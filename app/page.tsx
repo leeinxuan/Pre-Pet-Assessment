@@ -114,11 +114,11 @@ const categories = [
 ];
 
 const breeds = [
-  { id: "chihuahua", label: "吉娃娃", icon: "🐕" },
-  { id: "poodle", label: "貴賓犬", icon: "🐩" },
-  { id: "shiba", label: "柴犬", icon: "🐕" },
-  { id: "border", label: "邊境牧羊犬", icon: "🐕‍🦺" },
-  { id: "labrador", label: "拉布拉多", icon: "🦮" },
+  { id: "chihuahua", label: "吉娃娃", icon: "🐕", shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。" },
+  { id: "poodle", label: "貴賓犬", icon: "🐩", shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。" },
+  { id: "shiba", label: "柴犬", icon: "🐕", shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。" },
+  { id: "border", label: "邊境牧羊犬", icon: "🐕‍🦺", shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。" },
+  { id: "labrador", label: "拉布拉多", icon: "🦮", shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。" },
 ];
 
 const laws = [
@@ -493,8 +493,9 @@ function NavButtons({ onBack, onNext, nextLabel = "繼續下一站", disabled = 
 }
 
 function SpeciesStep({ category, breed, onCategory, onBreed, onNext }: { category: string; breed: string; onCategory: (value: string) => void; onBreed: (value: string) => void; onNext: () => void }) {
-  const [selectionPage, setSelectionPage] = useState<"species" | "breed">("species");
+  const [selectionPage, setSelectionPage] = useState<"species" | "breed">(category ? "breed" : "species");
   const selectedCategory = categories.find((item) => item.id === category);
+  const selectedBreed = breeds.find((item) => item.id === breed);
 
   function chooseCategory(id: string) {
     onCategory(id);
@@ -544,11 +545,13 @@ function SpeciesStep({ category, breed, onCategory, onBreed, onNext }: { categor
               </button>
             ))}
           </div>
-          {breed ? (
-            <div className="selection-note"><span>{selectedCategory?.icon ?? "🐕"}</span><div><b>你選擇了：{breeds.find((item) => item.id === breed)?.label}</b><p>你可以更換品種，確認後再繼續下一站。</p></div></div>
-          ) : (
-            <p className="breed-required-hint">請先點選一個品種，再繼續下一站。</p>
-          )}
+          <div className={`selection-note breed-description ${selectedBreed ? "selected" : "empty"}`} role="status" aria-live="polite" aria-atomic="true">
+            <span aria-hidden="true">{selectedBreed?.icon ?? "🐾"}</span>
+            <div>
+              <b>{selectedBreed ? `你選擇了：${selectedBreed.label}` : "品種飼養特性"}</b>
+              <p>{selectedBreed?.shortDescription ?? "點選一個品種，查看牠的飼養特性。"}</p>
+            </div>
+          </div>
           <NavButtons onBack={() => setSelectionPage("species")} onNext={onNext} disabled={!breed} />
         </section>
       )}

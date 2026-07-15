@@ -113,11 +113,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .breed-row button { min-height: 145px; }
 .breed-page-grid { gap: 14px; }
 .breed-page-grid button { min-height: 190px; }
-.breed-required-hint { margin: 18px 0 0; padding: 17px 19px; border: 1px dashed var(--line); border-radius: 16px; color: var(--muted); font-size: 13px; }
 .breed-row i { position: absolute; right: 9px; top: 9px; width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; background: var(--gold); color: white; font-style: normal; font-size: 13px; animation: checkPop .35s cubic-bezier(.2,1.6,.4,1); }
 .selection-note { display: flex; align-items: center; gap: 14px; padding: 16px 19px; background: var(--cream); border-radius: 16px; margin-top: 18px; }
 .selection-note > span { font-size: 32px; }
 .selection-note p { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
+.breed-description { min-height: 86px; }
+.breed-description > div { min-width: 0; }
+.breed-description p { line-height: 1.7; overflow-wrap: anywhere; white-space: normal; }
+.breed-description.empty { border: 1px dashed var(--line); background: transparent; }
 .nav-buttons { display: flex; justify-content: space-between; gap: 15px; border-top: 1px solid var(--line); margin-top: 42px; padding-top: 25px; }
 .mini-progress { height: 5px; background: #eee6d9; border-radius: 20px; margin: 0 auto 25px; position: relative; }
 .mini-progress span { height: 100%; display: block; background: var(--gold); border-radius: inherit; transition: width .3s; }
