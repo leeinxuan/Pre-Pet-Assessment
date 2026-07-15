@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 
 type Answer = "ready" | "unsure" | "discuss";
 type LawAnswer = "know" | "unsure";
@@ -562,34 +562,106 @@ function SpeciesStep({ category, breed, onCategory, onBreed, onNext }: { categor
 function LawStep({ index, answers, onIndex, onAnswer, onBack, onNext }: { index: number; answers: Record<number, LawAnswer>; onIndex: (value: number) => void; onAnswer: (value: LawAnswer) => void; onBack: () => void; onNext: () => void }) {
   const item = laws[index];
   const complete = Object.keys(answers).length === laws.length;
-  const [swipeMotion, setSwipeMotion] = useState<LawAnswer | null>(null);
+  const [showTutorial, setShowTutorial] = useState(true);
+  const [pendingAnswer, setPendingAnswer] = useState<LawAnswer | null>(null);
+  const [dragStart, setDragStart] = useState<number | null>(null);
+  const [dragX, setDragX] = useState(0);
+  const swipeThreshold = 90;
 
   function choose(answer: LawAnswer) {
-    if (swipeMotion) return;
-    setSwipeMotion(answer);
+    if (pendingAnswer) return;
+    setPendingAnswer(answer);
+    setDragX(answer === "unsure" ? -150 : 150);
     window.setTimeout(() => {
       onAnswer(answer);
-      setSwipeMotion(null);
-    }, 320);
+      setPendingAnswer(null);
+      setDragX(0);
+    }, 900);
   }
+
+  function startDrag(event: ReactPointerEvent<HTMLElement>) {
+    if (pendingAnswer) return;
+    setDragStart(event.clientX);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function moveDrag(event: ReactPointerEvent<HTMLElement>) {
+    if (dragStart === null || pendingAnswer) return;
+    const distance = event.clientX - dragStart;
+    setDragX(Math.max(-180, Math.min(180, distance)));
+  }
+
+  function finishDrag(event: ReactPointerEvent<HTMLElement>) {
+    if (dragStart === null || pendingAnswer) return;
+    const distance = event.clientX - dragStart;
+    setDragStart(null);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    if (distance <= -swipeThreshold) choose("unsure");
+    else if (distance >= swipeThreshold) choose("know");
+    else setDragX(0);
+  }
+
+  function cancelDrag(event: ReactPointerEvent<HTMLElement>) {
+    setDragStart(null);
+    setDragX(0);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  }
+
+  function answerWithKeyboard(event: ReactKeyboardEvent<HTMLButtonElement>, answer: LawAnswer) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    choose(answer);
+  }
+
+  if (showTutorial) {
+    return (
+      <div className="content-wrap compact law-tutorial">
+        <p className="law-tutorial-eyebrow">認識成為飼主的承諾</p>
+        <section className="law-tutorial-card" aria-labelledby="law-tutorial-title">
+          <div className="swipe-lesson-icon" aria-hidden="true"><span>←</span><b>☝</b><span>→</span></div>
+          <h1 id="law-tutorial-title">手指向左／向右滑動</h1>
+          <p>也可以使用下方左右答案按鈕，以滑鼠或鍵盤完成作答。</p>
+          <div className="law-tutorial-alert">⚠ 依照指示左滑右滑 ⚠</div>
+        </section>
+        <div className="law-tutorial-actions">
+          <button className="secondary" onClick={onBack}>← 返回</button>
+          <button className="primary" onClick={() => setShowTutorial(false)}>開始暖身 <span>→</span></button>
+        </div>
+      </div>
+    );
+  }
+
+  const direction = dragX < -8 ? "unsure" : dragX > 8 ? "know" : null;
+  const cardTransform = `translateX(${dragX}px) rotate(${dragX / 24}deg)`;
 
   return (
     <div className="content-wrap compact">
       <StepHeading eyebrow="02 · 法規暖身" title="哪些你已經知道？" body="誠實留下不熟悉的項目，最後會自動整理成待確認的法規清單。" />
       <div className="mini-progress"><span style={{ width: `${((index + 1) / laws.length) * 100}%` }} /><em>{index + 1} / {laws.length}</em></div>
-      <div className="swipe-zone">
-        <button className="swipe-choice unsure" onClick={() => choose("unsure")} disabled={Boolean(swipeMotion)}><span>←</span><b>不太清楚</b><small>留到摘要確認</small></button>
-        <article className={`law-card ${swipeMotion === "unsure" ? "swipe-left" : ""} ${swipeMotion === "know" ? "swipe-right" : ""}`}>
+      <div className={`swipe-zone ${direction ? `dragging-${direction}` : ""}`}>
+        <button className="swipe-choice unsure" onClick={() => choose("unsure")} onKeyDown={(event) => answerWithKeyboard(event, "unsure")} disabled={Boolean(pendingAnswer)} aria-label="向左作答：不太清楚，留到摘要確認"><span>←</span><b>不太清楚</b><small>左滑 · 留到摘要確認</small></button>
+        <article
+          className={`law-card draggable ${dragStart !== null ? "is-dragging" : ""} ${pendingAnswer ? "is-committing" : ""}`}
+          style={{ transform: cardTransform }}
+          onPointerDown={startDrag}
+          onPointerMove={moveDrag}
+          onPointerUp={finishDrag}
+          onPointerCancel={cancelDrag}
+          aria-label={`第 ${index + 1} 題。向左滑是不太清楚，向右滑是我知道。${item.statement}`}
+        >
+          <div className={`drag-cue left ${direction === "unsure" ? "visible" : ""}`} aria-hidden="true"><b>← 不太清楚</b><span>留到摘要確認</span></div>
+          <div className={`drag-cue right ${direction === "know" ? "visible" : ""}`} aria-hidden="true"><b>我知道 →</b><span>保留為已了解</span></div>
           <p>{String(index + 1).padStart(2, "0")}</p>
           <span>{item.title}</span>
           <h2>{item.statement}</h2>
-          <div><b>小提醒</b>{item.detail}</div>
+          <div className="law-detail"><b>小提醒</b>{item.detail}</div>
           {answers[index] && <em className={`answered ${answers[index]}`}>{answers[index] === "know" ? "已標記：知道" : "已標記：不太清楚"}</em>}
+          {pendingAnswer && <div className={`law-answer-feedback ${pendingAnswer}`} role="status" aria-live="assertive"><b>{pendingAnswer === "know" ? "→ 已選擇：我知道" : "← 已選擇：不太清楚"}</b><span>{pendingAnswer === "know" ? "已保留為了解項目。" : "已加入摘要的待確認清單。"}</span><small>{item.detail}</small></div>}
         </article>
-        <button className="swipe-choice know" onClick={() => choose("know")} disabled={Boolean(swipeMotion)}><span>→</span><b>我知道</b><small>保留為已了解</small></button>
+        <button className="swipe-choice know" onClick={() => choose("know")} onKeyDown={(event) => answerWithKeyboard(event, "know")} disabled={Boolean(pendingAnswer)} aria-label="向右作答：我知道，保留為已了解"><span>→</span><b>我知道</b><small>右滑 · 保留為已了解</small></button>
       </div>
-      <div className="dot-nav">{laws.map((_, itemIndex) => <button key={itemIndex} className={`${itemIndex === index ? "active" : ""} ${answers[itemIndex] ? "filled" : ""}`} onClick={() => onIndex(itemIndex)} aria-label={`前往第 ${itemIndex + 1} 題`} />)}</div>
-      <NavButtons onBack={onBack} onNext={onNext} disabled={!complete} nextLabel={complete ? "整理好了，繼續" : `還有 ${laws.length - Object.keys(answers).length} 題`} />
+      <div className="dot-nav">{laws.map((_, itemIndex) => <button key={itemIndex} className={`${itemIndex === index ? "active" : ""} ${answers[itemIndex] ? "filled" : ""}`} onClick={() => onIndex(itemIndex)} disabled={Boolean(pendingAnswer)} aria-label={`前往第 ${itemIndex + 1} 題`} />)}</div>
+      <NavButtons onBack={() => index > 0 ? onIndex(index - 1) : onBack()} onNext={onNext} disabled={!complete || Boolean(pendingAnswer)} nextLabel={complete ? "整理好了，繼續" : `還有 ${laws.length - Object.keys(answers).length} 題`} />
     </div>
   );
 }

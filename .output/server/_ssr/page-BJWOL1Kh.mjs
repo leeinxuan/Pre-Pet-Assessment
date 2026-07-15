@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-Vq2n-Vol.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-BJWOL1Kh.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
 var initialProfile = {
@@ -787,15 +787,97 @@ function SpeciesStep({ category, breed, onCategory, onBreed, onNext }) {
 function LawStep({ index, answers, onIndex, onAnswer, onBack, onNext }) {
 	const item = laws[index];
 	const complete = Object.keys(answers).length === laws.length;
-	const [swipeMotion, setSwipeMotion] = (0, import_react.useState)(null);
+	const [showTutorial, setShowTutorial] = (0, import_react.useState)(true);
+	const [pendingAnswer, setPendingAnswer] = (0, import_react.useState)(null);
+	const [dragStart, setDragStart] = (0, import_react.useState)(null);
+	const [dragX, setDragX] = (0, import_react.useState)(0);
+	const swipeThreshold = 90;
 	function choose(answer) {
-		if (swipeMotion) return;
-		setSwipeMotion(answer);
+		if (pendingAnswer) return;
+		setPendingAnswer(answer);
+		setDragX(answer === "unsure" ? -150 : 150);
 		window.setTimeout(() => {
 			onAnswer(answer);
-			setSwipeMotion(null);
-		}, 320);
+			setPendingAnswer(null);
+			setDragX(0);
+		}, 900);
 	}
+	function startDrag(event) {
+		if (pendingAnswer) return;
+		setDragStart(event.clientX);
+		event.currentTarget.setPointerCapture(event.pointerId);
+	}
+	function moveDrag(event) {
+		if (dragStart === null || pendingAnswer) return;
+		const distance = event.clientX - dragStart;
+		setDragX(Math.max(-180, Math.min(180, distance)));
+	}
+	function finishDrag(event) {
+		if (dragStart === null || pendingAnswer) return;
+		const distance = event.clientX - dragStart;
+		setDragStart(null);
+		if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+		if (distance <= -swipeThreshold) choose("unsure");
+		else if (distance >= swipeThreshold) choose("know");
+		else setDragX(0);
+	}
+	function cancelDrag(event) {
+		setDragStart(null);
+		setDragX(0);
+		if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+	}
+	function answerWithKeyboard(event, answer) {
+		if (event.key !== "Enter" && event.key !== " ") return;
+		event.preventDefault();
+		choose(answer);
+	}
+	if (showTutorial) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "content-wrap compact law-tutorial",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "law-tutorial-eyebrow",
+				children: "認識成為飼主的承諾"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+				className: "law-tutorial-card",
+				"aria-labelledby": "law-tutorial-title",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "swipe-lesson-icon",
+						"aria-hidden": "true",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "←" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "☝" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+						id: "law-tutorial-title",
+						children: "手指向左／向右滑動"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "也可以使用下方左右答案按鈕，以滑鼠或鍵盤完成作答。" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "law-tutorial-alert",
+						children: "⚠ 依照指示左滑右滑 ⚠"
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "law-tutorial-actions",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					className: "secondary",
+					onClick: onBack,
+					children: "← 返回"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary",
+					onClick: () => setShowTutorial(false),
+					children: ["開始暖身 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})]
+			})
+		]
+	});
+	const direction = dragX < -8 ? "unsure" : dragX > 8 ? "know" : null;
+	const cardTransform = `translateX(${dragX}px) rotate(${dragX / 24}deg)`;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap compact",
 		children: [
@@ -813,39 +895,72 @@ function LawStep({ index, answers, onIndex, onAnswer, onBack, onNext }) {
 				] })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "swipe-zone",
+				className: `swipe-zone ${direction ? `dragging-${direction}` : ""}`,
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						className: "swipe-choice unsure",
 						onClick: () => choose("unsure"),
-						disabled: Boolean(swipeMotion),
+						onKeyDown: (event) => answerWithKeyboard(event, "unsure"),
+						disabled: Boolean(pendingAnswer),
+						"aria-label": "向左作答：不太清楚，留到摘要確認",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "←" }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "不太清楚" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "留到摘要確認" })
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "左滑 · 留到摘要確認" })
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-						className: `law-card ${swipeMotion === "unsure" ? "swipe-left" : ""} ${swipeMotion === "know" ? "swipe-right" : ""}`,
+						className: `law-card draggable ${dragStart !== null ? "is-dragging" : ""} ${pendingAnswer ? "is-committing" : ""}`,
+						style: { transform: cardTransform },
+						onPointerDown: startDrag,
+						onPointerMove: moveDrag,
+						onPointerUp: finishDrag,
+						onPointerCancel: cancelDrag,
+						"aria-label": `第 ${index + 1} 題。向左滑是不太清楚，向右滑是我知道。${item.statement}`,
 						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: `drag-cue left ${direction === "unsure" ? "visible" : ""}`,
+								"aria-hidden": "true",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "← 不太清楚" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "留到摘要確認" })]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: `drag-cue right ${direction === "know" ? "visible" : ""}`,
+								"aria-hidden": "true",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "我知道 →" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "保留為已了解" })]
+							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: String(index + 1).padStart(2, "0") }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.title }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: item.statement }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "小提醒" }), item.detail] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "law-detail",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "小提醒" }), item.detail]
+							}),
 							answers[index] && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", {
 								className: `answered ${answers[index]}`,
 								children: answers[index] === "know" ? "已標記：知道" : "已標記：不太清楚"
+							}),
+							pendingAnswer && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: `law-answer-feedback ${pendingAnswer}`,
+								role: "status",
+								"aria-live": "assertive",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: pendingAnswer === "know" ? "→ 已選擇：我知道" : "← 已選擇：不太清楚" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: pendingAnswer === "know" ? "已保留為了解項目。" : "已加入摘要的待確認清單。" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: item.detail })
+								]
 							})
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						className: "swipe-choice know",
 						onClick: () => choose("know"),
-						disabled: Boolean(swipeMotion),
+						onKeyDown: (event) => answerWithKeyboard(event, "know"),
+						disabled: Boolean(pendingAnswer),
+						"aria-label": "向右作答：我知道，保留為已了解",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "我知道" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "保留為已了解" })
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "右滑 · 保留為已了解" })
 						]
 					})
 				]
@@ -855,13 +970,14 @@ function LawStep({ index, answers, onIndex, onAnswer, onBack, onNext }) {
 				children: laws.map((_, itemIndex) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 					className: `${itemIndex === index ? "active" : ""} ${answers[itemIndex] ? "filled" : ""}`,
 					onClick: () => onIndex(itemIndex),
+					disabled: Boolean(pendingAnswer),
 					"aria-label": `前往第 ${itemIndex + 1} 題`
 				}, itemIndex))
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NavButtons, {
-				onBack,
+				onBack: () => index > 0 ? onIndex(index - 1) : onBack(),
 				onNext,
-				disabled: !complete,
+				disabled: !complete || Boolean(pendingAnswer),
 				nextLabel: complete ? "整理好了，繼續" : `還有 ${laws.length - Object.keys(answers).length} 題`
 			})
 		]

@@ -125,6 +125,16 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .mini-progress { height: 5px; background: #eee6d9; border-radius: 20px; margin: 0 auto 25px; position: relative; }
 .mini-progress span { height: 100%; display: block; background: var(--gold); border-radius: inherit; transition: width .3s; }
 .mini-progress em { position: absolute; right: 0; top: -27px; font-style: normal; font-size: 13px; color: var(--muted); font-weight: 800; }
+.law-tutorial { max-width: 900px; }
+.law-tutorial-eyebrow { color: var(--muted); font-weight: 800; font-size: 14px; margin: 0 0 26px; }
+.law-tutorial-card { max-width: 720px; margin: 0 auto; padding: 64px 42px 0; border: 2px solid #e8b42c; border-radius: 24px; background: #fff0bf; text-align: center; overflow: hidden; }
+.swipe-lesson-icon { display: flex; justify-content: center; align-items: flex-start; gap: 18px; color: #191713; line-height: 1; }
+.swipe-lesson-icon span { font-size: 64px; font-weight: 700; }
+.swipe-lesson-icon b { font-size: 96px; font-weight: 400; transform: translateY(20px); }
+.law-tutorial-card h1 { font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: 31px; margin: 34px 0 10px; }
+.law-tutorial-card > p { color: var(--muted); line-height: 1.7; margin: 0 auto 38px; }
+.law-tutorial-alert { margin: 0 -42px; padding: 20px; border: 1px solid var(--line); border-radius: 16px 16px 0 0; background: white; font-size: 18px; font-weight: 900; }
+.law-tutorial-actions { display: flex; justify-content: space-between; gap: 15px; max-width: 720px; margin: 34px auto 0; padding-top: 25px; border-top: 1px solid var(--line); }
 .swipe-zone { display: grid; grid-template-columns: 135px minmax(0, 1fr) 135px; align-items: center; gap: 22px; }
 .swipe-choice { border: 0; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 7px; color: var(--muted); }
 .swipe-choice > span { width: 65px; height: 65px; border-radius: 50%; display: grid; place-items: center; border: 2px solid currentColor; font-size: 25px; transition: .2s; }
@@ -133,15 +143,30 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .swipe-choice.know { color: #6e9c72; }
 .swipe-choice small { font-size: 12px; }
 .law-card { min-height: 420px; border: 1px solid var(--line); border-radius: 26px; padding: 37px 45px; background: white; box-shadow: var(--shadow); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.law-card.draggable { cursor: grab; touch-action: pan-y; user-select: none; transition: transform .28s cubic-bezier(.2,.8,.2,1), border-color .2s, box-shadow .2s; }
+.law-card.draggable.is-dragging { cursor: grabbing; transition: border-color .2s, box-shadow .2s; }
+.dragging-unsure .law-card { border-color: var(--orange); box-shadow: 0 18px 50px rgba(206,104,48,.2); }
+.dragging-know .law-card { border-color: #6e9c72; box-shadow: 0 18px 50px rgba(110,156,114,.2); }
 .law-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 9px; background: var(--gold); }
 .law-card > p { font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: 55px; margin: 0 0 8px; color: var(--gold); }
 .law-card > span { text-decoration: underline; text-underline-offset: 6px; font-size: 13px; font-weight: 900; }
 .law-card h2 { max-width: 550px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: 29px; line-height: 1.5; margin: 30px auto; }
-.law-card > div { max-width: 590px; background: var(--cream); border-radius: 12px; padding: 15px 18px; font-size: 14px; line-height: 1.75; color: var(--muted); }
-.law-card > div b { color: var(--gold-dark); margin-right: 10px; }
+.law-card > .law-detail { max-width: 590px; background: var(--cream); border-radius: 12px; padding: 15px 18px; font-size: 14px; line-height: 1.75; color: var(--muted); }
+.law-card > .law-detail b { color: var(--gold-dark); margin-right: 10px; }
+.drag-cue { position: absolute; top: 30px; z-index: 2; display: flex; flex-direction: column; gap: 4px; padding: 11px 14px; border: 2px solid currentColor; border-radius: 12px; background: rgba(255,255,255,.94); opacity: 0; transform: scale(.88); transition: .16s; pointer-events: none; }
+.drag-cue.visible { opacity: 1; transform: scale(1); }
+.drag-cue.left { left: 22px; color: var(--orange); transform: rotate(-4deg) scale(.88); }
+.drag-cue.left.visible { transform: rotate(-4deg) scale(1); }
+.drag-cue.right { right: 22px; color: #577c59; transform: rotate(4deg) scale(.88); }
+.drag-cue.right.visible { transform: rotate(4deg) scale(1); }
+.drag-cue span { font-size: 11px; }
+.law-answer-feedback { position: absolute; inset: 0; z-index: 5; max-width: none !important; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 38px !important; border-radius: inherit !important; background: rgba(255,253,247,.97) !important; color: var(--ink) !important; }
+.law-answer-feedback > b { font-size: 25px; margin: 0 !important; }
+.law-answer-feedback.know > b { color: #577c59; }
+.law-answer-feedback.unsure > b { color: var(--orange); }
+.law-answer-feedback > span { font-weight: 900; }
+.law-answer-feedback > small { max-width: 520px; color: var(--muted); line-height: 1.75; }
 .law-card .answered { position: absolute; right: 18px; top: 23px; font-style: normal; font-size: 12px; font-weight: 900; padding: 7px 10px; border-radius: 999px; }
-.law-card.swipe-left { animation: swipeLeft .34s cubic-bezier(.4,0,.6,1) both; }
-.law-card.swipe-right { animation: swipeRight .34s cubic-bezier(.4,0,.6,1) both; }
 .answered.know { color: #577c59; background: var(--mint-soft); }
 .answered.unsure { color: #a74b20; background: var(--orange-soft); }
 .dot-nav { display: flex; justify-content: center; gap: 10px; margin: 28px 0 0; }
@@ -462,6 +487,12 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .law-card { grid-column: 1 / -1; grid-row: 1; min-height: 370px; padding: 30px 22px; }
   .swipe-choice { flex-direction: row; justify-content: center; flex-wrap: wrap; }
   .swipe-choice > span { width: 45px; height: 45px; }.swipe-choice small { display: none; }
+  .law-tutorial-card { padding: 44px 20px 0; }
+  .law-tutorial-alert { margin: 0 -20px; font-size: 16px; }
+  .swipe-lesson-icon span { font-size: 45px; }
+  .swipe-lesson-icon b { font-size: 72px; }
+  .law-tutorial-actions { position: sticky; bottom: 0; z-index: 10; padding: 14px 0; background: rgba(255,253,247,.94); }
+  .law-answer-feedback { padding: 25px 18px !important; }
   .form-grid, .time-card, .money-dashboard, .scene-card, .summary-grid { grid-template-columns: 1fr; }
   .profile-wizard-head { align-items: flex-start; }
   .profile-wizard-head h1 { font-size: 35px; }
