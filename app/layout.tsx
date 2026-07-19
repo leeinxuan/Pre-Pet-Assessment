@@ -10,19 +10,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: base,
-    title: "慢慢來，先想想｜飼養前生活預演",
-    description: "一場不評分、不貼標籤的飼養前生活預演，幫助準飼主把衝動變成可以討論的準備。",
+    title: "慢慢來，先想想｜領養生活時間軸",
+    description: "從領養前準備、接回家、建立日常到長期照顧的一段互動生活預演。",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
       title: "慢慢來，先想想",
-      description: "飼養前生活預演：把衝動變成可以討論的準備。",
+      description: "沿著真實時間軸，預演領養前準備、日常照顧、健康事件與生活變化。",
       type: "website",
       images: [{ url: new URL("/og.png", base), width: 1200, height: 630, alt: "準飼主與柴犬在家中安靜相處" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "慢慢來，先想想",
-      description: "飼養前生活預演：把衝動變成可以討論的準備。",
+      description: "沿著真實時間軸，預演領養前準備、日常照顧、健康事件與生活變化。",
       images: [new URL("/og.png", base)],
     },
   };

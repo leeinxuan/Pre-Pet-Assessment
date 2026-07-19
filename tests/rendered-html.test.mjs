@@ -30,9 +30,10 @@ test("server-renders the pet readiness journey", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
-test("contains all seven experience stages, lifetime cost math, and project-owned artwork", async () => {
-  const [page, css, packageJson] = await Promise.all([
+test("contains the eight-stage adoption timeline and project-owned artwork", async () => {
+  const [page, data, css, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/game-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     access(new URL("../public/og.png", import.meta.url)),
@@ -42,16 +43,17 @@ test("contains all seven experience stages, lifetime cost math, and project-owne
     access(new URL("../public/illustrations/prep-room.png", import.meta.url)),
   ]);
 
-  for (const label of ["選擇夥伴", "法規暖身", "認識你", "費用開箱", "生活預演", "準備房間", "準備摘要"]) {
-    assert.match(page, new RegExp(label));
+  for (const label of ["選擇寵物", "領養前準備", "接回家", "日常生活", "健康與意外", "生活變化", "認識你", "評估報告"]) {
+    assert.match(data, new RegExp(label));
   }
-  for (const axis of ["A1 物種認識與天性", "A2 空間與環境條件", "A3 飲食與食性", "A4 健康與醫療", "A5 行為、互動與家庭相處", "A6 時間與生活型態", "A7 花費與經濟能力", "A8 飼養動機與可持續性", "A9 法規、責任與合法取得"]) {
-    assert.match(page, new RegExp(axis));
+  for (const scenarioId of ["ride-home", "first-door", "first-meal", "hiding", "night-anxiety", "chewing-toilet", "daily-feeding", "exercise", "grooming", "low-appetite", "contact-vet", "medical-cost", "travel", "work-change", "moving", "senior-life"]) {
+    assert.match(data, new RegExp(scenarioId));
   }
-  assert.match(page, /3600 \* 12 \* estimatedLifespan/);
-  assert.match(page, /12800 \* estimatedLifespan/);
+  assert.doesNotMatch(page, /LawStep|CostStep|lawAnswers|costIndex/);
+  assert.match(page, /ExpenseRecord/);
+  assert.match(page, /firstChoiceId/);
   assert.match(css, /family=Huninn/);
-  assert.match(css, /@keyframes swipeLeft/);
+  assert.match(css, /\.cost-bar/);
   assert.match(css, /scenario-grid\.png/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 });
