@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CcuOrP3P.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-CUatR9j9.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var stations = [
@@ -237,71 +237,55 @@ var expenseCatalog = {
 		stage: "領養前準備",
 		recurring: false
 	},
-	"food-monthly": {
-		id: "food-monthly",
-		name: "每月飼料",
-		amount: 1600,
+	"monthly-main-food": {
+		id: "monthly-main-food",
+		name: "每月主食費",
+		amount: 1500,
 		category: "飲食",
-		stage: "建立日常生活",
+		stage: "一起生活三個月",
 		recurring: true
 	},
-	"waste-monthly": {
-		id: "waste-monthly",
-		name: "每月清潔耗材",
-		amount: 450,
-		category: "清潔",
-		stage: "建立日常生活",
-		recurring: true
-	},
-	"routine-care": {
-		id: "routine-care",
-		name: "每月例行保健準備",
-		amount: 600,
+	"journey-medical-care": {
+		id: "journey-medical-care",
+		name: "異常症狀檢查與治療",
+		amount: 4200,
 		category: "醫療",
-		stage: "建立日常生活",
-		recurring: true
-	},
-	"first-checkup": {
-		id: "first-checkup",
-		name: "初次健康檢查",
-		amount: 1800,
-		category: "醫療",
-		stage: "接回家當天",
-		recurring: false
-	},
-	"emergency-exam": {
-		id: "emergency-exam",
-		name: "緊急檢查與治療",
-		amount: 6800,
-		category: "醫療",
-		stage: "健康與突發事件",
+		stage: "健康出現變化",
 		recurring: false,
 		fromEmergency: true
 	},
-	boarding: {
-		id: "boarding",
-		name: "三日安心照顧服務",
-		amount: 3600,
+	"journey-care-service": {
+		id: "journey-care-service",
+		name: "短期照顧服務",
+		amount: 2400,
 		category: "照顧服務",
-		stage: "生活變化",
+		stage: "飼主生活發生改變",
 		recurring: false
 	},
-	moving: {
-		id: "moving",
-		name: "搬家安全設備調整",
-		amount: 1500,
-		category: "用品",
-		stage: "生活變化",
-		recurring: false
-	},
-	senior: {
-		id: "senior",
-		name: "老年健康檢查",
+	"senior-checkup": {
+		id: "senior-checkup",
+		name: "高齡健康檢查",
 		amount: 3200,
 		category: "醫療",
-		stage: "生活變化",
+		stage: "逐漸進入高齡",
 		recurring: false,
 		fromEmergency: true
+	},
+	"senior-slipmat": {
+		id: "senior-slipmat",
+		name: "高齡犬防滑墊",
+		amount: 1200,
+		category: "高齡用品",
+		stage: "調整高齡生活空間",
+		recurring: false
+	},
+	"senior-access-bed": {
+		id: "senior-access-bed",
+		name: "低入口高齡睡墊",
+		amount: 1800,
+		category: "高齡用品",
+		stage: "調整高齡生活空間",
+		recurring: false
 	}
 };
 var roomItems = [
@@ -374,8 +358,7 @@ var roomItems = [
 		label: "飼料",
 		icon: "🦴",
 		required: true,
-		need: "飲食",
-		expenseId: "food-monthly"
+		need: "飲食"
 	}
 ];
 var hazards = [
@@ -553,8 +536,7 @@ var trunkItems = [
 		label: "少量熟悉的飼料",
 		icon: "🦴",
 		kind: "essential",
-		feedback: "少量熟悉食物可避免接回當天突然換食。",
-		expenseId: "food-monthly"
+		feedback: "少量熟悉食物可避免接回當天突然換食。"
 	},
 	{
 		id: "cleaner",
@@ -628,7 +610,7 @@ var trunkItems = [
 		feedback: "巨大聲響與火源都不適合放在接送行李中。"
 	}
 ];
-var positive = {
+var positive$1 = {
 	feedbackTitle: "做得很好！",
 	effects: {
 		trust: 2,
@@ -636,7 +618,7 @@ var positive = {
 		support: 1
 	}
 };
-var partial = {
+var partial$1 = {
 	feedbackTitle: "方向不錯，但還可以再調整。",
 	effects: {
 		trust: 1,
@@ -644,7 +626,7 @@ var partial = {
 		support: 1
 	}
 };
-var incorrect = {
+var incorrect$1 = {
 	feedbackTitle: "這個做法可能不太適合。",
 	effects: {
 		trust: -1,
@@ -652,560 +634,7 @@ var incorrect = {
 		support: 0
 	}
 };
-var scenarios = [
-	{
-		id: "ride-home",
-		stage: "接回家當天",
-		timeLabel: "接牠回家的路上",
-		title: "安全搭車回家",
-		description: "牠第一次坐你的車，看起來緊張又想往車門靠近。你會怎麼安排？",
-		artIndex: 8,
-		reminder: "外出與交通時應採取合適防護；運輸籠或合身胸背帶能降低逃脫與干擾駕駛的風險。",
-		choices: [
-			{
-				id: "secure-carrier",
-				text: "讓牠待在固定好的安全運輸籠，車內保持安靜。",
-				result: "correct",
-				...positive,
-				explanation: "穩定的運輸空間能降低晃動、逃脫與干擾駕駛的風險。",
-				expenseIds: ["carrier"]
-			},
-			{
-				id: "lap",
-				text: "請同行家人抱著牠，並盡量安撫。",
-				result: "partial",
-				...partial,
-				explanation: "陪伴有幫助，但緊急煞車時抱著仍不安全。",
-				suggestion: "改用固定運輸籠，讓家人在旁安靜陪伴。"
-			},
-			{
-				id: "free-car",
-				text: "讓牠在車內自由走動，熟悉環境後就會放鬆。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "自由走動可能干擾駕駛，也可能在開門時逃脫。",
-				suggestion: "停車後重新安置到安全運輸籠再出發。"
-			}
-		]
-	},
-	{
-		id: "first-door",
-		stage: "接回家當天",
-		timeLabel: "第一次進家門",
-		title: "陌生的家，從哪裡開始？",
-		description: "家人很期待見牠，牠卻縮在門邊觀察。你會怎麼做？",
-		artIndex: 0,
-		choices: [
-			{
-				id: "quiet-zone",
-				text: "先帶到安靜安全的小範圍，放好水，讓牠自行探索。",
-				result: "correct",
-				...positive,
-				explanation: "降低刺激並保留退路，有助於牠建立安全感。"
-			},
-			{
-				id: "sit-nearby",
-				text: "坐在附近陪伴，但不主動碰觸，等牠靠近。",
-				result: "correct",
-				...positive,
-				explanation: "穩定陪伴且尊重距離，是另一個合理做法。"
-			},
-			{
-				id: "welcome-party",
-				text: "請大家圍過來認識牠，越快熟悉家人越好。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "陌生人、聲音與靠近會同時增加刺激。",
-				suggestion: "先限制人數與聲音，讓牠主動決定互動速度。"
-			}
-		]
-	},
-	{
-		id: "first-meal",
-		stage: "接回家當天",
-		timeLabel: "到家後的第一餐",
-		title: "牠沒有立刻吃飯",
-		description: "牠聞了聞飼料就離開，家人想拿人類食物引誘。你會怎麼處理？",
-		artIndex: 2,
-		choices: [
-			{
-				id: "familiar-food",
-				text: "提供少量原本熟悉的飼料與乾淨飲水，記錄進食狀況。",
-				result: "correct",
-				...positive,
-				explanation: "維持熟悉飲食能減少腸胃負擔，也方便觀察適應情況。",
-				expenseIds: ["food-monthly"]
-			},
-			{
-				id: "wait-calm",
-				text: "先讓環境安靜，稍後再提供相同飼料。",
-				result: "partial",
-				...partial,
-				explanation: "減少壓力是好方向，也要持續記錄飲水與進食。",
-				suggestion: "若長時間不吃或合併精神異常，應聯絡獸醫。"
-			},
-			{
-				id: "table-food",
-				text: "加很多人類食物，至少先讓牠吃下去。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "突然更換或混入不適合的食物可能造成腸胃不適。",
-				suggestion: "回到熟悉飼料，必要時詢問獸醫安全的轉食方式。"
-			}
-		]
-	},
-	{
-		id: "hiding",
-		stage: "第一週適應期",
-		timeLabel: "到家第二天",
-		title: "牠躲在角落不願互動",
-		description: "你靠近時牠退縮，家人擔心牠是不是不喜歡這個家。",
-		artIndex: 0,
-		choices: [
-			{
-				id: "observe-signals",
-				text: "保持距離、維持固定作息，觀察牠的身體訊號。",
-				result: "correct",
-				...positive,
-				explanation: "剛到陌生環境時躲藏很常見，尊重距離能減少壓力。"
-			},
-			{
-				id: "gentle-company",
-				text: "在遠處安靜做自己的事，偶爾輕聲說話。",
-				result: "correct",
-				...positive,
-				explanation: "不強迫互動的陪伴也能建立熟悉感。"
-			},
-			{
-				id: "pull-out",
-				text: "把牠抱出來，多摸一摸就會習慣。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "強迫離開躲藏處可能加深害怕，甚至引發防衛行為。",
-				suggestion: "保留安全躲藏處，等牠主動探索。"
-			}
-		]
-	},
-	{
-		id: "night-anxiety",
-		stage: "第一週適應期",
-		timeLabel: "第一週的夜晚",
-		title: "半夜一直叫或焦躁",
-		description: "牠在夜裡來回走動、叫幾聲，你和家人都睡不好。",
-		artIndex: 5,
-		choices: [
-			{
-				id: "check-needs",
-				text: "先確認排泄、飲水與環境安全，再用固定睡眠流程安撫。",
-				result: "correct",
-				...positive,
-				explanation: "先排除基本需求，再建立可預期的夜間節奏較穩定。"
-			},
-			{
-				id: "nearby-bed",
-				text: "暫時把睡墊移近一點，等適應後逐步調整。",
-				result: "partial",
-				...partial,
-				explanation: "短期提供安全感可以理解，但要避免每天任意改變規則。",
-				suggestion: "搭配固定關燈、安靜與排泄時間。"
-			},
-			{
-				id: "punish-noise",
-				text: "大聲制止，讓牠知道半夜不能叫。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "責罵可能把陌生環境與威脅連在一起，增加焦慮。",
-				suggestion: "先確認需求與壓力來源，再用一致作息慢慢調整。"
-			}
-		]
-	},
-	{
-		id: "chewing-toilet",
-		stage: "第一週適應期",
-		timeLabel: "到家第一週",
-		title: "咬壞物品或排泄失誤",
-		description: "回家後看到被咬的拖鞋和地上的排泄物，你已經有點累了。",
-		artIndex: 4,
-		choices: [
-			{
-				id: "manage-environment",
-				text: "清理現場、收好危險物，增加合適啃咬物與排泄引導。",
-				result: "correct",
-				...positive,
-				explanation: "管理環境與提供替代行為，比事後責罵更能預防再次發生。"
-			},
-			{
-				id: "review-routine",
-				text: "檢查散步、排泄與獨處安排，再調整時間。",
-				result: "correct",
-				...positive,
-				explanation: "行為常和需求及節奏有關，回頭檢查日常是合理做法。"
-			},
-			{
-				id: "show-damage",
-				text: "把牠帶到現場責罵，讓牠知道做錯了。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "事後責罵很難讓牠理解原因，反而可能害怕你。",
-				suggestion: "清理氣味、管理環境，並在正確行為發生時鼓勵。"
-			}
-		]
-	},
-	{
-		id: "daily-feeding",
-		stage: "建立日常生活",
-		timeLabel: "日常生活開始後",
-		title: "每天的餵食與飲水",
-		description: "生活漸漸穩定，你要建立家中每個人都能遵守的餵食方式。",
-		artIndex: 2,
-		choices: [
-			{
-				id: "measured-meals",
-				text: "固定時段與份量，隨時提供乾淨飲水並記錄異常。",
-				result: "correct",
-				...positive,
-				explanation: "規律份量與飲水有助於體重、腸胃與健康觀察。",
-				expenseIds: ["food-monthly", "waste-monthly"]
-			},
-			{
-				id: "family-board",
-				text: "用家庭紀錄板標記誰餵過，避免重複餵食。",
-				result: "correct",
-				...positive,
-				explanation: "清楚交接能避免漏餐或重複餵食。"
-			},
-			{
-				id: "free-treats",
-				text: "家人看到牠撒嬌就各自給零食，不需要特別記錄。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "多人重複餵食容易造成熱量過量，也不易追蹤食慾變化。",
-				suggestion: "統一零食份量並記錄每日總量。"
-			}
-		]
-	},
-	{
-		id: "exercise",
-		stage: "建立日常生活",
-		timeLabel: "普通的下班日",
-		title: "今天很累，還是需要活動",
-		description: "你下班後很疲倦，但牠正在門邊期待今天的散步或陪玩。",
-		artIndex: 5,
-		supportChoice: true,
-		choices: [
-			{
-				id: "rest-then-walk",
-				text: "稍作休息後完成符合牠需求的基本散步。",
-				result: "correct",
-				...positive,
-				explanation: "照顧自己的狀態後仍完成基本需求，是可持續的安排。"
-			},
-			{
-				id: "backup-help",
-				text: "請前面安排好的備用照顧者協助今天的活動。",
-				result: "correct",
-				...positive,
-				explanation: "事先分工就是為了讓照顧在忙碌時不會中斷。"
-			},
-			{
-				id: "indoor-game",
-				text: "依牠的狀況安排嗅聞或益智等室內活動。",
-				result: "partial",
-				...partial,
-				explanation: "室內活動能補充腦力刺激，但不一定能完全取代外出與排泄需求。",
-				suggestion: "確認基本排泄與活動量後再彈性搭配。"
-			}
-		]
-	},
-	{
-		id: "grooming",
-		stage: "建立日常生活",
-		timeLabel: "週末上午",
-		title: "清潔、梳毛與例行照顧",
-		description: "今天沒有意外，只是到了梳毛、清潔用品與檢查耳朵腳掌的時間。",
-		artIndex: 6,
-		choices: [
-			{
-				id: "gentle-routine",
-				text: "短時間、分步完成，配合牠能接受的節奏。",
-				result: "correct",
-				...positive,
-				explanation: "把照顧拆小並建立正向經驗，能讓例行清潔更穩定。",
-				expenseIds: ["routine-care"]
-			},
-			{
-				id: "professional-help",
-				text: "不熟悉的部分先請美容或醫療專業人員示範。",
-				result: "correct",
-				...positive,
-				explanation: "知道何時求助也是負責任的照顧能力。"
-			},
-			{
-				id: "force-finish",
-				text: "一次抓緊完成全部流程，免得拖太久。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "強迫控制可能增加害怕，之後更難進行身體照護。",
-				suggestion: "拆成短步驟，必要時尋求低壓操作協助。"
-			}
-		]
-	},
-	{
-		id: "low-appetite",
-		stage: "健康與突發事件",
-		timeLabel: "某個平常的早晨",
-		title: "食慾下降、精神也不太一樣",
-		description: "牠早餐吃得很少，活動力下降，但外觀看不出明顯傷口。",
-		artIndex: 1,
-		choices: [
-			{
-				id: "record-monitor",
-				text: "記錄飲食、排泄與精神狀態，確認是否有其他警訊。",
-				result: "correct",
-				...positive,
-				explanation: "具體紀錄能協助判斷變化，也能提供獸醫重要資訊。"
-			},
-			{
-				id: "offer-foods",
-				text: "不斷換不同食物測試，看牠願意吃哪一個。",
-				result: "partial",
-				...partial,
-				explanation: "想確認食慾可以理解，但頻繁換食會干擾判斷。",
-				suggestion: "先記錄原飲食狀況，並留意是否需要聯絡獸醫。"
-			},
-			{
-				id: "ignore-day",
-				text: "牠應該只是心情不好，先完全不處理。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "精神與食慾同時改變可能是健康警訊。",
-				suggestion: "開始紀錄並依持續時間、嚴重度與其他症狀諮詢獸醫。"
-			}
-		]
-	},
-	{
-		id: "contact-vet",
-		stage: "健康與突發事件",
-		timeLabel: "症狀持續之後",
-		title: "要不要聯絡獸醫？",
-		description: "幾小時後牠仍沒精神，還出現嘔吐。你會怎麼做？",
-		artIndex: 3,
-		reminder: "提供必要醫療是飼主責任的一部分；異常持續或惡化時，不宜只靠網路自行判斷。",
-		choices: [
-			{
-				id: "call-vet",
-				text: "整理紀錄並立即聯絡獸醫，依專業建議就醫。",
-				result: "correct",
-				...positive,
-				explanation: "症狀持續且增加時，及早由專業人員判斷能降低延誤風險。",
-				expenseIds: ["first-checkup"]
-			},
-			{
-				id: "ask-online",
-				text: "先在社群詢問，等有人遇過相同狀況再決定。",
-				result: "partial",
-				...partial,
-				explanation: "蒐集經驗不能取代個別醫療評估。",
-				suggestion: "同時直接聯絡獸醫，不要只等待網路回覆。"
-			},
-			{
-				id: "wait-days",
-				text: "再等幾天，真的很嚴重再去。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "等待可能讓脫水、疼痛或其他病況惡化。",
-				suggestion: "現在就聯絡獸醫，說明持續時間與症狀變化。"
-			}
-		]
-	},
-	{
-		id: "medical-cost",
-		stage: "健康與突發事件",
-		timeLabel: "到達動物醫院",
-		title: "臨時醫療支出",
-		description: "獸醫建議進一步檢查與治療，費用超出本月原本預算。",
-		artIndex: 3,
-		choices: [
-			{
-				id: "use-emergency",
-				text: "使用緊急預備金，並和院所確認必要項目與後續計畫。",
-				result: "correct",
-				...positive,
-				explanation: "預備金正是用來避免必要醫療因臨時現金不足而中斷。",
-				expenseIds: ["emergency-exam"]
-			},
-			{
-				id: "discuss-plan",
-				text: "和獸醫討論檢查優先順序、分階段方案與可行付款安排。",
-				result: "correct",
-				...positive,
-				explanation: "坦白討論資源限制，有助於在醫療需要與負擔間找到方案。",
-				expenseIds: ["emergency-exam"]
-			},
-			{
-				id: "cheapest-only",
-				text: "不問差異，直接選最便宜的處理方式。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "只看價格可能忽略必要診斷與風險。",
-				suggestion: "先請獸醫解釋每項目的目的、急迫性與替代方案。"
-			}
-		]
-	},
-	{
-		id: "travel",
-		stage: "生活變化",
-		timeLabel: "需要離家三天",
-		title: "誰能在你不在時照顧牠？",
-		description: "臨時收到出差通知，你需要安排餵食、活動、清潔與緊急聯絡。",
-		artIndex: 5,
-		supportChoice: true,
-		choices: [
-			{
-				id: "assigned-backup",
-				text: "聯絡前面安排好的備用照顧者，交接作息與緊急資訊。",
-				result: "correct",
-				...positive,
-				explanation: "既有分工能縮短臨時協調時間，也讓照顧延續一致。"
-			},
-			{
-				id: "boarding-service",
-				text: "選擇評估過的照顧服務，完整交接健康與行為資料。",
-				result: "correct",
-				...positive,
-				explanation: "合適的專業服務也是可行備案，但要提早確認環境與紀錄。",
-				expenseIds: ["boarding"]
-			},
-			{
-				id: "leave-alone",
-				text: "放足飼料和水，讓牠自己待三天。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "長時間無人查看會有飲水、排泄、健康與安全風險。",
-				suggestion: "安排可信任照顧者或合適寄宿服務，保留每日回報。"
-			}
-		]
-	},
-	{
-		id: "work-change",
-		stage: "生活變化",
-		timeLabel: "工作時間改變",
-		title: "每天晚兩小時回家",
-		description: "新的工作安排讓原本的散步與晚餐時間都受到影響。",
-		artIndex: 5,
-		supportChoice: true,
-		choices: [
-			{
-				id: "redistribute",
-				text: "和照顧成員重新分配晚餐與活動，自己保留其他主要工作。",
-				result: "correct",
-				...positive,
-				explanation: "生活改變時重新分工，能避免所有責任落在單一人身上。"
-			},
-			{
-				id: "paid-walker",
-				text: "評估可信任的散步或到府服務，並保留交接紀錄。",
-				result: "partial",
-				...partial,
-				explanation: "外部服務可以補位，但仍要評估人員、犬隻適應與持續費用。",
-				suggestion: "先試行並安排家人或自己的備援。"
-			},
-			{
-				id: "just-wait",
-				text: "讓牠每天多等兩小時，應該會自己習慣。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "長期延後飲食、排泄與活動可能影響健康與行為。",
-				suggestion: "重新安排照顧者或服務，讓基本需求維持穩定。"
-			}
-		]
-	},
-	{
-		id: "moving",
-		stage: "生活變化",
-		timeLabel: "準備搬家",
-		title: "新住處與家庭狀況改變",
-		description: "新住處規定、空間與同住者都不同，你需要重新確認能否繼續穩定照顧。",
-		artIndex: 7,
-		reminder: "搬家或生活改變時，應先尋求合法且安全的照顧調整；不能任意棄置動物。",
-		choices: [
-			{
-				id: "check-housing",
-				text: "先確認租約、社區規定、門窗安全與家人共識，再安排搬遷。",
-				result: "correct",
-				...positive,
-				explanation: "把居住規則、安全與支持系統一起確認，能降低搬家後的衝突。",
-				expenseIds: ["moving"]
-			},
-			{
-				id: "temporary-support",
-				text: "若短期無法入住，先安排可信任的合法暫時照顧。",
-				result: "correct",
-				...positive,
-				explanation: "有期限與交接的暫時安排，比倉促放棄更負責任。"
-			},
-			{
-				id: "abandon",
-				text: "若新住處不能養，就把牠留在原地或隨意送人。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "任意棄置有安全與法律風險，也讓動物失去必要照顧。",
-				suggestion: "先尋求家人、原領養單位、合法轉養與專業協助。"
-			}
-		]
-	},
-	{
-		id: "senior-life",
-		stage: "生活變化",
-		timeLabel: "一起生活很多年後",
-		title: "牠慢慢進入老年",
-		description: "牠走得比較慢、睡得更多，也需要更頻繁的健康追蹤。",
-		artIndex: 1,
-		choices: [
-			{
-				id: "adapt-senior",
-				text: "調整活動強度、止滑與休息空間，安排老年健康檢查。",
-				result: "correct",
-				...positive,
-				explanation: "依身體變化調整環境與醫療追蹤，是長期照顧的重要部分。",
-				expenseIds: ["senior"]
-			},
-			{
-				id: "gentle-routine-senior",
-				text: "保留牠喜歡的日常，但縮短時間並觀察恢復狀況。",
-				result: "correct",
-				...positive,
-				explanation: "老年不等於完全停止活動，適度且可調整的日常有助於生活品質。"
-			},
-			{
-				id: "same-intensity",
-				text: "維持年輕時的活動量，不能讓牠變懶。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "忽略關節、心肺與恢復能力可能造成疼痛或受傷。",
-				suggestion: "和獸醫討論適合的活動量，依當天狀況彈性調整。"
-			}
-		]
-	}
-];
-var scenarioStages = {
-	3: {
-		start: 0,
-		end: 2
-	},
-	4: {
-		start: 3,
-		end: 8
-	},
-	5: {
-		start: 9,
-		end: 11
-	},
-	6: {
-		start: 12,
-		end: 15
-	}
-};
+({ ...positive$1 }), { ...partial$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...partial$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...partial$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...partial$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...partial$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...partial$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...partial$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 }, { ...positive$1 }, { ...positive$1 }, { ...incorrect$1 };
 var initialProfile = {
 	age: "",
 	role: "",
@@ -1225,7 +654,1151 @@ var initialProfile = {
 	emergencyFund: null,
 	backupSupport: null
 };
+var positive = {
+	feedbackTitle: "做得很好！",
+	effects: {
+		trust: 2,
+		wellbeing: 2,
+		support: 1
+	}
+};
+var partial = {
+	feedbackTitle: "方向不錯，但還可以再完整一點。",
+	effects: {
+		trust: 1,
+		wellbeing: 1,
+		support: 1
+	}
+};
+var incorrect = {
+	feedbackTitle: "這個做法可能不太適合。",
+	effects: {
+		trust: -1,
+		wellbeing: -1,
+		support: 0
+	}
+};
+var lifeScenarios = [
+	{
+		id: "arrival-adjustment",
+		stage: "一起生活的第一天",
+		timeLabel: "一起生活的第一天",
+		title: "第一天適應新家",
+		description: "豆豆剛走進陌生的新家，躲在外出籠旁觀察，家人都很想立刻和牠打招呼。",
+		topic: "適應新家與安全感",
+		artIndex: 0,
+		choices: [
+			{
+				id: "quiet-explore",
+				text: "保持環境安靜，提供安全空間與飲水，讓豆豆依自己的速度探索。",
+				result: "correct",
+				...positive,
+				explanation: "安靜、可退回的安全空間能降低刺激，讓豆豆逐步建立對新家的信任。",
+				suggestion: "保持固定作息，等豆豆主動靠近再慢慢增加互動。"
+			},
+			{
+				id: "sit-and-watch",
+				text: "讓家人留在附近小聲聊天，不主動碰觸，觀察豆豆是否願意靠近。",
+				result: "partial",
+				...partial,
+				explanation: "不強迫互動是合理方向，但人數與聲音仍可能讓剛到家的豆豆緊張。",
+				suggestion: "先減少在場人數，保留一位安靜陪伴者即可。"
+			},
+			{
+				id: "welcome-crowd",
+				text: "大家一起圍過來抱抱牠，讓牠快點熟悉所有家人。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "同時被多人靠近和抱起，可能讓已經緊張的豆豆失去退路，增加閃躲或防衛反應。",
+				suggestion: "先提供安靜安全的範圍，尊重牠主動探索和互動的速度。"
+			}
+		]
+	},
+	{
+		id: "behavior-guidance",
+		stage: "逐漸長大的時候",
+		timeLabel: "逐漸長大的時候",
+		title: "面對行為問題",
+		description: "你回家後發現拖鞋被咬壞，地上也有排泄痕跡。豆豆看到你時退到桌子下面。",
+		topic: "行為需求與正向引導",
+		artIndex: 4,
+		choices: [
+			{
+				id: "review-and-guide",
+				text: "清理現場、收好危險物，檢查活動與排泄安排，提供合適替代用品並正向引導。",
+				result: "correct",
+				...positive,
+				explanation: "先管理環境和需求來源，再鼓勵正確行為，能降低問題重複發生，也不會破壞信任。"
+			},
+			{
+				id: "short-timeout",
+				text: "先讓自己冷靜，再縮小活動範圍並重新安排散步和排泄時間。",
+				result: "partial",
+				...partial,
+				explanation: "冷靜處理與調整日常是好方向，但縮小空間不能變成長時間隔離。",
+				suggestion: "搭配安全替代用品，並在正確行為出現時立即鼓勵。"
+			},
+			{
+				id: "scold-and-crate",
+				text: "把豆豆帶到現場大聲責罵，再關進籠子讓牠反省。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "事後責罵很難讓豆豆理解原因，長時間把籠子當處罰也可能增加害怕與焦慮。",
+				suggestion: "清除氣味、管理物品與作息，使用一致且正向的引導。"
+			}
+		]
+	},
+	{
+		id: "busy-daily-care",
+		stage: "穩定生活的日常",
+		timeLabel: "穩定生活的日常",
+		title: "忙碌時的日常照顧",
+		description: "今天工作特別忙，你很疲累，但豆豆仍需要晚餐、乾淨飲水、排泄與適當活動。",
+		topic: "時間安排與照顧支援",
+		artIndex: 5,
+		supportChoice: true,
+		choices: [
+			{
+				id: "basic-care-first",
+				text: "稍作休息後完成今晚的基本餵食、飲水、排泄與適量活動。",
+				result: "correct",
+				...positive,
+				explanation: "先照顧自己的狀態，再維持豆豆不可中斷的基本需求，是可持續的安排。"
+			},
+			{
+				id: "assigned-helper",
+				text: "請事先安排並同意的備用照顧者，依分工協助今晚的餵食與活動。",
+				result: "correct",
+				...positive,
+				explanation: "事先建立的支援能避免忙碌時漏掉照顧，也讓交接更清楚。"
+			},
+			{
+				id: "indoor-only",
+				text: "只安排短時間嗅聞或益智活動，其他需求明天再補。",
+				result: "partial",
+				...partial,
+				explanation: "室內活動可以彈性調整，但不能取代當天必要的飲水、進食與排泄。",
+				suggestion: "先完成基本需求，再依體力調整活動形式與時間。"
+			},
+			{
+				id: "skip-today",
+				text: "今天實在太累，飼料和散步都等明天再處理。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "忽略基本需求可能造成飢餓、脫水、憋尿與焦躁，也會打亂穩定作息。",
+				suggestion: "完成最低限度照顧，或立即聯絡已安排好的支援者。"
+			}
+		]
+	},
+	{
+		id: "illness-vet",
+		stage: "健康出現變化",
+		timeLabel: "健康出現變化",
+		title: "生病與就醫",
+		description: "豆豆今天食慾下降、活動變少，還出現一次嘔吐，看起來和平常不太一樣。",
+		topic: "健康觀察與就醫判斷",
+		artIndex: 3,
+		choices: [
+			{
+				id: "record-and-vet",
+				text: "記錄飲食、飲水、排泄與精神狀態，聯絡獸醫院並依建議就醫。",
+				result: "correct",
+				...positive,
+				explanation: "具體紀錄能幫助獸醫判斷，異常合併嘔吐時及早諮詢也能降低延誤風險。",
+				suggestion: "攜帶紀錄與既有病史，依獸醫建議安排檢查。",
+				expenseIds: ["journey-medical-care"]
+			},
+			{
+				id: "observe-briefly",
+				text: "先短時間密切觀察並記錄，如果症狀持續或增加就立刻聯絡獸醫。",
+				result: "partial",
+				...partial,
+				explanation: "觀察與紀錄是合理起點，但豆豆已有多項異常，不宜只在家等待太久。",
+				suggestion: "現在就先電話詢問獸醫院，說明症狀與持續時間。"
+			},
+			{
+				id: "human-medicine",
+				text: "先給豆豆吃家裡的人用腸胃藥，看看睡一覺會不會好。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "人用藥物的成分和劑量可能對狗造成中毒或掩蓋病況，延誤正確診斷。",
+				suggestion: "不要自行給藥，整理觀察紀錄並聯絡獸醫。"
+			}
+		]
+	},
+	{
+		id: "owner-life-change",
+		stage: "飼主生活發生改變",
+		timeLabel: "飼主生活發生改變",
+		title: "原本的照顧方式無法維持",
+		description: "你換了工作，還需要離家幾天。原本的餵食、散步和陪伴時間必須重新安排。",
+		topic: "生活變化與長期責任",
+		artIndex: 7,
+		supportChoice: true,
+		reminder: "生活改變時，飼主仍需安排合法、安全且持續的照顧，不能任意棄置動物。",
+		choices: [
+			{
+				id: "replan-family",
+				text: "和照顧成員重新分工，請已同意的備用照顧者接手並完整交接。",
+				result: "correct",
+				...positive,
+				explanation: "重新分工並保留交接紀錄，能讓豆豆的作息和健康照顧持續不中斷。"
+			},
+			{
+				id: "paid-care",
+				text: "評估合適的到府或住宿服務，確認環境、紀錄和緊急聯絡方式。",
+				result: "correct",
+				...positive,
+				explanation: "經過評估的專業照顧是可行方案，清楚交接能降低陌生照顧的風險。",
+				expenseIds: ["journey-care-service"]
+			},
+			{
+				id: "food-alone",
+				text: "準備很多飼料和水，讓豆豆自己在家待幾天。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "長時間無人查看會有飲水、排泄、健康與意外風險，也無法處理突發狀況。",
+				suggestion: "安排可信任的照顧者或合適服務，並保留每日回報。"
+			}
+		]
+	},
+	{
+		id: "growing-old",
+		stage: "逐漸進入高齡",
+		timeLabel: "逐漸進入高齡",
+		title: "小狗逐漸老去",
+		description: "一起生活多年後，豆豆走得更慢、睡眠增加，上下樓梯也比以前吃力。",
+		topic: "高齡健康與日常調整",
+		artIndex: 1,
+		choices: [
+			{
+				id: "senior-check",
+				text: "安排健康檢查，記錄變化，調整活動強度並重新檢查家中環境。",
+				result: "correct",
+				...positive,
+				explanation: "高齡變化仍可能包含疼痛或疾病，醫療追蹤與環境調整能一起維持生活品質。",
+				expenseIds: ["senior-checkup"]
+			},
+			{
+				id: "gentle-routine",
+				text: "保留豆豆喜歡的日常，但縮短時間、放慢速度並觀察恢復狀況。",
+				result: "partial",
+				...partial,
+				explanation: "調整活動是好方向，但不能把所有變化都當成自然老化。",
+				suggestion: "同時安排健康檢查，和獸醫討論疼痛與活動能力。"
+			},
+			{
+				id: "just-aging",
+				text: "年紀大本來就會慢，不需要檢查，維持以前的活動量就好。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "忽略疼痛、關節或其他疾病可能讓不舒服持續，原有活動強度也可能造成受傷。",
+				suggestion: "安排檢查，再依豆豆當下能力調整環境和活動。"
+			}
+		]
+	},
+	{
+		id: "late-life-companionship",
+		stage: "生命後段的陪伴",
+		timeLabel: "生命後段的陪伴",
+		title: "一起討論豆豆現在需要什麼",
+		description: "豆豆的健康狀況起伏變多。你準備和獸醫討論疼痛、飲食、活動能力、舒適程度與後續照護。",
+		topic: "生活品質與生命後段照護",
+		artIndex: 1,
+		choices: [
+			{
+				id: "quality-dialogue",
+				text: "記錄豆豆每天的舒適與活動狀況，和獸醫共同討論生活品質與照護選項。",
+				result: "correct",
+				...positive,
+				explanation: "持續觀察並和專業人員討論，可以讓每次調整都更貼近豆豆當下的需要與舒適。"
+			},
+			{
+				id: "family-vet-plan",
+				text: "先和家人整理疑問，再請獸醫說明疼痛管理、飲食和後續照護方式。",
+				result: "correct",
+				...positive,
+				explanation: "把家人的觀察和專業評估放在一起，有助於形成溫和、可執行的照護計畫。"
+			},
+			{
+				id: "avoid-discussion",
+				text: "不去討論，因為談到生命後段只會讓大家更難過。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "避開討論可能讓疼痛或照護需求沒有被及時看見，也讓家人在變化發生時更慌張。",
+				suggestion: "可以從記錄舒適程度開始，請獸醫以能理解的方式逐步說明，不需要在遊戲中做出單一重大決定。"
+			}
+		]
+	}
+];
+var journeyItems = [
+	{
+		id: "arrival",
+		type: "scenario",
+		timeLabel: "一起生活的第一天",
+		title: "第一天適應新家",
+		scenarioId: "arrival-adjustment"
+	},
+	{
+		id: "body-language",
+		type: "body-language",
+		timeLabel: "適應新家的時候",
+		title: "看懂小狗的身體語言"
+	},
+	{
+		id: "feeding",
+		type: "feeding",
+		timeLabel: "一起生活三個月",
+		title: "準備豆豆的晚餐"
+	},
+	{
+		id: "behavior",
+		type: "scenario",
+		timeLabel: "逐漸長大的時候",
+		title: "面對行為問題",
+		scenarioId: "behavior-guidance"
+	},
+	{
+		id: "busy-care",
+		type: "scenario",
+		timeLabel: "穩定生活的日常",
+		title: "忙碌時的日常照顧",
+		scenarioId: "busy-daily-care"
+	},
+	{
+		id: "body-care",
+		type: "body-care",
+		timeLabel: "成年後的例行照顧",
+		title: "清潔與基礎身體觀察"
+	},
+	{
+		id: "health",
+		type: "scenario",
+		timeLabel: "健康出現變化",
+		title: "生病與就醫",
+		scenarioId: "illness-vet"
+	},
+	{
+		id: "life-change",
+		type: "scenario",
+		timeLabel: "飼主生活發生改變",
+		title: "飼主生活發生改變",
+		scenarioId: "owner-life-change"
+	},
+	{
+		id: "senior",
+		type: "scenario",
+		timeLabel: "逐漸進入高齡",
+		title: "小狗逐漸老去",
+		scenarioId: "growing-old"
+	},
+	{
+		id: "senior-room",
+		type: "senior-room",
+		timeLabel: "調整高齡生活空間",
+		title: "改造高齡犬的家"
+	},
+	{
+		id: "late-life",
+		type: "scenario",
+		timeLabel: "生命後段的陪伴",
+		title: "生命後段的陪伴",
+		scenarioId: "late-life-companionship"
+	}
+];
+var initialLifeActivityState = {
+	bodyLanguageSignals: [],
+	feedingFoodReady: false,
+	feedingWaterSteps: [],
+	feedingServed: false,
+	bodyCareParts: [],
+	seniorAdjustments: []
+};
 var import_jsx_runtime = require_jsx_runtime();
+function ArrivalIntro({ onStart }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "content-wrap arrival-intro",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "arrival-scene",
+			"aria-label": "豆豆從外出籠旁探頭，準備走進溫暖的新家",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+					src: "/illustrations/prep-room.png",
+					alt: "",
+					"aria-hidden": "true"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "arrival-door",
+					"aria-hidden": "true",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "arrival-carrier",
+					"aria-hidden": "true",
+					children: "▱"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "arrival-dog",
+					"aria-hidden": "true",
+					children: "🐕"
+				})
+			]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "arrival-copy",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "eyebrow",
+					children: "小狗剛到家 · 不列入旅程進度"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "歡迎來到新家" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "經過領養前的準備，你終於把豆豆接回家了。今天是你們一起生活的第一天，也是這段長久陪伴的開始。" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "soft-note",
+					children: "接下來，你會陪牠從適應新家、建立日常，一路走過健康、生活變化與逐漸老去。你所做的每一個決定，都會成為牠生命中的一部分。"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary large",
+					onClick: onStart,
+					children: ["開始你們的生活旅程 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})
+			]
+		})]
+	});
+}
+function stageForIndex(index) {
+	if (index <= 2) return 3;
+	if (index <= 5) return 4;
+	if (index === 6) return 5;
+	return 6;
+}
+function LifeTimeline({ index, completedIds, onSelect }) {
+	const completed = journeyItems.map((item) => completedIds.includes(item.id));
+	const firstIncomplete = completed.findIndex((value) => !value);
+	const maxUnlocked = firstIncomplete === -1 ? journeyItems.length - 1 : firstIncomplete;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "life-timeline",
+		"aria-label": "豆豆的一生，共 11 個生活內容",
+		children: journeyItems.map((item, itemIndex) => {
+			const done = completed[itemIndex];
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+				className: `${itemIndex === index ? "active" : ""} ${done ? "done" : ""}`,
+				disabled: !(itemIndex <= maxUnlocked),
+				onClick: () => onSelect(itemIndex),
+				"aria-label": `${done ? "已完成" : "前往"}${item.timeLabel}，${item.type === "scenario" ? "情境判斷" : "生活練習"}：${item.title}`,
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: done ? "✓" : itemIndex + 1 }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.timeLabel }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: item.type === "scenario" ? "情境判斷" : "生活練習" })
+				]
+			}, item.id);
+		})
+	});
+}
+function ScenarioFeedback({ scenario, choice, onRetry, onContinue }) {
+	const labels = {
+		correct: {
+			icon: "✓",
+			button: "繼續生活旅程"
+		},
+		partial: {
+			icon: "△",
+			button: "記住建議，繼續"
+		},
+		incorrect: {
+			icon: "!",
+			button: "看完建議，繼續"
+		}
+	};
+	const expenseChanges = (choice.expenseIds ?? []).map((id) => expenseCatalog[id]).filter(Boolean);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: `scenario-feedback ${choice.result}`,
+		"aria-live": "polite",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "feedback-title",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: labels[choice.result].icon }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: scenario.timeLabel }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: choice.feedbackTitle })] })]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: choice.explanation }),
+			choice.suggestion && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "feedback-suggestion",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "可以這樣調整" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: choice.suggestion })]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "feedback-expense",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "本次費用變化" }), expenseChanges.length ? expenseChanges.map((expense) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+					expense.name,
+					" ＋NT$ ",
+					money.format(expense.amount),
+					expense.recurring ? "／月" : "",
+					"（同一事件只登記一次）"
+				] }, expense.id)) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "本次選擇沒有新增費用。" })]
+			}),
+			scenario.reminder && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "law-reminder",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "i" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "生活裡的責任提醒" }), scenario.reminder] })]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "feedback-actions",
+				children: [choice.result === "incorrect" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					className: "secondary",
+					onClick: onRetry,
+					children: "重新選一次"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary",
+					onClick: onContinue,
+					children: [
+						labels[choice.result].button,
+						" ",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })
+					]
+				})]
+			})
+		]
+	});
+}
+function ScenarioCard({ scenario, answer, backupNames, feedbackOpen, onChoose, onRetry, onContinue }) {
+	const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
+	if (feedbackOpen && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioFeedback, {
+		scenario,
+		choice: selectedChoice,
+		onRetry,
+		onContinue
+	});
+	const hasBackup = backupNames.length > 0;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+		className: "scene-card",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "scene-copy",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "eyebrow",
+					children: scenario.topic
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: scenario.title }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: scenario.description }),
+				scenario.supportChoice && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: `support-link ${hasBackup ? "ready" : "missing"}`,
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: hasBackup ? "✓" : "!" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: hasBackup ? `可聯絡：${backupNames.join("、")}` : "目前缺少可用的備用照顧支援" }), hasBackup ? "選項會直接使用前面建立的成員與分工。" : "請先以自己完成基本照顧或評估專業服務，不會顯示不存在的成員。"] })]
+				})
+			]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: `scene-art scene-${scenario.artIndex}`,
+			"aria-hidden": "true",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "scene-sprite" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: scenario.timeLabel })]
+		})]
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: "reflection",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "如果是你，會怎麼做？" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "choice-grid",
+			children: scenario.choices.filter((choice) => choice.id !== "assigned-helper" || hasBackup).map((choice) => {
+				const text = choice.id === "assigned-helper" ? `請${backupNames.join("或")}依照事先安排的分工，協助今晚的餵食與活動。` : choice.text;
+				return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					onClick: () => onChoose(choice),
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: choice.result === "correct" ? "可行做法" : choice.result === "partial" ? "需要調整" : "先想一想" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: text })]
+				}, choice.id);
+			})
+		})]
+	})] });
+}
+var bodySignals = [
+	{
+		id: "relaxed",
+		area: "身體姿勢",
+		label: "放鬆",
+		icon: "🐕",
+		text: "身體線條柔軟、動作自然，通常代表豆豆在當下環境較有安全感。"
+	},
+	{
+		id: "tense",
+		area: "身體姿勢",
+		label: "緊張",
+		icon: "⚡",
+		text: "喘氣、來回走動或身體緊繃可能表示壓力，需要降低刺激並保留距離。"
+	},
+	{
+		id: "avoid",
+		area: "身體姿勢",
+		label: "閃躲",
+		icon: "↩",
+		text: "轉頭、後退或躲開是豆豆在說自己暫時不想靠近，應尊重牠的選擇。"
+	},
+	{
+		id: "lip-lick",
+		area: "嘴巴",
+		label: "舔鼻子",
+		icon: "👅",
+		text: "在沒有食物時頻繁舔鼻子可能是壓力訊號，要一起觀察環境與其他姿勢。"
+	},
+	{
+		id: "lowered",
+		area: "身體姿勢",
+		label: "身體壓低",
+		icon: "▾",
+		text: "身體壓低可能表示害怕或想避免衝突，這時不要從上方強迫抱起。"
+	},
+	{
+		id: "tucked-tail",
+		area: "尾巴",
+		label: "尾巴夾起",
+		icon: "〰",
+		text: "尾巴夾在腿間常和害怕、不安有關，應減少刺激並提供退路。"
+	},
+	{
+		id: "stiff",
+		area: "耳朵與全身",
+		label: "身體僵硬",
+		icon: "!",
+		text: "突然僵住是需要留意的重要訊號，應停止靠近並觀察豆豆需要多少距離。"
+	},
+	{
+		id: "growl",
+		area: "嘴巴",
+		label: "低吼",
+		icon: "◖",
+		text: "低吼是小狗表達不舒服或需要距離的方式，不應立刻以責罵回應。"
+	}
+];
+function BodyLanguageActivity({ viewed, onView, onContinue }) {
+	const [active, setActive] = (0, import_react.useState)(viewed.at(-1) ?? "");
+	const signal = bodySignals.find((item) => item.id === active);
+	const complete = viewed.length === bodySignals.length;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: "life-activity",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-heading",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "eyebrow",
+						children: "生活練習 · 不計分"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "看懂小狗的身體語言" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "點擊耳朵、尾巴、嘴巴與身體姿勢的訊號。沒有答對或答錯，重點是學會看見豆豆正在表達什麼。" })
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "signal-layout",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "signal-dog",
+					"aria-hidden": "true",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "🐕" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "耳朵" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "嘴巴" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "尾巴" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "身體姿勢" })
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "signal-grid",
+					children: bodySignals.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						className: viewed.includes(item.id) ? "viewed" : "",
+						onClick: () => {
+							setActive(item.id);
+							onView(item.id);
+						},
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.icon }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [item.area, viewed.includes(item.id) ? " · 已閱讀" : ""] })
+						]
+					}, item.id))
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "activity-message",
+				role: "status",
+				children: signal ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: signal.label }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: signal.text })] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "從任一訊號開始觀察。" })
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-actions",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+					viewed.length,
+					" / ",
+					bodySignals.length,
+					" 個訊號已閱讀"
+				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary",
+					disabled: !complete,
+					onClick: onContinue,
+					children: ["完成身體語言練習 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})]
+			})
+		]
+	});
+}
+var feedingFoods = [
+	{
+		id: "main",
+		label: "適合豆豆的完整主食",
+		icon: "🥣",
+		kind: "main"
+	},
+	{
+		id: "treat",
+		label: "寵物零食",
+		icon: "🦴",
+		kind: "treat"
+	},
+	{
+		id: "leftovers",
+		label: "人類剩菜",
+		icon: "🍱",
+		kind: "risk"
+	},
+	{
+		id: "chocolate",
+		label: "巧克力",
+		icon: "🍫",
+		kind: "risk"
+	},
+	{
+		id: "seasoned-meat",
+		label: "調味肉類",
+		icon: "🍖",
+		kind: "risk"
+	},
+	{
+		id: "bone",
+		label: "不適合的骨頭",
+		icon: "🦴",
+		kind: "risk"
+	}
+];
+var waterSteps = [
+	"倒掉原本不乾淨的水",
+	"清潔水碗",
+	"加入乾淨飲水",
+	"將水碗放回固定位置"
+];
+function FeedingActivity({ activity, onChange, onAddExpense, onContinue }) {
+	const [message, setMessage] = (0, import_react.useState)(activity.feedingServed ? "晚餐與飲水都已準備完成。" : "先選擇適合豆豆的晚餐。");
+	const waterComplete = activity.feedingWaterSteps.length === waterSteps.length;
+	function chooseFood(kind) {
+		if (kind === "main") {
+			onChange({ feedingFoodReady: true });
+			setMessage("選得很好！主食應符合豆豆的年齡、體型及健康需求。");
+		} else if (kind === "treat") setMessage("零食可以作為少量獎勵，但不能代替營養完整的正餐。");
+		else setMessage("這項食物不適合放進豆豆的餐碗。部分人類食物可能油、鹽或調味過多，也可能含有危險成分，請換一個選擇。");
+	}
+	function doWaterStep(step, index) {
+		if (index !== activity.feedingWaterSteps.length) {
+			setMessage("請依序完成飲水準備，先處理前一個步驟。");
+			return;
+		}
+		onChange({ feedingWaterSteps: [...activity.feedingWaterSteps, step] });
+		setMessage(index === waterSteps.length - 1 ? "乾淨飲水已放回固定位置。" : `${step}完成，繼續下一步。`);
+	}
+	function serve() {
+		if (!activity.feedingFoodReady || !waterComplete) {
+			setMessage("還有一件每天都很重要的事：請確認豆豆有合適主食，以及隨時有乾淨、足量的飲水。");
+			return;
+		}
+		onChange({ feedingServed: true });
+		onAddExpense("monthly-main-food");
+		setMessage("晚餐準備完成！規律的餵食、合適的食物及乾淨飲水，都是每天照顧的重要部分。");
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: `life-activity feeding-activity ${activity.feedingServed ? "served" : ""}`,
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-heading",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "eyebrow",
+						children: "一起生活三個月 · 生活練習"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "準備豆豆的晚餐" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "三個月後，豆豆已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。" })
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "feeding-steps",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "1" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "選擇食物" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "food-options",
+							children: feedingFoods.map((food) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								className: activity.feedingFoodReady && food.kind === "main" ? "selected" : "",
+								onClick: () => chooseFood(food.kind),
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: food.icon }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: food.label })]
+							}, food.id))
+						})
+					] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "2" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "準備乾淨飲水" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "water-sequence",
+							children: waterSteps.map((step, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								className: activity.feedingWaterSteps.includes(step) ? "done" : "",
+								disabled: index > activity.feedingWaterSteps.length,
+								onClick: () => doWaterStep(step, index),
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: activity.feedingWaterSteps.includes(step) ? "✓" : index + 1 }), step]
+							}, step))
+						})
+					] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+						className: "serve-dinner",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "3" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "把晚餐交給豆豆" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "dinner-scene",
+								"aria-hidden": "true",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "🐕" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: activity.feedingFoodReady ? "🥣" : "○" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: waterComplete ? "💧" : "○" })
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								className: "secondary",
+								onClick: serve,
+								children: activity.feedingServed ? "再看看豆豆吃晚餐" : "請豆豆吃晚餐"
+							})
+						]
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-message",
+				role: "status",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: message }), activity.feedingServed && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "每月主食費＋NT$1,500（只登記一次）" })]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-actions",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: activity.feedingServed ? "晚餐與飲水已完成" : "完成三個步驟後繼續" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary",
+					disabled: !activity.feedingServed,
+					onClick: onContinue,
+					children: ["完成晚餐練習 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})]
+			})
+		]
+	});
+}
+var careParts = [
+	{
+		id: "eyes",
+		label: "眼睛",
+		icon: "◉",
+		text: "留意分泌物、紅腫或畏光，異常持續時應尋求專業協助。"
+	},
+	{
+		id: "ears",
+		label: "耳朵",
+		icon: "◖",
+		text: "觀察異味、紅腫與疼痛，不要把棉花棒深入耳道。"
+	},
+	{
+		id: "teeth",
+		label: "牙齒",
+		icon: "▤",
+		text: "使用寵物適用工具規律清潔牙齒，發現口臭或疼痛時諮詢獸醫。"
+	},
+	{
+		id: "coat",
+		label: "皮膚和毛髮",
+		icon: "✦",
+		text: "梳毛時一起觀察皮膚、腫塊、寄生蟲或持續搔癢。"
+	},
+	{
+		id: "paws",
+		label: "腳掌",
+		icon: "🐾",
+		text: "檢查腳墊、趾縫和異物，不隨意使用刺激性人用清潔用品。"
+	},
+	{
+		id: "nails",
+		label: "指甲",
+		icon: "⌁",
+		text: "留意長度與行走聲，沒有把握時請專業人員示範安全修剪。"
+	}
+];
+function BodyCareActivity({ viewed, onView, onContinue }) {
+	const [active, setActive] = (0, import_react.useState)(viewed.at(-1) ?? "");
+	const part = careParts.find((item) => item.id === active);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: "life-activity body-care-activity",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-heading",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "eyebrow",
+						children: "成年後的例行照顧 · 不計分"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "清潔與基礎身體觀察" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "依序查看豆豆的眼睛、耳朵、牙齒、皮膚毛髮、腳掌與指甲，將清潔變成每天都能做的健康觀察。" })
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "body-care-board",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "care-dog",
+					"aria-hidden": "true",
+					children: "🐕"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "care-parts",
+					children: careParts.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						className: viewed.includes(item.id) ? "viewed" : "",
+						onClick: () => {
+							setActive(item.id);
+							onView(item.id);
+						},
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.icon }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: viewed.includes(item.id) ? "✓ 已查看" : "點擊查看" })
+						]
+					}, item.id))
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "activity-message",
+				role: "status",
+				children: part ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: part.label }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: part.text })] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "從任一部位開始查看。" })
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-actions",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+					viewed.length,
+					" / ",
+					careParts.length,
+					" 個部位已查看"
+				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary",
+					disabled: viewed.length !== careParts.length,
+					onClick: onContinue,
+					children: ["完成身體觀察 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})]
+			})
+		]
+	});
+}
+var seniorAdjustments = [
+	{
+		id: "slipmat",
+		label: "鋪設防滑墊",
+		icon: "▦",
+		expenseId: "senior-slipmat"
+	},
+	{
+		id: "easy-bed",
+		label: "容易進出的睡墊",
+		icon: "🛏️",
+		expenseId: "senior-access-bed"
+	},
+	{
+		id: "stairs",
+		label: "減少上下樓梯",
+		icon: "▥"
+	},
+	{
+		id: "bowls",
+		label: "調整食碗及水碗位置",
+		icon: "🥣"
+	},
+	{
+		id: "warm-rest",
+		label: "安靜溫暖的休息空間",
+		icon: "☀"
+	},
+	{
+		id: "gentle-activity",
+		label: "依身體狀況調整活動",
+		icon: "🐾"
+	}
+];
+function SeniorRoomActivity({ roomReady, selected, onSelect, onAddExpense, onContinue }) {
+	const complete = selected.length === seniorAdjustments.length;
+	function choose(id, expenseId) {
+		onSelect(id);
+		if (!selected.includes(id) && expenseId) onAddExpense(expenseId);
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: "life-activity senior-room-activity",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-heading",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "eyebrow",
+						children: "調整高齡生活空間 · 不計分"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "改造高齡犬的家" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "豆豆已經走得比較慢。保留領養前準備好的房間，再加入讓高齡生活更安全、舒服的調整。" })
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "senior-room-layout",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "room senior-room-preview",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "原本已放置的物品" }),
+						roomReady.map((id, index) => {
+							const item = roomItems.find((entry) => entry.id === id);
+							return item ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+								className: `senior-original item-${index % 6}`,
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: item.icon }), item.label]
+							}, id) : null;
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", {
+							"aria-hidden": "true",
+							children: "🐕"
+						})
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "senior-adjustments",
+					children: seniorAdjustments.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						className: selected.includes(item.id) ? "selected" : "",
+						"aria-pressed": selected.includes(item.id),
+						onClick: () => choose(item.id, item.expenseId),
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.icon }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: selected.includes(item.id) ? "✓ 已完成" : item.expenseId ? `加入用品 · NT$ ${money.format(expenseCatalog[item.expenseId].amount)}` : "點擊完成調整" })
+						]
+					}, item.id))
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "activity-message",
+				role: "status",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: complete ? "高齡生活空間調整完成。安全與舒適會隨豆豆的身體狀況持續變化。" : `已完成 ${selected.length} / ${seniorAdjustments.length} 項調整。` })
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-actions",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+					selected.length,
+					" / ",
+					seniorAdjustments.length,
+					" 項已完成"
+				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary",
+					disabled: !complete,
+					onClick: onContinue,
+					children: ["完成高齡空間調整 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})]
+			})
+		]
+	});
+}
+function LifeJourney({ index, answers, activity, completedIds, expenses, backupNames, roomReady, onIndex, onChoose, onActivityChange, onCompleteItem, onAddExpense, onStageChange, onBack, onComplete }) {
+	const item = journeyItems[index];
+	const scenario = item.scenarioId ? lifeScenarios.find((entry) => entry.id === item.scenarioId) : void 0;
+	const answer = scenario ? answers[scenario.id] : void 0;
+	const [feedbackOpen, setFeedbackOpen] = (0, import_react.useState)(Boolean(answer));
+	(0, import_react.useEffect)(() => {
+		setFeedbackOpen(Boolean(item.scenarioId && answers[item.scenarioId]));
+	}, [answers, item.scenarioId]);
+	const completedCount = completedIds.length;
+	function selectItem(next) {
+		onIndex(next);
+		onStageChange(stageForIndex(next));
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth"
+		});
+	}
+	function continueJourney() {
+		onCompleteItem(item.id);
+		if (index === journeyItems.length - 1) {
+			onComplete();
+			return;
+		}
+		selectItem(index + 1);
+	}
+	function choose(choice) {
+		if (!scenario) return;
+		onChoose(scenario, choice);
+		setFeedbackOpen(true);
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "content-wrap life-journey-page",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "life-journey-head",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "eyebrow",
+					children: "飼養生活 · 豆豆的一生"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
+					"你們一起走到了「",
+					item.timeLabel,
+					"」"
+				] })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
+					index + 1,
+					" / ",
+					journeyItems.length
+				] })]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LifeTimeline, {
+				index,
+				completedIds,
+				onSelect: selectItem
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "journey-type-label",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.type === "scenario" ? "情境判斷" : "生活練習" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.title })]
+			}),
+			scenario && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioCard, {
+				scenario,
+				answer,
+				backupNames,
+				feedbackOpen,
+				onChoose: choose,
+				onRetry: () => setFeedbackOpen(false),
+				onContinue: continueJourney
+			}),
+			item.type === "body-language" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BodyLanguageActivity, {
+				viewed: activity.bodyLanguageSignals,
+				onView: (id) => onActivityChange({ bodyLanguageSignals: activity.bodyLanguageSignals.includes(id) ? activity.bodyLanguageSignals : [...activity.bodyLanguageSignals, id] }),
+				onContinue: continueJourney
+			}),
+			item.type === "feeding" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FeedingActivity, {
+				activity,
+				onChange: onActivityChange,
+				onAddExpense,
+				onContinue: continueJourney
+			}),
+			item.type === "body-care" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BodyCareActivity, {
+				viewed: activity.bodyCareParts,
+				onView: (id) => onActivityChange({ bodyCareParts: activity.bodyCareParts.includes(id) ? activity.bodyCareParts : [...activity.bodyCareParts, id] }),
+				onContinue: continueJourney
+			}),
+			item.type === "senior-room" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SeniorRoomActivity, {
+				roomReady,
+				selected: activity.seniorAdjustments,
+				onSelect: (id) => onActivityChange({ seniorAdjustments: activity.seniorAdjustments.includes(id) ? activity.seniorAdjustments : [...activity.seniorAdjustments, id] }),
+				onAddExpense,
+				onContinue: continueJourney
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "scenario-bottom-nav life-bottom-nav",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "secondary",
+					onClick: () => index > 0 ? selectItem(index - 1) : onBack(),
+					children: ["← ", index > 0 ? "上一個生活內容" : "返回領養前準備"]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+					completedCount,
+					" / ",
+					journeyItems.length,
+					" 個生活內容已完成"
+				] })]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+				className: "visually-hidden",
+				children: [
+					"目前共登記 ",
+					expenses.length,
+					" 筆費用，所有費用以唯一識別碼避免重複。"
+				]
+			})
+		]
+	});
+}
 function StepHeading({ eyebrow, title, body }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "step-heading",
@@ -2369,15 +2942,42 @@ function ProfileForm({ profile, onChange, onBack, onNext }) {
 		]
 	});
 }
-function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomReady, hazardsReady, members, assignments, trunkSelected, trunkPassed, answers, onBack, onReset }) {
+function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomReady, hazardsReady, members, assignments, trunkSelected, trunkPassed, answers, lifeActivity, onBack, onReset }) {
 	const recurring = expenses.filter((item) => item.recurring).reduce((sum, item) => sum + item.amount, 0);
 	const oneTime = expenses.filter((item) => !item.recurring && item.category === "用品").reduce((sum, item) => sum + item.amount, 0);
-	const medical = expenses.filter((item) => item.category === "醫療").reduce((sum, item) => sum + item.amount, 0);
+	const medical = expenses.filter((item) => item.category === "醫療" && !item.recurring).reduce((sum, item) => sum + item.amount, 0);
+	const careService = expenses.filter((item) => item.category === "照顧服務").reduce((sum, item) => sum + item.amount, 0);
+	const seniorSupplies = expenses.filter((item) => item.category === "高齡用品").reduce((sum, item) => sum + item.amount, 0);
 	const total = expenses.reduce((sum, item) => sum + item.amount, 0);
 	const emergencyUsed = expenses.filter((item) => item.fromEmergency).reduce((sum, item) => sum + item.amount, 0);
 	const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
-	const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && scenarios.find((scenario) => scenario.id === item.scenarioId)?.choices.find((choice) => choice.id === item.finalChoiceId)?.result === "correct").length;
-	const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect").map((item) => scenarios.find((scenario) => scenario.id === item.scenarioId)?.title).filter(Boolean);
+	const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
+	const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
+	const correctedTopics = corrected.map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
+	const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
+	const practiceItems = [
+		{
+			label: "已認識小狗的身體語言",
+			complete: lifeActivity.bodyLanguageSignals.length === 8
+		},
+		{
+			label: "已完成準備晚餐",
+			complete: lifeActivity.feedingServed
+		},
+		{
+			label: "已完成乾淨飲水準備",
+			complete: lifeActivity.feedingWaterSteps.length === 4
+		},
+		{
+			label: "已完成基本清潔及身體觀察",
+			complete: lifeActivity.bodyCareParts.length === 6
+		},
+		{
+			label: "已完成高齡生活空間調整",
+			complete: lifeActivity.seniorAdjustments.length === 6
+		}
+	];
+	const practiceComplete = practiceItems.filter((item) => item.complete).length;
 	const backupIds = new Set([...Object.values(assignments).map((item) => item.backup), assignments.emergency?.primary].filter((id) => Boolean(id) && id !== "player"));
 	const backupNames = members.filter((member) => backupIds.has(member.id)).map((member) => member.name);
 	const requiredRoom = roomItems.filter((item) => item.required);
@@ -2386,21 +2986,23 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 	const budgetEnough = Number(profile.monthlyBudget) >= recurring;
 	const strongSignals = [
 		roomCompletion === 100 && hazardsReady.length === 5 && assignmentCompletion === 100 && trunkPassed,
-		correctFirst >= 11,
+		correctFirst >= 5,
+		practiceComplete === 5,
 		budgetEnough,
 		profile.emergencyFund === true,
 		profile.backupSupport === true,
 		profile.housing !== "租屋" || profile.landlordConsent === "房東已同意",
 		profile.hasHousemates !== true || profile.housematesConsent === true
 	].filter(Boolean).length;
-	const level = strongSignals >= 6 ? "已具備多項準備" : strongSignals >= 4 ? "有部分條件需要先確認" : "建議暫緩並完成準備事項";
+	const level = strongSignals >= 7 ? "已具備多項準備" : strongSignals >= 4 ? "有部分條件需要先確認" : "建議先完成準備事項";
 	const prepared = [
 		roomCompletion === 100 && "必要用品與生活空間已完成",
 		hazardsReady.length === 5 && "居家危險物已完成收納與防護",
 		assignmentCompletion === 100 && "日常照顧工作已有主要負責人",
 		backupNames.length > 0 && `已有備用照顧者：${backupNames.join("、")}`,
 		trunkPassed && "接送行李、文件與安全運輸已通過檢查",
-		correctFirst >= 11 && `${correctFirst} 個情境第一次就選擇適當做法`,
+		correctFirst >= 5 && `${correctFirst} 個情境第一次就掌握照顧方向`,
+		practiceComplete === 5 && "四個生活練習與飲水步驟皆已完成",
 		budgetEnough && "每月預算可涵蓋目前固定支出"
 	].filter(Boolean);
 	const confirm = [
@@ -2435,7 +3037,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						children: "08 · 我的飼養準備報告"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: level }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "這不是合格或不合格，而是把模擬生活轉成下一步可執行的準備。" })
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "這份報告不貼標籤，而是把模擬生活轉成下一步可執行的準備。" })
 				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "summary-pet",
 					children: [
@@ -2444,8 +3046,8 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
 							correctFirst,
 							" / ",
-							scenarios.length,
-							" 題第一次適當"
+							lifeScenarios.length,
+							" 題第一次掌握方向"
 						] })
 					]
 				})]
@@ -2482,19 +3084,23 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								className: "card-head",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "02" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "情境學習" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "第一次選擇與修正" })] })]
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "02" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "情境判斷" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "第一次選擇與修正" })] })]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								className: "learning-counts",
 								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: correctFirst }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "第一次適當" })] }),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: corrected }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "提醒後修正" })] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: correctFirst }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "第一次掌握方向" })] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: corrected.length }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "提醒後修正" })] }),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: needsLearning.length }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "需要再了解" })] })
 								]
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								className: "all-clear",
-								children: needsLearning.length ? `優先主題：${needsLearning.slice(0, 3).join("、")}` : "所有情境都已留下可行方向，仍可持續向專業人員學習。"
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", {
+								className: "report-topic-list",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "第一次就掌握" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: correctTopics.join("、") || "尚無" })] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "經過提醒後修正" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: correctedTopics.join("、") || "尚無" })] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "還需要了解" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: needsLearning.join("、") || "目前沒有未修正主題" })] })
+								]
 							})
 						]
 					}),
@@ -2502,14 +3108,26 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						className: "summary-card",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "card-head",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "03" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "費用狀況" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "實際事件累積" })] })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "03" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "照顧實作" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "生活練習完成狀態" })] })]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: practiceItems.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
+							className: item.complete ? "green" : "yellow",
+							children: item.complete ? "✓" : "!"
+						}), item.label] }, item.label)) })]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+						className: "summary-card",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "card-head",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "04" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "費用狀況" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "實際事件累積" })] })]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", {
 							className: "report-metrics",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "一次性用品費" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(oneTime)] })] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "本月／累積支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(total)] })] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "每月固定支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(recurring)] })] }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "醫療與突發" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(medical)] })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "醫療支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(medical)] })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "照顧服務費" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(careService)] })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "高齡用品費" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(seniorSupplies)] })] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "剩餘緊急預備金" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(Math.max(0, emergencyReserve - emergencyUsed))] })] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "推估一年基本支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(recurring * 12)] })] })
 							]
@@ -2519,27 +3137,25 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						className: "summary-card profile-summary",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "card-head",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "04" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "真實生活條件" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "時間、住居與支援" })] })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "05" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "真實生活條件" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "時間、住居與支援" })] })]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "每日時間" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [
-								"離家 ",
-								profile.hoursAway,
-								" 小時／照顧 ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "可投入時間" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [
+								"每日 ",
 								profile.careHours,
 								" 小時"
 							] })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "居住條件" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [profile.housing, profile.housing === "租屋" ? ` · ${profile.landlordConsent}` : ""] })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "同住者支持" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.hasHousemates ? profile.housematesConsent ? "已同意" : "尚待確認" : "無同住者" })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "飼養經驗" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.experience })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "居住空間" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [profile.housing, profile.housing === "租屋" ? ` · ${profile.landlordConsent}` : ""] })] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "每月預算" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(Number(profile.monthlyBudget))] })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "外部支援" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.backupSupport ? "有可靠支援" : "目前沒有" })] })
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "同住者支持" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.hasHousemates ? profile.housematesConsent ? "已同意" : "尚待確認" : "無同住者" })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "備用照顧者" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: backupNames.join("、") || "尚未安排" })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "緊急預備金" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.emergencyFund ? "已有準備" : "目前沒有" })] })
 						] })]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
 						className: "summary-card readiness",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "card-head",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "05" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "已經準備好" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "可以延續的部分" })] })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "06" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "已經準備好" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "可以延續的部分" })] })]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: prepared.length ? prepared.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
 							className: "green",
 							children: "✓"
@@ -2552,7 +3168,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						className: "summary-card todo",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "card-head",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "06" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "建議再確認" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "需要補上的條件" })] })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "07" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "建議再確認" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "需要補上的條件" })] })]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: confirm.length ? confirm.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
 							className: "yellow",
 							children: "!"
@@ -2565,7 +3181,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						className: "summary-card discuss",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "card-head",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "07" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "和家人討論" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "需要共同決定" })] })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "08" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "和家人討論" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "需要共同決定" })] })]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: familyTopics.length ? familyTopics.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
 							className: "orange",
 							children: "●"
@@ -2578,7 +3194,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						className: "summary-card action-list",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "card-head",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "08" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "領養前行動清單" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "下一步可以這樣做" })] })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "09" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "領養前行動清單" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "下一步可以這樣做" })] })]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ol", { children: actions.slice(0, 7).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: item }, item)) })]
 					})
 				]
@@ -2586,7 +3202,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "summary-footer",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "這份報告不判斷你是否適合飼養。" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "這份報告不替你貼上單一結論。" }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
 					"它整理的是現在已具備的條件，以及真正領養前值得再確認的部分。"
 				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
@@ -2607,185 +3223,6 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 		]
 	});
 }
-function ScenarioFeedback({ scenario, choice, onRetry, onContinue }) {
-	const label = {
-		correct: {
-			icon: "✓",
-			button: "繼續下一個情境"
-		},
-		partial: {
-			icon: "△",
-			button: "記住建議，繼續"
-		},
-		incorrect: {
-			icon: "!",
-			button: "看完建議，繼續"
-		}
-	}[choice.result];
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		className: `scenario-feedback ${choice.result}`,
-		"aria-live": "polite",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "feedback-title",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: label.icon }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: scenario.timeLabel }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: choice.feedbackTitle })] })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: choice.explanation }),
-			choice.suggestion && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "feedback-suggestion",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "可以這樣調整" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: choice.suggestion })]
-			}),
-			scenario.reminder && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "law-reminder",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "i" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "生活裡的法規提醒" }), scenario.reminder] })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "feedback-actions",
-				children: [choice.result === "incorrect" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-					className: "secondary",
-					onClick: onRetry,
-					children: "重新選一次"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					className: "primary",
-					onClick: onContinue,
-					children: [
-						label.button,
-						" ",
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })
-					]
-				})]
-			})
-		]
-	});
-}
-function ScenarioGame({ start, end, index, answers, backupNames, onIndex, onChoose, onBackStage, onCompleteStage }) {
-	const scenario = scenarios[index];
-	const answer = answers[scenario.id];
-	const [feedbackOpen, setFeedbackOpen] = (0, import_react.useState)(Boolean(answer));
-	(0, import_react.useEffect)(() => {
-		setFeedbackOpen(Boolean(answers[scenarios[index].id]));
-	}, [index, answers]);
-	const selectedChoice = (0, import_react.useMemo)(() => scenario.choices.find((choice) => choice.id === answer?.finalChoiceId) ?? null, [answer, scenario.choices]);
-	const stageScenarios = scenarios.slice(start, end + 1);
-	const stageComplete = stageScenarios.every((item) => Boolean(answers[item.id]));
-	const position = index - start;
-	const hasBackup = backupNames.length > 0;
-	function choose(choice) {
-		onChoose(scenario, choice);
-		setFeedbackOpen(true);
-	}
-	function continueJourney() {
-		if (index < end) {
-			onIndex(index + 1);
-			window.scrollTo({
-				top: 0,
-				behavior: "smooth"
-			});
-		} else if (stageComplete) onCompleteStage();
-	}
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		className: "content-wrap scenario-page timeline-scenario",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "scene-progress",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { width: `${(position + 1) / stageScenarios.length * 100}%` } }) }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
-						scenario.stage,
-						" · ",
-						scenario.timeLabel
-					] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
-						position + 1,
-						" / ",
-						stageScenarios.length
-					] })
-				]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "timeline-strip",
-				"aria-label": "生活時間軸",
-				children: stageScenarios.map((item, itemIndex) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					className: `${start + itemIndex === index ? "active" : ""} ${answers[item.id] ? answers[item.id].firstResult : ""}`,
-					onClick: () => onIndex(start + itemIndex),
-					"aria-label": `前往${item.timeLabel}`,
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: answers[item.id] ? "✓" : itemIndex + 1 }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.timeLabel })]
-				}, item.id))
-			}),
-			!feedbackOpen ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-				className: "scene-card",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "scene-copy",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "eyebrow",
-							children: scenario.stage
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: scenario.title }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: scenario.description }),
-						scenario.supportChoice && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: `support-link ${hasBackup ? "ready" : "missing"}`,
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: hasBackup ? "✓" : "!" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: hasBackup ? `可聯絡：${backupNames.join("、")}` : "目前沒有可用的備用照顧者" }), hasBackup ? "前面建立的分工可以在這裡使用。" : "你仍可選其他方案，但報告會提醒支援不足。"] })]
-						})
-					]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: `scene-art scene-${scenario.artIndex}`,
-					"aria-hidden": "true",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "scene-sprite" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: scenario.timeLabel })]
-				})]
-			}, scenario.id), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				className: "reflection",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "如果是你，會怎麼做？" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "choice-grid",
-					children: scenario.choices.map((choice) => {
-						const unavailableBackup = (choice.id === "backup-help" || choice.id === "assigned-backup") && !hasBackup;
-						return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-							disabled: unavailableBackup,
-							onClick: () => choose(choice),
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: choice.result === "correct" ? "可行做法" : choice.result === "partial" ? "需要調整" : "先想一想" }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: choice.text }),
-								unavailableBackup && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "前面尚未安排備用照顧者" })
-							]
-						}, choice.id);
-					})
-				})]
-			})] }) : selectedChoice ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioFeedback, {
-				scenario,
-				choice: selectedChoice,
-				onRetry: () => setFeedbackOpen(false),
-				onContinue: continueJourney
-			}) : null,
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "scenario-bottom-nav",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						className: "secondary",
-						onClick: () => index > start ? onIndex(index - 1) : onBackStage(),
-						children: ["← ", index > start ? "上一個情境" : "返回上一階段"]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
-						Object.values(answers).filter((item) => stageScenarios.some((scenarioItem) => scenarioItem.id === item.scenarioId)).length,
-						" / ",
-						stageScenarios.length,
-						" 已完成"
-					] }),
-					index === end && stageComplete && !feedbackOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						className: "primary",
-						onClick: onCompleteStage,
-						children: ["前往下一階段 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
-					})
-				]
-			})
-		]
-	});
-}
-var initialScenarioCursors = {
-	3: 0,
-	4: 3,
-	5: 9,
-	6: 12
-};
 var emergencyReserve = 2e4;
 function Home() {
 	const [step, setStep] = (0, import_react.useState)(0);
@@ -2802,7 +3239,10 @@ function Home() {
 	const [trunkPassed, setTrunkPassed] = (0, import_react.useState)(false);
 	const [expenses, setExpenses] = (0, import_react.useState)([]);
 	const [latestExpense, setLatestExpense] = (0, import_react.useState)(null);
-	const [scenarioCursors, setScenarioCursors] = (0, import_react.useState)(initialScenarioCursors);
+	const [lifePhase, setLifePhase] = (0, import_react.useState)("arrival-intro");
+	const [journeyIndex, setJourneyIndex] = (0, import_react.useState)(0);
+	const [journeyCompleted, setJourneyCompleted] = (0, import_react.useState)([]);
+	const [lifeActivity, setLifeActivity] = (0, import_react.useState)(initialLifeActivityState);
 	const [scenarioAnswers, setScenarioAnswers] = (0, import_react.useState)({});
 	const [profile, setProfile] = (0, import_react.useState)(initialProfile);
 	const backupNames = (0, import_react.useMemo)(() => {
@@ -2811,11 +3251,21 @@ function Home() {
 	}, [assignments, members]);
 	function goTo(next) {
 		setStep(next);
-		setIntroOpen(next > 0);
+		setIntroOpen(next > 0 && !(next >= 3 && next <= 6));
 		window.scrollTo({
 			top: 0,
 			behavior: "smooth"
 		});
+	}
+	function goToStation(next) {
+		const firstJourneyItem = {
+			3: 0,
+			4: 3,
+			5: 6,
+			6: 7
+		};
+		if (firstJourneyItem[next] !== void 0) setJourneyIndex(firstJourneyItem[next]);
+		goTo(next);
 	}
 	function addExpenseById(id) {
 		const expense = expenseCatalog[id];
@@ -2830,7 +3280,8 @@ function Home() {
 	function addRoomItem(id) {
 		if (!id) return;
 		setRoomReady((current) => current.includes(id) ? current : [...current, id]);
-		addExpenseById(id === "food" ? "food-monthly" : id);
+		const expenseId = roomItems.find((item) => item.id === id)?.expenseId;
+		if (expenseId) addExpenseById(expenseId);
 	}
 	function toggleHazard(id) {
 		setHazardsReady((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
@@ -2862,12 +3313,14 @@ function Home() {
 				[scenario.id]: previous ? {
 					...previous,
 					finalChoiceId: choice.id,
+					finalResult: choice.result,
 					attempts: previous.attempts + 1
 				} : {
 					scenarioId: scenario.id,
 					firstChoiceId: choice.id,
 					finalChoiceId: choice.id,
 					firstResult: choice.result,
+					finalResult: choice.result,
 					attempts: 1
 				}
 			};
@@ -2887,7 +3340,10 @@ function Home() {
 		setTrunkPassed(false);
 		setExpenses([]);
 		setLatestExpense(null);
-		setScenarioCursors(initialScenarioCursors);
+		setLifePhase("arrival-intro");
+		setJourneyIndex(0);
+		setJourneyCompleted([]);
+		setLifeActivity(initialLifeActivityState);
 		setScenarioAnswers({});
 		setProfile(initialProfile);
 	}
@@ -2942,25 +3398,48 @@ function Home() {
 				setTrunkPassed(passed);
 			},
 			onBack: () => setPreparationTask(2),
-			onNext: () => goTo(3)
+			onNext: () => {
+				setStep(3);
+				setIntroOpen(false);
+				setLifePhase("arrival-intro");
+				window.scrollTo({
+					top: 0,
+					behavior: "smooth"
+				});
+			}
 		});
 	}
-	function renderScenarioStage(currentStep) {
-		const range = scenarioStages[currentStep];
-		const cursor = scenarioCursors[currentStep] ?? range.start;
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioGame, {
-			start: range.start,
-			end: range.end,
-			index: cursor,
+	function renderLifeJourney() {
+		if (lifePhase === "arrival-intro") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrivalIntro, { onStart: () => setLifePhase("journey") });
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LifeJourney, {
+			index: journeyIndex,
 			answers: scenarioAnswers,
+			activity: lifeActivity,
+			completedIds: journeyCompleted,
+			expenses,
 			backupNames,
-			onIndex: (index) => setScenarioCursors((current) => ({
-				...current,
-				[currentStep]: index
-			})),
+			roomReady,
+			onIndex: setJourneyIndex,
 			onChoose: answerScenario,
-			onBackStage: () => goTo(currentStep - 1),
-			onCompleteStage: () => goTo(currentStep + 1)
+			onActivityChange: (patch) => setLifeActivity((current) => ({
+				...current,
+				...patch
+			})),
+			onCompleteItem: (id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id]),
+			onAddExpense: addExpenseById,
+			onStageChange: (nextStep) => {
+				setStep(nextStep);
+				setIntroOpen(false);
+			},
+			onBack: () => {
+				setStep(2);
+				setIntroOpen(false);
+				setPreparationTask(3);
+			},
+			onComplete: () => {
+				setLifePhase("complete");
+				goTo(7);
+			}
 		});
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
@@ -2971,7 +3450,7 @@ function Home() {
 				className: "stage-layout",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StageRail, {
 					step,
-					onGoTo: goTo
+					onGoTo: goToStation
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 					className: "stage",
 					"aria-live": "polite",
@@ -2989,11 +3468,14 @@ function Home() {
 							onNext: () => goTo(2)
 						}),
 						step === 2 && renderPreparation(),
-						step >= 3 && step <= 6 && renderScenarioStage(step),
+						step >= 3 && step <= 6 && renderLifeJourney(),
 						step === 7 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProfileForm, {
 							profile,
 							onChange: setProfile,
-							onBack: () => goTo(6),
+							onBack: () => {
+								setStep(6);
+								setIntroOpen(false);
+							},
 							onNext: () => goTo(8)
 						}),
 						step === 8 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AssessmentReport, {
@@ -3008,6 +3490,7 @@ function Home() {
 							trunkSelected,
 							trunkPassed,
 							answers: scenarioAnswers,
+							lifeActivity,
 							onBack: () => goTo(7),
 							onReset: resetAll
 						})

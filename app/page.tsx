@@ -7,19 +7,22 @@ import {
   initialMembers,
   initialProfile,
   intros,
-  scenarioStages,
-  scenarios,
+  roomItems,
   trunkItems,
 } from "./game-data";
+import { initialLifeActivityState } from "./life-data";
 import type {
   CareAssignment,
   CareMember,
   ExpenseRecord,
+  LifeActivityState,
+  LifeJourneyPhase,
   Profile,
   Scenario,
   ScenarioAnswer,
   ScenarioChoice,
 } from "./game-types";
+import { ArrivalIntro, LifeJourney } from "./life-journey-components";
 import {
   CarTrunkPreparation,
   CareMemberSetup,
@@ -27,7 +30,6 @@ import {
   RoomPreparation,
 } from "./preparation-components";
 import { AssessmentReport, ProfileForm } from "./profile-report-components";
-import { ScenarioGame } from "./scenario-components";
 import {
   CostBar,
   SpeciesStep,
@@ -35,7 +37,6 @@ import {
   Welcome,
 } from "./shared-components";
 
-const initialScenarioCursors: Record<number, number> = { 3: 0, 4: 3, 5: 9, 6: 12 };
 const emergencyReserve = 20000;
 
 export default function Home() {
@@ -53,7 +54,10 @@ export default function Home() {
   const [trunkPassed, setTrunkPassed] = useState(false);
   const [expenses, setExpenses] = useState<ExpenseRecord[]>([]);
   const [latestExpense, setLatestExpense] = useState<ExpenseRecord | null>(null);
-  const [scenarioCursors, setScenarioCursors] = useState<Record<number, number>>(initialScenarioCursors);
+  const [lifePhase, setLifePhase] = useState<LifeJourneyPhase>("arrival-intro");
+  const [journeyIndex, setJourneyIndex] = useState(0);
+  const [journeyCompleted, setJourneyCompleted] = useState<string[]>([]);
+  const [lifeActivity, setLifeActivity] = useState<LifeActivityState>(initialLifeActivityState);
   const [scenarioAnswers, setScenarioAnswers] = useState<Record<string, ScenarioAnswer>>({});
   const [profile, setProfile] = useState<Profile>(initialProfile);
 
@@ -69,8 +73,14 @@ export default function Home() {
 
   function goTo(next: number) {
     setStep(next);
-    setIntroOpen(next > 0);
+    setIntroOpen(next > 0 && !(next >= 3 && next <= 6));
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function goToStation(next: number) {
+    const firstJourneyItem: Record<number, number> = { 3: 0, 4: 3, 5: 6, 6: 7 };
+    if (firstJourneyItem[next] !== undefined) setJourneyIndex(firstJourneyItem[next]);
+    goTo(next);
   }
 
   function addExpenseById(id: string) {
@@ -87,8 +97,8 @@ export default function Home() {
   function addRoomItem(id: string) {
     if (!id) return;
     setRoomReady((current) => current.includes(id) ? current : [...current, id]);
-    const expenseId = id === "food" ? "food-monthly" : id;
-    addExpenseById(expenseId);
+    const expenseId = roomItems.find((item) => item.id === id)?.expenseId;
+    if (expenseId) addExpenseById(expenseId);
   }
 
   function toggleHazard(id: string) {
@@ -125,12 +135,13 @@ export default function Home() {
       return {
         ...current,
         [scenario.id]: previous
-          ? { ...previous, finalChoiceId: choice.id, attempts: previous.attempts + 1 }
+          ? { ...previous, finalChoiceId: choice.id, finalResult: choice.result, attempts: previous.attempts + 1 }
           : {
             scenarioId: scenario.id,
             firstChoiceId: choice.id,
             finalChoiceId: choice.id,
             firstResult: choice.result,
+            finalResult: choice.result,
             attempts: 1,
           },
       };
@@ -151,7 +162,10 @@ export default function Home() {
     setTrunkPassed(false);
     setExpenses([]);
     setLatestExpense(null);
-    setScenarioCursors(initialScenarioCursors);
+    setLifePhase("arrival-intro");
+    setJourneyIndex(0);
+    setJourneyCompleted([]);
+    setLifeActivity(initialLifeActivityState);
     setScenarioAnswers({});
     setProfile(initialProfile);
   }
@@ -180,23 +194,30 @@ export default function Home() {
     if (preparationTask === 2) {
       return <CareTaskAssignment members={members} assignments={assignments} onChange={setAssignments} onBack={() => setPreparationTask(1)} onNext={() => setPreparationTask(3)} />;
     }
-    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => setPreparationTask(2)} onNext={() => goTo(3)} />;
+    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => setPreparationTask(2)} onNext={() => { setStep(3); setIntroOpen(false); setLifePhase("arrival-intro"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
-  function renderScenarioStage(currentStep: number) {
-    const range = scenarioStages[currentStep];
-    const cursor = scenarioCursors[currentStep] ?? range.start;
+  function renderLifeJourney() {
+    if (lifePhase === "arrival-intro") {
+      return <ArrivalIntro onStart={() => setLifePhase("journey")} />;
+    }
     return (
-      <ScenarioGame
-        start={range.start}
-        end={range.end}
-        index={cursor}
+      <LifeJourney
+        index={journeyIndex}
         answers={scenarioAnswers}
+        activity={lifeActivity}
+        completedIds={journeyCompleted}
+        expenses={expenses}
         backupNames={backupNames}
-        onIndex={(index) => setScenarioCursors((current) => ({ ...current, [currentStep]: index }))}
+        roomReady={roomReady}
+        onIndex={setJourneyIndex}
         onChoose={answerScenario}
-        onBackStage={() => goTo(currentStep - 1)}
-        onCompleteStage={() => goTo(currentStep + 1)}
+        onActivityChange={(patch) => setLifeActivity((current) => ({ ...current, ...patch }))}
+        onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}
+        onAddExpense={addExpenseById}
+        onStageChange={(nextStep) => { setStep(nextStep); setIntroOpen(false); }}
+        onBack={() => { setStep(2); setIntroOpen(false); setPreparationTask(3); }}
+        onComplete={() => { setLifePhase("complete"); goTo(7); }}
       />
     );
   }
@@ -207,14 +228,14 @@ export default function Home() {
 
       {step > 0 && !introOpen && (
         <div className="stage-layout">
-          <StageRail step={step} onGoTo={goTo} />
+          <StageRail step={step} onGoTo={goToStation} />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 7 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} />}
             {step === 1 && <SpeciesStep category={category} breed={breed} onCategory={setCategory} onBreed={setBreed} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
-            {step >= 3 && step <= 6 && renderScenarioStage(step)}
-            {step === 7 && <ProfileForm profile={profile} onChange={setProfile} onBack={() => goTo(6)} onNext={() => goTo(8)} />}
-            {step === 8 && <AssessmentReport breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} assignments={assignments} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} onBack={() => goTo(7)} onReset={resetAll} />}
+            {step >= 3 && step <= 6 && renderLifeJourney()}
+            {step === 7 && <ProfileForm profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); }} onNext={() => goTo(8)} />}
+            {step === 8 && <AssessmentReport breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} assignments={assignments} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => goTo(7)} onReset={resetAll} />}
           </section>
         </div>
       )}

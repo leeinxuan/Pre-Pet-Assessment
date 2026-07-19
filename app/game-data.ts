@@ -107,14 +107,12 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   toy: { id: "toy", name: "益智玩具", amount: 450, category: "用品", stage: "領養前準備", recurring: false },
   toilet: { id: "toilet", name: "尿墊或便盆", amount: 500, category: "清潔", stage: "領養前準備", recurring: false },
   cleaner: { id: "cleaner", name: "寵物友善清潔用品", amount: 420, category: "清潔", stage: "領養前準備", recurring: false },
-  "food-monthly": { id: "food-monthly", name: "每月飼料", amount: 1600, category: "飲食", stage: "建立日常生活", recurring: true },
-  "waste-monthly": { id: "waste-monthly", name: "每月清潔耗材", amount: 450, category: "清潔", stage: "建立日常生活", recurring: true },
-  "routine-care": { id: "routine-care", name: "每月例行保健準備", amount: 600, category: "醫療", stage: "建立日常生活", recurring: true },
-  "first-checkup": { id: "first-checkup", name: "初次健康檢查", amount: 1800, category: "醫療", stage: "接回家當天", recurring: false },
-  "emergency-exam": { id: "emergency-exam", name: "緊急檢查與治療", amount: 6800, category: "醫療", stage: "健康與突發事件", recurring: false, fromEmergency: true },
-  boarding: { id: "boarding", name: "三日安心照顧服務", amount: 3600, category: "照顧服務", stage: "生活變化", recurring: false },
-  moving: { id: "moving", name: "搬家安全設備調整", amount: 1500, category: "用品", stage: "生活變化", recurring: false },
-  senior: { id: "senior", name: "老年健康檢查", amount: 3200, category: "醫療", stage: "生活變化", recurring: false, fromEmergency: true },
+  "monthly-main-food": { id: "monthly-main-food", name: "每月主食費", amount: 1500, category: "飲食", stage: "一起生活三個月", recurring: true },
+  "journey-medical-care": { id: "journey-medical-care", name: "異常症狀檢查與治療", amount: 4200, category: "醫療", stage: "健康出現變化", recurring: false, fromEmergency: true },
+  "journey-care-service": { id: "journey-care-service", name: "短期照顧服務", amount: 2400, category: "照顧服務", stage: "飼主生活發生改變", recurring: false },
+  "senior-checkup": { id: "senior-checkup", name: "高齡健康檢查", amount: 3200, category: "醫療", stage: "逐漸進入高齡", recurring: false, fromEmergency: true },
+  "senior-slipmat": { id: "senior-slipmat", name: "高齡犬防滑墊", amount: 1200, category: "高齡用品", stage: "調整高齡生活空間", recurring: false },
+  "senior-access-bed": { id: "senior-access-bed", name: "低入口高齡睡墊", amount: 1800, category: "高齡用品", stage: "調整高齡生活空間", recurring: false },
 };
 
 export const roomItems: RoomItem[] = [
@@ -126,7 +124,7 @@ export const roomItems: RoomItem[] = [
   { id: "toy", label: "玩具", icon: "🧸", required: false, need: "活動", expenseId: "toy" },
   { id: "toilet", label: "尿墊或便盆", icon: "▧", required: true, need: "排泄", expenseId: "toilet" },
   { id: "cleaner", label: "清潔用品", icon: "🧼", required: true, need: "清潔", expenseId: "cleaner" },
-  { id: "food", label: "飼料", icon: "🦴", required: true, need: "飲食", expenseId: "food-monthly" },
+  { id: "food", label: "飼料", icon: "🦴", required: true, need: "飲食" },
 ];
 
 export const hazards: HazardItem[] = [
@@ -169,7 +167,7 @@ export const trunkItems: TrunkItem[] = [
   { id: "towel", label: "毛巾", icon: "▱", kind: "essential", feedback: "熟悉或柔軟的毛巾能增加穩定感。" },
   { id: "documents", label: "領養文件", icon: "📄", kind: "essential", feedback: "確認來源、健康、晶片與交接文件，並依規定辦理登記。" },
   { id: "id", label: "身分證明", icon: "▣", kind: "essential", feedback: "辦理領養與資料更新時需要核對身分。" },
-  { id: "food", label: "少量熟悉的飼料", icon: "🦴", kind: "essential", feedback: "少量熟悉食物可避免接回當天突然換食。", expenseId: "food-monthly" },
+  { id: "food", label: "少量熟悉的飼料", icon: "🦴", kind: "essential", feedback: "少量熟悉食物可避免接回當天突然換食。" },
   { id: "cleaner", label: "基本清潔用品", icon: "🧼", kind: "essential", feedback: "選擇氣味溫和、寵物友善的用品。", expenseId: "cleaner" },
   { id: "one-toy", label: "一個安靜的玩具", icon: "🧸", kind: "optional", feedback: "不是最重要，但一個安靜、熟悉的玩具可以攜帶。" },
   { id: "many-toys", label: "大量新玩具", icon: "🎁", kind: "optional", feedback: "不需要一次帶太多，先以安全運輸與文件為優先。" },

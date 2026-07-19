@@ -31,9 +31,11 @@ test("server-renders the pet readiness journey", async () => {
 });
 
 test("contains the eight-stage adoption timeline and project-owned artwork", async () => {
-  const [page, data, css, packageJson] = await Promise.all([
+  const [page, data, lifeData, lifeComponents, css, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/game-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/life-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/life-journey-components.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     access(new URL("../public/og.png", import.meta.url)),
@@ -46,12 +48,20 @@ test("contains the eight-stage adoption timeline and project-owned artwork", asy
   for (const label of ["選擇寵物", "領養前準備", "接回家", "日常生活", "健康與意外", "生活變化", "認識你", "評估報告"]) {
     assert.match(data, new RegExp(label));
   }
-  for (const scenarioId of ["ride-home", "first-door", "first-meal", "hiding", "night-anxiety", "chewing-toilet", "daily-feeding", "exercise", "grooming", "low-appetite", "contact-vet", "medical-cost", "travel", "work-change", "moving", "senior-life"]) {
-    assert.match(data, new RegExp(scenarioId));
+  for (const scenarioId of ["arrival-adjustment", "behavior-guidance", "busy-daily-care", "illness-vet", "owner-life-change", "growing-old", "late-life-companionship"]) {
+    assert.match(lifeData, new RegExp(scenarioId));
   }
+  assert.equal((lifeData.match(/type: "scenario"/g) ?? []).length, 7);
+  assert.equal((lifeData.match(/type: "(body-language|feeding|body-care|senior-room)"/g) ?? []).length, 4);
+  assert.match(lifeData, /一起生活的第一天[\s\S]*適應新家的時候[\s\S]*一起生活三個月[\s\S]*逐漸長大的時候[\s\S]*穩定生活的日常[\s\S]*成年後的例行照顧[\s\S]*健康出現變化[\s\S]*飼主生活發生改變[\s\S]*逐漸進入高齡[\s\S]*調整高齡生活空間[\s\S]*生命後段的陪伴/);
+  assert.match(lifeComponents, /歡迎來到新家/);
+  assert.match(lifeComponents, /開始你們的生活旅程/);
+  assert.match(lifeComponents, /準備豆豆的晚餐/);
+  assert.doesNotMatch(lifeComponents, /量杯|飼料克數|每餐份量|餵食後觀察|是否吃完/);
   assert.doesNotMatch(page, /LawStep|CostStep|lawAnswers|costIndex/);
   assert.match(page, /ExpenseRecord/);
   assert.match(page, /firstChoiceId/);
+  assert.match(page, /LifeJourney/);
   assert.match(css, /family=Huninn/);
   assert.match(css, /\.cost-bar/);
   assert.match(css, /scenario-grid\.png/);

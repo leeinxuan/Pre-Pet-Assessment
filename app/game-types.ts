@@ -5,6 +5,7 @@ export type ExpenseCategory =
   | "清潔"
   | "交通"
   | "照顧服務"
+  | "高齡用品"
   | "其他";
 
 export type ExpenseRecord = {
@@ -52,6 +53,7 @@ export type Scenario = {
   timeLabel: string;
   title: string;
   description: string;
+  topic?: string;
   choices: ScenarioChoice[];
   reminder?: string;
   artIndex: number;
@@ -63,7 +65,34 @@ export type ScenarioAnswer = {
   firstChoiceId: string;
   finalChoiceId: string;
   firstResult: ScenarioResult;
+  finalResult: ScenarioResult;
   attempts: number;
+};
+
+export type LifeJourneyPhase = "arrival-intro" | "journey" | "complete";
+
+export type JourneyItemType =
+  | "scenario"
+  | "body-language"
+  | "feeding"
+  | "body-care"
+  | "senior-room";
+
+export type JourneyItem = {
+  id: string;
+  type: JourneyItemType;
+  timeLabel: string;
+  title: string;
+  scenarioId?: string;
+};
+
+export type LifeActivityState = {
+  bodyLanguageSignals: string[];
+  feedingFoodReady: boolean;
+  feedingWaterSteps: string[];
+  feedingServed: boolean;
+  bodyCareParts: string[];
+  seniorAdjustments: string[];
 };
 
 export type Profile = {
