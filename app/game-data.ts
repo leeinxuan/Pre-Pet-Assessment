@@ -1,5 +1,4 @@
 import type {
-  CareAssignment,
   CareMember,
   ExpenseRecord,
   HazardItem,
@@ -124,26 +123,10 @@ export const hazards: HazardItem[] = [
   { id: "windows", label: "未防護的門窗或陽台", icon: "▤", hint: "加裝防逃與防墜措施，確認活動區域安全。" },
 ];
 
-export const careTasks = [
-  { id: "breakfast", label: "早上餵食", risk: false },
-  { id: "dinner", label: "晚上餵食", risk: false },
-  { id: "water", label: "更換飲水", risk: false },
-  { id: "walk", label: "散步或陪玩", risk: true },
-  { id: "toilet", label: "清理排泄物", risk: false },
-  { id: "groom", label: "梳毛與清潔", risk: false },
-  { id: "shopping", label: "購買飼料及用品", risk: false },
-  { id: "vet", label: "帶寵物就醫", risk: true },
-  { id: "emergency", label: "臨時無法照顧時的支援", risk: true },
-] as const;
-
 export const initialMembers: CareMember[] = [
   { id: "player", name: "我", age: null, isPlayer: true },
   { id: "family-1", name: "家人", age: null, isPlayer: false },
 ];
-
-export const initialAssignments: Record<string, CareAssignment> = Object.fromEntries(
-  careTasks.map((task) => [task.id, { primary: "", backup: "" }]),
-);
 
 export const trunkItems: TrunkItem[] = [
   { id: "carrier", label: "安全提籠或運輸籠", icon: "🧳", kind: "essential", feedback: "行車過程中，寵物需要安全且穩定的空間。", expenseId: "carrier" },

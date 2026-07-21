@@ -55,7 +55,7 @@ export const lifeScenarios: Scenario[] = [
     supportChoice: true,
     choices: [
       { id: "basic-care-first", text: "稍作休息後完成今晚的基本餵食、飲水、排泄與適量活動。", result: "correct", ...positive, explanation: "先照顧自己的狀態，再維持豆豆不可中斷的基本需求，是可持續的安排。" },
-      { id: "assigned-helper", text: "請事先安排並同意的備用照顧者，依分工協助今晚的餵食與活動。", result: "correct", ...positive, explanation: "事先建立的支援能避免忙碌時漏掉照顧，也讓交接更清楚。" },
+      { id: "assigned-helper", text: "請已確認能協助的家人或照顧者，幫忙今晚的餵食與活動。", result: "correct", ...positive, explanation: "事先確認支援人選能避免忙碌時漏掉照顧，也讓交接更清楚。" },
       { id: "indoor-only", text: "只安排短時間嗅聞或益智活動，其他需求明天再補。", result: "partial", ...partial, explanation: "室內活動可以彈性調整，但不能取代當天必要的飲水、進食與排泄。", suggestion: "先完成基本需求，再依體力調整活動形式與時間。" },
       { id: "skip-today", text: "今天實在太累，飼料和散步都等明天再處理。", result: "incorrect", ...incorrect, explanation: "忽略基本需求可能造成飢餓、脫水、憋尿與焦躁，也會打亂穩定作息。", suggestion: "完成最低限度照顧，或立即聯絡已安排好的支援者。" },
     ],
@@ -85,7 +85,7 @@ export const lifeScenarios: Scenario[] = [
     supportChoice: true,
     reminder: "生活改變時，飼主仍需安排合法、安全且持續的照顧，不能任意棄置動物。",
     choices: [
-      { id: "replan-family", text: "和照顧成員重新分工，請已同意的備用照顧者接手並完整交接。", result: "correct", ...positive, explanation: "重新分工並保留交接紀錄，能讓豆豆的作息和健康照顧持續不中斷。" },
+      { id: "replan-family", text: "和家人或照顧者確認可行安排，請能協助的人接手並完整交接。", result: "correct", ...positive, explanation: "確認支援安排並保留交接紀錄，能讓豆豆的作息和健康照顧持續不中斷。" },
       { id: "paid-care", text: "評估合適的到府或住宿服務，確認環境、紀錄和緊急聯絡方式。", result: "correct", ...positive, explanation: "經過評估的專業照顧是可行方案，清楚交接能降低陌生照顧的風險。", expenseIds: ["journey-care-service"] },
       { id: "food-alone", text: "準備很多飼料和水，讓豆豆自己在家待幾天。", result: "incorrect", ...incorrect, explanation: "長時間無人查看會有飲水、排泄、健康與意外風險，也無法處理突發狀況。", suggestion: "安排可信任的照顧者或合適服務，並保留每日回報。" },
     ],

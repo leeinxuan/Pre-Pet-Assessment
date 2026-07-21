@@ -25,11 +25,6 @@ export type CareMember = {
   isPlayer: boolean;
 };
 
-export type CareAssignment = {
-  primary: string;
-  backup: string;
-};
-
 export type ScenarioResult = "correct" | "partial" | "incorrect";
 
 export type ScenarioChoice = {

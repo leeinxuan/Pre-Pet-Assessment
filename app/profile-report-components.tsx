@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { breeds, careTasks, money, roomItems, trunkItems } from "./game-data";
+import { useState } from "react";
+import { breeds, money, roomItems, trunkItems } from "./game-data";
 import { lifeScenarios } from "./life-data";
-import type { CareAssignment, CareMember, ExpenseRecord, LifeActivityState, Profile, ScenarioAnswer } from "./game-types";
+import type { CareMember, ExpenseRecord, LifeActivityState, Profile, ScenarioAnswer } from "./game-types";
 import { NavButtons } from "./shared-components";
 
 function OptionButton({ label, selected, onClick, icon }: { label: string; selected: boolean; onClick: () => void; icon?: string }) {
@@ -120,7 +120,6 @@ export function AssessmentReport({
   roomReady,
   hazardsReady,
   members,
-  assignments,
   trunkSelected,
   trunkPassed,
   answers,
@@ -135,7 +134,6 @@ export function AssessmentReport({
   roomReady: string[];
   hazardsReady: string[];
   members: CareMember[];
-  assignments: Record<string, CareAssignment>;
   trunkSelected: string[];
   trunkPassed: boolean;
   answers: Record<string, ScenarioAnswer>;
@@ -163,26 +161,18 @@ export function AssessmentReport({
     { label: "已完成高齡生活空間調整", complete: lifeActivity.seniorAdjustments.length === 6 },
   ];
   const practiceComplete = practiceItems.filter((item) => item.complete).length;
-  const backupIds = new Set(
-    [
-      ...Object.values(assignments).map((item) => item.backup),
-      assignments.emergency?.primary,
-    ].filter((id): id is string => Boolean(id) && id !== "player"),
-  );
-  const backupNames = members.filter((member) => backupIds.has(member.id)).map((member) => member.name);
+  const backupNames = members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
   const requiredRoom = roomItems.filter((item) => item.required);
   const roomCompletion = Math.round((roomReady.filter((id) => requiredRoom.some((item) => item.id === id)).length / requiredRoom.length) * 100);
-  const assignmentCompletion = Math.round((careTasks.filter((task) => assignments[task.id]?.primary).length / careTasks.length) * 100);
   const budgetEnough = Number(profile.monthlyBudget) >= recurring;
-  const preparationStrong = roomCompletion === 100 && hazardsReady.length === 5 && assignmentCompletion === 100 && trunkPassed;
+  const preparationStrong = roomCompletion === 100 && hazardsReady.length === 5 && trunkPassed;
   const strongSignals = [preparationStrong, correctFirst >= 5, practiceComplete === 5, budgetEnough, profile.emergencyFund === true, profile.backupSupport === true, profile.housing !== "租屋" || profile.landlordConsent === "房東已同意", profile.hasHousemates !== true || profile.housematesConsent === true].filter(Boolean).length;
   const level = strongSignals >= 7 ? "已具備多項準備" : strongSignals >= 4 ? "有部分條件需要先確認" : "建議先完成準備事項";
 
   const prepared = [
     roomCompletion === 100 && "必要用品與生活空間已完成",
     hazardsReady.length === 5 && "居家危險物已完成收納與防護",
-    assignmentCompletion === 100 && "日常照顧工作已有主要負責人",
-    backupNames.length > 0 && `已有備用照顧者：${backupNames.join("、")}`,
+    backupNames.length > 0 && `已有可協助照顧的家庭成員：${backupNames.join("、")}`,
     trunkPassed && "接送行李、文件與安全運輸已通過檢查",
     correctFirst >= 5 && `${correctFirst} 個情境第一次就掌握照顧方向`,
     practiceComplete === 5 && "四個生活練習與飲水步驟皆已完成",
@@ -191,7 +181,7 @@ export function AssessmentReport({
   const confirm = [
     roomCompletion < 100 && `必要用品完成度 ${roomCompletion}%`,
     hazardsReady.length < 5 && "仍有居家危險物需要防護",
-    backupNames.length === 0 && "尚未建立可用的備用照顧者",
+    backupNames.length === 0 && "尚未新增其他可協助的照顧成員",
     !trunkPassed && "接寵物後車廂尚未通過檢查",
     !budgetEnough && `每月預算低於目前固定支出 NT$ ${money.format(recurring)}`,
     profile.emergencyFund === false && "目前沒有緊急預備金",
@@ -201,7 +191,6 @@ export function AssessmentReport({
     profile.hasHousemates && profile.housematesConsent !== true && "所有同住者是否知情並同意飼養",
     profile.housing === "租屋" && profile.landlordConsent !== "房東已同意" && "租屋規定與房東書面同意",
     profile.backupSupport === false && "忙碌、出差或生病時由誰接手",
-    assignmentCompletion < 100 && "未完成的照顧工作如何分配",
   ].filter(Boolean) as string[];
   const actions = [
     ...confirm.slice(0, 5),
@@ -215,11 +204,11 @@ export function AssessmentReport({
       <div className="summary-title"><div><h1>{level}</h1><p>這份報告不貼標籤，而是把模擬生活轉成下一步可執行的準備。</p></div><div className="summary-pet"><span>{selectedBreed?.icon ?? "🐕"}</span><b>我想領養{selectedBreed?.label}</b><small>{correctFirst} / {lifeScenarios.length} 題第一次掌握方向</small></div></div>
       <div className="report-level"><span>綜合準備狀態</span><b>{level}</b><p>參考準備任務、第一次作答、費用與真實生活條件。</p></div>
       <section className="summary-grid">
-        <article className="summary-card"><div className="card-head"><span>01</span><div><p>領養前準備</p><h2>家、分工與接送</h2></div></div><dl className="report-metrics"><div><dt>房間必要用品</dt><dd>{roomCompletion}%</dd></div><div><dt>危險物防護</dt><dd>{hazardsReady.length} / 5</dd></div><div><dt>工作分配</dt><dd>{assignmentCompletion}%</dd></div><div><dt>備用照顧者</dt><dd>{backupNames.length ? backupNames.join("、") : "尚未安排"}</dd></div><div><dt>後車廂</dt><dd>{trunkPassed ? "已通過" : `${trunkSelected.length} 件已放入`}</dd></div></dl></article>
+        <article className="summary-card"><div className="card-head"><span>01</span><div><p>領養前準備</p><h2>家、成員與接送</h2></div></div><dl className="report-metrics"><div><dt>房間必要用品</dt><dd>{roomCompletion}%</dd></div><div><dt>危險物防護</dt><dd>{hazardsReady.length} / 5</dd></div><div><dt>照顧成員</dt><dd>{backupNames.length ? backupNames.join("、") : "只有我"}</dd></div><div><dt>後車廂</dt><dd>{trunkPassed ? "已通過" : `${trunkSelected.length} 件已放入`}</dd></div></dl></article>
         <article className="summary-card"><div className="card-head"><span>02</span><div><p>情境判斷</p><h2>第一次選擇與修正</h2></div></div><div className="learning-counts"><div><b>{correctFirst}</b><small>第一次掌握方向</small></div><div><b>{corrected.length}</b><small>提醒後修正</small></div><div><b>{needsLearning.length}</b><small>需要再了解</small></div></div><dl className="report-topic-list"><div><dt>第一次就掌握</dt><dd>{correctTopics.join("、") || "尚無"}</dd></div><div><dt>經過提醒後修正</dt><dd>{correctedTopics.join("、") || "尚無"}</dd></div><div><dt>還需要了解</dt><dd>{needsLearning.join("、") || "目前沒有未修正主題"}</dd></div></dl></article>
         <article className="summary-card"><div className="card-head"><span>03</span><div><p>照顧實作</p><h2>生活練習完成狀態</h2></div></div><ul>{practiceItems.map((item) => <li key={item.label}><i className={item.complete ? "green" : "yellow"}>{item.complete ? "✓" : "!"}</i>{item.label}</li>)}</ul></article>
         <article className="summary-card"><div className="card-head"><span>04</span><div><p>費用狀況</p><h2>實際事件累積</h2></div></div><dl className="report-metrics"><div><dt>一次性用品費</dt><dd>NT$ {money.format(oneTime)}</dd></div><div><dt>本月／累積支出</dt><dd>NT$ {money.format(total)}</dd></div><div><dt>每月固定支出</dt><dd>NT$ {money.format(recurring)}</dd></div><div><dt>醫療支出</dt><dd>NT$ {money.format(medical)}</dd></div><div><dt>照顧服務費</dt><dd>NT$ {money.format(careService)}</dd></div><div><dt>高齡用品費</dt><dd>NT$ {money.format(seniorSupplies)}</dd></div><div><dt>剩餘緊急預備金</dt><dd>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</dd></div><div><dt>推估一年基本支出</dt><dd>NT$ {money.format(recurring * 12)}</dd></div></dl></article>
-        <article className="summary-card profile-summary"><div className="card-head"><span>05</span><div><p>真實生活條件</p><h2>時間、住居與支援</h2></div></div><dl><div><dt>可投入時間</dt><dd>每日 {profile.careHours} 小時</dd></div><div><dt>居住空間</dt><dd>{profile.housing}{profile.housing === "租屋" ? ` · ${profile.landlordConsent}` : ""}</dd></div><div><dt>每月預算</dt><dd>NT$ {money.format(Number(profile.monthlyBudget))}</dd></div><div><dt>同住者支持</dt><dd>{profile.hasHousemates ? (profile.housematesConsent ? "已同意" : "尚待確認") : "無同住者"}</dd></div><div><dt>備用照顧者</dt><dd>{backupNames.join("、") || "尚未安排"}</dd></div><div><dt>緊急預備金</dt><dd>{profile.emergencyFund ? "已有準備" : "目前沒有"}</dd></div></dl></article>
+        <article className="summary-card profile-summary"><div className="card-head"><span>05</span><div><p>真實生活條件</p><h2>時間、住居與支援</h2></div></div><dl><div><dt>可投入時間</dt><dd>每日 {profile.careHours} 小時</dd></div><div><dt>居住空間</dt><dd>{profile.housing}{profile.housing === "租屋" ? ` · ${profile.landlordConsent}` : ""}</dd></div><div><dt>每月預算</dt><dd>NT$ {money.format(Number(profile.monthlyBudget))}</dd></div><div><dt>同住者支持</dt><dd>{profile.hasHousemates ? (profile.housematesConsent ? "已同意" : "尚待確認") : "無同住者"}</dd></div><div><dt>家庭照顧成員</dt><dd>{backupNames.join("、") || "只有我"}</dd></div><div><dt>緊急預備金</dt><dd>{profile.emergencyFund ? "已有準備" : "目前沒有"}</dd></div></dl></article>
         <article className="summary-card readiness"><div className="card-head"><span>06</span><div><p>已經準備好</p><h2>可以延續的部分</h2></div></div><ul>{prepared.length ? prepared.map((item) => <li key={item}><i className="green">✓</i>{item}</li>) : <li><i className="yellow">?</i>目前先從完成領養前準備清單開始。</li>}</ul></article>
         <article className="summary-card todo"><div className="card-head"><span>07</span><div><p>建議再確認</p><h2>需要補上的條件</h2></div></div><ul>{confirm.length ? confirm.map((item) => <li key={item}><i className="yellow">!</i>{item}</li>) : <li><i className="green">✓</i>目前主要條件已有方向，請持續依實際個體調整。</li>}</ul></article>
         <article className="summary-card discuss"><div className="card-head"><span>08</span><div><p>和家人討論</p><h2>需要共同決定</h2></div></div><ul>{familyTopics.length ? familyTopics.map((item) => <li key={item}><i className="orange">●</i>{item}</li>) : <li><i className="green">✓</i>目前家庭支持條件已有明確方向。</li>}</ul></article>

@@ -18,6 +18,13 @@ var public_assets_data_default = {
 		"size": 712,
 		"path": "../public/favicon.svg"
 	},
+	"/window.svg": {
+		"type": "image/svg+xml",
+		"etag": "\"181-VMSODapsqjF/4bTEGQB/2T6Ujbk\"",
+		"mtime": "2026-07-15T05:13:25.278Z",
+		"size": 385,
+		"path": "../public/window.svg"
+	},
 	"/file.svg": {
 		"type": "image/svg+xml",
 		"etag": "\"187-+zgO7/6H1QtZc4NmTAKYKWTQ0ow\"",
@@ -32,54 +39,47 @@ var public_assets_data_default = {
 		"size": 1035,
 		"path": "../public/globe.svg"
 	},
-	"/window.svg": {
-		"type": "image/svg+xml",
-		"etag": "\"181-VMSODapsqjF/4bTEGQB/2T6Ujbk\"",
-		"mtime": "2026-07-15T05:13:25.278Z",
-		"size": 385,
-		"path": "../public/window.svg"
-	},
-	"/assets/index-DiJlR8Qw.css": {
+	"/assets/index-CXFUQJJu.css": {
 		"type": "text/css; charset=utf-8",
-		"etag": "\"12725-j8IgrUIaTQ4+fzZKK4KX3QZjLjE\"",
-		"mtime": "2026-07-21T05:17:30.400Z",
-		"size": 75557,
-		"path": "../public/assets/index-DiJlR8Qw.css"
+		"etag": "\"12489-FKpdpU8ccxckziXfCOTsitRZ2Ms\"",
+		"mtime": "2026-07-21T06:38:50.221Z",
+		"size": 74889,
+		"path": "../public/assets/index-CXFUQJJu.css"
+	},
+	"/assets/page-BTT5fYGJ.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"146ca-9OXM44HdZ6HhtEiGiaDBv/r/crw\"",
+		"mtime": "2026-07-21T06:38:50.218Z",
+		"size": 83658,
+		"path": "../public/assets/page-BTT5fYGJ.js"
 	},
 	"/assets/framework-CXnKph_e.js": {
 		"type": "text/javascript; charset=utf-8",
 		"etag": "\"2e56d-yqm8KBIaXv+Y0pOthtGoU3MxBZg\"",
-		"mtime": "2026-07-21T05:17:30.388Z",
+		"mtime": "2026-07-21T06:38:50.216Z",
 		"size": 189805,
 		"path": "../public/assets/framework-CXnKph_e.js"
-	},
-	"/assets/index-IKU4H7uY.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"13b49-hfiFKMBV6t9qEgvz0Cy2NJuloZY\"",
-		"mtime": "2026-07-21T05:17:30.387Z",
-		"size": 80713,
-		"path": "../public/assets/index-IKU4H7uY.js"
-	},
-	"/assets/layout-segment-context-DwLEuMOI.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"120-g9a9UK5Bi6qGzHVFqZPRZpfGx7w\"",
-		"mtime": "2026-07-21T05:17:30.395Z",
-		"size": 288,
-		"path": "../public/assets/layout-segment-context-DwLEuMOI.js"
-	},
-	"/assets/page-CNuMy48L.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"157bb-y8kfB01Bb7xTK84a3F3uOZHU0sE\"",
-		"mtime": "2026-07-21T05:17:30.397Z",
-		"size": 87995,
-		"path": "../public/assets/page-CNuMy48L.js"
 	},
 	"/assets/rolldown-runtime-S-ySWqyJ.js": {
 		"type": "text/javascript; charset=utf-8",
 		"etag": "\"2b6-wnqLLSlp3SaE+lbe74bKNe5Rpds\"",
-		"mtime": "2026-07-21T05:17:30.399Z",
+		"mtime": "2026-07-21T06:38:50.220Z",
 		"size": 694,
 		"path": "../public/assets/rolldown-runtime-S-ySWqyJ.js"
+	},
+	"/assets/layout-segment-context-C3O2ugQf.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"120-DP9fsGW4gzo14xjak/z9pyDrkg0\"",
+		"mtime": "2026-07-21T06:38:50.217Z",
+		"size": 288,
+		"path": "../public/assets/layout-segment-context-C3O2ugQf.js"
+	},
+	"/assets/index-Cf8-B4Sm.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"13b49-c9wzvEMLiae6Q2keRYUJf3VEkBU\"",
+		"mtime": "2026-07-21T06:38:50.215Z",
+		"size": 80713,
+		"path": "../public/assets/index-Cf8-B4Sm.js"
 	},
 	"/og.png": {
 		"type": "image/png",
@@ -95,6 +95,13 @@ var public_assets_data_default = {
 		"size": 2237292,
 		"path": "../public/illustrations/hero-life-preview.png"
 	},
+	"/illustrations/lifetime-costs.png": {
+		"type": "image/png",
+		"etag": "\"285acf-FnBZgMbXL3IGwSOJbWD9paB1Csc\"",
+		"mtime": "2026-07-15T05:13:25.326Z",
+		"size": 2644687,
+		"path": "../public/illustrations/lifetime-costs.png"
+	},
 	"/illustrations/prep-room.png": {
 		"type": "image/png",
 		"etag": "\"26d90f-AN+idVI+QskIM3mx2GRMCXfxWD0\"",
@@ -108,13 +115,6 @@ var public_assets_data_default = {
 		"mtime": "2026-07-15T05:13:25.372Z",
 		"size": 2666723,
 		"path": "../public/illustrations/scenario-grid.png"
-	},
-	"/illustrations/lifetime-costs.png": {
-		"type": "image/png",
-		"etag": "\"285acf-FnBZgMbXL3IGwSOJbWD9paB1Csc\"",
-		"mtime": "2026-07-15T05:13:25.326Z",
-		"size": 2644687,
-		"path": "../public/illustrations/lifetime-costs.png"
 	}
 };
 //#endregion

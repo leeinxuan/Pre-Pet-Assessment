@@ -126,7 +126,7 @@ export function StageRail({
       label: "領養前準備",
       status: mainStatus(1),
       onClick: () => onGoTo(2),
-      children: ["布置生活空間", "建立照顧成員", "分配照顧工作", "整理汽車後車廂"].map((label, index) => ({
+      children: ["布置生活空間", "建立照顧成員", "整理汽車後車廂"].map((label, index) => ({
         id: `preparation-${index}`,
         label,
         status: statusAt(index, preparationTask, preparationReached),

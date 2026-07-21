@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import {
   expenseCatalog,
-  initialAssignments,
   initialMembers,
   initialProfile,
   intros,
@@ -12,7 +11,6 @@ import {
 } from "./game-data";
 import { initialLifeActivityState } from "./life-data";
 import type {
-  CareAssignment,
   CareMember,
   ExpenseRecord,
   LifeActivityState,
@@ -26,7 +24,6 @@ import { ArrivalIntro, LifeJourney } from "./life-journey-components";
 import {
   CarTrunkPreparation,
   CareMemberSetup,
-  CareTaskAssignment,
   RoomPreparation,
 } from "./preparation-components";
 import { AssessmentReport, ProfileForm } from "./profile-report-components";
@@ -52,7 +49,6 @@ export default function Home() {
   const [roomReady, setRoomReady] = useState<string[]>([]);
   const [hazardsReady, setHazardsReady] = useState<string[]>([]);
   const [members, setMembers] = useState<CareMember[]>(initialMembers);
-  const [assignments, setAssignments] = useState<Record<string, CareAssignment>>(initialAssignments);
   const [trunkSelected, setTrunkSelected] = useState<string[]>([]);
   const [trunkChecked, setTrunkChecked] = useState(false);
   const [trunkPassed, setTrunkPassed] = useState(false);
@@ -68,14 +64,8 @@ export default function Home() {
   const [profileReached, setProfileReached] = useState(0);
 
   const backupNames = useMemo(() => {
-    const backupIds = new Set(
-      [
-        ...Object.values(assignments).map((assignment) => assignment.backup),
-        assignments.emergency?.primary,
-      ].filter((id): id is string => Boolean(id) && id !== "player"),
-    );
-    return members.filter((member) => backupIds.has(member.id)).map((member) => member.name);
-  }, [assignments, members]);
+    return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
+  }, [members]);
 
   function goTo(next: number) {
     setStep(next);
@@ -142,15 +132,7 @@ export default function Home() {
   }
 
   function updateMembers(nextMembers: CareMember[]) {
-    const validIds = new Set(nextMembers.map((member) => member.id));
     setMembers(nextMembers);
-    setAssignments((current) => Object.fromEntries(Object.entries(current).map(([taskId, assignment]) => [
-      taskId,
-      {
-        primary: validIds.has(assignment.primary) ? assignment.primary : "",
-        backup: validIds.has(assignment.backup) ? assignment.backup : "",
-      },
-    ])));
   }
 
   function toggleTrunkItem(id: string) {
@@ -195,7 +177,6 @@ export default function Home() {
     setRoomReady([]);
     setHazardsReady([]);
     setMembers(initialMembers);
-    setAssignments(initialAssignments);
     setTrunkSelected([]);
     setTrunkChecked(false);
     setTrunkPassed(false);
@@ -234,10 +215,7 @@ export default function Home() {
     if (preparationTask === 1) {
       return <CareMemberSetup members={members} onChange={updateMembers} onBack={() => changePreparationTask(0)} onNext={() => changePreparationTask(2)} />;
     }
-    if (preparationTask === 2) {
-      return <CareTaskAssignment members={members} assignments={assignments} onChange={setAssignments} onBack={() => changePreparationTask(1)} onNext={() => changePreparationTask(3)} />;
-    }
-    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => changePreparationTask(2)} onNext={() => { setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); setLifePhase("arrival-intro"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => changePreparationTask(1)} onNext={() => { setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); setLifePhase("arrival-intro"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
@@ -295,7 +273,7 @@ export default function Home() {
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <ProfileForm page={profilePage} onPage={changeProfilePage} profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); }} onNext={() => goTo(8)} />}
-            {step === 8 && <AssessmentReport breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} assignments={assignments} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => goTo(7)} onReset={resetAll} />}
+            {step === 8 && <AssessmentReport breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => goTo(7)} onReset={resetAll} />}
           </section>
         </div>
       )}

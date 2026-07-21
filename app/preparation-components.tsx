@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { careTasks, hazards, roomItems, trunkItems } from "./game-data";
-import type { CareAssignment, CareMember, TrunkItem } from "./game-types";
+import { useState } from "react";
+import { hazards, roomItems, trunkItems } from "./game-data";
+import type { CareMember, TrunkItem } from "./game-types";
 import { NavButtons, StepHeading } from "./shared-components";
 
 export function RoomPreparation({
@@ -97,60 +97,11 @@ export function CareMemberSetup({
 
   return (
     <div className="content-wrap preparation-page">
-      <StepHeading title="誰會一起照顧牠？" body="先建立照顧成員，下一步才能把每天與臨時的工作分配清楚。" />
+      <StepHeading title="誰會一起照顧牠？" body="建立可能一起照顧牠的家庭成員，完成後就可以整理接牠回家的後車廂。" />
       <div className="member-grid">{members.map((member, index) => <article className="member-card" key={member.id}><div className="member-card-head"><span>{member.isPlayer ? "我" : index + 1}</span><div><b>{member.isPlayer ? "主要玩家" : "家庭成員"}</b><small>{member.isPlayer ? "不可移除" : "可修改或移除"}</small></div>{!member.isPlayer && index > 1 && <button onClick={() => onChange(members.filter((item) => item.id !== member.id))}>移除</button>}</div><label>名稱或稱呼<input value={member.name} disabled={member.isPlayer} placeholder="例：媽媽" onChange={(event) => updateMember(member.id, { name: event.target.value })} /></label>{errors[`${member.id}-name`] && <p className="field-error">{errors[`${member.id}-name`]}</p>}<label>年齡<input type="number" inputMode="numeric" min="1" max="120" value={member.age ?? ""} placeholder="例：35" onChange={(event) => updateMember(member.id, { age: event.target.value ? Math.min(120, Math.max(1, Number(event.target.value))) : null })} /></label>{errors[`${member.id}-age`] && <p className="field-error">{errors[`${member.id}-age`]}</p>}</article>)}</div>
       <button className="add-member-button" onClick={addMember} disabled={members.length >= 6}>＋ 新增家庭成員 <small>{members.length} / 6</small></button>
-      <div className={`task-message ${valid ? "success" : ""}`}>{valid ? "成員資料完整，可以開始分配照顧工作。" : "每位成員都需要稱呼與合理年齡。"}</div>
-      <NavButtons onBack={onBack} onNext={validate} disabled={false} nextLabel="成員完成，開始分工" />
-    </div>
-  );
-}
-
-export function CareTaskAssignment({
-  members,
-  assignments,
-  onChange,
-  onBack,
-  onNext,
-}: {
-  members: CareMember[];
-  assignments: Record<string, CareAssignment>;
-  onChange: (assignments: Record<string, CareAssignment>) => void;
-  onBack: () => void;
-  onNext: () => void;
-}) {
-  const [message, setMessage] = useState("");
-  const memberById = useMemo(() => Object.fromEntries(members.map((member) => [member.id, member])), [members]);
-
-  function update(taskId: string, key: keyof CareAssignment, value: string) {
-    onChange({ ...assignments, [taskId]: { ...assignments[taskId], [key]: value } });
-  }
-
-  const validation = useMemo(() => {
-    const missing = careTasks.filter((task) => !assignments[task.id]?.primary);
-    const samePerson = careTasks.filter((task) => assignments[task.id]?.primary && assignments[task.id]?.primary === assignments[task.id]?.backup);
-    const playerHasTask = careTasks.some((task) => assignments[task.id]?.primary === "player");
-    const temporary = assignments.emergency?.primary || assignments.emergency?.backup;
-    const riskyChild = careTasks.filter((task) => task.risk && assignments[task.id]?.primary && (memberById[assignments[task.id].primary]?.age ?? 99) < 18);
-    return { missing, samePerson, playerHasTask, temporary, riskyChild, valid: missing.length === 0 && samePerson.length === 0 && playerHasTask && Boolean(temporary) && riskyChild.length === 0 };
-  }, [assignments, memberById]);
-
-  function checkAssignments() {
-    if (validation.missing.length) setMessage(`還有「${validation.missing[0].label}」沒有主要負責人。`);
-    else if (validation.samePerson.length) setMessage(`「${validation.samePerson[0].label}」的主要與備用負責人不能是同一人。`);
-    else if (!validation.playerHasTask) setMessage("你自己至少需要負責一項主要工作。");
-    else if (!validation.temporary) setMessage("請為臨時無法照顧時安排一位支援者。");
-    else if (validation.riskyChild.length) setMessage(`單獨負責「${validation.riskyChild[0].label}」需要足夠判斷與控制能力。年幼成員可以一起參與，但建議由成年人負主要責任。`);
-    else setMessage("分工完成！清楚的照顧分工能減少遺漏，也能避免領養後才發現沒有人有時間負責。");
-  }
-
-  return (
-    <div className="content-wrap preparation-page">
-      <StepHeading title="把照顧工作分配清楚" body="每項工作都需要主要負責人；備用者可在忙碌、出差或生病時接手。" />
-      <div className="assignment-table"><div className="assignment-head"><b>照顧工作</b><b>主要負責人</b><b>備用／協助者</b></div>{careTasks.map((task) => <div className="assignment-row" key={task.id}><span><b>{task.label}</b>{task.risk && <small>需要足夠判斷與控制能力</small>}</span><label><span className="visually-hidden">{task.label}主要負責人</span><select value={assignments[task.id]?.primary ?? ""} onChange={(event) => update(task.id, "primary", event.target.value)}><option value="">請選擇</option>{members.map((member) => <option key={member.id} value={member.id}>{member.name}（{member.age} 歲）</option>)}</select></label><label><span className="visually-hidden">{task.label}備用負責人</span><select value={assignments[task.id]?.backup ?? ""} onChange={(event) => update(task.id, "backup", event.target.value)}><option value="">可留空</option>{members.map((member) => <option key={member.id} value={member.id}>{member.name}（{member.age} 歲）</option>)}</select></label></div>)}</div>
-      <div className={`task-message ${validation.valid ? "success" : ""}`} role="status">{message || "完成主要分工後，按下「檢查分工」。"}</div>
-      <div className="task-check-actions"><button className="secondary" onClick={checkAssignments}>檢查分工</button></div>
-      <NavButtons onBack={onBack} onNext={onNext} disabled={!validation.valid} nextLabel="分工完成，整理後車廂" />
+      <div className={`task-message ${valid ? "success" : ""}`}>{valid ? "成員資料完整，可以繼續整理後車廂。" : "每位成員都需要稱呼與合理年齡。"}</div>
+      <NavButtons onBack={onBack} onNext={validate} disabled={false} nextLabel="成員完成，整理後車廂" />
     </div>
   );
 }

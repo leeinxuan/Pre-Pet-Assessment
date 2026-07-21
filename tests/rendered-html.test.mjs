@@ -52,9 +52,11 @@ test("contains the five-unit hierarchical journey and project-owned artwork", as
     assert.match(data, new RegExp(label));
   }
   assert.equal((data.match(/\["0[1-5]",/g) ?? []).length, 5);
-  for (const label of ["選擇物種", "選擇品種", "布置生活空間", "建立照顧成員", "分配照顧工作", "整理汽車後車廂", "接回家", "日常生活", "健康與意外", "生活變化"]) {
+  for (const label of ["選擇物種", "選擇品種", "布置生活空間", "建立照顧成員", "整理汽車後車廂", "接回家", "日常生活", "健康與意外", "生活變化"]) {
     assert.match(shared, new RegExp(label));
   }
+  assert.doesNotMatch(shared, /分配照顧工作/);
+  assert.doesNotMatch(preparation, /CareTaskAssignment|分配照顧工作|檢查分工/);
   assert.match(shared, /mobile-progress-nav/);
   assert.doesNotMatch(preparation, /02 · 領養前準備/);
   assert.doesNotMatch(profileReport, /07 · 回到真實的你|08 · 我的飼養準備報告/);

@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-DxkOd1Y0.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-DVbHHIGh.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var stations = [
@@ -370,53 +370,6 @@ var hazards = [
 		hint: "加裝防逃與防墜措施，確認活動區域安全。"
 	}
 ];
-var careTasks = [
-	{
-		id: "breakfast",
-		label: "早上餵食",
-		risk: false
-	},
-	{
-		id: "dinner",
-		label: "晚上餵食",
-		risk: false
-	},
-	{
-		id: "water",
-		label: "更換飲水",
-		risk: false
-	},
-	{
-		id: "walk",
-		label: "散步或陪玩",
-		risk: true
-	},
-	{
-		id: "toilet",
-		label: "清理排泄物",
-		risk: false
-	},
-	{
-		id: "groom",
-		label: "梳毛與清潔",
-		risk: false
-	},
-	{
-		id: "shopping",
-		label: "購買飼料及用品",
-		risk: false
-	},
-	{
-		id: "vet",
-		label: "帶寵物就醫",
-		risk: true
-	},
-	{
-		id: "emergency",
-		label: "臨時無法照顧時的支援",
-		risk: true
-	}
-];
 var initialMembers = [{
 	id: "player",
 	name: "我",
@@ -428,10 +381,6 @@ var initialMembers = [{
 	age: null,
 	isPlayer: false
 }];
-var initialAssignments = Object.fromEntries(careTasks.map((task) => [task.id, {
-	primary: "",
-	backup: ""
-}]));
 var trunkItems = [
 	{
 		id: "carrier",
@@ -744,10 +693,10 @@ var lifeScenarios = [
 			},
 			{
 				id: "assigned-helper",
-				text: "請事先安排並同意的備用照顧者，依分工協助今晚的餵食與活動。",
+				text: "請已確認能協助的家人或照顧者，幫忙今晚的餵食與活動。",
 				result: "correct",
 				...positive,
-				explanation: "事先建立的支援能避免忙碌時漏掉照顧，也讓交接更清楚。"
+				explanation: "事先確認支援人選能避免忙碌時漏掉照顧，也讓交接更清楚。"
 			},
 			{
 				id: "indoor-only",
@@ -816,10 +765,10 @@ var lifeScenarios = [
 		choices: [
 			{
 				id: "replan-family",
-				text: "和照顧成員重新分工，請已同意的備用照顧者接手並完整交接。",
+				text: "和家人或照顧者確認可行安排，請能協助的人接手並完整交接。",
 				result: "correct",
 				...positive,
-				explanation: "重新分工並保留交接紀錄，能讓豆豆的作息和健康照顧持續不中斷。"
+				explanation: "確認支援安排並保留交接紀錄，能讓豆豆的作息和健康照顧持續不中斷。"
 			},
 			{
 				id: "paid-care",
@@ -1816,7 +1765,6 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 			children: [
 				"布置生活空間",
 				"建立照顧成員",
-				"分配照顧工作",
 				"整理汽車後車廂"
 			].map((label, index) => ({
 				id: `preparation-${index}`,
@@ -2285,7 +2233,7 @@ function CareMemberSetup({ members, onChange, onBack, onNext }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
 				title: "誰會一起照顧牠？",
-				body: "先建立照顧成員，下一步才能把每天與臨時的工作分配清楚。"
+				body: "建立可能一起照顧牠的家庭成員，完成後就可以整理接牠回家的後車廂。"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "member-grid",
@@ -2337,131 +2285,13 @@ function CareMemberSetup({ members, onChange, onBack, onNext }) {
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: `task-message ${valid ? "success" : ""}`,
-				children: valid ? "成員資料完整，可以開始分配照顧工作。" : "每位成員都需要稱呼與合理年齡。"
+				children: valid ? "成員資料完整，可以繼續整理後車廂。" : "每位成員都需要稱呼與合理年齡。"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NavButtons, {
 				onBack,
 				onNext: validate,
 				disabled: false,
-				nextLabel: "成員完成，開始分工"
-			})
-		]
-	});
-}
-function CareTaskAssignment({ members, assignments, onChange, onBack, onNext }) {
-	const [message, setMessage] = (0, import_react.useState)("");
-	const memberById = (0, import_react.useMemo)(() => Object.fromEntries(members.map((member) => [member.id, member])), [members]);
-	function update(taskId, key, value) {
-		onChange({
-			...assignments,
-			[taskId]: {
-				...assignments[taskId],
-				[key]: value
-			}
-		});
-	}
-	const validation = (0, import_react.useMemo)(() => {
-		const missing = careTasks.filter((task) => !assignments[task.id]?.primary);
-		const samePerson = careTasks.filter((task) => assignments[task.id]?.primary && assignments[task.id]?.primary === assignments[task.id]?.backup);
-		const playerHasTask = careTasks.some((task) => assignments[task.id]?.primary === "player");
-		const temporary = assignments.emergency?.primary || assignments.emergency?.backup;
-		const riskyChild = careTasks.filter((task) => task.risk && assignments[task.id]?.primary && (memberById[assignments[task.id].primary]?.age ?? 99) < 18);
-		return {
-			missing,
-			samePerson,
-			playerHasTask,
-			temporary,
-			riskyChild,
-			valid: missing.length === 0 && samePerson.length === 0 && playerHasTask && Boolean(temporary) && riskyChild.length === 0
-		};
-	}, [assignments, memberById]);
-	function checkAssignments() {
-		if (validation.missing.length) setMessage(`還有「${validation.missing[0].label}」沒有主要負責人。`);
-		else if (validation.samePerson.length) setMessage(`「${validation.samePerson[0].label}」的主要與備用負責人不能是同一人。`);
-		else if (!validation.playerHasTask) setMessage("你自己至少需要負責一項主要工作。");
-		else if (!validation.temporary) setMessage("請為臨時無法照顧時安排一位支援者。");
-		else if (validation.riskyChild.length) setMessage(`單獨負責「${validation.riskyChild[0].label}」需要足夠判斷與控制能力。年幼成員可以一起參與，但建議由成年人負主要責任。`);
-		else setMessage("分工完成！清楚的照顧分工能減少遺漏，也能避免領養後才發現沒有人有時間負責。");
-	}
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		className: "content-wrap preparation-page",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				title: "把照顧工作分配清楚",
-				body: "每項工作都需要主要負責人；備用者可在忙碌、出差或生病時接手。"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "assignment-table",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "assignment-head",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "照顧工作" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "主要負責人" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "備用／協助者" })
-					]
-				}), careTasks.map((task) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "assignment-row",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: task.label }), task.risk && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "需要足夠判斷與控制能力" })] }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							className: "visually-hidden",
-							children: [task.label, "主要負責人"]
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("select", {
-							value: assignments[task.id]?.primary ?? "",
-							onChange: (event) => update(task.id, "primary", event.target.value),
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
-								value: "",
-								children: "請選擇"
-							}), members.map((member) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("option", {
-								value: member.id,
-								children: [
-									member.name,
-									"（",
-									member.age,
-									" 歲）"
-								]
-							}, member.id))]
-						})] }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							className: "visually-hidden",
-							children: [task.label, "備用負責人"]
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("select", {
-							value: assignments[task.id]?.backup ?? "",
-							onChange: (event) => update(task.id, "backup", event.target.value),
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
-								value: "",
-								children: "可留空"
-							}), members.map((member) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("option", {
-								value: member.id,
-								children: [
-									member.name,
-									"（",
-									member.age,
-									" 歲）"
-								]
-							}, member.id))]
-						})] })
-					]
-				}, task.id))]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: `task-message ${validation.valid ? "success" : ""}`,
-				role: "status",
-				children: message || "完成主要分工後，按下「檢查分工」。"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "task-check-actions",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-					className: "secondary",
-					onClick: checkAssignments,
-					children: "檢查分工"
-				})
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NavButtons, {
-				onBack,
-				onNext,
-				disabled: !validation.valid,
-				nextLabel: "分工完成，整理後車廂"
+				nextLabel: "成員完成，整理後車廂"
 			})
 		]
 	});
@@ -2941,7 +2771,7 @@ function ProfileForm({ page, onPage, profile, onChange, onBack, onNext }) {
 		]
 	});
 }
-function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomReady, hazardsReady, members, assignments, trunkSelected, trunkPassed, answers, lifeActivity, onBack, onReset }) {
+function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomReady, hazardsReady, members, trunkSelected, trunkPassed, answers, lifeActivity, onBack, onReset }) {
 	const recurring = expenses.filter((item) => item.recurring).reduce((sum, item) => sum + item.amount, 0);
 	const oneTime = expenses.filter((item) => !item.recurring && item.category === "用品").reduce((sum, item) => sum + item.amount, 0);
 	const medical = expenses.filter((item) => item.category === "醫療" && !item.recurring).reduce((sum, item) => sum + item.amount, 0);
@@ -2977,14 +2807,12 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 		}
 	];
 	const practiceComplete = practiceItems.filter((item) => item.complete).length;
-	const backupIds = new Set([...Object.values(assignments).map((item) => item.backup), assignments.emergency?.primary].filter((id) => Boolean(id) && id !== "player"));
-	const backupNames = members.filter((member) => backupIds.has(member.id)).map((member) => member.name);
+	const backupNames = members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
 	const requiredRoom = roomItems.filter((item) => item.required);
 	const roomCompletion = Math.round(roomReady.filter((id) => requiredRoom.some((item) => item.id === id)).length / requiredRoom.length * 100);
-	const assignmentCompletion = Math.round(careTasks.filter((task) => assignments[task.id]?.primary).length / careTasks.length * 100);
 	const budgetEnough = Number(profile.monthlyBudget) >= recurring;
 	const strongSignals = [
-		roomCompletion === 100 && hazardsReady.length === 5 && assignmentCompletion === 100 && trunkPassed,
+		roomCompletion === 100 && hazardsReady.length === 5 && trunkPassed,
 		correctFirst >= 5,
 		practiceComplete === 5,
 		budgetEnough,
@@ -2997,8 +2825,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 	const prepared = [
 		roomCompletion === 100 && "必要用品與生活空間已完成",
 		hazardsReady.length === 5 && "居家危險物已完成收納與防護",
-		assignmentCompletion === 100 && "日常照顧工作已有主要負責人",
-		backupNames.length > 0 && `已有備用照顧者：${backupNames.join("、")}`,
+		backupNames.length > 0 && `已有可協助照顧的家庭成員：${backupNames.join("、")}`,
 		trunkPassed && "接送行李、文件與安全運輸已通過檢查",
 		correctFirst >= 5 && `${correctFirst} 個情境第一次就掌握照顧方向`,
 		practiceComplete === 5 && "四個生活練習與飲水步驟皆已完成",
@@ -3007,7 +2834,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 	const confirm = [
 		roomCompletion < 100 && `必要用品完成度 ${roomCompletion}%`,
 		hazardsReady.length < 5 && "仍有居家危險物需要防護",
-		backupNames.length === 0 && "尚未建立可用的備用照顧者",
+		backupNames.length === 0 && "尚未新增其他可協助的照顧成員",
 		!trunkPassed && "接寵物後車廂尚未通過檢查",
 		!budgetEnough && `每月預算低於目前固定支出 NT$ ${money.format(recurring)}`,
 		profile.emergencyFund === false && "目前沒有緊急預備金",
@@ -3016,8 +2843,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 	const familyTopics = [
 		profile.hasHousemates && profile.housematesConsent !== true && "所有同住者是否知情並同意飼養",
 		profile.housing === "租屋" && profile.landlordConsent !== "房東已同意" && "租屋規定與房東書面同意",
-		profile.backupSupport === false && "忙碌、出差或生病時由誰接手",
-		assignmentCompletion < 100 && "未完成的照顧工作如何分配"
+		profile.backupSupport === false && "忙碌、出差或生病時由誰接手"
 	].filter(Boolean);
 	const actions = [
 		...confirm.slice(0, 5),
@@ -3059,14 +2885,13 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 						className: "summary-card",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "card-head",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "01" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "領養前準備" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "家、分工與接送" })] })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "01" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "領養前準備" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "家、成員與接送" })] })]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", {
 							className: "report-metrics",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "房間必要用品" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [roomCompletion, "%"] })] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "危險物防護" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [hazardsReady.length, " / 5"] })] }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "工作分配" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [assignmentCompletion, "%"] })] }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "備用照顧者" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: backupNames.length ? backupNames.join("、") : "尚未安排" })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "照顧成員" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: backupNames.length ? backupNames.join("、") : "只有我" })] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "後車廂" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: trunkPassed ? "已通過" : `${trunkSelected.length} 件已放入` })] })
 							]
 						})]
@@ -3139,7 +2964,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "居住空間" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [profile.housing, profile.housing === "租屋" ? ` · ${profile.landlordConsent}` : ""] })] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "每月預算" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(Number(profile.monthlyBudget))] })] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "同住者支持" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.hasHousemates ? profile.housematesConsent ? "已同意" : "尚待確認" : "無同住者" })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "備用照顧者" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: backupNames.join("、") || "尚未安排" })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "家庭照顧成員" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: backupNames.join("、") || "只有我" })] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "緊急預備金" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.emergencyFund ? "已有準備" : "目前沒有" })] })
 						] })]
 					}),
@@ -3229,7 +3054,6 @@ function Home() {
 	const [roomReady, setRoomReady] = (0, import_react.useState)([]);
 	const [hazardsReady, setHazardsReady] = (0, import_react.useState)([]);
 	const [members, setMembers] = (0, import_react.useState)(initialMembers);
-	const [assignments, setAssignments] = (0, import_react.useState)(initialAssignments);
 	const [trunkSelected, setTrunkSelected] = (0, import_react.useState)([]);
 	const [trunkChecked, setTrunkChecked] = (0, import_react.useState)(false);
 	const [trunkPassed, setTrunkPassed] = (0, import_react.useState)(false);
@@ -3244,9 +3068,8 @@ function Home() {
 	const [profilePage, setProfilePage] = (0, import_react.useState)(0);
 	const [profileReached, setProfileReached] = (0, import_react.useState)(0);
 	const backupNames = (0, import_react.useMemo)(() => {
-		const backupIds = new Set([...Object.values(assignments).map((assignment) => assignment.backup), assignments.emergency?.primary].filter((id) => Boolean(id) && id !== "player"));
-		return members.filter((member) => backupIds.has(member.id)).map((member) => member.name);
-	}, [assignments, members]);
+		return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
+	}, [members]);
 	function goTo(next) {
 		setStep(next);
 		setFurthestStep((current) => Math.max(current, next));
@@ -3322,12 +3145,7 @@ function Home() {
 		setHazardsReady((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
 	}
 	function updateMembers(nextMembers) {
-		const validIds = new Set(nextMembers.map((member) => member.id));
 		setMembers(nextMembers);
-		setAssignments((current) => Object.fromEntries(Object.entries(current).map(([taskId, assignment]) => [taskId, {
-			primary: validIds.has(assignment.primary) ? assignment.primary : "",
-			backup: validIds.has(assignment.backup) ? assignment.backup : ""
-		}])));
 	}
 	function toggleTrunkItem(id) {
 		if (!id) return;
@@ -3372,7 +3190,6 @@ function Home() {
 		setRoomReady([]);
 		setHazardsReady([]);
 		setMembers(initialMembers);
-		setAssignments(initialAssignments);
 		setTrunkSelected([]);
 		setTrunkChecked(false);
 		setTrunkPassed(false);
@@ -3423,13 +3240,6 @@ function Home() {
 			onBack: () => changePreparationTask(0),
 			onNext: () => changePreparationTask(2)
 		});
-		if (preparationTask === 2) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CareTaskAssignment, {
-			members,
-			assignments,
-			onChange: setAssignments,
-			onBack: () => changePreparationTask(1),
-			onNext: () => changePreparationTask(3)
-		});
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarTrunkPreparation, {
 			selected: trunkSelected,
 			checked: trunkChecked,
@@ -3439,7 +3249,7 @@ function Home() {
 				setTrunkChecked(true);
 				setTrunkPassed(passed);
 			},
-			onBack: () => changePreparationTask(2),
+			onBack: () => changePreparationTask(1),
 			onNext: () => {
 				setStep(3);
 				setFurthestStep((current) => Math.max(current, 3));
@@ -3557,7 +3367,6 @@ function Home() {
 							roomReady,
 							hazardsReady,
 							members,
-							assignments,
 							trunkSelected,
 							trunkPassed,
 							answers: scenarioAnswers,
