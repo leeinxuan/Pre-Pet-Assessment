@@ -38,41 +38,6 @@ function stageForIndex(index: number) {
   return 6;
 }
 
-function LifeTimeline({
-  index,
-  completedIds,
-  onSelect,
-}: {
-  index: number;
-  completedIds: string[];
-  onSelect: (index: number) => void;
-}) {
-  const completed = journeyItems.map((item) => completedIds.includes(item.id));
-  const firstIncomplete = completed.findIndex((value) => !value);
-  const maxUnlocked = firstIncomplete === -1 ? journeyItems.length - 1 : firstIncomplete;
-  return (
-    <div className="life-timeline" aria-label="豆豆的一生，共 11 個生活內容">
-      {journeyItems.map((item, itemIndex) => {
-        const done = completed[itemIndex];
-        const available = itemIndex <= maxUnlocked;
-        return (
-          <button
-            key={item.id}
-            className={`${itemIndex === index ? "active" : ""} ${done ? "done" : ""}`}
-            disabled={!available}
-            onClick={() => onSelect(itemIndex)}
-            aria-label={`${done ? "已完成" : "前往"}${item.timeLabel}，${item.type === "scenario" ? "情境判斷" : "生活練習"}：${item.title}`}
-          >
-            <i>{done ? "✓" : itemIndex + 1}</i>
-            <span>{item.timeLabel}</span>
-            <small>{item.type === "scenario" ? "情境判斷" : "生活練習"}</small>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 function ScenarioFeedback({
   scenario,
   choice,
@@ -188,7 +153,7 @@ function BodyLanguageActivity({
   const complete = viewed.length === bodySignals.length;
   return (
     <section className="life-activity">
-      <div className="activity-heading"><p className="eyebrow">生活練習 · 不計分</p><h1>看懂小狗的身體語言</h1><p>點擊耳朵、尾巴、嘴巴與身體姿勢的訊號。沒有答對或答錯，重點是學會看見豆豆正在表達什麼。</p></div>
+      <div className="activity-heading"><h1>看懂小狗的身體語言</h1><p>點擊耳朵、尾巴、嘴巴與身體姿勢的訊號。沒有答對或答錯，重點是學會看見豆豆正在表達什麼。</p></div>
       <div className="signal-layout">
         <div className="signal-dog" aria-hidden="true"><span>🐕</span><i>耳朵</i><i>嘴巴</i><i>尾巴</i><i>身體姿勢</i></div>
         <div className="signal-grid">{bodySignals.map((item) => <button key={item.id} className={viewed.includes(item.id) ? "viewed" : ""} onClick={() => { setActive(item.id); onView(item.id); }}><span>{item.icon}</span><b>{item.label}</b><small>{item.area}{viewed.includes(item.id) ? " · 已閱讀" : ""}</small></button>)}</div>
@@ -251,7 +216,7 @@ function FeedingActivity({
   }
   return (
     <section className={`life-activity feeding-activity ${activity.feedingServed ? "served" : ""}`}>
-      <div className="activity-heading"><p className="eyebrow">一起生活三個月 · 生活練習</p><h1>準備豆豆的晚餐</h1><p>三個月後，豆豆已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。</p></div>
+      <div className="activity-heading"><h1>準備豆豆的晚餐</h1><p>三個月後，豆豆已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。</p></div>
       <div className="feeding-steps">
         <article><span>1</span><h2>選擇食物</h2><div className="food-options">{feedingFoods.map((food) => <button key={food.id} className={activity.feedingFoodReady && food.kind === "main" ? "selected" : ""} onClick={() => chooseFood(food.kind)}><i>{food.icon}</i><b>{food.label}</b></button>)}</div></article>
         <article><span>2</span><h2>準備乾淨飲水</h2><div className="water-sequence">{waterSteps.map((step, index) => <button key={step} className={activity.feedingWaterSteps.includes(step) ? "done" : ""} disabled={index > activity.feedingWaterSteps.length} onClick={() => doWaterStep(step, index)}><i>{activity.feedingWaterSteps.includes(step) ? "✓" : index + 1}</i>{step}</button>)}</div></article>
@@ -277,7 +242,7 @@ function BodyCareActivity({ viewed, onView, onContinue }: { viewed: string[]; on
   const part = careParts.find((item) => item.id === active);
   return (
     <section className="life-activity body-care-activity">
-      <div className="activity-heading"><p className="eyebrow">成年後的例行照顧 · 不計分</p><h1>清潔與基礎身體觀察</h1><p>依序查看豆豆的眼睛、耳朵、牙齒、皮膚毛髮、腳掌與指甲，將清潔變成每天都能做的健康觀察。</p></div>
+      <div className="activity-heading"><h1>清潔與基礎身體觀察</h1><p>依序查看豆豆的眼睛、耳朵、牙齒、皮膚毛髮、腳掌與指甲，將清潔變成每天都能做的健康觀察。</p></div>
       <div className="body-care-board"><div className="care-dog" aria-hidden="true">🐕</div><div className="care-parts">{careParts.map((item) => <button key={item.id} className={viewed.includes(item.id) ? "viewed" : ""} onClick={() => { setActive(item.id); onView(item.id); }}><span>{item.icon}</span><b>{item.label}</b><small>{viewed.includes(item.id) ? "✓ 已查看" : "點擊查看"}</small></button>)}</div></div>
       <div className="activity-message" role="status">{part ? <><b>{part.label}</b><p>{part.text}</p></> : <p>從任一部位開始查看。</p>}</div>
       <div className="activity-actions"><span>{viewed.length} / {careParts.length} 個部位已查看</span><button className="primary" disabled={viewed.length !== careParts.length} onClick={onContinue}>完成身體觀察 <span>→</span></button></div>
@@ -314,7 +279,7 @@ function SeniorRoomActivity({
   }
   return (
     <section className="life-activity senior-room-activity">
-      <div className="activity-heading"><p className="eyebrow">調整高齡生活空間 · 不計分</p><h1>改造高齡犬的家</h1><p>豆豆已經走得比較慢。保留領養前準備好的房間，再加入讓高齡生活更安全、舒服的調整。</p></div>
+      <div className="activity-heading"><h1>改造高齡犬的家</h1><p>豆豆已經走得比較慢。保留領養前準備好的房間，再加入讓高齡生活更安全、舒服的調整。</p></div>
       <div className="senior-room-layout">
         <div className="room senior-room-preview"><p>原本已放置的物品</p>{roomReady.map((id, index) => { const item = roomItems.find((entry) => entry.id === id); return item ? <span key={id} className={`senior-original item-${index % 6}`}><i>{item.icon}</i>{item.label}</span> : null; })}<b aria-hidden="true">🐕</b></div>
         <div className="senior-adjustments">{seniorAdjustments.map((item) => <button key={item.id} className={selected.includes(item.id) ? "selected" : ""} aria-pressed={selected.includes(item.id)} onClick={() => choose(item.id, item.expenseId)}><span>{item.icon}</span><b>{item.label}</b><small>{selected.includes(item.id) ? "✓ 已完成" : item.expenseId ? `加入用品 · NT$ ${money.format(expenseCatalog[item.expenseId].amount)}` : "點擊完成調整"}</small></button>)}</div>
@@ -393,12 +358,9 @@ export function LifeJourney({
   return (
     <div className="content-wrap life-journey-page">
       <div className="life-journey-head">
-        <div><p className="eyebrow">飼養生活 · 豆豆的一生</p><h1>你們一起走到了「{item.timeLabel}」</h1></div>
+        <div><h1>你們一起走到了「{item.timeLabel}」</h1></div>
         <b>{index + 1} / {journeyItems.length}</b>
       </div>
-      <LifeTimeline index={index} completedIds={completedIds} onSelect={selectItem} />
-      <div className="journey-type-label"><span>{item.type === "scenario" ? "情境判斷" : "生活練習"}</span><b>{item.title}</b></div>
-
       {scenario && (
         <ScenarioCard
           scenario={scenario}

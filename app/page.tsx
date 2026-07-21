@@ -41,10 +41,14 @@ const emergencyReserve = 20000;
 
 export default function Home() {
   const [step, setStep] = useState(0);
+  const [furthestStep, setFurthestStep] = useState(1);
   const [introOpen, setIntroOpen] = useState(false);
   const [category, setCategory] = useState("");
   const [breed, setBreed] = useState("");
+  const [selectionPage, setSelectionPage] = useState<"species" | "breed">("species");
+  const [selectionReached, setSelectionReached] = useState(0);
   const [preparationTask, setPreparationTask] = useState(0);
+  const [preparationReached, setPreparationReached] = useState(0);
   const [roomReady, setRoomReady] = useState<string[]>([]);
   const [hazardsReady, setHazardsReady] = useState<string[]>([]);
   const [members, setMembers] = useState<CareMember[]>(initialMembers);
@@ -60,6 +64,8 @@ export default function Home() {
   const [lifeActivity, setLifeActivity] = useState<LifeActivityState>(initialLifeActivityState);
   const [scenarioAnswers, setScenarioAnswers] = useState<Record<string, ScenarioAnswer>>({});
   const [profile, setProfile] = useState<Profile>(initialProfile);
+  const [profilePage, setProfilePage] = useState(0);
+  const [profileReached, setProfileReached] = useState(0);
 
   const backupNames = useMemo(() => {
     const backupIds = new Set(
@@ -73,14 +79,44 @@ export default function Home() {
 
   function goTo(next: number) {
     setStep(next);
+    setFurthestStep((current) => Math.max(current, next));
     setIntroOpen(next > 0 && !(next >= 3 && next <= 6));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function goToStation(next: number) {
-    const firstJourneyItem: Record<number, number> = { 3: 0, 4: 3, 5: 6, 6: 7 };
-    if (firstJourneyItem[next] !== undefined) setJourneyIndex(firstJourneyItem[next]);
-    goTo(next);
+    setStep(next);
+    setIntroOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function goToLifeStage(stageIndex: number) {
+    const firstJourneyItem = [0, 2, 6, 7];
+    const underlyingStep = [3, 4, 5, 6];
+    if (lifePhase === "arrival-intro" && stageIndex === 0) {
+      setStep(3);
+      setIntroOpen(false);
+    } else {
+      setJourneyIndex(firstJourneyItem[stageIndex]);
+      setStep(underlyingStep[stageIndex]);
+      setIntroOpen(false);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function changeSelectionPage(page: "species" | "breed") {
+    setSelectionPage(page);
+    setSelectionReached((current) => Math.max(current, page === "breed" ? 1 : 0));
+  }
+
+  function changePreparationTask(task: number) {
+    setPreparationTask(task);
+    setPreparationReached((current) => Math.max(current, task));
+  }
+
+  function changeProfilePage(page: number) {
+    setProfilePage(page);
+    setProfileReached((current) => Math.max(current, page));
   }
 
   function addExpenseById(id: string) {
@@ -152,7 +188,10 @@ export default function Home() {
   function resetJourney() {
     setCategory("");
     setBreed("");
+    setSelectionPage("species");
+    setSelectionReached(0);
     setPreparationTask(0);
+    setPreparationReached(0);
     setRoomReady([]);
     setHazardsReady([]);
     setMembers(initialMembers);
@@ -168,11 +207,14 @@ export default function Home() {
     setLifeActivity(initialLifeActivityState);
     setScenarioAnswers({});
     setProfile(initialProfile);
+    setProfilePage(0);
+    setProfileReached(0);
   }
 
   function startFreshJourney() {
     resetJourney();
     setStep(1);
+    setFurthestStep(1);
     setIntroOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -180,21 +222,22 @@ export default function Home() {
   function resetAll() {
     resetJourney();
     setStep(0);
+    setFurthestStep(1);
     setIntroOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function renderPreparation() {
     if (preparationTask === 0) {
-      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} onAddItem={addRoomItem} onRemoveItem={(id) => setRoomReady((current) => current.filter((item) => item !== id))} onToggleHazard={toggleHazard} onBack={() => goTo(1)} onNext={() => setPreparationTask(1)} />;
+      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} onAddItem={addRoomItem} onRemoveItem={(id) => setRoomReady((current) => current.filter((item) => item !== id))} onToggleHazard={toggleHazard} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
     }
     if (preparationTask === 1) {
-      return <CareMemberSetup members={members} onChange={updateMembers} onBack={() => setPreparationTask(0)} onNext={() => setPreparationTask(2)} />;
+      return <CareMemberSetup members={members} onChange={updateMembers} onBack={() => changePreparationTask(0)} onNext={() => changePreparationTask(2)} />;
     }
     if (preparationTask === 2) {
-      return <CareTaskAssignment members={members} assignments={assignments} onChange={setAssignments} onBack={() => setPreparationTask(1)} onNext={() => setPreparationTask(3)} />;
+      return <CareTaskAssignment members={members} assignments={assignments} onChange={setAssignments} onBack={() => changePreparationTask(1)} onNext={() => changePreparationTask(3)} />;
     }
-    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => setPreparationTask(2)} onNext={() => { setStep(3); setIntroOpen(false); setLifePhase("arrival-intro"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => changePreparationTask(2)} onNext={() => { setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); setLifePhase("arrival-intro"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
@@ -215,7 +258,7 @@ export default function Home() {
         onActivityChange={(patch) => setLifeActivity((current) => ({ ...current, ...patch }))}
         onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}
         onAddExpense={addExpenseById}
-        onStageChange={(nextStep) => { setStep(nextStep); setIntroOpen(false); }}
+        onStageChange={(nextStep) => { setStep(nextStep); setFurthestStep((current) => Math.max(current, nextStep)); setIntroOpen(false); }}
         onBack={() => { setStep(2); setIntroOpen(false); setPreparationTask(3); }}
         onComplete={() => { setLifePhase("complete"); goTo(7); }}
       />
@@ -228,13 +271,30 @@ export default function Home() {
 
       {step > 0 && !introOpen && (
         <div className="stage-layout">
-          <StageRail step={step} onGoTo={goToStation} />
+          <StageRail
+            step={step}
+            furthestStep={furthestStep}
+            selectionPage={selectionPage}
+            selectionReached={selectionReached}
+            preparationTask={preparationTask}
+            preparationReached={preparationReached}
+            lifePhase={lifePhase}
+            journeyIndex={journeyIndex}
+            journeyCompleted={journeyCompleted}
+            profilePage={profilePage}
+            profileReached={profileReached}
+            onGoTo={goToStation}
+            onSelectionPage={(page) => { changeSelectionPage(page); goToStation(1); }}
+            onPreparationTask={(task) => { changePreparationTask(task); goToStation(2); }}
+            onLifeStage={goToLifeStage}
+            onProfilePage={(page) => { changeProfilePage(page); goToStation(7); }}
+          />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 7 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} />}
-            {step === 1 && <SpeciesStep category={category} breed={breed} onCategory={setCategory} onBreed={setBreed} onNext={() => goTo(2)} />}
+            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} onCategory={setCategory} onBreed={setBreed} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
-            {step === 7 && <ProfileForm profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); }} onNext={() => goTo(8)} />}
+            {step === 7 && <ProfileForm page={profilePage} onPage={changeProfilePage} profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); }} onNext={() => goTo(8)} />}
             {step === 8 && <AssessmentReport breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} assignments={assignments} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => goTo(7)} onReset={resetAll} />}
           </section>
         </div>
@@ -243,7 +303,6 @@ export default function Home() {
       {step > 0 && introOpen && (
         <section className="intro-screen">
           <div className="intro-orbit" aria-hidden="true"><span>{intros[step - 1].icon}</span></div>
-          <p className="eyebrow">{intros[step - 1].eyebrow}</p>
           <h1>{intros[step - 1].title}</h1>
           <p className="intro-body">{intros[step - 1].body}</p>
           <div className="soft-note"><span>✦</span>{intros[step - 1].tip}</div>

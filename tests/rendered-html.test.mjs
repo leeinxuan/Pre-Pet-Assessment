@@ -30,10 +30,13 @@ test("server-renders the pet readiness journey", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
-test("contains the eight-stage adoption timeline and project-owned artwork", async () => {
-  const [page, data, lifeData, lifeComponents, css, packageJson] = await Promise.all([
+test("contains the five-unit hierarchical journey and project-owned artwork", async () => {
+  const [page, data, shared, preparation, profileReport, lifeData, lifeComponents, css, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/game-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/shared-components.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/preparation-components.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/profile-report-components.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/life-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/life-journey-components.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -45,9 +48,17 @@ test("contains the eight-stage adoption timeline and project-owned artwork", asy
     access(new URL("../public/illustrations/prep-room.png", import.meta.url)),
   ]);
 
-  for (const label of ["選擇寵物", "領養前準備", "接回家", "日常生活", "健康與意外", "生活變化", "認識你", "評估報告"]) {
+  for (const label of ["選擇寵物", "領養前準備", "飼養生活", "認識你", "評估報告"]) {
     assert.match(data, new RegExp(label));
   }
+  assert.equal((data.match(/\["0[1-5]",/g) ?? []).length, 5);
+  for (const label of ["選擇物種", "選擇品種", "布置生活空間", "建立照顧成員", "分配照顧工作", "整理汽車後車廂", "接回家", "日常生活", "健康與意外", "生活變化"]) {
+    assert.match(shared, new RegExp(label));
+  }
+  assert.match(shared, /mobile-progress-nav/);
+  assert.doesNotMatch(preparation, /02 · 領養前準備/);
+  assert.doesNotMatch(profileReport, /07 · 回到真實的你|08 · 我的飼養準備報告/);
+  assert.doesNotMatch(lifeComponents, /飼養生活 · 豆豆的一生/);
   for (const scenarioId of ["arrival-adjustment", "behavior-guidance", "busy-daily-care", "illness-vet", "owner-life-change", "growing-old", "late-life-companionship"]) {
     assert.match(lifeData, new RegExp(scenarioId));
   }

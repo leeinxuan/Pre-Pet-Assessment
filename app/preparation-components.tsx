@@ -5,16 +5,6 @@ import { careTasks, hazards, roomItems, trunkItems } from "./game-data";
 import type { CareAssignment, CareMember, TrunkItem } from "./game-types";
 import { NavButtons, StepHeading } from "./shared-components";
 
-const preparationTitles = ["布置生活空間", "建立照顧成員", "分配照顧工作", "整理汽車後車廂"];
-
-function PreparationProgress({ task }: { task: number }) {
-  return (
-    <div className="prep-task-progress" aria-label={`領養前準備第 ${task + 1} 步，共 4 步`}>
-      {preparationTitles.map((title, index) => <span key={title} className={`${index === task ? "active" : ""} ${index < task ? "done" : ""}`}><i>{index < task ? "✓" : index + 1}</i><b>{title}</b></span>)}
-    </div>
-  );
-}
-
 export function RoomPreparation({
   selectedItems,
   securedHazards,
@@ -53,8 +43,7 @@ export function RoomPreparation({
 
   return (
     <div className="content-wrap preparation-page">
-      <PreparationProgress task={0} />
-      <StepHeading eyebrow="02 · 領養前準備" title="先替牠布置安全的生活空間" body="把用品拖進房間，或直接點擊加入；再逐一把可能造成風險的物品收好。" />
+      <StepHeading title="先替牠布置安全的生活空間" body="把用品拖進房間，或直接點擊加入；再逐一把可能造成風險的物品收好。" />
       <div className="prep-board expanded">
         <section className="item-shelf"><h2>用品準備箱 <span>{waiting.length} 件可加入</span></h2><div>{waiting.map((item) => <button key={item.id} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} onClick={() => onAddItem(item.id)}><span>{item.icon}</span><b>{item.label}</b><small>{item.required ? "必要用品" : "可選用品"} · 拖曳或點擊</small></button>)}</div>{waiting.length === 0 && <p className="empty-box">所有用品都已放進房間 ✓</p>}</section>
         <div className="room room-preparation" onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); onAddItem(event.dataTransfer.getData("text/plain")); }}>
@@ -108,8 +97,7 @@ export function CareMemberSetup({
 
   return (
     <div className="content-wrap preparation-page">
-      <PreparationProgress task={1} />
-      <StepHeading eyebrow="02 · 領養前準備" title="誰會一起照顧牠？" body="先建立照顧成員，下一步才能把每天與臨時的工作分配清楚。" />
+      <StepHeading title="誰會一起照顧牠？" body="先建立照顧成員，下一步才能把每天與臨時的工作分配清楚。" />
       <div className="member-grid">{members.map((member, index) => <article className="member-card" key={member.id}><div className="member-card-head"><span>{member.isPlayer ? "我" : index + 1}</span><div><b>{member.isPlayer ? "主要玩家" : "家庭成員"}</b><small>{member.isPlayer ? "不可移除" : "可修改或移除"}</small></div>{!member.isPlayer && index > 1 && <button onClick={() => onChange(members.filter((item) => item.id !== member.id))}>移除</button>}</div><label>名稱或稱呼<input value={member.name} disabled={member.isPlayer} placeholder="例：媽媽" onChange={(event) => updateMember(member.id, { name: event.target.value })} /></label>{errors[`${member.id}-name`] && <p className="field-error">{errors[`${member.id}-name`]}</p>}<label>年齡<input type="number" inputMode="numeric" min="1" max="120" value={member.age ?? ""} placeholder="例：35" onChange={(event) => updateMember(member.id, { age: event.target.value ? Math.min(120, Math.max(1, Number(event.target.value))) : null })} /></label>{errors[`${member.id}-age`] && <p className="field-error">{errors[`${member.id}-age`]}</p>}</article>)}</div>
       <button className="add-member-button" onClick={addMember} disabled={members.length >= 6}>＋ 新增家庭成員 <small>{members.length} / 6</small></button>
       <div className={`task-message ${valid ? "success" : ""}`}>{valid ? "成員資料完整，可以開始分配照顧工作。" : "每位成員都需要稱呼與合理年齡。"}</div>
@@ -158,8 +146,7 @@ export function CareTaskAssignment({
 
   return (
     <div className="content-wrap preparation-page">
-      <PreparationProgress task={2} />
-      <StepHeading eyebrow="02 · 領養前準備" title="把照顧工作分配清楚" body="每項工作都需要主要負責人；備用者可在忙碌、出差或生病時接手。" />
+      <StepHeading title="把照顧工作分配清楚" body="每項工作都需要主要負責人；備用者可在忙碌、出差或生病時接手。" />
       <div className="assignment-table"><div className="assignment-head"><b>照顧工作</b><b>主要負責人</b><b>備用／協助者</b></div>{careTasks.map((task) => <div className="assignment-row" key={task.id}><span><b>{task.label}</b>{task.risk && <small>需要足夠判斷與控制能力</small>}</span><label><span className="visually-hidden">{task.label}主要負責人</span><select value={assignments[task.id]?.primary ?? ""} onChange={(event) => update(task.id, "primary", event.target.value)}><option value="">請選擇</option>{members.map((member) => <option key={member.id} value={member.id}>{member.name}（{member.age} 歲）</option>)}</select></label><label><span className="visually-hidden">{task.label}備用負責人</span><select value={assignments[task.id]?.backup ?? ""} onChange={(event) => update(task.id, "backup", event.target.value)}><option value="">可留空</option>{members.map((member) => <option key={member.id} value={member.id}>{member.name}（{member.age} 歲）</option>)}</select></label></div>)}</div>
       <div className={`task-message ${validation.valid ? "success" : ""}`} role="status">{message || "完成主要分工後，按下「檢查分工」。"}</div>
       <div className="task-check-actions"><button className="secondary" onClick={checkAssignments}>檢查分工</button></div>
@@ -202,8 +189,7 @@ export function CarTrunkPreparation({
 
   return (
     <div className="content-wrap preparation-page">
-      <PreparationProgress task={3} />
-      <StepHeading eyebrow="02 · 領養前準備" title="出發接牠回家" body="你準備開車去接牠了。請把接牠回家需要的物品放進後車廂。" />
+      <StepHeading title="出發接牠回家" body="你準備開車去接牠了。請把接牠回家需要的物品放進後車廂。" />
       <div className={`trunk-layout ${departing ? "departing" : ""}`}>
         <section className="trunk-shelf"><h2>可選物品</h2><div>{trunkItems.filter((item) => !selected.includes(item.id)).map((item) => <button key={item.id} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} onClick={() => onToggle(item.id)}><span>{item.icon}</span><b>{item.label}</b><small>拖曳或點擊放入</small></button>)}</div></section>
         <section className="car-trunk" aria-label="打開的汽車後車廂" onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); onToggle(event.dataTransfer.getData("text/plain")); }}>

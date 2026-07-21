@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CUatR9j9.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-DxkOd1Y0.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var stations = [
@@ -15,87 +15,64 @@ var stations = [
 	],
 	[
 		"03",
-		"接回家",
-		"接牠回家的那一天"
+		"飼養生活",
+		"從接回家到長期陪伴"
 	],
 	[
 		"04",
-		"日常生活",
-		"一起生活的日常"
-	],
-	[
-		"05",
-		"健康與意外",
-		"生病與意外來臨時"
-	],
-	[
-		"06",
-		"生活變化",
-		"當生活發生改變"
-	],
-	[
-		"07",
 		"認識你",
 		"回到真實的你"
 	],
 	[
-		"08",
+		"05",
 		"評估報告",
 		"我的飼養準備報告"
 	]
 ];
 var intros = [
 	{
-		eyebrow: "第一站 · 遇見想領養的牠",
 		title: "先從你想一起生活的動物開始",
 		body: "不同物種、不同品種，會遇到很不一樣的日常。選擇後，我們會帶你從領養前準備一路走進長期生活。",
 		icon: "🐾",
 		tip: "這不是承諾，隨時都能回來更換。"
 	},
 	{
-		eyebrow: "第二站 · 為牠準備一個家",
 		title: "在出發以前，把家、照顧者與行李準備好",
 		body: "安全的空間、清楚的分工與合適的接送用品，能讓接回家的第一天少一點匆忙。",
 		icon: "⌂",
 		tip: "每項購買只會記錄一次，返回調整不會重複扣款。"
 	},
 	{
-		eyebrow: "第三站 · 接牠回家的那一天",
 		title: "車門關上後，你們的共同生活正式開始",
 		body: "從安全搭車、第一次進家門到第一餐，每個小決定都會影響牠對新環境的第一印象。",
 		icon: "🚗",
 		tip: "先穩定、再親近，給牠一點理解陌生世界的時間。"
 	},
 	{
-		eyebrow: "第四站 · 一起生活的日常",
 		title: "把第一週的磨合，慢慢變成每天的節奏",
 		body: "適應、飲食、散步、陪玩與清潔不只有突發狀況，也包含很多平凡而安心的日常。",
 		icon: "☀",
 		tip: "穩定的小事，往往比一次做到完美更重要。"
 	},
 	{
-		eyebrow: "第五站 · 生病與意外來臨時",
 		title: "當牠看起來不太一樣，你會怎麼判斷？",
 		body: "觀察、聯絡獸醫、交通與醫療預備金，會在真正需要時一起發揮作用。",
 		icon: "✚",
 		tip: "及早詢問不代表小題大作，而是把風險留給專業判斷。"
 	},
 	{
-		eyebrow: "第六站 · 當生活發生改變",
 		title: "工作、旅行、搬家與老年，都會重新安排生活",
 		body: "長期照顧不是永遠不變，而是在每次變動時仍能找到安全、合法且負責任的安排。",
 		icon: "↻",
 		tip: "前面建立的備用照顧者，會在這一段真正派上用場。"
 	},
 	{
-		eyebrow: "第七站 · 回到真實的你",
 		title: "把模擬生活，放回你現在的生活條件",
 		body: "你已經陪牠走過一段模擬生活。現在讓我們把遊戲中的經驗放回你的真實生活中，看看哪些部分已經準備好，哪些還需要確認。",
 		icon: "◎",
 		tip: "沒有理想答案，真實資料才有助於產生有用的報告。"
 	},
 	{
-		eyebrow: "最後一站 · 我的飼養準備報告",
 		title: "把一路上的選擇，整理成下一步行動",
 		body: "報告不判斷合格或不合格，而是整合準備、學習、費用與生活條件，指出已具備與需要再確認的部分。",
 		icon: "✓",
@@ -1071,29 +1048,6 @@ function stageForIndex(index) {
 	if (index === 6) return 5;
 	return 6;
 }
-function LifeTimeline({ index, completedIds, onSelect }) {
-	const completed = journeyItems.map((item) => completedIds.includes(item.id));
-	const firstIncomplete = completed.findIndex((value) => !value);
-	const maxUnlocked = firstIncomplete === -1 ? journeyItems.length - 1 : firstIncomplete;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		className: "life-timeline",
-		"aria-label": "豆豆的一生，共 11 個生活內容",
-		children: journeyItems.map((item, itemIndex) => {
-			const done = completed[itemIndex];
-			return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-				className: `${itemIndex === index ? "active" : ""} ${done ? "done" : ""}`,
-				disabled: !(itemIndex <= maxUnlocked),
-				onClick: () => onSelect(itemIndex),
-				"aria-label": `${done ? "已完成" : "前往"}${item.timeLabel}，${item.type === "scenario" ? "情境判斷" : "生活練習"}：${item.title}`,
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: done ? "✓" : itemIndex + 1 }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.timeLabel }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: item.type === "scenario" ? "情境判斷" : "生活練習" })
-				]
-			}, item.id);
-		})
-	});
-}
 function ScenarioFeedback({ scenario, choice, onRetry, onContinue }) {
 	const labels = {
 		correct: {
@@ -1267,14 +1221,7 @@ function BodyLanguageActivity({ viewed, onView, onContinue }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "activity-heading",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: "生活練習 · 不計分"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "看懂小狗的身體語言" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "點擊耳朵、尾巴、嘴巴與身體姿勢的訊號。沒有答對或答錯，重點是學會看見豆豆正在表達什麼。" })
-				]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "看懂小狗的身體語言" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "點擊耳朵、尾巴、嘴巴與身體姿勢的訊號。沒有答對或答錯，重點是學會看見豆豆正在表達什麼。" })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "signal-layout",
@@ -1402,14 +1349,7 @@ function FeedingActivity({ activity, onChange, onAddExpense, onContinue }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "activity-heading",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: "一起生活三個月 · 生活練習"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "準備豆豆的晚餐" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "三個月後，豆豆已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。" })
-				]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "準備豆豆的晚餐" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "三個月後，豆豆已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。" })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "feeding-steps",
@@ -1525,14 +1465,7 @@ function BodyCareActivity({ viewed, onView, onContinue }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "activity-heading",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: "成年後的例行照顧 · 不計分"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "清潔與基礎身體觀察" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "依序查看豆豆的眼睛、耳朵、牙齒、皮膚毛髮、腳掌與指甲，將清潔變成每天都能做的健康觀察。" })
-				]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "清潔與基礎身體觀察" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "依序查看豆豆的眼睛、耳朵、牙齒、皮膚毛髮、腳掌與指甲，將清潔變成每天都能做的健康觀察。" })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "body-care-board",
@@ -1623,14 +1556,7 @@ function SeniorRoomActivity({ roomReady, selected, onSelect, onAddExpense, onCon
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "activity-heading",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: "調整高齡生活空間 · 不計分"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "改造高齡犬的家" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "豆豆已經走得比較慢。保留領養前準備好的房間，再加入讓高齡生活更安全、舒服的調整。" })
-				]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "改造高齡犬的家" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "豆豆已經走得比較慢。保留領養前準備好的房間，再加入讓高齡生活更安全、舒服的調整。" })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "senior-room-layout",
@@ -1721,27 +1647,15 @@ function LifeJourney({ index, answers, activity, completedIds, expenses, backupN
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "life-journey-head",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					className: "eyebrow",
-					children: "飼養生活 · 豆豆的一生"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
 					"你們一起走到了「",
 					item.timeLabel,
 					"」"
-				] })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
+				] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
 					index + 1,
 					" / ",
 					journeyItems.length
 				] })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LifeTimeline, {
-				index,
-				completedIds,
-				onSelect: selectItem
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "journey-type-label",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.type === "scenario" ? "情境判斷" : "生活練習" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.title })]
 			}),
 			scenario && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioCard, {
 				scenario,
@@ -1799,17 +1713,10 @@ function LifeJourney({ index, answers, activity, completedIds, expenses, backupN
 		]
 	});
 }
-function StepHeading({ eyebrow, title, body }) {
+function StepHeading({ title, body }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "step-heading",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				className: "eyebrow",
-				children: eyebrow
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: title }),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: body })
-		]
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: body })]
 	});
 }
 function NavButtons({ onBack, onNext, nextLabel = "繼續下一站", disabled = false }) {
@@ -1831,18 +1738,172 @@ function NavButtons({ onBack, onNext, nextLabel = "繼續下一站", disabled = 
 		})]
 	});
 }
-function StageRail({ step, onGoTo }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("aside", {
+var lifeStageRanges = [
+	{
+		label: "接回家",
+		start: 0,
+		end: 1
+	},
+	{
+		label: "日常生活",
+		start: 2,
+		end: 5
+	},
+	{
+		label: "健康與意外",
+		start: 6,
+		end: 6
+	},
+	{
+		label: "生活變化",
+		start: 7,
+		end: 10
+	}
+];
+function statusAt(index, current, reached) {
+	if (index === current) return "current";
+	if (index <= reached) return "completed";
+	return "locked";
+}
+function StageRail({ step, furthestStep, selectionPage, selectionReached, preparationTask, preparationReached, lifePhase, journeyIndex, journeyCompleted, profilePage, profileReached, onGoTo, onSelectionPage, onPreparationTask, onLifeStage, onProfilePage }) {
+	const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
+	const currentLifeStage = lifePhase === "arrival-intro" ? 0 : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
+	const mainTargets = [
+		1,
+		2,
+		Math.max(3, Math.min(6, step)),
+		7,
+		8
+	];
+	const mainUnlockSteps = [
+		1,
+		2,
+		3,
+		7,
+		8
+	];
+	const profileTitles = [
+		"時間與身分",
+		"居住與同住者",
+		"經驗與動機",
+		"預算與支援"
+	];
+	const mainStatus = (index) => {
+		if (index === currentMain) return "current";
+		if (mainUnlockSteps[index] <= furthestStep) return "completed";
+		return "locked";
+	};
+	const navigation = [
+		{
+			id: "pet-selection",
+			number: "01",
+			label: "選擇寵物",
+			status: mainStatus(0),
+			onClick: () => onGoTo(1),
+			children: ["選擇物種", "選擇品種"].map((label, index) => ({
+				id: index === 0 ? "species" : "breed",
+				label,
+				status: statusAt(index, selectionPage === "species" ? 0 : 1, selectionReached),
+				onClick: () => onSelectionPage(index === 0 ? "species" : "breed")
+			}))
+		},
+		{
+			id: "preparation",
+			number: "02",
+			label: "領養前準備",
+			status: mainStatus(1),
+			onClick: () => onGoTo(2),
+			children: [
+				"布置生活空間",
+				"建立照顧成員",
+				"分配照顧工作",
+				"整理汽車後車廂"
+			].map((label, index) => ({
+				id: `preparation-${index}`,
+				label,
+				status: statusAt(index, preparationTask, preparationReached),
+				onClick: () => onPreparationTask(index)
+			}))
+		},
+		{
+			id: "life-journey",
+			number: "03",
+			label: "飼養生活",
+			status: mainStatus(2),
+			onClick: () => onGoTo(mainTargets[2]),
+			children: lifeStageRanges.map((range, index) => {
+				const completed = lifePhase === "complete" || journeyItems.slice(range.start, range.end + 1).every((item) => journeyCompleted.includes(item.id));
+				const status = index === currentLifeStage ? "current" : completed ? "completed" : "locked";
+				return {
+					id: `life-${index}`,
+					label: range.label,
+					status,
+					onClick: () => onLifeStage(index)
+				};
+			})
+		},
+		{
+			id: "profile",
+			number: "04",
+			label: "認識你",
+			status: mainStatus(3),
+			onClick: () => onGoTo(7),
+			children: profileTitles.map((label, index) => ({
+				id: `profile-${index}`,
+				label,
+				status: statusAt(index, profilePage, profileReached),
+				onClick: () => onProfilePage(index)
+			}))
+		},
+		{
+			id: "report",
+			number: "05",
+			label: "評估報告",
+			status: mainStatus(4),
+			onClick: () => onGoTo(8)
+		}
+	];
+	function renderNavigation() {
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+			className: "station-navigation",
+			children: navigation.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: `nav-main ${item.status}`,
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "nav-main-button",
+					onClick: item.onClick,
+					disabled: item.status === "locked",
+					"aria-current": item.status === "current" ? "step" : void 0,
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.status === "completed" ? "✓" : item.number }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: item.label })]
+				}), index === currentMain && item.children && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "nav-children",
+					children: item.children.map((child, childIndex) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: `nav-child ${child.status}`,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+							onClick: child.onClick,
+							disabled: child.status === "locked",
+							"aria-current": child.status === "current" ? "step" : void 0,
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: child.status === "completed" ? "✓" : childIndex + 1 }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: child.label })]
+						})
+					}, child.id))
+				})]
+			}, item.id))
+		});
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("aside", {
 		className: "station-rail",
 		"aria-label": "體驗進度",
-		children: stations.map(([number, shortLabel, longLabel], index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-			className: `${step === index + 1 ? "active" : ""} ${step > index + 1 ? "done" : ""}`,
-			onClick: () => index + 1 <= step && onGoTo(index + 1),
-			disabled: index + 1 > step,
-			"aria-label": `${number} ${longLabel}`,
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: step > index + 1 ? "✓" : number }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: shortLabel })]
-		}, number))
-	});
+		children: renderNavigation()
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("details", {
+		className: "mobile-progress-nav",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("summary", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "目前進度" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
+			navigation[currentMain].number,
+			" ",
+			navigation[currentMain].label
+		] })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"aria-label": "體驗進度",
+			children: renderNavigation()
+		})]
+	})] });
 }
 function Welcome({ onStart }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
@@ -1926,39 +1987,22 @@ function Welcome({ onStart }) {
 		]
 	});
 }
-function SpeciesStep({ category, breed, onCategory, onBreed, onNext }) {
-	const [selectionPage, setSelectionPage] = (0, import_react.useState)(category ? "breed" : "species");
-	const selectedCategory = categories.find((item) => item.id === category);
+function SpeciesStep({ selectionPage, onSelectionPage, category, breed, onCategory, onBreed, onNext }) {
 	const selectedBreed = breeds.find((item) => item.id === breed);
 	function chooseCategory(id) {
 		onCategory(id);
 		onBreed("");
-		setSelectionPage("breed");
+		onSelectionPage("breed");
 		window.scrollTo({
 			top: 0,
 			behavior: "smooth"
 		});
 	}
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "content-wrap partner-picker",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: "partner-progress",
-			"aria-label": `選擇寵物第 ${selectionPage === "species" ? 1 : 2} 步，共 2 步`,
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-					className: "active",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "1" }), "選擇物種"]
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { "aria-hidden": "true" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-					className: selectionPage === "breed" ? "active" : "",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "2" }), "選擇品種"]
-				})
-			]
-		}), selectionPage === "species" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		children: selectionPage === "species" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 			className: "partner-selection-page",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				eyebrow: "01 · 遇見想領養的牠",
 				title: "你想領養哪一種動物？",
 				body: "先選擇物種，再挑一個目前最感興趣的品種。這一版先以犬隻示範完整時間軸。"
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -1979,7 +2023,6 @@ function SpeciesStep({ category, breed, onCategory, onBreed, onNext }) {
 			className: "partner-selection-page",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-					eyebrow: `01 · 遇見想領養的牠 · ${selectedCategory?.label ?? "犬"}`,
 					title: "選擇你想領養的品種",
 					body: "品種會影響後續提醒，但每隻動物仍有自己的個性與需求。"
 				}),
@@ -2007,13 +2050,13 @@ function SpeciesStep({ category, breed, onCategory, onBreed, onNext }) {
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: selectedBreed ? `你選擇了：${selectedBreed.label}` : "品種飼養特性" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedBreed?.shortDescription ?? "點選一個品種，查看牠的飼養特性。" })] })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NavButtons, {
-					onBack: () => setSelectionPage("species"),
+					onBack: () => onSelectionPage("species"),
 					onNext,
 					disabled: !breed,
 					nextLabel: "開始領養前準備"
 				})
 			]
-		}, "breed")]
+		}, "breed")
 	});
 }
 function ExpenseDetails({ expenses, onClose }) {
@@ -2102,22 +2145,6 @@ function CostBar({ expenses, emergencyReserve, latestExpense }) {
 		onClose: () => setDetailsOpen(false)
 	})] });
 }
-var preparationTitles = [
-	"布置生活空間",
-	"建立照顧成員",
-	"分配照顧工作",
-	"整理汽車後車廂"
-];
-function PreparationProgress({ task }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		className: "prep-task-progress",
-		"aria-label": `領養前準備第 ${task + 1} 步，共 4 步`,
-		children: preparationTitles.map((title, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-			className: `${index === task ? "active" : ""} ${index < task ? "done" : ""}`,
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: index < task ? "✓" : index + 1 }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: title })]
-		}, title))
-	});
-}
 function RoomPreparation({ selectedItems, securedHazards, onAddItem, onRemoveItem, onToggleHazard, onBack, onNext }) {
 	const [message, setMessage] = (0, import_react.useState)("");
 	const missing = roomItems.filter((item) => item.required).filter((item) => !selectedItems.includes(item.id));
@@ -2138,9 +2165,7 @@ function RoomPreparation({ selectedItems, securedHazards, onAddItem, onRemoveIte
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap preparation-page",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PreparationProgress, { task: 0 }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				eyebrow: "02 · 領養前準備",
 				title: "先替牠布置安全的生活空間",
 				body: "把用品拖進房間，或直接點擊加入；再逐一把可能造成風險的物品收好。"
 			}),
@@ -2258,9 +2283,7 @@ function CareMemberSetup({ members, onChange, onBack, onNext }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap preparation-page",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PreparationProgress, { task: 1 }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				eyebrow: "02 · 領養前準備",
 				title: "誰會一起照顧牠？",
 				body: "先建立照顧成員，下一步才能把每天與臨時的工作分配清楚。"
 			}),
@@ -2363,9 +2386,7 @@ function CareTaskAssignment({ members, assignments, onChange, onBack, onNext }) 
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap preparation-page",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PreparationProgress, { task: 2 }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				eyebrow: "02 · 領養前準備",
 				title: "把照顧工作分配清楚",
 				body: "每項工作都需要主要負責人；備用者可在忙碌、出差或生病時接手。"
 			}),
@@ -2461,9 +2482,7 @@ function CarTrunkPreparation({ selected, checked, passed, onToggle, onCheck, onB
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap preparation-page",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PreparationProgress, { task: 3 }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				eyebrow: "02 · 領養前準備",
 				title: "出發接牠回家",
 				body: "你準備開車去接牠了。請把接牠回家需要的物品放進後車廂。"
 			}),
@@ -2548,8 +2567,7 @@ function OptionButton({ label, selected, onClick, icon }) {
 		]
 	});
 }
-function ProfileForm({ profile, onChange, onBack, onNext }) {
-	const [page, setPage] = (0, import_react.useState)(0);
+function ProfileForm({ page, onPage, profile, onChange, onBack, onNext }) {
 	const [errors, setErrors] = (0, import_react.useState)({});
 	const titles = [
 		"時間與身分",
@@ -2596,7 +2614,7 @@ function ProfileForm({ profile, onChange, onBack, onNext }) {
 	function nextPage() {
 		if (!validate(page)) return;
 		if (page < titles.length - 1) {
-			setPage((value) => value + 1);
+			onPage(page + 1);
 			setErrors({});
 			window.scrollTo({
 				top: 0,
@@ -2606,7 +2624,7 @@ function ProfileForm({ profile, onChange, onBack, onNext }) {
 	}
 	function backPage() {
 		setErrors({});
-		if (page > 0) setPage((value) => value - 1);
+		if (page > 0) onPage(page - 1);
 		else onBack();
 		window.scrollTo({
 			top: 0,
@@ -2620,28 +2638,9 @@ function ProfileForm({ profile, onChange, onBack, onNext }) {
 				className: "profile-bridge",
 				children: "你已經陪牠走過一段模擬生活。現在讓我們把遊戲中的經驗放回你的真實生活中，看看哪些部分已經準備好，哪些還需要確認。"
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "profile-wizard-head",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: "07 · 回到真實的你"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: titles[page] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "沒有理想答案，請依照現在的生活狀況填寫。" })
-				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
-					page + 1,
-					" / ",
-					titles.length
-				] })]
-			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "profile-stepper profile-stepper-four",
-				"aria-label": `認識你第 ${page + 1} 步，共 ${titles.length} 步`,
-				children: titles.map((title, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-					className: `${index === page ? "active" : ""} ${index < page ? "done" : ""}`,
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: index < page ? "✓" : index + 1 }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: title })]
-				}, title))
+				className: "profile-wizard-head",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: titles[page] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "沒有理想答案，請依照現在的生活狀況填寫。" })] })
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 				className: "profile-panel",
@@ -3031,14 +3030,7 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "summary-title",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: "08 · 我的飼養準備報告"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: level }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "這份報告不貼標籤，而是把模擬生活轉成下一步可執行的準備。" })
-				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: level }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "這份報告不貼標籤，而是把模擬生活轉成下一步可執行的準備。" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "summary-pet",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: selectedBreed?.icon ?? "🐕" }),
@@ -3226,10 +3218,14 @@ function AssessmentReport({ breed, profile, expenses, emergencyReserve, roomRead
 var emergencyReserve = 2e4;
 function Home() {
 	const [step, setStep] = (0, import_react.useState)(0);
+	const [furthestStep, setFurthestStep] = (0, import_react.useState)(1);
 	const [introOpen, setIntroOpen] = (0, import_react.useState)(false);
 	const [category, setCategory] = (0, import_react.useState)("");
 	const [breed, setBreed] = (0, import_react.useState)("");
+	const [selectionPage, setSelectionPage] = (0, import_react.useState)("species");
+	const [selectionReached, setSelectionReached] = (0, import_react.useState)(0);
 	const [preparationTask, setPreparationTask] = (0, import_react.useState)(0);
+	const [preparationReached, setPreparationReached] = (0, import_react.useState)(0);
 	const [roomReady, setRoomReady] = (0, import_react.useState)([]);
 	const [hazardsReady, setHazardsReady] = (0, import_react.useState)([]);
 	const [members, setMembers] = (0, import_react.useState)(initialMembers);
@@ -3245,12 +3241,15 @@ function Home() {
 	const [lifeActivity, setLifeActivity] = (0, import_react.useState)(initialLifeActivityState);
 	const [scenarioAnswers, setScenarioAnswers] = (0, import_react.useState)({});
 	const [profile, setProfile] = (0, import_react.useState)(initialProfile);
+	const [profilePage, setProfilePage] = (0, import_react.useState)(0);
+	const [profileReached, setProfileReached] = (0, import_react.useState)(0);
 	const backupNames = (0, import_react.useMemo)(() => {
 		const backupIds = new Set([...Object.values(assignments).map((assignment) => assignment.backup), assignments.emergency?.primary].filter((id) => Boolean(id) && id !== "player"));
 		return members.filter((member) => backupIds.has(member.id)).map((member) => member.name);
 	}, [assignments, members]);
 	function goTo(next) {
 		setStep(next);
+		setFurthestStep((current) => Math.max(current, next));
 		setIntroOpen(next > 0 && !(next >= 3 && next <= 6));
 		window.scrollTo({
 			top: 0,
@@ -3258,14 +3257,50 @@ function Home() {
 		});
 	}
 	function goToStation(next) {
-		const firstJourneyItem = {
-			3: 0,
-			4: 3,
-			5: 6,
-			6: 7
-		};
-		if (firstJourneyItem[next] !== void 0) setJourneyIndex(firstJourneyItem[next]);
-		goTo(next);
+		setStep(next);
+		setIntroOpen(false);
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth"
+		});
+	}
+	function goToLifeStage(stageIndex) {
+		const firstJourneyItem = [
+			0,
+			2,
+			6,
+			7
+		];
+		const underlyingStep = [
+			3,
+			4,
+			5,
+			6
+		];
+		if (lifePhase === "arrival-intro" && stageIndex === 0) {
+			setStep(3);
+			setIntroOpen(false);
+		} else {
+			setJourneyIndex(firstJourneyItem[stageIndex]);
+			setStep(underlyingStep[stageIndex]);
+			setIntroOpen(false);
+		}
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth"
+		});
+	}
+	function changeSelectionPage(page) {
+		setSelectionPage(page);
+		setSelectionReached((current) => Math.max(current, page === "breed" ? 1 : 0));
+	}
+	function changePreparationTask(task) {
+		setPreparationTask(task);
+		setPreparationReached((current) => Math.max(current, task));
+	}
+	function changeProfilePage(page) {
+		setProfilePage(page);
+		setProfileReached((current) => Math.max(current, page));
 	}
 	function addExpenseById(id) {
 		const expense = expenseCatalog[id];
@@ -3330,7 +3365,10 @@ function Home() {
 	function resetJourney() {
 		setCategory("");
 		setBreed("");
+		setSelectionPage("species");
+		setSelectionReached(0);
 		setPreparationTask(0);
+		setPreparationReached(0);
 		setRoomReady([]);
 		setHazardsReady([]);
 		setMembers(initialMembers);
@@ -3346,10 +3384,13 @@ function Home() {
 		setLifeActivity(initialLifeActivityState);
 		setScenarioAnswers({});
 		setProfile(initialProfile);
+		setProfilePage(0);
+		setProfileReached(0);
 	}
 	function startFreshJourney() {
 		resetJourney();
 		setStep(1);
+		setFurthestStep(1);
 		setIntroOpen(true);
 		window.scrollTo({
 			top: 0,
@@ -3359,6 +3400,7 @@ function Home() {
 	function resetAll() {
 		resetJourney();
 		setStep(0);
+		setFurthestStep(1);
 		setIntroOpen(false);
 		window.scrollTo({
 			top: 0,
@@ -3373,20 +3415,20 @@ function Home() {
 			onRemoveItem: (id) => setRoomReady((current) => current.filter((item) => item !== id)),
 			onToggleHazard: toggleHazard,
 			onBack: () => goTo(1),
-			onNext: () => setPreparationTask(1)
+			onNext: () => changePreparationTask(1)
 		});
 		if (preparationTask === 1) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CareMemberSetup, {
 			members,
 			onChange: updateMembers,
-			onBack: () => setPreparationTask(0),
-			onNext: () => setPreparationTask(2)
+			onBack: () => changePreparationTask(0),
+			onNext: () => changePreparationTask(2)
 		});
 		if (preparationTask === 2) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CareTaskAssignment, {
 			members,
 			assignments,
 			onChange: setAssignments,
-			onBack: () => setPreparationTask(1),
-			onNext: () => setPreparationTask(3)
+			onBack: () => changePreparationTask(1),
+			onNext: () => changePreparationTask(3)
 		});
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarTrunkPreparation, {
 			selected: trunkSelected,
@@ -3397,9 +3439,10 @@ function Home() {
 				setTrunkChecked(true);
 				setTrunkPassed(passed);
 			},
-			onBack: () => setPreparationTask(2),
+			onBack: () => changePreparationTask(2),
 			onNext: () => {
 				setStep(3);
+				setFurthestStep((current) => Math.max(current, 3));
 				setIntroOpen(false);
 				setLifePhase("arrival-intro");
 				window.scrollTo({
@@ -3429,6 +3472,7 @@ function Home() {
 			onAddExpense: addExpenseById,
 			onStageChange: (nextStep) => {
 				setStep(nextStep);
+				setFurthestStep((current) => Math.max(current, nextStep));
 				setIntroOpen(false);
 			},
 			onBack: () => {
@@ -3450,7 +3494,30 @@ function Home() {
 				className: "stage-layout",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StageRail, {
 					step,
-					onGoTo: goToStation
+					furthestStep,
+					selectionPage,
+					selectionReached,
+					preparationTask,
+					preparationReached,
+					lifePhase,
+					journeyIndex,
+					journeyCompleted,
+					profilePage,
+					profileReached,
+					onGoTo: goToStation,
+					onSelectionPage: (page) => {
+						changeSelectionPage(page);
+						goToStation(1);
+					},
+					onPreparationTask: (task) => {
+						changePreparationTask(task);
+						goToStation(2);
+					},
+					onLifeStage: goToLifeStage,
+					onProfilePage: (page) => {
+						changeProfilePage(page);
+						goToStation(7);
+					}
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 					className: "stage",
 					"aria-live": "polite",
@@ -3461,6 +3528,8 @@ function Home() {
 							latestExpense
 						}),
 						step === 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SpeciesStep, {
+							selectionPage,
+							onSelectionPage: changeSelectionPage,
 							category,
 							breed,
 							onCategory: setCategory,
@@ -3470,6 +3539,8 @@ function Home() {
 						step === 2 && renderPreparation(),
 						step >= 3 && step <= 6 && renderLifeJourney(),
 						step === 7 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProfileForm, {
+							page: profilePage,
+							onPage: changeProfilePage,
 							profile,
 							onChange: setProfile,
 							onBack: () => {
@@ -3504,10 +3575,6 @@ function Home() {
 						className: "intro-orbit",
 						"aria-hidden": "true",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: intros[step - 1].icon })
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: intros[step - 1].eyebrow
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: intros[step - 1].title }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {

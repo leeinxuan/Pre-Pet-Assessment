@@ -15,17 +15,20 @@ function OptionButton({ label, selected, onClick, icon }: { label: string; selec
 }
 
 export function ProfileForm({
+  page,
+  onPage,
   profile,
   onChange,
   onBack,
   onNext,
 }: {
+  page: number;
+  onPage: (page: number) => void;
   profile: Profile;
   onChange: (profile: Profile) => void;
   onBack: () => void;
   onNext: () => void;
 }) {
-  const [page, setPage] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const titles = ["時間與身分", "居住與同住者", "經驗與動機", "預算與支援"];
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => onChange({ ...profile, [key]: value });
@@ -67,7 +70,7 @@ export function ProfileForm({
   function nextPage() {
     if (!validate(page)) return;
     if (page < titles.length - 1) {
-      setPage((value) => value + 1);
+      onPage(page + 1);
       setErrors({});
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else onNext();
@@ -75,7 +78,7 @@ export function ProfileForm({
 
   function backPage() {
     setErrors({});
-    if (page > 0) setPage((value) => value - 1);
+    if (page > 0) onPage(page - 1);
     else onBack();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -83,8 +86,7 @@ export function ProfileForm({
   return (
     <div className="content-wrap profile-wizard">
       <div className="profile-bridge">你已經陪牠走過一段模擬生活。現在讓我們把遊戲中的經驗放回你的真實生活中，看看哪些部分已經準備好，哪些還需要確認。</div>
-      <div className="profile-wizard-head"><div><p className="eyebrow">07 · 回到真實的你</p><h1>{titles[page]}</h1><p>沒有理想答案，請依照現在的生活狀況填寫。</p></div><b>{page + 1} / {titles.length}</b></div>
-      <div className="profile-stepper profile-stepper-four" aria-label={`認識你第 ${page + 1} 步，共 ${titles.length} 步`}>{titles.map((title, index) => <span key={title} className={`${index === page ? "active" : ""} ${index < page ? "done" : ""}`}><i>{index < page ? "✓" : index + 1}</i><em>{title}</em></span>)}</div>
+      <div className="profile-wizard-head"><div><h1>{titles[page]}</h1><p>沒有理想答案，請依照現在的生活狀況填寫。</p></div></div>
       <section className="profile-panel" key={page}>
         {page === 0 && <>
           <div className="inline-number-field"><label htmlFor="real-age">年齡</label><input id="real-age" type="number" min="1" max="120" placeholder="例：20" value={profile.age} onChange={(event) => update("age", clamp(event.target.value, 120))} /><span>歲</span></div>{errors.age && <p className="field-error">{errors.age}</p>}
@@ -210,7 +212,7 @@ export function AssessmentReport({
 
   return (
     <div className="content-wrap summary-page assessment-report">
-      <div className="summary-title"><div><p className="eyebrow">08 · 我的飼養準備報告</p><h1>{level}</h1><p>這份報告不貼標籤，而是把模擬生活轉成下一步可執行的準備。</p></div><div className="summary-pet"><span>{selectedBreed?.icon ?? "🐕"}</span><b>我想領養{selectedBreed?.label}</b><small>{correctFirst} / {lifeScenarios.length} 題第一次掌握方向</small></div></div>
+      <div className="summary-title"><div><h1>{level}</h1><p>這份報告不貼標籤，而是把模擬生活轉成下一步可執行的準備。</p></div><div className="summary-pet"><span>{selectedBreed?.icon ?? "🐕"}</span><b>我想領養{selectedBreed?.label}</b><small>{correctFirst} / {lifeScenarios.length} 題第一次掌握方向</small></div></div>
       <div className="report-level"><span>綜合準備狀態</span><b>{level}</b><p>參考準備任務、第一次作答、費用與真實生活條件。</p></div>
       <section className="summary-grid">
         <article className="summary-card"><div className="card-head"><span>01</span><div><p>領養前準備</p><h2>家、分工與接送</h2></div></div><dl className="report-metrics"><div><dt>房間必要用品</dt><dd>{roomCompletion}%</dd></div><div><dt>危險物防護</dt><dd>{hazardsReady.length} / 5</dd></div><div><dt>工作分配</dt><dd>{assignmentCompletion}%</dd></div><div><dt>備用照顧者</dt><dd>{backupNames.length ? backupNames.join("、") : "尚未安排"}</dd></div><div><dt>後車廂</dt><dd>{trunkPassed ? "已通過" : `${trunkSelected.length} 件已放入`}</dd></div></dl></article>
