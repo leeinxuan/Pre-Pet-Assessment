@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { expenseCatalog, money, roomItems } from "./game-data";
 import { journeyItems, lifeScenarios } from "./life-data";
 import type {
@@ -11,22 +11,123 @@ import type {
   ScenarioChoice,
 } from "./game-types";
 
-export function ArrivalIntro({ onStart }: { onStart: () => void }) {
+const arrivalVideoSrc = "/assets/pet-journey/arrival-transition.mp4";
+const shibaImageSrc = "/assets/pet-journey/shiba-dog.png";
+
+function withPetName(text: string, petName: string) {
+  return text
+    .replaceAll("豆豆", petName)
+    .replaceAll("小狗", petName)
+    .replaceAll("狗狗", petName);
+}
+
+export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [ended, setEnded] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true));
+  }, []);
+
+  function playVideo() {
+    videoRef.current?.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true));
+  }
+
   return (
-    <div className="content-wrap arrival-intro">
-      <div className="arrival-scene" aria-label="豆豆從外出籠旁探頭，準備走進溫暖的新家">
-        <img src="/illustrations/prep-room.png" alt="" aria-hidden="true" />
-        <div className="arrival-door" aria-hidden="true"><span /></div>
-        <div className="arrival-carrier" aria-hidden="true">▱</div>
-        <div className="arrival-dog" aria-hidden="true">🐕</div>
+    <div className="content-wrap arrival-transition">
+      <div className="arrival-video-copy">
+        <h1>一起回到新家</h1>
+        <p>後車廂已經準備完成，現在帶著安全裝備與領養文件，陪小狗踏上回家的路。</p>
       </div>
-      <div className="arrival-copy">
-        <p className="eyebrow">小狗剛到家 · 不列入旅程進度</p>
+      <div className="arrival-video-frame">
+        {!failed ? (
+          <video
+            ref={videoRef}
+            src={arrivalVideoSrc}
+            playsInline
+            preload="metadata"
+            controls
+            onEnded={() => setEnded(true)}
+            onError={() => setFailed(true)}
+          >
+            你的瀏覽器無法播放到家過場影片，仍可使用下方按鈕繼續幫小狗取名字。
+          </video>
+        ) : (
+          <div className="arrival-video-fallback" role="alert">
+            <b>影片暫時無法載入</b>
+            <p>別擔心，你仍然可以繼續幫小狗取名字。</p>
+          </div>
+        )}
+      </div>
+      <div className="arrival-video-status" role="status" aria-live="polite">
+        {failed ? "影片載入失敗，可以直接繼續。" : ended ? "影片播放完畢" : autoplayBlocked ? "瀏覽器尚未開始播放，請按下播放影片。" : "影片播放中，可使用播放器暫停或繼續。"}
+      </div>
+      <div className="arrival-video-actions">
+        {autoplayBlocked && !failed && !ended && <button className="secondary" onClick={playVideo}>播放影片</button>}
+        {(ended || failed) && <button className="primary large" onClick={onContinue}>幫小狗取名字 <span>→</span></button>}
+        {!ended && !failed && <button className="text-back" onClick={onContinue}>略過影片</button>}
+      </div>
+    </div>
+  );
+}
+
+export function PetNaming({
+  petName,
+  onSave,
+  onBack,
+}: {
+  petName: string;
+  onSave: (name: string) => void;
+  onBack: () => void;
+}) {
+  const [draft, setDraft] = useState(petName);
+  const [error, setError] = useState("");
+
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const name = draft.trim();
+    if (!name) {
+      setError("請先幫小狗取一個名字。");
+      return;
+    }
+    if (Array.from(name).length > 12) {
+      setError("名字請控制在12個字以內。");
+      return;
+    }
+    setError("");
+    onSave(name);
+  }
+
+  return (
+    <div className="content-wrap pet-naming-page">
+      <div className="pet-naming-image">
+        <img src={shibaImageSrc} alt="等待命名的柴犬" />
+      </div>
+      <form className="pet-naming-copy" onSubmit={submit} noValidate>
         <h1>歡迎來到新家</h1>
-        <p>經過領養前的準備，你終於把豆豆接回家了。今天是你們一起生活的第一天，也是這段長久陪伴的開始。</p>
-        <div className="soft-note">接下來，你會陪牠從適應新家、建立日常，一路走過健康、生活變化與逐漸老去。你所做的每一個決定，都會成為牠生命中的一部分。</div>
-        <button className="primary large" onClick={onStart}>開始你們的生活旅程 <span>→</span></button>
-      </div>
+        <p>經過領養前的準備，你終於把小狗接回家了。今天是你們一起生活的第一天，也是這段長久陪伴的開始。</p>
+        <div className="soft-note">在開始生活旅程以前，先幫牠取一個名字吧。接下來，這個名字會陪著你們走過每一個生活情境。</div>
+        <label htmlFor="pet-name">牠叫什麼名字？</label>
+        <input
+          id="pet-name"
+          value={draft}
+          onChange={(event) => { setDraft(event.target.value); setError(""); }}
+          placeholder="請輸入小狗的名字"
+          autoComplete="off"
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? "pet-name-error" : "pet-name-hint"}
+        />
+        <small id="pet-name-hint">1～12 個字，儲存後仍可回來修改。</small>
+        {error && <p id="pet-name-error" className="field-error" role="alert">{error}</p>}
+        <div className="pet-naming-actions">
+          <button type="button" className="secondary" onClick={onBack}>← 返回領養前準備</button>
+          <button type="submit" className="primary large">用這個名字開始生活旅程 <span>→</span></button>
+        </div>
+      </form>
     </div>
   );
 }
@@ -41,11 +142,13 @@ function stageForIndex(index: number) {
 function ScenarioFeedback({
   scenario,
   choice,
+  petName,
   onRetry,
   onContinue,
 }: {
   scenario: Scenario;
   choice: ScenarioChoice;
+  petName: string;
   onRetry: () => void;
   onContinue: () => void;
 }) {
@@ -57,16 +160,16 @@ function ScenarioFeedback({
   const expenseChanges = (choice.expenseIds ?? []).map((id) => expenseCatalog[id]).filter(Boolean);
   return (
     <section className={`scenario-feedback ${choice.result}`} aria-live="polite">
-      <div className="feedback-title"><span>{labels[choice.result].icon}</span><div><small>{scenario.timeLabel}</small><h2>{choice.feedbackTitle}</h2></div></div>
-      <p>{choice.explanation}</p>
-      {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整</b><p>{choice.suggestion}</p></div>}
+      <div className="feedback-title"><span>{labels[choice.result].icon}</span><div><small>{scenario.timeLabel}</small><h2>{withPetName(choice.feedbackTitle, petName)}</h2></div></div>
+      <p>{withPetName(choice.explanation, petName)}</p>
+      {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整</b><p>{withPetName(choice.suggestion, petName)}</p></div>}
       <div className="feedback-expense">
         <b>本次費用變化</b>
         {expenseChanges.length
           ? expenseChanges.map((expense) => <span key={expense.id}>{expense.name} ＋NT$ {money.format(expense.amount)}{expense.recurring ? "／月" : ""}（同一事件只登記一次）</span>)
           : <span>本次選擇沒有新增費用。</span>}
       </div>
-      {scenario.reminder && <div className="law-reminder"><span>i</span><p><b>生活裡的責任提醒</b>{scenario.reminder}</p></div>}
+      {scenario.reminder && <div className="law-reminder"><span>i</span><p><b>生活裡的責任提醒</b>{withPetName(scenario.reminder, petName)}</p></div>}
       <div className="feedback-actions">
         {choice.result === "incorrect" && <button className="secondary" onClick={onRetry}>重新選一次</button>}
         <button className="primary" onClick={onContinue}>{labels[choice.result].button} <span>→</span></button>
@@ -77,6 +180,7 @@ function ScenarioFeedback({
 
 function ScenarioCard({
   scenario,
+  petName,
   answer,
   backupNames,
   feedbackOpen,
@@ -85,6 +189,7 @@ function ScenarioCard({
   onContinue,
 }: {
   scenario: Scenario;
+  petName: string;
   answer?: ScenarioAnswer;
   backupNames: string[];
   feedbackOpen: boolean;
@@ -94,7 +199,7 @@ function ScenarioCard({
 }) {
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   if (feedbackOpen && selectedChoice) {
-    return <ScenarioFeedback scenario={scenario} choice={selectedChoice} onRetry={onRetry} onContinue={onContinue} />;
+    return <ScenarioFeedback scenario={scenario} choice={selectedChoice} petName={petName} onRetry={onRetry} onContinue={onContinue} />;
   }
   const hasBackup = backupNames.length > 0;
   return (
@@ -102,8 +207,8 @@ function ScenarioCard({
       <article className="scene-card">
         <div className="scene-copy">
           <p className="eyebrow">{scenario.topic}</p>
-          <h1>{scenario.title}</h1>
-          <p>{scenario.description}</p>
+          <h1>{withPetName(scenario.title, petName)}</h1>
+          <p>{withPetName(scenario.description, petName)}</p>
           {scenario.supportChoice && (
             <div className={`support-link ${hasBackup ? "ready" : "missing"}`}>
               <span>{hasBackup ? "✓" : "!"}</span>
@@ -119,7 +224,7 @@ function ScenarioCard({
           {scenario.choices.filter((choice) => choice.id !== "assigned-helper" || hasBackup).map((choice) => {
             const text = choice.id === "assigned-helper"
               ? `請${backupNames.join("或")}依照事先安排的分工，協助今晚的餵食與活動。`
-              : choice.text;
+              : withPetName(choice.text, petName);
             return <button key={choice.id} onClick={() => onChoose(choice)}><span>{choice.result === "correct" ? "可行做法" : choice.result === "partial" ? "需要調整" : "先想一想"}</span><p>{text}</p></button>;
           })}
         </div>
@@ -141,10 +246,12 @@ const bodySignals = [
 
 function BodyLanguageActivity({
   viewed,
+  petName,
   onView,
   onContinue,
 }: {
   viewed: string[];
+  petName: string;
   onView: (id: string) => void;
   onContinue: () => void;
 }) {
@@ -153,12 +260,12 @@ function BodyLanguageActivity({
   const complete = viewed.length === bodySignals.length;
   return (
     <section className="life-activity">
-      <div className="activity-heading"><h1>看懂小狗的身體語言</h1><p>點擊耳朵、尾巴、嘴巴與身體姿勢的訊號。沒有答對或答錯，重點是學會看見豆豆正在表達什麼。</p></div>
+      <div className="activity-heading"><h1>看懂{petName}的身體語言</h1><p>點擊耳朵、尾巴、嘴巴與身體姿勢的訊號。沒有答對或答錯，重點是學會看見{petName}正在表達什麼。</p></div>
       <div className="signal-layout">
         <div className="signal-dog" aria-hidden="true"><span>🐕</span><i>耳朵</i><i>嘴巴</i><i>尾巴</i><i>身體姿勢</i></div>
         <div className="signal-grid">{bodySignals.map((item) => <button key={item.id} className={viewed.includes(item.id) ? "viewed" : ""} onClick={() => { setActive(item.id); onView(item.id); }}><span>{item.icon}</span><b>{item.label}</b><small>{item.area}{viewed.includes(item.id) ? " · 已閱讀" : ""}</small></button>)}</div>
       </div>
-      <div className="activity-message" role="status">{signal ? <><b>{signal.label}</b><p>{signal.text}</p></> : <p>從任一訊號開始觀察。</p>}</div>
+      <div className="activity-message" role="status">{signal ? <><b>{signal.label}</b><p>{withPetName(signal.text, petName)}</p></> : <p>從任一訊號開始觀察。</p>}</div>
       <div className="activity-actions"><span>{viewed.length} / {bodySignals.length} 個訊號已閱讀</span><button className="primary" disabled={!complete} onClick={onContinue}>完成身體語言練習 <span>→</span></button></div>
     </section>
   );
@@ -176,25 +283,27 @@ const waterSteps = ["倒掉原本不乾淨的水", "清潔水碗", "加入乾淨
 
 function FeedingActivity({
   activity,
+  petName,
   onChange,
   onAddExpense,
   onContinue,
 }: {
   activity: LifeActivityState;
+  petName: string;
   onChange: (patch: Partial<LifeActivityState>) => void;
   onAddExpense: (id: string) => void;
   onContinue: () => void;
 }) {
-  const [message, setMessage] = useState(activity.feedingServed ? "晚餐與飲水都已準備完成。" : "先選擇適合豆豆的晚餐。");
+  const [message, setMessage] = useState(activity.feedingServed ? "晚餐與飲水都已準備完成。" : `先選擇適合${petName}的晚餐。`);
   const waterComplete = activity.feedingWaterSteps.length === waterSteps.length;
   function chooseFood(kind: string) {
     if (kind === "main") {
       onChange({ feedingFoodReady: true });
-      setMessage("選得很好！主食應符合豆豆的年齡、體型及健康需求。");
+      setMessage(`選得很好！主食應符合${petName}的年齡、體型及健康需求。`);
     } else if (kind === "treat") {
       setMessage("零食可以作為少量獎勵，但不能代替營養完整的正餐。");
     } else {
-      setMessage("這項食物不適合放進豆豆的餐碗。部分人類食物可能油、鹽或調味過多，也可能含有危險成分，請換一個選擇。");
+      setMessage(`這項食物不適合放進${petName}的餐碗。部分人類食物可能油、鹽或調味過多，也可能含有危險成分，請換一個選擇。`);
     }
   }
   function doWaterStep(step: string, index: number) {
@@ -207,7 +316,7 @@ function FeedingActivity({
   }
   function serve() {
     if (!activity.feedingFoodReady || !waterComplete) {
-      setMessage("還有一件每天都很重要的事：請確認豆豆有合適主食，以及隨時有乾淨、足量的飲水。");
+      setMessage(`還有一件每天都很重要的事：請確認${petName}有合適主食，以及隨時有乾淨、足量的飲水。`);
       return;
     }
     onChange({ feedingServed: true });
@@ -216,11 +325,11 @@ function FeedingActivity({
   }
   return (
     <section className={`life-activity feeding-activity ${activity.feedingServed ? "served" : ""}`}>
-      <div className="activity-heading"><h1>準備豆豆的晚餐</h1><p>三個月後，豆豆已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。</p></div>
+      <div className="activity-heading"><h1>準備{petName}的晚餐</h1><p>三個月後，{petName}已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。</p></div>
       <div className="feeding-steps">
-        <article><span>1</span><h2>選擇食物</h2><div className="food-options">{feedingFoods.map((food) => <button key={food.id} className={activity.feedingFoodReady && food.kind === "main" ? "selected" : ""} onClick={() => chooseFood(food.kind)}><i>{food.icon}</i><b>{food.label}</b></button>)}</div></article>
+        <article><span>1</span><h2>選擇食物</h2><div className="food-options">{feedingFoods.map((food) => <button key={food.id} className={activity.feedingFoodReady && food.kind === "main" ? "selected" : ""} onClick={() => chooseFood(food.kind)}><i>{food.icon}</i><b>{withPetName(food.label, petName)}</b></button>)}</div></article>
         <article><span>2</span><h2>準備乾淨飲水</h2><div className="water-sequence">{waterSteps.map((step, index) => <button key={step} className={activity.feedingWaterSteps.includes(step) ? "done" : ""} disabled={index > activity.feedingWaterSteps.length} onClick={() => doWaterStep(step, index)}><i>{activity.feedingWaterSteps.includes(step) ? "✓" : index + 1}</i>{step}</button>)}</div></article>
-        <article className="serve-dinner"><span>3</span><h2>把晚餐交給豆豆</h2><div className="dinner-scene" aria-hidden="true"><i>🐕</i><b>{activity.feedingFoodReady ? "🥣" : "○"}</b><em>{waterComplete ? "💧" : "○"}</em></div><button className="secondary" onClick={serve}>{activity.feedingServed ? "再看看豆豆吃晚餐" : "請豆豆吃晚餐"}</button></article>
+        <article className="serve-dinner"><span>3</span><h2>把晚餐交給{petName}</h2><div className="dinner-scene" aria-hidden="true"><i>🐕</i><b>{activity.feedingFoodReady ? "🥣" : "○"}</b><em>{waterComplete ? "💧" : "○"}</em></div><button className="secondary" onClick={serve}>{activity.feedingServed ? `再看看${petName}吃晚餐` : `請${petName}吃晚餐`}</button></article>
       </div>
       <div className="activity-message" role="status"><p>{message}</p>{activity.feedingServed && <b>每月主食費＋NT$1,500（只登記一次）</b>}</div>
       <div className="activity-actions"><span>{activity.feedingServed ? "晚餐與飲水已完成" : "完成三個步驟後繼續"}</span><button className="primary" disabled={!activity.feedingServed} onClick={onContinue}>完成晚餐練習 <span>→</span></button></div>
@@ -237,12 +346,12 @@ const careParts = [
   { id: "nails", label: "指甲", icon: "⌁", text: "留意長度與行走聲，沒有把握時請專業人員示範安全修剪。" },
 ];
 
-function BodyCareActivity({ viewed, onView, onContinue }: { viewed: string[]; onView: (id: string) => void; onContinue: () => void }) {
+function BodyCareActivity({ petName, viewed, onView, onContinue }: { petName: string; viewed: string[]; onView: (id: string) => void; onContinue: () => void }) {
   const [active, setActive] = useState(viewed.at(-1) ?? "");
   const part = careParts.find((item) => item.id === active);
   return (
     <section className="life-activity body-care-activity">
-      <div className="activity-heading"><h1>清潔與基礎身體觀察</h1><p>依序查看豆豆的眼睛、耳朵、牙齒、皮膚毛髮、腳掌與指甲，將清潔變成每天都能做的健康觀察。</p></div>
+      <div className="activity-heading"><h1>清潔與基礎身體觀察</h1><p>依序查看{petName}的眼睛、耳朵、牙齒、皮膚毛髮、腳掌與指甲，將清潔變成每天都能做的健康觀察。</p></div>
       <div className="body-care-board"><div className="care-dog" aria-hidden="true">🐕</div><div className="care-parts">{careParts.map((item) => <button key={item.id} className={viewed.includes(item.id) ? "viewed" : ""} onClick={() => { setActive(item.id); onView(item.id); }}><span>{item.icon}</span><b>{item.label}</b><small>{viewed.includes(item.id) ? "✓ 已查看" : "點擊查看"}</small></button>)}</div></div>
       <div className="activity-message" role="status">{part ? <><b>{part.label}</b><p>{part.text}</p></> : <p>從任一部位開始查看。</p>}</div>
       <div className="activity-actions"><span>{viewed.length} / {careParts.length} 個部位已查看</span><button className="primary" disabled={viewed.length !== careParts.length} onClick={onContinue}>完成身體觀察 <span>→</span></button></div>
@@ -261,12 +370,14 @@ const seniorAdjustments = [
 
 function SeniorRoomActivity({
   roomReady,
+  petName,
   selected,
   onSelect,
   onAddExpense,
   onContinue,
 }: {
   roomReady: string[];
+  petName: string;
   selected: string[];
   onSelect: (id: string) => void;
   onAddExpense: (id: string) => void;
@@ -279,12 +390,12 @@ function SeniorRoomActivity({
   }
   return (
     <section className="life-activity senior-room-activity">
-      <div className="activity-heading"><h1>改造高齡犬的家</h1><p>豆豆已經走得比較慢。保留領養前準備好的房間，再加入讓高齡生活更安全、舒服的調整。</p></div>
+      <div className="activity-heading"><h1>改造{petName}的家</h1><p>{petName}已經走得比較慢。保留領養前準備好的房間，再加入讓高齡生活更安全、舒服的調整。</p></div>
       <div className="senior-room-layout">
         <div className="room senior-room-preview"><p>原本已放置的物品</p>{roomReady.map((id, index) => { const item = roomItems.find((entry) => entry.id === id); return item ? <span key={id} className={`senior-original item-${index % 6}`}><i>{item.icon}</i>{item.label}</span> : null; })}<b aria-hidden="true">🐕</b></div>
         <div className="senior-adjustments">{seniorAdjustments.map((item) => <button key={item.id} className={selected.includes(item.id) ? "selected" : ""} aria-pressed={selected.includes(item.id)} onClick={() => choose(item.id, item.expenseId)}><span>{item.icon}</span><b>{item.label}</b><small>{selected.includes(item.id) ? "✓ 已完成" : item.expenseId ? `加入用品 · NT$ ${money.format(expenseCatalog[item.expenseId].amount)}` : "點擊完成調整"}</small></button>)}</div>
       </div>
-      <div className="activity-message" role="status"><p>{complete ? "高齡生活空間調整完成。安全與舒適會隨豆豆的身體狀況持續變化。" : `已完成 ${selected.length} / ${seniorAdjustments.length} 項調整。`}</p></div>
+      <div className="activity-message" role="status"><p>{complete ? `高齡生活空間調整完成。安全與舒適會隨${petName}的身體狀況持續變化。` : `已完成 ${selected.length} / ${seniorAdjustments.length} 項調整。`}</p></div>
       <div className="activity-actions"><span>{selected.length} / {seniorAdjustments.length} 項已完成</span><button className="primary" disabled={!complete} onClick={onContinue}>完成高齡空間調整 <span>→</span></button></div>
     </section>
   );
@@ -292,6 +403,7 @@ function SeniorRoomActivity({
 
 export function LifeJourney({
   index,
+  petName,
   answers,
   activity,
   completedIds,
@@ -308,6 +420,7 @@ export function LifeJourney({
   onComplete,
 }: {
   index: number;
+  petName: string;
   answers: Record<string, ScenarioAnswer>;
   activity: LifeActivityState;
   completedIds: string[];
@@ -328,13 +441,11 @@ export function LifeJourney({
   const answer = scenario ? answers[scenario.id] : undefined;
   const [feedbackOpen, setFeedbackOpen] = useState(Boolean(answer));
 
-  useEffect(() => {
-    setFeedbackOpen(Boolean(item.scenarioId && answers[item.scenarioId]));
-  }, [answers, item.scenarioId]);
-
   const completedCount = completedIds.length;
 
   function selectItem(next: number) {
+    const nextScenarioId = journeyItems[next].scenarioId;
+    setFeedbackOpen(Boolean(nextScenarioId && answers[nextScenarioId]));
     onIndex(next);
     onStageChange(stageForIndex(next));
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -364,6 +475,7 @@ export function LifeJourney({
       {scenario && (
         <ScenarioCard
           scenario={scenario}
+          petName={petName}
           answer={answer}
           backupNames={backupNames}
           feedbackOpen={feedbackOpen}
@@ -372,13 +484,13 @@ export function LifeJourney({
           onContinue={continueJourney}
         />
       )}
-      {item.type === "body-language" && <BodyLanguageActivity viewed={activity.bodyLanguageSignals} onView={(id) => onActivityChange({ bodyLanguageSignals: activity.bodyLanguageSignals.includes(id) ? activity.bodyLanguageSignals : [...activity.bodyLanguageSignals, id] })} onContinue={continueJourney} />}
-      {item.type === "feeding" && <FeedingActivity activity={activity} onChange={onActivityChange} onAddExpense={onAddExpense} onContinue={continueJourney} />}
-      {item.type === "body-care" && <BodyCareActivity viewed={activity.bodyCareParts} onView={(id) => onActivityChange({ bodyCareParts: activity.bodyCareParts.includes(id) ? activity.bodyCareParts : [...activity.bodyCareParts, id] })} onContinue={continueJourney} />}
-      {item.type === "senior-room" && <SeniorRoomActivity roomReady={roomReady} selected={activity.seniorAdjustments} onSelect={(id) => onActivityChange({ seniorAdjustments: activity.seniorAdjustments.includes(id) ? activity.seniorAdjustments : [...activity.seniorAdjustments, id] })} onAddExpense={onAddExpense} onContinue={continueJourney} />}
+      {item.type === "body-language" && <BodyLanguageActivity petName={petName} viewed={activity.bodyLanguageSignals} onView={(id) => onActivityChange({ bodyLanguageSignals: activity.bodyLanguageSignals.includes(id) ? activity.bodyLanguageSignals : [...activity.bodyLanguageSignals, id] })} onContinue={continueJourney} />}
+      {item.type === "feeding" && <FeedingActivity petName={petName} activity={activity} onChange={onActivityChange} onAddExpense={onAddExpense} onContinue={continueJourney} />}
+      {item.type === "body-care" && <BodyCareActivity petName={petName} viewed={activity.bodyCareParts} onView={(id) => onActivityChange({ bodyCareParts: activity.bodyCareParts.includes(id) ? activity.bodyCareParts : [...activity.bodyCareParts, id] })} onContinue={continueJourney} />}
+      {item.type === "senior-room" && <SeniorRoomActivity petName={petName} roomReady={roomReady} selected={activity.seniorAdjustments} onSelect={(id) => onActivityChange({ seniorAdjustments: activity.seniorAdjustments.includes(id) ? activity.seniorAdjustments : [...activity.seniorAdjustments, id] })} onAddExpense={onAddExpense} onContinue={continueJourney} />}
 
       <div className="scenario-bottom-nav life-bottom-nav">
-        <button className="secondary" onClick={() => index > 0 ? selectItem(index - 1) : onBack()}>← {index > 0 ? "上一個生活內容" : "返回領養前準備"}</button>
+        <button className="secondary" onClick={() => index > 0 ? selectItem(index - 1) : onBack()}>← {index > 0 ? "上一個生活內容" : "返回命名頁面"}</button>
         <span>{completedCount} / {journeyItems.length} 個生活內容已完成</span>
       </div>
       <span className="visually-hidden">目前共登記 {expenses.length} 筆費用，所有費用以唯一識別碼避免重複。</span>

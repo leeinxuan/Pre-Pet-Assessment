@@ -95,7 +95,9 @@ export function StageRail({
   onProfilePage: (page: number) => void;
 }) {
   const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
-  const currentLifeStage = lifePhase === "arrival-intro" ? 0 : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
+  const currentLifeStage = lifePhase === "arrival-video" || lifePhase === "name-pet"
+    ? 0
+    : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
   const mainTargets = [1, 2, Math.max(3, Math.min(6, step)), 7, 8];
   const mainUnlockSteps = [1, 2, 3, 7, 8];
   const profileTitles = ["時間與身分", "居住與同住者", "經驗與動機", "預算與支援"];

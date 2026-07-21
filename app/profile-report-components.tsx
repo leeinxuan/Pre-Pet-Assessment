@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { breeds, money, roomItems, trunkItems } from "./game-data";
+import { breeds, money, roomItems } from "./game-data";
 import { lifeScenarios } from "./life-data";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, ScenarioAnswer } from "./game-types";
 import { NavButtons } from "./shared-components";
@@ -113,6 +113,7 @@ export function ProfileForm({
 }
 
 export function AssessmentReport({
+  petName,
   breed,
   profile,
   expenses,
@@ -127,6 +128,7 @@ export function AssessmentReport({
   onBack,
   onReset,
 }: {
+  petName: string;
   breed: string;
   profile: Profile;
   expenses: ExpenseRecord[];
@@ -154,7 +156,7 @@ export function AssessmentReport({
   const correctedTopics = corrected.map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const practiceItems = [
-    { label: "已認識小狗的身體語言", complete: lifeActivity.bodyLanguageSignals.length === 8 },
+    { label: `已認識${petName}的身體語言`, complete: lifeActivity.bodyLanguageSignals.length === 8 },
     { label: "已完成準備晚餐", complete: lifeActivity.feedingServed },
     { label: "已完成乾淨飲水準備", complete: lifeActivity.feedingWaterSteps.length === 4 },
     { label: "已完成基本清潔及身體觀察", complete: lifeActivity.bodyCareParts.length === 6 },
@@ -201,7 +203,7 @@ export function AssessmentReport({
 
   return (
     <div className="content-wrap summary-page assessment-report">
-      <div className="summary-title"><div><h1>{level}</h1><p>這份報告不貼標籤，而是把模擬生活轉成下一步可執行的準備。</p></div><div className="summary-pet"><span>{selectedBreed?.icon ?? "🐕"}</span><b>我想領養{selectedBreed?.label}</b><small>{correctFirst} / {lifeScenarios.length} 題第一次掌握方向</small></div></div>
+      <div className="summary-title"><div><h1>{level}</h1><p>這份報告不貼標籤，而是把和{petName}的模擬生活轉成下一步可執行的準備。</p></div><div className="summary-pet"><span>{selectedBreed?.icon ?? "🐕"}</span><b>{petName} · {selectedBreed?.label}</b><small>{correctFirst} / {lifeScenarios.length} 題第一次掌握方向</small></div></div>
       <div className="report-level"><span>綜合準備狀態</span><b>{level}</b><p>參考準備任務、第一次作答、費用與真實生活條件。</p></div>
       <section className="summary-grid">
         <article className="summary-card"><div className="card-head"><span>01</span><div><p>領養前準備</p><h2>家、成員與接送</h2></div></div><dl className="report-metrics"><div><dt>房間必要用品</dt><dd>{roomCompletion}%</dd></div><div><dt>危險物防護</dt><dd>{hazardsReady.length} / 5</dd></div><div><dt>照顧成員</dt><dd>{backupNames.length ? backupNames.join("、") : "只有我"}</dd></div><div><dt>後車廂</dt><dd>{trunkPassed ? "已通過" : `${trunkSelected.length} 件已放入`}</dd></div></dl></article>

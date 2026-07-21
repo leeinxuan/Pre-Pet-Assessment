@@ -11,20 +11,6 @@ var headers = ((m) => function headersRouteRule(event) {
 //#endregion
 //#region #nitro/virtual/public-assets-data
 var public_assets_data_default = {
-	"/favicon.svg": {
-		"type": "image/svg+xml",
-		"etag": "\"2c8-geBxqJCnEMLdObLLD/aK9EAfyXI\"",
-		"mtime": "2026-07-15T05:13:25.239Z",
-		"size": 712,
-		"path": "../public/favicon.svg"
-	},
-	"/window.svg": {
-		"type": "image/svg+xml",
-		"etag": "\"181-VMSODapsqjF/4bTEGQB/2T6Ujbk\"",
-		"mtime": "2026-07-15T05:13:25.278Z",
-		"size": 385,
-		"path": "../public/window.svg"
-	},
 	"/file.svg": {
 		"type": "image/svg+xml",
 		"etag": "\"187-+zgO7/6H1QtZc4NmTAKYKWTQ0ow\"",
@@ -39,47 +25,68 @@ var public_assets_data_default = {
 		"size": 1035,
 		"path": "../public/globe.svg"
 	},
-	"/assets/index-CXFUQJJu.css": {
-		"type": "text/css; charset=utf-8",
-		"etag": "\"12489-FKpdpU8ccxckziXfCOTsitRZ2Ms\"",
-		"mtime": "2026-07-21T06:38:50.221Z",
-		"size": 74889,
-		"path": "../public/assets/index-CXFUQJJu.css"
-	},
-	"/assets/page-BTT5fYGJ.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"146ca-9OXM44HdZ6HhtEiGiaDBv/r/crw\"",
-		"mtime": "2026-07-21T06:38:50.218Z",
-		"size": 83658,
-		"path": "../public/assets/page-BTT5fYGJ.js"
+	"/favicon.svg": {
+		"type": "image/svg+xml",
+		"etag": "\"2c8-geBxqJCnEMLdObLLD/aK9EAfyXI\"",
+		"mtime": "2026-07-15T05:13:25.239Z",
+		"size": 712,
+		"path": "../public/favicon.svg"
 	},
 	"/assets/framework-CXnKph_e.js": {
 		"type": "text/javascript; charset=utf-8",
 		"etag": "\"2e56d-yqm8KBIaXv+Y0pOthtGoU3MxBZg\"",
-		"mtime": "2026-07-21T06:38:50.216Z",
+		"mtime": "2026-07-21T07:01:15.931Z",
 		"size": 189805,
 		"path": "../public/assets/framework-CXnKph_e.js"
+	},
+	"/window.svg": {
+		"type": "image/svg+xml",
+		"etag": "\"181-VMSODapsqjF/4bTEGQB/2T6Ujbk\"",
+		"mtime": "2026-07-15T05:13:25.278Z",
+		"size": 385,
+		"path": "../public/window.svg"
+	},
+	"/assets/index-DI6rhA1a.css": {
+		"type": "text/css; charset=utf-8",
+		"etag": "\"12f6d-48o+kiRke3zhB3UxlTJ6s3Mfjng\"",
+		"mtime": "2026-07-21T07:01:15.934Z",
+		"size": 77677,
+		"path": "../public/assets/index-DI6rhA1a.css"
+	},
+	"/assets/index-bYwzQ0F7.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"13b49-3erc9RA8mBRcVD6M1FyBlBuE8sQ\"",
+		"mtime": "2026-07-21T07:01:15.930Z",
+		"size": 80713,
+		"path": "../public/assets/index-bYwzQ0F7.js"
+	},
+	"/assets/layout-segment-context-gPkobhDQ.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"120-g3JJCW85XbvfbbAl5+U5YyqeNzU\"",
+		"mtime": "2026-07-21T07:01:15.932Z",
+		"size": 288,
+		"path": "../public/assets/layout-segment-context-gPkobhDQ.js"
+	},
+	"/assets/page-CO4DZxxT.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"15177-9rRdLn9IbgPsBOgB7Vy4h2x6RqM\"",
+		"mtime": "2026-07-21T07:01:15.933Z",
+		"size": 86391,
+		"path": "../public/assets/page-CO4DZxxT.js"
 	},
 	"/assets/rolldown-runtime-S-ySWqyJ.js": {
 		"type": "text/javascript; charset=utf-8",
 		"etag": "\"2b6-wnqLLSlp3SaE+lbe74bKNe5Rpds\"",
-		"mtime": "2026-07-21T06:38:50.220Z",
+		"mtime": "2026-07-21T07:01:15.933Z",
 		"size": 694,
 		"path": "../public/assets/rolldown-runtime-S-ySWqyJ.js"
 	},
-	"/assets/layout-segment-context-C3O2ugQf.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"120-DP9fsGW4gzo14xjak/z9pyDrkg0\"",
-		"mtime": "2026-07-21T06:38:50.217Z",
-		"size": 288,
-		"path": "../public/assets/layout-segment-context-C3O2ugQf.js"
-	},
-	"/assets/index-Cf8-B4Sm.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"13b49-c9wzvEMLiae6Q2keRYUJf3VEkBU\"",
-		"mtime": "2026-07-21T06:38:50.215Z",
-		"size": 80713,
-		"path": "../public/assets/index-Cf8-B4Sm.js"
+	"/assets/pet-journey/shiba-dog.png": {
+		"type": "image/png",
+		"etag": "\"67827-gsdQ0dL2KnxW8pqKUVmYg+7syP4\"",
+		"mtime": "2026-07-21T06:44:34.325Z",
+		"size": 423975,
+		"path": "../public/assets/pet-journey/shiba-dog.png"
 	},
 	"/og.png": {
 		"type": "image/png",
@@ -95,12 +102,12 @@ var public_assets_data_default = {
 		"size": 2237292,
 		"path": "../public/illustrations/hero-life-preview.png"
 	},
-	"/illustrations/lifetime-costs.png": {
-		"type": "image/png",
-		"etag": "\"285acf-FnBZgMbXL3IGwSOJbWD9paB1Csc\"",
-		"mtime": "2026-07-15T05:13:25.326Z",
-		"size": 2644687,
-		"path": "../public/illustrations/lifetime-costs.png"
+	"/01過場動畫.mp4": {
+		"type": "video/mp4",
+		"etag": "\"267894-tlUkFIeMENgrtQp8wsRqYMHdL7Q\"",
+		"mtime": "2026-07-20T22:09:33.233Z",
+		"size": 2521236,
+		"path": "../public/01過場動畫.mp4"
 	},
 	"/illustrations/prep-room.png": {
 		"type": "image/png",
@@ -108,6 +115,20 @@ var public_assets_data_default = {
 		"mtime": "2026-07-15T05:13:25.347Z",
 		"size": 2545935,
 		"path": "../public/illustrations/prep-room.png"
+	},
+	"/assets/pet-journey/arrival-transition.mp4": {
+		"type": "video/mp4",
+		"etag": "\"267894-tlUkFIeMENgrtQp8wsRqYMHdL7Q\"",
+		"mtime": "2026-07-20T22:09:33.233Z",
+		"size": 2521236,
+		"path": "../public/assets/pet-journey/arrival-transition.mp4"
+	},
+	"/illustrations/lifetime-costs.png": {
+		"type": "image/png",
+		"etag": "\"285acf-FnBZgMbXL3IGwSOJbWD9paB1Csc\"",
+		"mtime": "2026-07-15T05:13:25.326Z",
+		"size": 2644687,
+		"path": "../public/illustrations/lifetime-costs.png"
 	},
 	"/illustrations/scenario-grid.png": {
 		"type": "image/png",

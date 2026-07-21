@@ -20,7 +20,11 @@ import type {
   ScenarioAnswer,
   ScenarioChoice,
 } from "./game-types";
-import { ArrivalIntro, LifeJourney } from "./life-journey-components";
+import {
+  ArrivalTransitionVideo,
+  LifeJourney,
+  PetNaming,
+} from "./life-journey-components";
 import {
   CarTrunkPreparation,
   CareMemberSetup,
@@ -54,7 +58,8 @@ export default function Home() {
   const [trunkPassed, setTrunkPassed] = useState(false);
   const [expenses, setExpenses] = useState<ExpenseRecord[]>([]);
   const [latestExpense, setLatestExpense] = useState<ExpenseRecord | null>(null);
-  const [lifePhase, setLifePhase] = useState<LifeJourneyPhase>("arrival-intro");
+  const [lifePhase, setLifePhase] = useState<LifeJourneyPhase>("arrival-video");
+  const [petName, setPetName] = useState("");
   const [journeyIndex, setJourneyIndex] = useState(0);
   const [journeyCompleted, setJourneyCompleted] = useState<string[]>([]);
   const [lifeActivity, setLifeActivity] = useState<LifeActivityState>(initialLifeActivityState);
@@ -83,7 +88,7 @@ export default function Home() {
   function goToLifeStage(stageIndex: number) {
     const firstJourneyItem = [0, 2, 6, 7];
     const underlyingStep = [3, 4, 5, 6];
-    if (lifePhase === "arrival-intro" && stageIndex === 0) {
+    if ((lifePhase === "arrival-video" || lifePhase === "name-pet") && stageIndex === 0) {
       setStep(3);
       setIntroOpen(false);
     } else {
@@ -182,7 +187,8 @@ export default function Home() {
     setTrunkPassed(false);
     setExpenses([]);
     setLatestExpense(null);
-    setLifePhase("arrival-intro");
+    setLifePhase("arrival-video");
+    setPetName("");
     setJourneyIndex(0);
     setJourneyCompleted([]);
     setLifeActivity(initialLifeActivityState);
@@ -215,16 +221,30 @@ export default function Home() {
     if (preparationTask === 1) {
       return <CareMemberSetup members={members} onChange={updateMembers} onBack={() => changePreparationTask(0)} onNext={() => changePreparationTask(2)} />;
     }
-    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => changePreparationTask(1)} onNext={() => { setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); setLifePhase("arrival-intro"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => changePreparationTask(1)} onNext={() => { setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); setLifePhase("arrival-video"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
-    if (lifePhase === "arrival-intro") {
-      return <ArrivalIntro onStart={() => setLifePhase("journey")} />;
+    if (lifePhase === "arrival-video") {
+      return <ArrivalTransitionVideo onContinue={() => setLifePhase("name-pet")} />;
+    }
+    if (lifePhase === "name-pet") {
+      return (
+        <PetNaming
+          petName={petName}
+          onSave={(name) => {
+            setPetName(name);
+            setJourneyIndex(0);
+            setLifePhase("life-journey");
+          }}
+          onBack={() => { setStep(2); setPreparationTask(2); setIntroOpen(false); }}
+        />
+      );
     }
     return (
       <LifeJourney
         index={journeyIndex}
+        petName={petName}
         answers={scenarioAnswers}
         activity={lifeActivity}
         completedIds={journeyCompleted}
@@ -237,7 +257,7 @@ export default function Home() {
         onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}
         onAddExpense={addExpenseById}
         onStageChange={(nextStep) => { setStep(nextStep); setFurthestStep((current) => Math.max(current, nextStep)); setIntroOpen(false); }}
-        onBack={() => { setStep(2); setIntroOpen(false); setPreparationTask(3); }}
+        onBack={() => { setStep(3); setIntroOpen(false); setLifePhase("name-pet"); }}
         onComplete={() => { setLifePhase("complete"); goTo(7); }}
       />
     );
@@ -273,7 +293,7 @@ export default function Home() {
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <ProfileForm page={profilePage} onPage={changeProfilePage} profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); }} onNext={() => goTo(8)} />}
-            {step === 8 && <AssessmentReport breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => goTo(7)} onReset={resetAll} />}
+            {step === 8 && <AssessmentReport petName={petName} breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => goTo(7)} onReset={resetAll} />}
           </section>
         </div>
       )}

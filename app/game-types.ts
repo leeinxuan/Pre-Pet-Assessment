@@ -64,7 +64,11 @@ export type ScenarioAnswer = {
   attempts: number;
 };
 
-export type LifeJourneyPhase = "arrival-intro" | "journey" | "complete";
+export type LifeJourneyPhase =
+  | "arrival-video"
+  | "name-pet"
+  | "life-journey"
+  | "complete";
 
 export type JourneyItemType =
   | "scenario"

@@ -46,6 +46,8 @@ test("contains the five-unit hierarchical journey and project-owned artwork", as
     access(new URL("../public/illustrations/lifetime-costs.png", import.meta.url)),
     access(new URL("../public/illustrations/scenario-grid.png", import.meta.url)),
     access(new URL("../public/illustrations/prep-room.png", import.meta.url)),
+    access(new URL("../public/assets/pet-journey/arrival-transition.mp4", import.meta.url)),
+    access(new URL("../public/assets/pet-journey/shiba-dog.png", import.meta.url)),
   ]);
 
   for (const label of ["選擇寵物", "領養前準備", "飼養生活", "認識你", "評估報告"]) {
@@ -67,9 +69,23 @@ test("contains the five-unit hierarchical journey and project-owned artwork", as
   assert.equal((lifeData.match(/type: "scenario"/g) ?? []).length, 7);
   assert.equal((lifeData.match(/type: "(body-language|feeding|body-care|senior-room)"/g) ?? []).length, 4);
   assert.match(lifeData, /一起生活的第一天[\s\S]*適應新家的時候[\s\S]*一起生活三個月[\s\S]*逐漸長大的時候[\s\S]*穩定生活的日常[\s\S]*成年後的例行照顧[\s\S]*健康出現變化[\s\S]*飼主生活發生改變[\s\S]*逐漸進入高齡[\s\S]*調整高齡生活空間[\s\S]*生命後段的陪伴/);
+  assert.match(lifeComponents, /arrival-transition\.mp4/);
+  assert.match(lifeComponents, /shiba-dog\.png/);
+  assert.match(lifeComponents, /影片播放完畢/);
+  assert.match(lifeComponents, /略過影片/);
   assert.match(lifeComponents, /歡迎來到新家/);
-  assert.match(lifeComponents, /開始你們的生活旅程/);
-  assert.match(lifeComponents, /準備豆豆的晚餐/);
+  assert.match(lifeComponents, /牠叫什麼名字？/);
+  assert.match(lifeComponents, /用這個名字開始生活旅程/);
+  assert.match(lifeComponents, /請先幫小狗取一個名字。/);
+  assert.match(lifeComponents, /名字請控制在12個字以內。/);
+  assert.match(lifeComponents, /replaceAll\("小狗", petName\)/);
+  assert.match(lifeComponents, /replaceAll\("狗狗", petName\)/);
+  assert.match(lifeComponents, /準備\{petName\}的晚餐/);
+  assert.match(page, /setPetName\(""\)/);
+  assert.match(page, /setLifePhase\("arrival-video"\)/);
+  assert.match(page, /setLifePhase\("name-pet"\)/);
+  assert.match(page, /setLifePhase\("life-journey"\)/);
+  assert.match(profileReport, /petName/);
   assert.doesNotMatch(lifeComponents, /量杯|飼料克數|每餐份量|餵食後觀察|是否吃完/);
   assert.doesNotMatch(page, /LawStep|CostStep|lawAnswers|costIndex/);
   assert.match(page, /ExpenseRecord/);
