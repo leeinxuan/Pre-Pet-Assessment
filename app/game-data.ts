@@ -95,6 +95,7 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   toy: { id: "toy", name: "益智玩具", amount: 450, category: "用品", stage: "領養前準備", recurring: false },
   toilet: { id: "toilet", name: "尿墊或便盆", amount: 500, category: "清潔", stage: "領養前準備", recurring: false },
   cleaner: { id: "cleaner", name: "寵物友善清潔用品", amount: 420, category: "清潔", stage: "領養前準備", recurring: false },
+  "starter-food": { id: "starter-food", name: "初期飼料", amount: 800, category: "飲食", stage: "領養前準備", recurring: false },
   "monthly-main-food": { id: "monthly-main-food", name: "每月主食費", amount: 1500, category: "飲食", stage: "一起生活三個月", recurring: true },
   "journey-medical-care": { id: "journey-medical-care", name: "異常症狀檢查與治療", amount: 4200, category: "醫療", stage: "健康出現變化", recurring: false, fromEmergency: true },
   "journey-care-service": { id: "journey-care-service", name: "短期照顧服務", amount: 2400, category: "照顧服務", stage: "飼主生活發生改變", recurring: false },
@@ -104,23 +105,21 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
 };
 
 export const roomItems: RoomItem[] = [
-  { id: "food-bowl", label: "食碗", icon: "🥣", required: true, need: "飲食", expenseId: "food-bowl" },
-  { id: "water-bowl", label: "水碗", icon: "💧", required: true, need: "飲食", expenseId: "water-bowl" },
-  { id: "bed", label: "睡墊", icon: "🛏️", required: true, need: "休息", expenseId: "bed" },
-  { id: "carrier", label: "外出籠", icon: "🧳", required: true, need: "安全", expenseId: "carrier" },
-  { id: "leash", label: "牽繩或胸背帶", icon: "🦮", required: true, need: "活動", expenseId: "leash" },
-  { id: "toy", label: "玩具", icon: "🧸", required: false, need: "活動", expenseId: "toy" },
-  { id: "toilet", label: "尿墊或便盆", icon: "▧", required: true, need: "排泄", expenseId: "toilet" },
-  { id: "cleaner", label: "清潔用品", icon: "🧼", required: true, need: "清潔", expenseId: "cleaner" },
-  { id: "food", label: "飼料", icon: "🦴", required: true, need: "飲食" },
+  { id: "carrier", label: "外出籠", icon: "🧳", image: "/room/外出籠.png", placement: { x: 8, y: 62, width: 15 }, required: true, need: "安全", expenseId: "carrier" },
+  { id: "toilet", label: "尿墊", icon: "▧", image: "/room/尿墊.png", placement: { x: 30, y: 77, width: 12 }, required: true, need: "排泄", expenseId: "toilet" },
+  { id: "water-bowl", label: "水", icon: "💧", image: "/room/水.png", placement: { x: 73, y: 73, width: 9 }, required: true, need: "飲食", expenseId: "water-bowl" },
+  { id: "cleaner", label: "清潔用品", icon: "🧼", image: "/room/清潔用品.png", placement: { x: 34, y: 43, width: 7 }, required: true, need: "清潔", expenseId: "cleaner" },
+  { id: "leash", label: "牽繩", icon: "🦮", image: "/room/牽繩.png", placement: { x: 19, y: 74, width: 11 }, required: true, need: "活動", expenseId: "leash" },
+  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/room/狗碗.png", placement: { x: 83, y: 74, width: 10 }, required: true, need: "飲食", expenseId: "food-bowl" },
+  { id: "bed", label: "睡墊", icon: "🛏️", image: "/room/睡墊.png", placement: { x: 48, y: 66, width: 22 }, required: true, need: "休息", expenseId: "bed" },
+  { id: "food", label: "飼料", icon: "🦴", image: "/room/飼料.png", placement: { x: 42, y: 61, width: 9 }, required: true, need: "飲食", expenseId: "starter-food" },
 ];
 
 export const hazards: HazardItem[] = [
-  { id: "cables", label: "電線", icon: "🔌", hint: "整理並固定電線，避免啃咬與絆倒。" },
-  { id: "chemicals", label: "清潔劑", icon: "🧴", hint: "放進有門的櫃子，避免舔食或誤觸。" },
-  { id: "chocolate", label: "巧克力與危險食物", icon: "🍫", hint: "移到寵物碰不到的密閉空間。" },
-  { id: "small-parts", label: "容易吞食的小物品", icon: "●", hint: "收進盒子，避免誤食與腸胃阻塞。" },
-  { id: "windows", label: "未防護的門窗或陽台", icon: "▤", hint: "加裝防逃與防墜措施，確認活動區域安全。" },
+  { id: "small-parts", label: "小物品", icon: "●", image: "/room/小物品.png", placement: { x: 34, y: 77, width: 8 }, hint: "收進盒子，避免誤食與腸胃阻塞。", feedback: "小物品已收好！容易吞食的物品可能造成噎住或腸胃阻塞。" },
+  { id: "chocolate", label: "巧克力", icon: "🍫", image: "/room/巧克力.png", placement: { x: 85, y: 64, width: 7 }, hint: "移到寵物碰不到的密閉空間。", feedback: "巧克力已收好！巧克力含有不適合狗狗的成分，應放在牠無法取得的位置。" },
+  { id: "chemicals", label: "清潔劑", icon: "🧴", image: "/room/清潔劑.png", placement: { x: 39, y: 47, width: 6 }, hint: "放進有門的櫃子，避免舔食或誤觸。", feedback: "清潔劑已收好！具有危險性的清潔用品應放在小狗無法取得的安全位置。" },
+  { id: "cables", label: "電線", icon: "🔌", image: "/room/電線.png", placement: { x: 12, y: 75, width: 14 }, hint: "整理並固定電線，避免啃咬與絆倒。", feedback: "電線已整理好！避免讓電線散落在小狗可以啃咬的地方，可以降低受傷及觸電風險。" },
 ];
 
 export const initialMembers: CareMember[] = [

@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CFNU-jbM.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-7xjJxULX.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var stations = [
@@ -214,6 +214,14 @@ var expenseCatalog = {
 		stage: "領養前準備",
 		recurring: false
 	},
+	"starter-food": {
+		id: "starter-food",
+		name: "初期飼料",
+		amount: 800,
+		category: "飲食",
+		stage: "領養前準備",
+		recurring: false
+	},
 	"monthly-main-food": {
 		id: "monthly-main-food",
 		name: "每月主食費",
@@ -267,107 +275,170 @@ var expenseCatalog = {
 };
 var roomItems = [
 	{
-		id: "food-bowl",
-		label: "食碗",
-		icon: "🥣",
-		required: true,
-		need: "飲食",
-		expenseId: "food-bowl"
-	},
-	{
-		id: "water-bowl",
-		label: "水碗",
-		icon: "💧",
-		required: true,
-		need: "飲食",
-		expenseId: "water-bowl"
-	},
-	{
-		id: "bed",
-		label: "睡墊",
-		icon: "🛏️",
-		required: true,
-		need: "休息",
-		expenseId: "bed"
-	},
-	{
 		id: "carrier",
 		label: "外出籠",
 		icon: "🧳",
+		image: "/room/外出籠.png",
+		placement: {
+			x: 8,
+			y: 62,
+			width: 15
+		},
 		required: true,
 		need: "安全",
 		expenseId: "carrier"
 	},
 	{
-		id: "leash",
-		label: "牽繩或胸背帶",
-		icon: "🦮",
-		required: true,
-		need: "活動",
-		expenseId: "leash"
-	},
-	{
-		id: "toy",
-		label: "玩具",
-		icon: "🧸",
-		required: false,
-		need: "活動",
-		expenseId: "toy"
-	},
-	{
 		id: "toilet",
-		label: "尿墊或便盆",
+		label: "尿墊",
 		icon: "▧",
+		image: "/room/尿墊.png",
+		placement: {
+			x: 30,
+			y: 77,
+			width: 12
+		},
 		required: true,
 		need: "排泄",
 		expenseId: "toilet"
 	},
 	{
+		id: "water-bowl",
+		label: "水",
+		icon: "💧",
+		image: "/room/水.png",
+		placement: {
+			x: 73,
+			y: 73,
+			width: 9
+		},
+		required: true,
+		need: "飲食",
+		expenseId: "water-bowl"
+	},
+	{
 		id: "cleaner",
 		label: "清潔用品",
 		icon: "🧼",
+		image: "/room/清潔用品.png",
+		placement: {
+			x: 34,
+			y: 43,
+			width: 7
+		},
 		required: true,
 		need: "清潔",
 		expenseId: "cleaner"
 	},
 	{
+		id: "leash",
+		label: "牽繩",
+		icon: "🦮",
+		image: "/room/牽繩.png",
+		placement: {
+			x: 19,
+			y: 74,
+			width: 11
+		},
+		required: true,
+		need: "活動",
+		expenseId: "leash"
+	},
+	{
+		id: "food-bowl",
+		label: "狗碗",
+		icon: "🥣",
+		image: "/room/狗碗.png",
+		placement: {
+			x: 83,
+			y: 74,
+			width: 10
+		},
+		required: true,
+		need: "飲食",
+		expenseId: "food-bowl"
+	},
+	{
+		id: "bed",
+		label: "睡墊",
+		icon: "🛏️",
+		image: "/room/睡墊.png",
+		placement: {
+			x: 48,
+			y: 66,
+			width: 22
+		},
+		required: true,
+		need: "休息",
+		expenseId: "bed"
+	},
+	{
 		id: "food",
 		label: "飼料",
 		icon: "🦴",
+		image: "/room/飼料.png",
+		placement: {
+			x: 42,
+			y: 61,
+			width: 9
+		},
 		required: true,
-		need: "飲食"
+		need: "飲食",
+		expenseId: "starter-food"
 	}
 ];
 var hazards = [
 	{
-		id: "cables",
-		label: "電線",
-		icon: "🔌",
-		hint: "整理並固定電線，避免啃咬與絆倒。"
+		id: "small-parts",
+		label: "小物品",
+		icon: "●",
+		image: "/room/小物品.png",
+		placement: {
+			x: 34,
+			y: 77,
+			width: 8
+		},
+		hint: "收進盒子，避免誤食與腸胃阻塞。",
+		feedback: "小物品已收好！容易吞食的物品可能造成噎住或腸胃阻塞。"
+	},
+	{
+		id: "chocolate",
+		label: "巧克力",
+		icon: "🍫",
+		image: "/room/巧克力.png",
+		placement: {
+			x: 85,
+			y: 64,
+			width: 7
+		},
+		hint: "移到寵物碰不到的密閉空間。",
+		feedback: "巧克力已收好！巧克力含有不適合狗狗的成分，應放在牠無法取得的位置。"
 	},
 	{
 		id: "chemicals",
 		label: "清潔劑",
 		icon: "🧴",
-		hint: "放進有門的櫃子，避免舔食或誤觸。"
+		image: "/room/清潔劑.png",
+		placement: {
+			x: 39,
+			y: 47,
+			width: 6
+		},
+		hint: "放進有門的櫃子，避免舔食或誤觸。",
+		feedback: "清潔劑已收好！具有危險性的清潔用品應放在小狗無法取得的安全位置。"
 	},
 	{
-		id: "chocolate",
-		label: "巧克力與危險食物",
-		icon: "🍫",
-		hint: "移到寵物碰不到的密閉空間。"
-	},
-	{
-		id: "small-parts",
-		label: "容易吞食的小物品",
-		icon: "●",
-		hint: "收進盒子，避免誤食與腸胃阻塞。"
-	},
-	{
-		id: "windows",
-		label: "未防護的門窗或陽台",
-		icon: "▤",
-		hint: "加裝防逃與防墜措施，確認活動區域安全。"
+		id: "cables",
+		label: "電線",
+		icon: "🔌",
+		image: "/room/電線.png",
+		placement: {
+			x: 12,
+			y: 75,
+			width: 14
+		},
+		hint: "整理並固定電線，避免啃咬與絆倒。",
+		feedback: "電線已整理好！避免讓電線散落在小狗可以啃咬的地方，可以降低受傷及觸電風險。"
 	}
 ];
 var initialMembers = [{
@@ -948,68 +1019,65 @@ function withPetName(text, petName) {
 }
 function ArrivalTransitionVideo({ onContinue }) {
 	const videoRef = (0, import_react.useRef)(null);
-	const [ended, setEnded] = (0, import_react.useState)(false);
-	const [failed, setFailed] = (0, import_react.useState)(false);
-	const [autoplayBlocked, setAutoplayBlocked] = (0, import_react.useState)(false);
+	const hasFinishedArrivalVideo = (0, import_react.useRef)(false);
+	const startTimeoutRef = (0, import_react.useRef)(null);
+	const onContinueRef = (0, import_react.useRef)(onContinue);
+	(0, import_react.useEffect)(() => {
+		onContinueRef.current = onContinue;
+	}, [onContinue]);
+	const finishArrivalVideo = (0, import_react.useCallback)(() => {
+		if (hasFinishedArrivalVideo.current) return;
+		hasFinishedArrivalVideo.current = true;
+		if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+		videoRef.current?.pause();
+		onContinueRef.current();
+	}, []);
 	(0, import_react.useEffect)(() => {
 		const video = videoRef.current;
 		if (!video) return;
-		video.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true));
-	}, []);
-	function playVideo() {
-		videoRef.current?.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true));
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			video.pause();
+			video.currentTime = 0;
+			startTimeoutRef.current = window.setTimeout(finishArrivalVideo, 180);
+			return () => {
+				if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+			};
+		}
+		startTimeoutRef.current = window.setTimeout(() => {
+			if (video.paused || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) finishArrivalVideo();
+		}, 8e3);
+		video.play()?.catch(() => {
+			console.warn("接回家過場影片無法自動播放，已略過至命名頁面。");
+			finishArrivalVideo();
+		});
+		return () => {
+			if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+		};
+	}, [finishArrivalVideo]);
+	function handlePlaying() {
+		if (startTimeoutRef.current !== null) {
+			window.clearTimeout(startTimeoutRef.current);
+			startTimeoutRef.current = null;
+		}
 	}
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		className: "content-wrap arrival-transition",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "arrival-video-copy",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "一起回到新家" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "後車廂已經準備完成，現在帶著安全裝備與領養文件，陪小狗踏上回家的路。" })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "arrival-video-frame",
-				children: !failed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
-					ref: videoRef,
-					src: arrivalVideoSrc,
-					playsInline: true,
-					preload: "metadata",
-					controls: true,
-					onEnded: () => setEnded(true),
-					onError: () => setFailed(true),
-					children: "你的瀏覽器無法播放到家過場影片，仍可使用下方按鈕繼續幫小狗取名字。"
-				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "arrival-video-fallback",
-					role: "alert",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "影片暫時無法載入" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "別擔心，你仍然可以繼續幫小狗取名字。" })]
-				})
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "arrival-video-status",
-				role: "status",
-				"aria-live": "polite",
-				children: failed ? "影片載入失敗，可以直接繼續。" : ended ? "影片播放完畢" : autoplayBlocked ? "瀏覽器尚未開始播放，請按下播放影片。" : "影片播放中，可使用播放器暫停或繼續。"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "arrival-video-actions",
-				children: [
-					autoplayBlocked && !failed && !ended && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-						className: "secondary",
-						onClick: playVideo,
-						children: "播放影片"
-					}),
-					(ended || failed) && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						className: "primary large",
-						onClick: onContinue,
-						children: ["幫小狗取名字 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
-					}),
-					!ended && !failed && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-						className: "text-back",
-						onClick: onContinue,
-						children: "略過影片"
-					})
-				]
-			})
-		]
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+		className: "arrival-video-screen",
+		"aria-label": "接回家影片過場",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
+			ref: videoRef,
+			src: arrivalVideoSrc,
+			autoPlay: true,
+			muted: true,
+			playsInline: true,
+			preload: "auto",
+			"aria-label": "小狗搭乘外出籠抵達新家的過場動畫",
+			onPlaying: handlePlaying,
+			onEnded: finishArrivalVideo,
+			onError: () => {
+				console.warn("接回家過場影片載入失敗，已略過至命名頁面。");
+				finishArrivalVideo();
+			}
+		})
 	});
 }
 function PetNaming({ petName, onSave, onBack }) {
@@ -2224,94 +2292,216 @@ function CostBar({ expenses, emergencyReserve, latestExpense }) {
 }
 function RoomPreparation({ selectedItems, securedHazards, onAddItem, onRemoveItem, onToggleHazard, onBack, onNext }) {
 	const [message, setMessage] = (0, import_react.useState)("");
+	const [selectedSupply, setSelectedSupply] = (0, import_react.useState)(null);
+	const [selectedHazard, setSelectedHazard] = (0, import_react.useState)(null);
+	const [trashDragging, setTrashDragging] = (0, import_react.useState)(false);
+	const [trashOver, setTrashOver] = (0, import_react.useState)(false);
+	const [trashSuccess, setTrashSuccess] = (0, import_react.useState)(false);
+	const [roomApproved, setRoomApproved] = (0, import_react.useState)(false);
 	const missing = roomItems.filter((item) => item.required).filter((item) => !selectedItems.includes(item.id));
 	const unsecured = hazards.filter((item) => !securedHazards.includes(item.id));
 	const complete = missing.length === 0 && unsecured.length === 0;
 	const waiting = roomItems.filter((item) => !selectedItems.includes(item.id));
+	function placeSupply(id) {
+		if (!roomItems.some((item) => item.id === id) || selectedItems.includes(id)) return;
+		onAddItem(id);
+		setSelectedSupply(null);
+		setRoomApproved(false);
+		setMessage("");
+	}
+	function secureHazard(id) {
+		const hazard = hazards.find((item) => item.id === id);
+		if (!hazard || securedHazards.includes(id)) return;
+		onToggleHazard(id);
+		setSelectedHazard(null);
+		setTrashDragging(false);
+		setTrashOver(false);
+		setTrashSuccess(true);
+		window.setTimeout(() => setTrashSuccess(false), 500);
+		setRoomApproved(false);
+		setMessage(hazard.feedback);
+	}
+	function readRoomDrop(event) {
+		event.preventDefault();
+		const value = event.dataTransfer.getData("text/plain");
+		if (value.startsWith("supply:")) placeSupply(value.slice(7));
+	}
+	function readTrashDrop(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		const value = event.dataTransfer.getData("text/plain");
+		if (value.startsWith("hazard:")) secureHazard(value.slice(7));
+		else {
+			setTrashDragging(false);
+			setTrashOver(false);
+		}
+	}
 	function checkRoom() {
 		if (complete) {
-			setMessage("房間準備完成！你已經替牠準備好安全的休息、飲食與活動空間。");
+			setRoomApproved(true);
+			setMessage("房間準備完成！你已經放好基本生活用品，也收起了可能造成危險的物品。");
 			return;
 		}
-		if (missing.some((item) => item.need === "休息")) setMessage("還少了一個可以安心休息的地方，試著找找看適合的物品。");
-		else if (missing.some((item) => item.need === "飲食")) setMessage("飲食準備還不完整，請確認食物、食碗與乾淨飲水。");
-		else if (missing.some((item) => item.need === "排泄")) setMessage("還需要安排清楚的排泄空間，讓適應期更容易整理。");
-		else if (unsecured.length) setMessage(`還有 ${unsecured[0].label} 尚未收好。${unsecured[0].hint}`);
-		else setMessage("再確認必要用品與安全區域，就快完成了。");
+		setRoomApproved(false);
+		if (missing.length && unsecured.length) setMessage(`還有${missing.length}項用品尚未放入房間。還有${unsecured.length}項危險物品需要收好。`);
+		else if (missing.length) setMessage("房間裡還缺少狗狗生活需要的用品，請再檢查用品準備區。");
+		else setMessage("用品已經準備完成，但房間中還有可能造成風險的物品。");
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap preparation-page",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
 				title: "先替牠布置安全的生活空間",
-				body: "把用品拖進房間，或直接點擊加入；再逐一把可能造成風險的物品收好。"
+				body: "把用品放進房間，再把危險物品拖進垃圾桶；也可以先點選危險物品，再點擊垃圾桶。"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "prep-board expanded",
+				className: "room-preparation-layout",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-					className: "item-shelf",
+					className: "room-supply-shelf",
+					"aria-label": "用品準備區",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: ["用品準備箱 ", /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [waiting.length, " 件可加入"] })] }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: waiting.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-							draggable: true,
-							onDragStart: (event) => event.dataTransfer.setData("text/plain", item.id),
-							onClick: () => onAddItem(item.id),
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.icon }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [item.required ? "必要用品" : "可選用品", " · 拖曳或點擊"] })
-							]
-						}, item.id)) }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "拖曳用品，或先點選用品再點房間。" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "room-supply-grid",
+							children: waiting.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								type: "button",
+								draggable: true,
+								className: selectedSupply === item.id ? "selected" : "",
+								"aria-pressed": selectedSupply === item.id,
+								onDragStart: (event) => event.dataTransfer.setData("text/plain", `supply:${item.id}`),
+								onClick: () => setSelectedSupply((current) => current === item.id ? null : item.id),
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									className: item.id === "food" ? "room-item-image room-item-image--food" : "room-item-image",
+									src: item.image,
+									alt: `準備用品：${item.label}`,
+									onError: (event) => {
+										event.currentTarget.hidden = true;
+									}
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
+							}, item.id))
+						}),
 						waiting.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 							className: "empty-box",
 							children: "所有用品都已放進房間 ✓"
 						})
 					]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "room room-preparation",
-					onDragOver: (event) => event.preventDefault(),
-					onDrop: (event) => {
-						event.preventDefault();
-						onAddItem(event.dataTransfer.getData("text/plain"));
-					},
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "安全、休息、飲食、排泄與活動空間" }), selectedItems.map((id, index) => {
-						const item = roomItems.find((entry) => entry.id === id);
-						return item ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-							className: `placed item-${index % 6}`,
-							onClick: () => onRemoveItem(id),
-							title: "點擊移回準備箱",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.icon }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
-						}, id) : null;
+					className: "room-interaction-column",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: `room-scene ${selectedSupply ? "awaiting-placement" : ""}`,
+						role: "group",
+						tabIndex: 0,
+						"aria-label": selectedSupply ? `將${roomItems.find((item) => item.id === selectedSupply)?.label}放進房間` : "空的寵物生活房間",
+						onClick: () => selectedSupply && placeSupply(selectedSupply),
+						onKeyDown: (event) => {
+							if (selectedSupply && (event.key === "Enter" || event.key === " ")) {
+								event.preventDefault();
+								placeSupply(selectedSupply);
+							}
+						},
+						onDragOver: (event) => event.preventDefault(),
+						onDrop: readRoomDrop,
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								className: "room-scene-background",
+								src: "/room/空房間.png",
+								alt: "空的寵物生活房間"
+							}),
+							selectedItems.map((id) => {
+								const item = roomItems.find((entry) => entry.id === id);
+								return item ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+									type: "button",
+									className: `room-object placed-supply ${item.id === "food" ? "placed-room-item--food" : ""}`,
+									style: {
+										left: `${item.placement.x}%`,
+										top: `${item.placement.y}%`,
+										width: `${item.placement.width}%`
+									},
+									onClick: (event) => {
+										event.stopPropagation();
+										onRemoveItem(id);
+										setRoomApproved(false);
+										setMessage("");
+									},
+									"aria-label": `房間中的${item.label}，點擊移回用品準備區`,
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+										className: item.id === "food" ? "room-item-image room-item-image--food" : "room-item-image",
+										src: item.image,
+										alt: `房間中的用品：${item.label}`,
+										onError: (event) => {
+											event.currentTarget.hidden = true;
+										}
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.label })]
+								}, id) : null;
+							}),
+							unsecured.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								type: "button",
+								draggable: true,
+								className: `room-object room-hazard ${selectedHazard === item.id ? "selected" : ""}`,
+								style: {
+									left: `${item.placement.x}%`,
+									top: `${item.placement.y}%`,
+									width: `${item.placement.width}%`
+								},
+								"aria-pressed": selectedHazard === item.id,
+								onDragStart: (event) => {
+									event.dataTransfer.setData("text/plain", `hazard:${item.id}`);
+									setTrashDragging(true);
+								},
+								onDragEnd: () => {
+									setTrashDragging(false);
+									setTrashOver(false);
+								},
+								onClick: (event) => {
+									event.stopPropagation();
+									setSelectedHazard((current) => current === item.id ? null : item.id);
+								},
+								"aria-label": `房間中的危險物品：${item.label}，選取後可放進垃圾桶`,
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: item.image,
+									alt: `房間中的危險物品：${item.label}`,
+									onError: (event) => {
+										event.currentTarget.hidden = true;
+									}
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.label })]
+							}, item.id)),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								type: "button",
+								className: `room-trash-bin ${selectedHazard || trashDragging ? "ready" : ""} ${trashOver ? "over" : ""} ${trashSuccess ? "success" : ""}`,
+								"aria-label": "將選取的危險物品放進垃圾桶",
+								onClick: (event) => {
+									event.stopPropagation();
+									if (selectedHazard) secureHazard(selectedHazard);
+								},
+								onDragEnter: (event) => {
+									event.preventDefault();
+									if (trashDragging) setTrashOver(true);
+								},
+								onDragOver: (event) => {
+									event.preventDefault();
+									if (trashDragging) setTrashOver(true);
+								},
+								onDragLeave: () => setTrashOver(false),
+								onDrop: readTrashDrop,
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: "/room/垃圾桶.png",
+									alt: "房間中的垃圾桶"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: unsecured.length === 0 ? "危險物品已全部收好！" : `已收好 ${hazards.length - unsecured.length}／${hazards.length}` })]
+							})
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "trash-guidance",
+						role: "note",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "把危險物品移出活動範圍" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "請把房間中的危險物品拖進垃圾桶，或先點選物品，再點擊垃圾桶。遊戲中的垃圾桶代表把危險物品移出小狗可以接觸的範圍。" })]
 					})]
 				})]
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				className: "hazard-panel",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: "居家安全檢查"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "把危險物品收好" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "點選項目代表已完成固定、收納或防護。" })
-				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "hazard-grid",
-					children: hazards.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						className: securedHazards.includes(item.id) ? "secured" : "",
-						"aria-pressed": securedHazards.includes(item.id),
-						onClick: () => onToggleHazard(item.id),
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.icon }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: securedHazards.includes(item.id) ? "✓ 已收好" : item.hint })
-						]
-					}, item.id))
-				})]
-			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: `task-message ${complete ? "success" : ""}`,
+				className: `task-message ${roomApproved ? "success" : ""}`,
 				role: "status",
-				children: message || "完成用品放置與危險物品收納後，按下「檢查房間」。"
+				"aria-live": "polite",
+				children: message || "完成8項用品放置與4項危險物品收納後，按下「檢查房間」。"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "task-check-actions",
@@ -2324,7 +2514,7 @@ function RoomPreparation({ selectedItems, securedHazards, onAddItem, onRemoveIte
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NavButtons, {
 				onBack,
 				onNext,
-				disabled: !complete,
+				disabled: !roomApproved,
 				nextLabel: "房間完成，建立照顧成員"
 			})
 		]
@@ -2941,7 +3131,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	const roomCompletion = Math.round(roomReady.filter((id) => requiredRoom.some((item) => item.id === id)).length / requiredRoom.length * 100);
 	const budgetEnough = Number(profile.monthlyBudget) >= recurring;
 	const strongSignals = [
-		roomCompletion === 100 && hazardsReady.length === 5 && trunkPassed,
+		roomCompletion === 100 && hazardsReady.length === hazards.length && trunkPassed,
 		correctFirst >= 5,
 		practiceComplete === 5,
 		budgetEnough,
@@ -2953,7 +3143,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	const level = strongSignals >= 7 ? "已具備多項準備" : strongSignals >= 4 ? "有部分條件需要先確認" : "建議先完成準備事項";
 	const prepared = [
 		roomCompletion === 100 && "必要用品與生活空間已完成",
-		hazardsReady.length === 5 && "居家危險物已完成收納與防護",
+		hazardsReady.length === hazards.length && "居家危險物已完成收納與防護",
 		backupNames.length > 0 && `已有可協助照顧的家庭成員：${backupNames.join("、")}`,
 		trunkPassed && "接送行李、文件與安全運輸已通過檢查",
 		correctFirst >= 5 && `${correctFirst} 個情境第一次就掌握照顧方向`,
@@ -2962,7 +3152,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	].filter(Boolean);
 	const confirm = [
 		roomCompletion < 100 && `必要用品完成度 ${roomCompletion}%`,
-		hazardsReady.length < 5 && "仍有居家危險物需要防護",
+		hazardsReady.length < hazards.length && "仍有居家危險物需要防護",
 		backupNames.length === 0 && "尚未新增其他可協助的照顧成員",
 		!trunkPassed && "接寵物後車廂尚未通過檢查",
 		!budgetEnough && `每月預算低於目前固定支出 NT$ ${money.format(recurring)}`,
@@ -3027,7 +3217,11 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 							className: "report-metrics",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "房間必要用品" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [roomCompletion, "%"] })] }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "危險物防護" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [hazardsReady.length, " / 5"] })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "危險物防護" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: [
+									hazardsReady.length,
+									" / ",
+									hazards.length
+								] })] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "照顧成員" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: backupNames.length ? backupNames.join("、") : "只有我" })] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "後車廂" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: trunkPassed ? "已通過" : `${trunkSelected.length} 件已放入` })] })
 							]
@@ -3393,7 +3587,6 @@ function Home() {
 				setStep(3);
 				setFurthestStep((current) => Math.max(current, 3));
 				setIntroOpen(false);
-				setLifePhase("arrival-video");
 				window.scrollTo({
 					top: 0,
 					behavior: "smooth"

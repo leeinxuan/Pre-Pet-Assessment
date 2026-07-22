@@ -118,6 +118,8 @@ export type RoomItem = {
   id: string;
   label: string;
   icon: string;
+  image: string;
+  placement: { x: number; y: number; width: number };
   required: boolean;
   need: "飲食" | "休息" | "排泄" | "安全" | "活動" | "清潔";
   expenseId?: string;
@@ -127,7 +129,10 @@ export type HazardItem = {
   id: string;
   label: string;
   icon: string;
+  image: string;
+  placement: { x: number; y: number; width: number };
   hint: string;
+  feedback: string;
 };
 
 export type TrunkItem = {

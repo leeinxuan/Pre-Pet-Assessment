@@ -18,13 +18,6 @@ var public_assets_data_default = {
 		"size": 391,
 		"path": "../public/file.svg"
 	},
-	"/globe.svg": {
-		"type": "image/svg+xml",
-		"etag": "\"40b-LrojsBpGczu4Qj5tOOv19+lavsU\"",
-		"mtime": "2026-07-15T05:13:25.251Z",
-		"size": 1035,
-		"path": "../public/globe.svg"
-	},
 	"/favicon.svg": {
 		"type": "image/svg+xml",
 		"etag": "\"2c8-geBxqJCnEMLdObLLD/aK9EAfyXI\"",
@@ -32,12 +25,19 @@ var public_assets_data_default = {
 		"size": 712,
 		"path": "../public/favicon.svg"
 	},
-	"/assets/framework-CXnKph_e.js": {
+	"/globe.svg": {
+		"type": "image/svg+xml",
+		"etag": "\"40b-LrojsBpGczu4Qj5tOOv19+lavsU\"",
+		"mtime": "2026-07-15T05:13:25.251Z",
+		"size": 1035,
+		"path": "../public/globe.svg"
+	},
+	"/assets/index-mKIbibR8.js": {
 		"type": "text/javascript; charset=utf-8",
-		"etag": "\"2e56d-yqm8KBIaXv+Y0pOthtGoU3MxBZg\"",
-		"mtime": "2026-07-21T07:01:15.931Z",
-		"size": 189805,
-		"path": "../public/assets/framework-CXnKph_e.js"
+		"etag": "\"13b49-+/7TJqzG7wh0gUYfK39kAMCPKjU\"",
+		"mtime": "2026-07-22T05:36:58.115Z",
+		"size": 80713,
+		"path": "../public/assets/index-mKIbibR8.js"
 	},
 	"/window.svg": {
 		"type": "image/svg+xml",
@@ -46,40 +46,117 @@ var public_assets_data_default = {
 		"size": 385,
 		"path": "../public/window.svg"
 	},
-	"/assets/index-DI6rhA1a.css": {
-		"type": "text/css; charset=utf-8",
-		"etag": "\"12f6d-48o+kiRke3zhB3UxlTJ6s3Mfjng\"",
-		"mtime": "2026-07-21T07:01:15.934Z",
-		"size": 77677,
-		"path": "../public/assets/index-DI6rhA1a.css"
-	},
-	"/assets/index-bYwzQ0F7.js": {
+	"/assets/framework-CXnKph_e.js": {
 		"type": "text/javascript; charset=utf-8",
-		"etag": "\"13b49-3erc9RA8mBRcVD6M1FyBlBuE8sQ\"",
-		"mtime": "2026-07-21T07:01:15.930Z",
-		"size": 80713,
-		"path": "../public/assets/index-bYwzQ0F7.js"
+		"etag": "\"2e56d-yqm8KBIaXv+Y0pOthtGoU3MxBZg\"",
+		"mtime": "2026-07-22T05:36:58.116Z",
+		"size": 189805,
+		"path": "../public/assets/framework-CXnKph_e.js"
 	},
-	"/assets/layout-segment-context-gPkobhDQ.js": {
+	"/assets/layout-segment-context-Bd8iLnGH.js": {
 		"type": "text/javascript; charset=utf-8",
-		"etag": "\"120-g3JJCW85XbvfbbAl5+U5YyqeNzU\"",
-		"mtime": "2026-07-21T07:01:15.932Z",
+		"etag": "\"120-lv8cwmsgsLEIMjDWn2ZS7gxlf5I\"",
+		"mtime": "2026-07-22T05:36:58.119Z",
 		"size": 288,
-		"path": "../public/assets/layout-segment-context-gPkobhDQ.js"
+		"path": "../public/assets/layout-segment-context-Bd8iLnGH.js"
 	},
-	"/assets/page-CO4DZxxT.js": {
+	"/assets/index-CnV8ZuMk.css": {
+		"type": "text/css; charset=utf-8",
+		"etag": "\"140ed-Jo1ATU41Ff1T1hhY7AEd5lAP3Ow\"",
+		"mtime": "2026-07-22T05:36:58.122Z",
+		"size": 82157,
+		"path": "../public/assets/index-CnV8ZuMk.css"
+	},
+	"/assets/page-CISbmLHQ.js": {
 		"type": "text/javascript; charset=utf-8",
-		"etag": "\"15177-9rRdLn9IbgPsBOgB7Vy4h2x6RqM\"",
-		"mtime": "2026-07-21T07:01:15.933Z",
-		"size": 86391,
-		"path": "../public/assets/page-CO4DZxxT.js"
+		"etag": "\"15cbe-Rf/3YtuFRr8MxnvwEORnuHhgsKI\"",
+		"mtime": "2026-07-22T05:36:58.120Z",
+		"size": 89278,
+		"path": "../public/assets/page-CISbmLHQ.js"
 	},
 	"/assets/rolldown-runtime-S-ySWqyJ.js": {
 		"type": "text/javascript; charset=utf-8",
 		"etag": "\"2b6-wnqLLSlp3SaE+lbe74bKNe5Rpds\"",
-		"mtime": "2026-07-21T07:01:15.933Z",
+		"mtime": "2026-07-22T05:36:58.121Z",
 		"size": 694,
 		"path": "../public/assets/rolldown-runtime-S-ySWqyJ.js"
+	},
+	"/room/垃圾桶.png": {
+		"type": "image/png",
+		"etag": "\"363a0-Mi5pQhWdlbTKmV9B8vU+nr5nfDc\"",
+		"mtime": "2026-07-22T04:32:54.704Z",
+		"size": 222112,
+		"path": "../public/room/垃圾桶.png"
+	},
+	"/room/小物品.png": {
+		"type": "image/png",
+		"etag": "\"89b3-AP7hQCMZrwJ/Kc7QBbKzEV7Uv4c\"",
+		"mtime": "2026-07-21T06:25:37.438Z",
+		"size": 35251,
+		"path": "../public/room/小物品.png"
+	},
+	"/room/巧克力.png": {
+		"type": "image/png",
+		"etag": "\"d060-oj6hoIjmOuk0BXOgAxi5p4CAIck\"",
+		"mtime": "2026-07-21T06:25:10.741Z",
+		"size": 53344,
+		"path": "../public/room/巧克力.png"
+	},
+	"/room/水.png": {
+		"type": "image/png",
+		"etag": "\"e813-ps/3EA5uw+CrU+9aboULvFHVge8\"",
+		"mtime": "2026-07-21T06:19:26.431Z",
+		"size": 59411,
+		"path": "../public/room/水.png"
+	},
+	"/room/尿墊.png": {
+		"type": "image/png",
+		"etag": "\"12b18-ia1a0cyNI6GqS3jBsS7ZB7q60Zc\"",
+		"mtime": "2026-07-21T06:23:32.364Z",
+		"size": 76568,
+		"path": "../public/room/尿墊.png"
+	},
+	"/room/外出籠.png": {
+		"type": "image/png",
+		"etag": "\"1f84f-mIQeeXVntOUQbbLtXfXxYyxqTmg\"",
+		"mtime": "2026-07-21T06:21:27.988Z",
+		"size": 129103,
+		"path": "../public/room/外出籠.png"
+	},
+	"/room/牽繩.png": {
+		"type": "image/png",
+		"etag": "\"fa51-g2PVZsKoHQjoU7gz7bRBTFAvEnE\"",
+		"mtime": "2026-07-21T06:23:05.878Z",
+		"size": 64081,
+		"path": "../public/room/牽繩.png"
+	},
+	"/room/清潔劑.png": {
+		"type": "image/png",
+		"etag": "\"ad7f-zNgi+LgTgy998c/0xdYaJs5Srcg\"",
+		"mtime": "2026-07-21T06:24:43.341Z",
+		"size": 44415,
+		"path": "../public/room/清潔劑.png"
+	},
+	"/room/狗碗.png": {
+		"type": "image/png",
+		"etag": "\"1217e-xUbGrGSJ6nM9e9GZv0rDOPXbT04\"",
+		"mtime": "2026-07-21T06:19:06.443Z",
+		"size": 74110,
+		"path": "../public/room/狗碗.png"
+	},
+	"/room/清潔用品.png": {
+		"type": "image/png",
+		"etag": "\"deb3-qfq9n5BYhefs/4f6SDIVUWYpKf8\"",
+		"mtime": "2026-07-21T06:23:56.582Z",
+		"size": 57011,
+		"path": "../public/room/清潔用品.png"
+	},
+	"/room/電線.png": {
+		"type": "image/png",
+		"etag": "\"10ee2-rpFnki9/lJcRjPzfMtAI/MC2Ao0\"",
+		"mtime": "2026-07-21T06:24:12.686Z",
+		"size": 69346,
+		"path": "../public/room/電線.png"
 	},
 	"/assets/pet-journey/shiba-dog.png": {
 		"type": "image/png",
@@ -88,26 +165,12 @@ var public_assets_data_default = {
 		"size": 423975,
 		"path": "../public/assets/pet-journey/shiba-dog.png"
 	},
-	"/og.png": {
-		"type": "image/png",
-		"etag": "\"242572-VbSX8g94n6LAx27cu0Y/o5MWeEg\"",
-		"mtime": "2026-07-15T05:13:25.273Z",
-		"size": 2368882,
-		"path": "../public/og.png"
-	},
 	"/illustrations/hero-life-preview.png": {
 		"type": "image/png",
 		"etag": "\"22236c-9UrBu7Kj2eY1fpelO7J5gYsI2lA\"",
 		"mtime": "2026-07-15T05:13:25.302Z",
 		"size": 2237292,
 		"path": "../public/illustrations/hero-life-preview.png"
-	},
-	"/01過場動畫.mp4": {
-		"type": "video/mp4",
-		"etag": "\"267894-tlUkFIeMENgrtQp8wsRqYMHdL7Q\"",
-		"mtime": "2026-07-20T22:09:33.233Z",
-		"size": 2521236,
-		"path": "../public/01過場動畫.mp4"
 	},
 	"/illustrations/prep-room.png": {
 		"type": "image/png",
@@ -116,12 +179,19 @@ var public_assets_data_default = {
 		"size": 2545935,
 		"path": "../public/illustrations/prep-room.png"
 	},
-	"/assets/pet-journey/arrival-transition.mp4": {
-		"type": "video/mp4",
-		"etag": "\"267894-tlUkFIeMENgrtQp8wsRqYMHdL7Q\"",
-		"mtime": "2026-07-20T22:09:33.233Z",
-		"size": 2521236,
-		"path": "../public/assets/pet-journey/arrival-transition.mp4"
+	"/room/空房間.png": {
+		"type": "image/png",
+		"etag": "\"f1db0-WPh64SeqYCQMxhXWcwmi8pbWMgk\"",
+		"mtime": "2026-07-21T05:24:46.441Z",
+		"size": 990640,
+		"path": "../public/room/空房間.png"
+	},
+	"/room/睡墊.png": {
+		"type": "image/png",
+		"etag": "\"1f692-I+bt2gythr6t3JbYNhQk6w9Wvrk\"",
+		"mtime": "2026-07-21T06:20:16.186Z",
+		"size": 128658,
+		"path": "../public/room/睡墊.png"
 	},
 	"/illustrations/lifetime-costs.png": {
 		"type": "image/png",
@@ -136,6 +206,27 @@ var public_assets_data_default = {
 		"mtime": "2026-07-15T05:13:25.372Z",
 		"size": 2666723,
 		"path": "../public/illustrations/scenario-grid.png"
+	},
+	"/og.png": {
+		"type": "image/png",
+		"etag": "\"242572-VbSX8g94n6LAx27cu0Y/o5MWeEg\"",
+		"mtime": "2026-07-15T05:13:25.273Z",
+		"size": 2368882,
+		"path": "../public/og.png"
+	},
+	"/room/飼料.png": {
+		"type": "image/png",
+		"etag": "\"222d89-RhF2s9Sr8pkrWeMMkU+SkGGE1/c\"",
+		"mtime": "2026-07-21T06:18:19.685Z",
+		"size": 2239881,
+		"path": "../public/room/飼料.png"
+	},
+	"/assets/pet-journey/arrival-transition.mp4": {
+		"type": "video/mp4",
+		"etag": "\"269969-+pm64P/+UessDBI9GcKOeldVZwY\"",
+		"mtime": "2026-07-22T03:04:30.713Z",
+		"size": 2529641,
+		"path": "../public/assets/pet-journey/arrival-transition.mp4"
 	}
 };
 //#endregion

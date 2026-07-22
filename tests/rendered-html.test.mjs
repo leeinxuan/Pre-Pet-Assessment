@@ -48,6 +48,9 @@ test("contains the five-unit hierarchical journey and project-owned artwork", as
     access(new URL("../public/illustrations/prep-room.png", import.meta.url)),
     access(new URL("../public/assets/pet-journey/arrival-transition.mp4", import.meta.url)),
     access(new URL("../public/assets/pet-journey/shiba-dog.png", import.meta.url)),
+    access(new URL("../public/room/空房間.png", import.meta.url)),
+    access(new URL("../public/room/垃圾桶.png", import.meta.url)),
+    ...["外出籠", "尿墊", "水", "清潔用品", "牽繩", "狗碗", "睡墊", "飼料", "小物品", "巧克力", "清潔劑", "電線"].map((name) => access(new URL(`../public/room/${name}.png`, import.meta.url))),
   ]);
 
   for (const label of ["選擇寵物", "領養前準備", "飼養生活", "認識你", "評估報告"]) {
@@ -59,6 +62,15 @@ test("contains the five-unit hierarchical journey and project-owned artwork", as
   }
   assert.doesNotMatch(shared, /分配照顧工作/);
   assert.doesNotMatch(preparation, /CareTaskAssignment|分配照顧工作|檢查分工/);
+  assert.match(preparation, /\/room\/空房間\.png/);
+  assert.match(preparation, /\/room\/垃圾桶\.png/);
+  assert.match(preparation, /將選取的危險物品放進垃圾桶/);
+  assert.match(preparation, /先點選物品，再點擊垃圾桶/);
+  assert.doesNotMatch(preparation, /hazard-storage|點擊收好/);
+  assert.match(preparation, /完成8項用品放置與4項危險物品收納/);
+  assert.doesNotMatch(preparation, /hazard-panel/);
+  assert.equal((data.match(/image: "\/room\//g) ?? []).length, 12);
+  assert.equal((data.match(/required: true/g) ?? []).length, 8);
   assert.match(shared, /mobile-progress-nav/);
   assert.doesNotMatch(preparation, /02 · 領養前準備/);
   assert.doesNotMatch(profileReport, /07 · 回到真實的你|08 · 我的飼養準備報告/);
@@ -71,8 +83,17 @@ test("contains the five-unit hierarchical journey and project-owned artwork", as
   assert.match(lifeData, /一起生活的第一天[\s\S]*適應新家的時候[\s\S]*一起生活三個月[\s\S]*逐漸長大的時候[\s\S]*穩定生活的日常[\s\S]*成年後的例行照顧[\s\S]*健康出現變化[\s\S]*飼主生活發生改變[\s\S]*逐漸進入高齡[\s\S]*調整高齡生活空間[\s\S]*生命後段的陪伴/);
   assert.match(lifeComponents, /arrival-transition\.mp4/);
   assert.match(lifeComponents, /shiba-dog\.png/);
-  assert.match(lifeComponents, /影片播放完畢/);
-  assert.match(lifeComponents, /略過影片/);
+  assert.match(lifeComponents, /arrival-video-screen/);
+  assert.match(lifeComponents, /autoPlay/);
+  assert.match(lifeComponents, /muted/);
+  assert.match(lifeComponents, /preload="auto"/);
+  assert.match(lifeComponents, /onEnded=\{finishArrivalVideo\}/);
+  assert.match(lifeComponents, /hasFinishedArrivalVideo/);
+  assert.match(lifeComponents, /prefers-reduced-motion: reduce/);
+  assert.match(lifeComponents, /小狗搭乘外出籠抵達新家的過場動畫/);
+  assert.doesNotMatch(lifeComponents, /arrival-video-next|arrival-video-play|togglePlayback|continueToNaming/);
+  assert.doesNotMatch(lifeComponents, /一起回到新家|影片播放完畢|略過影片|播放影片中|影片暫時無法載入/);
+  assert.doesNotMatch(lifeComponents, /<video[\s\S]*?controls/);
   assert.match(lifeComponents, /歡迎來到新家/);
   assert.match(lifeComponents, /牠叫什麼名字？/);
   assert.match(lifeComponents, /用這個名字開始生活旅程/);
@@ -83,6 +104,7 @@ test("contains the five-unit hierarchical journey and project-owned artwork", as
   assert.match(lifeComponents, /準備\{petName\}的晚餐/);
   assert.match(page, /setPetName\(""\)/);
   assert.match(page, /setLifePhase\("arrival-video"\)/);
+  assert.doesNotMatch(css, /\.arrival-video-next|\.arrival-video-play/);
   assert.match(page, /setLifePhase\("name-pet"\)/);
   assert.match(page, /setLifePhase\("life-journey"\)/);
   assert.match(profileReport, /petName/);

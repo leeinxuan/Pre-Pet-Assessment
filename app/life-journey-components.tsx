@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { expenseCatalog, money, roomItems } from "./game-data";
 import { journeyItems, lifeScenarios } from "./life-data";
 import type {
@@ -23,55 +23,76 @@ function withPetName(text: string, petName: string) {
 
 export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [ended, setEnded] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const hasFinishedArrivalVideo = useRef(false);
+  const startTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const onContinueRef = useRef(onContinue);
+
+  useEffect(() => {
+    onContinueRef.current = onContinue;
+  }, [onContinue]);
+
+  const finishArrivalVideo = useCallback(() => {
+    if (hasFinishedArrivalVideo.current) return;
+    hasFinishedArrivalVideo.current = true;
+    if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+    videoRef.current?.pause();
+    onContinueRef.current();
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true));
-  }, []);
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function playVideo() {
-    videoRef.current?.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true));
+    if (reducedMotion) {
+      video.pause();
+      video.currentTime = 0;
+      startTimeoutRef.current = window.setTimeout(finishArrivalVideo, 180);
+      return () => {
+        if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+      };
+    }
+
+    startTimeoutRef.current = window.setTimeout(() => {
+      if (video.paused || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) finishArrivalVideo();
+    }, 8000);
+
+    const playAttempt = video.play();
+    playAttempt?.catch(() => {
+      console.warn("接回家過場影片無法自動播放，已略過至命名頁面。");
+      finishArrivalVideo();
+    });
+
+    return () => {
+      if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+    };
+  }, [finishArrivalVideo]);
+
+  function handlePlaying() {
+    if (startTimeoutRef.current !== null) {
+      window.clearTimeout(startTimeoutRef.current);
+      startTimeoutRef.current = null;
+    }
   }
 
   return (
-    <div className="content-wrap arrival-transition">
-      <div className="arrival-video-copy">
-        <h1>一起回到新家</h1>
-        <p>後車廂已經準備完成，現在帶著安全裝備與領養文件，陪小狗踏上回家的路。</p>
-      </div>
-      <div className="arrival-video-frame">
-        {!failed ? (
-          <video
-            ref={videoRef}
-            src={arrivalVideoSrc}
-            playsInline
-            preload="metadata"
-            controls
-            onEnded={() => setEnded(true)}
-            onError={() => setFailed(true)}
-          >
-            你的瀏覽器無法播放到家過場影片，仍可使用下方按鈕繼續幫小狗取名字。
-          </video>
-        ) : (
-          <div className="arrival-video-fallback" role="alert">
-            <b>影片暫時無法載入</b>
-            <p>別擔心，你仍然可以繼續幫小狗取名字。</p>
-          </div>
-        )}
-      </div>
-      <div className="arrival-video-status" role="status" aria-live="polite">
-        {failed ? "影片載入失敗，可以直接繼續。" : ended ? "影片播放完畢" : autoplayBlocked ? "瀏覽器尚未開始播放，請按下播放影片。" : "影片播放中，可使用播放器暫停或繼續。"}
-      </div>
-      <div className="arrival-video-actions">
-        {autoplayBlocked && !failed && !ended && <button className="secondary" onClick={playVideo}>播放影片</button>}
-        {(ended || failed) && <button className="primary large" onClick={onContinue}>幫小狗取名字 <span>→</span></button>}
-        {!ended && !failed && <button className="text-back" onClick={onContinue}>略過影片</button>}
-      </div>
-    </div>
+    <section className="arrival-video-screen" aria-label="接回家影片過場">
+      <video
+        ref={videoRef}
+        src={arrivalVideoSrc}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        aria-label="小狗搭乘外出籠抵達新家的過場動畫"
+        onPlaying={handlePlaying}
+        onEnded={finishArrivalVideo}
+        onError={() => {
+          console.warn("接回家過場影片載入失敗，已略過至命名頁面。");
+          finishArrivalVideo();
+        }}
+      />
+    </section>
   );
 }
 
@@ -125,7 +146,7 @@ export function PetNaming({
         {error && <p id="pet-name-error" className="field-error" role="alert">{error}</p>}
         <div className="pet-naming-actions">
           <button type="button" className="secondary" onClick={onBack}>← 返回領養前準備</button>
-          <button type="submit" className="primary large">用這個名字開始生活旅程 <span>→</span></button>
+          <button type="submit" className="primary large">開始生活旅程 <span>→</span></button>
         </div>
       </form>
     </div>

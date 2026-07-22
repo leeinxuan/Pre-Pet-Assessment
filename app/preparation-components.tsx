@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { DragEvent } from "react";
 import { hazards, roomItems, trunkItems } from "./game-data";
 import type { CareMember, TrunkItem } from "./game-types";
 import { NavButtons, StepHeading } from "./shared-components";
@@ -23,41 +24,158 @@ export function RoomPreparation({
   onNext: () => void;
 }) {
   const [message, setMessage] = useState("");
+  const [selectedSupply, setSelectedSupply] = useState<string | null>(null);
+  const [selectedHazard, setSelectedHazard] = useState<string | null>(null);
+  const [trashDragging, setTrashDragging] = useState(false);
+  const [trashOver, setTrashOver] = useState(false);
+  const [trashSuccess, setTrashSuccess] = useState(false);
+  const [roomApproved, setRoomApproved] = useState(false);
   const required = roomItems.filter((item) => item.required);
   const missing = required.filter((item) => !selectedItems.includes(item.id));
   const unsecured = hazards.filter((item) => !securedHazards.includes(item.id));
   const complete = missing.length === 0 && unsecured.length === 0;
   const waiting = roomItems.filter((item) => !selectedItems.includes(item.id));
 
+  function placeSupply(id: string) {
+    if (!roomItems.some((item) => item.id === id) || selectedItems.includes(id)) return;
+    onAddItem(id);
+    setSelectedSupply(null);
+    setRoomApproved(false);
+    setMessage("");
+  }
+
+  function secureHazard(id: string) {
+    const hazard = hazards.find((item) => item.id === id);
+    if (!hazard || securedHazards.includes(id)) return;
+    onToggleHazard(id);
+    setSelectedHazard(null);
+    setTrashDragging(false);
+    setTrashOver(false);
+    setTrashSuccess(true);
+    window.setTimeout(() => setTrashSuccess(false), 500);
+    setRoomApproved(false);
+    setMessage(hazard.feedback);
+  }
+
+  function readRoomDrop(event: DragEvent<HTMLElement>) {
+    event.preventDefault();
+    const value = event.dataTransfer.getData("text/plain");
+    if (value.startsWith("supply:")) placeSupply(value.slice(7));
+  }
+
+  function readTrashDrop(event: DragEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    const value = event.dataTransfer.getData("text/plain");
+    if (value.startsWith("hazard:")) secureHazard(value.slice(7));
+    else {
+      setTrashDragging(false);
+      setTrashOver(false);
+    }
+  }
+
   function checkRoom() {
     if (complete) {
-      setMessage("房間準備完成！你已經替牠準備好安全的休息、飲食與活動空間。");
+      setRoomApproved(true);
+      setMessage("房間準備完成！你已經放好基本生活用品，也收起了可能造成危險的物品。");
       return;
     }
-    if (missing.some((item) => item.need === "休息")) setMessage("還少了一個可以安心休息的地方，試著找找看適合的物品。");
-    else if (missing.some((item) => item.need === "飲食")) setMessage("飲食準備還不完整，請確認食物、食碗與乾淨飲水。");
-    else if (missing.some((item) => item.need === "排泄")) setMessage("還需要安排清楚的排泄空間，讓適應期更容易整理。");
-    else if (unsecured.length) setMessage(`還有 ${unsecured[0].label} 尚未收好。${unsecured[0].hint}`);
-    else setMessage("再確認必要用品與安全區域，就快完成了。");
+    setRoomApproved(false);
+    if (missing.length && unsecured.length) setMessage(`還有${missing.length}項用品尚未放入房間。還有${unsecured.length}項危險物品需要收好。`);
+    else if (missing.length) setMessage("房間裡還缺少狗狗生活需要的用品，請再檢查用品準備區。");
+    else setMessage("用品已經準備完成，但房間中還有可能造成風險的物品。");
   }
 
   return (
     <div className="content-wrap preparation-page">
-      <StepHeading title="先替牠布置安全的生活空間" body="把用品拖進房間，或直接點擊加入；再逐一把可能造成風險的物品收好。" />
-      <div className="prep-board expanded">
-        <section className="item-shelf"><h2>用品準備箱 <span>{waiting.length} 件可加入</span></h2><div>{waiting.map((item) => <button key={item.id} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} onClick={() => onAddItem(item.id)}><span>{item.icon}</span><b>{item.label}</b><small>{item.required ? "必要用品" : "可選用品"} · 拖曳或點擊</small></button>)}</div>{waiting.length === 0 && <p className="empty-box">所有用品都已放進房間 ✓</p>}</section>
-        <div className="room room-preparation" onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); onAddItem(event.dataTransfer.getData("text/plain")); }}>
-          <p>安全、休息、飲食、排泄與活動空間</p>
-          {selectedItems.map((id, index) => {
+      <StepHeading title="先替牠布置安全的生活空間" body="把用品放進房間，再把危險物品拖進垃圾桶；也可以先點選危險物品，再點擊垃圾桶。" />
+      <div className="room-preparation-layout">
+        <section className="room-supply-shelf" aria-label="用品準備區">
+          <h2>用品準備箱 <span>{waiting.length} 件可加入</span></h2>
+          <p>拖曳用品，或先點選用品再點房間。</p>
+          <div className="room-supply-grid">
+            {waiting.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                draggable
+                className={selectedSupply === item.id ? "selected" : ""}
+                aria-pressed={selectedSupply === item.id}
+                onDragStart={(event) => event.dataTransfer.setData("text/plain", `supply:${item.id}`)}
+                onClick={() => setSelectedSupply((current) => current === item.id ? null : item.id)}
+              >
+                <img className={item.id === "food" ? "room-item-image room-item-image--food" : "room-item-image"} src={item.image} alt={`準備用品：${item.label}`} onError={(event) => { event.currentTarget.hidden = true; }} />
+                <b>{item.label}</b>
+              </button>
+            ))}
+          </div>
+          {waiting.length === 0 && <p className="empty-box">所有用品都已放進房間 ✓</p>}
+        </section>
+        <div className="room-interaction-column">
+          <div
+            className={`room-scene ${selectedSupply ? "awaiting-placement" : ""}`}
+            role="group"
+            tabIndex={0}
+            aria-label={selectedSupply ? `將${roomItems.find((item) => item.id === selectedSupply)?.label}放進房間` : "空的寵物生活房間"}
+            onClick={() => selectedSupply && placeSupply(selectedSupply)}
+            onKeyDown={(event) => { if (selectedSupply && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); placeSupply(selectedSupply); } }}
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={readRoomDrop}
+          >
+            <img className="room-scene-background" src="/room/空房間.png" alt="空的寵物生活房間" />
+            {selectedItems.map((id) => {
             const item = roomItems.find((entry) => entry.id === id);
-            return item ? <button key={id} className={`placed item-${index % 6}`} onClick={() => onRemoveItem(id)} title="點擊移回準備箱"><span>{item.icon}</span><b>{item.label}</b></button> : null;
+            return item ? (
+              <button
+                key={id}
+                type="button"
+                className={`room-object placed-supply ${item.id === "food" ? "placed-room-item--food" : ""}`}
+                style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%` }}
+                onClick={(event) => { event.stopPropagation(); onRemoveItem(id); setRoomApproved(false); setMessage(""); }}
+                aria-label={`房間中的${item.label}，點擊移回用品準備區`}
+              >
+                <img className={item.id === "food" ? "room-item-image room-item-image--food" : "room-item-image"} src={item.image} alt={`房間中的用品：${item.label}`} onError={(event) => { event.currentTarget.hidden = true; }} />
+                <span>{item.label}</span>
+              </button>
+            ) : null;
           })}
+            {unsecured.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                draggable
+                className={`room-object room-hazard ${selectedHazard === item.id ? "selected" : ""}`}
+                style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%` }}
+                aria-pressed={selectedHazard === item.id}
+                onDragStart={(event) => { event.dataTransfer.setData("text/plain", `hazard:${item.id}`); setTrashDragging(true); }}
+                onDragEnd={() => { setTrashDragging(false); setTrashOver(false); }}
+                onClick={(event) => { event.stopPropagation(); setSelectedHazard((current) => current === item.id ? null : item.id); }}
+                aria-label={`房間中的危險物品：${item.label}，選取後可放進垃圾桶`}
+              >
+                <img src={item.image} alt={`房間中的危險物品：${item.label}`} onError={(event) => { event.currentTarget.hidden = true; }} />
+                <span>{item.label}</span>
+              </button>
+            ))}
+            <button
+              type="button"
+              className={`room-trash-bin ${selectedHazard || trashDragging ? "ready" : ""} ${trashOver ? "over" : ""} ${trashSuccess ? "success" : ""}`}
+              aria-label="將選取的危險物品放進垃圾桶"
+              onClick={(event) => { event.stopPropagation(); if (selectedHazard) secureHazard(selectedHazard); }}
+              onDragEnter={(event) => { event.preventDefault(); if (trashDragging) setTrashOver(true); }}
+              onDragOver={(event) => { event.preventDefault(); if (trashDragging) setTrashOver(true); }}
+              onDragLeave={() => setTrashOver(false)}
+              onDrop={readTrashDrop}
+            >
+              <img src="/room/垃圾桶.png" alt="房間中的垃圾桶" />
+              <span>{unsecured.length === 0 ? "危險物品已全部收好！" : `已收好 ${hazards.length - unsecured.length}／${hazards.length}`}</span>
+            </button>
+          </div>
+          <div className="trash-guidance" role="note"><b>把危險物品移出活動範圍</b><p>請把房間中的危險物品拖進垃圾桶，或先點選物品，再點擊垃圾桶。遊戲中的垃圾桶代表把危險物品移出小狗可以接觸的範圍。</p></div>
         </div>
       </div>
-      <section className="hazard-panel"><div><p className="eyebrow">居家安全檢查</p><h2>把危險物品收好</h2><p>點選項目代表已完成固定、收納或防護。</p></div><div className="hazard-grid">{hazards.map((item) => <button key={item.id} className={securedHazards.includes(item.id) ? "secured" : ""} aria-pressed={securedHazards.includes(item.id)} onClick={() => onToggleHazard(item.id)}><span>{item.icon}</span><b>{item.label}</b><small>{securedHazards.includes(item.id) ? "✓ 已收好" : item.hint}</small></button>)}</div></section>
-      <div className={`task-message ${complete ? "success" : ""}`} role="status">{message || "完成用品放置與危險物品收納後，按下「檢查房間」。"}</div>
+      <div className={`task-message ${roomApproved ? "success" : ""}`} role="status" aria-live="polite">{message || "完成8項用品放置與4項危險物品收納後，按下「檢查房間」。"}</div>
       <div className="task-check-actions"><button className="secondary" onClick={checkRoom}>檢查房間</button></div>
-      <NavButtons onBack={onBack} onNext={onNext} disabled={!complete} nextLabel="房間完成，建立照顧成員" />
+      <NavButtons onBack={onBack} onNext={onNext} disabled={!roomApproved} nextLabel="房間完成，建立照顧成員" />
     </div>
   );
 }
