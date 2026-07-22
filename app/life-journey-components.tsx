@@ -142,7 +142,6 @@ export function PetNaming({
           aria-invalid={Boolean(error)}
           aria-describedby={error ? "pet-name-error" : "pet-name-hint"}
         />
-        <small id="pet-name-hint">1～12 個字，儲存後仍可回來修改。</small>
         {error && <p id="pet-name-error" className="field-error" role="alert">{error}</p>}
         <div className="pet-naming-actions">
           <button type="button" className="secondary" onClick={onBack}>← 返回領養前準備</button>
