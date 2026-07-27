@@ -12,7 +12,6 @@ import type {
 } from "./game-types";
 
 const arrivalVideoSrc = "/assets/pet-journey/arrival-transition.mp4";
-const shibaImageSrc = "/assets/pet-journey/shiba-dog.png";
 
 function withPetName(text: string, petName: string) {
   return text
@@ -59,7 +58,7 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
 
     const playAttempt = video.play();
     playAttempt?.catch(() => {
-      console.warn("接回家過場影片無法自動播放，已略過至命名頁面。");
+      console.warn("接回家過場影片無法自動播放，已略過至飼養生活。");
       finishArrivalVideo();
     });
 
@@ -88,67 +87,11 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
         onPlaying={handlePlaying}
         onEnded={finishArrivalVideo}
         onError={() => {
-          console.warn("接回家過場影片載入失敗，已略過至命名頁面。");
+          console.warn("接回家過場影片載入失敗，已略過至飼養生活。");
           finishArrivalVideo();
         }}
       />
     </section>
-  );
-}
-
-export function PetNaming({
-  petName,
-  onSave,
-  onBack,
-}: {
-  petName: string;
-  onSave: (name: string) => void;
-  onBack: () => void;
-}) {
-  const [draft, setDraft] = useState(petName);
-  const [error, setError] = useState("");
-
-  function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const name = draft.trim();
-    if (!name) {
-      setError("請先幫小狗取一個名字。");
-      return;
-    }
-    if (Array.from(name).length > 12) {
-      setError("名字請控制在12個字以內。");
-      return;
-    }
-    setError("");
-    onSave(name);
-  }
-
-  return (
-    <div className="content-wrap pet-naming-page">
-      <div className="pet-naming-image">
-        <img src={shibaImageSrc} alt="等待命名的柴犬" />
-      </div>
-      <form className="pet-naming-copy" onSubmit={submit} noValidate>
-        <h1>歡迎來到新家</h1>
-        <p>經過領養前的準備，你終於把小狗接回家了。今天是你們一起生活的第一天，也是這段長久陪伴的開始。</p>
-        <div className="soft-note">在開始生活旅程以前，先幫牠取一個名字吧。接下來，這個名字會陪著你們走過每一個生活情境。</div>
-        <label htmlFor="pet-name">牠叫什麼名字？</label>
-        <input
-          id="pet-name"
-          value={draft}
-          onChange={(event) => { setDraft(event.target.value); setError(""); }}
-          placeholder="請輸入小狗的名字"
-          autoComplete="off"
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? "pet-name-error" : "pet-name-hint"}
-        />
-        {error && <p id="pet-name-error" className="field-error" role="alert">{error}</p>}
-        <div className="pet-naming-actions">
-          <button type="button" className="secondary" onClick={onBack}>← 返回領養前準備</button>
-          <button type="submit" className="primary large">開始生活旅程 <span>→</span></button>
-        </div>
-      </form>
-    </div>
   );
 }
 
@@ -510,7 +453,7 @@ export function LifeJourney({
       {item.type === "senior-room" && <SeniorRoomActivity petName={petName} roomReady={roomReady} selected={activity.seniorAdjustments} onSelect={(id) => onActivityChange({ seniorAdjustments: activity.seniorAdjustments.includes(id) ? activity.seniorAdjustments : [...activity.seniorAdjustments, id] })} onAddExpense={onAddExpense} onContinue={continueJourney} />}
 
       <div className="scenario-bottom-nav life-bottom-nav">
-        <button className="secondary" onClick={() => index > 0 ? selectItem(index - 1) : onBack()}>← {index > 0 ? "上一個生活內容" : "返回命名頁面"}</button>
+        <button className="secondary" onClick={() => index > 0 ? selectItem(index - 1) : onBack()}>← {index > 0 ? "上一個生活內容" : "返回出發前準備"}</button>
         <span>{completedCount} / {journeyItems.length} 個生活內容已完成</span>
       </div>
       <span className="visually-hidden">目前共登記 {expenses.length} 筆費用，所有費用以唯一識別碼避免重複。</span>

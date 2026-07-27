@@ -105,50 +105,75 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
 };
 
 export const roomItems: RoomItem[] = [
-  { id: "carrier", label: "外出籠", icon: "🧳", image: "/room/外出籠.png", placement: { x: 8, y: 62, width: 15 }, required: true, need: "安全", expenseId: "carrier" },
-  { id: "toilet", label: "尿墊", icon: "▧", image: "/room/尿墊.png", placement: { x: 30, y: 77, width: 12 }, required: true, need: "排泄", expenseId: "toilet" },
-  { id: "water-bowl", label: "水", icon: "💧", image: "/room/水.png", placement: { x: 73, y: 73, width: 9 }, required: true, need: "飲食", expenseId: "water-bowl" },
-  { id: "cleaner", label: "清潔用品", icon: "🧼", image: "/room/清潔用品.png", placement: { x: 34, y: 43, width: 7 }, required: true, need: "清潔", expenseId: "cleaner" },
-  { id: "leash", label: "牽繩", icon: "🦮", image: "/room/牽繩.png", placement: { x: 19, y: 74, width: 11 }, required: true, need: "活動", expenseId: "leash" },
-  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/room/狗碗.png", placement: { x: 83, y: 74, width: 10 }, required: true, need: "飲食", expenseId: "food-bowl" },
-  { id: "bed", label: "睡墊", icon: "🛏️", image: "/room/睡墊.png", placement: { x: 48, y: 66, width: 22 }, required: true, need: "休息", expenseId: "bed" },
-  { id: "food", label: "飼料", icon: "🦴", image: "/room/飼料.png", placement: { x: 42, y: 61, width: 9 }, required: true, need: "飲食", expenseId: "starter-food" },
+  { id: "bed", label: "睡墊", icon: "🛏️", image: "/room/睡墊.png", placement: { x: 67, y: 83, width: 32, layer: 2 }, required: true, need: "休息", expenseId: "bed", purpose: "提供固定且舒適的休息空間，讓小狗能安心休息。" },
+  { id: "toy", label: "玩具", icon: "🦴", image: "/room/玩具.png", placement: { x: 73, y: 80, width: 10, layer: 4 }, required: true, need: "活動", purpose: "合適的玩具可以提供活動與探索，也能減少因無聊產生的破壞行為。" },
+  { id: "water-bowl", label: "水碗", icon: "💧", image: "/room/水.png", placement: { x: 35, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "每天確認水碗乾淨，並提供足量的新鮮飲水。" },
+  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/room/狗碗.png", placement: { x: 45, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
+  { id: "toilet", label: "尿墊", icon: "▧", image: "/room/尿墊.png", placement: { x: 15, y: 85, width: 20, layer: 1 }, required: true, need: "排泄", expenseId: "toilet", purpose: "排泄用品應與食物及休息位置分開，方便小狗建立習慣。" },
+  { id: "cleaner", label: "清潔用品", icon: "🧼", image: "/room/清潔用品.png", placement: { x: 39, y: 47, width: 8, layer: 3 }, required: true, need: "清潔", expenseId: "cleaner", purpose: "準備安全的清潔用品，並收在小狗無法自行取得的位置。" },
+  { id: "food", label: "飼料", icon: "🦴", image: "/room/飼料.png", placement: { x: 53, y: 87, width: 15, layer: 3 }, required: true, need: "飲食", expenseId: "starter-food", purpose: "選擇符合小狗年齡、體型及健康需求的主食，並妥善保存。" },
 ];
 
 export const hazards: HazardItem[] = [
-  { id: "small-parts", label: "小物品", icon: "●", image: "/room/小物品.png", placement: { x: 34, y: 77, width: 8 }, hint: "收進盒子，避免誤食與腸胃阻塞。", feedback: "小物品已收好！容易吞食的物品可能造成噎住或腸胃阻塞。" },
-  { id: "chocolate", label: "巧克力", icon: "🍫", image: "/room/巧克力.png", placement: { x: 85, y: 64, width: 7 }, hint: "移到寵物碰不到的密閉空間。", feedback: "巧克力已收好！巧克力含有不適合狗狗的成分，應放在牠無法取得的位置。" },
-  { id: "chemicals", label: "清潔劑", icon: "🧴", image: "/room/清潔劑.png", placement: { x: 39, y: 47, width: 6 }, hint: "放進有門的櫃子，避免舔食或誤觸。", feedback: "清潔劑已收好！具有危險性的清潔用品應放在小狗無法取得的安全位置。" },
-  { id: "cables", label: "電線", icon: "🔌", image: "/room/電線.png", placement: { x: 12, y: 75, width: 14 }, hint: "整理並固定電線，避免啃咬與絆倒。", feedback: "電線已整理好！避免讓電線散落在小狗可以啃咬的地方，可以降低受傷及觸電風險。" },
+  { id: "small-parts", label: "小物品", icon: "●", image: "/room/小物品.png", placement: { x: 26, y: 85, width: 12, layer: 5 }, danger: "容易被誤吞，可能造成噎住或腸胃阻塞。", handling: "收進小狗無法取得的抽屜或收納盒。" },
+  { id: "chocolate", label: "巧克力", icon: "🍫", image: "/room/巧克力.png", placement: { x: 89, y: 78, width: 10, layer: 5  }, danger: "含有不適合狗狗的成分，可能危害健康。", handling: "放進有門的高處櫃子。" },
+  { id: "chemicals", label: "清潔劑", icon: "🧴", image: "/room/清潔劑.png", placement: { x: 62, y: 64, width: 10, layer: 5 }, danger: "可能造成誤食或皮膚接觸風險。", handling: "收進上鎖或小狗無法開啟的櫃子。" },
+  { id: "cables", label: "電線", icon: "🔌", image: "/room/電線.png", placement: { x: 12, y: 78, width: 24, layer: 5 }, danger: "可能被啃咬，造成受傷或觸電。", handling: "整理固定或加裝電線保護套。" },
 ];
 
 export const initialMembers: CareMember[] = [
-  { id: "player", name: "我", age: null, isPlayer: true },
-  { id: "family-1", name: "家人", age: null, isPlayer: false },
+  { id: "player", name: "", age: null, isPlayer: true },
 ];
 
 export const trunkItems: TrunkItem[] = [
-  { id: "carrier", label: "安全提籠或運輸籠", icon: "🧳", kind: "essential", feedback: "行車過程中，寵物需要安全且穩定的空間。", expenseId: "carrier" },
-  { id: "leash", label: "合適的牽繩", icon: "➰", kind: "essential", feedback: "下車與移動時要先確保牽繩尺寸合適。", expenseId: "leash" },
-  { id: "harness", label: "胸背帶", icon: "🦺", kind: "essential", feedback: "合身胸背帶可降低掙脫風險。", expenseId: "leash" },
-  { id: "water", label: "飲水", icon: "💧", kind: "essential", feedback: "路途中保留乾淨飲水，避免一次喝得太急。" },
-  { id: "bowl", label: "水碗", icon: "🥣", kind: "essential", feedback: "穩定的小水碗方便在安全停靠時補水。", expenseId: "water-bowl" },
-  { id: "bags", label: "清潔袋", icon: "🛍️", kind: "essential", feedback: "途中發生排泄時可以立即清理。" },
-  { id: "pad", label: "尿墊", icon: "▧", kind: "essential", feedback: "尿墊能保護籠內並讓清潔更容易。", expenseId: "toilet" },
-  { id: "towel", label: "毛巾", icon: "▱", kind: "essential", feedback: "熟悉或柔軟的毛巾能增加穩定感。" },
-  { id: "documents", label: "領養文件", icon: "📄", kind: "essential", feedback: "確認來源、健康、晶片與交接文件，並依規定辦理登記。" },
-  { id: "id", label: "身分證明", icon: "▣", kind: "essential", feedback: "辦理領養與資料更新時需要核對身分。" },
-  { id: "food", label: "少量熟悉的飼料", icon: "🦴", kind: "essential", feedback: "少量熟悉食物可避免接回當天突然換食。" },
-  { id: "cleaner", label: "基本清潔用品", icon: "🧼", kind: "essential", feedback: "選擇氣味溫和、寵物友善的用品。", expenseId: "cleaner" },
-  { id: "one-toy", label: "一個安靜的玩具", icon: "🧸", kind: "optional", feedback: "不是最重要，但一個安靜、熟悉的玩具可以攜帶。" },
-  { id: "many-toys", label: "大量新玩具", icon: "🎁", kind: "optional", feedback: "不需要一次帶太多，先以安全運輸與文件為優先。" },
-  { id: "human-snack", label: "人類零食", icon: "🍪", kind: "risk", feedback: "成分可能不適合寵物，請改帶熟悉的飼料。" },
-  { id: "chocolate", label: "巧克力", icon: "🍫", kind: "risk", feedback: "巧克力可能造成健康風險，請立即移除。" },
-  { id: "loud-toy", label: "音量很大的玩具", icon: "📣", kind: "risk", feedback: "巨大聲響可能增加剛換環境時的壓力。" },
-  { id: "box", label: "沒有蓋子的紙箱", icon: "📦", kind: "risk", feedback: "紙箱無法提供穩定防逃的行車空間。" },
-  { id: "wrong-leash", label: "尺寸不合的牽繩", icon: "〰", kind: "risk", feedback: "尺寸不合容易掙脫，請換成合身裝備。" },
-  { id: "perfume-cleaner", label: "香味強烈的清潔用品", icon: "🫧", kind: "risk", feedback: "強烈氣味可能刺激嗅覺，請使用溫和用品。" },
-  { id: "fireworks", label: "煙火", icon: "🎆", kind: "risk", feedback: "巨大聲響與火源都不適合放在接送行李中。" },
+  {
+    id: "id", label: "身分證", kind: "document", image: "/car/身分證件.png", preparedLabel: "已攜帶",
+    description: "領養單位可能需要確認領養人的身分與聯絡資料，出發前請依通知準備有效身分證明。",
+    reason: "方便領養單位依其評估與交接流程核對申請人資料。",
+    caution: "實際需要攜帶的文件，請依領養單位通知及評估流程確認。",
+    sourceLabel: "領養單位提供的領養評估單與接回注意事項",
+    feedback: "身分證已放入文件夾。", placement: { x: 20, y: 36, width: 15, layer: 4 },
+  },
+  {
+    id: "documents", label: "領養文件", kind: "document", image: "/car/文件.png", preparedLabel: "已攜帶",
+    description: "領養申請、評估或契約文件可能包含飼養條件、照顧責任及後續聯絡資料，出發前應先確認是否需要攜帶或簽署。",
+    reason: "把交接資料集中整理，能在辦理流程時快速確認與簽署。",
+    caution: "不同領養單位的流程與文件不完全相同，請以該單位通知為準。",
+    sourceLabel: "領養單位提供的領養評估單與接回注意事項",
+    feedback: "領養文件已放入文件夾。", placement: { x: 22, y: 32, width: 24, layer: 3 },
+  },
+  {
+    id: "carrier-kit", label: "運輸籠＋尿墊", kind: "supply", image: "/car/外出籠.png", preparedLabel: "已準備",
+    description: "運輸籠可降低行車途中小狗在車內移動或逃脫的風險；底部鋪設尿墊，可處理緊張或長途移動時可能發生的排泄與髒污。",
+    reason: "提供平穩、可固定且不干擾駕駛的安全運輸空間。",
+    caution: "運輸籠尺寸需合適並保持穩定；尿墊應鋪在籠內底部，而不是鋪滿後車廂。",
+    sourceLabel: "動物醫療機構與領養單位提供的安全運輸建議",
+    feedback: "尿墊已鋪入運輸籠，安全運輸設備準備完成。", expenseIds: ["carrier", "toilet"], placement: { x: 51, y: 60, width: 34, layer: 5 },
+  },
+  {
+    id: "water-kit", label: "水碗", kind: "supply", image: "/car/水.png", preparedLabel: "已準備",
+    description: "途中應準備飲水及可使用的水碗，視小狗狀況與路程適時補充。行車中不要放置裝滿水且容易打翻的開放水碗。",
+    reason: "途中可在安全停靠時補充飲水，避免脫水或一次喝得太急。",
+    caution: "水碗與飲水應收妥於側邊，行車時不要讓開放容器在車內翻倒。",
+    sourceLabel: "動物醫療機構提供的外出飲水與運輸照護建議",
+    feedback: "水碗與飲水已收妥。", expenseIds: ["water-bowl"], placement: { x: 55, y: 70, width: 14, layer: 6 },
+  },
+  {
+    id: "leash", label: "牽繩", kind: "supply", image: "/car/牽繩.png", preparedLabel: "已準備",
+    description: "上下車前應先確認牽繩及合適的胸背帶已正確使用，避免小狗在陌生地點掙脫或逃跑。",
+    reason: "抵達後可先控制移動範圍，再安全地讓小狗離開運輸籠。",
+    caution: "牽繩應捲好並放在容易取得的位置，不要纏繞運輸籠或散落在車廂中。",
+    sourceLabel: "領養單位提供的接回注意事項與外出安全提醒",
+    feedback: "牽繩已收好，抵達後可以先確認安全裝備再讓小狗下車。", expenseIds: ["leash"], placement: { x: 30, y: 60, width: 25, layer: 4 },
+  },
+  {
+    id: "cleaner", label: "清潔用品", kind: "supply", image: "/room/清潔用品.png", preparedLabel: "已準備",
+    description: "小狗在陌生環境或移動途中可能因緊張而排泄或嘔吐，可準備清潔袋、擦拭用品及安全的清潔工具。",
+    reason: "途中若發生排泄或髒污，可以盡快整理並維持運輸空間舒適。",
+    caution: "包裝需密封，與飲水分開收納，也不要放進運輸籠或讓小狗直接咬到。",
+    sourceLabel: "領養單位與動物醫療機構提供的接送清潔建議",
+    feedback: "清潔用品已收妥，可以處理途中可能發生的髒污。", expenseIds: ["cleaner"], placement: { x: 35, y: 68, width: 12, layer: 8 },
+  },
 ];
 
 const positive = {

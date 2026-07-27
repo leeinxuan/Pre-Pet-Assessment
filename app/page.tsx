@@ -23,7 +23,6 @@ import type {
 import {
   ArrivalTransitionVideo,
   LifeJourney,
-  PetNaming,
 } from "./life-journey-components";
 import {
   CarTrunkPreparation,
@@ -54,7 +53,6 @@ export default function Home() {
   const [hazardsReady, setHazardsReady] = useState<string[]>([]);
   const [members, setMembers] = useState<CareMember[]>(initialMembers);
   const [trunkSelected, setTrunkSelected] = useState<string[]>([]);
-  const [trunkChecked, setTrunkChecked] = useState(false);
   const [trunkPassed, setTrunkPassed] = useState(false);
   const [expenses, setExpenses] = useState<ExpenseRecord[]>([]);
   const [latestExpense, setLatestExpense] = useState<ExpenseRecord | null>(null);
@@ -88,7 +86,7 @@ export default function Home() {
   function goToLifeStage(stageIndex: number) {
     const firstJourneyItem = [0, 2, 6, 7];
     const underlyingStep = [3, 4, 5, 6];
-    if ((lifePhase === "arrival-video" || lifePhase === "name-pet") && stageIndex === 0) {
+    if (lifePhase === "arrival-video" && stageIndex === 0) {
       setStep(3);
       setIntroOpen(false);
     } else {
@@ -140,16 +138,16 @@ export default function Home() {
     setMembers(nextMembers);
   }
 
-  function toggleTrunkItem(id: string) {
+  function selectTrunkItem(id: string) {
     if (!id) return;
-    const adding = !trunkSelected.includes(id);
-    setTrunkSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
-    setTrunkChecked(false);
-    setTrunkPassed(false);
-    if (adding) {
-      const expenseId = trunkItems.find((item) => item.id === id)?.expenseId;
-      if (expenseId) addExpenseById(expenseId);
-    }
+    const expenseIds = trunkItems.find((item) => item.id === id)?.expenseIds ?? [];
+    setTrunkSelected((current) => {
+      if (current.includes(id)) return current;
+      const next = [...current, id];
+      setTrunkPassed(trunkItems.every((item) => next.includes(item.id)));
+      return next;
+    });
+    expenseIds.forEach(addExpenseById);
   }
 
   function answerScenario(scenario: Scenario, choice: ScenarioChoice) {
@@ -183,7 +181,6 @@ export default function Home() {
     setHazardsReady([]);
     setMembers(initialMembers);
     setTrunkSelected([]);
-    setTrunkChecked(false);
     setTrunkPassed(false);
     setExpenses([]);
     setLatestExpense(null);
@@ -216,30 +213,17 @@ export default function Home() {
 
   function renderPreparation() {
     if (preparationTask === 0) {
-      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} onAddItem={addRoomItem} onRemoveItem={(id) => setRoomReady((current) => current.filter((item) => item !== id))} onToggleHazard={toggleHazard} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
+      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} onPrepare={addRoomItem} onToggleHazard={toggleHazard} onSavePetName={setPetName} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
     }
     if (preparationTask === 1) {
       return <CareMemberSetup members={members} onChange={updateMembers} onBack={() => changePreparationTask(0)} onNext={() => changePreparationTask(2)} />;
     }
-    return <CarTrunkPreparation selected={trunkSelected} checked={trunkChecked} passed={trunkPassed} onToggle={toggleTrunkItem} onCheck={(passed) => { setTrunkChecked(true); setTrunkPassed(passed); }} onBack={() => changePreparationTask(1)} onNext={() => { setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation selected={trunkSelected} onSelect={selectTrunkItem} onBack={() => changePreparationTask(1)} onNext={() => { setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
     if (lifePhase === "arrival-video") {
-      return <ArrivalTransitionVideo onContinue={() => setLifePhase("name-pet")} />;
-    }
-    if (lifePhase === "name-pet") {
-      return (
-        <PetNaming
-          petName={petName}
-          onSave={(name) => {
-            setPetName(name);
-            setJourneyIndex(0);
-            setLifePhase("life-journey");
-          }}
-          onBack={() => { setStep(2); setPreparationTask(2); setIntroOpen(false); }}
-        />
-      );
+      return <ArrivalTransitionVideo onContinue={() => { setJourneyIndex(0); setLifePhase("life-journey"); }} />;
     }
     return (
       <LifeJourney
@@ -257,7 +241,7 @@ export default function Home() {
         onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}
         onAddExpense={addExpenseById}
         onStageChange={(nextStep) => { setStep(nextStep); setFurthestStep((current) => Math.max(current, nextStep)); setIntroOpen(false); }}
-        onBack={() => { setStep(3); setIntroOpen(false); setLifePhase("name-pet"); }}
+        onBack={() => { setStep(2); setPreparationTask(2); setIntroOpen(false); }}
         onComplete={() => { setLifePhase("complete"); goTo(7); }}
       />
     );

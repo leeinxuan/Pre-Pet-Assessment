@@ -95,7 +95,7 @@ export function StageRail({
   onProfilePage: (page: number) => void;
 }) {
   const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
-  const currentLifeStage = lifePhase === "arrival-video" || lifePhase === "name-pet"
+  const currentLifeStage = lifePhase === "arrival-video"
     ? 0
     : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
   const mainTargets = [1, 2, Math.max(3, Math.min(6, step)), 7, 8];
@@ -128,7 +128,7 @@ export function StageRail({
       label: "領養前準備",
       status: mainStatus(1),
       onClick: () => onGoTo(2),
-      children: ["布置生活空間", "建立照顧成員", "整理汽車後車廂"].map((label, index) => ({
+      children: ["布置生活空間", "家庭成員與共同照護", "出發前準備"].map((label, index) => ({
         id: `preparation-${index}`,
         label,
         status: statusAt(index, preparationTask, preparationReached),

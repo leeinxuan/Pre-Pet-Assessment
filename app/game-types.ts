@@ -66,7 +66,6 @@ export type ScenarioAnswer = {
 
 export type LifeJourneyPhase =
   | "arrival-video"
-  | "name-pet"
   | "life-journey"
   | "complete";
 
@@ -119,10 +118,11 @@ export type RoomItem = {
   label: string;
   icon: string;
   image: string;
-  placement: { x: number; y: number; width: number };
+  placement: { x: number; y: number; width: number; layer: number };
   required: boolean;
   need: "飲食" | "休息" | "排泄" | "安全" | "活動" | "清潔";
   expenseId?: string;
+  purpose: string;
 };
 
 export type HazardItem = {
@@ -130,16 +130,23 @@ export type HazardItem = {
   label: string;
   icon: string;
   image: string;
-  placement: { x: number; y: number; width: number };
-  hint: string;
-  feedback: string;
+  placement: { x: number; y: number; width: number; layer: number };
+  danger: string;
+  handling: string;
 };
 
 export type TrunkItem = {
   id: string;
   label: string;
-  icon: string;
-  kind: "essential" | "optional" | "risk";
+  kind: "document" | "supply";
+  image: string;
+  description: string;
+  reason: string;
+  caution: string;
+  sourceLabel: string;
+  sourceUrl?: string;
   feedback: string;
-  expenseId?: string;
+  preparedLabel: "已攜帶" | "已準備";
+  expenseIds?: string[];
+  placement: { x: number; y: number; width: number; layer: number };
 };
