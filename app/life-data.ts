@@ -25,9 +25,9 @@ export const lifeScenarios: Scenario[] = [
     topic: "適應新家與安全感",
     artIndex: 0,
     choices: [
-      { id: "quiet-explore", text: "保持環境安靜，提供安全空間與飲水，讓豆豆依自己的速度探索。", result: "correct", ...positive, explanation: "安靜、可退回的安全空間能降低刺激，讓豆豆逐步建立對新家的信任。", suggestion: "保持固定作息，等豆豆主動靠近再慢慢增加互動。" },
-      { id: "sit-and-watch", text: "讓家人留在附近小聲聊天，不主動碰觸，觀察豆豆是否願意靠近。", result: "partial", ...partial, explanation: "不強迫互動是合理方向，但人數與聲音仍可能讓剛到家的豆豆緊張。", suggestion: "先減少在場人數，保留一位安靜陪伴者即可。" },
-      { id: "welcome-crowd", text: "大家一起圍過來抱抱牠，讓牠快點熟悉所有家人。", result: "incorrect", ...incorrect, explanation: "同時被多人靠近和抱起，可能讓已經緊張的豆豆失去退路，增加閃躲或防衛反應。", suggestion: "先提供安靜安全的範圍，尊重牠主動探索和互動的速度。" },
+      { id: "quiet-explore", text: "保持距離，給牠安靜適應的時間", result: "correct", ...positive, explanation: "做得很好！剛到新家的小狗需要先觀察環境。保持距離並提供安靜、安全的空間，能減少壓力，讓牠以自己的速度建立安全感。", suggestion: "準備乾淨飲水與可休息的角落，等牠主動靠近後再慢慢增加互動。" },
+      { id: "force-pick-up", text: "強行抱出來", result: "incorrect", ...incorrect, explanation: "這個做法可能讓牠更緊張。被強行抱起會讓小狗失去退路，增加防衛反應，也可能降低牠對新環境的安全感。", suggestion: "保持距離，提供安靜安全的空間，讓牠用自己的速度探索。" },
+      { id: "keep-calling", text: "持續靠近並呼喚牠", result: "incorrect", ...incorrect, explanation: "持續靠近與呼喚會增加刺激，讓還在適應中的小狗難以安心觀察，可能變得更緊張或躲避。", suggestion: "先給牠安靜的時間與可退回的安全空間，等待牠主動探索或靠近。" },
     ],
   },
   {
@@ -58,20 +58,6 @@ export const lifeScenarios: Scenario[] = [
       { id: "assigned-helper", text: "請已確認能協助的家人或照顧者，幫忙今晚的餵食與活動。", result: "correct", ...positive, explanation: "事先確認支援人選能避免忙碌時漏掉照顧，也讓交接更清楚。" },
       { id: "indoor-only", text: "只安排短時間嗅聞或益智活動，其他需求明天再補。", result: "partial", ...partial, explanation: "室內活動可以彈性調整，但不能取代當天必要的飲水、進食與排泄。", suggestion: "先完成基本需求，再依體力調整活動形式與時間。" },
       { id: "skip-today", text: "今天實在太累，飼料和散步都等明天再處理。", result: "incorrect", ...incorrect, explanation: "忽略基本需求可能造成飢餓、脫水、憋尿與焦躁，也會打亂穩定作息。", suggestion: "完成最低限度照顧，或立即聯絡已安排好的支援者。" },
-    ],
-  },
-  {
-    id: "illness-vet",
-    stage: "健康出現變化",
-    timeLabel: "健康出現變化",
-    title: "生病與就醫",
-    description: "豆豆今天食慾下降、活動變少，還出現一次嘔吐，看起來和平常不太一樣。",
-    topic: "健康觀察與就醫判斷",
-    artIndex: 3,
-    choices: [
-      { id: "record-and-vet", text: "記錄飲食、飲水、排泄與精神狀態，聯絡獸醫院並依建議就醫。", result: "correct", ...positive, explanation: "具體紀錄能幫助獸醫判斷，異常合併嘔吐時及早諮詢也能降低延誤風險。", suggestion: "攜帶紀錄與既有病史，依獸醫建議安排檢查。", expenseIds: ["journey-medical-care"] },
-      { id: "observe-briefly", text: "先短時間密切觀察並記錄，如果症狀持續或增加就立刻聯絡獸醫。", result: "partial", ...partial, explanation: "觀察與紀錄是合理起點，但豆豆已有多項異常，不宜只在家等待太久。", suggestion: "現在就先電話詢問獸醫院，說明症狀與持續時間。" },
-      { id: "human-medicine", text: "先給豆豆吃家裡的人用腸胃藥，看看睡一覺會不會好。", result: "incorrect", ...incorrect, explanation: "人用藥物的成分和劑量可能對狗造成中毒或掩蓋病況，延誤正確診斷。", suggestion: "不要自行給藥，整理觀察紀錄並聯絡獸醫。" },
     ],
   },
   {
@@ -122,12 +108,10 @@ export const lifeScenarios: Scenario[] = [
 
 export const journeyItems: JourneyItem[] = [
   { id: "arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "arrival-adjustment" },
-  { id: "body-language", type: "body-language", timeLabel: "適應新家的時候", title: "看懂小狗的身體語言" },
-  { id: "feeding", type: "feeding", timeLabel: "一起生活三個月", title: "準備豆豆的晚餐" },
+  { id: "body-language", type: "body-language", timeLabel: "適應新家的時候", title: "看懂小狗的警告訊號" },
   { id: "behavior", type: "scenario", timeLabel: "逐漸長大的時候", title: "面對行為問題", scenarioId: "behavior-guidance" },
   { id: "busy-care", type: "scenario", timeLabel: "穩定生活的日常", title: "忙碌時的日常照顧", scenarioId: "busy-daily-care" },
   { id: "body-care", type: "body-care", timeLabel: "成年後的例行照顧", title: "清潔與基礎身體觀察" },
-  { id: "health", type: "scenario", timeLabel: "健康出現變化", title: "生病與就醫", scenarioId: "illness-vet" },
   { id: "life-change", type: "scenario", timeLabel: "飼主生活發生改變", title: "飼主生活發生改變", scenarioId: "owner-life-change" },
   { id: "senior", type: "scenario", timeLabel: "逐漸進入高齡", title: "小狗逐漸老去", scenarioId: "growing-old" },
   { id: "senior-room", type: "senior-room", timeLabel: "調整高齡生活空間", title: "改造高齡犬的家" },
@@ -136,9 +120,8 @@ export const journeyItems: JourneyItem[] = [
 
 export const initialLifeActivityState: LifeActivityState = {
   bodyLanguageSignals: [],
-  feedingFoodReady: false,
-  feedingWaterSteps: [],
-  feedingServed: false,
+  arrivalMealFoodReady: false,
+  arrivalMealWaterReady: false,
   bodyCareParts: [],
   seniorAdjustments: [],
 };

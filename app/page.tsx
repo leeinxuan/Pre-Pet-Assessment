@@ -3,11 +3,11 @@
 import { useMemo, useState } from "react";
 import {
   expenseCatalog,
+  departureTrunkItems,
   initialMembers,
   initialProfile,
   intros,
   roomItems,
-  trunkItems,
 } from "./game-data";
 import { initialLifeActivityState } from "./life-data";
 import type {
@@ -84,12 +84,13 @@ export default function Home() {
   }
 
   function goToLifeStage(stageIndex: number) {
-    const firstJourneyItem = [0, 2, 6, 7];
-    const underlyingStep = [3, 4, 5, 6];
+    const firstJourneyItem = [0, 2, 5];
+    const underlyingStep = [3, 4, 6];
     if (lifePhase === "arrival-video" && stageIndex === 0) {
       setStep(3);
       setIntroOpen(false);
     } else {
+      setLifePhase("life-journey");
       setJourneyIndex(firstJourneyItem[stageIndex]);
       setStep(underlyingStep[stageIndex]);
       setIntroOpen(false);
@@ -140,11 +141,11 @@ export default function Home() {
 
   function selectTrunkItem(id: string) {
     if (!id) return;
-    const expenseIds = trunkItems.find((item) => item.id === id)?.expenseIds ?? [];
+    const expenseIds = departureTrunkItems.find((item) => item.id === id)?.expenseIds ?? [];
     setTrunkSelected((current) => {
       if (current.includes(id)) return current;
       const next = [...current, id];
-      setTrunkPassed(trunkItems.every((item) => next.includes(item.id)));
+      setTrunkPassed(departureTrunkItems.every((item) => next.includes(item.id)));
       return next;
     });
     expenseIds.forEach(addExpenseById);

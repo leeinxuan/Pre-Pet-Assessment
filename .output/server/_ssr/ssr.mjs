@@ -2,20 +2,20 @@ import * as __viteRscAsyncHooks from "node:async_hooks";
 import { AsyncLocalStorage as AsyncLocalStorage$1 } from "node:async_hooks";
 //#region node_modules/.nitro/vite/services/ssr/__vite_rsc_assets_manifest.js
 var __vite_rsc_assets_manifest_default = {
-	"bootstrapScriptContent": "import(\"/assets/index-BZ1oO3lE.js\")",
+	"bootstrapScriptContent": "import(\"/assets/index-B8gGPtjT.js\")",
 	"clientReferenceDeps": {
 		"6efdf509a785": {
 			"js": [
-				"/assets/page-iOg0YMeT.js",
+				"/assets/page-BtGre8uH.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js",
-				"/assets/index-BZ1oO3lE.js"
+				"/assets/index-B8gGPtjT.js"
 			],
 			"css": []
 		},
 		"d041429ec63f": {
 			"js": [
-				"/assets/index-BZ1oO3lE.js",
+				"/assets/index-B8gGPtjT.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
@@ -23,16 +23,16 @@ var __vite_rsc_assets_manifest_default = {
 		},
 		"e562e7309659": {
 			"js": [
-				"/assets/layout-segment-context-0huNFWQ8.js",
+				"/assets/layout-segment-context-DLIhV4YF.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
-				"/assets/index-BZ1oO3lE.js",
+				"/assets/index-B8gGPtjT.js",
 				"/assets/framework-CXnKph_e.js"
 			],
 			"css": []
 		},
 		"8a1c26e77cc3": {
 			"js": [
-				"/assets/index-BZ1oO3lE.js",
+				"/assets/index-B8gGPtjT.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
@@ -41,7 +41,7 @@ var __vite_rsc_assets_manifest_default = {
 	},
 	"serverResources": { "app/layout.tsx": {
 		"js": [],
-		"css": ["/assets/index-CF4opTtj.css"]
+		"css": ["/assets/index-BaXv-s9C.css"]
 	} }
 };
 //#endregion
@@ -11599,7 +11599,7 @@ function createFromReadableStream(stream, options = {}) {
 }
 var client_references_default = {
 	"6efdf509a785": async () => {
-		const m = await import("./page-CH19Iwnv.mjs");
+		const m = await import("./page-BIbe6MvV.mjs");
 		return { get "default"() {
 			return m["default"];
 		} };

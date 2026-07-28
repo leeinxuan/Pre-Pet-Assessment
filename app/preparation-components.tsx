@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { hazards, roomItems, trunkItems } from "./game-data";
+import { departureTrunkItems, hazards, roomItems, trunkItems } from "./game-data";
 import type { CareMember } from "./game-types";
 import { NavButtons, StepHeading } from "./shared-components";
 
@@ -138,7 +138,7 @@ export function RoomPreparation({
               <div><label htmlFor="pet-name">小狗名字</label><input id="pet-name" value={nameDraft} maxLength={24} placeholder="請輸入小狗的名字" onChange={(event) => setNameDraft(event.target.value)} aria-invalid={Boolean(nameError)} aria-describedby="pet-name-error" /><button type="button" className="secondary" onClick={saveName}>掛上名字牌</button></div>
               {nameError && <p id="pet-name-error" className="field-error" role="alert">{nameError}</p>}
             </section>
-            {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已處理</h2><p><b>為什麼危險：</b>{activeHazard.danger}</p><p><b>建議如何處理：</b>{activeHazard.handling}</p></section>}
+            {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已收起</h2><p><b>為什麼危險：</b>{activeHazard.danger}</p><p><b>建議如何處理：</b>{activeHazard.handling}</p></section>}
           </div>
 
         </div>
@@ -179,27 +179,32 @@ export function CareMemberSetup({ members, onChange, onBack, onNext }: { members
 }
 
 export function CarTrunkPreparation({ selected, onSelect, onBack, onNext }: { selected: string[]; onSelect: (id: string) => void; onBack: () => void; onNext: () => void }) {
-  const [activeId, setActiveId] = useState(trunkItems[0]?.id ?? "");
-  const [message, setMessage] = useState("");
+  const [exitingItems, setExitingItems] = useState<string[]>([]);
   const [departing, setDeparting] = useState(false);
-  const documents = trunkItems.filter((item) => item.kind === "document");
-  const supplies = trunkItems.filter((item) => item.kind === "supply");
+  const documents = departureTrunkItems.filter((item) => item.kind === "document");
+  const supplies = departureTrunkItems.filter((item) => item.kind === "supply");
   const documentDone = documents.filter((item) => selected.includes(item.id)).length;
   const supplyDone = supplies.filter((item) => selected.includes(item.id)).length;
   const complete = documentDone === documents.length && supplyDone === supplies.length;
-  const activeItem = trunkItems.find((item) => item.id === activeId) ?? trunkItems[0];
+  const remainingItems = departureTrunkItems.filter((item) => !selected.includes(item.id) || exitingItems.includes(item.id));
+  const supplyRows = remainingItems.length <= 3
+    ? [remainingItems]
+    : [remainingItems.slice(0, 2), remainingItems.slice(2, 4), remainingItems.slice(4)].filter((row) => row.length > 0);
+  // Kept only for the legacy markup below; the rendered interface returns before it.
+  const [message, setMessage] = useState("");
+  const activeId = "";
+  const activeItem = trunkItems[0];
 
   function selectItem(id: string) {
-    const item = trunkItems.find((entry) => entry.id === id);
-    if (!item) return;
-    setActiveId(id);
-    if (!selected.includes(id)) {
+    if (selected.includes(id) || exitingItems.includes(id)) return;
+    setExitingItems((current) => [...current, id]);
+    window.setTimeout(() => {
       onSelect(id);
-      setMessage(item.feedback);
-    }
+      setExitingItems((current) => current.filter((itemId) => itemId !== id));
+    }, 360);
   }
 
-  function checkPreparation() {
+  function legacyCheckPreparation() {
     const missingDocuments = documents.filter((item) => !selected.includes(item.id));
     const missingSupplies = supplies.filter((item) => !selected.includes(item.id));
     if (missingDocuments.length > 0 && missingSupplies.length > 0) {
@@ -214,6 +219,37 @@ export function CarTrunkPreparation({ selected, onSelect, onBack, onNext }: { se
   }
 
   function depart() { setDeparting(true); window.setTimeout(onNext, 650); }
+
+  return <div className="content-wrap preparation-page">
+    <StepHeading title="出發接牠回家" body="" />
+    <div className={`departure-layout ${departing ? "departing" : ""}`}>
+      <aside className="departure-supply-shelf" aria-label="準備物品">
+        <div className="departure-supply-header"><h2>準備物品</h2><span>{complete ? "準備完成" : `${remainingItems.length} 件可準備`}</span></div>
+        {!complete && <div className="departure-supply-rows">
+          {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
+            {row.map((item) => <button key={item.id} type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
+              <span className="departure-supply-visual"><img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /></span><b>{item.label}</b>
+            </button>)}
+          </div>)}
+        </div>}
+      </aside>
+
+      <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">
+        <img className="car-trunk-background" src="/car/後車箱.png" alt="打開的汽車後車廂" />
+        {selected.includes("documents") && <div className="car-document-folder complete"><img src="/car/文件.png" alt="領養文件夾" /></div>}
+        {selected.includes("id") && <img className="placed-car-item placed-car-id" src="/car/身分證件.png" alt="放入文件夾的身分證" />}
+        {supplies.filter((item) => selected.includes(item.id)).map((item) => false ? (
+          <div key={item.id} className="placed-car-item placed-car-carrier-kit" style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }}>
+            <img className="carrier-pad" src="/car/尿墊.png" alt="鋪在運輸籠內的尿墊" /><img className="carrier-image" src={item.image} alt="放在後車廂的安全運輸籠" />
+          </div>
+        ) : <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`後車廂內的${item.label}`} />)}
+      </section>
+    </div>
+    <div className="departure-actions">
+      <button type="button" className="secondary" onClick={onBack}>← 返回</button>
+      <div><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
+    </div>
+  </div>;
 
   return <div className="content-wrap preparation-page">
     <StepHeading title="出發接牠回家" body="確認需要攜帶的文件及接回用品。點擊項目後，系統會自動配置到文件夾或後車廂。" />
@@ -250,7 +286,7 @@ export function CarTrunkPreparation({ selected, onSelect, onBack, onNext }: { se
     <div className={`task-message ${complete ? "success" : ""}`} role="status" aria-live="polite">{complete ? "文件與接回用品都準備完成，可以出發接牠回家了。" : message || `文件準備 ${documentDone}／2｜接回用品 ${supplyDone}／4`}</div>
     <div className="departure-actions">
       <button type="button" className="secondary" onClick={onBack}>← 返回</button>
-      <div><button type="button" className="secondary" onClick={checkPreparation}>檢查準備</button><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
+      <div><button type="button" className="secondary" onClick={legacyCheckPreparation}>檢查準備</button><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
     </div>
   </div>;
 }

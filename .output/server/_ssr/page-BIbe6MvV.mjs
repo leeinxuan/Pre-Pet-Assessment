@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CH19Iwnv.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-BIbe6MvV.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var stations = [
@@ -222,12 +222,12 @@ var expenseCatalog = {
 		stage: "領養前準備",
 		recurring: false
 	},
-	"monthly-main-food": {
-		id: "monthly-main-food",
+	"monthly-food-main": {
+		id: "monthly-food-main",
 		name: "每月主食費",
-		amount: 1500,
+		amount: 1e3,
 		category: "飲食",
-		stage: "一起生活三個月",
+		stage: "第一天適應新家",
 		recurring: true
 	},
 	"journey-medical-care": {
@@ -520,8 +520,8 @@ var trunkItems = [
 		expenseIds: ["water-bowl"],
 		placement: {
 			x: 55,
-			y: 70,
-			width: 14,
+			y: 67,
+			width: 27,
 			layer: 6
 		}
 	},
@@ -563,6 +563,51 @@ var trunkItems = [
 			layer: 8
 		}
 	}
+];
+var departureTrunkItems = [
+	trunkItems.find((item) => item.id === "id"),
+	trunkItems.find((item) => item.id === "documents"),
+	{
+		id: "carrier",
+		label: "運輸籠",
+		kind: "supply",
+		image: "/car/外出籠.png",
+		preparedLabel: "已準備",
+		description: "安全運輸籠可降低行車途中移動或逃脫的風險。",
+		reason: "提供穩定的運輸空間。",
+		caution: "確認尺寸合適並固定在平坦位置。",
+		sourceLabel: "專案既有接回安全運輸建議",
+		feedback: "運輸籠已放入後車廂。",
+		expenseIds: ["carrier"],
+		placement: {
+			x: 51,
+			y: 60,
+			width: 34,
+			layer: 5
+		}
+	},
+	{
+		id: "pee-pad",
+		label: "尿墊",
+		kind: "supply",
+		image: "/car/尿墊.png",
+		preparedLabel: "已準備",
+		description: "尿墊可協助處理移動途中可能發生的排泄與髒污。",
+		reason: "讓運輸區域保持乾淨。",
+		caution: "平整鋪在運輸籠預定位置下方。",
+		sourceLabel: "專案既有接回安全運輸建議",
+		feedback: "尿墊已放入後車廂底部。",
+		expenseIds: ["toilet"],
+		placement: {
+			x: 49,
+			y: 66,
+			width: 20,
+			layer: 6
+		}
+	},
+	trunkItems.find((item) => item.id === "water-kit"),
+	trunkItems.find((item) => item.id === "leash"),
+	trunkItems.find((item) => item.id === "cleaner")
 ];
 var positive$1 = {
 	feedbackTitle: "做得很好！",
@@ -644,27 +689,27 @@ var lifeScenarios = [
 		choices: [
 			{
 				id: "quiet-explore",
-				text: "保持環境安靜，提供安全空間與飲水，讓豆豆依自己的速度探索。",
+				text: "保持距離，給牠安靜適應的時間",
 				result: "correct",
 				...positive,
-				explanation: "安靜、可退回的安全空間能降低刺激，讓豆豆逐步建立對新家的信任。",
-				suggestion: "保持固定作息，等豆豆主動靠近再慢慢增加互動。"
+				explanation: "做得很好！剛到新家的小狗需要先觀察環境。保持距離並提供安靜、安全的空間，能減少壓力，讓牠以自己的速度建立安全感。",
+				suggestion: "準備乾淨飲水與可休息的角落，等牠主動靠近後再慢慢增加互動。"
 			},
 			{
-				id: "sit-and-watch",
-				text: "讓家人留在附近小聲聊天，不主動碰觸，觀察豆豆是否願意靠近。",
-				result: "partial",
-				...partial,
-				explanation: "不強迫互動是合理方向，但人數與聲音仍可能讓剛到家的豆豆緊張。",
-				suggestion: "先減少在場人數，保留一位安靜陪伴者即可。"
-			},
-			{
-				id: "welcome-crowd",
-				text: "大家一起圍過來抱抱牠，讓牠快點熟悉所有家人。",
+				id: "force-pick-up",
+				text: "強行抱出來",
 				result: "incorrect",
 				...incorrect,
-				explanation: "同時被多人靠近和抱起，可能讓已經緊張的豆豆失去退路，增加閃躲或防衛反應。",
-				suggestion: "先提供安靜安全的範圍，尊重牠主動探索和互動的速度。"
+				explanation: "這個做法可能讓牠更緊張。被強行抱起會讓小狗失去退路，增加防衛反應，也可能降低牠對新環境的安全感。",
+				suggestion: "保持距離，提供安靜安全的空間，讓牠用自己的速度探索。"
+			},
+			{
+				id: "keep-calling",
+				text: "持續靠近並呼喚牠",
+				result: "incorrect",
+				...incorrect,
+				explanation: "持續靠近與呼喚會增加刺激，讓還在適應中的小狗難以安心觀察，可能變得更緊張或躲避。",
+				suggestion: "先給牠安靜的時間與可退回的安全空間，等待牠主動探索或靠近。"
 			}
 		]
 	},
@@ -741,42 +786,6 @@ var lifeScenarios = [
 				...incorrect,
 				explanation: "忽略基本需求可能造成飢餓、脫水、憋尿與焦躁，也會打亂穩定作息。",
 				suggestion: "完成最低限度照顧，或立即聯絡已安排好的支援者。"
-			}
-		]
-	},
-	{
-		id: "illness-vet",
-		stage: "健康出現變化",
-		timeLabel: "健康出現變化",
-		title: "生病與就醫",
-		description: "豆豆今天食慾下降、活動變少，還出現一次嘔吐，看起來和平常不太一樣。",
-		topic: "健康觀察與就醫判斷",
-		artIndex: 3,
-		choices: [
-			{
-				id: "record-and-vet",
-				text: "記錄飲食、飲水、排泄與精神狀態，聯絡獸醫院並依建議就醫。",
-				result: "correct",
-				...positive,
-				explanation: "具體紀錄能幫助獸醫判斷，異常合併嘔吐時及早諮詢也能降低延誤風險。",
-				suggestion: "攜帶紀錄與既有病史，依獸醫建議安排檢查。",
-				expenseIds: ["journey-medical-care"]
-			},
-			{
-				id: "observe-briefly",
-				text: "先短時間密切觀察並記錄，如果症狀持續或增加就立刻聯絡獸醫。",
-				result: "partial",
-				...partial,
-				explanation: "觀察與紀錄是合理起點，但豆豆已有多項異常，不宜只在家等待太久。",
-				suggestion: "現在就先電話詢問獸醫院，說明症狀與持續時間。"
-			},
-			{
-				id: "human-medicine",
-				text: "先給豆豆吃家裡的人用腸胃藥，看看睡一覺會不會好。",
-				result: "incorrect",
-				...incorrect,
-				explanation: "人用藥物的成分和劑量可能對狗造成中毒或掩蓋病況，延誤正確診斷。",
-				suggestion: "不要自行給藥，整理觀察紀錄並聯絡獸醫。"
 			}
 		]
 	},
@@ -897,13 +906,7 @@ var journeyItems = [
 		id: "body-language",
 		type: "body-language",
 		timeLabel: "適應新家的時候",
-		title: "看懂小狗的身體語言"
-	},
-	{
-		id: "feeding",
-		type: "feeding",
-		timeLabel: "一起生活三個月",
-		title: "準備豆豆的晚餐"
+		title: "看懂小狗的警告訊號"
 	},
 	{
 		id: "behavior",
@@ -924,13 +927,6 @@ var journeyItems = [
 		type: "body-care",
 		timeLabel: "成年後的例行照顧",
 		title: "清潔與基礎身體觀察"
-	},
-	{
-		id: "health",
-		type: "scenario",
-		timeLabel: "健康出現變化",
-		title: "生病與就醫",
-		scenarioId: "illness-vet"
 	},
 	{
 		id: "life-change",
@@ -962,14 +958,13 @@ var journeyItems = [
 ];
 var initialLifeActivityState = {
 	bodyLanguageSignals: [],
-	feedingFoodReady: false,
-	feedingWaterSteps: [],
-	feedingServed: false,
+	arrivalMealFoodReady: false,
+	arrivalMealWaterReady: false,
 	bodyCareParts: [],
 	seniorAdjustments: []
 };
 var import_jsx_runtime = require_jsx_runtime();
-var arrivalVideoSrc = "/assets/pet-journey/arrival-transition.mp4";
+var arrivalVideoSources = ["/assets/pet-journey/arrival-transition.mp4", "/assets/pet-journey/arrival-transition2.mp4"];
 function withPetName(text, petName) {
 	return text.replaceAll("豆豆", petName).replaceAll("小狗", petName).replaceAll("狗狗", petName);
 }
@@ -977,16 +972,28 @@ function ArrivalTransitionVideo({ onContinue }) {
 	const videoRef = (0, import_react.useRef)(null);
 	const hasFinishedArrivalVideo = (0, import_react.useRef)(false);
 	const startTimeoutRef = (0, import_react.useRef)(null);
+	const endTimeoutRef = (0, import_react.useRef)(null);
 	const onContinueRef = (0, import_react.useRef)(onContinue);
+	const [currentVideo, setCurrentVideo] = (0, import_react.useState)(0);
+	const [needsManualPlay, setNeedsManualPlay] = (0, import_react.useState)(false);
+	const [showWelcome, setShowWelcome] = (0, import_react.useState)(false);
 	(0, import_react.useEffect)(() => {
 		onContinueRef.current = onContinue;
 	}, [onContinue]);
-	const finishArrivalVideo = (0, import_react.useCallback)(() => {
+	(0, import_react.useCallback)(() => {
 		if (hasFinishedArrivalVideo.current) return;
 		hasFinishedArrivalVideo.current = true;
 		if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
 		videoRef.current?.pause();
 		onContinueRef.current();
+	}, []);
+	const showFinalFrame = (0, import_react.useCallback)(() => {
+		if (hasFinishedArrivalVideo.current) return;
+		hasFinishedArrivalVideo.current = true;
+		if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+		videoRef.current?.pause();
+		setShowWelcome(true);
+		endTimeoutRef.current = window.setTimeout(() => onContinueRef.current(), 1600);
 	}, []);
 	(0, import_react.useEffect)(() => {
 		const video = videoRef.current;
@@ -994,55 +1001,74 @@ function ArrivalTransitionVideo({ onContinue }) {
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 			video.pause();
 			video.currentTime = 0;
-			startTimeoutRef.current = window.setTimeout(finishArrivalVideo, 180);
+			startTimeoutRef.current = window.setTimeout(showFinalFrame, 180);
 			return () => {
 				if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
 			};
 		}
 		startTimeoutRef.current = window.setTimeout(() => {
-			if (video.paused || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) finishArrivalVideo();
+			if (video.paused || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) setNeedsManualPlay(true);
 		}, 8e3);
+		video.load();
 		video.play()?.catch(() => {
 			console.warn("接回家過場影片無法自動播放，已略過至飼養生活。");
-			finishArrivalVideo();
+			setNeedsManualPlay(true);
 		});
 		return () => {
 			if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
 		};
-	}, [finishArrivalVideo]);
+	}, [currentVideo, showFinalFrame]);
 	function handlePlaying() {
 		if (startTimeoutRef.current !== null) {
 			window.clearTimeout(startTimeoutRef.current);
 			startTimeoutRef.current = null;
 		}
+		setNeedsManualPlay(false);
 	}
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+	function handleArrivalEnded() {
+		if (currentVideo === 0) {
+			setNeedsManualPlay(false);
+			setCurrentVideo(1);
+			return;
+		}
+		showFinalFrame();
+	}
+	function handleVideoError() {
+		if (currentVideo === 0) {
+			setCurrentVideo(1);
+			return;
+		}
+		showFinalFrame();
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "arrival-video-screen",
 		"aria-label": "接回家影片過場",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
 			ref: videoRef,
-			src: arrivalVideoSrc,
+			src: arrivalVideoSources[currentVideo],
 			autoPlay: true,
-			muted: true,
 			playsInline: true,
 			preload: "auto",
 			"aria-label": "小狗搭乘外出籠抵達新家的過場動畫",
 			onPlaying: handlePlaying,
-			onEnded: finishArrivalVideo,
+			onEnded: handleArrivalEnded,
 			onError: () => {
 				console.warn("接回家過場影片載入失敗，已略過至飼養生活。");
-				finishArrivalVideo();
+				handleVideoError();
 			}
-		})
+		}), showWelcome && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+			className: "arrival-video-welcome",
+			children: "歡迎來到新家"
+		})]
 	});
 }
 function stageForIndex(index) {
-	if (index <= 2) return 3;
-	if (index <= 5) return 4;
-	if (index === 6) return 5;
+	if (index <= 1) return 3;
+	if (index <= 4) return 4;
 	return 6;
 }
 function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
+	const isArrivalAdjustment = scenario.id === "arrival-adjustment";
 	const labels = {
 		correct: {
 			icon: "✓",
@@ -1091,11 +1117,11 @@ function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
 					className: "secondary",
 					onClick: onRetry,
 					children: "重新選一次"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+				}), (!isArrivalAdjustment || choice.result !== "incorrect") && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: "primary",
 					onClick: onContinue,
 					children: [
-						labels[choice.result].button,
+						isArrivalAdjustment ? "繼續" : labels[choice.result].button,
 						" ",
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })
 					]
@@ -1105,6 +1131,8 @@ function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
 	});
 }
 function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, onChoose, onRetry, onContinue }) {
+	const [arrivalVideoFailed, setArrivalVideoFailed] = (0, import_react.useState)(false);
+	const isArrivalAdjustment = scenario.id === "arrival-adjustment";
 	const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
 	if (feedbackOpen && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioFeedback, {
 		scenario,
@@ -1131,9 +1159,25 @@ function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, on
 				})
 			]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: `scene-art scene-${scenario.artIndex}`,
-			"aria-hidden": "true",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "scene-sprite" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: scenario.timeLabel })]
+			className: `scene-art scene-${scenario.artIndex} ${isArrivalAdjustment ? "scene-art--video" : ""}`,
+			children: [isArrivalAdjustment ? arrivalVideoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "scene-video-fallback",
+				role: "status",
+				children: "第一天適應新家的影片目前無法播放。"
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
+				className: "scene-video",
+				src: "/assets/pet-journey/first-day.mp4",
+				autoPlay: true,
+				loop: true,
+				muted: true,
+				playsInline: true,
+				preload: "metadata",
+				"aria-label": "小狗第一天適應新家的影片",
+				onError: () => setArrivalVideoFailed(true)
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "scene-sprite",
+				"aria-hidden": "true"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: scenario.timeLabel })]
 		})]
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "reflection",
@@ -1149,282 +1193,203 @@ function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, on
 		})]
 	})] });
 }
-var bodySignals = [
+var warningSignalSegments = [
 	{
-		id: "relaxed",
-		area: "身體姿勢",
-		label: "放鬆",
-		icon: "🐕",
-		text: "身體線條柔軟、動作自然，通常代表豆豆在當下環境較有安全感。"
+		title: "牠不是無故攻擊",
+		text: "一般而言，犬隻通常不是無故攻擊。當牠覺得受到威脅或不舒服時，可能會先透過表情、聲音或行動發出警告。"
 	},
 	{
-		id: "tense",
-		area: "身體姿勢",
-		label: "緊張",
-		icon: "⚡",
-		text: "喘氣、來回走動或身體緊繃可能表示壓力，需要降低刺激並保留距離。"
+		title: "牠正在要求距離",
+		text: "有經驗的狗狗為了避免衝突，可能會先示警，也會主動拉開安全距離。這時不要繼續逼近，應慢慢退開。"
 	},
 	{
-		id: "avoid",
-		area: "身體姿勢",
-		label: "閃躲",
-		icon: "↩",
-		text: "轉頭、後退或躲開是豆豆在說自己暫時不想靠近，應尊重牠的選擇。"
+		title: "常見的警示反應",
+		text: "指南中列出的階段性警示行為包含：撩牙、撩嘴皮、低吼、吠叫、嘶吼。這些都是需要被看見的訊號。"
 	},
 	{
-		id: "lip-lick",
-		area: "嘴巴",
-		label: "舔鼻子",
-		icon: "👅",
-		text: "在沒有食物時頻繁舔鼻子可能是壓力訊號，要一起觀察環境與其他姿勢。"
+		title: "不要責罵，先降低刺激",
+		text: "看到警告訊號時，不要立刻責罵或強迫牠配合。可以慢慢拉開距離，面對著牠逐漸離開現場，讓牠有空間冷靜。"
 	},
 	{
-		id: "lowered",
-		area: "身體姿勢",
-		label: "身體壓低",
-		icon: "▾",
-		text: "身體壓低可能表示害怕或想避免衝突，這時不要從上方強迫抱起。"
-	},
-	{
-		id: "tucked-tail",
-		area: "尾巴",
-		label: "尾巴夾起",
-		icon: "〰",
-		text: "尾巴夾在腿間常和害怕、不安有關，應減少刺激並提供退路。"
-	},
-	{
-		id: "stiff",
-		area: "耳朵與全身",
-		label: "身體僵硬",
-		icon: "!",
-		text: "突然僵住是需要留意的重要訊號，應停止靠近並觀察豆豆需要多少距離。"
-	},
-	{
-		id: "growl",
-		area: "嘴巴",
-		label: "低吼",
-		icon: "◖",
-		text: "低吼是小狗表達不舒服或需要距離的方式，不應立刻以責罵回應。"
+		title: "先觀察，再互動",
+		text: "飼主應熟悉小狗平常的行為，學會辨識牠緊張、害怕或不舒服時的表現，才能更好地照顧牠的身心狀態。"
 	}
 ];
-function BodyLanguageActivity({ viewed, petName, onView, onContinue }) {
-	const [active, setActive] = (0, import_react.useState)(viewed.at(-1) ?? "");
-	const signal = bodySignals.find((item) => item.id === active);
-	const complete = viewed.length === bodySignals.length;
+function WarningSignalsActivity({ viewed, onView, onContinue }) {
+	const videoRef = (0, import_react.useRef)(null);
+	const complete = viewed.includes("warning-signals-video");
+	const [started, setStarted] = (0, import_react.useState)(complete);
+	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
+	const [segmentIndex, setSegmentIndex] = (0, import_react.useState)(complete ? warningSignalSegments.length - 1 : 0);
+	function startVideo() {
+		setStarted(true);
+		const video = videoRef.current;
+		if (!video) return;
+		video.play().catch(() => setVideoFailed(true));
+	}
+	function syncSegment() {
+		const video = videoRef.current;
+		if (!video?.duration || !Number.isFinite(video.duration)) return;
+		setSegmentIndex(Math.min(warningSignalSegments.length - 1, Math.floor(video.currentTime / video.duration * warningSignalSegments.length)));
+	}
+	function finishVideo() {
+		setSegmentIndex(warningSignalSegments.length - 1);
+		onView("warning-signals-video");
+	}
+	const segment = warningSignalSegments[segmentIndex];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		className: "life-activity",
+		className: "life-activity warning-signals-activity",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "activity-heading",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
-					"看懂",
-					petName,
-					"的身體語言"
-				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
-					"點擊耳朵、尾巴、嘴巴與身體姿勢的訊號。沒有答對或答錯，重點是學會看見",
-					petName,
-					"正在表達什麼。"
-				] })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "看懂小狗的警告訊號" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "有些反應不是牠故意兇，而是在告訴你：牠需要距離。" })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "signal-layout",
+				className: "warning-signal-layout",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "signal-dog",
-					"aria-hidden": "true",
+					className: "warning-signal-video-wrap",
 					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "🐕" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "耳朵" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "嘴巴" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "尾巴" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "身體姿勢" })
+						!videoFailed && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
+							ref: videoRef,
+							className: "warning-signal-video",
+							src: "/assets/pet-journey/03狗狗身體語言.mp4",
+							playsInline: true,
+							preload: "metadata",
+							"aria-label": "小狗警告訊號教學影片",
+							onTimeUpdate: syncSegment,
+							onEnded: finishVideo,
+							onError: () => {
+								setVideoFailed(true);
+								finishVideo();
+							}
+						}),
+						!started && !videoFailed && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+							type: "button",
+							className: "warning-signal-start",
+							onClick: startVideo,
+							"aria-label": "開始播放小狗警告訊號教學影片",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "▶" }), "開始觀看"]
+						}),
+						videoFailed && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "warning-signal-fallback",
+							role: "status",
+							children: "影片目前無法播放，仍可閱讀右側警告訊號說明。"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "warning-signal-video-tag",
+							children: "Video"
+						})
 					]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "signal-grid",
-					children: bodySignals.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						className: viewed.includes(item.id) ? "viewed" : "",
-						onClick: () => {
-							setActive(item.id);
-							onView(item.id);
-						},
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.icon }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [item.area, viewed.includes(item.id) ? " · 已閱讀" : ""] })
-						]
-					}, item.id))
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+					className: "warning-signal-copy",
+					"aria-live": "polite",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+							segmentIndex + 1,
+							" / ",
+							warningSignalSegments.length
+						] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: segment.title }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: segment.text }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "資料依據：農業部《寵物飼養與照顧指南－犬篇》" })
+					]
 				})]
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "activity-message",
+			complete && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "warning-signal-complete",
 				role: "status",
-				children: signal ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: signal.label }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(signal.text, petName) })] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "從任一訊號開始觀察。" })
+				children: "你已經看過小狗的警告訊號。下次看到類似反應時，先給牠距離，就是很重要的照顧。"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "activity-actions",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
-					viewed.length,
-					" / ",
-					bodySignals.length,
-					" 個訊號已閱讀"
-				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: complete ? "已完成警告訊號教學" : started ? "影片播放中" : "點擊一次開始觀看" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: "primary",
 					disabled: !complete,
 					onClick: onContinue,
-					children: ["完成身體語言練習 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+					children: ["繼續生活旅程 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
 				})]
 			})
 		]
 	});
 }
-var feedingFoods = [
-	{
-		id: "main",
-		label: "適合豆豆的完整主食",
-		icon: "🥣",
-		kind: "main"
-	},
-	{
-		id: "treat",
-		label: "寵物零食",
-		icon: "🦴",
-		kind: "treat"
-	},
-	{
-		id: "leftovers",
-		label: "人類剩菜",
-		icon: "🍱",
-		kind: "risk"
-	},
-	{
-		id: "chocolate",
-		label: "巧克力",
-		icon: "🍫",
-		kind: "risk"
-	},
-	{
-		id: "seasoned-meat",
-		label: "調味肉類",
-		icon: "🍖",
-		kind: "risk"
-	},
-	{
-		id: "bone",
-		label: "不適合的骨頭",
-		icon: "🦴",
-		kind: "risk"
+function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onContinue }) {
+	const complete = activity.arrivalMealFoodReady && activity.arrivalMealWaterReady;
+	const hasRecordedMeal = (0, import_react.useRef)(false);
+	(0, import_react.useEffect)(() => {
+		if (!complete || hasRecordedMeal.current) return;
+		hasRecordedMeal.current = true;
+		onAddExpense("monthly-food-main");
+	}, [complete, onAddExpense]);
+	function prepareFood() {
+		if (activity.arrivalMealFoodReady) return;
+		onChange({ arrivalMealFoodReady: true });
 	}
-];
-var waterSteps = [
-	"倒掉原本不乾淨的水",
-	"清潔水碗",
-	"加入乾淨飲水",
-	"將水碗放回固定位置"
-];
-function FeedingActivity({ activity, petName, onChange, onAddExpense, onContinue }) {
-	const [message, setMessage] = (0, import_react.useState)(activity.feedingServed ? "晚餐與飲水都已準備完成。" : `先選擇適合${petName}的晚餐。`);
-	const waterComplete = activity.feedingWaterSteps.length === waterSteps.length;
-	function chooseFood(kind) {
-		if (kind === "main") {
-			onChange({ feedingFoodReady: true });
-			setMessage(`選得很好！主食應符合${petName}的年齡、體型及健康需求。`);
-		} else if (kind === "treat") setMessage("零食可以作為少量獎勵，但不能代替營養完整的正餐。");
-		else setMessage(`這項食物不適合放進${petName}的餐碗。部分人類食物可能油、鹽或調味過多，也可能含有危險成分，請換一個選擇。`);
-	}
-	function doWaterStep(step, index) {
-		if (index !== activity.feedingWaterSteps.length) {
-			setMessage("請依序完成飲水準備，先處理前一個步驟。");
-			return;
-		}
-		onChange({ feedingWaterSteps: [...activity.feedingWaterSteps, step] });
-		setMessage(index === waterSteps.length - 1 ? "乾淨飲水已放回固定位置。" : `${step}完成，繼續下一步。`);
-	}
-	function serve() {
-		if (!activity.feedingFoodReady || !waterComplete) {
-			setMessage(`還有一件每天都很重要的事：請確認${petName}有合適主食，以及隨時有乾淨、足量的飲水。`);
-			return;
-		}
-		onChange({ feedingServed: true });
-		onAddExpense("monthly-main-food");
-		setMessage("晚餐準備完成！規律的餵食、合適的食物及乾淨飲水，都是每天照顧的重要部分。");
+	function prepareWater() {
+		if (activity.arrivalMealWaterReady) return;
+		onChange({ arrivalMealWaterReady: true });
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		className: `life-activity feeding-activity ${activity.feedingServed ? "served" : ""}`,
+		className: "arrival-meal-activity",
+		"aria-label": `為${petName}準備第一餐`,
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "activity-heading",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
-					"準備",
-					petName,
-					"的晚餐"
-				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
-					"三個月後，",
-					petName,
-					"已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。"
-				] })]
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
+				className: "arrival-meal-supplies",
+				"aria-label": "晚餐用品",
+				children: [
+					!activity.arrivalMealFoodReady && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						type: "button",
+						onClick: prepareFood,
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							src: "/room/飼料.png",
+							alt: "飼料"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "飼料" })]
+					}),
+					!activity.arrivalMealWaterReady && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						type: "button",
+						onClick: prepareWater,
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							src: "/assets/pet-journey/waterbottle.png",
+							alt: "水瓶"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "水" })]
+					}),
+					complete && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "晚餐用品已準備好" })
+				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "feeding-steps",
+				className: "arrival-meal-scene",
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "1" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "選擇食物" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "food-options",
-							children: feedingFoods.map((food) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-								className: activity.feedingFoodReady && food.kind === "main" ? "selected" : "",
-								onClick: () => chooseFood(food.kind),
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: food.icon }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: withPetName(food.label, petName) })]
-							}, food.id))
-						})
-					] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "2" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "準備乾淨飲水" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "water-sequence",
-							children: waterSteps.map((step, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-								className: activity.feedingWaterSteps.includes(step) ? "done" : "",
-								disabled: index > activity.feedingWaterSteps.length,
-								onClick: () => doWaterStep(step, index),
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: activity.feedingWaterSteps.includes(step) ? "✓" : index + 1 }), step]
-							}, step))
-						})
-					] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-						className: "serve-dinner",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "3" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: ["把晚餐交給", petName] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								className: "dinner-scene",
-								"aria-hidden": "true",
-								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "🐕" }),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: activity.feedingFoodReady ? "🥣" : "○" }),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: waterComplete ? "💧" : "○" })
-								]
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-								className: "secondary",
-								onClick: serve,
-								children: activity.feedingServed ? `再看看${petName}吃晚餐` : `請${petName}吃晚餐`
-							})
-						]
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						className: "arrival-meal-room",
+						src: "/room/空房間.png",
+						alt: "小狗的新家房間"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						className: "arrival-meal-dog",
+						src: "/assets/pet-journey/shiba-dog.png",
+						alt: petName
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						className: "arrival-meal-water",
+						src: activity.arrivalMealWaterReady ? "/room/水.png" : "/assets/pet-journey/空水碗.png",
+						alt: activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						className: "arrival-meal-food",
+						src: activity.arrivalMealFoodReady ? "/room/狗碗.png" : "/assets/pet-journey/空飼料碗.png",
+						alt: activity.arrivalMealFoodReady ? "裝好飼料的狗碗" : "空飼料碗"
 					})
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "activity-message",
-				role: "status",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: message }), activity.feedingServed && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "每月主食費＋NT$1,500（只登記一次）" })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "activity-actions",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: activity.feedingServed ? "晚餐與飲水已完成" : "完成三個步驟後繼續" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+				className: "arrival-meal-footer",
+				children: [complete && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					role: "status",
+					children: "晚餐準備好了！合適的主食與乾淨飲水，是每天照顧的重要部分。"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: "primary",
-					disabled: !activity.feedingServed,
+					disabled: !complete,
 					onClick: onContinue,
-					children: ["完成晚餐練習 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+					children: ["繼續生活旅程 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
 				})]
 			})
 		]
@@ -1635,6 +1600,7 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 	const item = journeyItems[index];
 	const scenario = item.scenarioId ? lifeScenarios.find((entry) => entry.id === item.scenarioId) : void 0;
 	const answer = scenario ? answers[scenario.id] : void 0;
+	const showArrivalMeal = scenario?.id === "arrival-adjustment" && answer?.finalResult === "correct";
 	const [feedbackOpen, setFeedbackOpen] = (0, import_react.useState)(Boolean(answer));
 	const completedCount = completedIds.length;
 	function selectItem(next) {
@@ -1675,7 +1641,13 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 					journeyItems.length
 				] })]
 			}),
-			scenario && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioCard, {
+			scenario && (showArrivalMeal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrivalMealActivity, {
+				activity,
+				petName,
+				onChange: onActivityChange,
+				onAddExpense,
+				onContinue: continueJourney
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioCard, {
 				scenario,
 				petName,
 				answer,
@@ -1684,18 +1656,10 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 				onChoose: choose,
 				onRetry: () => setFeedbackOpen(false),
 				onContinue: continueJourney
-			}),
-			item.type === "body-language" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BodyLanguageActivity, {
-				petName,
+			})),
+			item.type === "body-language" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WarningSignalsActivity, {
 				viewed: activity.bodyLanguageSignals,
 				onView: (id) => onActivityChange({ bodyLanguageSignals: activity.bodyLanguageSignals.includes(id) ? activity.bodyLanguageSignals : [...activity.bodyLanguageSignals, id] }),
-				onContinue: continueJourney
-			}),
-			item.type === "feeding" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FeedingActivity, {
-				petName,
-				activity,
-				onChange: onActivityChange,
-				onAddExpense,
 				onContinue: continueJourney
 			}),
 			item.type === "body-care" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BodyCareActivity, {
@@ -1770,17 +1734,12 @@ var lifeStageRanges = [
 	{
 		label: "日常生活",
 		start: 2,
-		end: 5
-	},
-	{
-		label: "健康與意外",
-		start: 6,
-		end: 6
+		end: 4
 	},
 	{
 		label: "生活變化",
-		start: 7,
-		end: 10
+		start: 5,
+		end: 8
 	}
 ];
 function statusAt(index, current, reached) {
@@ -1893,16 +1852,14 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: "nav-main-button",
 					onClick: item.onClick,
-					disabled: item.status === "locked",
 					"aria-current": item.status === "current" ? "step" : void 0,
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.status === "completed" ? "✓" : item.number }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: item.label })]
-				}), index === currentMain && item.children && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				}), item.children && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "nav-children",
 					children: item.children.map((child, childIndex) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						className: `nav-child ${child.status}`,
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 							onClick: child.onClick,
-							disabled: child.status === "locked",
 							"aria-current": child.status === "current" ? "step" : void 0,
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: child.status === "completed" ? "✓" : childIndex + 1 }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: child.label })]
 						})
@@ -2368,7 +2325,7 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 								role: "status",
 								"aria-live": "polite",
 								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [activeHazard.label, "已處理"] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [activeHazard.label, "已收起"] }),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "為什麼危險：" }), activeHazard.danger] }),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "建議如何處理：" }), activeHazard.handling] })
 								]
@@ -2509,31 +2466,28 @@ function CareMemberSetup({ members, onChange, onBack, onNext }) {
 	});
 }
 function CarTrunkPreparation({ selected, onSelect, onBack, onNext }) {
-	const [activeId, setActiveId] = (0, import_react.useState)(trunkItems[0]?.id ?? "");
-	const [message, setMessage] = (0, import_react.useState)("");
+	const [exitingItems, setExitingItems] = (0, import_react.useState)([]);
 	const [departing, setDeparting] = (0, import_react.useState)(false);
-	const documents = trunkItems.filter((item) => item.kind === "document");
-	const supplies = trunkItems.filter((item) => item.kind === "supply");
+	const documents = departureTrunkItems.filter((item) => item.kind === "document");
+	const supplies = departureTrunkItems.filter((item) => item.kind === "supply");
 	const documentDone = documents.filter((item) => selected.includes(item.id)).length;
 	const supplyDone = supplies.filter((item) => selected.includes(item.id)).length;
 	const complete = documentDone === documents.length && supplyDone === supplies.length;
-	const activeItem = trunkItems.find((item) => item.id === activeId) ?? trunkItems[0];
+	const remainingItems = departureTrunkItems.filter((item) => !selected.includes(item.id) || exitingItems.includes(item.id));
+	const supplyRows = remainingItems.length <= 3 ? [remainingItems] : [
+		remainingItems.slice(0, 2),
+		remainingItems.slice(2, 4),
+		remainingItems.slice(4)
+	].filter((row) => row.length > 0);
+	const [message, setMessage] = (0, import_react.useState)("");
+	trunkItems[0];
 	function selectItem(id) {
-		const item = trunkItems.find((entry) => entry.id === id);
-		if (!item) return;
-		setActiveId(id);
-		if (!selected.includes(id)) {
+		if (selected.includes(id) || exitingItems.includes(id)) return;
+		setExitingItems((current) => [...current, id]);
+		window.setTimeout(() => {
 			onSelect(id);
-			setMessage(item.feedback);
-		}
-	}
-	function checkPreparation() {
-		const missingDocuments = documents.filter((item) => !selected.includes(item.id));
-		const missingSupplies = supplies.filter((item) => !selected.includes(item.id));
-		if (missingDocuments.length > 0 && missingSupplies.length > 0) setMessage(`還有需要確認的身分或領養文件。還需要準備：${missingSupplies.map((item) => item.label).join("、")}。`);
-		else if (missingDocuments.length > 0) setMessage("還有需要確認的身分或領養文件。");
-		else if (missingSupplies.length > 0) setMessage(`還需要準備：${missingSupplies.map((item) => item.label).join("、")}。`);
-		else setMessage("準備完成！文件、運輸設備及途中用品都已確認。");
+			setExitingItems((current) => current.filter((itemId) => itemId !== id));
+		}, 360);
 	}
 	function depart() {
 		setDeparting(true);
@@ -2544,71 +2498,58 @@ function CarTrunkPreparation({ selected, onSelect, onBack, onNext }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
 				title: "出發接牠回家",
-				body: "確認需要攜帶的文件及接回用品。點擊項目後，系統會自動配置到文件夾或後車廂。"
+				body: ""
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: `car-preparation-layout ${departing ? "departing" : ""}`,
+				className: `departure-layout ${departing ? "departing" : ""}`,
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
-					className: "car-preparation-panel",
-					"aria-label": "出發前準備內容",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DepartureGroup, {
-						title: "A. 準備文件",
-						description: "先確認辦理領養及接回時需要攜帶的身分與領養資料。",
-						done: documentDone,
-						total: documents.length,
-						items: documents,
-						selected,
-						activeId,
-						onSelect: selectItem
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DepartureGroup, {
-						title: "B. 準備接回用品",
-						description: "準備安全運輸、飲水、牽引及清潔用品，讓小狗回家的路程更安全。",
-						done: supplyDone,
-						total: supplies.length,
-						items: supplies,
-						selected,
-						activeId,
-						onSelect: selectItem
+					className: "departure-supply-shelf",
+					"aria-label": "準備物品",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "departure-supply-header",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "準備物品" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: complete ? "準備完成" : `${remainingItems.length} 件可準備` })]
+					}), !complete && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "departure-supply-rows",
+						children: supplyRows.map((row, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: `departure-supply-row departure-supply-row--${row.length}`,
+							children: row.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								type: "button",
+								className: exitingItems.includes(item.id) ? "departing" : "",
+								onClick: () => selectItem(item.id),
+								"aria-label": `準備${item.label}`,
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "departure-supply-visual",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+										className: `departure-item-image departure-item-image--${item.id}`,
+										src: item.image,
+										alt: ""
+									})
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
+							}, item.id))
+						}, `${row.map((item) => item.id).join("-")}-${index}`))
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-					className: "car-trunk-scene",
+					className: "departure-car",
 					"aria-label": "已打開的汽車後車廂與自動配置用品",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 							className: "car-trunk-background",
 							src: "/car/後車箱.png",
-							alt: "打開且等待放入接回用品的汽車後車廂"
+							alt: "打開的汽車後車廂"
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: `car-document-folder ${documentDone === documents.length ? "complete" : ""}`,
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						selected.includes("documents") && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "car-document-folder complete",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								src: "/car/文件.png",
 								alt: "領養文件夾"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: documentDone === documents.length ? "文件已備齊" : `文件 ${documentDone}／${documents.length}` })]
+							})
 						}),
 						selected.includes("id") && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 							className: "placed-car-item placed-car-id",
 							src: "/car/身分證件.png",
-							alt: "已放入文件夾的身分證"
+							alt: "放入文件夾的身分證"
 						}),
-						supplies.filter((item) => selected.includes(item.id)).map((item) => item.id === "carrier-kit" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: "placed-car-item placed-car-carrier-kit",
-							style: {
-								left: `${item.placement.x}%`,
-								top: `${item.placement.y}%`,
-								width: `${item.placement.width}%`,
-								zIndex: item.placement.layer
-							},
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								className: "carrier-pad",
-								src: "/car/尿墊.png",
-								alt: "鋪在運輸籠底部的尿墊"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								className: "carrier-image",
-								src: item.image,
-								alt: "已鋪好尿墊的安全運輸籠"
-							})]
-						}, item.id) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						supplies.filter((item) => selected.includes(item.id)).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 							className: `placed-car-item placed-car-${item.id}`,
 							style: {
 								left: `${item.placement.x}%`,
@@ -2617,48 +2558,10 @@ function CarTrunkPreparation({ selected, onSelect, onBack, onNext }) {
 								zIndex: item.placement.layer
 							},
 							src: item.image,
-							alt: `後車廂中已收妥的${item.label}`
+							alt: `後車廂內的${item.label}`
 						}, item.id))
 					]
 				})]
-			}),
-			activeItem && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				className: "departure-item-information",
-				"aria-live": "polite",
-				"aria-labelledby": "departure-information-title",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "eyebrow",
-						children: "物品資訊"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-						id: "departure-information-title",
-						children: activeItem.label
-					})] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "用途" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: activeItem.description })] }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "為什麼需要" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: activeItem.reason })] }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "注意事項" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: activeItem.caution })] })
-					] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-						className: "departure-source",
-						children: [
-							"參考：",
-							activeItem.sourceLabel,
-							activeItem.sourceUrl && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-								href: activeItem.sourceUrl,
-								target: "_blank",
-								rel: "noreferrer",
-								children: "查看參考資料"
-							})
-						]
-					})
-				]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: `task-message ${complete ? "success" : ""}`,
-				role: "status",
-				"aria-live": "polite",
-				children: complete ? "文件與接回用品都準備完成，可以出發接牠回家了。" : message || `文件準備 ${documentDone}／2｜接回用品 ${supplyDone}／4`
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "departure-actions",
@@ -2667,58 +2570,13 @@ function CarTrunkPreparation({ selected, onSelect, onBack, onNext }) {
 					className: "secondary",
 					onClick: onBack,
 					children: "← 返回"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-					type: "button",
-					className: "secondary",
-					onClick: checkPreparation,
-					children: "檢查準備"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					type: "button",
 					className: "primary",
 					onClick: depart,
 					disabled: !complete,
 					children: ["出發接牠 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
-				})] })]
-			})
-		]
-	});
-}
-function DepartureGroup({ title, description, done, total, items, selected, activeId, onSelect }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		className: "car-preparation-group",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "car-preparation-group-head",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: title }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
-					done,
-					"／",
-					total
-				] })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: description }),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "car-preparation-items",
-				children: items.map((item) => {
-					const prepared = selected.includes(item.id);
-					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						type: "button",
-						className: `${prepared ? "prepared" : ""} ${activeId === item.id ? "active" : ""}`,
-						"aria-pressed": prepared,
-						onClick: () => onSelect(item.id),
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							src: item.image,
-							alt: ""
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: prepared ? `✓ ${item.preparedLabel}` : "點擊自動配置" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "為什麼要帶？" })
-						] })]
-					}, item.id);
-				})
-			}),
-			done === total && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-				className: "car-group-complete",
-				children: ["✓ ", title.startsWith("A") ? "文件準備完成 2／2，文件已備齊" : "接回用品準備完成 4／4"]
+				}) })]
 			})
 		]
 	});
@@ -3132,16 +2990,12 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
 	const practiceItems = [
 		{
-			label: `已認識${petName}的身體語言`,
-			complete: lifeActivity.bodyLanguageSignals.length === 8
+			label: "已看過小狗的警告訊號",
+			complete: lifeActivity.bodyLanguageSignals.includes("warning-signals-video")
 		},
 		{
-			label: "已完成準備晚餐",
-			complete: lifeActivity.feedingServed
-		},
-		{
-			label: "已完成乾淨飲水準備",
-			complete: lifeActivity.feedingWaterSteps.length === 4
+			label: "已完成到家第一餐",
+			complete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady
 		},
 		{
 			label: "已完成基本清潔及身體觀察",
@@ -3449,19 +3303,18 @@ function Home() {
 		const firstJourneyItem = [
 			0,
 			2,
-			6,
-			7
+			5
 		];
 		const underlyingStep = [
 			3,
 			4,
-			5,
 			6
 		];
 		if (lifePhase === "arrival-video" && stageIndex === 0) {
 			setStep(3);
 			setIntroOpen(false);
 		} else {
+			setLifePhase("life-journey");
 			setJourneyIndex(firstJourneyItem[stageIndex]);
 			setStep(underlyingStep[stageIndex]);
 			setIntroOpen(false);
@@ -3507,11 +3360,11 @@ function Home() {
 	}
 	function selectTrunkItem(id) {
 		if (!id) return;
-		const expenseIds = trunkItems.find((item) => item.id === id)?.expenseIds ?? [];
+		const expenseIds = departureTrunkItems.find((item) => item.id === id)?.expenseIds ?? [];
 		setTrunkSelected((current) => {
 			if (current.includes(id)) return current;
 			const next = [...current, id];
-			setTrunkPassed(trunkItems.every((item) => next.includes(item.id)));
+			setTrunkPassed(departureTrunkItems.every((item) => next.includes(item.id)));
 			return next;
 		});
 		expenseIds.forEach(addExpenseById);

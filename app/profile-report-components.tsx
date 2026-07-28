@@ -156,9 +156,8 @@ export function AssessmentReport({
   const correctedTopics = corrected.map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const practiceItems = [
-    { label: `已認識${petName}的身體語言`, complete: lifeActivity.bodyLanguageSignals.length === 8 },
-    { label: "已完成準備晚餐", complete: lifeActivity.feedingServed },
-    { label: "已完成乾淨飲水準備", complete: lifeActivity.feedingWaterSteps.length === 4 },
+    { label: "已看過小狗的警告訊號", complete: lifeActivity.bodyLanguageSignals.includes("warning-signals-video") },
+    { label: "已完成到家第一餐", complete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady },
     { label: "已完成基本清潔及身體觀察", complete: lifeActivity.bodyCareParts.length === 6 },
     { label: "已完成高齡生活空間調整", complete: lifeActivity.seniorAdjustments.length === 6 },
   ];

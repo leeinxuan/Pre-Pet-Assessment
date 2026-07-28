@@ -96,7 +96,7 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   toilet: { id: "toilet", name: "尿墊或便盆", amount: 500, category: "清潔", stage: "領養前準備", recurring: false },
   cleaner: { id: "cleaner", name: "寵物友善清潔用品", amount: 420, category: "清潔", stage: "領養前準備", recurring: false },
   "starter-food": { id: "starter-food", name: "初期飼料", amount: 800, category: "飲食", stage: "領養前準備", recurring: false },
-  "monthly-main-food": { id: "monthly-main-food", name: "每月主食費", amount: 1500, category: "飲食", stage: "一起生活三個月", recurring: true },
+  "monthly-food-main": { id: "monthly-food-main", name: "每月主食費", amount: 1000, category: "飲食", stage: "第一天適應新家", recurring: true },
   "journey-medical-care": { id: "journey-medical-care", name: "異常症狀檢查與治療", amount: 4200, category: "醫療", stage: "健康出現變化", recurring: false, fromEmergency: true },
   "journey-care-service": { id: "journey-care-service", name: "短期照顧服務", amount: 2400, category: "照顧服務", stage: "飼主生活發生改變", recurring: false },
   "senior-checkup": { id: "senior-checkup", name: "高齡健康檢查", amount: 3200, category: "醫療", stage: "逐漸進入高齡", recurring: false, fromEmergency: true },
@@ -156,7 +156,7 @@ export const trunkItems: TrunkItem[] = [
     reason: "途中可在安全停靠時補充飲水，避免脫水或一次喝得太急。",
     caution: "水碗與飲水應收妥於側邊，行車時不要讓開放容器在車內翻倒。",
     sourceLabel: "動物醫療機構提供的外出飲水與運輸照護建議",
-    feedback: "水碗與飲水已收妥。", expenseIds: ["water-bowl"], placement: { x: 55, y: 70, width: 14, layer: 6 },
+    feedback: "水碗與飲水已收妥。", expenseIds: ["water-bowl"], placement: { x: 55, y: 67, width: 27, layer: 6 },
   },
   {
     id: "leash", label: "牽繩", kind: "supply", image: "/car/牽繩.png", preparedLabel: "已準備",
@@ -174,6 +174,24 @@ export const trunkItems: TrunkItem[] = [
     sourceLabel: "領養單位與動物醫療機構提供的接送清潔建議",
     feedback: "清潔用品已收妥，可以處理途中可能發生的髒污。", expenseIds: ["cleaner"], placement: { x: 35, y: 68, width: 12, layer: 8 },
   },
+];
+
+export const departureTrunkItems: TrunkItem[] = [
+  trunkItems.find((item) => item.id === "id")!,
+  trunkItems.find((item) => item.id === "documents")!,
+  {
+    id: "carrier", label: "運輸籠", kind: "supply", image: "/car/外出籠.png", preparedLabel: "已準備",
+    description: "安全運輸籠可降低行車途中移動或逃脫的風險。", reason: "提供穩定的運輸空間。", caution: "確認尺寸合適並固定在平坦位置。",
+    sourceLabel: "專案既有接回安全運輸建議", feedback: "運輸籠已放入後車廂。", expenseIds: ["carrier"], placement: { x: 51, y: 60, width: 34, layer: 5 },
+  },
+  {
+    id: "pee-pad", label: "尿墊", kind: "supply", image: "/car/尿墊.png", preparedLabel: "已準備",
+    description: "尿墊可協助處理移動途中可能發生的排泄與髒污。", reason: "讓運輸區域保持乾淨。", caution: "平整鋪在運輸籠預定位置下方。",
+    sourceLabel: "專案既有接回安全運輸建議", feedback: "尿墊已放入後車廂底部。", expenseIds: ["toilet"], placement: { x: 49, y: 66, width: 20, layer: 6 },
+  },
+  trunkItems.find((item) => item.id === "water-kit")!,
+  trunkItems.find((item) => item.id === "leash")!,
+  trunkItems.find((item) => item.id === "cleaner")!,
 ];
 
 const positive = {

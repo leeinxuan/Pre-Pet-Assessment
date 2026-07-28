@@ -72,7 +72,6 @@ export type LifeJourneyPhase =
 export type JourneyItemType =
   | "scenario"
   | "body-language"
-  | "feeding"
   | "body-care"
   | "senior-room";
 
@@ -86,9 +85,8 @@ export type JourneyItem = {
 
 export type LifeActivityState = {
   bodyLanguageSignals: string[];
-  feedingFoodReady: boolean;
-  feedingWaterSteps: string[];
-  feedingServed: boolean;
+  arrivalMealFoodReady: boolean;
+  arrivalMealWaterReady: boolean;
   bodyCareParts: string[];
   seniorAdjustments: string[];
 };

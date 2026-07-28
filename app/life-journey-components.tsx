@@ -11,7 +11,10 @@ import type {
   ScenarioChoice,
 } from "./game-types";
 
-const arrivalVideoSrc = "/assets/pet-journey/arrival-transition.mp4";
+const arrivalVideoSources = [
+  "/assets/pet-journey/arrival-transition.mp4",
+  "/assets/pet-journey/arrival-transition2.mp4",
+] as const;
 
 function withPetName(text: string, petName: string) {
   return text
@@ -24,7 +27,11 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
   const videoRef = useRef<HTMLVideoElement>(null);
   const hasFinishedArrivalVideo = useRef(false);
   const startTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const endTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
   const onContinueRef = useRef(onContinue);
+  const [currentVideo, setCurrentVideo] = useState<0 | 1>(0);
+  const [needsManualPlay, setNeedsManualPlay] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
     onContinueRef.current = onContinue;
@@ -38,6 +45,15 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
     onContinueRef.current();
   }, []);
 
+  const showFinalFrame = useCallback(() => {
+    if (hasFinishedArrivalVideo.current) return;
+    hasFinishedArrivalVideo.current = true;
+    if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+    videoRef.current?.pause();
+    setShowWelcome(true);
+    endTimeoutRef.current = window.setTimeout(() => onContinueRef.current(), 1600);
+  }, []);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -46,59 +62,84 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
     if (reducedMotion) {
       video.pause();
       video.currentTime = 0;
-      startTimeoutRef.current = window.setTimeout(finishArrivalVideo, 180);
+      startTimeoutRef.current = window.setTimeout(showFinalFrame, 180);
       return () => {
         if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
       };
     }
 
     startTimeoutRef.current = window.setTimeout(() => {
-      if (video.paused || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) finishArrivalVideo();
+      if (video.paused || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) setNeedsManualPlay(true);
     }, 8000);
 
+    video.load();
     const playAttempt = video.play();
     playAttempt?.catch(() => {
       console.warn("接回家過場影片無法自動播放，已略過至飼養生活。");
-      finishArrivalVideo();
+      setNeedsManualPlay(true);
     });
 
     return () => {
       if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
     };
-  }, [finishArrivalVideo]);
+  }, [currentVideo, showFinalFrame]);
 
   function handlePlaying() {
     if (startTimeoutRef.current !== null) {
       window.clearTimeout(startTimeoutRef.current);
       startTimeoutRef.current = null;
     }
+    setNeedsManualPlay(false);
+  }
+
+  function startVideoManually() {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = false;
+    video.play().then(() => setNeedsManualPlay(false)).catch(() => setNeedsManualPlay(true));
+  }
+
+  function handleArrivalEnded() {
+    if (currentVideo === 0) {
+      setNeedsManualPlay(false);
+      setCurrentVideo(1);
+      return;
+    }
+    showFinalFrame();
+  }
+
+  function handleVideoError() {
+    if (currentVideo === 0) {
+      setCurrentVideo(1);
+      return;
+    }
+    showFinalFrame();
   }
 
   return (
     <section className="arrival-video-screen" aria-label="接回家影片過場">
       <video
         ref={videoRef}
-        src={arrivalVideoSrc}
+        src={arrivalVideoSources[currentVideo]}
         autoPlay
-        muted
         playsInline
         preload="auto"
         aria-label="小狗搭乘外出籠抵達新家的過場動畫"
         onPlaying={handlePlaying}
-        onEnded={finishArrivalVideo}
+        onEnded={handleArrivalEnded}
         onError={() => {
           console.warn("接回家過場影片載入失敗，已略過至飼養生活。");
-          finishArrivalVideo();
+          handleVideoError();
         }}
       />
+      {showWelcome && <h1 className="arrival-video-welcome">歡迎來到新家</h1>}
     </section>
   );
 }
 
 function stageForIndex(index: number) {
-  if (index <= 2) return 3;
-  if (index <= 5) return 4;
-  if (index === 6) return 5;
+  if (index <= 1) return 3;
+  if (index <= 4) return 4;
   return 6;
 }
 
@@ -115,6 +156,7 @@ function ScenarioFeedback({
   onRetry: () => void;
   onContinue: () => void;
 }) {
+  const isArrivalAdjustment = scenario.id === "arrival-adjustment";
   const labels = {
     correct: { icon: "✓", button: "繼續生活旅程" },
     partial: { icon: "△", button: "記住建議，繼續" },
@@ -135,7 +177,7 @@ function ScenarioFeedback({
       {scenario.reminder && <div className="law-reminder"><span>i</span><p><b>生活裡的責任提醒</b>{withPetName(scenario.reminder, petName)}</p></div>}
       <div className="feedback-actions">
         {choice.result === "incorrect" && <button className="secondary" onClick={onRetry}>重新選一次</button>}
-        <button className="primary" onClick={onContinue}>{labels[choice.result].button} <span>→</span></button>
+        {(!isArrivalAdjustment || choice.result !== "incorrect") && <button className="primary" onClick={onContinue}>{isArrivalAdjustment ? "繼續" : labels[choice.result].button} <span>→</span></button>}
       </div>
     </section>
   );
@@ -160,6 +202,8 @@ function ScenarioCard({
   onRetry: () => void;
   onContinue: () => void;
 }) {
+  const [arrivalVideoFailed, setArrivalVideoFailed] = useState(false);
+  const isArrivalAdjustment = scenario.id === "arrival-adjustment";
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   if (feedbackOpen && selectedChoice) {
     return <ScenarioFeedback scenario={scenario} choice={selectedChoice} petName={petName} onRetry={onRetry} onContinue={onContinue} />;
@@ -179,7 +223,14 @@ function ScenarioCard({
             </div>
           )}
         </div>
-        <div className={`scene-art scene-${scenario.artIndex}`} aria-hidden="true"><div className="scene-sprite" /><p>{scenario.timeLabel}</p></div>
+        <div className={`scene-art scene-${scenario.artIndex} ${isArrivalAdjustment ? "scene-art--video" : ""}`}>
+          {isArrivalAdjustment ? (
+            arrivalVideoFailed
+              ? <div className="scene-video-fallback" role="status">第一天適應新家的影片目前無法播放。</div>
+              : <video className="scene-video" src="/assets/pet-journey/first-day.mp4" autoPlay loop muted playsInline preload="metadata" aria-label="小狗第一天適應新家的影片" onError={() => setArrivalVideoFailed(true)} />
+          ) : <div className="scene-sprite" aria-hidden="true" />}
+          <p>{scenario.timeLabel}</p>
+        </div>
       </article>
       <section className="reflection">
         <h2>如果是你，會怎麼做？</h2>
@@ -234,17 +285,93 @@ function BodyLanguageActivity({
   );
 }
 
-const feedingFoods = [
-  { id: "main", label: "適合豆豆的完整主食", icon: "🥣", kind: "main" },
-  { id: "treat", label: "寵物零食", icon: "🦴", kind: "treat" },
-  { id: "leftovers", label: "人類剩菜", icon: "🍱", kind: "risk" },
-  { id: "chocolate", label: "巧克力", icon: "🍫", kind: "risk" },
-  { id: "seasoned-meat", label: "調味肉類", icon: "🍖", kind: "risk" },
-  { id: "bone", label: "不適合的骨頭", icon: "🦴", kind: "risk" },
-];
-const waterSteps = ["倒掉原本不乾淨的水", "清潔水碗", "加入乾淨飲水", "將水碗放回固定位置"];
+const warningSignalSegments = [
+  {
+    title: "牠不是無故攻擊",
+    text: "一般而言，犬隻通常不是無故攻擊。當牠覺得受到威脅或不舒服時，可能會先透過表情、聲音或行動發出警告。",
+  },
+  {
+    title: "牠正在要求距離",
+    text: "有經驗的狗狗為了避免衝突，可能會先示警，也會主動拉開安全距離。這時不要繼續逼近，應慢慢退開。",
+  },
+  {
+    title: "常見的警示反應",
+    text: "指南中列出的階段性警示行為包含：撩牙、撩嘴皮、低吼、吠叫、嘶吼。這些都是需要被看見的訊號。",
+  },
+  {
+    title: "不要責罵，先降低刺激",
+    text: "看到警告訊號時，不要立刻責罵或強迫牠配合。可以慢慢拉開距離，面對著牠逐漸離開現場，讓牠有空間冷靜。",
+  },
+  {
+    title: "先觀察，再互動",
+    text: "飼主應熟悉小狗平常的行為，學會辨識牠緊張、害怕或不舒服時的表現，才能更好地照顧牠的身心狀態。",
+  },
+] as const;
 
-function FeedingActivity({
+function WarningSignalsActivity({
+  viewed,
+  onView,
+  onContinue,
+}: {
+  viewed: string[];
+  onView: (id: string) => void;
+  onContinue: () => void;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const complete = viewed.includes("warning-signals-video");
+  const [started, setStarted] = useState(complete);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [segmentIndex, setSegmentIndex] = useState(complete ? warningSignalSegments.length - 1 : 0);
+
+  function startVideo() {
+    setStarted(true);
+    const video = videoRef.current;
+    if (!video) return;
+    video.play().catch(() => setVideoFailed(true));
+  }
+
+  function syncSegment() {
+    const video = videoRef.current;
+    if (!video?.duration || !Number.isFinite(video.duration)) return;
+    setSegmentIndex(Math.min(warningSignalSegments.length - 1, Math.floor((video.currentTime / video.duration) * warningSignalSegments.length)));
+  }
+
+  function finishVideo() {
+    setSegmentIndex(warningSignalSegments.length - 1);
+    onView("warning-signals-video");
+  }
+
+  const segment = warningSignalSegments[segmentIndex];
+  return (
+    <section className="life-activity warning-signals-activity">
+      <div className="activity-heading">
+        <h1>看懂小狗的警告訊號</h1>
+        <p>有些反應不是牠故意兇，而是在告訴你：牠需要距離。</p>
+      </div>
+      <div className="warning-signal-layout">
+        <div className="warning-signal-video-wrap">
+          {!videoFailed && <video ref={videoRef} className="warning-signal-video" src="/assets/pet-journey/03狗狗身體語言.mp4" playsInline preload="metadata" aria-label="小狗警告訊號教學影片" onTimeUpdate={syncSegment} onEnded={finishVideo} onError={() => { setVideoFailed(true); finishVideo(); }} />}
+          {!started && !videoFailed && <button type="button" className="warning-signal-start" onClick={startVideo} aria-label="開始播放小狗警告訊號教學影片"><span>▶</span>開始觀看</button>}
+          {videoFailed && <div className="warning-signal-fallback" role="status">影片目前無法播放，仍可閱讀右側警告訊號說明。</div>}
+          <span className="warning-signal-video-tag">Video</span>
+        </div>
+        <article className="warning-signal-copy" aria-live="polite">
+          <span>{segmentIndex + 1} / {warningSignalSegments.length}</span>
+          <h2>{segment.title}</h2>
+          <p>{segment.text}</p>
+          <small>資料依據：農業部《寵物飼養與照顧指南－犬篇》</small>
+        </article>
+      </div>
+      {complete && <div className="warning-signal-complete" role="status">你已經看過小狗的警告訊號。下次看到類似反應時，先給牠距離，就是很重要的照顧。</div>}
+      <div className="activity-actions">
+        <span>{complete ? "已完成警告訊號教學" : started ? "影片播放中" : "點擊一次開始觀看"}</span>
+        <button className="primary" disabled={!complete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
+      </div>
+    </section>
+  );
+}
+
+function ArrivalMealActivity({
   activity,
   petName,
   onChange,
@@ -257,45 +384,38 @@ function FeedingActivity({
   onAddExpense: (id: string) => void;
   onContinue: () => void;
 }) {
-  const [message, setMessage] = useState(activity.feedingServed ? "晚餐與飲水都已準備完成。" : `先選擇適合${petName}的晚餐。`);
-  const waterComplete = activity.feedingWaterSteps.length === waterSteps.length;
-  function chooseFood(kind: string) {
-    if (kind === "main") {
-      onChange({ feedingFoodReady: true });
-      setMessage(`選得很好！主食應符合${petName}的年齡、體型及健康需求。`);
-    } else if (kind === "treat") {
-      setMessage("零食可以作為少量獎勵，但不能代替營養完整的正餐。");
-    } else {
-      setMessage(`這項食物不適合放進${petName}的餐碗。部分人類食物可能油、鹽或調味過多，也可能含有危險成分，請換一個選擇。`);
-    }
+  const complete = activity.arrivalMealFoodReady && activity.arrivalMealWaterReady;
+  const hasRecordedMeal = useRef(false);
+  useEffect(() => {
+    if (!complete || hasRecordedMeal.current) return;
+    hasRecordedMeal.current = true;
+    onAddExpense("monthly-food-main");
+  }, [complete, onAddExpense]);
+  function prepareFood() {
+    if (activity.arrivalMealFoodReady) return;
+    onChange({ arrivalMealFoodReady: true });
   }
-  function doWaterStep(step: string, index: number) {
-    if (index !== activity.feedingWaterSteps.length) {
-      setMessage("請依序完成飲水準備，先處理前一個步驟。");
-      return;
-    }
-    onChange({ feedingWaterSteps: [...activity.feedingWaterSteps, step] });
-    setMessage(index === waterSteps.length - 1 ? "乾淨飲水已放回固定位置。" : `${step}完成，繼續下一步。`);
-  }
-  function serve() {
-    if (!activity.feedingFoodReady || !waterComplete) {
-      setMessage(`還有一件每天都很重要的事：請確認${petName}有合適主食，以及隨時有乾淨、足量的飲水。`);
-      return;
-    }
-    onChange({ feedingServed: true });
-    onAddExpense("monthly-main-food");
-    setMessage("晚餐準備完成！規律的餵食、合適的食物及乾淨飲水，都是每天照顧的重要部分。");
+  function prepareWater() {
+    if (activity.arrivalMealWaterReady) return;
+    onChange({ arrivalMealWaterReady: true });
   }
   return (
-    <section className={`life-activity feeding-activity ${activity.feedingServed ? "served" : ""}`}>
-      <div className="activity-heading"><h1>準備{petName}的晚餐</h1><p>三個月後，{petName}已經逐漸熟悉新家。到了固定的晚餐時間，牠正坐在食碗旁等待你準備晚餐。</p></div>
-      <div className="feeding-steps">
-        <article><span>1</span><h2>選擇食物</h2><div className="food-options">{feedingFoods.map((food) => <button key={food.id} className={activity.feedingFoodReady && food.kind === "main" ? "selected" : ""} onClick={() => chooseFood(food.kind)}><i>{food.icon}</i><b>{withPetName(food.label, petName)}</b></button>)}</div></article>
-        <article><span>2</span><h2>準備乾淨飲水</h2><div className="water-sequence">{waterSteps.map((step, index) => <button key={step} className={activity.feedingWaterSteps.includes(step) ? "done" : ""} disabled={index > activity.feedingWaterSteps.length} onClick={() => doWaterStep(step, index)}><i>{activity.feedingWaterSteps.includes(step) ? "✓" : index + 1}</i>{step}</button>)}</div></article>
-        <article className="serve-dinner"><span>3</span><h2>把晚餐交給{petName}</h2><div className="dinner-scene" aria-hidden="true"><i>🐕</i><b>{activity.feedingFoodReady ? "🥣" : "○"}</b><em>{waterComplete ? "💧" : "○"}</em></div><button className="secondary" onClick={serve}>{activity.feedingServed ? `再看看${petName}吃晚餐` : `請${petName}吃晚餐`}</button></article>
+    <section className="arrival-meal-activity" aria-label={`為${petName}準備第一餐`}>
+      <aside className="arrival-meal-supplies" aria-label="晚餐用品">
+        {!activity.arrivalMealFoodReady && <button type="button" onClick={prepareFood}><img src="/room/飼料.png" alt="飼料" /><span>飼料</span></button>}
+        {!activity.arrivalMealWaterReady && <button type="button" onClick={prepareWater}><img src="/assets/pet-journey/waterbottle.png" alt="水瓶" /><span>水</span></button>}
+        {complete && <p>晚餐用品已準備好</p>}
+      </aside>
+      <div className="arrival-meal-scene">
+        <img className="arrival-meal-room" src="/room/空房間.png" alt="小狗的新家房間" />
+        <img className="arrival-meal-dog" src="/assets/pet-journey/shiba-dog.png" alt={petName} />
+        <img className="arrival-meal-water" src={activity.arrivalMealWaterReady ? "/room/水.png" : "/assets/pet-journey/空水碗.png"} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
+        <img className="arrival-meal-food" src={activity.arrivalMealFoodReady ? "/room/狗碗.png" : "/assets/pet-journey/空飼料碗.png"} alt={activity.arrivalMealFoodReady ? "裝好飼料的狗碗" : "空飼料碗"} />
       </div>
-      <div className="activity-message" role="status"><p>{message}</p>{activity.feedingServed && <b>每月主食費＋NT$1,500（只登記一次）</b>}</div>
-      <div className="activity-actions"><span>{activity.feedingServed ? "晚餐與飲水已完成" : "完成三個步驟後繼續"}</span><button className="primary" disabled={!activity.feedingServed} onClick={onContinue}>完成晚餐練習 <span>→</span></button></div>
+      <div className="arrival-meal-footer">
+        {complete && <p role="status">晚餐準備好了！合適的主食與乾淨飲水，是每天照顧的重要部分。</p>}
+        <button className="primary" disabled={!complete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
+      </div>
     </section>
   );
 }
@@ -402,6 +522,7 @@ export function LifeJourney({
   const item = journeyItems[index];
   const scenario = item.scenarioId ? lifeScenarios.find((entry) => entry.id === item.scenarioId) : undefined;
   const answer = scenario ? answers[scenario.id] : undefined;
+  const showArrivalMeal = scenario?.id === "arrival-adjustment" && answer?.finalResult === "correct";
   const [feedbackOpen, setFeedbackOpen] = useState(Boolean(answer));
 
   const completedCount = completedIds.length;
@@ -435,7 +556,15 @@ export function LifeJourney({
         <div><h1>你們一起走到了「{item.timeLabel}」</h1></div>
         <b>{index + 1} / {journeyItems.length}</b>
       </div>
-      {scenario && (
+      {scenario && (showArrivalMeal ? (
+        <ArrivalMealActivity
+          activity={activity}
+          petName={petName}
+          onChange={onActivityChange}
+          onAddExpense={onAddExpense}
+          onContinue={continueJourney}
+        />
+      ) : (
         <ScenarioCard
           scenario={scenario}
           petName={petName}
@@ -446,9 +575,8 @@ export function LifeJourney({
           onRetry={() => setFeedbackOpen(false)}
           onContinue={continueJourney}
         />
-      )}
-      {item.type === "body-language" && <BodyLanguageActivity petName={petName} viewed={activity.bodyLanguageSignals} onView={(id) => onActivityChange({ bodyLanguageSignals: activity.bodyLanguageSignals.includes(id) ? activity.bodyLanguageSignals : [...activity.bodyLanguageSignals, id] })} onContinue={continueJourney} />}
-      {item.type === "feeding" && <FeedingActivity petName={petName} activity={activity} onChange={onActivityChange} onAddExpense={onAddExpense} onContinue={continueJourney} />}
+      ))}
+      {item.type === "body-language" && <WarningSignalsActivity viewed={activity.bodyLanguageSignals} onView={(id) => onActivityChange({ bodyLanguageSignals: activity.bodyLanguageSignals.includes(id) ? activity.bodyLanguageSignals : [...activity.bodyLanguageSignals, id] })} onContinue={continueJourney} />}
       {item.type === "body-care" && <BodyCareActivity petName={petName} viewed={activity.bodyCareParts} onView={(id) => onActivityChange({ bodyCareParts: activity.bodyCareParts.includes(id) ? activity.bodyCareParts : [...activity.bodyCareParts, id] })} onContinue={continueJourney} />}
       {item.type === "senior-room" && <SeniorRoomActivity petName={petName} roomReady={roomReady} selected={activity.seniorAdjustments} onSelect={(id) => onActivityChange({ seniorAdjustments: activity.seniorAdjustments.includes(id) ? activity.seniorAdjustments : [...activity.seniorAdjustments, id] })} onAddExpense={onAddExpense} onContinue={continueJourney} />}
 

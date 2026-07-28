@@ -48,9 +48,8 @@ type MainNavigation = {
 
 const lifeStageRanges = [
   { label: "接回家", start: 0, end: 1 },
-  { label: "日常生活", start: 2, end: 5 },
-  { label: "健康與意外", start: 6, end: 6 },
-  { label: "生活變化", start: 7, end: 10 },
+  { label: "日常生活", start: 2, end: 4 },
+  { label: "生活變化", start: 5, end: 8 },
 ] as const;
 
 function statusAt(index: number, current: number, reached: number): NavigationStatus {
@@ -179,14 +178,14 @@ export function StageRail({
       <nav className="station-navigation">
         {navigation.map((item, index) => (
           <div className={`nav-main ${item.status}`} key={item.id}>
-            <button className="nav-main-button" onClick={item.onClick} disabled={item.status === "locked"} aria-current={item.status === "current" ? "step" : undefined}>
+            <button className="nav-main-button" onClick={item.onClick} aria-current={item.status === "current" ? "step" : undefined}>
               <span>{item.status === "completed" ? "✓" : item.number}</span><em>{item.label}</em>
             </button>
-            {index === currentMain && item.children && (
+            {item.children && (
               <div className="nav-children">
                 {item.children.map((child, childIndex) => (
                   <div className={`nav-child ${child.status}`} key={child.id}>
-                    <button onClick={child.onClick} disabled={child.status === "locked"} aria-current={child.status === "current" ? "step" : undefined}>
+                    <button onClick={child.onClick} aria-current={child.status === "current" ? "step" : undefined}>
                       <span>{child.status === "completed" ? "✓" : childIndex + 1}</span><em>{child.label}</em>
                     </button>
                   </div>
