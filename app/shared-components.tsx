@@ -47,9 +47,9 @@ type MainNavigation = {
 };
 
 const lifeStageRanges = [
-  { label: "接回家", start: 0, end: 1 },
-  { label: "日常生活", start: 2, end: 4 },
-  { label: "生活變化", start: 5, end: 8 },
+  { label: "接回家", start: 0, end: 0 },
+  { label: "日常生活", start: 1, end: 2 },
+  { label: "生活變化", start: 3, end: 4 },
 ] as const;
 
 function statusAt(index: number, current: number, reached: number): NavigationStatus {
@@ -68,13 +68,10 @@ export function StageRail({
   lifePhase,
   journeyIndex,
   journeyCompleted,
-  profilePage,
-  profileReached,
   onGoTo,
   onSelectionPage,
   onPreparationTask,
   onLifeStage,
-  onProfilePage,
 }: {
   step: number;
   furthestStep: number;
@@ -85,21 +82,17 @@ export function StageRail({
   lifePhase: LifeJourneyPhase;
   journeyIndex: number;
   journeyCompleted: string[];
-  profilePage: number;
-  profileReached: number;
   onGoTo: (step: number) => void;
   onSelectionPage: (page: "species" | "breed") => void;
   onPreparationTask: (task: number) => void;
   onLifeStage: (stage: number) => void;
-  onProfilePage: (page: number) => void;
 }) {
-  const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
+  const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : 3;
   const currentLifeStage = lifePhase === "arrival-video"
     ? 0
     : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
-  const mainTargets = [1, 2, Math.max(3, Math.min(6, step)), 7, 8];
-  const mainUnlockSteps = [1, 2, 3, 7, 8];
-  const profileTitles = ["時間與身分", "居住與同住者", "經驗與動機", "預算與支援"];
+  const mainTargets = [1, 2, Math.max(3, Math.min(6, step)), 7];
+  const mainUnlockSteps = [1, 2, 3, 7];
 
   const mainStatus = (index: number): NavigationStatus => {
     if (index === currentMain) return "current";
@@ -127,7 +120,7 @@ export function StageRail({
       label: "領養前準備",
       status: mainStatus(1),
       onClick: () => onGoTo(2),
-      children: ["布置生活空間", "家庭成員與共同照護", "出發前準備"].map((label, index) => ({
+      children: ["布置生活空間", "出發前準備"].map((label, index) => ({
         id: `preparation-${index}`,
         label,
         status: statusAt(index, preparationTask, preparationReached),
@@ -152,24 +145,11 @@ export function StageRail({
       }),
     },
     {
-      id: "profile",
+      id: "assessment",
       number: "04",
-      label: "認識你",
+      label: "資料與評估",
       status: mainStatus(3),
       onClick: () => onGoTo(7),
-      children: profileTitles.map((label, index) => ({
-        id: `profile-${index}`,
-        label,
-        status: statusAt(index, profilePage, profileReached),
-        onClick: () => onProfilePage(index),
-      })),
-    },
-    {
-      id: "report",
-      number: "05",
-      label: "評估報告",
-      status: mainStatus(4),
-      onClick: () => onGoTo(8),
     },
   ];
 
@@ -279,7 +259,7 @@ export function SpeciesStep({
                 disabled={!item.active}
                 aria-label={item.active ? `選擇${item.label}` : `${item.label}，陸續開放`}
               >
-                <span>{item.icon}</span><b>{item.label}</b>
+                {item.image ? <img className="partner-card-image" src={item.image} alt="" /> : <span>{item.icon}</span>}<b>{item.label}</b>
                 <small>{item.active ? "點擊選擇" : "陸續開放"}</small>
               </button>
             ))}
@@ -291,12 +271,12 @@ export function SpeciesStep({
           <div className="breed-row breed-page-grid">
             {breeds.map((item) => (
               <button key={item.id} className={breed === item.id ? "selected" : ""} onClick={() => onBreed(item.id)} aria-pressed={breed === item.id}>
-                <span>{item.icon}</span><b>{item.label}</b>{breed === item.id && <i>✓</i>}
+                {item.image ? <img className="partner-card-image" src={item.image} alt="" /> : <span>{item.icon}</span>}<b>{item.label}</b>{breed === item.id && <i>✓</i>}
               </button>
             ))}
           </div>
           <div className={`selection-note breed-description ${selectedBreed ? "selected" : "empty"}`} role="status" aria-live="polite" aria-atomic="true">
-            <span aria-hidden="true">{selectedBreed?.icon ?? "🐾"}</span>
+            {selectedBreed?.image ? <img className="selection-note-image" src={selectedBreed.image} alt="" /> : <span aria-hidden="true">{selectedBreed?.icon ?? "🐾"}</span>}
             <div><b>{selectedBreed ? `你選擇了：${selectedBreed.label}` : "品種飼養特性"}</b><p>{selectedBreed?.shortDescription ?? "點選一個品種，查看牠的飼養特性。"}</p></div>
           </div>
           <NavButtons onBack={() => onSelectionPage("species")} onNext={onNext} disabled={!breed} nextLabel="開始領養前準備" />

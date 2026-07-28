@@ -26,6 +26,7 @@ export function RoomPreparation({
 }) {
   const [nameDraft, setNameDraft] = useState(petName);
   const [nameError, setNameError] = useState("");
+  const [nameEditing, setNameEditing] = useState(!petName);
   const [roomApproved, setRoomApproved] = useState(false);
   const [roomCheckMessage, setRoomCheckMessage] = useState("");
   const [dismissingHazard, setDismissingHazard] = useState<string | null>(null);
@@ -42,7 +43,10 @@ export function RoomPreparation({
     ? [remainingRoomItems]
     : [remainingRoomItems.slice(0, 2), remainingRoomItems.slice(2, 4), remainingRoomItems.slice(4)].filter((row) => row.length > 0);
 
-  useEffect(() => setNameDraft(petName), [petName]);
+  useEffect(() => {
+    setNameDraft(petName);
+    if (petName) setNameEditing(false);
+  }, [petName]);
 
   useEffect(() => {
     const scene = roomSceneRef.current;
@@ -89,6 +93,7 @@ export function RoomPreparation({
     setNameError("");
     setRoomApproved(false);
     setRoomCheckMessage("");
+    setNameEditing(false);
   }
 
   function checkRoom() {
@@ -101,7 +106,7 @@ export function RoomPreparation({
     const missingItems = roomItems.length - itemsDone;
     const remainingHazards = hazards.length - hazardsDone;
     const messages = [
-      !petName.trim() ? "請先完成小狗命名" : "",
+      !petName.trim() ? "請先點選門牌，輸入小狗的名字" : "",
       missingItems > 0 ? `還有${missingItems}項用品尚未準備` : "",
       remainingHazards > 0 ? `還有${remainingHazards}項危險物品需要處理` : "",
     ].filter(Boolean);
@@ -132,12 +137,10 @@ export function RoomPreparation({
             <img className="room-scene-background" src="/room/空房間.png" alt="空的寵物生活房間" />
             {roomItems.filter((item) => selectedItems.includes(item.id)).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object ${item.id === "food" ? "placed-room-item--food" : ""}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }}><img src={item.image} alt={`房間中已配置的${item.label}`} /><span>{item.label}</span></div>)}
             {hazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
-            {petName && <div className="pet-nameplate named" aria-live="polite" >{petName}的家</div>}
-            <section className={`pet-name-inline pet-name-overlay ${petName ? "named" : ""}`} aria-labelledby="pet-name-inline-title">
-              <h2 id="pet-name-inline-title">牠叫什麼名字？</h2>
-              <div><label htmlFor="pet-name">小狗名字</label><input id="pet-name" value={nameDraft} maxLength={24} placeholder="請輸入小狗的名字" onChange={(event) => setNameDraft(event.target.value)} aria-invalid={Boolean(nameError)} aria-describedby="pet-name-error" /><button type="button" className="secondary" onClick={saveName}>掛上名字牌</button></div>
-              {nameError && <p id="pet-name-error" className="field-error" role="alert">{nameError}</p>}
-            </section>
+            <div className={`pet-doorplate ${nameEditing ? "editing" : ""}`}>
+              <img src="/room/門牌.png" alt="小狗名字門牌" />
+              {nameEditing ? <div className="pet-doorplate-editor"><label htmlFor="pet-name" className="sr-only">小狗名字</label><input id="pet-name" value={nameDraft} maxLength={12} placeholder="請輸入小狗的名字" onChange={(event) => setNameDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveName(); }} aria-invalid={Boolean(nameError)} aria-describedby="pet-name-error" autoFocus />{nameError && <p id="pet-name-error" className="field-error" role="alert">{nameError}</p>}</div> : <button type="button" className={petName ? "named" : "placeholder"} onClick={() => { setNameEditing(true); setNameError(""); }}>{petName || "請輸入小狗的名字"}</button>}
+            </div>
             {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已收起</h2><p><b>為什麼危險：</b>{activeHazard.danger}</p><p><b>建議如何處理：</b>{activeHazard.handling}</p></section>}
           </div>
 
@@ -145,7 +148,7 @@ export function RoomPreparation({
       </div>
       <div className="room-actions">
         <button className="secondary" onClick={onBack}>← 返回</button>
-        <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="secondary" onClick={checkRoom}>檢查房間</button><button className="primary" onClick={onNext} disabled={!roomApproved}>房間完成，設定照顧成員 <span>→</span></button></div>
+        <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="secondary" onClick={checkRoom}>檢查房間</button><button className="primary" onClick={onNext} disabled={!roomApproved}>房間完成，準備出發 <span>→</span></button></div>
       </div>
     </div>
   );

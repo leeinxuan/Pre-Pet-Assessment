@@ -70,20 +70,20 @@ export const intros = [
 ] as const;
 
 export const categories = [
-  { id: "dog", label: "犬", icon: "🐕", active: true },
-  { id: "cat", label: "貓", icon: "🐈", active: false },
-  { id: "rabbit", label: "兔", icon: "🐇", active: false },
-  { id: "bird", label: "鳥", icon: "🦜", active: false },
-  { id: "reptile", label: "爬蟲", icon: "🦎", active: false },
-  { id: "small", label: "小型哺乳", icon: "🐹", active: false },
+  { id: "dog", label: "犬", icon: "🐕", image: "/species/犬.png", active: true },
+  { id: "cat", label: "貓", icon: "🐈", image: "/species/貓.png", active: false },
+  { id: "rabbit", label: "兔", icon: "🐇", image: "/species/兔.png", active: false },
+  { id: "bird", label: "鳥", icon: "🦜", image: "/species/鳥.png", active: false },
+  { id: "reptile", label: "爬蟲", icon: "🦎", image: "/species/爬蟲.png", active: false },
+  { id: "small", label: "小型哺乳", icon: "🐹", image: "/species/小型哺乳.png", active: false },
 ];
 
 export const breeds = [
-  { id: "chihuahua", label: "吉娃娃", icon: "🐕", shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。" },
-  { id: "poodle", label: "貴賓犬", icon: "🐩", shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。" },
+  { id: "chihuahua", label: "吉娃娃", icon: "🐕", image: "/species/dog/吉娃娃.png", shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。" },
+  { id: "poodle", label: "貴賓犬", icon: "🐩", image: "/species/dog/貴賓犬.png", shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。" },
   { id: "shiba", label: "柴犬", icon: "🐕", shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。" },
-  { id: "border", label: "邊境牧羊犬", icon: "🐕‍🦺", shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。" },
-  { id: "labrador", label: "拉布拉多", icon: "🦮", shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。" },
+  { id: "border", label: "邊境牧羊犬", icon: "🐕‍🦺", image: "/species/dog/邊境牧羊犬.png", shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。" },
+  { id: "labrador", label: "拉布拉多", icon: "🦮", image: "/species/dog/拉不拉多.png", shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。" },
 ];
 
 export const expenseCatalog: Record<string, ExpenseRecord> = {
@@ -441,6 +441,20 @@ export const initialProfile: Profile = {
   landlordConsent: "",
   hasHousemates: null,
   housematesConsent: null,
+  housemateTypes: [],
+  otherHousemate: "",
+  activitySpace: "",
+  otherActivitySpace: "",
+  noShibaExperience: false,
+  pastPetTypes: [],
+  pastDogCount: "",
+  pastCatCount: "",
+  pastOther: "",
+  currentPetTypes: [],
+  currentDogCount: "",
+  currentCatCount: "",
+  currentOther: "",
+  experienceNote: "",
   experience: "",
   pastPets: "",
   currentPets: "",
