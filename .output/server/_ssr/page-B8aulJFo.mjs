@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-BIbe6MvV.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-B8aulJFo.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var stations = [
@@ -230,12 +230,12 @@ var expenseCatalog = {
 		stage: "第一天適應新家",
 		recurring: true
 	},
-	"journey-medical-care": {
-		id: "journey-medical-care",
-		name: "異常症狀檢查與治療",
+	"sick-vet-care": {
+		id: "sick-vet-care",
+		name: "生病就醫與檢查",
 		amount: 4200,
 		category: "醫療",
-		stage: "健康出現變化",
+		stage: "生病與就醫",
 		recurring: false,
 		fromEmergency: true
 	},
@@ -790,6 +790,42 @@ var lifeScenarios = [
 		]
 	},
 	{
+		id: "illness-vet",
+		stage: "生病與就醫",
+		timeLabel: "生病與就醫",
+		title: "食慾與精神狀況變差",
+		description: "小狗今天食慾下降、活動變少，看起來和平常不太一樣。你會怎麼做？",
+		topic: "健康觀察與就醫判斷",
+		artIndex: 3,
+		choices: [
+			{
+				id: "record-and-vet",
+				text: "記錄食慾、飲水、排泄與精神狀態，並聯絡獸醫確認是否就醫",
+				result: "correct",
+				...positive,
+				explanation: "做得很好！具體紀錄能幫助獸醫判斷，及早聯絡也能避免重要症狀被延誤。",
+				suggestion: "持續記下症狀出現的時間、頻率與變化，並依獸醫建議安排就醫。",
+				expenseIds: ["sick-vet-care"]
+			},
+			{
+				id: "wait-and-see",
+				text: "先等幾天看看，牠可能只是心情不好",
+				result: "incorrect",
+				...incorrect,
+				explanation: "只等待可能錯過病況惡化的時機。食慾與精神同時變差時，應先觀察具體症狀並及早諮詢獸醫。",
+				suggestion: "記錄食慾、飲水、排泄與精神變化，聯絡獸醫確認下一步。"
+			},
+			{
+				id: "human-medicine",
+				text: "自行餵人用藥或網路偏方",
+				result: "incorrect",
+				...incorrect,
+				explanation: "人用藥與未經專業確認的偏方可能對小狗造成危險，也可能掩蓋病況並延誤治療。",
+				suggestion: "不要自行給藥；先記錄症狀，並向獸醫說明觀察到的變化。"
+			}
+		]
+	},
+	{
 		id: "owner-life-change",
 		stage: "飼主生活發生改變",
 		timeLabel: "飼主生活發生改變",
@@ -929,6 +965,13 @@ var journeyItems = [
 		title: "清潔與基礎身體觀察"
 	},
 	{
+		id: "sick",
+		type: "scenario",
+		timeLabel: "生病與就醫",
+		title: "生病與就醫",
+		scenarioId: "illness-vet"
+	},
+	{
 		id: "life-change",
 		type: "scenario",
 		timeLabel: "飼主生活發生改變",
@@ -960,6 +1003,7 @@ var initialLifeActivityState = {
 	bodyLanguageSignals: [],
 	arrivalMealFoodReady: false,
 	arrivalMealWaterReady: false,
+	sickTimePassComplete: false,
 	bodyCareParts: [],
 	seniorAdjustments: []
 };
@@ -1067,8 +1111,48 @@ function stageForIndex(index) {
 	if (index <= 4) return 4;
 	return 6;
 }
+function TimePassTransition({ onComplete }) {
+	const videoRef = (0, import_react.useRef)(null);
+	const [needsManualPlay, setNeedsManualPlay] = (0, import_react.useState)(false);
+	const hasFinished = (0, import_react.useRef)(false);
+	(0, import_react.useEffect)(() => {
+		const video = videoRef.current;
+		if (!video) return;
+		video.play().catch(() => setNeedsManualPlay(true));
+	}, []);
+	function finish() {
+		if (hasFinished.current) return;
+		hasFinished.current = true;
+		onComplete();
+	}
+	function playManually() {
+		const video = videoRef.current;
+		if (!video) return;
+		video.muted = false;
+		video.play().then(() => setNeedsManualPlay(false)).catch(() => setNeedsManualPlay(true));
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: "time-pass-transition",
+		"aria-label": "時間流逝過場動畫",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
+			ref: videoRef,
+			src: "/assets/pet-journey/time passes.mp4",
+			autoPlay: true,
+			playsInline: true,
+			preload: "auto",
+			"aria-label": "時間流逝過場動畫",
+			onEnded: finish,
+			onError: () => setNeedsManualPlay(true)
+		}), needsManualPlay && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+			type: "button",
+			className: "time-pass-play",
+			onClick: playManually,
+			children: "播放影片"
+		})]
+	});
+}
 function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
-	const isArrivalAdjustment = scenario.id === "arrival-adjustment";
+	const requiresRetry = scenario.id === "arrival-adjustment" || scenario.id === "illness-vet";
 	const labels = {
 		correct: {
 			icon: "✓",
@@ -1117,11 +1201,11 @@ function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
 					className: "secondary",
 					onClick: onRetry,
 					children: "重新選一次"
-				}), (!isArrivalAdjustment || choice.result !== "incorrect") && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+				}), (!requiresRetry || choice.result !== "incorrect") && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: "primary",
 					onClick: onContinue,
 					children: [
-						isArrivalAdjustment ? "繼續" : labels[choice.result].button,
+						scenario.id === "arrival-adjustment" ? "繼續" : labels[choice.result].button,
 						" ",
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })
 					]
@@ -1131,8 +1215,15 @@ function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
 	});
 }
 function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, onChoose, onRetry, onContinue }) {
-	const [arrivalVideoFailed, setArrivalVideoFailed] = (0, import_react.useState)(false);
-	const isArrivalAdjustment = scenario.id === "arrival-adjustment";
+	const [sceneVideoFailed, setSceneVideoFailed] = (0, import_react.useState)(false);
+	const scenarioVideo = scenario.id === "arrival-adjustment" ? {
+		src: "/assets/pet-journey/first-day.mp4",
+		label: "小狗第一天適應新家的影片"
+	} : scenario.id === "illness-vet" ? {
+		src: "/assets/pet-journey/sick.mp4",
+		label: "小狗生病與就醫情境影片"
+	} : null;
+	(0, import_react.useEffect)(() => setSceneVideoFailed(false), [scenario.id]);
 	const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
 	if (feedbackOpen && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioFeedback, {
 		scenario,
@@ -1159,21 +1250,21 @@ function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, on
 				})
 			]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: `scene-art scene-${scenario.artIndex} ${isArrivalAdjustment ? "scene-art--video" : ""}`,
-			children: [isArrivalAdjustment ? arrivalVideoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: `scene-art scene-${scenario.artIndex} ${scenarioVideo ? "scene-art--video" : ""}`,
+			children: [scenarioVideo ? sceneVideoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "scene-video-fallback",
 				role: "status",
-				children: "第一天適應新家的影片目前無法播放。"
+				children: "這段情境影片目前無法播放。"
 			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
 				className: "scene-video",
-				src: "/assets/pet-journey/first-day.mp4",
+				src: scenarioVideo.src,
 				autoPlay: true,
 				loop: true,
 				muted: true,
 				playsInline: true,
 				preload: "metadata",
-				"aria-label": "小狗第一天適應新家的影片",
-				onError: () => setArrivalVideoFailed(true)
+				"aria-label": scenarioVideo.label,
+				onError: () => setSceneVideoFailed(true)
 			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "scene-sprite",
 				"aria-hidden": "true"
@@ -1602,6 +1693,8 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 	const answer = scenario ? answers[scenario.id] : void 0;
 	const showArrivalMeal = scenario?.id === "arrival-adjustment" && answer?.finalResult === "correct";
 	const [feedbackOpen, setFeedbackOpen] = (0, import_react.useState)(Boolean(answer));
+	const [timePassOpen, setTimePassOpen] = (0, import_react.useState)(false);
+	(0, import_react.useEffect)(() => setTimePassOpen(false), [index]);
 	const completedCount = completedIds.length;
 	function selectItem(next) {
 		const nextScenarioId = journeyItems[next].scenarioId;
@@ -1615,6 +1708,10 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 	}
 	function continueJourney() {
 		onCompleteItem(item.id);
+		if (item.scenarioId === "illness-vet" && !activity.sickTimePassComplete) {
+			setTimePassOpen(true);
+			return;
+		}
 		if (index === journeyItems.length - 1) {
 			onComplete();
 			return;
@@ -1626,6 +1723,11 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 		onChoose(scenario, choice);
 		setFeedbackOpen(true);
 	}
+	if (timePassOpen && item.scenarioId === "illness-vet") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TimePassTransition, { onComplete: () => {
+		onActivityChange({ sickTimePassComplete: true });
+		setTimePassOpen(false);
+		selectItem(index + 1);
+	} });
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap life-journey-page",
 		children: [

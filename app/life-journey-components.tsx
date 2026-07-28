@@ -143,6 +143,38 @@ function stageForIndex(index: number) {
   return 6;
 }
 
+function TimePassTransition({ onComplete }: { onComplete: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [needsManualPlay, setNeedsManualPlay] = useState(false);
+  const hasFinished = useRef(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.play().catch(() => setNeedsManualPlay(true));
+  }, []);
+
+  function finish() {
+    if (hasFinished.current) return;
+    hasFinished.current = true;
+    onComplete();
+  }
+
+  function playManually() {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = false;
+    video.play().then(() => setNeedsManualPlay(false)).catch(() => setNeedsManualPlay(true));
+  }
+
+  return (
+    <section className="time-pass-transition" aria-label="時間流逝過場動畫">
+      <video ref={videoRef} src="/assets/pet-journey/time passes.mp4" autoPlay playsInline preload="auto" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      {needsManualPlay && <button type="button" className="time-pass-play" onClick={playManually}>播放影片</button>}
+    </section>
+  );
+}
+
 function ScenarioFeedback({
   scenario,
   choice,
@@ -156,7 +188,7 @@ function ScenarioFeedback({
   onRetry: () => void;
   onContinue: () => void;
 }) {
-  const isArrivalAdjustment = scenario.id === "arrival-adjustment";
+  const requiresRetry = scenario.id === "arrival-adjustment" || scenario.id === "illness-vet";
   const labels = {
     correct: { icon: "✓", button: "繼續生活旅程" },
     partial: { icon: "△", button: "記住建議，繼續" },
@@ -177,7 +209,7 @@ function ScenarioFeedback({
       {scenario.reminder && <div className="law-reminder"><span>i</span><p><b>生活裡的責任提醒</b>{withPetName(scenario.reminder, petName)}</p></div>}
       <div className="feedback-actions">
         {choice.result === "incorrect" && <button className="secondary" onClick={onRetry}>重新選一次</button>}
-        {(!isArrivalAdjustment || choice.result !== "incorrect") && <button className="primary" onClick={onContinue}>{isArrivalAdjustment ? "繼續" : labels[choice.result].button} <span>→</span></button>}
+        {(!requiresRetry || choice.result !== "incorrect") && <button className="primary" onClick={onContinue}>{scenario.id === "arrival-adjustment" ? "繼續" : labels[choice.result].button} <span>→</span></button>}
       </div>
     </section>
   );
@@ -202,8 +234,13 @@ function ScenarioCard({
   onRetry: () => void;
   onContinue: () => void;
 }) {
-  const [arrivalVideoFailed, setArrivalVideoFailed] = useState(false);
-  const isArrivalAdjustment = scenario.id === "arrival-adjustment";
+  const [sceneVideoFailed, setSceneVideoFailed] = useState(false);
+  const scenarioVideo = scenario.id === "arrival-adjustment"
+    ? { src: "/assets/pet-journey/first-day.mp4", label: "小狗第一天適應新家的影片" }
+    : scenario.id === "illness-vet"
+      ? { src: "/assets/pet-journey/sick.mp4", label: "小狗生病與就醫情境影片" }
+      : null;
+  useEffect(() => setSceneVideoFailed(false), [scenario.id]);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   if (feedbackOpen && selectedChoice) {
     return <ScenarioFeedback scenario={scenario} choice={selectedChoice} petName={petName} onRetry={onRetry} onContinue={onContinue} />;
@@ -223,11 +260,11 @@ function ScenarioCard({
             </div>
           )}
         </div>
-        <div className={`scene-art scene-${scenario.artIndex} ${isArrivalAdjustment ? "scene-art--video" : ""}`}>
-          {isArrivalAdjustment ? (
-            arrivalVideoFailed
-              ? <div className="scene-video-fallback" role="status">第一天適應新家的影片目前無法播放。</div>
-              : <video className="scene-video" src="/assets/pet-journey/first-day.mp4" autoPlay loop muted playsInline preload="metadata" aria-label="小狗第一天適應新家的影片" onError={() => setArrivalVideoFailed(true)} />
+        <div className={`scene-art scene-${scenario.artIndex} ${scenarioVideo ? "scene-art--video" : ""}`}>
+          {scenarioVideo ? (
+            sceneVideoFailed
+              ? <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>
+              : <video className="scene-video" src={scenarioVideo.src} autoPlay loop muted playsInline preload="metadata" aria-label={scenarioVideo.label} onError={() => setSceneVideoFailed(true)} />
           ) : <div className="scene-sprite" aria-hidden="true" />}
           <p>{scenario.timeLabel}</p>
         </div>
@@ -524,6 +561,8 @@ export function LifeJourney({
   const answer = scenario ? answers[scenario.id] : undefined;
   const showArrivalMeal = scenario?.id === "arrival-adjustment" && answer?.finalResult === "correct";
   const [feedbackOpen, setFeedbackOpen] = useState(Boolean(answer));
+  const [timePassOpen, setTimePassOpen] = useState(false);
+  useEffect(() => setTimePassOpen(false), [index]);
 
   const completedCount = completedIds.length;
 
@@ -537,6 +576,10 @@ export function LifeJourney({
 
   function continueJourney() {
     onCompleteItem(item.id);
+    if (item.scenarioId === "illness-vet" && !activity.sickTimePassComplete) {
+      setTimePassOpen(true);
+      return;
+    }
     if (index === journeyItems.length - 1) {
       onComplete();
       return;
@@ -548,6 +591,14 @@ export function LifeJourney({
     if (!scenario) return;
     onChoose(scenario, choice);
     setFeedbackOpen(true);
+  }
+
+  if (timePassOpen && item.scenarioId === "illness-vet") {
+    return <TimePassTransition onComplete={() => {
+      onActivityChange({ sickTimePassComplete: true });
+      setTimePassOpen(false);
+      selectItem(index + 1);
+    }} />;
   }
 
   return (

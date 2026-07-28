@@ -87,6 +87,7 @@ export type LifeActivityState = {
   bodyLanguageSignals: string[];
   arrivalMealFoodReady: boolean;
   arrivalMealWaterReady: boolean;
+  sickTimePassComplete: boolean;
   bodyCareParts: string[];
   seniorAdjustments: string[];
 };

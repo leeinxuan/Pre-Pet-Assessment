@@ -61,6 +61,20 @@ export const lifeScenarios: Scenario[] = [
     ],
   },
   {
+    id: "illness-vet",
+    stage: "生病與就醫",
+    timeLabel: "生病與就醫",
+    title: "食慾與精神狀況變差",
+    description: "小狗今天食慾下降、活動變少，看起來和平常不太一樣。你會怎麼做？",
+    topic: "健康觀察與就醫判斷",
+    artIndex: 3,
+    choices: [
+      { id: "record-and-vet", text: "記錄食慾、飲水、排泄與精神狀態，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "做得很好！具體紀錄能幫助獸醫判斷，及早聯絡也能避免重要症狀被延誤。", suggestion: "持續記下症狀出現的時間、頻率與變化，並依獸醫建議安排就醫。", expenseIds: ["sick-vet-care"] },
+      { id: "wait-and-see", text: "先等幾天看看，牠可能只是心情不好", result: "incorrect", ...incorrect, explanation: "只等待可能錯過病況惡化的時機。食慾與精神同時變差時，應先觀察具體症狀並及早諮詢獸醫。", suggestion: "記錄食慾、飲水、排泄與精神變化，聯絡獸醫確認下一步。" },
+      { id: "human-medicine", text: "自行餵人用藥或網路偏方", result: "incorrect", ...incorrect, explanation: "人用藥與未經專業確認的偏方可能對小狗造成危險，也可能掩蓋病況並延誤治療。", suggestion: "不要自行給藥；先記錄症狀，並向獸醫說明觀察到的變化。" },
+    ],
+  },
+  {
     id: "owner-life-change",
     stage: "飼主生活發生改變",
     timeLabel: "飼主生活發生改變",
@@ -112,6 +126,7 @@ export const journeyItems: JourneyItem[] = [
   { id: "behavior", type: "scenario", timeLabel: "逐漸長大的時候", title: "面對行為問題", scenarioId: "behavior-guidance" },
   { id: "busy-care", type: "scenario", timeLabel: "穩定生活的日常", title: "忙碌時的日常照顧", scenarioId: "busy-daily-care" },
   { id: "body-care", type: "body-care", timeLabel: "成年後的例行照顧", title: "清潔與基礎身體觀察" },
+  { id: "sick", type: "scenario", timeLabel: "生病與就醫", title: "生病與就醫", scenarioId: "illness-vet" },
   { id: "life-change", type: "scenario", timeLabel: "飼主生活發生改變", title: "飼主生活發生改變", scenarioId: "owner-life-change" },
   { id: "senior", type: "scenario", timeLabel: "逐漸進入高齡", title: "小狗逐漸老去", scenarioId: "growing-old" },
   { id: "senior-room", type: "senior-room", timeLabel: "調整高齡生活空間", title: "改造高齡犬的家" },
@@ -122,6 +137,7 @@ export const initialLifeActivityState: LifeActivityState = {
   bodyLanguageSignals: [],
   arrivalMealFoodReady: false,
   arrivalMealWaterReady: false,
+  sickTimePassComplete: false,
   bodyCareParts: [],
   seniorAdjustments: [],
 };

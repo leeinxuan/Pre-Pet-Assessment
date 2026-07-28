@@ -97,7 +97,7 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   cleaner: { id: "cleaner", name: "寵物友善清潔用品", amount: 420, category: "清潔", stage: "領養前準備", recurring: false },
   "starter-food": { id: "starter-food", name: "初期飼料", amount: 800, category: "飲食", stage: "領養前準備", recurring: false },
   "monthly-food-main": { id: "monthly-food-main", name: "每月主食費", amount: 1000, category: "飲食", stage: "第一天適應新家", recurring: true },
-  "journey-medical-care": { id: "journey-medical-care", name: "異常症狀檢查與治療", amount: 4200, category: "醫療", stage: "健康出現變化", recurring: false, fromEmergency: true },
+  "sick-vet-care": { id: "sick-vet-care", name: "生病就醫與檢查", amount: 4200, category: "醫療", stage: "生病與就醫", recurring: false, fromEmergency: true },
   "journey-care-service": { id: "journey-care-service", name: "短期照顧服務", amount: 2400, category: "照顧服務", stage: "飼主生活發生改變", recurring: false },
   "senior-checkup": { id: "senior-checkup", name: "高齡健康檢查", amount: 3200, category: "醫療", stage: "逐漸進入高齡", recurring: false, fromEmergency: true },
   "senior-slipmat": { id: "senior-slipmat", name: "高齡犬防滑墊", amount: 1200, category: "高齡用品", stage: "調整高齡生活空間", recurring: false },
