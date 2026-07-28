@@ -41,7 +41,7 @@ var __vite_rsc_assets_manifest_default = {
 	},
 	"serverResources": { "app/layout.tsx": {
 		"js": [],
-		"css": ["/assets/index-CMRP2PLo.css"]
+		"css": ["/assets/index-542rt34-.css"]
 	} }
 };
 //#endregion
