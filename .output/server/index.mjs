@@ -11,13 +11,6 @@ var headers = ((m) => function headersRouteRule(event) {
 //#endregion
 //#region #nitro/virtual/public-assets-data
 var public_assets_data_default = {
-	"/favicon.svg": {
-		"type": "image/svg+xml",
-		"etag": "\"2c8-geBxqJCnEMLdObLLD/aK9EAfyXI\"",
-		"mtime": "2026-07-15T05:13:25.239Z",
-		"size": 712,
-		"path": "../public/favicon.svg"
-	},
 	"/globe.svg": {
 		"type": "image/svg+xml",
 		"etag": "\"40b-LrojsBpGczu4Qj5tOOv19+lavsU\"",
@@ -25,12 +18,12 @@ var public_assets_data_default = {
 		"size": 1035,
 		"path": "../public/globe.svg"
 	},
-	"/file.svg": {
+	"/favicon.svg": {
 		"type": "image/svg+xml",
-		"etag": "\"187-+zgO7/6H1QtZc4NmTAKYKWTQ0ow\"",
-		"mtime": "2026-07-15T05:13:25.246Z",
-		"size": 391,
-		"path": "../public/file.svg"
+		"etag": "\"2c8-geBxqJCnEMLdObLLD/aK9EAfyXI\"",
+		"mtime": "2026-07-15T05:13:25.239Z",
+		"size": 712,
+		"path": "../public/favicon.svg"
 	},
 	"/window.svg": {
 		"type": "image/svg+xml",
@@ -39,47 +32,61 @@ var public_assets_data_default = {
 		"size": 385,
 		"path": "../public/window.svg"
 	},
-	"/assets/index-CFivZu0g.js": {
+	"/file.svg": {
+		"type": "image/svg+xml",
+		"etag": "\"187-+zgO7/6H1QtZc4NmTAKYKWTQ0ow\"",
+		"mtime": "2026-07-15T05:13:25.246Z",
+		"size": 391,
+		"path": "../public/file.svg"
+	},
+	"/assets/index-Dy04mD2D.js": {
 		"type": "text/javascript; charset=utf-8",
-		"etag": "\"13b49-/DJ6RLt/RXDozeGOlJ64uIzPDwQ\"",
-		"mtime": "2026-07-28T20:53:54.035Z",
+		"etag": "\"13b49-mXS+kzACmrIbTvIG6DNhmHO9aCk\"",
+		"mtime": "2026-07-29T05:52:43.433Z",
 		"size": 80713,
-		"path": "../public/assets/index-CFivZu0g.js"
-	},
-	"/assets/layout-segment-context-B5FLcxHN.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"120-Z+ZcyCGkTUZmgOc6HjGvarldhi8\"",
-		"mtime": "2026-07-28T20:53:54.037Z",
-		"size": 288,
-		"path": "../public/assets/layout-segment-context-B5FLcxHN.js"
-	},
-	"/assets/index-542rt34-.css": {
-		"type": "text/css; charset=utf-8",
-		"etag": "\"1ad4f-xrhfE+zZWiwMoXuyu1gPWtcWkRw\"",
-		"mtime": "2026-07-28T20:53:54.041Z",
-		"size": 109903,
-		"path": "../public/assets/index-542rt34-.css"
+		"path": "../public/assets/index-Dy04mD2D.js"
 	},
 	"/assets/framework-CXnKph_e.js": {
 		"type": "text/javascript; charset=utf-8",
 		"etag": "\"2e56d-yqm8KBIaXv+Y0pOthtGoU3MxBZg\"",
-		"mtime": "2026-07-28T20:53:54.036Z",
+		"mtime": "2026-07-29T05:52:43.434Z",
 		"size": 189805,
 		"path": "../public/assets/framework-CXnKph_e.js"
+	},
+	"/assets/layout-segment-context-DDwQ9dQi.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"120-y6UWJoYm9ya9xUFDj0bJJL8u4m8\"",
+		"mtime": "2026-07-29T05:52:43.435Z",
+		"size": 288,
+		"path": "../public/assets/layout-segment-context-DDwQ9dQi.js"
+	},
+	"/assets/index-542rt34-.css": {
+		"type": "text/css; charset=utf-8",
+		"etag": "\"1ad4f-xrhfE+zZWiwMoXuyu1gPWtcWkRw\"",
+		"mtime": "2026-07-29T05:52:43.437Z",
+		"size": 109903,
+		"path": "../public/assets/index-542rt34-.css"
+	},
+	"/car/尿墊.png": {
+		"type": "image/png",
+		"etag": "\"12b18-ia1a0cyNI6GqS3jBsS7ZB7q60Zc\"",
+		"mtime": "2026-07-21T06:23:32.364Z",
+		"size": 76568,
+		"path": "../public/car/尿墊.png"
 	},
 	"/assets/rolldown-runtime-S-ySWqyJ.js": {
 		"type": "text/javascript; charset=utf-8",
 		"etag": "\"2b6-wnqLLSlp3SaE+lbe74bKNe5Rpds\"",
-		"mtime": "2026-07-28T20:53:54.039Z",
+		"mtime": "2026-07-29T05:52:43.437Z",
 		"size": 694,
 		"path": "../public/assets/rolldown-runtime-S-ySWqyJ.js"
 	},
-	"/assets/page-BnDjy2n8.js": {
+	"/assets/page-DUYGDjPp.js": {
 		"type": "text/javascript; charset=utf-8",
-		"etag": "\"15fda-N2TSTfy9IgA1Xj5QAuMJkXFPfy4\"",
-		"mtime": "2026-07-28T20:53:54.039Z",
-		"size": 90074,
-		"path": "../public/assets/page-BnDjy2n8.js"
+		"etag": "\"15fb6-u7tCk0l9ZWuwaplAj5IDs7S38zs\"",
+		"mtime": "2026-07-29T05:52:43.436Z",
+		"size": 90038,
+		"path": "../public/assets/page-DUYGDjPp.js"
 	},
 	"/car/外出籠.png": {
 		"type": "image/png",
@@ -88,12 +95,12 @@ var public_assets_data_default = {
 		"size": 129103,
 		"path": "../public/car/外出籠.png"
 	},
-	"/car/尿墊.png": {
+	"/car/玩具.png": {
 		"type": "image/png",
-		"etag": "\"12b18-ia1a0cyNI6GqS3jBsS7ZB7q60Zc\"",
-		"mtime": "2026-07-21T06:23:32.364Z",
-		"size": 76568,
-		"path": "../public/car/尿墊.png"
+		"etag": "\"c0f6-DH6+pQcS97ixe1LxXn1GN+L1BnI\"",
+		"mtime": "2026-07-27T06:38:22.340Z",
+		"size": 49398,
+		"path": "../public/car/玩具.png"
 	},
 	"/car/後車箱.png": {
 		"type": "image/png",
@@ -109,13 +116,6 @@ var public_assets_data_default = {
 		"size": 265146,
 		"path": "../public/car/文件.png"
 	},
-	"/car/玩具.png": {
-		"type": "image/png",
-		"etag": "\"c0f6-DH6+pQcS97ixe1LxXn1GN+L1BnI\"",
-		"mtime": "2026-07-27T06:38:22.340Z",
-		"size": 49398,
-		"path": "../public/car/玩具.png"
-	},
 	"/car/身分證件.png": {
 		"type": "image/png",
 		"etag": "\"40b7a-j+jrYl34bGXDz6NFkeEJKaR8CLw\"",
@@ -130,54 +130,26 @@ var public_assets_data_default = {
 		"size": 64081,
 		"path": "../public/car/牽繩.png"
 	},
-	"/species/兔.png": {
-		"type": "image/png",
-		"etag": "\"4e3e-SL5iurh5uwbHlCaLZPk/jnHmips\"",
-		"mtime": "2026-07-28T19:04:30.431Z",
-		"size": 20030,
-		"path": "../public/species/兔.png"
-	},
-	"/species/小型哺乳.png": {
-		"type": "image/png",
-		"etag": "\"8403-VPnALA1eu4rjbDIyOQNOGqLi/Xs\"",
-		"mtime": "2026-07-28T19:05:32.748Z",
-		"size": 33795,
-		"path": "../public/species/小型哺乳.png"
-	},
-	"/species/犬.png": {
-		"type": "image/png",
-		"etag": "\"80a7-5Q4gj2TU1fEo3bsi094cfV7IueM\"",
-		"mtime": "2026-07-28T19:03:54.510Z",
-		"size": 32935,
-		"path": "../public/species/犬.png"
-	},
-	"/species/爬蟲.png": {
-		"type": "image/png",
-		"etag": "\"66a4-My88tXVoCQpp4cW3SitrPjBzL5s\"",
-		"mtime": "2026-07-28T19:05:13.812Z",
-		"size": 26276,
-		"path": "../public/species/爬蟲.png"
-	},
-	"/species/貓.png": {
-		"type": "image/png",
-		"etag": "\"6c0d-kjvexoQUlLSlYxAjZ1B4nRTDfMM\"",
-		"mtime": "2026-07-28T19:04:13.454Z",
-		"size": 27661,
-		"path": "../public/species/貓.png"
-	},
-	"/species/鳥.png": {
-		"type": "image/png",
-		"etag": "\"451f-0Td2R9efWaGzKWo/euk5Xn5OOiI\"",
-		"mtime": "2026-07-28T19:04:51.759Z",
-		"size": 17695,
-		"path": "../public/species/鳥.png"
-	},
 	"/room/小物品.png": {
 		"type": "image/png",
 		"etag": "\"89b3-AP7hQCMZrwJ/Kc7QBbKzEV7Uv4c\"",
 		"mtime": "2026-07-21T06:25:37.438Z",
 		"size": 35251,
 		"path": "../public/room/小物品.png"
+	},
+	"/room/尿墊.png": {
+		"type": "image/png",
+		"etag": "\"12b18-ia1a0cyNI6GqS3jBsS7ZB7q60Zc\"",
+		"mtime": "2026-07-21T06:23:32.364Z",
+		"size": 76568,
+		"path": "../public/room/尿墊.png"
+	},
+	"/room/巧克力.png": {
+		"type": "image/png",
+		"etag": "\"d060-oj6hoIjmOuk0BXOgAxi5p4CAIck\"",
+		"mtime": "2026-07-21T06:25:10.741Z",
+		"size": 53344,
+		"path": "../public/room/巧克力.png"
 	},
 	"/room/水.png": {
 		"type": "image/png",
@@ -200,12 +172,12 @@ var public_assets_data_default = {
 		"size": 57011,
 		"path": "../public/room/清潔用品.png"
 	},
-	"/room/巧克力.png": {
+	"/room/牽繩.png": {
 		"type": "image/png",
-		"etag": "\"d060-oj6hoIjmOuk0BXOgAxi5p4CAIck\"",
-		"mtime": "2026-07-21T06:25:10.741Z",
-		"size": 53344,
-		"path": "../public/room/巧克力.png"
+		"etag": "\"fa51-g2PVZsKoHQjoU7gz7bRBTFAvEnE\"",
+		"mtime": "2026-07-21T06:23:05.878Z",
+		"size": 64081,
+		"path": "../public/room/牽繩.png"
 	},
 	"/room/玩具.png": {
 		"type": "image/png",
@@ -214,20 +186,6 @@ var public_assets_data_default = {
 		"size": 49398,
 		"path": "../public/room/玩具.png"
 	},
-	"/room/狗碗.png": {
-		"type": "image/png",
-		"etag": "\"1217e-xUbGrGSJ6nM9e9GZv0rDOPXbT04\"",
-		"mtime": "2026-07-21T06:19:06.443Z",
-		"size": 74110,
-		"path": "../public/room/狗碗.png"
-	},
-	"/room/牽繩.png": {
-		"type": "image/png",
-		"etag": "\"fa51-g2PVZsKoHQjoU7gz7bRBTFAvEnE\"",
-		"mtime": "2026-07-21T06:23:05.878Z",
-		"size": 64081,
-		"path": "../public/room/牽繩.png"
-	},
 	"/room/睡墊.png": {
 		"type": "image/png",
 		"etag": "\"1f692-I+bt2gythr6t3JbYNhQk6w9Wvrk\"",
@@ -235,19 +193,12 @@ var public_assets_data_default = {
 		"size": 128658,
 		"path": "../public/room/睡墊.png"
 	},
-	"/room/尿墊.png": {
+	"/room/狗碗.png": {
 		"type": "image/png",
-		"etag": "\"12b18-ia1a0cyNI6GqS3jBsS7ZB7q60Zc\"",
-		"mtime": "2026-07-21T06:23:32.364Z",
-		"size": 76568,
-		"path": "../public/room/尿墊.png"
-	},
-	"/car/水.png": {
-		"type": "image/png",
-		"etag": "\"215e1d-Ki7p6SIILJWJMyFWnbWb+T87dWY\"",
-		"mtime": "2026-07-27T20:00:13.754Z",
-		"size": 2186781,
-		"path": "../public/car/水.png"
+		"etag": "\"1217e-xUbGrGSJ6nM9e9GZv0rDOPXbT04\"",
+		"mtime": "2026-07-21T06:19:06.443Z",
+		"size": 74110,
+		"path": "../public/room/狗碗.png"
 	},
 	"/room/電線.png": {
 		"type": "image/png",
@@ -255,6 +206,41 @@ var public_assets_data_default = {
 		"mtime": "2026-07-21T06:24:12.686Z",
 		"size": 69346,
 		"path": "../public/room/電線.png"
+	},
+	"/species/小型哺乳.png": {
+		"type": "image/png",
+		"etag": "\"8403-VPnALA1eu4rjbDIyOQNOGqLi/Xs\"",
+		"mtime": "2026-07-28T19:05:32.748Z",
+		"size": 33795,
+		"path": "../public/species/小型哺乳.png"
+	},
+	"/species/兔.png": {
+		"type": "image/png",
+		"etag": "\"4e3e-SL5iurh5uwbHlCaLZPk/jnHmips\"",
+		"mtime": "2026-07-28T19:04:30.431Z",
+		"size": 20030,
+		"path": "../public/species/兔.png"
+	},
+	"/species/爬蟲.png": {
+		"type": "image/png",
+		"etag": "\"66a4-My88tXVoCQpp4cW3SitrPjBzL5s\"",
+		"mtime": "2026-07-28T19:05:13.812Z",
+		"size": 26276,
+		"path": "../public/species/爬蟲.png"
+	},
+	"/species/犬.png": {
+		"type": "image/png",
+		"etag": "\"80a7-5Q4gj2TU1fEo3bsi094cfV7IueM\"",
+		"mtime": "2026-07-28T19:03:54.510Z",
+		"size": 32935,
+		"path": "../public/species/犬.png"
+	},
+	"/species/貓.png": {
+		"type": "image/png",
+		"etag": "\"6c0d-kjvexoQUlLSlYxAjZ1B4nRTDfMM\"",
+		"mtime": "2026-07-28T19:04:13.454Z",
+		"size": 27661,
+		"path": "../public/species/貓.png"
 	},
 	"/og.png": {
 		"type": "image/png",
@@ -270,12 +256,26 @@ var public_assets_data_default = {
 		"size": 2237292,
 		"path": "../public/illustrations/hero-life-preview.png"
 	},
+	"/car/水.png": {
+		"type": "image/png",
+		"etag": "\"215e1d-Ki7p6SIILJWJMyFWnbWb+T87dWY\"",
+		"mtime": "2026-07-27T20:00:13.754Z",
+		"size": 2186781,
+		"path": "../public/car/水.png"
+	},
 	"/illustrations/prep-room.png": {
 		"type": "image/png",
 		"etag": "\"26d90f-AN+idVI+QskIM3mx2GRMCXfxWD0\"",
 		"mtime": "2026-07-15T05:13:25.347Z",
 		"size": 2545935,
 		"path": "../public/illustrations/prep-room.png"
+	},
+	"/species/鳥.png": {
+		"type": "image/png",
+		"etag": "\"451f-0Td2R9efWaGzKWo/euk5Xn5OOiI\"",
+		"mtime": "2026-07-28T19:04:51.759Z",
+		"size": 17695,
+		"path": "../public/species/鳥.png"
 	},
 	"/room/空房間.png": {
 		"type": "image/png",
@@ -312,6 +312,13 @@ var public_assets_data_default = {
 		"size": 14851,
 		"path": "../public/assets/pet-journey/waterbottle.png"
 	},
+	"/assets/pet-journey/空飼料碗.png": {
+		"type": "image/png",
+		"etag": "\"38255-TUTK4i9nw0Wxx0kl5O1d571o5jA\"",
+		"mtime": "2026-07-28T12:18:34.812Z",
+		"size": 229973,
+		"path": "../public/assets/pet-journey/空飼料碗.png"
+	},
 	"/assets/pet-journey/空水碗.png": {
 		"type": "image/png",
 		"etag": "\"4014c-rhvx/ogi4c7cdiVC5wOu2KT1nUA\"",
@@ -326,33 +333,12 @@ var public_assets_data_default = {
 		"size": 22619,
 		"path": "../public/species/dog/吉娃娃.png"
 	},
-	"/assets/pet-journey/空飼料碗.png": {
-		"type": "image/png",
-		"etag": "\"38255-TUTK4i9nw0Wxx0kl5O1d571o5jA\"",
-		"mtime": "2026-07-28T12:18:34.812Z",
-		"size": 229973,
-		"path": "../public/assets/pet-journey/空飼料碗.png"
-	},
 	"/species/dog/拉不拉多.png": {
 		"type": "image/png",
 		"etag": "\"7ccb-wy/iD93ZmdZtvGZlP6RGHqenrqQ\"",
 		"mtime": "2026-07-28T19:07:29.498Z",
 		"size": 31947,
 		"path": "../public/species/dog/拉不拉多.png"
-	},
-	"/species/dog/邊境牧羊犬.png": {
-		"type": "image/png",
-		"etag": "\"8dab-XIGDPwOGyDQ9+ahpo0wtA59F+Cc\"",
-		"mtime": "2026-07-28T19:07:07.017Z",
-		"size": 36267,
-		"path": "../public/species/dog/邊境牧羊犬.png"
-	},
-	"/species/dog/貴賓犬.png": {
-		"type": "image/png",
-		"etag": "\"6be5-s4qk06FWkeLl1ojAuUvCDjtBwOA\"",
-		"mtime": "2026-07-28T19:06:19.013Z",
-		"size": 27621,
-		"path": "../public/species/dog/貴賓犬.png"
 	},
 	"/room/門牌.png": {
 		"type": "image/png",
@@ -361,12 +347,26 @@ var public_assets_data_default = {
 		"size": 2205339,
 		"path": "../public/room/門牌.png"
 	},
+	"/species/dog/貴賓犬.png": {
+		"type": "image/png",
+		"etag": "\"6be5-s4qk06FWkeLl1ojAuUvCDjtBwOA\"",
+		"mtime": "2026-07-28T19:06:19.013Z",
+		"size": 27621,
+		"path": "../public/species/dog/貴賓犬.png"
+	},
 	"/room/飼料.png": {
 		"type": "image/png",
 		"etag": "\"222d89-RhF2s9Sr8pkrWeMMkU+SkGGE1/c\"",
 		"mtime": "2026-07-21T06:18:19.685Z",
 		"size": 2239881,
 		"path": "../public/room/飼料.png"
+	},
+	"/species/dog/邊境牧羊犬.png": {
+		"type": "image/png",
+		"etag": "\"8dab-XIGDPwOGyDQ9+ahpo0wtA59F+Cc\"",
+		"mtime": "2026-07-28T19:07:07.017Z",
+		"size": 36267,
+		"path": "../public/species/dog/邊境牧羊犬.png"
 	},
 	"/assets/pet-journey/correct-answer.mp4": {
 		"type": "video/mp4",
@@ -375,13 +375,6 @@ var public_assets_data_default = {
 		"size": 1455835,
 		"path": "../public/assets/pet-journey/correct-answer.mp4"
 	},
-	"/assets/pet-journey/sick.mp4": {
-		"type": "video/mp4",
-		"etag": "\"188c9f-fcDf1qj14gQQ0UiEXncjUG3p7j8\"",
-		"mtime": "2026-07-28T13:42:15.222Z",
-		"size": 1608863,
-		"path": "../public/assets/pet-journey/sick.mp4"
-	},
 	"/assets/pet-journey/03狗狗身體語言.mp4": {
 		"type": "video/mp4",
 		"etag": "\"27a528-8lcJfsz8QTzzcWF1qVoCZ3d1QDY\"",
@@ -389,12 +382,26 @@ var public_assets_data_default = {
 		"size": 2598184,
 		"path": "../public/assets/pet-journey/03狗狗身體語言.mp4"
 	},
+	"/assets/pet-journey/sick.mp4": {
+		"type": "video/mp4",
+		"etag": "\"188c9f-fcDf1qj14gQQ0UiEXncjUG3p7j8\"",
+		"mtime": "2026-07-28T13:42:15.222Z",
+		"size": 1608863,
+		"path": "../public/assets/pet-journey/sick.mp4"
+	},
 	"/assets/pet-journey/chewing-on-things.mp4": {
 		"type": "video/mp4",
 		"etag": "\"26acc9-UROgwX5clzFgr7Jr6P6EaiB9T3I\"",
 		"mtime": "2026-07-28T05:28:57.631Z",
 		"size": 2534601,
 		"path": "../public/assets/pet-journey/chewing-on-things.mp4"
+	},
+	"/assets/pet-journey/arrival-transition.mp4": {
+		"type": "video/mp4",
+		"etag": "\"26f4a7-5L+XuD8S/JKIgAAtUp0ic9Eyvfg\"",
+		"mtime": "2026-07-27T05:23:56.420Z",
+		"size": 2552999,
+		"path": "../public/assets/pet-journey/arrival-transition.mp4"
 	},
 	"/assets/pet-journey/arrival-transition2.mp4": {
 		"type": "video/mp4",
@@ -409,13 +416,6 @@ var public_assets_data_default = {
 		"mtime": "2026-07-28T05:28:42.647Z",
 		"size": 2487080,
 		"path": "../public/assets/pet-journey/first-day.mp4"
-	},
-	"/assets/pet-journey/arrival-transition.mp4": {
-		"type": "video/mp4",
-		"etag": "\"26f4a7-5L+XuD8S/JKIgAAtUp0ic9Eyvfg\"",
-		"mtime": "2026-07-27T05:23:56.420Z",
-		"size": 2552999,
-		"path": "../public/assets/pet-journey/arrival-transition.mp4"
 	},
 	"/assets/pet-journey/time passes_old.mp4": {
 		"type": "video/mp4",

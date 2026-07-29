@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-DJgoMoZQ.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-BHS4rM6E.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var stations = [
@@ -1887,11 +1887,7 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "life-journey-head",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
-					"你們一起走到了「",
-					item.timeLabel,
-					"」"
-				] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: item.timeLabel }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
 					index + 1,
 					" / ",
 					journeyItems.length

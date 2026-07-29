@@ -906,7 +906,7 @@ export function LifeJourney({
   return (
     <div className="content-wrap life-journey-page">
       <div className="life-journey-head">
-        <div><h1>你們一起走到了「{item.timeLabel}」</h1></div>
+        <div><h1>{item.timeLabel}</h1></div>
         <b>{index + 1} / {journeyItems.length}</b>
       </div>
       {isDailyBehaviorActivity ? (
