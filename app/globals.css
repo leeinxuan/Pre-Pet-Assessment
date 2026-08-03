@@ -1226,6 +1226,9 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .warning-signal-copy small { margin-top: 24px; color: var(--muted); line-height: 1.6; }
 .warning-signal-complete { margin-top: 18px; padding: 16px 18px; border-radius: 14px; background: var(--mint-soft); color: #3e6848; line-height: 1.7; }
 .arrival-meal-activity { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: stretch; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: white; box-shadow: var(--shadow); }
+.arrival-meal-heading { grid-column: 1 / -1; padding: 24px 28px 18px; border-bottom: 1px solid var(--line); background: #fffdf7; }
+.arrival-meal-heading h1 { margin: 0 0 8px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(28px, 4vw, 42px); }
+.arrival-meal-heading p { max-width: 760px; margin: 0; color: var(--muted); line-height: 1.75; }
 .arrival-meal-supplies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: center; align-items: center; justify-items: center; gap: 28px 18px; padding: 32px 18px; background: var(--paper); }
 .arrival-meal-supplies button { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; padding: 0; border: 0; background: transparent; color: var(--ink); font: inherit; font-weight: 900; cursor: pointer; }
 .arrival-meal-supplies .arrival-meal-supply-food-button { max-width: none; }

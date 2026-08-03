@@ -35,7 +35,7 @@ export const lifeScenarios: Scenario[] = [
     stage: "日常行為照顧",
     timeLabel: "日常生活",
     title: "牠一直吠叫，該怎麼辦？",
-    description: "晚上你正在休息，牠突然對著門口一直吠叫。你看見牠有些警覺，也注意到附近有聲音經過。",
+    description: "晚上你正在休息，小狗突然對著門口一直吠叫。你看見牠有些警覺，也注意到附近有聲音經過。",
     topic: "日常行為照顧",
     artIndex: 4,
     choices: [
@@ -50,7 +50,7 @@ export const lifeScenarios: Scenario[] = [
     stage: "日常行為照顧",
     timeLabel: "日常生活",
     title: "牠開始亂咬東西，該怎麼辦？",
-    description: "你回到客廳時，發現牠正在咬桌腳旁的物品。旁邊還有一些不能讓牠碰到的小東西。",
+    description: "你回到客廳時，發現小狗正在咬桌腳旁的物品。旁邊還有一些不能讓牠碰到的小東西。",
     topic: "日常行為照顧",
     artIndex: 4,
     choices: [
@@ -65,7 +65,7 @@ export const lifeScenarios: Scenario[] = [
     stage: "日常行為照顧",
     timeLabel: "日常生活",
     title: "牠在不適合的地方大小便，該怎麼辦？",
-    description: "你發現牠在不適合的位置大小便。牠看起來不是故意搗亂，而是還沒建立固定如廁習慣。",
+    description: "你發現小狗在不適合的位置大小便。牠看起來不是故意搗亂，而是還沒建立固定如廁習慣。",
     topic: "日常行為照顧",
     artIndex: 4,
     choices: [

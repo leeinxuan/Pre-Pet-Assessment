@@ -1,5 +1,5 @@
 import { a as require_react, o as __toESM, t as require_jsx_runtime } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-D94rvvc5.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-936Vxlxj.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var stations = [
@@ -735,7 +735,7 @@ var lifeScenarios = [
 		stage: "日常行為照顧",
 		timeLabel: "日常生活",
 		title: "牠一直吠叫，該怎麼辦？",
-		description: "晚上你正在休息，牠突然對著門口一直吠叫。你看見牠有些警覺，也注意到附近有聲音經過。",
+		description: "晚上你正在休息，小狗突然對著門口一直吠叫。你看見牠有些警覺，也注意到附近有聲音經過。",
 		topic: "日常行為照顧",
 		artIndex: 4,
 		choices: [
@@ -775,7 +775,7 @@ var lifeScenarios = [
 		stage: "日常行為照顧",
 		timeLabel: "日常生活",
 		title: "牠開始亂咬東西，該怎麼辦？",
-		description: "你回到客廳時，發現牠正在咬桌腳旁的物品。旁邊還有一些不能讓牠碰到的小東西。",
+		description: "你回到客廳時，發現小狗正在咬桌腳旁的物品。旁邊還有一些不能讓牠碰到的小東西。",
 		topic: "日常行為照顧",
 		artIndex: 4,
 		choices: [
@@ -815,7 +815,7 @@ var lifeScenarios = [
 		stage: "日常行為照顧",
 		timeLabel: "日常生活",
 		title: "牠在不適合的地方大小便，該怎麼辦？",
-		description: "你發現牠在不適合的位置大小便。牠看起來不是故意搗亂，而是還沒建立固定如廁習慣。",
+		description: "你發現小狗在不適合的位置大小便。牠看起來不是故意搗亂，而是還沒建立固定如廁習慣。",
 		topic: "日常行為照顧",
 		artIndex: 4,
 		choices: [
@@ -1012,7 +1012,7 @@ function withPetName(text, petName) {
 }
 function otherCorrectChoices(scenario, choice, petName) {
 	if (choice.result !== "correct") return [];
-	return scenario.choices.filter((entry) => entry.result === "correct" && entry.id !== choice.id).slice(0, 2).map((entry) => withPetName(entry.text, petName));
+	return scenario.choices.filter((entry) => entry.result === "correct" && entry.id !== choice.id).filter((entry) => !(scenario.id === "busy-daily-care" && entry.id === "family-helper")).slice(0, 2).map((entry) => withPetName(entry.text, petName));
 }
 function OtherCorrectTips({ scenario, choice, petName }) {
 	const tips = otherCorrectChoices(scenario, choice, petName);
@@ -1414,7 +1414,7 @@ var dailyBehaviorVideos = {
 	"behavior-chewing": "/assets/pet-journey/chewing-on-things.mp4",
 	"behavior-toileting": "/assets/pet-journey/Urinate-and-defecate-at-will.mp4"
 };
-function DailyBehaviorActivity({ answers, onChoose, onContinue }) {
+function DailyBehaviorActivity({ answers, petName, onChoose, onContinue }) {
 	const scenarios = dailyBehaviorScenarioIds.map((id) => lifeScenarios.find((entry) => entry.id === id)).filter((entry) => Boolean(entry));
 	const firstUnfinished = scenarios.findIndex((entry) => answers[entry.id]?.finalResult !== "correct");
 	const [currentIndex, setCurrentIndex] = (0, import_react.useState)(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
@@ -1469,11 +1469,11 @@ function DailyBehaviorActivity({ answers, onChoose, onContinue }) {
 			className: "daily-behavior-positive-copy",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "做得很好！" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedChoice.explanation }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(OtherCorrectTips, {
 					scenario,
 					choice: selectedChoice,
-					petName: ""
+					petName
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "改善後，牠能在安全又被理解的環境裡慢慢學習。" }),
 				videoFinished && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
@@ -1490,7 +1490,7 @@ function DailyBehaviorActivity({ answers, onChoose, onContinue }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "daily-behavior-head",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: scenario.title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: scenario.description })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: withPetName(scenario.title, petName) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(scenario.description, petName) })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "daily-behavior-video",
@@ -1514,8 +1514,8 @@ function DailyBehaviorActivity({ answers, onChoose, onContinue }) {
 				"aria-live": "polite",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "這個做法可能不太適合" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedChoice.explanation }),
-					selectedChoice.suggestion && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "可以這樣調整：" }), selectedChoice.suggestion] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
+					selectedChoice.suggestion && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "可以這樣調整：" }), withPetName(selectedChoice.suggestion, petName)] }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 						type: "button",
 						className: "secondary",
@@ -1530,14 +1530,14 @@ function DailyBehaviorActivity({ answers, onChoose, onContinue }) {
 					children: scenario.choices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 						type: "button",
 						onClick: () => choose(choice),
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: choice.text })
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(choice.text, petName) })
 					}, choice.id))
 				})]
 			})
 		]
 	});
 }
-function BusyCareActivity({ scenario, answer, members: _members, onMembersChange: _onMembersChange, onChoose, onContinue }) {
+function BusyCareActivity({ scenario, answer, petName, members: _members, onMembersChange: _onMembersChange, onChoose, onContinue }) {
 	const [mode, setMode] = (0, import_react.useState)(answer?.finalResult === "correct" ? "positive" : "question");
 	const [familyFeedback, setFamilyFeedback] = (0, import_react.useState)(null);
 	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
@@ -1591,13 +1591,17 @@ function BusyCareActivity({ scenario, answer, members: _members, onMembersChange
 			className: "busy-care-positive-copy",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "做得很好！" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedChoice.explanation }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(OtherCorrectTips, {
 					scenario,
 					choice: selectedChoice,
-					petName: ""
+					petName
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "事先確認與交接，能讓小狗在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
+					"事先確認與交接，能讓",
+					petName,
+					"在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。"
+				] }),
 				videoFinished && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					type: "button",
 					className: "primary",
@@ -1611,7 +1615,7 @@ function BusyCareActivity({ scenario, answer, members: _members, onMembersChange
 		className: "busy-care-activity",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "busy-care-heading",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "忙碌時的日常照顧" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "今天工作特別忙，你很疲累，但小狗仍需要晚餐、乾淨飲水、排泄與適當活動。" })]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "忙碌時的日常照顧" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(scenario.description, petName) })]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "busy-care-layout",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -1658,7 +1662,7 @@ function BusyCareActivity({ scenario, answer, members: _members, onMembersChange
 					familyFeedback && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "busy-care-family-feedback",
 						role: "alert",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [familyFeedback.name, "目前不適合協助"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: familyFeedback.reason })]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [familyFeedback.name, "目前不適合協助"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(familyFeedback.reason, petName) })]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "busy-care-member-actions",
@@ -1683,8 +1687,8 @@ function BusyCareActivity({ scenario, answer, members: _members, onMembersChange
 				"aria-live": "polite",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "這個做法可能不太適合" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedChoice.explanation }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "可以這樣調整：" }), selectedChoice.suggestion] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "可以這樣調整：" }), selectedChoice.suggestion ? withPetName(selectedChoice.suggestion, petName) : ""] }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 						type: "button",
 						className: "secondary",
@@ -1697,7 +1701,7 @@ function BusyCareActivity({ scenario, answer, members: _members, onMembersChange
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "你會怎麼安排？" }), scenario.choices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 					type: "button",
 					onClick: () => choose(choice),
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: choice.text })
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: withPetName(choice.text, petName) })
 				}, choice.id))]
 			})]
 		})]
@@ -1735,6 +1739,19 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 		className: "arrival-meal-activity",
 		"aria-label": `為${petName}準備第一餐`,
 		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "arrival-meal-heading",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
+					"幫",
+					petName,
+					"準備第一餐"
+				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+					petName,
+					"剛到新家，還有些不安。先幫",
+					petName,
+					"準備合適的主食與乾淨飲水，讓牠慢慢安心下來。"
+				] })]
+			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
 				className: "arrival-meal-supplies",
 				"aria-label": "晚餐用品",
@@ -1774,8 +1791,7 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 							src: "/assets/pet-journey/吃剩的骨頭.png",
 							alt: "吃剩的骨頭"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "吃剩的骨頭" })]
-					}),
-					complete && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "晚餐用品已準備好" })
+					})
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -1880,11 +1896,13 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 			}),
 			isDailyBehaviorActivity ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DailyBehaviorActivity, {
 				answers,
+				petName,
 				onChoose,
 				onContinue: continueJourney
 			}) : isBusyCareActivity && scenario ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BusyCareActivity, {
 				scenario,
 				answer,
+				petName,
 				members,
 				onMembersChange,
 				onChoose: choose,
