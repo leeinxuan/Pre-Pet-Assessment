@@ -594,10 +594,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .busy-care-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(310px, .88fr); gap: 20px; align-items: stretch; }
 .busy-care-room { position: relative; min-height: 420px; overflow: hidden; border-radius: 26px; background: var(--cream); box-shadow: var(--shadow); }
 .busy-care-room-background { display: block; width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
-.busy-care-dog, .busy-care-water, .busy-care-bowl { position: absolute; height: auto; object-fit: contain; }
-.busy-care-dog { width: 34%; left: 57%; bottom: 13%; z-index: 2; }
-.busy-care-water { width: 16%; left: 35%; bottom: 15%; z-index: 3; }
-.busy-care-bowl { width: 17%; left: 47%; bottom: 14%; z-index: 3; }
+.busy-care-hungry-dog { position: absolute; width: 42%; max-height: 58%; left: 25%; bottom: 0%; z-index: 2; object-fit: contain; }
 .busy-care-options, .busy-care-members, .busy-care-feedback { padding: 25px; border: 1px solid var(--line); border-radius: 26px; background: white; box-shadow: var(--shadow); }
 .busy-care-options h2, .busy-care-members h2, .busy-care-feedback h2 { margin: 0 0 16px; font-size: 23px; }
 .busy-care-options > button { display: flex; width: 100%; flex-direction: column; gap: 7px; margin-top: 11px; padding: 16px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); text-align: left; cursor: pointer; transition: .2s; }
@@ -1168,7 +1165,6 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .arrival-video-screen { min-width: 0; min-height: 0; position: relative; overflow: hidden; background: #17130f; isolation: isolate; }
 .arrival-video-screen video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; background: #17130f; }
 .arrival-video-play { position: absolute; left: 50%; top: 50%; z-index: 2; min-width: 124px; transform: translate(-50%, -50%); }
-.arrival-video-welcome { position: absolute; left: 50%; top: 20%; z-index: 2; margin: 0; color: #fffaf0; font-size: clamp(36px, 5vw, 68px); font-weight: 900; letter-spacing: .08em; text-shadow: 0 3px 18px rgba(48,41,31,.6); transform: translate(-50%, -50%); white-space: nowrap; }
 
 
 .arrival-intro { max-width: 1120px; min-height: calc(100vh - 40px); display: grid; grid-template-columns: 1.08fr .92fr; gap: clamp(32px, 6vw, 78px); align-items: center; }

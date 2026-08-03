@@ -12,10 +12,7 @@ import type {
   ScenarioChoice,
 } from "./game-types";
 
-const arrivalVideoSources = [
-  "/assets/pet-journey/arrival-transition.mp4",
-  "/assets/pet-journey/arrival-transition2.mp4",
-] as const;
+const arrivalVideoSource = "/assets/pet-journey/arrival-transition.mp4";
 
 function withPetName(text: string, petName: string) {
   return text
@@ -45,29 +42,18 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
   const startTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
   const endTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
   const onContinueRef = useRef(onContinue);
-  const [currentVideo, setCurrentVideo] = useState<0 | 1>(0);
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
     onContinueRef.current = onContinue;
   }, [onContinue]);
-
-  const finishArrivalVideo = useCallback(() => {
-    if (hasFinishedArrivalVideo.current) return;
-    hasFinishedArrivalVideo.current = true;
-    if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
-    videoRef.current?.pause();
-    onContinueRef.current();
-  }, []);
 
   const showFinalFrame = useCallback(() => {
     if (hasFinishedArrivalVideo.current) return;
     hasFinishedArrivalVideo.current = true;
     if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
     videoRef.current?.pause();
-    setShowWelcome(true);
-    endTimeoutRef.current = window.setTimeout(() => onContinueRef.current(), 1600);
+    endTimeoutRef.current = window.setTimeout(() => onContinueRef.current(), 1000);
   }, []);
 
   useEffect(() => {
@@ -97,8 +83,9 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
 
     return () => {
       if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
+      if (endTimeoutRef.current !== null) window.clearTimeout(endTimeoutRef.current);
     };
-  }, [currentVideo, showFinalFrame]);
+  }, [showFinalFrame]);
 
   function handlePlaying() {
     if (startTimeoutRef.current !== null) {
@@ -116,19 +103,10 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
   }
 
   function handleArrivalEnded() {
-    if (currentVideo === 0) {
-      setNeedsManualPlay(false);
-      setCurrentVideo(1);
-      return;
-    }
     showFinalFrame();
   }
 
   function handleVideoError() {
-    if (currentVideo === 0) {
-      setCurrentVideo(1);
-      return;
-    }
     showFinalFrame();
   }
 
@@ -136,7 +114,7 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
     <section className="arrival-video-screen" aria-label="接回家影片過場">
       <video
         ref={videoRef}
-        src={arrivalVideoSources[currentVideo]}
+        src={arrivalVideoSource}
         autoPlay
         playsInline
         preload="auto"
@@ -148,7 +126,7 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
           handleVideoError();
         }}
       />
-      {showWelcome && <h1 className="arrival-video-welcome">歡迎來到新家</h1>}
+      {needsManualPlay && <button type="button" className="primary arrival-video-play" onClick={startVideoManually}>播放影片</button>}
     </section>
   );
 }
@@ -281,7 +259,7 @@ function ScenarioCard({
           {scenarioVideo ? (
             sceneVideoFailed
               ? <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>
-              : <video className="scene-video" src={scenarioVideo.src} autoPlay loop muted playsInline preload="metadata" aria-label={scenarioVideo.label} onError={() => setSceneVideoFailed(true)} />
+              : <video className="scene-video" src={scenarioVideo.src} autoPlay loop playsInline preload="metadata" aria-label={scenarioVideo.label} onError={() => setSceneVideoFailed(true)} />
           ) : <div className="scene-sprite" aria-hidden="true" />}
           <p>{scenario.timeLabel}</p>
         </div>
@@ -316,7 +294,7 @@ function VideoScenarioActivity({
 }) {
   const [mode, setMode] = useState<"question" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
   const [videoFailed, setVideoFailed] = useState(false);
-  const [videoFinished, setVideoFinished] = useState(false);
+  const [, setVideoFinished] = useState(false);
   const source = scenario.id === "arrival-adjustment"
     ? "/assets/pet-journey/first-day.mp4"
     : scenario.id === "growing-old"
@@ -335,9 +313,9 @@ function VideoScenarioActivity({
     return (
       <section className="video-scenario-positive" aria-live="polite">
         <div className="video-scenario-positive-video">
-          {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay muted playsInline preload="metadata" aria-label="正確處置後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
+          {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay playsInline preload="metadata" aria-label="正確處置後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
         </div>
-        <div className="video-scenario-positive-copy"><h2>做得很好！</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} /><small>{scenario.id === "arrival-adjustment" ? "你已替牠保留適應新家的空間。接著一起準備第一餐吧。" : scenario.id === "growing-old" ? "提早安排醫療準備與健康觀察，能讓高齡階段的照顧更穩定。" : "及早觀察、記錄並聯絡獸醫，能讓小狗獲得更適當的照顧。"}</small>{videoFinished && <button type="button" className="primary" onClick={onCorrectComplete}>繼續 <span>→</span></button>}</div>
+        <div className="video-scenario-positive-copy"><h2>做得很好！</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} /><small>{scenario.id === "arrival-adjustment" ? "你已替牠保留適應新家的空間。接著一起準備第一餐吧。" : scenario.id === "growing-old" ? "提早安排醫療準備與健康觀察，能讓高齡階段的照顧更穩定。" : "及早觀察、記錄並聯絡獸醫，能讓小狗獲得更適當的照顧。"}</small><button type="button" className="primary" onClick={onCorrectComplete}>繼續 <span>→</span></button></div>
       </section>
     );
   }
@@ -347,7 +325,7 @@ function VideoScenarioActivity({
       <div className="video-scenario-heading"><span>{scenario.topic}</span><h1>{withPetName(scenario.title, petName)}</h1><p>{withPetName(scenario.description, petName)}</p></div>
       <div className="video-scenario-layout">
         <div className="video-scenario-visual">
-          <video src={source} autoPlay loop muted playsInline preload="metadata" aria-label={scenario.id === "arrival-adjustment" ? "小狗第一天適應新家的影片" : scenario.id === "growing-old" ? "小狗逐漸進入高齡的情境影片" : "小狗食慾與精神狀況變差的影片"} onError={() => setVideoFailed(true)} />
+          <video src={source} autoPlay loop playsInline preload="metadata" aria-label={scenario.id === "arrival-adjustment" ? "小狗第一天適應新家的影片" : scenario.id === "growing-old" ? "小狗逐漸進入高齡的情境影片" : "柴犬常見健康問題觀察影片"} onError={() => setVideoFailed(true)} />
           {videoFailed && <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>}
         </div>
         {mode === "incorrect" && selectedChoice ? (
@@ -387,7 +365,7 @@ function DailyBehaviorActivity({
     firstUnfinished === -1 ? "positive" : "question",
   );
   const [videoFailed, setVideoFailed] = useState(false);
-  const [videoFinished, setVideoFinished] = useState(false);
+  const [, setVideoFinished] = useState(false);
   const scenario = scenarios[currentIndex];
   const selectedChoice = scenario && scenario.choices.find((choice) => choice.id === answers[scenario.id]?.finalChoiceId);
 
@@ -425,7 +403,6 @@ function DailyBehaviorActivity({
             <video
               src="/assets/pet-journey/correct-answer.mp4"
               autoPlay
-              muted
               playsInline
               preload="metadata"
               aria-label="改善後的正向結果影片"
@@ -442,7 +419,7 @@ function DailyBehaviorActivity({
           <p>{withPetName(selectedChoice.explanation, petName)}</p>
           <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />
           <small>改善後，牠能在安全又被理解的環境裡慢慢學習。</small>
-          {videoFinished && <button type="button" className="primary" onClick={moveToNext}>繼續 <span>→</span></button>}
+          <button type="button" className="primary" onClick={moveToNext}>繼續 <span>→</span></button>
         </div>
       </section>
     );
@@ -459,7 +436,6 @@ function DailyBehaviorActivity({
           src={dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4"}
           autoPlay
           loop
-          muted
           playsInline
           preload="metadata"
           aria-label="小狗日常行為問題情境影片"
@@ -510,7 +486,7 @@ function BusyCareActivity({
   const [mode, setMode] = useState<"question" | "family" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : "question");
   const [familyFeedback, setFamilyFeedback] = useState<{ name: string; reason: string } | null>(null);
   const [videoFailed, setVideoFailed] = useState(false);
-  const [videoFinished, setVideoFinished] = useState(false);
+  const [, setVideoFinished] = useState(false);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const familyOptions = [
     { id: "dad", name: "爸爸", label: "近期工作繁忙的爸爸", reason: "爸爸近期工作繁忙，可能無法穩定負責餵食、飲水、排泄與陪伴。" },
@@ -533,9 +509,9 @@ function BusyCareActivity({
     return (
       <section className="busy-care-positive" aria-live="polite">
         <div className="busy-care-positive-video">
-          {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay muted playsInline preload="metadata" aria-label="安排照顧支援後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
+          {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay playsInline preload="metadata" aria-label="安排照顧支援後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
         </div>
-        <div className="busy-care-positive-copy"><h2>做得很好！</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} /><small>事先確認與交接，能讓{petName}在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。</small>{videoFinished && <button type="button" className="primary" onClick={onContinue}>繼續 <span>→</span></button>}</div>
+        <div className="busy-care-positive-copy"><h2>做得很好！</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} /><small>事先確認與交接，能讓{petName}在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。</small><button type="button" className="primary" onClick={onContinue}>繼續 <span>→</span></button></div>
       </section>
     );
   }
@@ -546,9 +522,7 @@ function BusyCareActivity({
       <div className="busy-care-layout">
         <div className="busy-care-room" aria-label="小狗在房間中等待照顧的情境">
           <img className="busy-care-room-background" src="/room/空房間.png" alt="居家房間場景" />
-          <img className="busy-care-dog" src="/assets/pet-journey/shiba-dog.png" alt="等待照顧的柴犬" />
-          <img className="busy-care-water" src="/room/水.png" alt="裝好水的水碗" />
-          <img className="busy-care-bowl" src="/room/狗碗.png" alt="裝好飼料的狗碗" />
+          <img className="busy-care-hungry-dog" src="/assets/pet-journey/柴犬趴著餓肚子.png" alt={`${petName}趴在房間裡等待照顧`} />
         </div>
         {mode === "family" ? (
           <section className="busy-care-members" aria-live="polite">
