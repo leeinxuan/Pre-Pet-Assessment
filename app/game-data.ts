@@ -81,7 +81,7 @@ export const categories = [
 export const breeds = [
   { id: "chihuahua", label: "吉娃娃", icon: "🐕", image: "/species/dog/吉娃娃.png", shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。" },
   { id: "poodle", label: "貴賓犬", icon: "🐩", image: "/species/dog/貴賓犬.png", shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。" },
-  { id: "shiba", label: "柴犬", icon: "🐕", shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。" },
+  { id: "shiba", label: "柴犬", icon: "🐕", image: "/species/dog/柴犬.png", shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。" },
   { id: "border", label: "邊境牧羊犬", icon: "🐕‍🦺", image: "/species/dog/邊境牧羊犬.png", shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。" },
   { id: "labrador", label: "拉布拉多", icon: "🦮", image: "/species/dog/拉不拉多.png", shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。" },
 ];
@@ -107,11 +107,11 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
 export const roomItems: RoomItem[] = [
   { id: "bed", label: "睡墊", icon: "🛏️", image: "/room/睡墊.png", placement: { x: 67, y: 83, width: 32, layer: 2 }, required: true, need: "休息", expenseId: "bed", purpose: "提供固定且舒適的休息空間，讓小狗能安心休息。" },
   { id: "toy", label: "玩具", icon: "🦴", image: "/room/玩具.png", placement: { x: 73, y: 80, width: 10, layer: 4 }, required: true, need: "活動", purpose: "合適的玩具可以提供活動與探索，也能減少因無聊產生的破壞行為。" },
-  { id: "water-bowl", label: "水碗", icon: "💧", image: "/room/水.png", placement: { x: 35, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "每天確認水碗乾淨，並提供足量的新鮮飲水。" },
-  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/room/狗碗.png", placement: { x: 45, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
+  { id: "water-bowl", label: "水碗", icon: "💧", image: "/room/水.png", placement: { x: 32, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "每天確認水碗乾淨，並提供足量的新鮮飲水。" },
+  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/room/狗碗.png", placement: { x: 42, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
   { id: "toilet", label: "尿墊", icon: "▧", image: "/room/尿墊.png", placement: { x: 15, y: 85, width: 20, layer: 1 }, required: true, need: "排泄", expenseId: "toilet", purpose: "排泄用品應與食物及休息位置分開，方便小狗建立習慣。" },
-  { id: "cleaner", label: "清潔用品", icon: "🧼", image: "/room/清潔用品.png", placement: { x: 39, y: 47, width: 8, layer: 3 }, required: true, need: "清潔", expenseId: "cleaner", purpose: "準備安全的清潔用品，並收在小狗無法自行取得的位置。" },
-  { id: "food", label: "飼料", icon: "🦴", image: "/room/飼料.png", placement: { x: 53, y: 87, width: 15, layer: 3 }, required: true, need: "飲食", expenseId: "starter-food", purpose: "選擇符合小狗年齡、體型及健康需求的主食，並妥善保存。" },
+  { id: "cleaner", label: "清潔用品", icon: "🧼", image: "/room/清潔用品.png", placement: { x: 39, y: 46, width: 10, layer: 3 }, required: true, need: "清潔", expenseId: "cleaner", purpose: "準備安全的清潔用品，並收在小狗無法自行取得的位置。" },
+  { id: "food", label: "飼料", icon: "🦴", image: "/room/飼料.png", placement: { x: 50, y: 85, width: 9, layer: 3 }, required: true, need: "飲食", expenseId: "starter-food", purpose: "選擇符合小狗年齡、體型及健康需求的主食，並妥善保存。" },
 ];
 
 export const hazards: HazardItem[] = [

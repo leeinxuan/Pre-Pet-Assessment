@@ -5,6 +5,26 @@ import { departureTrunkItems, hazards, roomItems, trunkItems } from "./game-data
 import type { CareMember } from "./game-types";
 import { NavButtons, StepHeading } from "./shared-components";
 
+const preparedRoomItemNotes: Record<string, { label: string; note: string }> = {
+  bed: { label: "睡墊", note: "提供固定、安靜的休息位置。" },
+  toy: { label: "玩具", note: "幫助小狗消耗精力與建立正向互動。" },
+  "water-bowl": { label: "水碗", note: "每天確認有乾淨、足量的飲水。" },
+  "food-bowl": { label: "狗碗", note: "固定飲食器具，幫助建立規律餵食。" },
+  toilet: { label: "尿墊", note: "協助建立如廁位置，減少環境壓力。" },
+  cleaner: { label: "清潔用品", note: "維持居家清潔，降低病原與異味。" },
+  food: { label: "飼料", note: "選擇符合年齡、體型與健康需求的主食。" },
+};
+
+const preparedTrunkItemNotes: Record<string, { label: string; note: string }> = {
+  id: { label: "身分證", note: "辦理認養與核對身分時使用。" },
+  documents: { label: "領養文件", note: "確認認養流程與後續照顧責任。" },
+  carrier: { label: "運輸籠", note: "讓小狗在移動途中有安全固定的空間。" },
+  "pee-pad": { label: "尿墊", note: "接回途中可降低排泄與清潔壓力。" },
+  "water-kit": { label: "水碗", note: "必要時補充飲水，避免長時間缺水。" },
+  leash: { label: "牽繩", note: "下車或移動時維持安全防護。" },
+  cleaner: { label: "清潔用品", note: "處理接回途中可能發生的髒污。" },
+};
+
 export function RoomPreparation({
   selectedItems,
   securedHazards,
@@ -119,7 +139,7 @@ export function RoomPreparation({
       <div className="room-preparation-layout simplified-room-layout">
         <section className="room-supply-shelf" aria-label="生活用品準備區">
           <div className="room-supply-header">
-            <h2>用品準備箱</h2>
+            <h2>{itemsDone === roomItems.length ? "已準備的物品" : "用品準備箱"}</h2>
             <span>{itemsDone === roomItems.length ? "用品已準備完成" : `${roomItems.length - itemsDone} 件可加入`}</span>
           </div>
           {remainingRoomItems.length > 0 && <div className="room-supply-rows">
@@ -130,6 +150,12 @@ export function RoomPreparation({
               </button>)}
             </div>)}
           </div>}
+          {remainingRoomItems.length === 0 && <ul className="prepared-item-list" aria-label="已準備的房間物品">
+            {roomItems.map((item) => {
+              const note = preparedRoomItemNotes[item.id] ?? { label: item.label, note: item.purpose };
+              return <li key={item.id}><b>{note.label}</b><span>{note.note}</span></li>;
+            })}
+          </ul>}
         </section>
 
         <div className="room-interaction-column">
@@ -227,7 +253,7 @@ export function CarTrunkPreparation({ selected, onSelect, onBack, onNext }: { se
     <StepHeading title="出發接牠回家" body="" />
     <div className={`departure-layout ${departing ? "departing" : ""}`}>
       <aside className="departure-supply-shelf" aria-label="準備物品">
-        <div className="departure-supply-header"><h2>準備物品</h2><span>{complete ? "準備完成" : `${remainingItems.length} 件可準備`}</span></div>
+        <div className="departure-supply-header"><h2>{complete ? "已準備的物品" : "準備物品"}</h2><span>{complete ? "準備完成" : `${remainingItems.length} 件可準備`}</span></div>
         {!complete && <div className="departure-supply-rows">
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
             {row.map((item) => <button key={item.id} type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
@@ -235,6 +261,12 @@ export function CarTrunkPreparation({ selected, onSelect, onBack, onNext }: { se
             </button>)}
           </div>)}
         </div>}
+        {complete && <ul className="prepared-item-list departure-prepared-list" aria-label="已準備的後車廂物品">
+          {departureTrunkItems.map((item) => {
+            const note = preparedTrunkItemNotes[item.id] ?? { label: item.label, note: item.description };
+            return <li key={item.id}><b>{note.label}</b><span>{note.note}</span></li>;
+          })}
+        </ul>}
       </aside>
 
       <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">

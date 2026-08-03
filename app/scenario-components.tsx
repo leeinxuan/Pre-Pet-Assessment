@@ -104,7 +104,7 @@ export function ScenarioGame({
           </article>
           <section className="reflection"><h2>如果是你，會怎麼做？</h2><div className="choice-grid">{scenario.choices.map((choice) => {
             const unavailableBackup = (choice.id === "backup-help" || choice.id === "assigned-backup") && !hasBackup;
-            return <button key={choice.id} disabled={unavailableBackup} onClick={() => choose(choice)}><span>{choice.result === "correct" ? "可行做法" : choice.result === "partial" ? "需要調整" : "先想一想"}</span><p>{choice.text}</p>{unavailableBackup && <small>前面尚未安排備用照顧者</small>}</button>;
+            return <button key={choice.id} disabled={unavailableBackup} onClick={() => choose(choice)}><p>{choice.text}</p>{unavailableBackup && <small>前面尚未安排備用照顧者</small>}</button>;
           })}</div></section>
         </>
       ) : selectedChoice ? (

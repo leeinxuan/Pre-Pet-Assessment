@@ -35,7 +35,7 @@ export const lifeScenarios: Scenario[] = [
     stage: "日常行為照顧",
     timeLabel: "日常生活",
     title: "牠一直吠叫，該怎麼辦？",
-    description: "吠叫是狗狗的本能，也可能是警覺或緊張的自然反應。如果只是責罵，可能無法真正改善原因。",
+    description: "晚上你正在休息，牠突然對著門口一直吠叫。你看見牠有些警覺，也注意到附近有聲音經過。",
     topic: "日常行為照顧",
     artIndex: 4,
     choices: [
@@ -50,7 +50,7 @@ export const lifeScenarios: Scenario[] = [
     stage: "日常行為照顧",
     timeLabel: "日常生活",
     title: "牠開始亂咬東西，該怎麼辦？",
-    description: "嗅聞、舔、咬是狗狗重要的感官功能，也可能是探索世界或緩和情緒的方式。重點是提供安全替代物，並收好危險物品。",
+    description: "你回到客廳時，發現牠正在咬桌腳旁的物品。旁邊還有一些不能讓牠碰到的小東西。",
     topic: "日常行為照顧",
     artIndex: 4,
     choices: [
@@ -65,7 +65,7 @@ export const lifeScenarios: Scenario[] = [
     stage: "日常行為照顧",
     timeLabel: "日常生活",
     title: "牠在不適合的地方大小便，該怎麼辦？",
-    description: "狗狗不一定天生知道固定如廁的位置。幼犬需要足夠外出機會，或透過適當材質與獎勵，慢慢建立如廁習慣。",
+    description: "你發現牠在不適合的位置大小便。牠看起來不是故意搗亂，而是還沒建立固定如廁習慣。",
     topic: "日常行為照顧",
     artIndex: 4,
     choices: [
@@ -87,7 +87,7 @@ export const lifeScenarios: Scenario[] = [
     choices: [
       { id: "alone-with-food", text: "準備大量食物，讓牠自己待在家", result: "incorrect", ...incorrect, explanation: "只準備大量食物，讓小狗長時間獨自在家，可能造成飲水不足、排泄無法處理、過量進食、焦慮或突發狀況沒有人發現。", suggestion: "離家前應先確認能接手餵食、飲水、排泄與活動的人選，並清楚交接照顧需求。" },
       { id: "family-helper", text: "請家庭成員協助", result: "correct", ...positive, explanation: "事先確認家庭成員能協助照顧，能讓小狗持續獲得餵食、飲水、排泄照顧與陪伴，不會長時間完全無人照護。" },
-      { id: "trusted-helper", text: "請朋友或合適的照護者協助", result: "correct", ...positive, explanation: "可信任且了解照顧需求的朋友或照護者，也能在忙碌時協助維持小狗的基本作息與安全。" },
+      { id: "trusted-helper", text: "請最近幾天有空、也了解照顧需求的朋友協助", result: "correct", ...positive, explanation: "狗狗不能長時間完全無人照護。忙碌或離家時，可以找最近幾天有空、可信任，且願意依照交接內容協助照顧的朋友，協助餵食、換水、清理排泄與觀察狀況。" },
     ],
   },
   {

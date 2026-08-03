@@ -112,11 +112,22 @@ export function ProfileForm({
   );
 }
 
-export function ProfileSupplementForm({ profile, onChange }: { profile: Profile; onChange: (profile: Profile) => void }) {
-  const [updated, setUpdated] = useState(false);
+export function ProfileSupplementForm({
+  profile,
+  onChange,
+  onBack,
+  onReset,
+}: {
+  profile: Profile;
+  onChange: (profile: Profile) => void;
+  onBack: () => void;
+  onReset: () => void;
+}) {
+  const [committed, setCommitted] = useState(false);
+  const [finished, setFinished] = useState(false);
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     onChange({ ...profile, [key]: value });
-    setUpdated(false);
+    setFinished(false);
   };
   const clamp = (raw: string, max: number) => raw === "" ? "" : String(Math.min(max, Math.max(0, Number(raw.replace(/\D/g, "")) || 0)));
   const toggle = (key: "pastPetTypes" | "currentPetTypes" | "reasons", value: string) => update(key, profile[key].includes(value) ? profile[key].filter((item) => item !== value) : [...profile[key], value]);
@@ -139,8 +150,19 @@ export function ProfileSupplementForm({ profile, onChange }: { profile: Profile;
 
   return (
     <section className="content-wrap profile-supplement" aria-labelledby="profile-supplement-title">
-      <div className="profile-bridge"><b>資料補充</b><br />將你的真實生活條件補進來，上方評估會立即更新，協助你看見還需要確認的地方。</div>
-      <div className="profile-wizard-head"><div><h1 id="profile-supplement-title">重要生活資訊</h1><p>只填寫會影響照顧安排與評估的條件即可。</p></div></div>
+      <section className="info-use-section">
+        <div className="profile-wizard-head"><div><h1>為什麼需要補充這些資料？</h1><p>你填寫的資料會用來整理更貼近你生活狀況的提醒。</p></div></div>
+        <div className="info-use-table" role="table" aria-label="資料填寫用途說明">
+          {[
+            ["每日陪伴時間", "影響日常照顧提醒"],
+            ["同住者狀況", "影響家庭互動與安全提醒"],
+            ["活動空間", "影響空間布置與危險物提醒"],
+            ["飼養經驗", "影響新手照顧重點"],
+            ["飼養原因", "影響長期責任與期待提醒"],
+          ].map(([label, value]) => <div key={label} role="row"><b role="cell">{label}</b><span role="cell">{value}</span></div>)}
+        </div>
+      </section>
+      <div className="profile-wizard-head"><div><h1 id="profile-supplement-title">補充真實生活條件</h1><p>只保留會影響照顧安排的資訊；預算、身分與備用照顧者欄位不再顯示。</p></div></div>
       <section className="profile-panel">
         <fieldset><legend>每天的時間</legend><div className="profile-time-grid"><label>每天離家時間<span>每日 <input type="number" min="0" max="24" value={profile.hoursAway} onChange={(event) => update("hoursAway", clamp(event.target.value, 24))} /> 小時</span></label><label>每天可投入照顧時間<span>每日 <input type="number" min="0" max="24" value={profile.careHours} onChange={(event) => update("careHours", clamp(event.target.value, 24))} /> 小時</span></label></div></fieldset>
         <fieldset><legend>居住空間</legend><div className="housing-options">{["自有住宅", "租屋"].map((value) => <OptionButton key={value} label={value} selected={profile.housing === value} onClick={() => update("housing", value)} />)}</div>{profile.housing === "租屋" && <div className="landlord-options">{["房東已同意", "尚未取得同意"].map((value) => <OptionButton key={value} label={value} selected={profile.landlordConsent === value} onClick={() => update("landlordConsent", value)} />)}</div>}</fieldset>
@@ -150,7 +172,19 @@ export function ProfileSupplementForm({ profile, onChange }: { profile: Profile;
         <fieldset><legend>飼養經驗</legend><button type="button" className={`supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`} aria-pressed={profile.noShibaExperience} onClick={() => update("noShibaExperience", !profile.noShibaExperience)}>我沒有養過柴犬</button><div className="pet-experience-block"><b>曾經飼養：</b><div className="pet-experience-row">{experienceInputs("past")}</div><b>目前家中有寵物：</b><div className="pet-experience-row">{experienceInputs("current")}</div><label className="experience-note">其他飼養經驗分享：<textarea placeholder="請分享你的照顧經驗" value={profile.experienceNote} onChange={(event) => update("experienceNote", event.target.value)} /></label></div></fieldset>
         <fieldset><legend>飼養原因 <small>可複選</small></legend><div className="supplement-choice-grid reasons">{["陪伴與情緒支持", "喜愛動物", "單純想養", "看家守衛", "他人推薦", "其他"].map((reason) => <button type="button" key={reason} className={`supplement-choice ${profile.reasons.includes(reason) ? "selected" : ""}`} aria-pressed={profile.reasons.includes(reason)} onClick={() => toggle("reasons", reason)}>{profile.reasons.includes(reason) && <span>✓</span>}{reason}</button>)}</div>{profile.reasons.includes("其他") && <label className="supplement-inline-input">其他飼養原因<input placeholder="請說明" value={profile.reasonOther} onChange={(event) => update("reasonOther", event.target.value)} /></label>}</fieldset>
       </section>
-      <div className="profile-supplement-actions"><button type="button" className="primary" onClick={() => setUpdated(true)}>更新評估 <span>↗</span></button>{updated && <span role="status">評估已依目前資料更新。</span>}</div>
+      <section className="care-commitment" aria-labelledby="care-commitment-title">
+        <h2 id="care-commitment-title">照顧承諾</h2>
+        <label>
+          <input type="checkbox" checked={committed} onChange={(event) => { setCommitted(event.target.checked); setFinished(false); }} />
+          <span>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</span>
+        </label>
+      </section>
+      <div className="profile-supplement-actions">
+        <button type="button" className="secondary" onClick={onBack}>← 返回飼養生活</button>
+        <button type="button" className="secondary" onClick={onReset}>重新預演</button>
+        <button type="button" className="primary" disabled={!committed} onClick={() => setFinished(true)}>完成評估 <span>✓</span></button>
+        {finished && <span role="status">已完成照顧承諾。</span>}
+      </div>
     </section>
   );
 }
@@ -241,23 +275,70 @@ export function AssessmentReport({
   ];
   const selectedBreed = breeds.find((item) => item.id === breed);
 
+  const overviewCards = [
+    { title: "照顧時間", text: "你需要每天安排固定時間陪伴、餵食、飲水、排泄與活動。散步建議至少 20–30 分鐘，仍需依狗狗年齡、健康與天氣調整。" },
+    { title: "生活環境", text: "家中需要有安全、乾淨、通風、可休息的空間。危險物品要收好，食物、清潔用品、電線與小物品都需要注意。" },
+    { title: "照顧責任", text: "狗狗無法長時間完全無人照護。當你忙碌、外出或生活改變時，需要事先安排家人、朋友或合適照護者協助。" },
+  ];
+  const checklistGroups = [
+    { title: "每日照顧", items: ["提供合適主食", "隨時提供乾淨飲水", "觀察食慾、精神、排泄與活動狀況", "安排陪伴與互動時間", "安排外出散步或合適活動", "清理排泄物與維持環境清潔"] },
+    { title: "家中環境", items: ["準備睡墊", "準備水碗與狗碗", "準備尿墊或如廁區", "準備清潔用品", "收好巧克力、人類食物、清潔劑、電線與小物品", "保留安全、安靜、可休息的空間"] },
+    { title: "外出與接回", items: ["攜帶身分證與領養文件", "準備運輸籠", "準備尿墊", "準備牽繩", "準備水與清潔用品", "外出時使用牽繩或胸背帶"] },
+    { title: "生活變化", items: ["忙碌時安排替代照顧者", "發現生病徵兆時記錄並聯絡獸醫", "生活改變時重新安排照顧", "高齡後提前準備醫療基金與老年照顧知識"] },
+  ];
+  const handlingRows = [
+    ["剛到新家", "給牠安靜空間，不要強迫互動，讓牠用自己的速度適應。"],
+    ["吠叫", "增加安全感、遊戲、適量散步；若持續困擾，尋求獸醫或行為專家協助。"],
+    ["亂咬東西", "提供安全啃咬玩具，收好危險物品。"],
+    ["隨意大小便", "使用尿墊或適當材質，一天多出門幾次，做對時給予獎勵。"],
+    ["忙碌或很累", "不要只放大量食物讓牠獨自在家，需安排家人、朋友或合適照護者協助。"],
+    ["生病", "記錄食慾、飲水、排泄與精神狀態，必要時聯絡獸醫。"],
+    ["高齡照顧", "提前規劃醫療基金，學習老年照顧知識，定期諮詢獸醫。"],
+  ];
+  const expenseRows = [
+    ["一次性用品", "運輸籠、睡墊、水碗、狗碗、尿墊、清潔用品、牽繩等。"],
+    ["每月固定支出", "主食費、日常消耗用品。"],
+    ["可能發生的支出", "醫療費、臨時照顧服務、高齡照顧相關費用。"],
+    ["緊急預備金", "建議保留一筆可應付突發醫療或照顧安排的預備金。"],
+  ];
+
   return (
-    <div className="content-wrap summary-page assessment-report">
-      <div className="summary-title"><div><h1>{level}</h1><p>這份報告不貼標籤，而是把和{petName}的模擬生活轉成下一步可執行的準備。</p></div><div className="summary-pet"><span>{selectedBreed?.icon ?? "🐕"}</span><b>{petName} · {selectedBreed?.label}</b><small>{correctFirst} / {lifeScenarios.length} 題第一次掌握方向</small></div></div>
-      <div className="report-level"><span>綜合準備狀態</span><b>{level}</b><p>參考準備任務、第一次作答、費用與真實生活條件。</p></div>
-      <section className="summary-grid">
-        <article className="summary-card"><div className="card-head"><span>01</span><div><p>領養前準備</p><h2>家與接送</h2></div></div><dl className="report-metrics"><div><dt>房間必要用品</dt><dd>{roomCompletion}%</dd></div><div><dt>危險物防護</dt><dd>{hazardsReady.length} / {hazards.length}</dd></div><div><dt>後車廂</dt><dd>{trunkPassed ? "已通過" : `${trunkSelected.length} 件已放入`}</dd></div></dl></article>
-        <article className="summary-card"><div className="card-head"><span>02</span><div><p>情境判斷</p><h2>第一次選擇與修正</h2></div></div><div className="learning-counts"><div><b>{correctFirst}</b><small>第一次掌握方向</small></div><div><b>{corrected.length}</b><small>提醒後修正</small></div><div><b>{needsLearning.length}</b><small>需要再了解</small></div></div><dl className="report-topic-list"><div><dt>第一次就掌握</dt><dd>{correctTopics.join("、") || "尚無"}</dd></div><div><dt>經過提醒後修正</dt><dd>{correctedTopics.join("、") || "尚無"}</dd></div><div><dt>還需要了解</dt><dd>{needsLearning.join("、") || "目前沒有未修正主題"}</dd></div></dl></article>
-        <article className="summary-card"><div className="card-head"><span>03</span><div><p>照顧實作</p><h2>生活練習完成狀態</h2></div></div><ul>{practiceItems.map((item) => <li key={item.label}><i className={item.complete ? "green" : "yellow"}>{item.complete ? "✓" : "!"}</i>{item.label}</li>)}</ul></article>
-        <article className="summary-card"><div className="card-head"><span>04</span><div><p>費用狀況</p><h2>實際事件累積</h2></div></div><dl className="report-metrics"><div><dt>一次性用品費</dt><dd>NT$ {money.format(oneTime)}</dd></div><div><dt>本月／累積支出</dt><dd>NT$ {money.format(total)}</dd></div><div><dt>每月固定支出</dt><dd>NT$ {money.format(recurring)}</dd></div><div><dt>醫療支出</dt><dd>NT$ {money.format(medical)}</dd></div><div><dt>照顧服務費</dt><dd>NT$ {money.format(careService)}</dd></div><div><dt>高齡用品費</dt><dd>NT$ {money.format(seniorSupplies)}</dd></div><div><dt>剩餘緊急預備金</dt><dd>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</dd></div><div><dt>推估一年基本支出</dt><dd>NT$ {money.format(recurring * 12)}</dd></div></dl></article>
-        <article className="summary-card profile-summary"><div className="card-head"><span>05</span><div><p>真實生活條件</p><h2>家人、空間與經驗</h2></div></div><dl><div><dt>每天離家時間</dt><dd>{profile.hoursAway === "" ? "待補充" : `每日 ${profile.hoursAway} 小時`}</dd></div><div><dt>可投入時間</dt><dd>{profile.careHours === "" ? "待補充" : `每日 ${profile.careHours} 小時`}</dd></div><div><dt>居住空間</dt><dd>{profile.housing || "待補充"}{profile.housing === "租屋" ? ` · ${profile.landlordConsent || "待補充"}` : ""}</dd></div><div><dt>同居家人</dt><dd>{housemateStatus}</dd></div><div><dt>同住者同意</dt><dd>{profile.hasHousemates ? profile.housematesConsent === true ? "已知情並同意" : profile.housematesConsent === false ? "不同意" : "尚未確認" : profile.hasHousemates === false ? "不需要" : "待補充"}</dd></div><div><dt>預計活動空間</dt><dd>{activitySpace}</dd></div><div><dt>飼養經驗</dt><dd>{experienceStatus}</dd></div><div><dt>飼養原因</dt><dd>{reasonStatus}</dd></div></dl></article>
-        <article className="summary-card readiness"><div className="card-head"><span>06</span><div><p>已經準備好</p><h2>可以延續的部分</h2></div></div><ul>{prepared.length ? prepared.map((item) => <li key={item}><i className="green">✓</i>{item}</li>) : <li><i className="yellow">?</i>目前先從完成領養前準備清單開始。</li>}</ul></article>
-        <article className="summary-card todo"><div className="card-head"><span>07</span><div><p>建議再確認</p><h2>需要補上的條件</h2></div></div><ul>{confirm.length ? confirm.map((item) => <li key={item}><i className="yellow">!</i>{item}</li>) : <li><i className="green">✓</i>目前主要條件已有方向，請持續依實際個體調整。</li>}</ul></article>
-        <article className="summary-card discuss"><div className="card-head"><span>08</span><div><p>和家人討論</p><h2>需要共同決定</h2></div></div><ul>{familyTopics.length ? familyTopics.map((item) => <li key={item}><i className="orange">●</i>{item}</li>) : <li><i className="green">✓</i>目前家庭支持條件已有明確方向。</li>}</ul></article>
-        <article className="summary-card action-list"><div className="card-head"><span>09</span><div><p>領養前行動清單</p><h2>下一步可以這樣做</h2></div></div><ol>{actions.slice(0, 7).map((item) => <li key={item}>{item}</li>)}</ol></article>
+    <div className="content-wrap summary-page assessment-report compact-assessment">
+      <div className="summary-title">
+        <div><h1>照顧準備總覽</h1><p>把你和{petName || "小狗"}完成的旅程整理成可執行的照顧清單。</p></div>
+        <div className="summary-pet"><span>{selectedBreed?.icon ?? "🐕"}</span><b>{petName || "小狗"} · {selectedBreed?.label ?? "柴犬"}</b><small>{correctFirst} / {lifeScenarios.length} 題第一次掌握方向</small></div>
+      </div>
+
+      <section className="overview-cards" aria-label="照顧準備總覽">
+        {overviewCards.map((item) => <article key={item.title}><h2>{item.title}</h2><p>{item.text}</p></article>)}
       </section>
-      <div className="summary-footer"><p><b>這份報告不替你貼上單一結論。</b><br />它整理的是現在已具備的條件，以及真正領養前值得再確認的部分。</p><div><button className="secondary" onClick={onReset}>重新預演</button><button className="primary" onClick={() => window.print()}>列印／儲存報告 <span>↗</span></button></div></div>
-      <button className="text-back" onClick={onBack}>← 返回飼養生活</button>
+
+      <section className="checklist-section" aria-labelledby="care-checklist-title">
+        <div className="section-heading"><span>Checklist</span><h2 id="care-checklist-title">你需要做到的事</h2></div>
+        <div className="checklist-grid">
+          {checklistGroups.map((group) => (
+            <article key={group.title} className="checklist-card">
+              <h3>{group.title}</h3>
+              <ul>{group.items.map((item) => <li key={item}><span aria-hidden="true">□</span>{item}</li>)}</ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="key-table-section" aria-labelledby="handling-table-title">
+        <div className="section-heading"><span>重點整理</span><h2 id="handling-table-title">情境處理重點</h2></div>
+        <div className="key-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
+      </section>
+
+      <section className="key-table-section" aria-labelledby="expense-table-title">
+        <div className="section-heading"><span>費用與用品</span><h2 id="expense-table-title">費用與用品整理</h2></div>
+        <div className="expense-summary-strip">
+          <div><small>目前模擬累積花費</small><b>NT$ {money.format(total)}</b></div>
+          <div><small>每月固定支出</small><b>NT$ {money.format(recurring)}</b></div>
+          <div><small>剩餘緊急預備金</small><b>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</b></div>
+        </div>
+        <div className="key-table expense-table">{expenseRows.map(([label, text]) => <div key={label}><b>{label}</b><p>{text}</p></div>)}</div>
+      </section>
     </div>
   );
 }

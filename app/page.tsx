@@ -271,7 +271,7 @@ export default function Home() {
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>
               <AssessmentReport petName={petName} breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
-              <ProfileSupplementForm profile={profile} onChange={setProfile} />
+              <ProfileSupplementForm profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
             </>}
           </section>
         </div>

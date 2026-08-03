@@ -24,6 +24,20 @@ function withPetName(text: string, petName: string) {
     .replaceAll("狗狗", petName);
 }
 
+function otherCorrectChoices(scenario: Scenario, choice: ScenarioChoice, petName: string) {
+  if (choice.result !== "correct") return [];
+  return scenario.choices
+    .filter((entry) => entry.result === "correct" && entry.id !== choice.id)
+    .slice(0, 2)
+    .map((entry) => withPetName(entry.text, petName));
+}
+
+function OtherCorrectTips({ scenario, choice, petName }: { scenario: Scenario; choice: ScenarioChoice; petName: string }) {
+  const tips = otherCorrectChoices(scenario, choice, petName);
+  if (tips.length === 0) return null;
+  return <div className="other-correct-tips"><b>也可以這樣做</b><ul>{tips.map((tip) => <li key={tip}>{tip}</li>)}</ul></div>;
+}
+
 export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hasFinishedArrivalVideo = useRef(false);
@@ -200,6 +214,7 @@ function ScenarioFeedback({
     <section className={`scenario-feedback ${choice.result}`} aria-live="polite">
       <div className="feedback-title"><span>{labels[choice.result].icon}</span><div><small>{scenario.timeLabel}</small><h2>{withPetName(choice.feedbackTitle, petName)}</h2></div></div>
       <p>{withPetName(choice.explanation, petName)}</p>
+      <OtherCorrectTips scenario={scenario} choice={choice} petName={petName} />
       {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整</b><p>{withPetName(choice.suggestion, petName)}</p></div>}
       <div className="feedback-expense">
         <b>本次費用變化</b>
@@ -277,7 +292,7 @@ function ScenarioCard({
             const text = choice.id === "assigned-helper"
               ? `請${backupNames.join("或")}依照事先安排的分工，協助今晚的餵食與活動。`
               : withPetName(choice.text, petName);
-            return <button key={choice.id} onClick={() => onChoose(choice)}><span>{choice.result === "correct" ? "可行做法" : choice.result === "partial" ? "需要調整" : "先想一想"}</span><p>{text}</p></button>;
+            return <button key={choice.id} onClick={() => onChoose(choice)}><p>{text}</p></button>;
           })}
         </div>
       </section>
@@ -321,7 +336,7 @@ function VideoScenarioActivity({
         <div className="video-scenario-positive-video">
           {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay muted playsInline preload="metadata" aria-label="正確處置後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
         </div>
-        <div className="video-scenario-positive-copy"><span>✓ 適當處置</span><h2>做得很好！</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><small>{scenario.id === "arrival-adjustment" ? "你已替牠保留適應新家的空間。接著一起準備第一餐吧。" : scenario.id === "growing-old" ? "提早安排醫療準備與健康觀察，能讓高齡階段的照顧更穩定。" : "及早觀察、記錄並聯絡獸醫，能讓小狗獲得更適當的照顧。"}</small>{videoFinished && <button type="button" className="primary" onClick={onCorrectComplete}>繼續 <span>→</span></button>}</div>
+        <div className="video-scenario-positive-copy"><h2>做得很好！</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} /><small>{scenario.id === "arrival-adjustment" ? "你已替牠保留適應新家的空間。接著一起準備第一餐吧。" : scenario.id === "growing-old" ? "提早安排醫療準備與健康觀察，能讓高齡階段的照顧更穩定。" : "及早觀察、記錄並聯絡獸醫，能讓小狗獲得更適當的照顧。"}</small>{videoFinished && <button type="button" className="primary" onClick={onCorrectComplete}>繼續 <span>→</span></button>}</div>
       </section>
     );
   }
@@ -337,7 +352,7 @@ function VideoScenarioActivity({
         {mode === "incorrect" && selectedChoice ? (
           <section className="video-scenario-retry" aria-live="polite"><h2>這個做法可能不太適合</h2><p>{withPetName(selectedChoice.explanation, petName)}</p>{selectedChoice.suggestion && <p><b>可以這樣調整：</b>{withPetName(selectedChoice.suggestion, petName)}</p>}<button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button></section>
         ) : (
-          <section className="video-scenario-options"><h2>你會怎麼做？</h2>{scenario.choices.map((choice) => <button type="button" key={choice.id} onClick={() => choose(choice)}><span>{choice.result === "correct" ? "適當做法" : "先想一想"}</span><b>{withPetName(choice.text, petName)}</b></button>)}</section>
+          <section className="video-scenario-options"><h2>你會怎麼做？</h2>{scenario.choices.map((choice) => <button type="button" key={choice.id} onClick={() => choose(choice)}><b>{withPetName(choice.text, petName)}</b></button>)}</section>
         )}
       </div>
     </section>
@@ -345,6 +360,11 @@ function VideoScenarioActivity({
 }
 
 const dailyBehaviorScenarioIds = ["behavior-barking", "behavior-chewing", "behavior-toileting"] as const;
+const dailyBehaviorVideos: Record<string, string> = {
+  "behavior-barking": "/assets/pet-journey/barking.mp4",
+  "behavior-chewing": "/assets/pet-journey/chewing-on-things.mp4",
+  "behavior-toileting": "/assets/pet-journey/Urinate-and-defecate-at-will.mp4",
+};
 
 function DailyBehaviorActivity({
   answers,
@@ -415,9 +435,9 @@ function DailyBehaviorActivity({
           )}
         </div>
         <div className="daily-behavior-positive-copy">
-          <span>✓ 適當處置</span>
           <h2>做得很好！</h2>
           <p>{selectedChoice.explanation}</p>
+          <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName="" />
           <small>改善後，牠能在安全又被理解的環境裡慢慢學習。</small>
           {videoFinished && <button type="button" className="primary" onClick={moveToNext}>繼續 <span>→</span></button>}
         </div>
@@ -428,13 +448,12 @@ function DailyBehaviorActivity({
   return (
     <section className="daily-behavior-activity">
       <div className="daily-behavior-head">
-        <span>日常行為照顧 · {currentIndex + 1} / {scenarios.length}</span>
         <h1>{scenario.title}</h1>
         <p>{scenario.description}</p>
       </div>
       <div className="daily-behavior-video">
         <video
-          src="/assets/pet-journey/chewing-on-things.mp4"
+          src={dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4"}
           autoPlay
           loop
           muted
@@ -454,11 +473,10 @@ function DailyBehaviorActivity({
         </section>
       ) : (
         <section className="reflection daily-behavior-choices">
-          <h2>你會怎麼做？</h2>
+          <h2>你會怎麼處理？</h2>
           <div className="choice-grid">
             {scenario.choices.map((choice) => (
               <button key={choice.id} type="button" onClick={() => choose(choice)}>
-                <span>{choice.result === "correct" ? "適當做法" : "先想一想"}</span>
                 <p>{choice.text}</p>
               </button>
             ))}
@@ -472,8 +490,8 @@ function DailyBehaviorActivity({
 function BusyCareActivity({
   scenario,
   answer,
-  members,
-  onMembersChange,
+  members: _members,
+  onMembersChange: _onMembersChange,
   onChoose,
   onContinue,
 }: {
@@ -485,28 +503,18 @@ function BusyCareActivity({
   onContinue: () => void;
 }) {
   const [mode, setMode] = useState<"question" | "family" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : "question");
-  const [selectedMemberId, setSelectedMemberId] = useState("");
-  const [familyError, setFamilyError] = useState("");
+  const [familyFeedback, setFamilyFeedback] = useState<{ name: string; reason: string } | null>(null);
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoFinished, setVideoFinished] = useState(false);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
-  const familyChoice = scenario.choices.find((choice) => choice.id === "family-helper");
-  const familyMembers = members.filter((member) => !member.isPlayer);
-
-  function updateMember(id: string, patch: Partial<CareMember>) {
-    onMembersChange(members.map((member) => member.id === id ? { ...member, ...patch } : member));
-  }
-
-  function addMember() {
-    if (members.length >= 6) return;
-    const id = `member-${Date.now()}`;
-    onMembersChange([...members, { id, name: "", age: null, isPlayer: false }]);
-    setSelectedMemberId(id);
-  }
+  const familyOptions = [
+    { id: "dad", name: "爸爸", label: "近期工作繁忙的爸爸", reason: "爸爸近期工作繁忙，可能無法穩定負責餵食、飲水、排泄與陪伴。" },
+    { id: "younger-brother", name: "年幼的弟弟", label: "年幼的弟弟", reason: "弟弟年紀太小，還不能獨立照顧小狗，也不適合單獨承擔照顧責任。" },
+  ];
 
   function choose(choice: ScenarioChoice) {
     if (choice.id === "family-helper") {
-      setFamilyError("");
+      setFamilyFeedback(null);
       setMode("family");
       return;
     }
@@ -516,26 +524,13 @@ function BusyCareActivity({
     setMode(choice.result === "correct" ? "positive" : "incorrect");
   }
 
-  function confirmFamilyHelper() {
-    const member = familyMembers.find((item) => item.id === selectedMemberId);
-    if (!member?.name.trim()) {
-      setFamilyError("請先新增或選擇一位已填寫稱呼的家庭成員。");
-      return;
-    }
-    if (!familyChoice) return;
-    onChoose(familyChoice);
-    setVideoFailed(false);
-    setVideoFinished(false);
-    setMode("positive");
-  }
-
   if (mode === "positive" && selectedChoice) {
     return (
       <section className="busy-care-positive" aria-live="polite">
         <div className="busy-care-positive-video">
           {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay muted playsInline preload="metadata" aria-label="安排照顧支援後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
         </div>
-        <div className="busy-care-positive-copy"><span>✓ 已安排支援</span><h2>做得很好！</h2><p>{selectedChoice.explanation}</p><small>事先確認與交接，能讓小狗在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。</small>{videoFinished && <button type="button" className="primary" onClick={onContinue}>繼續 <span>→</span></button>}</div>
+        <div className="busy-care-positive-copy"><h2>做得很好！</h2><p>{selectedChoice.explanation}</p><OtherCorrectTips scenario={scenario} choice={selectedChoice} petName="" /><small>事先確認與交接，能讓小狗在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。</small>{videoFinished && <button type="button" className="primary" onClick={onContinue}>繼續 <span>→</span></button>}</div>
       </section>
     );
   }
@@ -552,17 +547,15 @@ function BusyCareActivity({
         </div>
         {mode === "family" ? (
           <section className="busy-care-members" aria-live="polite">
-            <div><span>家庭成員協助</span><h2>新增或選擇能協助的人</h2><p>請先確認對方知情、願意協助，並能了解小狗的餵食、飲水、排泄與活動需求。</p></div>
-            {familyMembers.length > 0 && <div className="busy-care-member-list">{familyMembers.map((member) => <label key={member.id} className={selectedMemberId === member.id ? "selected" : ""}><input type="radio" name="busy-care-member" value={member.id} checked={selectedMemberId === member.id} onChange={() => { setSelectedMemberId(member.id); setFamilyError(""); }} /><span>{member.name.trim() || "尚未填寫稱呼"}</span></label>)}</div>}
-            {familyMembers.map((member) => !member.name.trim() && <div className="busy-care-member-fields" key={`${member.id}-fields`}><label>家庭成員稱呼<input value={member.name} placeholder="例：媽媽" onChange={(event) => updateMember(member.id, { name: event.target.value })} /></label><label>年齡（選填）<input type="number" min="1" max="120" inputMode="numeric" value={member.age ?? ""} onChange={(event) => updateMember(member.id, { age: event.target.value ? Number(event.target.value) : null })} /></label></div>)}
-            <button type="button" className="add-member-button" onClick={addMember} disabled={members.length >= 6}>＋新增家庭成員</button>
-            {familyError && <p className="field-error" role="alert">{familyError}</p>}
-            <div className="busy-care-member-actions"><button type="button" className="secondary" onClick={() => setMode("question")}>返回選項</button><button type="button" className="primary" onClick={confirmFamilyHelper}>確認由這位家人協助 <span>→</span></button></div>
+            <div><h2>先確認家人是否真的能協助</h2></div>
+            {!familyFeedback && <div className="busy-care-member-list busy-care-family-options">{familyOptions.map((member) => <button key={member.id} type="button" onClick={() => setFamilyFeedback({ name: member.name, reason: member.reason })}><b>{member.label}</b></button>)}</div>}
+            {familyFeedback && <div className="busy-care-family-feedback" role="alert"><b>{familyFeedback.name}目前不適合協助</b><p>{familyFeedback.reason}</p></div>}
+            <div className="busy-care-member-actions"><button type="button" className="secondary" onClick={() => setFamilyFeedback(null)}>重新選擇家庭成員</button><button type="button" className="primary" onClick={() => { setFamilyFeedback(null); setMode("question"); }}>返回上一層，改選其他照顧方式 <span>→</span></button></div>
           </section>
         ) : mode === "incorrect" && selectedChoice ? (
           <section className="busy-care-feedback incorrect" aria-live="polite"><h2>這個做法可能不太適合</h2><p>{selectedChoice.explanation}</p><p><b>可以這樣調整：</b>{selectedChoice.suggestion}</p><button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button></section>
         ) : (
-          <section className="busy-care-options"><h2>你會怎麼安排？</h2>{scenario.choices.map((choice) => <button type="button" key={choice.id} onClick={() => choose(choice)}><span>{choice.result === "correct" ? "可行安排" : "先想一想"}</span><b>{choice.text}</b></button>)}</section>
+          <section className="busy-care-options"><h2>你會怎麼安排？</h2>{scenario.choices.map((choice) => <button type="button" key={choice.id} onClick={() => choose(choice)}><b>{choice.text}</b></button>)}</section>
         )}
       </div>
     </section>
@@ -708,7 +701,7 @@ function ArrivalMealActivity({
 }) {
   const complete = activity.arrivalMealFoodReady && activity.arrivalMealWaterReady;
   const hasRecordedMeal = useRef(false);
-  const [chocolateWarning, setChocolateWarning] = useState(false);
+  const [foodWarning, setFoodWarning] = useState<{ title: string; text: string } | null>(null);
   useEffect(() => {
     if (!complete || hasRecordedMeal.current) return;
     hasRecordedMeal.current = true;
@@ -716,31 +709,42 @@ function ArrivalMealActivity({
   }, [complete, onAddExpense]);
   function prepareFood() {
     if (activity.arrivalMealFoodReady) return;
+    setFoodWarning(null);
     onChange({ arrivalMealFoodReady: true });
   }
   function prepareWater() {
     if (activity.arrivalMealWaterReady) return;
+    setFoodWarning(null);
     onChange({ arrivalMealWaterReady: true });
   }
-  function warnChocolate() {
-    setChocolateWarning(true);
+  function warnUnsafeFood(kind: "macadamia" | "bones") {
+    setFoodWarning(kind === "macadamia"
+      ? {
+        title: "這個不能給小狗吃",
+        text: "常見的人類食物例如洋蔥、大蒜、巧克力、葡萄、堅果類（例如：夏威夷豆）、口香糖（含木糖醇）等，對犬隻而言可能會造成健康危害。另外，太鹹、太油或含有咖啡因的食物，也不適合犬隻食用。",
+      }
+      : {
+        title: "吃剩的骨頭不適合當作正餐",
+        text: "許多民眾會將吃過的骨頭、便當或剩菜剩飯當作犬隻的食物來源之一，但除了必須注意犬隻的營養均衡與日食物安全適當之外，啃食骨頭或剩食中較堅硬的殘渣，可能造成犬隻口腔或消化道危害，建議避免餵食此類食物。",
+      });
   }
   return (
     <section className="arrival-meal-activity" aria-label={`為${petName}準備第一餐`}>
       <aside className="arrival-meal-supplies" aria-label="晚餐用品">
-        {!activity.arrivalMealFoodReady && <button type="button" onClick={prepareFood}><img src="/room/飼料.png" alt="飼料" /><span>飼料</span></button>}
+        {!activity.arrivalMealFoodReady && <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src="/room/飼料.png" alt="飼料" /><span>飼料</span></button>}
         {!activity.arrivalMealWaterReady && <button type="button" onClick={prepareWater}><img src="/assets/pet-journey/waterbottle.png" alt="水瓶" /><span>水</span></button>}
-        <button type="button" className={chocolateWarning ? "arrival-meal-chocolate warning" : "arrival-meal-chocolate"} onClick={warnChocolate}><img src="/room/巧克力.png" alt="巧克力" /><span>巧克力</span></button>
+        <button type="button" className={foodWarning?.title === "這個不能給小狗吃" ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood("macadamia")}><img src="/assets/pet-journey/夏威夷豆.png" alt="夏威夷豆" /><span>夏威夷豆</span></button>
+        <button type="button" className={foodWarning?.title === "吃剩的骨頭不適合當作正餐" ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood("bones")}><img src="/assets/pet-journey/吃剩的骨頭.png" alt="吃剩的骨頭" /><span>吃剩的骨頭</span></button>
         {complete && <p>晚餐用品已準備好</p>}
       </aside>
       <div className="arrival-meal-scene">
         <img className="arrival-meal-room" src="/room/空房間.png" alt="小狗的新家房間" />
-        <img className="arrival-meal-dog" src="/assets/pet-journey/shiba-dog.png" alt={petName} />
+        {foodWarning && <div className="arrival-meal-warning" role="alert"><b>{foodWarning.title}</b><p>{foodWarning.text}</p></div>}
+        <img className="arrival-meal-dog" src={complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/柴犬不開心.png"} alt={complete ? `${petName}開心地坐在房間裡` : `${petName}還在等待晚餐與飲水`} />
         <img className="arrival-meal-water" src={activity.arrivalMealWaterReady ? "/room/水.png" : "/assets/pet-journey/空水碗.png"} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
         <img className="arrival-meal-food" src={activity.arrivalMealFoodReady ? "/room/狗碗.png" : "/assets/pet-journey/空飼料碗.png"} alt={activity.arrivalMealFoodReady ? "裝好飼料的狗碗" : "空飼料碗"} />
       </div>
       <div className="arrival-meal-footer">
-        {chocolateWarning && <div className="arrival-meal-warning" role="alert"><b>這個不能給小狗吃</b><p>巧克力屬於犬隻不適合食用的食物，可能對健康造成危害。請選擇適合小狗的主食與乾淨飲水。</p><small>人類食物不一定適合狗狗，尤其是巧克力、洋蔥、大蒜、葡萄、酒精、咖啡因等，都應避免餵食。</small></div>}
         {complete && <p role="status">晚餐準備好了！合適的主食與乾淨飲水，是每天照顧的重要部分。</p>}
         <button className="primary" disabled={!complete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
       </div>
@@ -907,7 +911,6 @@ export function LifeJourney({
     <div className="content-wrap life-journey-page">
       <div className="life-journey-head">
         <div><h1>{item.timeLabel}</h1></div>
-        <b>{index + 1} / {journeyItems.length}</b>
       </div>
       {isDailyBehaviorActivity ? (
         <DailyBehaviorActivity
