@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-kj8qM3wM.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-DWrrk1wU.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -872,7 +872,7 @@ var lifeScenarios = [
 				text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫",
 				result: "correct",
 				...positive,
-				explanation: "做得很好！及早觀察與記錄能幫助獸醫判斷。",
+				explanation: "及早觀察與記錄能幫助獸醫判斷。",
 				suggestion: "柴犬較常見需要留意的健康問題包括：\n皮膚過敏或搔癢、掉毛、紅腫；\n關節不適、跛行或活動力下降；\n眼睛分泌物增加、紅眼或視力異常。\n\n如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。",
 				expenseIds: ["sick-vet-care"]
 			},
@@ -944,6 +944,12 @@ var journeyItems = [
 		title: "日常行為照顧"
 	},
 	{
+		id: "walking",
+		type: "walking",
+		timeLabel: "日常生活",
+		title: "今天也要出門散步"
+	},
+	{
 		id: "busy-care",
 		type: "scenario",
 		timeLabel: "穩定生活的日常",
@@ -969,6 +975,11 @@ var initialLifeActivityState = {
 	bodyLanguageSignals: [],
 	arrivalMealFoodReady: false,
 	arrivalMealWaterReady: false,
+	walkingPreparedItems: [],
+	walkingSceneIndex: 0,
+	walkingMinutes: 0,
+	walkingPoopCleaned: false,
+	walkingComplete: false,
 	sickTimePassComplete: false,
 	bodyCareParts: [],
 	seniorAdjustments: []
@@ -977,6 +988,16 @@ var import_jsx_runtime = require_jsx_runtime();
 var arrivalVideoSource = "/assets/pet-journey/arrival-transition.mp4";
 function withPetName(text, petName) {
 	return text.replaceAll("豆豆", petName).replaceAll("小狗", petName).replaceAll("狗狗", petName);
+}
+var lifeStageLabels = {
+	arrival: "適應新家與安全感",
+	daily: "日常生活照護",
+	change: "當生活發生變化"
+};
+function lifeStageLabelForScenario(scenario) {
+	if (scenario.id === "arrival-adjustment") return lifeStageLabels.arrival;
+	if (scenario.id === "illness-vet" || scenario.id === "growing-old") return lifeStageLabels.change;
+	return lifeStageLabels.daily;
 }
 function otherCorrectChoices(scenario, choice, petName) {
 	if (choice.result !== "correct") return [];
@@ -1076,7 +1097,7 @@ function ArrivalTransitionVideo({ onContinue }) {
 }
 function stageForIndex(index) {
 	if (index <= 0) return 3;
-	if (index <= 2) return 4;
+	if (index <= 3) return 4;
 	return 6;
 }
 function TimePassTransition({ onComplete }) {
@@ -1212,8 +1233,8 @@ function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, on
 			className: "scene-copy",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					className: "eyebrow",
-					children: scenario.topic
+					className: "life-stage-label",
+					children: lifeStageLabelForScenario(scenario)
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: withPetName(scenario.title, petName) }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(scenario.description, petName) }),
@@ -1316,7 +1337,10 @@ function VideoScenarioActivity({ scenario, answer, petName, onChoose, onCorrectC
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "video-scenario-heading",
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: scenario.topic }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "life-stage-label",
+					children: lifeStageLabelForScenario(scenario)
+				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: withPetName(scenario.title, petName) }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(scenario.description, petName) })
 			]
@@ -1447,7 +1471,14 @@ function DailyBehaviorActivity({ answers, petName, onChoose, onContinue }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "daily-behavior-head",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: withPetName(scenario.title, petName) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(scenario.description, petName) })]
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "life-stage-label",
+						children: lifeStageLabels.daily
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: withPetName(scenario.title, petName) }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(scenario.description, petName) })
+				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "daily-behavior-video",
@@ -1570,7 +1601,14 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 		className: "busy-care-activity",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "busy-care-heading",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "忙碌時的日常照顧" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(scenario.description, petName) })]
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "life-stage-label",
+					children: lifeStageLabels.daily
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "忙碌時的日常照顧" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(scenario.description, petName) })
+			]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "busy-care-layout",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -1683,16 +1721,23 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "arrival-meal-heading",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
-					"幫",
-					petName,
-					"準備第一餐"
-				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
-					petName,
-					"剛到新家，還有些不安。先幫",
-					petName,
-					"準備合適的主食與乾淨飲水，讓牠慢慢安心下來。"
-				] })]
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "life-stage-label",
+						children: lifeStageLabels.daily
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
+						"幫",
+						petName,
+						"準備第一餐"
+					] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+						petName,
+						"剛到新家，還有些不安。先幫",
+						petName,
+						"準備合適的主食與乾淨飲水，讓牠慢慢安心下來。"
+					] })
+				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
 				className: "arrival-meal-supplies",
@@ -1781,11 +1826,276 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 		]
 	});
 }
+var walkingPrepItems = [
+	{
+		id: "leash",
+		label: "牽繩／胸背帶",
+		image: "/car/牽繩.png"
+	},
+	{
+		id: "bag",
+		label: "撿便袋",
+		image: "/walking-the-dog/拾便袋.png"
+	},
+	{
+		id: "water",
+		label: "水",
+		image: "/assets/pet-journey/waterbottle.png"
+	}
+];
+var walkingScenes = [
+	{
+		title: "家門口往人行道",
+		image: "/walking-the-dog/家門口往人行道背景.jpg",
+		poopEvent: false
+	},
+	{
+		title: "公園",
+		image: "/walking-the-dog/公園.png",
+		poopEvent: false
+	},
+	{
+		title: "公園 2",
+		image: "/walking-the-dog/公園%202.png",
+		poopEvent: true
+	},
+	{
+		title: "人行道往家門口",
+		image: "/walking-the-dog/人行道往家門口背景.jpg",
+		poopEvent: false
+	}
+];
+function WalkingActivity({ activity, petName, onChange, onContinue }) {
+	const [started, setStarted] = (0, import_react.useState)(activity.walkingMinutes > 0 || activity.walkingComplete);
+	const [position, setPosition] = (0, import_react.useState)(0);
+	const [moving, setMoving] = (0, import_react.useState)(false);
+	const [message, setMessage] = (0, import_react.useState)("");
+	const [completedSceneIndex, setCompletedSceneIndex] = (0, import_react.useState)(null);
+	const completingSceneRef = (0, import_react.useRef)(null);
+	const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
+	const scene = walkingScenes[sceneIndex];
+	const prepared = activity.walkingPreparedItems;
+	const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
+	const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
+	const progressMinutes = Math.min(20, activity.walkingMinutes);
+	(0, import_react.useEffect)(() => {
+		setPosition(0);
+		setMoving(false);
+		setCompletedSceneIndex(null);
+		completingSceneRef.current = null;
+	}, [activity.walkingSceneIndex]);
+	(0, import_react.useEffect)(() => {
+		if (!started || activity.walkingComplete || !moving || needsCleanup) return;
+		const timer = window.setInterval(() => {
+			setPosition((current) => {
+				if (scene.poopEvent && current >= 50 && !activity.walkingPoopCleaned) {
+					setMoving(false);
+					return 50;
+				}
+				const next = Math.min(100, current + .72);
+				if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
+					completingSceneRef.current = sceneIndex;
+					setCompletedSceneIndex(sceneIndex);
+				}
+				return next;
+			});
+		}, 38);
+		return () => window.clearInterval(timer);
+	}, [
+		activity.walkingComplete,
+		activity.walkingPoopCleaned,
+		moving,
+		needsCleanup,
+		scene.poopEvent,
+		sceneIndex,
+		started
+	]);
+	(0, import_react.useEffect)(() => {
+		if (!started || activity.walkingComplete || completedSceneIndex === null) return;
+		if (completedSceneIndex !== sceneIndex) return;
+		const complete = completedSceneIndex >= walkingScenes.length - 1;
+		onChange({
+			walkingMinutes: Math.min(20, activity.walkingMinutes + 5),
+			walkingSceneIndex: complete ? completedSceneIndex : completedSceneIndex + 1,
+			walkingComplete: complete
+		});
+		setMessage(complete ? "散步時間達到 20 分鐘！" : `完成「${walkingScenes[completedSceneIndex].title}」，散步時間 +5 分鐘。`);
+	}, [
+		activity.walkingComplete,
+		activity.walkingMinutes,
+		completedSceneIndex,
+		onChange,
+		sceneIndex,
+		started
+	]);
+	function prepare(id) {
+		if (prepared.includes(id)) return;
+		onChange({ walkingPreparedItems: [...prepared, id] });
+		setMessage("");
+	}
+	function startWalk() {
+		if (!prepared.includes("leash")) {
+			setMessage("外出活動需要適當防護措施，牽繩或胸背帶能避免走失、驚嚇衝出，也能保護牠和其他人。");
+			return;
+		}
+		if (!allPrepared) {
+			setMessage("出門前也要準備撿便袋和水，讓散步更安心。");
+			return;
+		}
+		setStarted(true);
+		setMessage("把滑鼠移到畫面右側，陪牠慢慢往前走。");
+	}
+	function handleSceneMove(event) {
+		if (!started || activity.walkingComplete) return;
+		if (needsCleanup) {
+			setMessage("先把排泄物清理乾淨，再繼續散步。");
+			setMoving(false);
+			return;
+		}
+		const rect = event.currentTarget.getBoundingClientRect();
+		setMoving((event.clientX - rect.left) / rect.width > .54);
+	}
+	function cleanupPoop() {
+		onChange({ walkingPoopCleaned: true });
+		setMessage("已清理完成，散步時記得隨手清理排泄物。");
+	}
+	if (activity.walkingComplete) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+		className: "walking-activity walking-complete",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "walking-complete-card",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "今天的散步完成了！" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+					"你陪",
+					petName,
+					"完成了至少 20 分鐘的活動，也記得清理排泄物。"
+				] }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "規律散步能讓狗狗有機會探索環境、消耗體力，也有助於維持生理與心理健康。" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					type: "button",
+					className: "primary",
+					onClick: onContinue,
+					children: ["繼續生活旅程 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})
+			]
+		})
+	});
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: "walking-activity",
+		"aria-label": "今天也要出門散步",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "walking-head",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "life-stage-label",
+				children: lifeStageLabels.daily
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "今天也要出門散步" })] })
+		}), !started ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "walking-prep",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "walking-prep-list",
+				children: walkingPrepItems.map((item) => {
+					const done = prepared.includes(item.id);
+					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						type: "button",
+						className: done ? "prepared" : "",
+						"aria-pressed": done,
+						onClick: () => prepare(item.id),
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							src: item.image,
+							alt: item.label
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
+					}, item.id);
+				})
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "walking-prep-card",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "出門準備" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "三項都完成後才可以開始散步。外出時的防護、補水與清理排泄，都是日常照顧的一部分。" }),
+					message && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "walking-message",
+						role: "alert",
+						children: message
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						type: "button",
+						className: "primary",
+						disabled: !allPrepared,
+						onClick: startWalk,
+						children: ["開始散步 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+					})
+				]
+			})]
+		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "walking-game",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "walking-progress",
+					"aria-label": `散步進度 ${progressMinutes} / 20 分鐘`,
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "散步進度" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { width: `${progressMinutes / 20 * 100}%` } }) }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [progressMinutes, " / 20 分鐘"] })
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: `walking-scene ${moving ? "is-moving" : ""}`,
+					onMouseMove: handleSceneMove,
+					onMouseLeave: () => setMoving(false),
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							className: "walking-bg",
+							src: scene.image,
+							alt: scene.title
+						}),
+						needsCleanup && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "walking-scene-alert",
+							role: "alert",
+							children: "散步中發現排泄物，請點擊清理後再繼續前進。"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "walking-character",
+							style: { left: `${Math.min(78, 5 + position * .73)}%` },
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								src: needsCleanup ? "/walking-the-dog/散步人物+排便柴犬.png" : "/walking-the-dog/散步人物+柴犬.png",
+								alt: `正在和${petName}散步的人物與小狗`
+							}), needsCleanup && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								className: "walking-poop",
+								onClick: cleanupPoop,
+								"aria-label": "清理排泄物",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: "/walking-the-dog/便便.png",
+									alt: ""
+								})
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "walking-forward-zone",
+							"aria-hidden": "true",
+							children: "滑鼠移到右側前進"
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					className: "primary walking-mobile-forward",
+					onPointerDown: () => setMoving(true),
+					onPointerUp: () => setMoving(false),
+					onPointerCancel: () => setMoving(false),
+					onPointerLeave: () => setMoving(false),
+					disabled: needsCleanup,
+					children: "按住往前走"
+				})
+			]
+		})]
+	});
+}
 function LifeJourney({ index, petName, answers, activity, completedIds, expenses, backupNames, members, roomReady, onIndex, onChoose, onMembersChange, onActivityChange, onCompleteItem, onAddExpense, onStageChange, onBack, onComplete }) {
 	const item = journeyItems[index];
 	const scenario = item.scenarioId ? lifeScenarios.find((entry) => entry.id === item.scenarioId) : void 0;
 	const answer = scenario ? answers[scenario.id] : void 0;
 	const isDailyBehaviorActivity = item.id === "behavior";
+	const isWalkingActivity = item.id === "walking";
 	const isBusyCareActivity = item.id === "busy-care" && scenario?.id === "busy-daily-care";
 	const isVideoFeedbackScenario = scenario?.id === "arrival-adjustment" || scenario?.id === "illness-vet" || scenario?.id === "growing-old";
 	const [arrivalMealOpen, setArrivalMealOpen] = (0, import_react.useState)(false);
@@ -1832,14 +2142,15 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap life-journey-page",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "life-journey-head",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: item.timeLabel }) })
-			}),
 			isDailyBehaviorActivity ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DailyBehaviorActivity, {
 				answers,
 				petName,
 				onChoose,
+				onContinue: continueJourney
+			}) : isWalkingActivity ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WalkingActivity, {
+				activity,
+				petName,
+				onChange: onActivityChange,
 				onContinue: continueJourney
 			}) : isBusyCareActivity && scenario ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BusyCareActivity, {
 				scenario,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { expenseCatalog, money, roomItems } from "./game-data";
 import { journeyItems, lifeScenarios } from "./life-data";
 import type {
@@ -19,6 +19,18 @@ function withPetName(text: string, petName: string) {
     .replaceAll("豆豆", petName)
     .replaceAll("小狗", petName)
     .replaceAll("狗狗", petName);
+}
+
+const lifeStageLabels = {
+  arrival: "適應新家與安全感",
+  daily: "日常生活照護",
+  change: "當生活發生變化",
+} as const;
+
+function lifeStageLabelForScenario(scenario: Scenario) {
+  if (scenario.id === "arrival-adjustment") return lifeStageLabels.arrival;
+  if (scenario.id === "illness-vet" || scenario.id === "growing-old") return lifeStageLabels.change;
+  return lifeStageLabels.daily;
 }
 
 function otherCorrectChoices(scenario: Scenario, choice: ScenarioChoice, petName: string) {
@@ -133,7 +145,7 @@ export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void 
 
 function stageForIndex(index: number) {
   if (index <= 0) return 3;
-  if (index <= 2) return 4;
+  if (index <= 3) return 4;
   return 6;
 }
 
@@ -245,7 +257,7 @@ function ScenarioCard({
     <>
       <article className="scene-card">
         <div className="scene-copy">
-          <p className="eyebrow">{scenario.topic}</p>
+          <p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p>
           <h1>{withPetName(scenario.title, petName)}</h1>
           <p>{withPetName(scenario.description, petName)}</p>
           {scenario.supportChoice && (
@@ -334,7 +346,7 @@ function VideoScenarioActivity({
 
   return (
     <section className="video-scenario-activity">
-      <div className="video-scenario-heading"><span>{scenario.topic}</span><h1>{withPetName(scenario.title, petName)}</h1><p>{withPetName(scenario.description, petName)}</p></div>
+      <div className="video-scenario-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(scenario.title, petName)}</h1><p>{withPetName(scenario.description, petName)}</p></div>
       <div className="video-scenario-layout">
         <div className="video-scenario-visual">
           <video src={source} autoPlay loop playsInline preload="metadata" aria-label={scenario.id === "arrival-adjustment" ? "小狗第一天適應新家的影片" : scenario.id === "growing-old" ? "小狗逐漸進入高齡的情境影片" : "柴犬常見健康問題觀察影片"} onError={() => setVideoFailed(true)} />
@@ -440,6 +452,7 @@ function DailyBehaviorActivity({
   return (
     <section className="daily-behavior-activity">
       <div className="daily-behavior-head">
+        <p className="life-stage-label">{lifeStageLabels.daily}</p>
         <h1>{withPetName(scenario.title, petName)}</h1>
         <p>{withPetName(scenario.description, petName)}</p>
       </div>
@@ -530,7 +543,7 @@ function BusyCareActivity({
 
   return (
     <section className="busy-care-activity">
-      <div className="busy-care-heading"><h1>忙碌時的日常照顧</h1><p>{withPetName(scenario.description, petName)}</p></div>
+      <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabels.daily}</p><h1>忙碌時的日常照顧</h1><p>{withPetName(scenario.description, petName)}</p></div>
       <div className="busy-care-layout">
         <div className="busy-care-room" aria-label="小狗在房間中等待照顧的情境">
           <img className="busy-care-room-background" src="/room/空房間.png" alt="居家房間場景" />
@@ -722,6 +735,7 @@ function ArrivalMealActivity({
   return (
     <section className="arrival-meal-activity" aria-label={`為${petName}準備第一餐`}>
       <div className="arrival-meal-heading">
+        <p className="life-stage-label">{lifeStageLabels.daily}</p>
         <h1>幫{petName}準備第一餐</h1>
         <p>{petName}剛到新家，還有些不安。先幫{petName}準備合適的主食與乾淨飲水，讓牠慢慢安心下來。</p>
       </div>
@@ -810,6 +824,208 @@ function SeniorRoomActivity({
   );
 }
 
+const walkingPrepItems = [
+  { id: "leash", label: "牽繩／胸背帶", image: "/car/牽繩.png" },
+  { id: "bag", label: "撿便袋", image: "/walking-the-dog/拾便袋.png" },
+  { id: "water", label: "水", image: "/assets/pet-journey/waterbottle.png" },
+] as const;
+
+const walkingScenes = [
+  { title: "家門口往人行道", image: "/walking-the-dog/家門口往人行道背景.jpg", poopEvent: false },
+  { title: "公園", image: "/walking-the-dog/公園.png", poopEvent: false },
+  { title: "公園 2", image: "/walking-the-dog/公園%202.png", poopEvent: true },
+  { title: "人行道往家門口", image: "/walking-the-dog/人行道往家門口背景.jpg", poopEvent: false },
+] as const;
+
+function dogWalkStatus(minutes: number) {
+  if (minutes >= 20) return "滿足";
+  if (minutes >= 15) return "活動中";
+  if (minutes >= 10) return "放鬆";
+  if (minutes >= 5) return "開始探索";
+  return "期待";
+}
+
+function WalkingActivity({
+  activity,
+  petName,
+  onChange,
+  onContinue,
+}: {
+  activity: LifeActivityState;
+  petName: string;
+  onChange: (patch: Partial<LifeActivityState>) => void;
+  onContinue: () => void;
+}) {
+  const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
+  const [position, setPosition] = useState(0);
+  const [moving, setMoving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [completedSceneIndex, setCompletedSceneIndex] = useState<number | null>(null);
+  const completingSceneRef = useRef<number | null>(null);
+  const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
+  const scene = walkingScenes[sceneIndex];
+  const prepared = activity.walkingPreparedItems;
+  const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
+  const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
+  const progressMinutes = Math.min(20, activity.walkingMinutes);
+
+  useEffect(() => {
+    setPosition(0);
+    setMoving(false);
+    setCompletedSceneIndex(null);
+    completingSceneRef.current = null;
+  }, [activity.walkingSceneIndex]);
+
+  useEffect(() => {
+    if (!started || activity.walkingComplete || !moving || needsCleanup) return;
+    const timer = window.setInterval(() => {
+      setPosition((current) => {
+        if (scene.poopEvent && current >= 50 && !activity.walkingPoopCleaned) {
+          setMoving(false);
+          return 50;
+        }
+        const next = Math.min(100, current + 0.72);
+        if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
+          completingSceneRef.current = sceneIndex;
+          setCompletedSceneIndex(sceneIndex);
+        }
+        return next;
+      });
+    }, 38);
+    return () => window.clearInterval(timer);
+  }, [activity.walkingComplete, activity.walkingPoopCleaned, moving, needsCleanup, scene.poopEvent, sceneIndex, started]);
+
+  useEffect(() => {
+    if (!started || activity.walkingComplete || completedSceneIndex === null) return;
+    if (completedSceneIndex !== sceneIndex) return;
+    const complete = completedSceneIndex >= walkingScenes.length - 1;
+    const nextMinutes = Math.min(20, activity.walkingMinutes + 5);
+    onChange({
+      walkingMinutes: nextMinutes,
+      walkingSceneIndex: complete ? completedSceneIndex : completedSceneIndex + 1,
+      walkingComplete: complete,
+    });
+    setMessage(complete ? "散步時間達到 20 分鐘！" : `完成「${walkingScenes[completedSceneIndex].title}」，散步時間 +5 分鐘。`);
+  }, [activity.walkingComplete, activity.walkingMinutes, completedSceneIndex, onChange, sceneIndex, started]);
+
+  function prepare(id: string) {
+    if (prepared.includes(id)) return;
+    onChange({ walkingPreparedItems: [...prepared, id] });
+    setMessage("");
+  }
+
+  function startWalk() {
+    if (!prepared.includes("leash")) {
+      setMessage("外出活動需要適當防護措施，牽繩或胸背帶能避免走失、驚嚇衝出，也能保護牠和其他人。");
+      return;
+    }
+    if (!allPrepared) {
+      setMessage("出門前也要準備撿便袋和水，讓散步更安心。");
+      return;
+    }
+    setStarted(true);
+    setMessage("把滑鼠移到畫面右側，陪牠慢慢往前走。");
+  }
+
+  function handleSceneMove(event: MouseEvent<HTMLElement>) {
+    if (!started || activity.walkingComplete) return;
+    if (needsCleanup) {
+      setMessage("先把排泄物清理乾淨，再繼續散步。");
+      setMoving(false);
+      return;
+    }
+    const rect = event.currentTarget.getBoundingClientRect();
+    const ratio = (event.clientX - rect.left) / rect.width;
+    setMoving(ratio > 0.54);
+  }
+
+  function cleanupPoop() {
+    onChange({ walkingPoopCleaned: true });
+    setMessage("已清理完成，散步時記得隨手清理排泄物。");
+  }
+
+  if (activity.walkingComplete) {
+    return (
+      <section className="walking-activity walking-complete">
+        <div className="walking-complete-card">
+          <h1>今天的散步完成了！</h1>
+          <p>你陪{petName}完成了至少 20 分鐘的活動，也記得清理排泄物。</p>
+          <p>規律散步能讓狗狗有機會探索環境、消耗體力，也有助於維持生理與心理健康。</p>
+          <button type="button" className="primary" onClick={onContinue}>繼續生活旅程 <span>→</span></button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="walking-activity" aria-label="今天也要出門散步">
+      <div className="walking-head">
+        <div>
+          <p className="life-stage-label">{lifeStageLabels.daily}</p>
+          <h1>今天也要出門散步</h1>
+        </div>
+      </div>
+
+      {!started ? (
+        <div className="walking-prep">
+          <div className="walking-prep-list">
+            {walkingPrepItems.map((item) => {
+              const done = prepared.includes(item.id);
+              return (
+                <button type="button" key={item.id} className={done ? "prepared" : ""} aria-pressed={done} onClick={() => prepare(item.id)}>
+                  <img src={item.image} alt={item.label} />
+                  <b>{item.label}</b>
+                </button>
+              );
+            })}
+          </div>
+          <div className="walking-prep-card">
+            <h2>出門準備</h2>
+            <p>三項都完成後才可以開始散步。外出時的防護、補水與清理排泄，都是日常照顧的一部分。</p>
+            {message && <p className="walking-message" role="alert">{message}</p>}
+            <button type="button" className="primary" disabled={!allPrepared} onClick={startWalk}>開始散步 <span>→</span></button>
+          </div>
+        </div>
+      ) : (
+        <div className="walking-game">
+          <div className="walking-progress" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
+            <b>散步進度</b>
+            <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
+            <small>{progressMinutes} / 20 分鐘</small>
+          </div>
+          <div
+            className={`walking-scene ${moving ? "is-moving" : ""}`}
+            onMouseMove={handleSceneMove}
+            onMouseLeave={() => setMoving(false)}
+          >
+            <img className="walking-bg" src={scene.image} alt={scene.title} />
+            {needsCleanup && <div className="walking-scene-alert" role="alert">散步中發現排泄物，請點擊清理後再繼續前進。</div>}
+            <div className="walking-character" style={{ left: `${Math.min(78, 5 + position * 0.73)}%` }}>
+              <img
+                src={needsCleanup ? "/walking-the-dog/散步人物+排便柴犬.png" : "/walking-the-dog/散步人物+柴犬.png"}
+                alt={`正在和${petName}散步的人物與小狗`}
+              />
+              {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/walking-the-dog/便便.png" alt="" /></button>}
+            </div>
+            <div className="walking-forward-zone" aria-hidden="true">滑鼠移到右側前進</div>
+          </div>
+          <button
+            type="button"
+            className="primary walking-mobile-forward"
+            onPointerDown={() => setMoving(true)}
+            onPointerUp={() => setMoving(false)}
+            onPointerCancel={() => setMoving(false)}
+            onPointerLeave={() => setMoving(false)}
+            disabled={needsCleanup}
+          >
+            按住往前走
+          </button>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function LifeJourney({
   index,
   petName,
@@ -853,6 +1069,7 @@ export function LifeJourney({
   const scenario = item.scenarioId ? lifeScenarios.find((entry) => entry.id === item.scenarioId) : undefined;
   const answer = scenario ? answers[scenario.id] : undefined;
   const isDailyBehaviorActivity = item.id === "behavior";
+  const isWalkingActivity = item.id === "walking";
   const isBusyCareActivity = item.id === "busy-care" && scenario?.id === "busy-daily-care";
   const isVideoFeedbackScenario = scenario?.id === "arrival-adjustment" || scenario?.id === "illness-vet" || scenario?.id === "growing-old";
   const [arrivalMealOpen, setArrivalMealOpen] = useState(false);
@@ -903,14 +1120,18 @@ export function LifeJourney({
 
   return (
     <div className="content-wrap life-journey-page">
-      <div className="life-journey-head">
-        <div><h1>{item.timeLabel}</h1></div>
-      </div>
       {isDailyBehaviorActivity ? (
         <DailyBehaviorActivity
           answers={answers}
           petName={petName}
           onChoose={onChoose}
+          onContinue={continueJourney}
+        />
+      ) : isWalkingActivity ? (
+        <WalkingActivity
+          activity={activity}
+          petName={petName}
+          onChange={onActivityChange}
           onContinue={continueJourney}
         />
       ) : isBusyCareActivity && scenario ? (

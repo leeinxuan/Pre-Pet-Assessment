@@ -98,7 +98,7 @@ export const lifeScenarios: Scenario[] = [
     topic: "健康觀察與就醫判斷",
     artIndex: 3,
     choices: [
-      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "做得很好！及早觀察與記錄能幫助獸醫判斷。", suggestion: "柴犬較常見需要留意的健康問題包括：\n皮膚過敏或搔癢、掉毛、紅腫；\n關節不適、跛行或活動力下降；\n眼睛分泌物增加、紅眼或視力異常。\n\n如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。", expenseIds: ["sick-vet-care"] },
+      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "及早觀察與記錄能幫助獸醫判斷。", suggestion: "柴犬較常見需要留意的健康問題包括：\n皮膚過敏或搔癢、掉毛、紅腫；\n關節不適、跛行或活動力下降；\n眼睛分泌物增加、紅眼或視力異常。\n\n如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。", expenseIds: ["sick-vet-care"] },
       { id: "wait-and-see", text: "先等幾天看看，牠可能只是心情不好", result: "incorrect", ...incorrect, explanation: "等太久可能延誤皮膚過敏、關節不適或眼部問題的處理，讓小狗持續不舒服。", suggestion: "記錄具體症狀與變化，並聯絡獸醫確認是否需要檢查。" },
       { id: "human-medicine", text: "自行餵人用藥或網路偏方", result: "incorrect", ...incorrect, explanation: "人用藥與未經專業確認的偏方可能對小狗造成危險，也可能讓皮膚、關節或眼部問題更難判斷。", suggestion: "不要自行給藥；先記錄症狀，再向獸醫說明觀察到的變化。" },
     ],
@@ -122,6 +122,7 @@ export const lifeScenarios: Scenario[] = [
 export const journeyItems: JourneyItem[] = [
   { id: "arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "arrival-adjustment" },
   { id: "behavior", type: "scenario", timeLabel: "日常行為照顧", title: "日常行為照顧" },
+  { id: "walking", type: "walking", timeLabel: "日常生活", title: "今天也要出門散步" },
   { id: "busy-care", type: "scenario", timeLabel: "穩定生活的日常", title: "忙碌時的日常照顧", scenarioId: "busy-daily-care" },
   { id: "sick", type: "scenario", timeLabel: "生病與就醫", title: "生病與就醫", scenarioId: "illness-vet" },
   { id: "senior", type: "scenario", timeLabel: "逐漸進入高齡", title: "小狗逐漸老去", scenarioId: "growing-old" },
@@ -131,6 +132,11 @@ export const initialLifeActivityState: LifeActivityState = {
   bodyLanguageSignals: [],
   arrivalMealFoodReady: false,
   arrivalMealWaterReady: false,
+  walkingPreparedItems: [],
+  walkingSceneIndex: 0,
+  walkingMinutes: 0,
+  walkingPoopCleaned: false,
+  walkingComplete: false,
   sickTimePassComplete: false,
   bodyCareParts: [],
   seniorAdjustments: [],
