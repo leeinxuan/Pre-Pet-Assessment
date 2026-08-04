@@ -445,6 +445,8 @@ export const initialProfile: Profile = {
   otherHousemate: "",
   activitySpace: "",
   otherActivitySpace: "",
+  homeSpaceImage: "",
+  homeSpaceImageName: "",
   noShibaExperience: false,
   pastPetTypes: [],
   pastDogCount: "",

@@ -315,7 +315,19 @@ function VideoScenarioActivity({
         <div className="video-scenario-positive-video">
           {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay playsInline preload="metadata" aria-label="正確處置後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
         </div>
-        <div className="video-scenario-positive-copy"><h2>做得很好！</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} /><small>{scenario.id === "arrival-adjustment" ? "你已替牠保留適應新家的空間。接著一起準備第一餐吧。" : scenario.id === "growing-old" ? "提早安排醫療準備與健康觀察，能讓高齡階段的照顧更穩定。" : "及早觀察、記錄並聯絡獸醫，能讓小狗獲得更適當的照顧。"}</small><button type="button" className="primary" onClick={onCorrectComplete}>繼續 <span>→</span></button></div>
+        <div className="video-scenario-positive-copy">
+          <h2>做得很好！</h2>
+          <p>{withPetName(selectedChoice.explanation, petName)}</p>
+          {scenario.id === "illness-vet" && selectedChoice.suggestion ? (
+            <div className="illness-health-note">
+              {withPetName(selectedChoice.suggestion, petName).split("\n").map((line, index) => line ? <p key={`${line}-${index}`}>{line}</p> : <br key={`break-${index}`} />)}
+            </div>
+          ) : (
+            <small>{scenario.id === "arrival-adjustment" ? "你已替牠保留適應新家的空間。接著一起準備第一餐吧。" : scenario.id === "growing-old" ? "提早安排醫療準備與健康觀察，能讓高齡階段的照顧更穩定。" : "及早觀察、記錄並聯絡獸醫，能讓小狗獲得更適當的照顧。"}</small>
+          )}
+          <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />
+          <button type="button" className="primary" onClick={onCorrectComplete}>繼續 <span>→</span></button>
+        </div>
       </section>
     );
   }

@@ -106,6 +106,8 @@ export type Profile = {
   otherHousemate: string;
   activitySpace: string;
   otherActivitySpace: string;
+  homeSpaceImage: string;
+  homeSpaceImageName: string;
   noShibaExperience: boolean;
   pastPetTypes: string[];
   pastDogCount: string;

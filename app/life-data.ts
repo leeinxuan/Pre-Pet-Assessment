@@ -71,7 +71,6 @@ export const lifeScenarios: Scenario[] = [
     choices: [
       { id: "toilet-material", text: "使用適當材質鋪地，例如報紙或尿布墊", result: "correct", ...positive, explanation: "適當材質能幫助建立固定如廁位置，也讓清潔和引導更一致。" },
       { id: "toilet-outings", text: "一天多安排幾次外出如廁機會", result: "correct", ...positive, explanation: "增加合適的外出機會，能讓幼犬有更多時間練習正確如廁。" },
-      { id: "toilet-reward", text: "在牠完成如廁時給予適當獎勵", result: "correct", ...positive, explanation: "在做對的當下給予適當獎勵，能讓小狗更容易理解期待的行為。" },
       { id: "toilet-scold", text: "牠尿錯地方就把牠抓過來罵", result: "incorrect", ...incorrect, explanation: "責罵可能讓狗狗害怕，卻不一定知道正確如廁地點。", suggestion: "使用適當材質、增加外出機會，並在牠做對時給予獎勵。" },
       { id: "toilet-expert", text: "若頻率異常或持續困擾，尋求獸醫或行為專家協助", result: "correct", ...positive, explanation: "頻率異常或持續困擾時，尋求獸醫或行為專家協助能確認是否有健康或行為需求。" },
     ],
@@ -95,11 +94,11 @@ export const lifeScenarios: Scenario[] = [
     stage: "生病與就醫",
     timeLabel: "生病與就醫",
     title: "柴犬常見健康問題觀察",
-    description: "最近你發現小狗常常舔腳、抓癢，走路時偶爾不太想跳上跳下，眼睛也有些紅紅的。這些可能和柴犬常見的皮膚過敏、關節問題或眼部疾病有關，需要仔細觀察並尋求專業建議。",
+    description: "最近你發現小狗常常舔腳、抓癢，走路時偶爾不太想跳上跳下，眼睛也有些紅紅的。",
     topic: "健康觀察與就醫判斷",
     artIndex: 3,
     choices: [
-      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "做得很好！及早觀察與記錄能幫助獸醫判斷。皮膚、關節與眼部問題都需要專業評估，也需要平常持續留意變化。", suggestion: "持續記下舔腳、抓癢、走路狀態、眼睛紅腫等變化，並依獸醫建議安排檢查。", expenseIds: ["sick-vet-care"] },
+      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "做得很好！及早觀察與記錄能幫助獸醫判斷。", suggestion: "柴犬較常見需要留意的健康問題包括：\n皮膚過敏或搔癢、掉毛、紅腫；\n關節不適、跛行或活動力下降；\n眼睛分泌物增加、紅眼或視力異常。\n\n如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。", expenseIds: ["sick-vet-care"] },
       { id: "wait-and-see", text: "先等幾天看看，牠可能只是心情不好", result: "incorrect", ...incorrect, explanation: "等太久可能延誤皮膚過敏、關節不適或眼部問題的處理，讓小狗持續不舒服。", suggestion: "記錄具體症狀與變化，並聯絡獸醫確認是否需要檢查。" },
       { id: "human-medicine", text: "自行餵人用藥或網路偏方", result: "incorrect", ...incorrect, explanation: "人用藥與未經專業確認的偏方可能對小狗造成危險，也可能讓皮膚、關節或眼部問題更難判斷。", suggestion: "不要自行給藥；先記錄症狀，再向獸醫說明觀察到的變化。" },
     ],

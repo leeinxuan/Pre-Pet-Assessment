@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { breeds, categories, money, stations } from "./game-data";
+import { breeds, categories, money } from "./game-data";
 import { journeyItems } from "./life-data";
 import type { ExpenseRecord, LifeJourneyPhase } from "./game-types";
 
@@ -147,7 +147,7 @@ export function StageRail({
     {
       id: "assessment",
       number: "04",
-      label: "資料與評估",
+      label: "照顧準備總覽",
       status: mainStatus(3),
       onClick: () => onGoTo(7),
     },
@@ -191,29 +191,23 @@ export function StageRail({
 
 export function Welcome({ onStart }: { onStart: () => void }) {
   return (
-    <section className="welcome">
-      <nav className="welcome-nav">
-        <div className="brand static"><span className="brand-mark">慢</span><span>慢慢來，先想想</span></div>
-        <span className="prototype-tag">一段真正開始生活的領養預演</span>
-      </nav>
-      <div className="welcome-grid">
-        <div className="hero-copy">
-          <p className="eyebrow">給準飼主的一段慢速旅程</p>
-          <h1>在把牠帶回家以前，<br /><span>先一起生活一次。</span></h1>
-          <p className="hero-lead">從準備空間、分配照顧，到接回家、建立日常、面對生病與生活變化。這不是適不適合的測驗，而是一段約 15–20 分鐘的生活時間軸。</p>
-          <div className="hero-actions">
-            <button className="primary large" onClick={onStart}>開始領養生活預演 <span>→</span></button>
-            <span className="time-pill">◷ 約 15–20 分鐘</span>
-          </div>
-          <div className="trust-line"><span>不評分</span><span>不貼標籤</span><span>可返回調整</span></div>
-        </div>
-        <div className="hero-scene" aria-label="準飼主與柴犬在家中安靜相處的插畫">
-          <img src="/illustrations/hero-life-preview.png" alt="準飼主與柴犬在溫暖的居家空間互相觀察" />
-          <div className="thought">準備，不必一次到位<br /><b>但可以先想清楚。</b></div>
-        </div>
+    <section className="welcome" aria-label="毛日子新手村封面">
+      <div className="welcome-hero-copy">
+        <h1>毛日子<br />新手村</h1>
+        <p className="welcome-subtitle">在真正飼養前，先走過一次與毛小孩的完整旅程</p>
+        <button className="primary large welcome-start" onClick={onStart}>開始生活練習 <span>→</span></button>
       </div>
-      <div className="journey-map journey-map-eight">
-        {stations.map(([number, shortLabel], index) => <div key={number}><span>{number}</span><p>{shortLabel}</p>{index < stations.length - 1 && <i>··</i>}</div>)}
+      <div className="welcome-village" aria-hidden="true">
+        <span className="welcome-cloud welcome-cloud--left" />
+        <span className="welcome-cloud welcome-cloud--center" />
+        <span className="welcome-cloud welcome-cloud--right" />
+        <div className="welcome-houses">
+          <span className="welcome-house welcome-house--a" />
+          <span className="welcome-house welcome-house--b" />
+          <span className="welcome-house welcome-house--c" />
+          <span className="welcome-house welcome-house--d" />
+          <span className="welcome-house welcome-house--e" />
+        </div>
       </div>
     </section>
   );

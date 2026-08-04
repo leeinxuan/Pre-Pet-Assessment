@@ -1,0 +1,22 @@
+/* Hallmark 繚 pre-emit critique: P5 H4 E4 S5 R4 V4 */
+:root {
+  --home-sky-top: oklch(78% 0.09 205);
+  --home-sky-mid: oklch(88% 0.06 192);
+  --home-sky-low: oklch(96% 0.045 82);
+  --home-ink: oklch(24% 0.035 237);
+  --home-muted: oklch(44% 0.026 235);
+  --home-cloud: oklch(99% 0.025 86);
+  --home-card: oklch(98% 0.018 84);
+  --home-line: oklch(86% 0.026 92);
+  --home-accent: oklch(54% 0.12 213);
+  --home-accent-dark: oklch(40% 0.105 220);
+  --home-warm: oklch(78% 0.135 55);
+  --home-warm-soft: oklch(94% 0.05 58);
+  --home-mint: oklch(72% 0.07 168);
+  --home-shadow: 0 28px 70px oklch(32% 0.035 235 / 0.16);
+  --home-radius-panel: 26px;
+  --home-radius-pill: 999px;
+  --home-ease-out: cubic-bezier(.2, .8, .2, 1);
+  --home-dur-fast: 180ms;
+  --home-dur-slow: 700ms;
+}

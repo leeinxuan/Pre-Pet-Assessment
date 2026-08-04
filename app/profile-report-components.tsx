@@ -1,10 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { breeds, hazards, money, roomItems } from "./game-data";
 import { lifeScenarios } from "./life-data";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, ScenarioAnswer } from "./game-types";
 import { NavButtons } from "./shared-components";
+
+function PdfFab() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <button type="button" className="primary pdf-fab" onClick={() => window.print()}>
+      輸出 PDF
+    </button>,
+    document.body
+  );
+}
 
 function OptionButton({ label, selected, onClick, icon }: { label: string; selected: boolean; onClick: () => void; icon?: string }) {
   return (
@@ -123,11 +141,8 @@ export function ProfileSupplementForm({
   onBack: () => void;
   onReset: () => void;
 }) {
-  const [committed, setCommitted] = useState(false);
-  const [finished, setFinished] = useState(false);
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     onChange({ ...profile, [key]: value });
-    setFinished(false);
   };
   const clamp = (raw: string, max: number) => raw === "" ? "" : String(Math.min(max, Math.max(0, Number(raw.replace(/\D/g, "")) || 0)));
   const toggle = (key: "pastPetTypes" | "currentPetTypes" | "reasons", value: string) => update(key, profile[key].includes(value) ? profile[key].filter((item) => item !== value) : [...profile[key], value]);
@@ -137,7 +152,19 @@ export function ProfileSupplementForm({
     const housemateTypes = existing.includes(value) ? existing.filter((item) => item !== value) : [...existing, value];
     onChange({ ...profile, housemateTypes, hasHousemates: housemateTypes.length ? true : null });
   };
+  const consentOptions: Array<{ value: "agree" | "pending" | "disagree"; label: string; selected: boolean; consent: boolean | null }> = [
+    { value: "agree", label: "已知情並同意", selected: profile.housematesConsent === true, consent: true },
+    { value: "pending", label: "尚未確認", selected: profile.housematesConsent === null, consent: null },
+    { value: "disagree", label: "不同意", selected: profile.housematesConsent === false, consent: false },
+  ];
   const setCount = (key: "pastDogCount" | "pastCatCount" | "currentDogCount" | "currentCatCount", raw: string) => update(key, clamp(raw, 99));
+  function handleHomeSpaceImage(file: File | undefined) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = () => onChange({ ...profile, homeSpaceImage: String(reader.result ?? ""), homeSpaceImageName: file.name });
+    reader.readAsDataURL(file);
+  }
   const experienceInputs = (prefix: "past" | "current") => {
     const types = prefix === "past" ? profile.pastPetTypes : profile.currentPetTypes;
     return ["狗", "貓", "其他"].map((type) => {
@@ -150,41 +177,24 @@ export function ProfileSupplementForm({
 
   return (
     <section className="content-wrap profile-supplement" aria-labelledby="profile-supplement-title">
-      <section className="info-use-section">
-        <div className="profile-wizard-head"><div><h1>為什麼需要補充這些資料？</h1><p>你填寫的資料會用來整理更貼近你生活狀況的提醒。</p></div></div>
-        <div className="info-use-table" role="table" aria-label="資料填寫用途說明">
-          {[
-            ["每日陪伴時間", "影響日常照顧提醒"],
-            ["同住者狀況", "影響家庭互動與安全提醒"],
-            ["活動空間", "影響空間布置與危險物提醒"],
-            ["飼養經驗", "影響新手照顧重點"],
-            ["飼養原因", "影響長期責任與期待提醒"],
-          ].map(([label, value]) => <div key={label} role="row"><b role="cell">{label}</b><span role="cell">{value}</span></div>)}
-        </div>
-      </section>
-      <div className="profile-wizard-head"><div><h1 id="profile-supplement-title">補充真實生活條件</h1><p>只保留會影響照顧安排的資訊；預算、身分與備用照顧者欄位不再顯示。</p></div></div>
+      <div className="profile-wizard-head"><div><h1 id="profile-supplement-title">補充真實生活條件</h1><p>這些資料可協助收容所、寵物店家或照護人員了解你的居住環境、同住者狀況與飼養經驗，作為後續溝通與照顧建議的參考。</p></div></div>
       <section className="profile-panel">
         <fieldset><legend>每天的時間</legend><div className="profile-time-grid"><label>每天離家時間<span>每日 <input type="number" min="0" max="24" value={profile.hoursAway} onChange={(event) => update("hoursAway", clamp(event.target.value, 24))} /> 小時</span></label><label>每天可投入照顧時間<span>每日 <input type="number" min="0" max="24" value={profile.careHours} onChange={(event) => update("careHours", clamp(event.target.value, 24))} /> 小時</span></label></div></fieldset>
         <fieldset><legend>居住空間</legend><div className="housing-options">{["自有住宅", "租屋"].map((value) => <OptionButton key={value} label={value} selected={profile.housing === value} onClick={() => update("housing", value)} />)}</div>{profile.housing === "租屋" && <div className="landlord-options">{["房東已同意", "尚未取得同意"].map((value) => <OptionButton key={value} label={value} selected={profile.landlordConsent === value} onClick={() => update("landlordConsent", value)} />)}</div>}</fieldset>
-        <fieldset><legend>同居家人</legend><div className="supplement-choice-grid">{["無", "幼童", "長者", "孕婦", "其他"].map((value) => <button type="button" key={value} className={`supplement-choice ${profile.housemateTypes.includes(value) ? "selected" : ""}`} aria-pressed={profile.housemateTypes.includes(value)} onClick={() => chooseHousemate(value)}>{profile.housemateTypes.includes(value) && <span>✓</span>}{value}</button>)}</div>{profile.housemateTypes.includes("其他") && <label className="supplement-inline-input">其他同居家人<input placeholder="請說明" value={profile.otherHousemate} onChange={(event) => update("otherHousemate", event.target.value)} /></label>}{profile.hasHousemates && <div className="supplement-followup"><b>同住者是否知情並同意飼養？</b><div className="supplement-choice-grid compact">{[["agree", "已知情並同意"], ["pending", "尚未確認"], ["disagree", "不同意"]].map(([value, label]) => <button type="button" key={value} className={`supplement-choice ${value === "agree" ? profile.housematesConsent === true : value === "pending" ? profile.housematesConsent === null : profile.housematesConsent === false ? "selected" : ""}`} aria-pressed={value === "agree" ? profile.housematesConsent === true : value === "pending" ? profile.housematesConsent === null : profile.housematesConsent === false} onClick={() => update("housematesConsent", value === "agree" ? true : value === "disagree" ? false : null)}>{label}</button>)}</div></div>}</fieldset>
+        <fieldset><legend>同居家人</legend><div className="supplement-choice-grid">{["無", "幼童", "長者", "孕婦", "其他"].map((value) => <button type="button" key={value} className={`supplement-choice ${profile.housemateTypes.includes(value) ? "selected" : ""}`} aria-pressed={profile.housemateTypes.includes(value)} onClick={() => chooseHousemate(value)}>{profile.housemateTypes.includes(value) && <span>✓</span>}{value}</button>)}</div>{profile.housemateTypes.includes("其他") && <label className="supplement-inline-input">其他同居家人<input placeholder="請說明" value={profile.otherHousemate} onChange={(event) => update("otherHousemate", event.target.value)} /></label>}{profile.hasHousemates && <div className="supplement-followup"><b>同住者是否知情並同意飼養？</b><div className="supplement-choice-grid compact">{consentOptions.map((option) => <button type="button" key={option.value} className={`supplement-choice ${option.selected ? "selected" : ""}`} aria-pressed={option.selected} onClick={() => update("housematesConsent", option.consent)}>{option.label}</button>)}</div></div>}</fieldset>
         <fieldset><legend>寵物預計活動空間</legend><div className="supplement-choice-grid">{["戶外空間", "室內客廳", "房間", "其他"].map((value) => <button type="button" key={value} className={`supplement-choice ${profile.activitySpace === value ? "selected" : ""}`} aria-pressed={profile.activitySpace === value} onClick={() => update("activitySpace", value)}>{profile.activitySpace === value && <span>✓</span>}{value}</button>)}</div>{profile.activitySpace === "其他" && <label className="supplement-inline-input">其他活動空間<input placeholder="請說明" value={profile.otherActivitySpace} onChange={(event) => update("otherActivitySpace", event.target.value)} /></label>}</fieldset>
-        <fieldset><legend>居家空間</legend><div className="home-space-placeholder" role="note"><b>共同為毛孩的安全把關</b><span>上傳未來的活動空間與家戶防護照片</span></div></fieldset>
+        <fieldset><legend>居家空間</legend><div className="home-space-upload">
+          <label>
+            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => handleHomeSpaceImage(event.target.files?.[0])} />
+            <b>共同為毛孩的安全把關</b>
+            <span>可上傳未來寵物活動空間照片，協助評估環境安全與照顧安排。</span>
+            <em>{profile.homeSpaceImageName || "選擇 PNG、JPG、JPEG 或 WebP 圖片"}</em>
+          </label>
+          {profile.homeSpaceImage && <figure><img src={profile.homeSpaceImage} alt="已上傳的居家空間照片預覽" /><figcaption>{profile.homeSpaceImageName}</figcaption></figure>}
+        </div></fieldset>
         <fieldset><legend>飼養經驗</legend><button type="button" className={`supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`} aria-pressed={profile.noShibaExperience} onClick={() => update("noShibaExperience", !profile.noShibaExperience)}>我沒有養過柴犬</button><div className="pet-experience-block"><b>曾經飼養：</b><div className="pet-experience-row">{experienceInputs("past")}</div><b>目前家中有寵物：</b><div className="pet-experience-row">{experienceInputs("current")}</div><label className="experience-note">其他飼養經驗分享：<textarea placeholder="請分享你的照顧經驗" value={profile.experienceNote} onChange={(event) => update("experienceNote", event.target.value)} /></label></div></fieldset>
         <fieldset><legend>飼養原因 <small>可複選</small></legend><div className="supplement-choice-grid reasons">{["陪伴與情緒支持", "喜愛動物", "單純想養", "看家守衛", "他人推薦", "其他"].map((reason) => <button type="button" key={reason} className={`supplement-choice ${profile.reasons.includes(reason) ? "selected" : ""}`} aria-pressed={profile.reasons.includes(reason)} onClick={() => toggle("reasons", reason)}>{profile.reasons.includes(reason) && <span>✓</span>}{reason}</button>)}</div>{profile.reasons.includes("其他") && <label className="supplement-inline-input">其他飼養原因<input placeholder="請說明" value={profile.reasonOther} onChange={(event) => update("reasonOther", event.target.value)} /></label>}</fieldset>
       </section>
-      <section className="care-commitment" aria-labelledby="care-commitment-title">
-        <h2 id="care-commitment-title">照顧承諾</h2>
-        <label>
-          <input type="checkbox" checked={committed} onChange={(event) => { setCommitted(event.target.checked); setFinished(false); }} />
-          <span>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</span>
-        </label>
-      </section>
-      <div className="profile-supplement-actions">
-        <button type="button" className="secondary" onClick={onBack}>← 返回飼養生活</button>
-        <button type="button" className="secondary" onClick={onReset}>重新預演</button>
-        <button type="button" className="primary" disabled={!committed} onClick={() => setFinished(true)}>完成評估 <span>✓</span></button>
-        {finished && <span role="status">已完成照顧承諾。</span>}
-      </div>
     </section>
   );
 }
@@ -220,6 +230,7 @@ export function AssessmentReport({
   onBack: () => void;
   onReset: () => void;
 }) {
+  const [committed, setCommitted] = useState(false);
   const recurring = expenses.filter((item) => item.recurring).reduce((sum, item) => sum + item.amount, 0);
   const oneTime = expenses.filter((item) => !item.recurring && item.category === "用品").reduce((sum, item) => sum + item.amount, 0);
   const medical = expenses.filter((item) => item.category === "醫療" && !item.recurring).reduce((sum, item) => sum + item.amount, 0);
@@ -275,70 +286,139 @@ export function AssessmentReport({
   ];
   const selectedBreed = breeds.find((item) => item.id === breed);
 
-  const overviewCards = [
-    { title: "照顧時間", text: "你需要每天安排固定時間陪伴、餵食、飲水、排泄與活動。散步建議至少 20–30 分鐘，仍需依狗狗年齡、健康與天氣調整。" },
-    { title: "生活環境", text: "家中需要有安全、乾淨、通風、可休息的空間。危險物品要收好，食物、清潔用品、電線與小物品都需要注意。" },
-    { title: "照顧責任", text: "狗狗無法長時間完全無人照護。當你忙碌、外出或生活改變時，需要事先安排家人、朋友或合適照護者協助。" },
-  ];
   const checklistGroups = [
-    { title: "每日照顧", items: ["提供合適主食", "隨時提供乾淨飲水", "觀察食慾、精神、排泄與活動狀況", "安排陪伴與互動時間", "安排外出散步或合適活動", "清理排泄物與維持環境清潔"] },
-    { title: "家中環境", items: ["準備睡墊", "準備水碗與狗碗", "準備尿墊或如廁區", "準備清潔用品", "收好巧克力、人類食物、清潔劑、電線與小物品", "保留安全、安靜、可休息的空間"] },
-    { title: "外出與接回", items: ["攜帶身分證與領養文件", "準備運輸籠", "準備尿墊", "準備牽繩", "準備水與清潔用品", "外出時使用牽繩或胸背帶"] },
-    { title: "生活變化", items: ["忙碌時安排替代照顧者", "發現生病徵兆時記錄並聯絡獸醫", "生活改變時重新安排照顧", "高齡後提前準備醫療基金與老年照顧知識"] },
+    { title: "每日照顧", items: ["固定餵食", "提供乾淨飲水", "觀察精神、食慾與排泄", "安排陪伴與活動", "外出散步或合適活動", "清理排泄物"] },
+    { title: "家中環境", items: ["睡墊", "水碗與狗碗", "尿墊或如廁區", "清潔用品", "危險物品收好", "安靜休息空間"] },
+    { title: "外出與接回", items: ["身分證", "領養文件", "運輸籠", "尿墊", "牽繩", "飲水與清潔用品"] },
   ];
   const handlingRows = [
-    ["剛到新家", "給牠安靜空間，不要強迫互動，讓牠用自己的速度適應。"],
-    ["吠叫", "增加安全感、遊戲、適量散步；若持續困擾，尋求獸醫或行為專家協助。"],
-    ["亂咬東西", "提供安全啃咬玩具，收好危險物品。"],
-    ["隨意大小便", "使用尿墊或適當材質，一天多出門幾次，做對時給予獎勵。"],
-    ["忙碌或很累", "不要只放大量食物讓牠獨自在家，需安排家人、朋友或合適照護者協助。"],
-    ["生病", "記錄食慾、飲水、排泄與精神狀態，必要時聯絡獸醫。"],
-    ["高齡照顧", "提前規劃醫療基金，學習老年照顧知識，定期諮詢獸醫。"],
+    ["忙碌或離家", "安排家人、朋友或合適照護者協助"],
+    ["食慾、精神或排泄異常", "記錄並聯絡獸醫"],
+    ["行為困擾", "調整環境、提供活動，必要時尋求專業協助"],
+    ["生活改變", "重新安排照顧時間與支援"],
+    ["高齡階段", "提早準備醫療與長期照顧資源"],
   ];
-  const expenseRows = [
-    ["一次性用品", "運輸籠、睡墊、水碗、狗碗、尿墊、清潔用品、牽繩等。"],
-    ["每月固定支出", "主食費、日常消耗用品。"],
-    ["可能發生的支出", "醫療費、臨時照顧服務、高齡照顧相關費用。"],
-    ["緊急預備金", "建議保留一筆可應付突發醫療或照顧安排的預備金。"],
-  ];
+  const consentText = profile.hasHousemates === true
+    ? profile.housematesConsent === true ? "已知情並同意" : profile.housematesConsent === false ? "不同意" : "尚未確認"
+    : "";
+  const pastPets = [
+    profile.pastPetTypes.includes("狗") && `狗${profile.pastDogCount ? ` ${profile.pastDogCount} 隻` : ""}`,
+    profile.pastPetTypes.includes("貓") && `貓${profile.pastCatCount ? ` ${profile.pastCatCount} 隻` : ""}`,
+    profile.pastPetTypes.includes("其他") && (profile.pastOther || "其他"),
+  ].filter(Boolean).join("、");
+  const currentPets = [
+    profile.currentPetTypes.includes("狗") && `狗${profile.currentDogCount ? ` ${profile.currentDogCount} 隻` : ""}`,
+    profile.currentPetTypes.includes("貓") && `貓${profile.currentCatCount ? ` ${profile.currentCatCount} 隻` : ""}`,
+    profile.currentPetTypes.includes("其他") && (profile.currentOther || "其他"),
+  ].filter(Boolean).join("、");
+  const printProfileSections = [
+    {
+      title: "時間與居住",
+      rows: [
+        profile.hoursAway !== "" && ["每天離家時間", `每日 ${profile.hoursAway} 小時`],
+        profile.careHours !== "" && ["每天可投入照顧時間", `每日 ${profile.careHours} 小時`],
+        profile.housing && ["居住空間", profile.housing],
+        profile.housing === "租屋" && profile.landlordConsent && ["房東狀態", profile.landlordConsent],
+      ].filter(Boolean) as string[][],
+    },
+    {
+      title: "同住與活動空間",
+      rows: [
+        housemateStatus !== "待補充" && ["同居家人", housemateStatus],
+        consentText && ["同住者同意", consentText],
+        activitySpace !== "待補充" && ["寵物預計活動空間", activitySpace],
+      ].filter(Boolean) as string[][],
+    },
+    {
+      title: "飼養經驗與原因",
+      rows: [
+        profile.noShibaExperience && ["柴犬經驗", "我沒有養過柴犬"],
+        pastPets && ["曾經飼養", pastPets],
+        currentPets && ["目前家中有寵物", currentPets],
+        profile.experienceNote && ["其他飼養經驗分享", profile.experienceNote],
+        reasonStatus !== "待補充" && ["飼養原因", reasonStatus],
+      ].filter(Boolean) as string[][],
+    },
+  ].map((section) => ({ ...section, rows: section.rows.slice(0, 6) })).filter((section) => section.rows.length > 0);
 
   return (
+    <>
+    <PdfFab />
     <div className="content-wrap summary-page assessment-report compact-assessment">
-      <div className="summary-title">
-        <div><h1>照顧準備總覽</h1><p>把你和{petName || "小狗"}完成的旅程整理成可執行的照顧清單。</p></div>
-        <div className="summary-pet"><span>{selectedBreed?.icon ?? "🐕"}</span><b>{petName || "小狗"} · {selectedBreed?.label ?? "柴犬"}</b><small>{correctFirst} / {lifeScenarios.length} 題第一次掌握方向</small></div>
-      </div>
+      <article className="care-a4-sheet" aria-label="毛日子照顧準備總覽 A4">
+        <header className="care-a4-header">
+          <div>
+            <p>毛日子新手村</p>
+            <h1>照顧準備總覽</h1>
+            <span>把喜歡變成每天做得到的照顧</span>
+          </div>
+          <aside className="care-breed-card">
+            <b>{selectedBreed?.label ?? (petName || "小狗")}</b>
+            {selectedBreed?.image && <img src={selectedBreed.image} alt={selectedBreed.label} />}
+          </aside>
+        </header>
 
-      <section className="overview-cards" aria-label="照顧準備總覽">
-        {overviewCards.map((item) => <article key={item.title}><h2>{item.title}</h2><p>{item.text}</p></article>)}
-      </section>
-
-      <section className="checklist-section" aria-labelledby="care-checklist-title">
-        <div className="section-heading"><span>Checklist</span><h2 id="care-checklist-title">你需要做到的事</h2></div>
-        <div className="checklist-grid">
+        <section className="care-a4-checklists" aria-labelledby="care-a4-checklist-title">
+          <h2 id="care-a4-checklist-title">Checklist</h2>
           {checklistGroups.map((group) => (
-            <article key={group.title} className="checklist-card">
+            <div key={group.title} className="care-a4-card">
               <h3>{group.title}</h3>
-              <ul>{group.items.map((item) => <li key={item}><span aria-hidden="true">□</span>{item}</li>)}</ul>
-            </article>
+              <ul>{group.items.map((item) => <li key={item}><span aria-hidden="true">□</span><b>{item}</b></li>)}</ul>
+            </div>
           ))}
-        </div>
+        </section>
+
+        <section className="care-a4-table-section" aria-labelledby="care-a4-table-title">
+          <h2 id="care-a4-table-title">需要特別處理的狀況</h2>
+          <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
+        </section>
+
+        <section className="care-a4-money" aria-label="費用速記">
+          <div><small>模擬累積</small><b>NT$ {money.format(total)}</b></div>
+          <div><small>每月固定</small><b>NT$ {money.format(recurring)}</b></div>
+          <div><small>緊急預備金</small><b>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</b></div>
+        </section>
+
+        <footer className="care-a4-commitment">
+          <span aria-hidden="true">{committed ? "☑" : "□"}</span>
+          <p>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</p>
+        </footer>
+      </article>
+
+      <section className="care-commitment overview-commitment" aria-labelledby="overview-care-commitment-title">
+        <h2 id="overview-care-commitment-title">照顧承諾</h2>
+        <label>
+          <input type="checkbox" checked={committed} onChange={(event) => setCommitted(event.target.checked)} />
+          <span>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</span>
+        </label>
       </section>
 
-      <section className="key-table-section" aria-labelledby="handling-table-title">
-        <div className="section-heading"><span>重點整理</span><h2 id="handling-table-title">情境處理重點</h2></div>
-        <div className="key-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
-      </section>
-
-      <section className="key-table-section" aria-labelledby="expense-table-title">
-        <div className="section-heading"><span>費用與用品</span><h2 id="expense-table-title">費用與用品整理</h2></div>
-        <div className="expense-summary-strip">
-          <div><small>目前模擬累積花費</small><b>NT$ {money.format(total)}</b></div>
-          <div><small>每月固定支出</small><b>NT$ {money.format(recurring)}</b></div>
-          <div><small>剩餘緊急預備金</small><b>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</b></div>
+      <article className="care-print-profile" aria-label="使用者填寫的個人資料">
+        <header className="care-a4-header">
+          <div>
+            <p>個人資料</p>
+            <h1>真實生活條件</h1>
+            <span>僅列出你已填寫或勾選的內容</span>
+          </div>
+          <aside>
+            <b>{petName || "小狗"}</b>
+            <small>{selectedBreed?.label ?? "柴犬"}</small>
+          </aside>
+        </header>
+        <div className="print-profile-grid">
+          {printProfileSections.length > 0 ? printProfileSections.map((section) => (
+            <section key={section.title}>
+              <h2>{section.title}</h2>
+              <dl>{section.rows.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
+            </section>
+          )) : <p className="print-empty-note">目前尚未補充真實生活條件。</p>}
         </div>
-        <div className="key-table expense-table">{expenseRows.map(([label, text]) => <div key={label}><b>{label}</b><p>{text}</p></div>)}</div>
-      </section>
+        <section className="print-home-space-photo" aria-label="居家空間照片">
+          <h2>居家空間照片</h2>
+          {profile.homeSpaceImage ? <figure><img src={profile.homeSpaceImage} alt="使用者上傳的居家空間照片" /><figcaption>{profile.homeSpaceImageName || "已上傳居家空間照片"}</figcaption></figure> : <p>尚未上傳居家空間照片</p>}
+        </section>
+      </article>
     </div>
+    </>
   );
 }
