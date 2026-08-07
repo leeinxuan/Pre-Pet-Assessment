@@ -1002,7 +1002,7 @@ function WalkingActivity({
             {needsCleanup && <div className="walking-scene-alert" role="alert">散步中發現排泄物，請點擊清理後再繼續前進。</div>}
             <div className="walking-character" style={{ left: `${Math.min(78, 5 + position * 0.73)}%` }}>
               <img
-                src={needsCleanup ? "/walking-the-dog/散步人物+排便柴犬.png" : "/walking-the-dog/散步人物+柴犬.png"}
+                src={needsCleanup ? "/walking-the-dog/walking-person-shiba-poop.png" : "/walking-the-dog/walking-person-shiba.png"}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
               {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/walking-the-dog/便便.png" alt="" /></button>}

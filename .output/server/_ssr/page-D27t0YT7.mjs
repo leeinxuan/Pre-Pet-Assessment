@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-DWrrk1wU.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-D27t0YT7.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -2056,7 +2056,7 @@ function WalkingActivity({ activity, petName, onChange, onContinue }) {
 							className: "walking-character",
 							style: { left: `${Math.min(78, 5 + position * .73)}%` },
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								src: needsCleanup ? "/walking-the-dog/散步人物+排便柴犬.png" : "/walking-the-dog/散步人物+柴犬.png",
+								src: needsCleanup ? "/walking-the-dog/walking-person-shiba-poop.png" : "/walking-the-dog/walking-person-shiba.png",
 								alt: `正在和${petName}散步的人物與小狗`
 							}), needsCleanup && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 								type: "button",
