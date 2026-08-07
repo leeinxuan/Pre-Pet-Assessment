@@ -826,15 +826,23 @@ function SeniorRoomActivity({
 
 const walkingPrepItems = [
   { id: "leash", label: "牽繩／胸背帶", image: "/car/牽繩.png" },
-  { id: "bag", label: "撿便袋", image: "/walking-the-dog/拾便袋.png" },
+  { id: "bag", label: "撿便袋", image: "/walking-the-dog/poop-bag.png" },
   { id: "water", label: "水", image: "/assets/pet-journey/waterbottle.png" },
 ] as const;
 
 const walkingScenes = [
-  { title: "家門口往人行道", image: "/walking-the-dog/家門口往人行道背景.jpg", poopEvent: false },
-  { title: "公園", image: "/walking-the-dog/公園.png", poopEvent: false },
-  { title: "公園 2", image: "/walking-the-dog/公園%202.png", poopEvent: true },
-  { title: "人行道往家門口", image: "/walking-the-dog/人行道往家門口背景.jpg", poopEvent: false },
+  { title: "家門口往人行道", image: "/walking-the-dog/home-to-sidewalk.jpg", poopEvent: false },
+  { title: "公園", image: "/walking-the-dog/park.png", poopEvent: false },
+  { title: "公園 2", image: "/walking-the-dog/park-2.png", poopEvent: true },
+  { title: "人行道往家門口", image: "/walking-the-dog/sidewalk-to-home.jpg", poopEvent: false },
+] as const;
+
+const walkingPreloadImages = [
+  ...walkingScenes.map((scene) => scene.image),
+  ...walkingPrepItems.map((item) => item.image),
+  "/walking-the-dog/walking-person-shiba.png",
+  "/walking-the-dog/walking-person-shiba-poop.png",
+  "/walking-the-dog/poop.png",
 ] as const;
 
 function dogWalkStatus(minutes: number) {
@@ -868,6 +876,13 @@ function WalkingActivity({
   const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
   const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
   const progressMinutes = Math.min(20, activity.walkingMinutes);
+
+  useEffect(() => {
+    walkingPreloadImages.forEach((src) => {
+      const image = new Image();
+      image.src = src;
+    });
+  }, []);
 
   useEffect(() => {
     setPosition(0);
@@ -1005,7 +1020,7 @@ function WalkingActivity({
                 src={needsCleanup ? "/walking-the-dog/walking-person-shiba-poop.png" : "/walking-the-dog/walking-person-shiba.png"}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
-              {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/walking-the-dog/便便.png" alt="" /></button>}
+              {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/walking-the-dog/poop.png" alt="" /></button>}
             </div>
             <div className="walking-forward-zone" aria-hidden="true">滑鼠移到右側前進</div>
           </div>

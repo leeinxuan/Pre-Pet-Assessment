@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-D27t0YT7.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-DxNJ-qM2.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1835,7 +1835,7 @@ var walkingPrepItems = [
 	{
 		id: "bag",
 		label: "撿便袋",
-		image: "/walking-the-dog/拾便袋.png"
+		image: "/walking-the-dog/poop-bag.png"
 	},
 	{
 		id: "water",
@@ -1846,24 +1846,31 @@ var walkingPrepItems = [
 var walkingScenes = [
 	{
 		title: "家門口往人行道",
-		image: "/walking-the-dog/家門口往人行道背景.jpg",
+		image: "/walking-the-dog/home-to-sidewalk.jpg",
 		poopEvent: false
 	},
 	{
 		title: "公園",
-		image: "/walking-the-dog/公園.png",
+		image: "/walking-the-dog/park.png",
 		poopEvent: false
 	},
 	{
 		title: "公園 2",
-		image: "/walking-the-dog/公園%202.png",
+		image: "/walking-the-dog/park-2.png",
 		poopEvent: true
 	},
 	{
 		title: "人行道往家門口",
-		image: "/walking-the-dog/人行道往家門口背景.jpg",
+		image: "/walking-the-dog/sidewalk-to-home.jpg",
 		poopEvent: false
 	}
+];
+var walkingPreloadImages = [
+	...walkingScenes.map((scene) => scene.image),
+	...walkingPrepItems.map((item) => item.image),
+	"/walking-the-dog/walking-person-shiba.png",
+	"/walking-the-dog/walking-person-shiba-poop.png",
+	"/walking-the-dog/poop.png"
 ];
 function WalkingActivity({ activity, petName, onChange, onContinue }) {
 	const [started, setStarted] = (0, import_react.useState)(activity.walkingMinutes > 0 || activity.walkingComplete);
@@ -1878,6 +1885,12 @@ function WalkingActivity({ activity, petName, onChange, onContinue }) {
 	const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
 	const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
 	const progressMinutes = Math.min(20, activity.walkingMinutes);
+	(0, import_react.useEffect)(() => {
+		walkingPreloadImages.forEach((src) => {
+			const image = new Image();
+			image.src = src;
+		});
+	}, []);
 	(0, import_react.useEffect)(() => {
 		setPosition(0);
 		setMoving(false);
@@ -2064,7 +2077,7 @@ function WalkingActivity({ activity, petName, onChange, onContinue }) {
 								onClick: cleanupPoop,
 								"aria-label": "清理排泄物",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-									src: "/walking-the-dog/便便.png",
+									src: "/walking-the-dog/poop.png",
 									alt: ""
 								})
 							})]
