@@ -23,18 +23,18 @@ import type {
 import {
   ArrivalTransitionVideo,
   LifeJourney,
-} from "./life-journey-components";
+} from "./components/life/LifeJourneyComponents";
 import {
   CarTrunkPreparation,
   RoomPreparation,
-} from "./preparation-components";
-import { AssessmentReport, ProfileSupplementForm } from "./profile-report-components";
+} from "./components/preparation/PreparationComponents";
+import { AssessmentReport, ProfileSupplementForm } from "./components/report/ProfileReportComponents";
 import {
   CostBar,
   SpeciesStep,
   StageRail,
   Welcome,
-} from "./shared-components";
+} from "./components/shared/SharedComponents";
 
 const emergencyReserve = 20000;
 

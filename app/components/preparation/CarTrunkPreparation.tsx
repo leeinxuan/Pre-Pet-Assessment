@@ -1,0 +1,1 @@
+export { CarTrunkPreparation } from "./PreparationComponents";
