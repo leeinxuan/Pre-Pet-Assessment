@@ -14,6 +14,22 @@ import type {
 } from "../../game-types";
 
 const arrivalVideoSource = "/assets/pet-journey/arrival-transition.mp4";
+const correctAnswerVideos = [
+  "/assets/pet-journey/correct-answer.mp4",
+  "/assets/pet-journey/correct-answer2.mp4",
+] as const;
+
+const scenarioCorrectAnswerVideoIndex: Record<string, number> = {
+  "arrival-adjustment": 0,
+  "illness-vet": 1,
+  "growing-old": 0,
+  "busy-daily-care": 1,
+};
+
+function getCorrectAnswerVideo(key: number | string) {
+  const index = typeof key === "number" ? key : (scenarioCorrectAnswerVideoIndex[key] ?? 0);
+  return correctAnswerVideos[Math.abs(index) % correctAnswerVideos.length];
+}
 
 function withPetName(text: string, petName: string) {
   return text
@@ -176,7 +192,7 @@ function TimePassTransition({ onComplete }: { onComplete: () => void }) {
 
   return (
     <section className="time-pass-transition" aria-label="時間流逝過場動畫">
-      <video ref={videoRef} src="/assets/pet-journey/time-passes.mp4" autoPlay playsInline preload="auto" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      <video ref={videoRef} src="/assets/pet-journey/time-passes-aging.mp4" autoPlay playsInline preload="auto" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
       {needsManualPlay && <button type="button" className="time-pass-play" onClick={playManually}>播放影片</button>}
     </section>
   );
@@ -311,7 +327,7 @@ function VideoScenarioActivity({
   const source = scenario.id === "arrival-adjustment"
     ? "/assets/pet-journey/first-day.mp4"
     : scenario.id === "growing-old"
-      ? "/assets/pet-journey/time-passes-old.mp4"
+      ? "/assets/pet-journey/senior-life.mp4"
       : "/assets/pet-journey/sick.mp4";
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
 
@@ -326,7 +342,7 @@ function VideoScenarioActivity({
     return (
       <section className="video-scenario-positive" aria-live="polite">
         <div className="video-scenario-positive-video">
-          {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay playsInline preload="metadata" aria-label="正確處置後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
+          {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src={getCorrectAnswerVideo(scenario.id)} autoPlay playsInline preload="metadata" aria-label="正確處置後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
         </div>
         <div className="video-scenario-positive-copy">
           <h2>做得很好！</h2>
@@ -426,7 +442,7 @@ function DailyBehaviorActivity({
             <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續下一段生活互動。</div>
           ) : (
             <video
-              src="/assets/pet-journey/correct-answer.mp4"
+              src={getCorrectAnswerVideo(currentIndex)}
               autoPlay
               playsInline
               preload="metadata"
@@ -535,7 +551,7 @@ function BusyCareActivity({
     return (
       <section className="busy-care-positive" aria-live="polite">
         <div className="busy-care-positive-video">
-          {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src="/assets/pet-journey/correct-answer.mp4" autoPlay playsInline preload="metadata" aria-label="安排照顧支援後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
+          {videoFailed ? <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續生活旅程。</div> : <video src={getCorrectAnswerVideo(scenario.id)} autoPlay playsInline preload="metadata" aria-label="安排照顧支援後的正向結果影片" onEnded={() => setVideoFinished(true)} onError={() => { setVideoFailed(true); setVideoFinished(true); }} />}
         </div>
         <div className="busy-care-positive-copy"><h2>做得很好！</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} /><small>事先確認與交接，能讓{petName}在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。</small><button type="button" className="primary" onClick={onContinue}>繼續 <span>→</span></button></div>
       </section>

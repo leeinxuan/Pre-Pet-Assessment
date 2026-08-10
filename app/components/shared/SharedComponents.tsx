@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { breeds, categories, money } from "../../game-data";
 import { journeyItems } from "../../life-data";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
@@ -280,18 +280,100 @@ export function SpeciesStep({
   );
 }
 
+type ExpenseDetailGroup = string;
+type CostFlashKey = "total" | "monthly" | "supplies" | "medical";
+
+const expenseLabels = {
+  oneTimeSupplies: "\u4e00\u6b21\u6027\u7528\u54c1",
+  monthlyBasic: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa",
+  medicalHealth: "\u91ab\u7642\u8207\u5065\u5eb7",
+  departureSupplies: "\u5916\u51fa\u4ea4\u901a\u8207\u63a5\u56de\u7528\u54c1",
+  careService: "\u7167\u9867\u670d\u52d9",
+  other: "\u5176\u4ed6",
+  detailEyebrow: "\u82b1\u8cbb\u660e\u7d30",
+  detailTitle: "\u76ee\u524d\u5df2\u767b\u8a18\u7684\u652f\u51fa",
+  closeDetails: "\u95dc\u9589\u660e\u7d30",
+  noGroupExpenses: "\u76ee\u524d\u6c92\u6709\u6b64\u985e\u652f\u51fa\u3002",
+  currentCostStatus: "\u76ee\u524d\u8cbb\u7528\u72c0\u6cc1",
+  totalSpent: "\u672c\u6b21\u5df2\u82b1\u8cbb",
+  medicalReserveBalance: "\u91ab\u7642\u61c9\u6025\u91d1\u9918\u984d",
+  emergencyReserveHelp: "\u7dca\u6025\u9810\u5099\u91d1\u662f\u5efa\u8b70\u984d\u5ea6\uff0c\u6a21\u64ec\u7a81\u767c\u91ab\u7642\u6216\u7167\u9867\u72c0\u6cc1\u6642\u6703\u6263\u9664\uff0c\u4e0d\u4ee3\u8868\u5df2\u82b1\u8cbb\u3002",
+  viewDetails: "\u67e5\u770b\u660e\u7d30",
+  monthlySuffix: "\uff0f\u6708",
+  medicalCategory: "\u91ab\u7642",
+  careCategory: "\u7167\u9867\u670d\u52d9",
+  departureKeyword: "\u51fa\u767c",
+  arrivalKeyword: "\u63a5\u56de",
+  categorySupply: "\u7528\u54c1",
+  categoryClean: "\u6e05\u6f54",
+  categoryFood: "\u98f2\u98df",
+  categorySenior: "\u9ad8\u9f61\u7528\u54c1",
+} as const;
+
+const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
+  expenseLabels.oneTimeSupplies,
+  expenseLabels.monthlyBasic,
+  expenseLabels.medicalHealth,
+  expenseLabels.departureSupplies,
+  expenseLabels.careService,
+  expenseLabels.other,
+];
+
+function isMedicalExpense(item: ExpenseRecord) {
+  return item.category === expenseLabels.medicalCategory || Boolean(item.fromEmergency);
+}
+
+function isCareServiceExpense(item: ExpenseRecord) {
+  return item.category === expenseLabels.careCategory;
+}
+
+
+function isDepartureExpense(item: ExpenseRecord) {
+  return ["carrier", "leash"].includes(item.id) || item.stage.includes(expenseLabels.arrivalKeyword) || item.stage.includes(expenseLabels.departureKeyword);
+}
+
+function isOneTimeSupplyExpense(item: ExpenseRecord) {
+  return !item.recurring && !isMedicalExpense(item) && !isCareServiceExpense(item);
+}
+
+function detailGroupForExpense(item: ExpenseRecord): ExpenseDetailGroup {
+  if (item.recurring) return expenseLabels.monthlyBasic;
+  if (isMedicalExpense(item)) return expenseLabels.medicalHealth;
+  if (isCareServiceExpense(item)) return expenseLabels.careService;
+  if (isDepartureExpense(item)) return expenseLabels.departureSupplies;
+  if (([expenseLabels.categorySupply, expenseLabels.categoryClean, expenseLabels.categoryFood, expenseLabels.categorySenior] as readonly string[]).includes(item.category)) return expenseLabels.oneTimeSupplies;
+  return expenseLabels.other;
+}
+
+function flashKeysForExpense(item: ExpenseRecord): CostFlashKey[] {
+  if (item.recurring) return ["monthly"];
+  if (isMedicalExpense(item)) return ["total", "medical"];
+  return ["total", "supplies"];
+}
+
 export function ExpenseDetails({ expenses, onClose }: { expenses: ExpenseRecord[]; onClose: () => void }) {
-  const oneTime = expenses.filter((item) => !item.recurring);
-  const recurring = expenses.filter((item) => item.recurring);
+  const grouped = expenseDetailGroupOrder.map((group) => ({
+    group,
+    items: expenses.filter((item) => detailGroupForExpense(item) === group),
+  }));
+
   return (
     <div className="expense-modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section className="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-title" onMouseDown={(event) => event.stopPropagation()}>
-        <div className="expense-modal-head"><div><p className="eyebrow">費用明細</p><h2 id="expense-title">一路上的實際支出</h2></div><button onClick={onClose} aria-label="關閉費用明細">×</button></div>
+        <div className="expense-modal-head"><div><p className="eyebrow">{expenseLabels.detailEyebrow}</p><h2 id="expense-title">{expenseLabels.detailTitle}</h2></div><button onClick={onClose} aria-label={expenseLabels.closeDetails}>x</button></div>
         <div className="expense-groups">
-          <div><h3>一次性支出</h3>{oneTime.length ? <ul>{oneTime.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.category} · {item.stage}</small></span><strong>NT$ {money.format(item.amount)}</strong></li>)}</ul> : <p>目前還沒有一次性支出。</p>}</div>
-          <div><h3>每月固定支出</h3>{recurring.length ? <ul>{recurring.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.category} · {item.stage}</small></span><strong>NT$ {money.format(item.amount)}／月</strong></li>)}</ul> : <p>目前還沒有每月固定支出。</p>}</div>
+          {grouped.map(({ group, items }) => (
+            <div key={group}>
+              <h3>{group}</h3>
+              {items.length ? (
+                <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.category} · {item.stage}</small></span><strong>NT$ {money.format(item.amount)}{item.recurring ? expenseLabels.monthlySuffix : ""}</strong></li>)}</ul>
+              ) : (
+                <p>{expenseLabels.noGroupExpenses}</p>
+              )}
+            </div>
+          ))}
         </div>
-        <button className="primary" onClick={onClose}>看完明細</button>
+        <button className="primary" onClick={onClose}>{expenseLabels.closeDetails}</button>
       </section>
     </div>
   );
@@ -307,18 +389,31 @@ export function CostBar({
   latestExpense: ExpenseRecord | null;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const currentMonth = expenses.reduce((sum, item) => sum + item.amount, 0);
+  const [flashKeys, setFlashKeys] = useState<CostFlashKey[]>([]);
+  const totalSpent = expenses.filter((item) => !item.recurring).reduce((sum, item) => sum + item.amount, 0);
   const recurring = expenses.filter((item) => item.recurring).reduce((sum, item) => sum + item.amount, 0);
+  const oneTimeSupplies = expenses.filter(isOneTimeSupplyExpense).reduce((sum, item) => sum + item.amount, 0);
   const emergencyUsed = expenses.filter((item) => item.fromEmergency).reduce((sum, item) => sum + item.amount, 0);
+
+  useEffect(() => {
+    if (!latestExpense) return;
+    setFlashKeys(flashKeysForExpense(latestExpense));
+    const timer = window.setTimeout(() => setFlashKeys([]), 1600);
+    return () => window.clearTimeout(timer);
+  }, [latestExpense]);
+
+  function costCellClass(key: CostFlashKey) {
+    return `cost-cell${flashKeys.includes(key) ? " flash" : ""}`;
+  }
+
   return (
     <>
-      <div className="cost-bar" aria-label="目前費用狀況">
-        <div><small>本月花費</small><b>NT$ {money.format(currentMonth)}</b></div>
-        <div><small>累積花費</small><b>NT$ {money.format(currentMonth)}</b></div>
-        <div><small>每月固定支出</small><b>NT$ {money.format(recurring)}</b></div>
-        <div><small>緊急預備金</small><b>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</b></div>
-        <button onClick={() => setDetailsOpen(true)}>查看明細 <span>＋</span></button>
-        {latestExpense && <div className="expense-toast" role="status" aria-live="polite">{latestExpense.name} ＋NT$ {money.format(latestExpense.amount)}</div>}
+      <div className="cost-bar" aria-label={expenseLabels.currentCostStatus}>
+        <div className={costCellClass("total")}><small>{expenseLabels.totalSpent}</small><b>NT$ {money.format(totalSpent)}</b></div>
+        <div className={costCellClass("monthly")}><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(recurring)}</b></div>
+        <div className={costCellClass("supplies")}><small>{expenseLabels.oneTimeSupplies}</small><b>NT$ {money.format(oneTimeSupplies)}</b></div>
+        <div className={costCellClass("medical")}><small title={expenseLabels.emergencyReserveHelp}>{expenseLabels.medicalReserveBalance}</small><b>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</b></div>
+        <button onClick={() => setDetailsOpen(true)}>{expenseLabels.viewDetails} <span>+</span></button>
       </div>
       {detailsOpen && <ExpenseDetails expenses={expenses} onClose={() => setDetailsOpen(false)} />}
     </>

@@ -1330,12 +1330,12 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   box-shadow: 0 8px 24px rgba(70, 53, 26, .06);
   backdrop-filter: blur(12px);
 }
-.cost-bar > div:not(.expense-toast) { min-width: 0; padding: 13px 16px; border-right: 1px solid #eee6d8; display: flex; flex-direction: column; }
+.cost-bar > .cost-cell { min-width: 0; padding: 13px 16px; border-right: 1px solid #eee6d8; display: flex; flex-direction: column; transition: background-color .3s ease; }
+.cost-bar > .cost-cell.flash { background: #e3f3df; }
 .cost-bar small { color: var(--muted); font-size: 10px; }
 .cost-bar b { margin-top: 2px; font-size: 14px; white-space: nowrap; }
 .cost-bar > button { border: 0; background: var(--ink); color: white; padding: 11px 18px; font-weight: 900; cursor: pointer; }
 .cost-bar > button span { margin-left: 7px; color: #f5c965; }
-.expense-toast { position: absolute; right: 20px; top: calc(100% + 10px); padding: 10px 15px; border-radius: 999px; background: var(--mint-soft); color: #4e6d50; box-shadow: var(--shadow); font-weight: 900; font-size: 13px; animation: expensePop 1.8s ease both; }
 .expense-modal-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 22px; background: rgba(48, 41, 31, .48); }
 .expense-modal { width: min(760px, 100%); max-height: min(760px, 90vh); overflow: auto; padding: 28px; border-radius: 24px; background: var(--paper); box-shadow: 0 30px 90px rgba(30, 24, 15, .3); }
 .expense-modal-head { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
@@ -1563,10 +1563,9 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 @media (max-width: 720px) {
   .journey-map-eight { grid-template-columns: 1fr 1fr; }
   .cost-bar { position: sticky; grid-template-columns: 1fr 1fr; }
-  .cost-bar > div:not(.expense-toast) { padding: 9px 12px; }
+  .cost-bar > .cost-cell { padding: 9px 12px; }
   .cost-bar > button { grid-column: 1 / -1; padding: 10px; }
   .cost-bar b { font-size: 12px; }
-  .expense-toast { left: 20px; right: 20px; text-align: center; }
   .expense-groups { grid-template-columns: 1fr; }
   .expense-modal { padding: 20px; }
   .room-preparation { min-height: 430px; }
