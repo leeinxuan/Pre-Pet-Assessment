@@ -1,12 +1,4 @@
-export type ExpenseCategory =
-  | "用品"
-  | "飲食"
-  | "醫療"
-  | "清潔"
-  | "交通"
-  | "照顧服務"
-  | "高齡用品"
-  | "其他";
+export type ExpenseCategory = string;
 
 export type ExpenseRecord = {
   id: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { breeds, categories, money } from "../../game-data";
+import { applySizeBasedExpenseAmount, breeds, categories, expenseCatalog, getPetSizeForBreed, money } from "../../game-data";
 import { journeyItems } from "../../life-data";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
 
@@ -281,80 +281,96 @@ export function SpeciesStep({
 }
 
 type ExpenseDetailGroup = string;
-type CostFlashKey = "total" | "monthly" | "supplies" | "medical";
+type CostFlashKey = "prep" | "monthly" | "medical" | "total";
 
 const expenseLabels = {
-  oneTimeSupplies: "\u4e00\u6b21\u6027\u7528\u54c1",
+  requiredAfterArrival: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa",
+  oneTimePrep: "\u4e00\u6b21\u6027\u6e96\u5099\u8cbb",
   monthlyBasic: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa",
-  medicalHealth: "\u91ab\u7642\u8207\u5065\u5eb7",
-  departureSupplies: "\u5916\u51fa\u4ea4\u901a\u8207\u63a5\u56de\u7528\u54c1",
-  careService: "\u7167\u9867\u670d\u52d9",
-  other: "\u5176\u4ed6",
+  temporaryMedical: "\u81e8\u6642\uff0f\u91ab\u7642\u652f\u51fa",
+  suggestedReserve: "\u5efa\u8b70\u9810\u7559",
+  emergencyReserveTitle: "\u5efa\u8b70\u9810\u7559\u91ab\u7642\u61c9\u6025\u91d1",
   detailEyebrow: "\u82b1\u8cbb\u660e\u7d30",
   detailTitle: "\u76ee\u524d\u5df2\u767b\u8a18\u7684\u652f\u51fa",
   closeDetails: "\u95dc\u9589\u660e\u7d30",
-  noGroupExpenses: "\u76ee\u524d\u6c92\u6709\u6b64\u985e\u652f\u51fa\u3002",
+  noGroupExpenses: "\u76ee\u524d\u5c1a\u672a\u767b\u8a18\u6b64\u985e\u652f\u51fa\u3002",
   currentCostStatus: "\u76ee\u524d\u8cbb\u7528\u72c0\u6cc1",
-  totalSpent: "\u672c\u6b21\u5df2\u82b1\u8cbb",
-  medicalReserveBalance: "\u91ab\u7642\u61c9\u6025\u91d1\u9918\u984d",
-  emergencyReserveHelp: "\u7dca\u6025\u9810\u5099\u91d1\u662f\u5efa\u8b70\u984d\u5ea6\uff0c\u6a21\u64ec\u7a81\u767c\u91ab\u7642\u6216\u7167\u9867\u72c0\u6cc1\u6642\u6703\u6263\u9664\uff0c\u4e0d\u4ee3\u8868\u5df2\u82b1\u8cbb\u3002",
+  accumulatedTotal: "\u7d2f\u7a4d\u652f\u51fa",
+  accumulatedHelp: "\u542b\u76ee\u524d\u6d41\u7a0b\u5df2\u767b\u8a18\u7684\u4e00\u6b21\u6027\u3001\u7576\u6708\u652f\u51fa\u8207\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa",
   viewDetails: "\u67e5\u770b\u660e\u7d30",
   monthlySuffix: "\uff0f\u6708",
-  medicalCategory: "\u91ab\u7642",
-  careCategory: "\u7167\u9867\u670d\u52d9",
-  departureKeyword: "\u51fa\u767c",
-  arrivalKeyword: "\u63a5\u56de",
-  categorySupply: "\u7528\u54c1",
-  categoryClean: "\u6e05\u6f54",
-  categoryFood: "\u98f2\u98df",
-  categorySenior: "\u9ad8\u9f61\u7528\u54c1",
+  monthlyType: "\u6bcf\u6708\u652f\u51fa",
+  oneTimeType: "\u4e00\u6b21\u6027\u652f\u51fa",
+  addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
+const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup"]);
+const defaultVisibleExpenseIds = ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "monthly-preventive-medicine"];
+const defaultVisibleExpenses = defaultVisibleExpenseIds
+  .map((id) => expenseCatalog[id])
+  .filter((item): item is ExpenseRecord => Boolean(item));
+const oneTimePreparationExpenseIds = new Set(["food-bowl", "water-bowl", "bed", "carrier", "leash", "toy", "toilet", "cleaner", "starter-food"]);
+const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed"]);
+
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
-  expenseLabels.oneTimeSupplies,
+  expenseLabels.requiredAfterArrival,
+  expenseLabels.oneTimePrep,
   expenseLabels.monthlyBasic,
-  expenseLabels.medicalHealth,
-  expenseLabels.departureSupplies,
-  expenseLabels.careService,
-  expenseLabels.other,
+  expenseLabels.temporaryMedical,
 ];
 
-function isMedicalExpense(item: ExpenseRecord) {
-  return item.category === expenseLabels.medicalCategory || Boolean(item.fromEmergency);
+function isRequiredAfterArrivalExpense(item: ExpenseRecord) {
+  return requiredAfterArrivalExpenseIds.has(item.id);
 }
 
-function isCareServiceExpense(item: ExpenseRecord) {
-  return item.category === expenseLabels.careCategory;
+function isMonthlyExpense(item: ExpenseRecord) {
+  return item.recurring;
 }
 
-
-function isDepartureExpense(item: ExpenseRecord) {
-  return ["carrier", "leash"].includes(item.id) || item.stage.includes(expenseLabels.arrivalKeyword) || item.stage.includes(expenseLabels.departureKeyword);
+function isTemporaryOrMedicalExpense(item: ExpenseRecord) {
+  return temporaryMedicalExpenseIds.has(item.id) || item.category === "\u91ab\u7642" || item.category === "\u7167\u9867\u670d\u52d9" || item.category === "\u9ad8\u9f61\u7528\u54c1" || Boolean(item.fromEmergency);
 }
 
-function isOneTimeSupplyExpense(item: ExpenseRecord) {
-  return !item.recurring && !isMedicalExpense(item) && !isCareServiceExpense(item);
+function isOneTimePreparationExpense(item: ExpenseRecord) {
+  return !isMonthlyExpense(item) && !isRequiredAfterArrivalExpense(item) && !isTemporaryOrMedicalExpense(item);
+}
+
+function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string) {
+  const petSize = getPetSizeForBreed(breed);
+  const existingIds = new Set(expenses.map((item) => item.id));
+  return [
+    ...expenses,
+    ...defaultVisibleExpenses
+      .filter((item) => !existingIds.has(item.id))
+      .map((item) => applySizeBasedExpenseAmount(item, petSize)),
+  ];
 }
 
 function detailGroupForExpense(item: ExpenseRecord): ExpenseDetailGroup {
-  if (item.recurring) return expenseLabels.monthlyBasic;
-  if (isMedicalExpense(item)) return expenseLabels.medicalHealth;
-  if (isCareServiceExpense(item)) return expenseLabels.careService;
-  if (isDepartureExpense(item)) return expenseLabels.departureSupplies;
-  if (([expenseLabels.categorySupply, expenseLabels.categoryClean, expenseLabels.categoryFood, expenseLabels.categorySenior] as readonly string[]).includes(item.category)) return expenseLabels.oneTimeSupplies;
-  return expenseLabels.other;
+  if (isRequiredAfterArrivalExpense(item)) return expenseLabels.requiredAfterArrival;
+  if (isMonthlyExpense(item)) return expenseLabels.monthlyBasic;
+  if (isTemporaryOrMedicalExpense(item)) return expenseLabels.temporaryMedical;
+  if (isOneTimePreparationExpense(item)) return expenseLabels.oneTimePrep;
+  return expenseLabels.temporaryMedical;
 }
 
 function flashKeysForExpense(item: ExpenseRecord): CostFlashKey[] {
-  if (item.recurring) return ["monthly"];
-  if (isMedicalExpense(item)) return ["total", "medical"];
-  return ["total", "supplies"];
+  if (isRequiredAfterArrivalExpense(item)) return ["total"];
+  if (isMonthlyExpense(item)) return ["monthly", "total"];
+  if (isTemporaryOrMedicalExpense(item)) return ["medical", "total"];
+  return ["prep", "total"];
 }
 
-export function ExpenseDetails({ expenses, onClose }: { expenses: ExpenseRecord[]; onClose: () => void }) {
+function expenseTypeLabel(item: ExpenseRecord) {
+  if (isMonthlyExpense(item)) return expenseLabels.monthlyType;
+  return expenseLabels.oneTimeType;
+}
+
+export function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }: { expenses: ExpenseRecord[]; emergencyReserve: number; breed: string; onClose: () => void }) {
+  const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
   const grouped = expenseDetailGroupOrder.map((group) => ({
     group,
-    items: expenses.filter((item) => detailGroupForExpense(item) === group),
+    items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group),
   }));
 
   return (
@@ -366,12 +382,16 @@ export function ExpenseDetails({ expenses, onClose }: { expenses: ExpenseRecord[
             <div key={group}>
               <h3>{group}</h3>
               {items.length ? (
-                <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.category} · {item.stage}</small></span><strong>NT$ {money.format(item.amount)}{item.recurring ? expenseLabels.monthlySuffix : ""}</strong></li>)}</ul>
+                <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.stage} / {expenseTypeLabel(item)}</small></span><strong>NT$ {money.format(item.amount)}{isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}</strong></li>)}</ul>
               ) : (
                 <p>{expenseLabels.noGroupExpenses}</p>
               )}
             </div>
           ))}
+          <div className="expense-reserve-note">
+            <h3>{expenseLabels.suggestedReserve}</h3>
+            <b>{expenseLabels.emergencyReserveTitle}: NT$ {money.format(emergencyReserve)}</b>
+          </div>
         </div>
         <button className="primary" onClick={onClose}>{expenseLabels.closeDetails}</button>
       </section>
@@ -383,22 +403,30 @@ export function CostBar({
   expenses,
   emergencyReserve,
   latestExpense,
+  breed,
 }: {
   expenses: ExpenseRecord[];
   emergencyReserve: number;
   latestExpense: ExpenseRecord | null;
+  breed: string;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [flashKeys, setFlashKeys] = useState<CostFlashKey[]>([]);
-  const totalSpent = expenses.filter((item) => !item.recurring).reduce((sum, item) => sum + item.amount, 0);
-  const recurring = expenses.filter((item) => item.recurring).reduce((sum, item) => sum + item.amount, 0);
-  const oneTimeSupplies = expenses.filter(isOneTimeSupplyExpense).reduce((sum, item) => sum + item.amount, 0);
-  const emergencyUsed = expenses.filter((item) => item.fromEmergency).reduce((sum, item) => sum + item.amount, 0);
+  const [flashExpense, setFlashExpense] = useState<ExpenseRecord | null>(null);
+  const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
+  const preparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+  const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
+  const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
+  const accumulatedTotal = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
 
   useEffect(() => {
     if (!latestExpense) return;
     setFlashKeys(flashKeysForExpense(latestExpense));
-    const timer = window.setTimeout(() => setFlashKeys([]), 1600);
+    setFlashExpense(latestExpense);
+    const timer = window.setTimeout(() => {
+      setFlashKeys([]);
+      setFlashExpense(null);
+    }, 1600);
     return () => window.clearTimeout(timer);
   }, [latestExpense]);
 
@@ -406,16 +434,22 @@ export function CostBar({
     return `cost-cell${flashKeys.includes(key) ? " flash" : ""}`;
   }
 
+  function flashMessage(key: CostFlashKey) {
+    if (key === "total") return null;
+    if (!flashExpense || !flashKeys.includes(key)) return null;
+    return <span className="cost-added-name">{expenseLabels.addedPrefix}{flashExpense.name}</span>;
+  }
+
   return (
     <>
       <div className="cost-bar" aria-label={expenseLabels.currentCostStatus}>
-        <div className={costCellClass("total")}><small>{expenseLabels.totalSpent}</small><b>NT$ {money.format(totalSpent)}</b></div>
-        <div className={costCellClass("monthly")}><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(recurring)}</b></div>
-        <div className={costCellClass("supplies")}><small>{expenseLabels.oneTimeSupplies}</small><b>NT$ {money.format(oneTimeSupplies)}</b></div>
-        <div className={costCellClass("medical")}><small title={expenseLabels.emergencyReserveHelp}>{expenseLabels.medicalReserveBalance}</small><b>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</b></div>
+        <div className={costCellClass("prep")}><div className="cost-cell-main"><small>{expenseLabels.oneTimePrep}</small><b>NT$ {money.format(preparationTotal)}</b></div>{flashMessage("prep")}</div>
+        <div className={costCellClass("monthly")}><div className="cost-cell-main"><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>{flashMessage("monthly")}</div>
+        <div className={costCellClass("medical")}><div className="cost-cell-main"><small>{expenseLabels.temporaryMedical}</small><b>NT$ {money.format(temporaryMedicalTotal)}</b></div>{flashMessage("medical")}</div>
+        <div className={costCellClass("total")}><div className="cost-cell-main"><small title={expenseLabels.accumulatedHelp}>{expenseLabels.accumulatedTotal}</small><b>NT$ {money.format(accumulatedTotal)}</b></div>{flashMessage("total")}</div>
         <button onClick={() => setDetailsOpen(true)}>{expenseLabels.viewDetails} <span>+</span></button>
       </div>
-      {detailsOpen && <ExpenseDetails expenses={expenses} onClose={() => setDetailsOpen(false)} />}
+      {detailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} onClose={() => setDetailsOpen(false)} />}
     </>
   );
 }

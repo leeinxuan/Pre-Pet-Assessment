@@ -2,8 +2,10 @@
 
 import { useMemo, useState } from "react";
 import {
+  applySizeBasedExpenseAmount,
   expenseCatalog,
   departureTrunkItems,
+  getPetSizeForBreed,
   initialMembers,
   initialProfile,
   intros,
@@ -108,11 +110,12 @@ export default function Home() {
   function addExpenseById(id: string) {
     const expense = expenseCatalog[id];
     if (!expense) return;
+    const sizedExpense = applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed));
     setExpenses((current) => {
       if (current.some((item) => item.id === id)) return current;
-      setLatestExpense(expense);
+      setLatestExpense(sizedExpense);
       window.setTimeout(() => setLatestExpense((active) => active?.id === id ? null : active), 1800);
-      return [...current, expense];
+      return [...current, sizedExpense];
     });
   }
 
@@ -265,7 +268,7 @@ export default function Home() {
             onLifeStage={goToLifeStage}
           />
           <section className="stage" aria-live="polite">
-            {step >= 2 && step <= 7 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} />}
+            {step >= 2 && step <= 7 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} breed={breed} />}
             {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} onCategory={setCategory} onBreed={setBreed} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}

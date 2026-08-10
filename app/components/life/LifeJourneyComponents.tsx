@@ -853,11 +853,13 @@ function WalkingActivity({
   activity,
   petName,
   onChange,
+  onAddExpense,
   onContinue,
 }: {
   activity: LifeActivityState;
   petName: string;
   onChange: (patch: Partial<LifeActivityState>) => void;
+  onAddExpense: (id: string) => void;
   onContinue: () => void;
 }) {
   const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
@@ -921,6 +923,7 @@ function WalkingActivity({
 
   function prepare(id: string) {
     if (prepared.includes(id)) return;
+    if (id === "bag") onAddExpense("monthly-waste-bags");
     onChange({ walkingPreparedItems: [...prepared, id] });
     setMessage("");
   }
@@ -1143,6 +1146,7 @@ export function LifeJourney({
           activity={activity}
           petName={petName}
           onChange={onActivityChange}
+          onAddExpense={onAddExpense}
           onContinue={continueJourney}
         />
       ) : isBusyCareActivity && scenario ? (

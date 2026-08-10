@@ -79,12 +79,49 @@ export const categories = [
 ];
 
 export const breeds = [
-  { id: "chihuahua", label: "吉娃娃", icon: "🐕", image: "/assets/species/dog/chihuahua.png", shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。" },
-  { id: "poodle", label: "貴賓犬", icon: "🐩", image: "/assets/species/dog/poodle.png", shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。" },
-  { id: "shiba", label: "柴犬", icon: "🐕", image: "/assets/species/dog/shiba.png", shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。" },
-  { id: "border", label: "邊境牧羊犬", icon: "🐕‍🦺", image: "/assets/species/dog/border-collie.png", shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。" },
-  { id: "labrador", label: "拉布拉多", icon: "🦮", image: "/assets/species/dog/labrador.png", shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。" },
+  { id: "chihuahua", label: "吉娃娃", icon: "🐕", image: "/assets/species/dog/chihuahua.png", size: "small", shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。" },
+  { id: "poodle", label: "貴賓犬", icon: "🐩", image: "/assets/species/dog/poodle.png", size: "small", shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。" },
+  { id: "shiba", label: "柴犬", icon: "🐕", image: "/assets/species/dog/shiba.png", size: "medium", shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。" },
+  { id: "border", label: "邊境牧羊犬", icon: "🐕‍🦺", image: "/assets/species/dog/border-collie.png", size: "medium", shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。" },
+  { id: "labrador", label: "拉布拉多", icon: "🦮", image: "/assets/species/dog/labrador.png", size: "large", shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。" },
 ];
+
+export type PetSize = "small" | "medium" | "large";
+
+export const sizeBasedCosts: Record<PetSize, {
+  monthlyFood: number;
+  monthlyWasteBags: number;
+  monthlyPreventiveMedicine: number;
+  carrier: number;
+  leash: number;
+  bed: number;
+  seniorSupplies: number;
+}> = {
+  small: { monthlyFood: 800, monthlyWasteBags: 150, monthlyPreventiveMedicine: 600, carrier: 900, leash: 700, bed: 700, seniorSupplies: 1000 },
+  medium: { monthlyFood: 1200, monthlyWasteBags: 200, monthlyPreventiveMedicine: 900, carrier: 1200, leash: 950, bed: 900, seniorSupplies: 1500 },
+  large: { monthlyFood: 1800, monthlyWasteBags: 300, monthlyPreventiveMedicine: 1300, carrier: 1800, leash: 1200, bed: 1300, seniorSupplies: 2200 },
+};
+
+export function getPetSizeForBreed(breedId: string): PetSize {
+  const size = breeds.find((item) => item.id === breedId)?.size;
+  return size === "small" || size === "large" ? size : "medium";
+}
+
+export function applySizeBasedExpenseAmount(expense: ExpenseRecord, petSize: PetSize): ExpenseRecord {
+  const costs = sizeBasedCosts[petSize];
+  const sizeAmountById: Record<string, number> = {
+    "monthly-food-main": costs.monthlyFood,
+    "monthly-waste-bags": costs.monthlyWasteBags,
+    "monthly-preventive-medicine": costs.monthlyPreventiveMedicine,
+    carrier: costs.carrier,
+    leash: costs.leash,
+    bed: costs.bed,
+    "senior-slipmat": costs.seniorSupplies,
+    "senior-access-bed": costs.seniorSupplies,
+  };
+  const amount = sizeAmountById[expense.id];
+  return typeof amount === "number" ? { ...expense, amount } : expense;
+}
 
 export const expenseCatalog: Record<string, ExpenseRecord> = {
   "food-bowl": { id: "food-bowl", name: "食碗", amount: 350, category: "用品", stage: "領養前準備", recurring: false },
@@ -92,11 +129,16 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   bed: { id: "bed", name: "睡墊", amount: 900, category: "用品", stage: "領養前準備", recurring: false },
   carrier: { id: "carrier", name: "安全外出籠", amount: 1200, category: "用品", stage: "領養前準備", recurring: false },
   leash: { id: "leash", name: "牽繩與胸背帶", amount: 950, category: "用品", stage: "領養前準備", recurring: false },
-  toy: { id: "toy", name: "益智玩具", amount: 450, category: "用品", stage: "領養前準備", recurring: false },
+  toy: { id: "toy", name: "\u73a9\u5177", amount: 450, category: "\u4e00\u6b21\u6027\u6e96\u5099\u8cbb", stage: "\u9818\u990a\u524d\u6e96\u5099", recurring: false },
   toilet: { id: "toilet", name: "尿墊或便盆", amount: 500, category: "清潔", stage: "領養前準備", recurring: false },
   cleaner: { id: "cleaner", name: "寵物友善清潔用品", amount: 420, category: "清潔", stage: "領養前準備", recurring: false },
   "starter-food": { id: "starter-food", name: "初期飼料", amount: 800, category: "飲食", stage: "領養前準備", recurring: false },
-  "monthly-food-main": { id: "monthly-food-main", name: "每月主食費", amount: 1000, category: "飲食", stage: "第一天適應新家", recurring: true },
+  "monthly-food-main": { id: "monthly-food-main", name: "\u6bcf\u6708\u4e3b\u98df\u8cbb", amount: 1200, category: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa", stage: "\u65e5\u5e38\u7167\u8b77", recurring: true },
+  "monthly-waste-bags": { id: "monthly-waste-bags", name: "\u6bcf\u6708\u64bf\u4fbf\u888b\u8207\u6e05\u6f54\u6d88\u8017\u54c1", amount: 200, category: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa", stage: "\u65e5\u5e38\u6563\u6b65", recurring: true },
+  "monthly-preventive-medicine": { id: "monthly-preventive-medicine", name: "\u6bcf\u6708\u9810\u9632\u85e5\u7269", amount: 900, category: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa", stage: "\u65e5\u5e38\u7167\u8b77", recurring: true },
+  "microchip-registration": { id: "microchip-registration", name: "\u6676\u7247\u690d\u5165\u8207\u5bf5\u7269\u767b\u8a18", amount: 1000, category: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa", stage: "\u5bf5\u7269\u5230\u5bb6\u5f8c", recurring: false },
+  "rabies-vaccine": { id: "rabies-vaccine", name: "\u72c2\u72ac\u75c5\u75ab\u82d7", amount: 400, category: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa", stage: "\u5bf5\u7269\u5230\u5bb6\u5f8c", recurring: false },
+  "basic-vaccine-checkup": { id: "basic-vaccine-checkup", name: "\u57fa\u790e\u75ab\u82d7\u8207\u521d\u671f\u5065\u5eb7\u6aa2\u67e5", amount: 3500, category: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa", stage: "\u5bf5\u7269\u5230\u5bb6\u5f8c", recurring: false },
   "sick-vet-care": { id: "sick-vet-care", name: "生病就醫與檢查", amount: 4200, category: "醫療", stage: "生病與就醫", recurring: false, fromEmergency: true },
   "journey-care-service": { id: "journey-care-service", name: "短期照顧服務", amount: 2400, category: "照顧服務", stage: "飼主生活發生改變", recurring: false },
   "senior-checkup": { id: "senior-checkup", name: "高齡健康檢查", amount: 3200, category: "醫療", stage: "逐漸進入高齡", recurring: false, fromEmergency: true },
@@ -106,7 +148,7 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
 
 export const roomItems: RoomItem[] = [
   { id: "bed", label: "睡墊", icon: "🛏️", image: "/assets/room/pet-bed.png", placement: { x: 67, y: 83, width: 32, layer: 2 }, required: true, need: "休息", expenseId: "bed", purpose: "提供固定且舒適的休息空間，讓小狗能安心休息。" },
-  { id: "toy", label: "玩具", icon: "🦴", image: "/assets/room/toy.png", placement: { x: 73, y: 80, width: 10, layer: 4 }, required: true, need: "活動", purpose: "合適的玩具可以提供活動與探索，也能減少因無聊產生的破壞行為。" },
+  { id: "toy", label: "玩具", icon: "🦴", image: "/assets/room/toy.png", placement: { x: 73, y: 80, width: 10, layer: 4 }, required: true, need: "活動", expenseId: "toy", purpose: "合適的玩具可以提供活動與探索，也能減少因無聊產生的破壞行為。" },
   { id: "water-bowl", label: "水碗", icon: "💧", image: "/assets/room/water-bowl.png", placement: { x: 32, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "每天確認水碗乾淨，並提供足量的新鮮飲水。" },
   { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/assets/room/food-bowl.png", placement: { x: 42, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
   { id: "toilet", label: "尿墊", icon: "▧", image: "/assets/room/pee-pad.png", placement: { x: 15, y: 85, width: 20, layer: 1 }, required: true, need: "排泄", expenseId: "toilet", purpose: "排泄用品應與食物及休息位置分開，方便小狗建立習慣。" },
@@ -243,7 +285,7 @@ export const scenarios: Scenario[] = [
     description: "牠聞了聞飼料就離開，家人想拿人類食物引誘。你會怎麼處理？",
     artIndex: 2,
     choices: [
-      { id: "familiar-food", text: "提供少量原本熟悉的飼料與乾淨飲水，記錄進食狀況。", result: "correct", ...positive, explanation: "維持熟悉飲食能減少腸胃負擔，也方便觀察適應情況。", expenseIds: ["food-monthly"] },
+      { id: "familiar-food", text: "提供少量原本熟悉的飼料與乾淨飲水，記錄進食狀況。", result: "correct", ...positive, explanation: "維持熟悉飲食能減少腸胃負擔，也方便觀察適應情況。", expenseIds: ["monthly-food-main"] },
       { id: "wait-calm", text: "先讓環境安靜，稍後再提供相同飼料。", result: "partial", ...partial, explanation: "減少壓力是好方向，也要持續記錄飲水與進食。", suggestion: "若長時間不吃或合併精神異常，應聯絡獸醫。" },
       { id: "table-food", text: "加很多人類食物，至少先讓牠吃下去。", result: "incorrect", ...incorrect, explanation: "突然更換或混入不適合的食物可能造成腸胃不適。", suggestion: "回到熟悉飼料，必要時詢問獸醫安全的轉食方式。" },
     ],
@@ -295,7 +337,7 @@ export const scenarios: Scenario[] = [
     description: "生活漸漸穩定，你要建立家中每個人都能遵守的餵食方式。",
     artIndex: 2,
     choices: [
-      { id: "measured-meals", text: "固定時段與份量，隨時提供乾淨飲水並記錄異常。", result: "correct", ...positive, explanation: "規律份量與飲水有助於體重、腸胃與健康觀察。", expenseIds: ["food-monthly", "waste-monthly"] },
+      { id: "measured-meals", text: "固定時段與份量，隨時提供乾淨飲水並記錄異常。", result: "correct", ...positive, explanation: "規律份量與飲水有助於體重、腸胃與健康觀察。", expenseIds: ["monthly-food-main", "monthly-waste-bags"] },
       { id: "family-board", text: "用家庭紀錄板標記誰餵過，避免重複餵食。", result: "correct", ...positive, explanation: "清楚交接能避免漏餐或重複餵食。" },
       { id: "free-treats", text: "家人看到牠撒嬌就各自給零食，不需要特別記錄。", result: "incorrect", ...incorrect, explanation: "多人重複餵食容易造成熱量過量，也不易追蹤食慾變化。", suggestion: "統一零食份量並記錄每日總量。" },
     ],

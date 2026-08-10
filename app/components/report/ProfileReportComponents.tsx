@@ -237,7 +237,6 @@ export function AssessmentReport({
   const careService = expenses.filter((item) => item.category === "照顧服務").reduce((sum, item) => sum + item.amount, 0);
   const seniorSupplies = expenses.filter((item) => item.category === "高齡用品").reduce((sum, item) => sum + item.amount, 0);
   const total = expenses.reduce((sum, item) => sum + item.amount, 0);
-  const emergencyUsed = expenses.filter((item) => item.fromEmergency).reduce((sum, item) => sum + item.amount, 0);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
   const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
@@ -376,7 +375,7 @@ export function AssessmentReport({
         <section className="care-a4-money" aria-label="費用速記">
           <div><small>模擬累積</small><b>NT$ {money.format(total)}</b></div>
           <div><small>每月固定</small><b>NT$ {money.format(recurring)}</b></div>
-          <div><small>緊急預備金</small><b>NT$ {money.format(Math.max(0, emergencyReserve - emergencyUsed))}</b></div>
+          <div><small>{"\u5efa\u8b70\u9810\u7559\u91ab\u7642\u61c9\u6025\u91d1"}</small><b>NT$ {money.format(emergencyReserve)}</b></div>
         </section>
 
         <footer className="care-a4-commitment">

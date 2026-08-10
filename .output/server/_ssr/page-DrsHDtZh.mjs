@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-Be00lty0.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-DrsHDtZh.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -102,6 +102,7 @@ var breeds = [
 		label: "吉娃娃",
 		icon: "🐕",
 		image: "/assets/species/dog/chihuahua.png",
+		size: "small",
 		shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。"
 	},
 	{
@@ -109,6 +110,7 @@ var breeds = [
 		label: "貴賓犬",
 		icon: "🐩",
 		image: "/assets/species/dog/poodle.png",
+		size: "small",
 		shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。"
 	},
 	{
@@ -116,6 +118,7 @@ var breeds = [
 		label: "柴犬",
 		icon: "🐕",
 		image: "/assets/species/dog/shiba.png",
+		size: "medium",
 		shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。"
 	},
 	{
@@ -123,6 +126,7 @@ var breeds = [
 		label: "邊境牧羊犬",
 		icon: "🐕‍🦺",
 		image: "/assets/species/dog/border-collie.png",
+		size: "medium",
 		shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。"
 	},
 	{
@@ -130,9 +134,60 @@ var breeds = [
 		label: "拉布拉多",
 		icon: "🦮",
 		image: "/assets/species/dog/labrador.png",
+		size: "large",
 		shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。"
 	}
 ];
+var sizeBasedCosts = {
+	small: {
+		monthlyFood: 800,
+		monthlyWasteBags: 150,
+		monthlyPreventiveMedicine: 600,
+		carrier: 900,
+		leash: 700,
+		bed: 700,
+		seniorSupplies: 1e3
+	},
+	medium: {
+		monthlyFood: 1200,
+		monthlyWasteBags: 200,
+		monthlyPreventiveMedicine: 900,
+		carrier: 1200,
+		leash: 950,
+		bed: 900,
+		seniorSupplies: 1500
+	},
+	large: {
+		monthlyFood: 1800,
+		monthlyWasteBags: 300,
+		monthlyPreventiveMedicine: 1300,
+		carrier: 1800,
+		leash: 1200,
+		bed: 1300,
+		seniorSupplies: 2200
+	}
+};
+function getPetSizeForBreed(breedId) {
+	const size = breeds.find((item) => item.id === breedId)?.size;
+	return size === "small" || size === "large" ? size : "medium";
+}
+function applySizeBasedExpenseAmount(expense, petSize) {
+	const costs = sizeBasedCosts[petSize];
+	const amount = {
+		"monthly-food-main": costs.monthlyFood,
+		"monthly-waste-bags": costs.monthlyWasteBags,
+		"monthly-preventive-medicine": costs.monthlyPreventiveMedicine,
+		carrier: costs.carrier,
+		leash: costs.leash,
+		bed: costs.bed,
+		"senior-slipmat": costs.seniorSupplies,
+		"senior-access-bed": costs.seniorSupplies
+	}[expense.id];
+	return typeof amount === "number" ? {
+		...expense,
+		amount
+	} : expense;
+}
 var expenseCatalog = {
 	"food-bowl": {
 		id: "food-bowl",
@@ -176,9 +231,9 @@ var expenseCatalog = {
 	},
 	toy: {
 		id: "toy",
-		name: "益智玩具",
+		name: "玩具",
 		amount: 450,
-		category: "用品",
+		category: "一次性準備費",
 		stage: "領養前準備",
 		recurring: false
 	},
@@ -209,10 +264,50 @@ var expenseCatalog = {
 	"monthly-food-main": {
 		id: "monthly-food-main",
 		name: "每月主食費",
-		amount: 1e3,
-		category: "飲食",
-		stage: "第一天適應新家",
+		amount: 1200,
+		category: "每月基本支出",
+		stage: "日常照護",
 		recurring: true
+	},
+	"monthly-waste-bags": {
+		id: "monthly-waste-bags",
+		name: "每月撿便袋與清潔消耗品",
+		amount: 200,
+		category: "每月基本支出",
+		stage: "日常散步",
+		recurring: true
+	},
+	"monthly-preventive-medicine": {
+		id: "monthly-preventive-medicine",
+		name: "每月預防藥物",
+		amount: 900,
+		category: "每月基本支出",
+		stage: "日常照護",
+		recurring: true
+	},
+	"microchip-registration": {
+		id: "microchip-registration",
+		name: "晶片植入與寵物登記",
+		amount: 1e3,
+		category: "到家後必要支出",
+		stage: "寵物到家後",
+		recurring: false
+	},
+	"rabies-vaccine": {
+		id: "rabies-vaccine",
+		name: "狂犬病疫苗",
+		amount: 400,
+		category: "到家後必要支出",
+		stage: "寵物到家後",
+		recurring: false
+	},
+	"basic-vaccine-checkup": {
+		id: "basic-vaccine-checkup",
+		name: "基礎疫苗與初期健康檢查",
+		amount: 3500,
+		category: "到家後必要支出",
+		stage: "寵物到家後",
+		recurring: false
 	},
 	"sick-vet-care": {
 		id: "sick-vet-care",
@@ -287,6 +382,7 @@ var roomItems = [
 		},
 		required: true,
 		need: "活動",
+		expenseId: "toy",
 		purpose: "合適的玩具可以提供活動與探索，也能減少因無聊產生的破壞行為。"
 	},
 	{
@@ -1883,7 +1979,7 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 		]
 	});
 }
-function WalkingActivity({ activity, petName, onChange, onContinue }) {
+function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue }) {
 	const [started, setStarted] = (0, import_react.useState)(activity.walkingMinutes > 0 || activity.walkingComplete);
 	const [position, setPosition] = (0, import_react.useState)(0);
 	const [moving, setMoving] = (0, import_react.useState)(false);
@@ -1954,6 +2050,7 @@ function WalkingActivity({ activity, petName, onChange, onContinue }) {
 	]);
 	function prepare(id) {
 		if (prepared.includes(id)) return;
+		if (id === "bag") onAddExpense("monthly-waste-bags");
 		onChange({ walkingPreparedItems: [...prepared, id] });
 		setMessage("");
 	}
@@ -2175,6 +2272,7 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 				activity,
 				petName,
 				onChange: onActivityChange,
+				onAddExpense,
 				onContinue: continueJourney
 			}) : isBusyCareActivity && scenario ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BusyCareActivity, {
 				scenario,
@@ -2520,73 +2618,88 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, onCatego
 	});
 }
 var expenseLabels = {
-	oneTimeSupplies: "一次性用品",
+	requiredAfterArrival: "到家後必要支出",
+	oneTimePrep: "一次性準備費",
 	monthlyBasic: "每月基本支出",
-	medicalHealth: "醫療與健康",
-	departureSupplies: "外出交通與接回用品",
-	careService: "照顧服務",
-	other: "其他",
+	temporaryMedical: "臨時／醫療支出",
+	suggestedReserve: "建議預留",
+	emergencyReserveTitle: "建議預留醫療應急金",
 	detailEyebrow: "花費明細",
 	detailTitle: "目前已登記的支出",
 	closeDetails: "關閉明細",
-	noGroupExpenses: "目前沒有此類支出。",
+	noGroupExpenses: "目前尚未登記此類支出。",
 	currentCostStatus: "目前費用狀況",
-	totalSpent: "本次已花費",
-	medicalReserveBalance: "醫療應急金餘額",
-	emergencyReserveHelp: "緊急預備金是建議額度，模擬突發醫療或照顧狀況時會扣除，不代表已花費。",
+	accumulatedTotal: "累積支出",
+	accumulatedHelp: "含目前流程已登記的一次性、當月支出與到家後必要支出",
 	viewDetails: "查看明細",
 	monthlySuffix: "／月",
-	medicalCategory: "醫療",
-	careCategory: "照顧服務",
-	departureKeyword: "出發",
-	arrivalKeyword: "接回",
-	categorySupply: "用品",
-	categoryClean: "清潔",
-	categoryFood: "飲食",
-	categorySenior: "高齡用品"
+	monthlyType: "每月支出",
+	oneTimeType: "一次性支出",
+	addedPrefix: "新增："
 };
+var requiredAfterArrivalExpenseIds = new Set([
+	"microchip-registration",
+	"rabies-vaccine",
+	"basic-vaccine-checkup"
+]);
+var defaultVisibleExpenses = [
+	"microchip-registration",
+	"rabies-vaccine",
+	"basic-vaccine-checkup",
+	"monthly-preventive-medicine"
+].map((id) => expenseCatalog[id]).filter((item) => Boolean(item));
+var temporaryMedicalExpenseIds = new Set([
+	"sick-vet-care",
+	"senior-checkup",
+	"journey-care-service",
+	"senior-slipmat",
+	"senior-access-bed"
+]);
 var expenseDetailGroupOrder = [
-	expenseLabels.oneTimeSupplies,
+	expenseLabels.requiredAfterArrival,
+	expenseLabels.oneTimePrep,
 	expenseLabels.monthlyBasic,
-	expenseLabels.medicalHealth,
-	expenseLabels.departureSupplies,
-	expenseLabels.careService,
-	expenseLabels.other
+	expenseLabels.temporaryMedical
 ];
-function isMedicalExpense(item) {
-	return item.category === expenseLabels.medicalCategory || Boolean(item.fromEmergency);
+function isRequiredAfterArrivalExpense(item) {
+	return requiredAfterArrivalExpenseIds.has(item.id);
 }
-function isCareServiceExpense(item) {
-	return item.category === expenseLabels.careCategory;
+function isMonthlyExpense(item) {
+	return item.recurring;
 }
-function isDepartureExpense(item) {
-	return ["carrier", "leash"].includes(item.id) || item.stage.includes(expenseLabels.arrivalKeyword) || item.stage.includes(expenseLabels.departureKeyword);
+function isTemporaryOrMedicalExpense(item) {
+	return temporaryMedicalExpenseIds.has(item.id) || item.category === "醫療" || item.category === "照顧服務" || item.category === "高齡用品" || Boolean(item.fromEmergency);
 }
-function isOneTimeSupplyExpense(item) {
-	return !item.recurring && !isMedicalExpense(item) && !isCareServiceExpense(item);
+function isOneTimePreparationExpense(item) {
+	return !isMonthlyExpense(item) && !isRequiredAfterArrivalExpense(item) && !isTemporaryOrMedicalExpense(item);
+}
+function mergeDefaultVisibleExpenses(expenses, breed) {
+	const petSize = getPetSizeForBreed(breed);
+	const existingIds = new Set(expenses.map((item) => item.id));
+	return [...expenses, ...defaultVisibleExpenses.filter((item) => !existingIds.has(item.id)).map((item) => applySizeBasedExpenseAmount(item, petSize))];
 }
 function detailGroupForExpense(item) {
-	if (item.recurring) return expenseLabels.monthlyBasic;
-	if (isMedicalExpense(item)) return expenseLabels.medicalHealth;
-	if (isCareServiceExpense(item)) return expenseLabels.careService;
-	if (isDepartureExpense(item)) return expenseLabels.departureSupplies;
-	if ([
-		expenseLabels.categorySupply,
-		expenseLabels.categoryClean,
-		expenseLabels.categoryFood,
-		expenseLabels.categorySenior
-	].includes(item.category)) return expenseLabels.oneTimeSupplies;
-	return expenseLabels.other;
+	if (isRequiredAfterArrivalExpense(item)) return expenseLabels.requiredAfterArrival;
+	if (isMonthlyExpense(item)) return expenseLabels.monthlyBasic;
+	if (isTemporaryOrMedicalExpense(item)) return expenseLabels.temporaryMedical;
+	if (isOneTimePreparationExpense(item)) return expenseLabels.oneTimePrep;
+	return expenseLabels.temporaryMedical;
 }
 function flashKeysForExpense(item) {
-	if (item.recurring) return ["monthly"];
-	if (isMedicalExpense(item)) return ["total", "medical"];
-	return ["total", "supplies"];
+	if (isRequiredAfterArrivalExpense(item)) return ["total"];
+	if (isMonthlyExpense(item)) return ["monthly", "total"];
+	if (isTemporaryOrMedicalExpense(item)) return ["medical", "total"];
+	return ["prep", "total"];
 }
-function ExpenseDetails({ expenses, onClose }) {
+function expenseTypeLabel(item) {
+	if (isMonthlyExpense(item)) return expenseLabels.monthlyType;
+	return expenseLabels.oneTimeType;
+}
+function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }) {
+	const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
 	const grouped = expenseDetailGroupOrder.map((group) => ({
 		group,
-		items: expenses.filter((item) => detailGroupForExpense(item) === group)
+		items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group)
 	}));
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "expense-modal-backdrop",
@@ -2613,17 +2726,24 @@ function ExpenseDetails({ expenses, onClose }) {
 						children: "x"
 					})]
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "expense-groups",
-					children: grouped.map(({ group, items }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: group }), items.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.name }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
-						item.category,
-						" · ",
-						item.stage
+					children: [grouped.map(({ group, items }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: group }), items.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.name }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
+						item.stage,
+						" / ",
+						expenseTypeLabel(item)
 					] })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
 						"NT$ ",
 						money.format(item.amount),
-						item.recurring ? expenseLabels.monthlySuffix : ""
-					] })] }, item.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: expenseLabels.noGroupExpenses })] }, group))
+						isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""
+					] })] }, item.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: expenseLabels.noGroupExpenses })] }, group)), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "expense-reserve-note",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: expenseLabels.suggestedReserve }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [
+							expenseLabels.emergencyReserveTitle,
+							": NT$ ",
+							money.format(emergencyReserve)
+						] })]
+					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 					className: "primary",
@@ -2634,44 +2754,70 @@ function ExpenseDetails({ expenses, onClose }) {
 		})
 	});
 }
-function CostBar({ expenses, emergencyReserve, latestExpense }) {
+function CostBar({ expenses, emergencyReserve, latestExpense, breed }) {
 	const [detailsOpen, setDetailsOpen] = (0, import_react.useState)(false);
 	const [flashKeys, setFlashKeys] = (0, import_react.useState)([]);
-	const totalSpent = expenses.filter((item) => !item.recurring).reduce((sum, item) => sum + item.amount, 0);
-	const recurring = expenses.filter((item) => item.recurring).reduce((sum, item) => sum + item.amount, 0);
-	const oneTimeSupplies = expenses.filter(isOneTimeSupplyExpense).reduce((sum, item) => sum + item.amount, 0);
-	const emergencyUsed = expenses.filter((item) => item.fromEmergency).reduce((sum, item) => sum + item.amount, 0);
+	const [flashExpense, setFlashExpense] = (0, import_react.useState)(null);
+	const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
+	const preparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+	const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
+	const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
+	const accumulatedTotal = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
 	(0, import_react.useEffect)(() => {
 		if (!latestExpense) return;
 		setFlashKeys(flashKeysForExpense(latestExpense));
-		const timer = window.setTimeout(() => setFlashKeys([]), 1600);
+		setFlashExpense(latestExpense);
+		const timer = window.setTimeout(() => {
+			setFlashKeys([]);
+			setFlashExpense(null);
+		}, 1600);
 		return () => window.clearTimeout(timer);
 	}, [latestExpense]);
 	function costCellClass(key) {
 		return `cost-cell${flashKeys.includes(key) ? " flash" : ""}`;
+	}
+	function flashMessage(key) {
+		if (key === "total") return null;
+		if (!flashExpense || !flashKeys.includes(key)) return null;
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+			className: "cost-added-name",
+			children: [expenseLabels.addedPrefix, flashExpense.name]
+		});
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "cost-bar",
 		"aria-label": expenseLabels.currentCostStatus,
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: costCellClass("total"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.totalSpent }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(totalSpent)] })]
+				className: costCellClass("prep"),
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "cost-cell-main",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.oneTimePrep }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(preparationTotal)] })]
+				}), flashMessage("prep")]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: costCellClass("monthly"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.monthlyBasic }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(recurring)] })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: costCellClass("supplies"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.oneTimeSupplies }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(oneTimeSupplies)] })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "cost-cell-main",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.monthlyBasic }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(monthlyTotal)] })]
+				}), flashMessage("monthly")]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: costCellClass("medical"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", {
-					title: expenseLabels.emergencyReserveHelp,
-					children: expenseLabels.medicalReserveBalance
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(Math.max(0, emergencyReserve - emergencyUsed))] })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "cost-cell-main",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.temporaryMedical }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(temporaryMedicalTotal)] })]
+				}), flashMessage("medical")]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: costCellClass("total"),
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "cost-cell-main",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", {
+						title: expenseLabels.accumulatedHelp,
+						children: expenseLabels.accumulatedTotal
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(accumulatedTotal)] })]
+				}), flashMessage("total")]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 				onClick: () => setDetailsOpen(true),
@@ -2684,6 +2830,8 @@ function CostBar({ expenses, emergencyReserve, latestExpense }) {
 		]
 	}), detailsOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ExpenseDetails, {
 		expenses,
+		emergencyReserve,
+		breed,
 		onClose: () => setDetailsOpen(false)
 	})] });
 }
@@ -3472,7 +3620,6 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	expenses.filter((item) => item.category === "照顧服務").reduce((sum, item) => sum + item.amount, 0);
 	expenses.filter((item) => item.category === "高齡用品").reduce((sum, item) => sum + item.amount, 0);
 	const total = expenses.reduce((sum, item) => sum + item.amount, 0);
-	const emergencyUsed = expenses.filter((item) => item.fromEmergency).reduce((sum, item) => sum + item.amount, 0);
 	const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
 	const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
 	Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
@@ -3657,7 +3804,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "模擬累積" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(total)] })] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "每月固定" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(recurring)] })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "緊急預備金" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(Math.max(0, emergencyReserve - emergencyUsed))] })] })
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "建議預留醫療應急金" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(emergencyReserve)] })] })
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("footer", {
@@ -3794,11 +3941,12 @@ function Home() {
 	function addExpenseById(id) {
 		const expense = expenseCatalog[id];
 		if (!expense) return;
+		const sizedExpense = applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed));
 		setExpenses((current) => {
 			if (current.some((item) => item.id === id)) return current;
-			setLatestExpense(expense);
+			setLatestExpense(sizedExpense);
 			window.setTimeout(() => setLatestExpense((active) => active?.id === id ? null : active), 1800);
-			return [...current, expense];
+			return [...current, sizedExpense];
 		});
 	}
 	function addRoomItem(id) {
@@ -3993,7 +4141,8 @@ function Home() {
 						step >= 2 && step <= 7 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CostBar, {
 							expenses,
 							emergencyReserve,
-							latestExpense
+							latestExpense,
+							breed
 						}),
 						step === 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SpeciesStep, {
 							selectionPage,
