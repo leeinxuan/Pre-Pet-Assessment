@@ -859,6 +859,12 @@ function dogWalkStatus(minutes: number) {
   return "期待";
 }
 
+const walkingPrepNotes: Record<string, string> = {
+  leash: "外出時維持安全距離，避免走失或衝突。",
+  bag: "散步時清理排泄物，是對環境與他人的責任。",
+  water: "天氣熱或散步時間較長時，幫狗狗補充飲水。",
+};
+
 function WalkingActivity({
   activity,
   petName,
@@ -987,27 +993,34 @@ function WalkingActivity({
         <div>
           <p className="life-stage-label">{lifeStageLabels.daily}</p>
           <h1>今天也要出門散步</h1>
+          <p>一天的照顧不只是在家餵食和陪伴，狗狗也需要規律外出活動。散步能讓牠探索環境、消耗體力、練習社會化，也有機會完成排泄。出門前，先把安全與清潔用品準備好吧。</p>
         </div>
       </div>
 
       {!started ? (
         <div className="walking-prep">
-          <div className="walking-prep-list">
-            {walkingPrepItems.map((item) => {
-              const done = prepared.includes(item.id);
-              return (
-                <button type="button" key={item.id} className={done ? "prepared" : ""} aria-pressed={done} onClick={() => prepare(item.id)}>
-                  <img src={item.image} alt={item.label} />
-                  <b>{item.label}</b>
-                </button>
-              );
-            })}
-          </div>
+          <section className="walking-prep-supplies" aria-label="出門前準備用品">
+            <h2>出門前，先確認這些東西</h2>
+            <div className="walking-prep-list">
+              {walkingPrepItems.map((item) => {
+                const done = prepared.includes(item.id);
+                return (
+                  <button type="button" key={item.id} className={done ? "prepared" : ""} aria-pressed={done} onClick={() => prepare(item.id)}>
+                    <img src={item.image} alt={item.label} />
+                    <b>{item.label}</b>
+                    <small>{walkingPrepNotes[item.id]}</small>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
           <div className="walking-prep-card">
-            <h2>出門準備</h2>
-            <p>三項都完成後才可以開始散步。外出時的防護、補水與清理排泄，都是日常照顧的一部分。</p>
+            <h2>準備好再出門</h2>
+            <p>確認牽繩、撿便袋和水都準備好後，就可以陪牠走一段 20 分鐘的散步路線。路上如果牠排泄，也要記得停下來清理。</p>
             {message && <p className="walking-message" role="alert">{message}</p>}
-            <button type="button" className="primary" disabled={!allPrepared} onClick={startWalk}>開始散步 <span>→</span></button>
+            <div className="walking-prep-actions">
+              <button type="button" className="primary" disabled={!allPrepared} onClick={startWalk}>開始散步 <span>→</span></button>
+            </div>
           </div>
         </div>
       ) : (

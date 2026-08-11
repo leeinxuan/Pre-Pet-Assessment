@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CrgkZQcR.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-CDLqaEW5.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1988,6 +1988,11 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 		]
 	});
 }
+var walkingPrepNotes = {
+	leash: "外出時維持安全距離，避免走失或衝突。",
+	bag: "散步時清理排泄物，是對環境與他人的責任。",
+	water: "天氣熱或散步時間較長時，幫狗狗補充飲水。"
+};
 function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue }) {
 	const [started, setStarted] = (0, import_react.useState)(activity.walkingMinutes > 0 || activity.walkingComplete);
 	const [position, setPosition] = (0, import_react.useState)(0);
@@ -2115,43 +2120,58 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 		"aria-label": "今天也要出門散步",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "walking-head",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				className: "life-stage-label",
-				children: lifeStageLabels.daily
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "今天也要出門散步" })] })
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "life-stage-label",
+					children: lifeStageLabels.daily
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "今天也要出門散步" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "一天的照顧不只是在家餵食和陪伴，狗狗也需要規律外出活動。散步能讓牠探索環境、消耗體力、練習社會化，也有機會完成排泄。出門前，先把安全與清潔用品準備好吧。" })
+			] })
 		}), !started ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "walking-prep",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "walking-prep-list",
-				children: walkingPrepItems.map((item) => {
-					const done = prepared.includes(item.id);
-					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						type: "button",
-						className: done ? "prepared" : "",
-						"aria-pressed": done,
-						onClick: () => prepare(item.id),
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							src: item.image,
-							alt: item.label
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
-					}, item.id);
-				})
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+				className: "walking-prep-supplies",
+				"aria-label": "出門前準備用品",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "出門前，先確認這些東西" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "walking-prep-list",
+					children: walkingPrepItems.map((item) => {
+						const done = prepared.includes(item.id);
+						return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+							type: "button",
+							className: done ? "prepared" : "",
+							"aria-pressed": done,
+							onClick: () => prepare(item.id),
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: item.image,
+									alt: item.label
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: walkingPrepNotes[item.id] })
+							]
+						}, item.id);
+					})
+				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "walking-prep-card",
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "出門準備" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "三項都完成後才可以開始散步。外出時的防護、補水與清理排泄，都是日常照顧的一部分。" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "準備好再出門" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "確認牽繩、撿便袋和水都準備好後，就可以陪牠走一段 20 分鐘的散步路線。路上如果牠排泄，也要記得停下來清理。" }),
 					message && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						className: "walking-message",
 						role: "alert",
 						children: message
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						type: "button",
-						className: "primary",
-						disabled: !allPrepared,
-						onClick: startWalk,
-						children: ["開始散步 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "walking-prep-actions",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+							type: "button",
+							className: "primary",
+							disabled: !allPrepared,
+							onClick: startWalk,
+							children: ["開始散步 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+						})
 					})
 				]
 			})]
