@@ -890,6 +890,12 @@ function WalkingActivity({
   const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
   const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
   const progressMinutes = Math.min(20, activity.walkingMinutes);
+  const walkingInstruction = "慢慢把滑鼠往右移動，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
+  const walkingEventMessage = scene.poopEvent && position >= 50
+    ? activity.walkingPoopCleaned
+      ? { title: "做得很好！", body: "散步時清理排泄物，也是照顧責任的一部分。" }
+      : { title: "散步中的小事件", body: "牠在路上排泄了，先停下來幫牠清理乾淨，再繼續往前走。" }
+    : null;
 
   useEffect(() => {
     walkingPreloadImages.forEach((src) => {
@@ -1025,7 +1031,7 @@ function WalkingActivity({
         </div>
       ) : (
         <div className="walking-game">
-          <p className="walking-game-hint">滑鼠往右移動時，人和狗會一起前進；走到畫面右側就會進入下一段路。</p>
+          <p className="walking-game-hint">{walkingInstruction}</p>
           <div className="walking-progress" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
             <b>散步進度</b>
             <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
@@ -1037,7 +1043,12 @@ function WalkingActivity({
             onMouseLeave={() => setMoving(false)}
           >
             <img className="walking-bg" src={scene.image} alt={scene.title} />
-            {needsCleanup && <div className="walking-scene-alert" role="alert">散步中發現排泄物，請點擊清理後再繼續前進。</div>}
+            {walkingEventMessage && (
+              <div className="walking-event-card" role="status">
+                <b>{walkingEventMessage.title}</b>
+                <p>{walkingEventMessage.body}</p>
+              </div>
+            )}
             <div className="walking-character" style={{ left: `${Math.min(78, 5 + position * 0.73)}%` }}>
               <img
                 src={needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png"}
@@ -1045,7 +1056,12 @@ function WalkingActivity({
               />
               {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/assets/walking/poop.png" alt="" /></button>}
             </div>
-            {!needsCleanup && position <= 8 && <div className="walk-mouse-hint" aria-hidden="true"><span className="mouse-icon" /><span className="mouse-arrow">→</span></div>}
+            <div className="walk-mouse-hint" aria-hidden="true">
+              <div className="walk-mouse-hint-inner">
+                <span className="mouse-icon" />
+                <span className="mouse-arrow">→</span>
+              </div>
+            </div>
           </div>
           <button
             type="button"

@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-pRvuLvPr.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-C_puW2F5.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -2006,6 +2006,14 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 	const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
 	const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
 	const progressMinutes = Math.min(20, activity.walkingMinutes);
+	const walkingInstruction = "慢慢把滑鼠往右移動，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
+	const walkingEventMessage = scene.poopEvent && position >= 50 ? activity.walkingPoopCleaned ? {
+		title: "做得很好！",
+		body: "散步時清理排泄物，也是照顧責任的一部分。"
+	} : {
+		title: "散步中的小事件",
+		body: "牠在路上排泄了，先停下來幫牠清理乾淨，再繼續往前走。"
+	} : null;
 	(0, import_react.useEffect)(() => {
 		walkingPreloadImages.forEach((src) => {
 			const image = new Image();
@@ -2180,7 +2188,7 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "walking-game-hint",
-					children: "滑鼠往右移動時，人和狗會一起前進；走到畫面右側就會進入下一段路。"
+					children: walkingInstruction
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "walking-progress",
@@ -2201,10 +2209,10 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 							src: scene.image,
 							alt: scene.title
 						}),
-						needsCleanup && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "walking-scene-alert",
-							role: "alert",
-							children: "散步中發現排泄物，請點擊清理後再繼續前進。"
+						walkingEventMessage && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "walking-event-card",
+							role: "status",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: walkingEventMessage.title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: walkingEventMessage.body })]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "walking-character",
@@ -2223,13 +2231,16 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 								})
 							})]
 						}),
-						!needsCleanup && position <= 8 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							className: "walk-mouse-hint",
 							"aria-hidden": "true",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "mouse-icon" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								className: "mouse-arrow",
-								children: "→"
-							})]
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "walk-mouse-hint-inner",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "mouse-icon" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "mouse-arrow",
+									children: "→"
+								})]
+							})
 						})
 					]
 				}),
