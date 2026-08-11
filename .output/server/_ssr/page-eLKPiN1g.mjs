@@ -1,55 +1,55 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-DrsHDtZh.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-eLKPiN1g.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
 	{
-		title: "先從你想一起生活的動物開始",
-		body: "不同物種、不同品種，會遇到很不一樣的日常。選擇後，我們會帶你從領養前準備一路走進長期生活。",
-		icon: "🐾",
-		tip: "這不是承諾，隨時都能回來更換。"
+		title: "選擇夥伴",
+		body: "先選定物種與品種，理解牠未來可能需要的生活節奏。",
+		icon: "pet",
+		tip: ""
 	},
 	{
-		title: "在出發以前，把家、照顧者與行李準備好",
-		body: "安全的空間、清楚的分工與合適的接送用品，能讓接回家的第一天少一點匆忙。",
-		icon: "⌂",
-		tip: "每項購買只會記錄一次，返回調整不會重複扣款。"
+		title: "領養前準備",
+		body: "整理生活空間、接回用品與基本照顧安排，讓到家第一天更安穩。",
+		icon: "home",
+		tip: ""
 	},
 	{
-		title: "車門關上後，你們的共同生活正式開始",
-		body: "從安全搭車、第一次進家門到第一餐，每個小決定都會影響牠對新環境的第一印象。",
-		icon: "🚗",
-		tip: "先穩定、再親近，給牠一點理解陌生世界的時間。"
+		title: "接牠回家",
+		body: "從安全搭車到第一次進門，用穩定的步調陪牠認識新環境。",
+		icon: "car",
+		tip: ""
 	},
 	{
-		title: "把第一週的磨合，慢慢變成每天的節奏",
-		body: "適應、飲食、散步、陪玩與清潔不只有突發狀況，也包含很多平凡而安心的日常。",
-		icon: "☀",
-		tip: "穩定的小事，往往比一次做到完美更重要。"
+		title: "日常照護",
+		body: "把飲食、散步、清潔與互動，慢慢變成每天做得到的節奏。",
+		icon: "sun",
+		tip: ""
 	},
 	{
-		title: "當牠看起來不太一樣，你會怎麼判斷？",
-		body: "觀察、聯絡獸醫、交通與醫療預備金，會在真正需要時一起發揮作用。",
-		icon: "✚",
-		tip: "及早詢問不代表小題大作，而是把風險留給專業判斷。"
+		title: "健康觀察",
+		body: "當食慾、精神或身體狀況改變時，學會記錄並找專業協助。",
+		icon: "health",
+		tip: ""
 	},
 	{
-		title: "工作、旅行、搬家與老年，都會重新安排生活",
-		body: "長期照顧不是永遠不變，而是在每次變動時仍能找到安全、合法且負責任的安排。",
-		icon: "↻",
-		tip: "前面建立的備用照顧者，會在這一段真正派上用場。"
+		title: "生活變化",
+		body: "忙碌、搬家或高齡階段來臨時，重新安排照顧與支援。",
+		icon: "change",
+		tip: ""
 	},
 	{
-		title: "把模擬生活，放回你現在的生活條件",
-		body: "你已經陪牠走過一段模擬生活。現在讓我們把遊戲中的經驗放回你的真實生活中，看看哪些部分已經準備好，哪些還需要確認。",
-		icon: "◎",
-		tip: "沒有理想答案，真實資料才有助於產生有用的報告。"
+		title: "資料補充",
+		body: "把你的生活條件補齊，讓提醒更貼近真實照顧狀況。",
+		icon: "note",
+		tip: ""
 	},
 	{
-		title: "把一路上的選擇，整理成下一步行動",
-		body: "報告不判斷合格或不合格，而是整合準備、學習、費用與生活條件，指出已具備與需要再確認的部分。",
-		icon: "✓",
-		tip: "可以帶著報告與家人、獸醫或收容所逐項討論。"
+		title: "照顧總覽",
+		body: "將這趟練習整理成清單，帶著具體重點回到現實生活。",
+		icon: "check",
+		tip: ""
 	}
 ];
 var categories = [
@@ -3861,6 +3861,137 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	})] });
 }
 var emergencyReserve = 2e4;
+function IntroIcon({ step }) {
+	const common = {
+		fill: "none",
+		stroke: "currentColor",
+		strokeWidth: 2.1,
+		strokeLinecap: "round",
+		strokeLinejoin: "round"
+	};
+	const icons = [
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M18 36c4.5-5.8 23.5-5.8 28 0"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M24 27c0 2.2-1.4 4-3.1 4s-3.1-1.8-3.1-4 1.4-4 3.1-4 3.1 1.8 3.1 4Z"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M46.2 27c0 2.2-1.4 4-3.1 4S40 29.2 40 27s1.4-4 3.1-4 3.1 1.8 3.1 4Z"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M31.6 20c0 2.4-1.5 4.4-3.4 4.4s-3.4-2-3.4-4.4 1.5-4.4 3.4-4.4 3.4 2 3.4 4.4Z"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M39.2 20c0 2.4-1.5 4.4-3.4 4.4s-3.4-2-3.4-4.4 1.5-4.4 3.4-4.4 3.4 2 3.4 4.4Z"
+			})
+		] }),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M16 31.5 32 17l16 14.5"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M20 29v17h24V29"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M29 46V35h6v11"
+			})
+		] }),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M18 38h28l2-10H16l2 10Z"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M22 28l4-8h12l4 8"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M22 41.5h0M42 41.5h0"
+			})
+		] }),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M32 15v34"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M18 32h28"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M22.5 22.5 41.5 41.5"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M41.5 22.5 22.5 41.5"
+			})
+		] }),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+			...common,
+			d: "M32 47s14-8.5 14-20a8 8 0 0 0-14-5.2A8 8 0 0 0 18 27c0 11.5 14 20 14 20Z"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+			...common,
+			d: "M24 32h5l2-5 4 11 2-6h4"
+		})] }),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M21 24h20v20H21z"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M27 20h10"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M26 31h12M26 37h8"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M43 21l4 4-4 4"
+			})
+		] }),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M21 17h17l5 5v25H21z"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M38 17v7h7"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				...common,
+				d: "M26 31h12M26 37h12M26 43h7"
+			})
+		] }),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+			...common,
+			d: "M20 32l8 8 16-18"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+			...common,
+			d: "M17 18h30v30H17z"
+		})] })
+	];
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", {
+		className: "intro-line-icon",
+		viewBox: "0 0 64 64",
+		"aria-hidden": "true",
+		children: icons[step - 1] ?? icons[0]
+	});
+}
 function Home() {
 	const [step, setStep] = (0, import_react.useState)(0);
 	const [furthestStep, setFurthestStep] = (0, import_react.useState)(1);
@@ -4199,21 +4330,17 @@ function Home() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						className: "intro-orbit",
 						"aria-hidden": "true",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: intros[step - 1].icon })
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(IntroIcon, { step })
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: intros[step - 1].title }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						className: "intro-body",
 						children: intros[step - 1].body
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						className: "soft-note",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "✦" }), intros[step - 1].tip]
-					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						className: "primary large",
 						onClick: () => setIntroOpen(false),
-						children: ["進入這一站 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+						children: ["開始 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
 					})
 				]
 			})

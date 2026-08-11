@@ -40,6 +40,60 @@ import {
 
 const emergencyReserve = 20000;
 
+function IntroIcon({ step }: { step: number }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 2.1, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const icons = [
+    <>
+      <path {...common} d="M18 36c4.5-5.8 23.5-5.8 28 0" />
+      <path {...common} d="M24 27c0 2.2-1.4 4-3.1 4s-3.1-1.8-3.1-4 1.4-4 3.1-4 3.1 1.8 3.1 4Z" />
+      <path {...common} d="M46.2 27c0 2.2-1.4 4-3.1 4S40 29.2 40 27s1.4-4 3.1-4 3.1 1.8 3.1 4Z" />
+      <path {...common} d="M31.6 20c0 2.4-1.5 4.4-3.4 4.4s-3.4-2-3.4-4.4 1.5-4.4 3.4-4.4 3.4 2 3.4 4.4Z" />
+      <path {...common} d="M39.2 20c0 2.4-1.5 4.4-3.4 4.4s-3.4-2-3.4-4.4 1.5-4.4 3.4-4.4 3.4 2 3.4 4.4Z" />
+    </>,
+    <>
+      <path {...common} d="M16 31.5 32 17l16 14.5" />
+      <path {...common} d="M20 29v17h24V29" />
+      <path {...common} d="M29 46V35h6v11" />
+    </>,
+    <>
+      <path {...common} d="M18 38h28l2-10H16l2 10Z" />
+      <path {...common} d="M22 28l4-8h12l4 8" />
+      <path {...common} d="M22 41.5h0M42 41.5h0" />
+    </>,
+    <>
+      <path {...common} d="M32 15v34" />
+      <path {...common} d="M18 32h28" />
+      <path {...common} d="M22.5 22.5 41.5 41.5" />
+      <path {...common} d="M41.5 22.5 22.5 41.5" />
+    </>,
+    <>
+      <path {...common} d="M32 47s14-8.5 14-20a8 8 0 0 0-14-5.2A8 8 0 0 0 18 27c0 11.5 14 20 14 20Z" />
+      <path {...common} d="M24 32h5l2-5 4 11 2-6h4" />
+    </>,
+    <>
+      <path {...common} d="M21 24h20v20H21z" />
+      <path {...common} d="M27 20h10" />
+      <path {...common} d="M26 31h12M26 37h8" />
+      <path {...common} d="M43 21l4 4-4 4" />
+    </>,
+    <>
+      <path {...common} d="M21 17h17l5 5v25H21z" />
+      <path {...common} d="M38 17v7h7" />
+      <path {...common} d="M26 31h12M26 37h12M26 43h7" />
+    </>,
+    <>
+      <path {...common} d="M20 32l8 8 16-18" />
+      <path {...common} d="M17 18h30v30H17z" />
+    </>,
+  ];
+
+  return (
+    <svg className="intro-line-icon" viewBox="0 0 64 64" aria-hidden="true">
+      {icons[step - 1] ?? icons[0]}
+    </svg>
+  );
+}
+
 export default function Home() {
   const [step, setStep] = useState(0);
   const [furthestStep, setFurthestStep] = useState(1);
@@ -282,11 +336,10 @@ export default function Home() {
 
       {step > 0 && introOpen && (
         <section className="intro-screen">
-          <div className="intro-orbit" aria-hidden="true"><span>{intros[step - 1].icon}</span></div>
+          <div className="intro-orbit" aria-hidden="true"><IntroIcon step={step} /></div>
           <h1>{intros[step - 1].title}</h1>
           <p className="intro-body">{intros[step - 1].body}</p>
-          <div className="soft-note"><span>✦</span>{intros[step - 1].tip}</div>
-          <button className="primary large" onClick={() => setIntroOpen(false)}>進入這一站 <span>→</span></button>
+          <button className="primary large" onClick={() => setIntroOpen(false)}>開始 <span>→</span></button>
         </section>
       )}
     </main>

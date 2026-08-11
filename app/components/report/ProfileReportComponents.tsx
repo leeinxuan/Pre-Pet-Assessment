@@ -349,7 +349,7 @@ export function AssessmentReport({
           <div>
             <p>毛日子新手村</p>
             <h1>照顧準備總覽</h1>
-            <span>把喜歡變成每天做得到的照顧</span>
+            <span>把這趟練習整理成你真正帶得走的照顧清單</span>
           </div>
           <aside className="care-breed-card">
             <b>{selectedBreed?.label ?? (petName || "小狗")}</b>
