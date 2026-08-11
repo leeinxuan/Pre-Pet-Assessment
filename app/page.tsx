@@ -194,7 +194,9 @@ export default function Home() {
     setTrunkSelected((current) => {
       if (current.includes(id)) return current;
       const next = [...current, id];
-      setTrunkPassed(departureTrunkItems.every((item) => next.includes(item.id)));
+      const trunkComplete = departureTrunkItems.every((item) => next.includes(item.id));
+      setTrunkPassed(trunkComplete);
+      if (trunkComplete) setPreparationReached((current) => Math.max(current, 1));
       return next;
     });
     expenseIds.forEach(addExpenseById);
@@ -263,7 +265,7 @@ export default function Home() {
     if (preparationTask === 0) {
       return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} onPrepare={addRoomItem} onToggleHazard={toggleHazard} onSavePetName={setPetName} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
     }
-    return <CarTrunkPreparation selected={trunkSelected} onSelect={selectTrunkItem} onBack={() => changePreparationTask(0)} onNext={() => { setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation selected={trunkSelected} petName={petName} onSelect={selectTrunkItem} onBack={() => changePreparationTask(0)} onNext={() => { setPreparationReached((current) => Math.max(current, 1)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
@@ -323,7 +325,7 @@ export default function Home() {
           />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 7 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} breed={breed} />}
-            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} onCategory={setCategory} onBreed={setBreed} onNext={() => goTo(2)} />}
+            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} onCategory={setCategory} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>

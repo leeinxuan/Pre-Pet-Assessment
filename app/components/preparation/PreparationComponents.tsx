@@ -17,7 +17,7 @@ const preparedRoomItemNotes: Record<string, { label: string; note: string }> = {
 
 const preparedTrunkItemNotes: Record<string, { label: string; note: string }> = {
   id: { label: "身分證", note: "辦理認養與核對身分時使用。" },
-  documents: { label: "領養文件", note: "確認認養流程與後續照顧責任。" },
+  documents: { label: "領養文件", note: "如有租屋，須提供房東許可之證明。" },
   carrier: { label: "運輸籠", note: "讓小狗在移動途中有安全固定的空間。" },
   "pee-pad": { label: "尿墊", note: "接回途中可降低排泄與清潔壓力。" },
   "water-kit": { label: "水碗", note: "必要時補充飲水，避免長時間缺水。" },
@@ -59,9 +59,9 @@ export function RoomPreparation({
   const complete = itemsDone === roomItems.length && hazardsDone === hazards.length && Boolean(petName.trim());
   const activeHazard = hazards.find((item) => item.id === activeHazardInfo);
   const remainingRoomItems = roomItems.filter((item) => !selectedItems.includes(item.id) || exitingItems.includes(item.id));
-  const supplyRows = remainingRoomItems.length <= 3
-    ? [remainingRoomItems]
-    : [remainingRoomItems.slice(0, 2), remainingRoomItems.slice(2, 4), remainingRoomItems.slice(4)].filter((row) => row.length > 0);
+  const supplyRows = remainingRoomItems.length === roomItems.length
+    ? [remainingRoomItems.slice(0, 2), remainingRoomItems.slice(2, 4), remainingRoomItems.slice(4)].filter((row) => row.length > 0)
+    : Array.from({ length: Math.ceil(remainingRoomItems.length / 2) }, (_, index) => remainingRoomItems.slice(index * 2, index * 2 + 2)).filter((row) => row.length > 0);
 
   useEffect(() => {
     setNameDraft(petName);
@@ -135,15 +135,14 @@ export function RoomPreparation({
 
   return (
     <div className="content-wrap preparation-page">
-      <StepHeading title="先替牠布置安全的生活空間" body="點選七項日常用品，系統會自動放到合適位置；再找出房間中的四項安全風險。" />
+      <StepHeading title="先替牠布置安全的生活空間" body={`${petName || "小狗"} 還沒到家，但牠的生活角落可以先準備起來。先把每天會用到的用品放進房間，再看看有哪些東西可能讓牠誤咬、誤食或受傷。`} />
       <div className="room-preparation-layout simplified-room-layout">
         <section className="room-supply-shelf" aria-label="生活用品準備區">
           <div className="room-supply-header">
             <h2>{itemsDone === roomItems.length ? "已準備的物品" : "用品準備箱"}</h2>
-            <span>{itemsDone === roomItems.length ? "用品已準備完成" : `${roomItems.length - itemsDone} 件可加入`}</span>
           </div>
           {remainingRoomItems.length > 0 && <div className="room-supply-rows">
-            {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length}`}>
+            {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} ${remainingRoomItems.length === roomItems.length ? "full-seven" : "compact-grid"}`}>
               {row.map((item) => <button key={item.id} type="button" className={exitingItems.includes(item.id) ? "departing" : ""} aria-label={`${item.label}，可加入`} disabled={exitingItems.includes(item.id)} onClick={() => prepareItem(item.id)}>
                 <span className="room-supply-visual"><img className={`room-item-image room-item-image--${item.id}`} src={item.image} alt="" /></span>
                 <b>{item.label}</b>
@@ -207,7 +206,7 @@ export function CareMemberSetup({ members, onChange, onBack, onNext }: { members
   </div>;
 }
 
-export function CarTrunkPreparation({ selected, onSelect, onBack, onNext }: { selected: string[]; onSelect: (id: string) => void; onBack: () => void; onNext: () => void }) {
+export function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNext }: { selected: string[]; petName: string; onSelect: (id: string) => void; onBack: () => void; onNext: () => void }) {
   const [exitingItems, setExitingItems] = useState<string[]>([]);
   const [departing, setDeparting] = useState(false);
   const documents = departureTrunkItems.filter((item) => item.kind === "document");
@@ -250,10 +249,10 @@ export function CarTrunkPreparation({ selected, onSelect, onBack, onNext }: { se
   function depart() { setDeparting(true); window.setTimeout(onNext, 650); }
 
   return <div className="content-wrap preparation-page">
-    <StepHeading title="出發接牠回家" body="" />
+    <StepHeading title="出發接牠回家" body={`今天要去接 ${petName || "小狗"} 回家了。出門前先把需要的文件與接回用品準備好，讓牠在路上有安全的位置，也讓你能從容處理突發狀況。`} />
     <div className={`departure-layout ${departing ? "departing" : ""}`}>
       <aside className="departure-supply-shelf" aria-label="準備物品">
-        <div className="departure-supply-header"><h2>{complete ? "已準備的物品" : "準備物品"}</h2><span>{complete ? "準備完成" : `${remainingItems.length} 件可準備`}</span></div>
+        <div className="departure-supply-header"><h2>{complete ? "已準備的物品" : "準備物品"}</h2></div>
         {!complete && <div className="departure-supply-rows">
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
             {row.map((item) => <button key={item.id} type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>

@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { breeds, hazards, money, roomItems } from "../../game-data";
 import { lifeScenarios } from "../../life-data";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, ScenarioAnswer } from "../../game-types";
-import { NavButtons } from "../shared/SharedComponents";
+import { isMonthlyExpense, isOneTimePreparationExpense, isTemporaryOrMedicalExpense, mergeDefaultVisibleExpenses, NavButtons } from "../shared/SharedComponents";
 
 function PdfFab() {
   const [mounted, setMounted] = useState(false);
@@ -112,7 +112,7 @@ export function ProfileForm({
           <fieldset><legend>每天的時間</legend><div className="profile-time-grid"><label>每天離家時間<span>每日 <input type="number" min="0" max="24" value={profile.hoursAway} onChange={(event) => update("hoursAway", clamp(event.target.value, 24))} /> 小時</span></label><label>每天能投入照顧時間<span>每日 <input type="number" min="0" max="24" value={profile.careHours} onChange={(event) => update("careHours", clamp(event.target.value, 24))} /> 小時</span></label></div>{errors.hoursAway && <p className="field-error">{errors.hoursAway}</p>}{errors.careHours && <p className="field-error">{errors.careHours}</p>}</fieldset>
         </>}
         {page === 1 && <>
-          <fieldset><legend>居住類型</legend><div className="housing-options">{["自有住宅", "租屋"].map((value) => <OptionButton key={value} label={value} selected={profile.housing === value} onClick={() => update("housing", value)} />)}</div>{errors.housing && <p className="field-error">{errors.housing}</p>}{profile.housing === "租屋" && <div className="landlord-options">{["房東已同意", "尚未取得同意"].map((value) => <OptionButton key={value} label={value} selected={profile.landlordConsent === value} onClick={() => update("landlordConsent", value)} />)}</div>}{errors.landlordConsent && <p className="field-error">{errors.landlordConsent}</p>}</fieldset>
+          <fieldset><legend>居住類型</legend><div className="housing-options">{["自有住宅", "租屋"].map((value) => <OptionButton key={value} label={value} selected={profile.housing === value} onClick={() => update("housing", value)} />)}</div>{errors.housing && <p className="field-error">{errors.housing}</p>}{profile.housing === "租屋" && <div className="landlord-options">{["房東已同意", "不同意", "尚未取得同意"].map((value) => <OptionButton key={value} label={value} selected={profile.landlordConsent === value} onClick={() => update("landlordConsent", value)} />)}</div>}{errors.landlordConsent && <p className="field-error">{errors.landlordConsent}</p>}</fieldset>
           <fieldset><legend>是否有同住者？</legend><div className="housemate-presence-options"><OptionButton label="有" selected={profile.hasHousemates === true} onClick={() => update("hasHousemates", true)} /><OptionButton label="無" selected={profile.hasHousemates === false} onClick={() => update("hasHousemates", false)} /></div>{errors.hasHousemates && <p className="field-error">{errors.hasHousemates}</p>}{profile.hasHousemates === true && <div className="housemate-details"><h2>所有同住者是否知情並同意？</h2><div className="housemate-presence-options"><OptionButton label="同意" selected={profile.housematesConsent === true} onClick={() => update("housematesConsent", true)} /><OptionButton label="尚未同意" selected={profile.housematesConsent === false} onClick={() => update("housematesConsent", false)} /></div>{errors.housematesConsent && <p className="field-error">{errors.housematesConsent}</p>}</div>}</fieldset>
         </>}
         {page === 2 && <>
@@ -180,8 +180,11 @@ export function ProfileSupplementForm({
       <div className="profile-wizard-head"><div><h1 id="profile-supplement-title">補充真實生活條件</h1><p>這些資料可協助收容所、寵物店家或照護人員了解你的居住環境、同住者狀況與飼養經驗，作為後續溝通與照顧建議的參考。</p></div></div>
       <section className="profile-panel">
         <fieldset><legend>每天的時間</legend><div className="profile-time-grid"><label>每天離家時間<span>每日 <input type="number" min="0" max="24" value={profile.hoursAway} onChange={(event) => update("hoursAway", clamp(event.target.value, 24))} /> 小時</span></label><label>每天可投入照顧時間<span>每日 <input type="number" min="0" max="24" value={profile.careHours} onChange={(event) => update("careHours", clamp(event.target.value, 24))} /> 小時</span></label></div></fieldset>
-        <fieldset><legend>居住空間</legend><div className="housing-options">{["自有住宅", "租屋"].map((value) => <OptionButton key={value} label={value} selected={profile.housing === value} onClick={() => update("housing", value)} />)}</div>{profile.housing === "租屋" && <div className="landlord-options">{["房東已同意", "尚未取得同意"].map((value) => <OptionButton key={value} label={value} selected={profile.landlordConsent === value} onClick={() => update("landlordConsent", value)} />)}</div>}</fieldset>
-        <fieldset><legend>同居家人</legend><div className="supplement-choice-grid">{["無", "幼童", "長者", "孕婦", "其他"].map((value) => <button type="button" key={value} className={`supplement-choice ${profile.housemateTypes.includes(value) ? "selected" : ""}`} aria-pressed={profile.housemateTypes.includes(value)} onClick={() => chooseHousemate(value)}>{profile.housemateTypes.includes(value) && <span>✓</span>}{value}</button>)}</div>{profile.housemateTypes.includes("其他") && <label className="supplement-inline-input">其他同居家人<input placeholder="請說明" value={profile.otherHousemate} onChange={(event) => update("otherHousemate", event.target.value)} /></label>}{profile.hasHousemates && <div className="supplement-followup"><b>同住者是否知情並同意飼養？</b><div className="supplement-choice-grid compact">{consentOptions.map((option) => <button type="button" key={option.value} className={`supplement-choice ${option.selected ? "selected" : ""}`} aria-pressed={option.selected} onClick={() => update("housematesConsent", option.consent)}>{option.label}</button>)}</div></div>}</fieldset>
+        <fieldset><legend>居住空間</legend><div className="housing-options">{["自有住宅", "租屋"].map((value) => <OptionButton key={value} label={value} selected={profile.housing === value} onClick={() => update("housing", value)} />)}</div>{profile.housing === "租屋" && <div className="supplement-followup landlord-consent-followup"><b>房東／租約是否允許飼養寵物？</b><div className="supplement-choice-grid compact">{["已確認並同意", "不同意", "尚未確認"].map((value) => {
+          const selected = profile.landlordConsent === value || (value === "已確認並同意" && profile.landlordConsent === "房東已同意") || (value === "尚未確認" && profile.landlordConsent === "尚未取得同意");
+          return <button type="button" key={value} className={`supplement-choice ${selected ? "selected" : ""}`} aria-pressed={selected} onClick={() => update("landlordConsent", value)}>{value}</button>;
+        })}</div></div>}</fieldset>
+        <fieldset><legend>同居家人</legend><div className="housemate-type-groups"><div className="supplement-choice-grid housemate-none-row"><button type="button" className={`supplement-choice ${profile.housemateTypes.includes("無") ? "selected" : ""}`} aria-pressed={profile.housemateTypes.includes("無")} onClick={() => chooseHousemate("無")}>{profile.housemateTypes.includes("無") && <span>✓</span>}無</button></div><div className="supplement-choice-grid housemate-other-row">{["幼童", "長者", "孕婦", "其他"].map((value) => <button type="button" key={value} className={`supplement-choice ${profile.housemateTypes.includes(value) ? "selected" : ""}`} aria-pressed={profile.housemateTypes.includes(value)} onClick={() => chooseHousemate(value)}>{profile.housemateTypes.includes(value) && <span>✓</span>}{value}</button>)}</div></div>{profile.housemateTypes.includes("其他") && <label className="supplement-inline-input">其他同居家人<input placeholder="請說明" value={profile.otherHousemate} onChange={(event) => update("otherHousemate", event.target.value)} /></label>}{profile.hasHousemates && <div className="supplement-followup"><b>同住者是否知情並同意飼養？</b><div className="supplement-choice-grid compact">{consentOptions.map((option) => <button type="button" key={option.value} className={`supplement-choice ${option.selected ? "selected" : ""}`} aria-pressed={option.selected} onClick={() => update("housematesConsent", option.consent)}>{option.label}</button>)}</div></div>}</fieldset>
         <fieldset><legend>寵物預計活動空間</legend><div className="supplement-choice-grid">{["戶外空間", "室內客廳", "房間", "其他"].map((value) => <button type="button" key={value} className={`supplement-choice ${profile.activitySpace === value ? "selected" : ""}`} aria-pressed={profile.activitySpace === value} onClick={() => update("activitySpace", value)}>{profile.activitySpace === value && <span>✓</span>}{value}</button>)}</div>{profile.activitySpace === "其他" && <label className="supplement-inline-input">其他活動空間<input placeholder="請說明" value={profile.otherActivitySpace} onChange={(event) => update("otherActivitySpace", event.target.value)} /></label>}</fieldset>
         <fieldset><legend>居家空間</legend><div className="home-space-upload">
           <label>
@@ -204,7 +207,6 @@ export function AssessmentReport({
   breed,
   profile,
   expenses,
-  emergencyReserve,
   roomReady,
   hazardsReady,
   members,
@@ -231,12 +233,11 @@ export function AssessmentReport({
   onReset: () => void;
 }) {
   const [committed, setCommitted] = useState(false);
-  const recurring = expenses.filter((item) => item.recurring).reduce((sum, item) => sum + item.amount, 0);
-  const oneTime = expenses.filter((item) => !item.recurring && item.category === "用品").reduce((sum, item) => sum + item.amount, 0);
-  const medical = expenses.filter((item) => item.category === "醫療" && !item.recurring).reduce((sum, item) => sum + item.amount, 0);
-  const careService = expenses.filter((item) => item.category === "照顧服務").reduce((sum, item) => sum + item.amount, 0);
-  const seniorSupplies = expenses.filter((item) => item.category === "高齡用品").reduce((sum, item) => sum + item.amount, 0);
-  const total = expenses.reduce((sum, item) => sum + item.amount, 0);
+  const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
+  const oneTime = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+  const recurring = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
+  const temporaryMedical = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
+  const total = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
   const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
@@ -254,7 +255,8 @@ export function AssessmentReport({
   const housemateStatus = profile.housemateTypes.includes("無") ? "無" : profile.housemateTypes.length ? [...profile.housemateTypes.filter((item) => item !== "其他"), profile.housemateTypes.includes("其他") ? profile.otherHousemate || "其他（待補充）" : ""].filter(Boolean).join("、") : "待補充";
   const experienceStatus = profile.noShibaExperience ? "沒有柴犬經驗" : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote ? "已補充飼養經驗" : "待補充";
   const reasonStatus = profile.reasons.length ? profile.reasons.map((item) => item === "其他" ? profile.reasonOther || "其他（待補充）" : item).join("、") : "待補充";
-  const strongSignals = [preparationStrong, correctFirst >= 5, practiceComplete === practiceItems.length, profile.activitySpace !== "", profile.reasons.length > 0, profile.housing !== "租屋" || profile.landlordConsent === "房東已同意", profile.hasHousemates !== true || profile.housematesConsent === true].filter(Boolean).length;
+  const landlordConfirmed = profile.landlordConsent === "已確認並同意" || profile.landlordConsent === "房東已同意";
+  const strongSignals = [preparationStrong, correctFirst >= 5, practiceComplete === practiceItems.length, profile.activitySpace !== "", profile.reasons.length > 0, profile.housing !== "租屋" || landlordConfirmed, profile.hasHousemates !== true || profile.housematesConsent === true].filter(Boolean).length;
   const level = strongSignals >= 6 ? "已具備多項準備" : strongSignals >= 3 ? "有部分條件需要先確認" : "建議先完成準備事項";
 
   const prepared = [
@@ -276,7 +278,7 @@ export function AssessmentReport({
   ].filter(Boolean) as string[];
   const familyTopics = [
     profile.hasHousemates && profile.housematesConsent !== true && "所有同住者是否知情並同意飼養",
-    profile.housing === "租屋" && profile.landlordConsent !== "房東已同意" && "租屋規定與房東書面同意",
+    profile.housing === "租屋" && !landlordConfirmed && "租屋規定與房東書面同意",
   ].filter(Boolean) as string[];
   const actions = [
     ...confirm.slice(0, 5),
@@ -372,10 +374,12 @@ export function AssessmentReport({
           <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
         </section>
 
-        <section className="care-a4-money" aria-label="費用速記">
-          <div><small>模擬累積</small><b>NT$ {money.format(total)}</b></div>
-          <div><small>每月固定</small><b>NT$ {money.format(recurring)}</b></div>
-          <div><small>{"\u5efa\u8b70\u9810\u7559\u91ab\u7642\u61c9\u6025\u91d1"}</small><b>NT$ {money.format(emergencyReserve)}</b></div>
+        <section className="care-a4-money" aria-label="預估支出">
+          <h2>預估支出</h2>
+          <div><small>一次性準備費</small><b>NT$ {money.format(oneTime)}</b></div>
+          <div><small>每月基本支出</small><b>NT$ {money.format(recurring)}</b></div>
+          <div><small>臨時／醫療支出</small><b>NT$ {money.format(temporaryMedical)}</b></div>
+          <div><small>總支出</small><b>NT$ {money.format(total)}</b></div>
         </section>
 
         <footer className="care-a4-commitment">

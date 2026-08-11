@@ -110,7 +110,7 @@ export function StageRail({
       children: ["選擇物種", "選擇品種"].map((label, index) => ({
         id: index === 0 ? "species" : "breed",
         label,
-        status: statusAt(index, selectionPage === "species" ? 0 : 1, selectionReached),
+        status: step > 1 && index <= selectionReached ? "completed" : statusAt(index, selectionPage === "species" ? 0 : 1, selectionReached),
         onClick: () => onSelectionPage(index === 0 ? "species" : "breed"),
       })),
     },
@@ -123,7 +123,7 @@ export function StageRail({
       children: ["布置生活空間", "出發前準備"].map((label, index) => ({
         id: `preparation-${index}`,
         label,
-        status: statusAt(index, preparationTask, preparationReached),
+        status: step > 2 && index <= preparationReached ? "completed" : statusAt(index, preparationTask, preparationReached),
         onClick: () => onPreparationTask(index),
       })),
     },
@@ -319,23 +319,23 @@ const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
   expenseLabels.temporaryMedical,
 ];
 
-function isRequiredAfterArrivalExpense(item: ExpenseRecord) {
+export function isRequiredAfterArrivalExpense(item: ExpenseRecord) {
   return requiredAfterArrivalExpenseIds.has(item.id);
 }
 
-function isMonthlyExpense(item: ExpenseRecord) {
+export function isMonthlyExpense(item: ExpenseRecord) {
   return item.recurring;
 }
 
-function isTemporaryOrMedicalExpense(item: ExpenseRecord) {
+export function isTemporaryOrMedicalExpense(item: ExpenseRecord) {
   return temporaryMedicalExpenseIds.has(item.id) || item.category === "\u91ab\u7642" || item.category === "\u7167\u9867\u670d\u52d9" || item.category === "\u9ad8\u9f61\u7528\u54c1" || Boolean(item.fromEmergency);
 }
 
-function isOneTimePreparationExpense(item: ExpenseRecord) {
+export function isOneTimePreparationExpense(item: ExpenseRecord) {
   return !isMonthlyExpense(item) && !isRequiredAfterArrivalExpense(item) && !isTemporaryOrMedicalExpense(item);
 }
 
-function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string) {
+export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string) {
   const petSize = getPetSizeForBreed(breed);
   const existingIds = new Set(expenses.map((item) => item.id));
   return [

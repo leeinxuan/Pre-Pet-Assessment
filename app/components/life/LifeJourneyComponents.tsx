@@ -223,7 +223,7 @@ function ScenarioFeedback({
       <div className="feedback-title"><span>{labels[choice.result].icon}</span><div><small>{scenario.timeLabel}</small><h2>{withPetName(choice.feedbackTitle, petName)}</h2></div></div>
       <p>{withPetName(choice.explanation, petName)}</p>
       <OtherCorrectTips scenario={scenario} choice={choice} petName={petName} />
-      {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整</b><p>{withPetName(choice.suggestion, petName)}</p></div>}
+      {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整：</b><p>{withPetName(choice.suggestion, petName)}</p></div>}
       <div className="feedback-expense">
         <b>本次費用變化</b>
         {expenseChanges.length
@@ -370,7 +370,12 @@ function VideoScenarioActivity({
           {videoFailed && <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>}
         </div>
         {mode === "incorrect" && selectedChoice ? (
-          <section className="video-scenario-retry" aria-live="polite"><h2>這個做法可能不太適合</h2><p>{withPetName(selectedChoice.explanation, petName)}</p>{selectedChoice.suggestion && <p><b>可以這樣調整：</b>{withPetName(selectedChoice.suggestion, petName)}</p>}<button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button></section>
+          <section className="video-scenario-retry" aria-live="polite">
+            <h2>這個做法可能不太適合</h2>
+            <p>{withPetName(selectedChoice.explanation, petName)}</p>
+            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
+            <button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button>
+          </section>
         ) : (
           <section className="video-scenario-options"><h2>你會怎麼做？</h2>{scenario.choices.map((choice) => <button type="button" key={choice.id} onClick={() => choose(choice)}><b>{withPetName(choice.text, petName)}</b></button>)}</section>
         )}
@@ -489,7 +494,7 @@ function DailyBehaviorActivity({
         <section className="daily-behavior-retry" aria-live="polite">
           <h2>這個做法可能不太適合</h2>
           <p>{withPetName(selectedChoice.explanation, petName)}</p>
-          {selectedChoice.suggestion && <p><b>可以這樣調整：</b>{withPetName(selectedChoice.suggestion, petName)}</p>}
+          {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
           <button type="button" className="secondary" onClick={retry}>重新選擇</button>
         </section>
       ) : (

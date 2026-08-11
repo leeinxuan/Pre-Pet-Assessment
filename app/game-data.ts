@@ -157,10 +157,10 @@ export const roomItems: RoomItem[] = [
 ];
 
 export const hazards: HazardItem[] = [
-  { id: "small-parts", label: "小物品", icon: "●", image: "/assets/room/small-items.png", placement: { x: 26, y: 85, width: 12, layer: 5 }, danger: "容易被誤吞，可能造成噎住或腸胃阻塞。", handling: "收進小狗無法取得的抽屜或收納盒。" },
+  { id: "small-parts", label: "小物品", icon: "●", image: "/assets/room/small-items.png", placement: { x: 40, y: 75, width: 12, layer: 5 }, danger: "容易被誤吞，可能造成噎住或腸胃阻塞。", handling: "收進小狗無法取得的抽屜或收納盒。" },
   { id: "chocolate", label: "巧克力", icon: "🍫", image: "/assets/room/chocolate.png", placement: { x: 89, y: 78, width: 10, layer: 5  }, danger: "含有不適合狗狗的成分，可能危害健康。", handling: "放進有門的高處櫃子。" },
   { id: "chemicals", label: "清潔劑", icon: "🧴", image: "/assets/room/detergent.png", placement: { x: 62, y: 64, width: 10, layer: 5 }, danger: "可能造成誤食或皮膚接觸風險。", handling: "收進上鎖或小狗無法開啟的櫃子。" },
-  { id: "cables", label: "電線", icon: "🔌", image: "/assets/room/wire.png", placement: { x: 12, y: 78, width: 24, layer: 5 }, danger: "可能被啃咬，造成受傷或觸電。", handling: "整理固定或加裝電線保護套。" },
+  { id: "cables", label: "電線", icon: "🔌", image: "/assets/room/wire.png", placement: { x: 12, y: 78, width: 20, layer: 5 }, danger: "可能被啃咬，造成受傷或觸電。", handling: "整理固定或加裝電線保護套。" },
 ];
 
 export const initialMembers: CareMember[] = [
@@ -178,9 +178,9 @@ export const trunkItems: TrunkItem[] = [
   },
   {
     id: "documents", label: "領養文件", kind: "document", image: "/assets/car/adoption-documents.png", preparedLabel: "已攜帶",
-    description: "領養申請、評估或契約文件可能包含飼養條件、照顧責任及後續聯絡資料，出發前應先確認是否需要攜帶或簽署。",
-    reason: "把交接資料集中整理，能在辦理流程時快速確認與簽署。",
-    caution: "不同領養單位的流程與文件不完全相同，請以該單位通知為準。",
+    description: "如有租屋，須提供房東許可之證明。",
+    reason: "如有租屋，須提供房東許可之證明。",
+    caution: "實際需要攜帶的文件，請依領養單位通知及評估流程確認。",
     sourceLabel: "領養單位提供的領養評估單與接回注意事項",
     feedback: "領養文件已放入文件夾。", placement: { x: 22, y: 32, width: 24, layer: 3 },
   },
