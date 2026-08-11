@@ -129,8 +129,8 @@
 .departure-supply-header h2 { margin: 0; font-size: 15px; }
 .departure-supply-header span { color: var(--muted); font-size: 11px; font-weight: 800; text-align: right; }
 .departure-supply-rows { display: flex; flex-direction: column; gap: 10px; min-height: 370px; }
-.departure-supply-row { display: flex; flex: 0 0 142px; min-height: 142px; align-items: flex-start; justify-content: center; gap: 22px; }
-.departure-supply-row--1 { justify-content: center; }
+.departure-supply-row { display: flex; flex: 0 0 142px; min-height: 142px; align-items: flex-start; justify-content: flex-start; gap: 22px; }
+.departure-supply-row--1 { justify-content: flex-start; }
 .departure-supply-row--3 { gap: 7px; }
 .departure-supply-row button { appearance: none; flex: 0 1 calc((100% - 22px) / 2); min-width: 104px; min-height: 142px; padding: 8px 4px; border: 0; border-radius: 0; background: transparent; box-shadow: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; color: inherit; cursor: pointer; transition: opacity .2s ease, transform .2s ease; }
 .departure-supply-row--1 button { flex-basis: 45%; }
@@ -1037,6 +1037,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .busy-care-member-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
 .busy-care-feedback.incorrect { border: 2px solid var(--orange); background: var(--orange-soft); }
 .busy-care-feedback p { color: #733817; line-height: 1.75; }
+.busy-care-feedback--standard .secondary { margin-top: 24px; }
 .busy-care-positive { min-height: 560px; display: grid; grid-template-columns: 1.08fr .92fr; overflow: hidden; border: 1px solid var(--mint); border-radius: 28px; background: var(--mint-soft); box-shadow: var(--shadow); }
 .busy-care-positive-video { min-height: 560px; background: #2f2a22; }
 .busy-care-positive-video video { display: block; width: 100%; height: 100%; min-height: 560px; object-fit: cover; }
@@ -1731,7 +1732,8 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .care-a4-header aside small { display: block; margin-top: 2mm; color: var(--muted); line-height: 1.45; }
 .care-a4-checklists { margin-top: 8mm; }
 .care-a4-checklists > h2,
-.care-a4-table-section h2 { margin: 0 0 4mm; font-size: 16px; }
+.care-a4-table-section h2,
+.care-a4-money h2 { margin: 0 0 4mm; font-size: 16px; font-weight: 900; color: var(--ink); }
 .care-a4-checklists { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
 .care-a4-checklists > h2 { grid-column: 1 / -1; }
 .care-a4-card { min-height: 70mm; padding: 5mm; border: 1px solid #e3d6bf; border-radius: 12px; background: #fffaf0; }
@@ -1746,11 +1748,19 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .care-a4-table div:last-child { border-bottom: 0; }
 .care-a4-table b { color: var(--gold-dark); font-size: 12px; }
 .care-a4-table p { margin: 0; color: #4d4439; font-size: 12px; line-height: 1.45; }
-.care-a4-money { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; margin-top: 8mm; }
-.care-a4-money h2 { grid-column: 1 / -1; margin: 0 0 1mm; color: var(--gold-dark); font-size: 15px; }
-.care-a4-money div { padding: 4mm; border-radius: 12px; background: var(--mint-soft); }
-.care-a4-money small { display: block; color: #5f735f; font-size: 10px; font-weight: 900; }
-.care-a4-money b { display: block; margin-top: 1mm; font-size: 16px; }
+.care-a4-money { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 4mm; margin-top: 8mm; }
+.care-a4-money h2 { grid-column: 1 / -1; }
+.care-a4-money-types,
+.care-a4-money-summary { padding: 4mm; border-radius: 12px; background: var(--mint-soft); }
+.care-a4-money h3 { margin: 0 0 3mm; color: #5f735f; font-size: 11px; font-weight: 900; }
+.care-a4-money ul { display: grid; gap: 1.8mm; margin: 0; padding-left: 1.1em; color: #4e644e; font-size: 11.5px; font-weight: 850; line-height: 1.35; }
+.care-a4-money-note { color: #7b8c7c; font-size: .88em; font-weight: 750; line-height: 1.45; }
+.care-a4-money dl { display: grid; gap: 2mm; margin: 0; }
+.care-a4-money dl div { display: flex; justify-content: space-between; gap: 4mm; padding: 0 0 1.8mm; border-bottom: 1px solid rgba(95, 115, 95, .18); }
+.care-a4-money dl div:last-child { padding-bottom: 0; border-bottom: 0; }
+.care-a4-money dt { color: #5f735f; font-size: 11px; font-weight: 900; }
+.care-a4-money dd { margin: 0; color: var(--ink); font-size: 14px; font-weight: 900; white-space: nowrap; }
+.care-a4-money p { grid-column: 1 / -1; margin: 3mm 0 0; color: #5f735f; font-size: 10.5px; font-weight: 800; line-height: 1.45; }
 .care-a4-commitment { display: grid; grid-template-columns: 7mm 1fr; gap: 3mm; align-items: start; margin-top: 8mm; padding: 5mm; border: 2px solid #d8c49d; border-radius: 14px; background: #fff7df; }
 .care-a4-commitment span { font-size: 18px; font-weight: 900; line-height: 1; }
 .care-a4-commitment p { margin: 0; font-size: 13px; font-weight: 900; line-height: 1.55; }
@@ -2180,13 +2190,20 @@ html, body { overflow-x: clip; }
 .care-a4-table p { font-size: 14px; }
 .care-a4-money {
   margin-top: 24px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
   gap: 14px;
 }
-.care-a4-money h2 { margin-bottom: 0; font-size: 18px; }
-.care-a4-money div { padding: 16px; }
-.care-a4-money small { font-size: 12px; }
-.care-a4-money b { font-size: 20px; }
+.care-a4-money h2 { margin: 0 0 4mm; font-size: 16px; }
+.care-a4-money-types,
+.care-a4-money-summary { padding: 16px; }
+.care-a4-money h3 { font-size: 13px; }
+.care-a4-money ul { gap: 7px; font-size: 13px; }
+.care-a4-money-note { font-size: 11.5px; }
+.care-a4-money dl { gap: 9px; }
+.care-a4-money dl div { padding-bottom: 9px; }
+.care-a4-money dt { font-size: 13px; }
+.care-a4-money dd { font-size: 18px; }
+.care-a4-money p { margin-top: 12px; font-size: 12px; }
 .care-a4-commitment {
   margin-top: 24px;
   grid-template-columns: 28px 1fr;
@@ -2248,7 +2265,7 @@ html, body { overflow-x: clip; }
     height: 297mm !important;
     min-height: 297mm !important;
     margin: 0 !important;
-    padding: 16mm !important;
+    padding: 14mm 16mm 12mm !important;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -2257,21 +2274,32 @@ html, body { overflow-x: clip; }
   .care-a4-sheet { top: 0; }
   .care-print-profile {
     top: 297mm;
-    padding: 28mm 16mm 16mm !important;
+    padding: 24mm 16mm 16mm !important;
     page-break-before: always;
   }
-  .care-a4-header { display: flex !important; padding-bottom: 8mm !important; border-bottom: 2px solid #e7d9bd !important; }
+  .care-a4-header { display: flex !important; padding-bottom: 6mm !important; border-bottom: 2px solid #e7d9bd !important; }
   .care-a4-header h1 { font-size: 28px !important; }
-  .care-a4-checklists { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 4mm !important; margin-top: 8mm !important; }
-  .care-a4-card { padding: 5mm !important; min-height: 70mm !important; }
-  .care-a4-card li { grid-template-columns: 6mm 1fr !important; font-size: 12px !important; }
-  .care-a4-table div { grid-template-columns: 38mm 1fr !important; padding: 3.4mm 4.5mm !important; }
+  .care-a4-checklists { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 3.5mm !important; margin-top: 6mm !important; }
+  .care-a4-card { padding: 4mm !important; min-height: 58mm !important; }
+  .care-a4-card ul { gap: 1.8mm !important; }
+  .care-a4-card li { grid-template-columns: 5mm 1fr !important; gap: 1.5mm !important; font-size: 11.4px !important; line-height: 1.22 !important; }
+  .care-a4-table-section { margin-top: 6mm !important; }
+  .care-a4-table div { grid-template-columns: 38mm 1fr !important; padding: 2.6mm 4mm !important; }
   .care-a4-table b,
   .care-a4-table p { font-size: 12px !important; }
-  .care-a4-money { grid-template-columns: repeat(4, 1fr) !important; gap: 4mm !important; margin-top: 8mm !important; }
-  .care-a4-money h2 { grid-column: 1 / -1 !important; font-size: 15px !important; margin: 0 0 1mm !important; }
-  .care-a4-money b { font-size: 16px !important; }
-  .care-a4-commitment { grid-template-columns: 7mm 1fr !important; margin-top: 8mm !important; padding: 5mm !important; }
+  .care-a4-money { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr) !important; gap: 3.5mm !important; margin-top: 6mm !important; }
+  .care-a4-money h2 { grid-column: 1 / -1 !important; font-size: 16px !important; margin: 0 0 4mm !important; }
+  .care-a4-money-types,
+  .care-a4-money-summary { padding: 3mm !important; }
+  .care-a4-money h3 { font-size: 11px !important; margin-bottom: 2mm !important; }
+  .care-a4-money ul { gap: 1.5mm !important; font-size: 11px !important; }
+  .care-a4-money-note { font-size: 9.8px !important; }
+  .care-a4-money dl { gap: 1.6mm !important; }
+  .care-a4-money dl div { padding-bottom: 1.6mm !important; }
+  .care-a4-money dt { font-size: 10.5px !important; }
+  .care-a4-money dd { font-size: 13px !important; }
+  .care-a4-money p { margin-top: 2mm !important; font-size: 10px !important; }
+  .care-a4-commitment { grid-template-columns: 7mm 1fr !important; margin-top: 6mm !important; padding: 4mm !important; }
   .print-profile-grid section { break-inside: avoid; }
   .a4-toolbar,
   .station-rail,
@@ -2347,7 +2375,7 @@ html, body { overflow-x: clip; }
   }
 
   .care-print-profile {
-    padding-top: 48mm !important;
+    padding-top: 24mm !important;
   }
 
   .care-print-profile .care-a4-header {

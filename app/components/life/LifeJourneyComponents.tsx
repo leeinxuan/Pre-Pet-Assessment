@@ -579,7 +579,12 @@ function BusyCareActivity({
             <div className="busy-care-member-actions"><button type="button" className="secondary" onClick={() => setFamilyFeedback(null)}>重新選擇家庭成員</button><button type="button" className="primary" onClick={() => { setFamilyFeedback(null); setMode("question"); }}>返回上一層，改選其他照顧方式 <span>→</span></button></div>
           </section>
         ) : mode === "incorrect" && selectedChoice ? (
-          <section className="busy-care-feedback incorrect" aria-live="polite"><h2>這個做法可能不太適合</h2><p>{withPetName(selectedChoice.explanation, petName)}</p><p><b>可以這樣調整：</b>{selectedChoice.suggestion ? withPetName(selectedChoice.suggestion, petName) : ""}</p><button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button></section>
+          <section className="busy-care-feedback incorrect busy-care-feedback--standard" aria-live="polite">
+            <h2>這個做法可能不太適合</h2>
+            <p>{withPetName(selectedChoice.explanation, petName)}</p>
+            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
+            <button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button>
+          </section>
         ) : (
           <section className="busy-care-options"><h2>你會怎麼安排？</h2>{scenario.choices.map((choice) => <button type="button" key={choice.id} onClick={() => choose(choice)}><b>{withPetName(choice.text, petName)}</b></button>)}</section>
         )}

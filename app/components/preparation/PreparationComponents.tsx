@@ -215,9 +215,10 @@ export function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNex
   const supplyDone = supplies.filter((item) => selected.includes(item.id)).length;
   const complete = documentDone === documents.length && supplyDone === supplies.length;
   const remainingItems = departureTrunkItems.filter((item) => !selected.includes(item.id) || exitingItems.includes(item.id));
-  const supplyRows = remainingItems.length <= 3
-    ? [remainingItems]
-    : [remainingItems.slice(0, 2), remainingItems.slice(2, 4), remainingItems.slice(4)].filter((row) => row.length > 0);
+  const supplyRows = Array.from(
+    { length: Math.ceil(remainingItems.length / 2) },
+    (_, index) => remainingItems.slice(index * 2, index * 2 + 2),
+  ).filter((row) => row.length > 0);
   // Kept only for the legacy markup below; the rendered interface returns before it.
   const [message, setMessage] = useState("");
   const activeId = "";

@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-lV7juojv.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-CrgkZQcR.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1822,12 +1822,15 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 					})
 				]
 			}) : mode === "incorrect" && selectedChoice ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				className: "busy-care-feedback incorrect",
+				className: "busy-care-feedback incorrect busy-care-feedback--standard",
 				"aria-live": "polite",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "這個做法可能不太適合" }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "可以這樣調整：" }), selectedChoice.suggestion ? withPetName(selectedChoice.suggestion, petName) : ""] }),
+					selectedChoice.suggestion && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "incorrect-suggestion",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "可以這樣調整：" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.suggestion, petName) })]
+					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 						type: "button",
 						className: "secondary",
@@ -3171,11 +3174,7 @@ function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNext }) {
 	const supplyDone = supplies.filter((item) => selected.includes(item.id)).length;
 	const complete = documentDone === documents.length && supplyDone === supplies.length;
 	const remainingItems = departureTrunkItems.filter((item) => !selected.includes(item.id) || exitingItems.includes(item.id));
-	const supplyRows = remainingItems.length <= 3 ? [remainingItems] : [
-		remainingItems.slice(0, 2),
-		remainingItems.slice(2, 4),
-		remainingItems.slice(4)
-	].filter((row) => row.length > 0);
+	const supplyRows = Array.from({ length: Math.ceil(remainingItems.length / 2) }, (_, index) => remainingItems.slice(index * 2, index * 2 + 2)).filter((row) => row.length > 0);
 	const [message, setMessage] = (0, import_react.useState)("");
 	trunkItems[0];
 	function selectItem(id) {
@@ -3468,8 +3467,8 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 							className: "supplement-choice-grid compact",
 							children: [
 								"已確認並同意",
-								"不同意",
-								"尚未確認"
+								"尚未確認",
+								"不同意"
 							].map((value) => {
 								const selected = profile.landlordConsent === value || value === "已確認並同意" && profile.landlordConsent === "房東已同意" || value === "尚未確認" && profile.landlordConsent === "尚未取得同意";
 								return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
@@ -3641,13 +3640,10 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 		})]
 	});
 }
-function AssessmentReport({ petName, breed, profile, expenses, roomReady, hazardsReady, members, trunkSelected, trunkPassed, answers, lifeActivity, onBack, onReset }) {
+function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve, roomReady, hazardsReady, members, trunkSelected, trunkPassed, answers, lifeActivity, onBack, onReset }) {
 	const [committed, setCommitted] = (0, import_react.useState)(false);
-	const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
-	const oneTime = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
-	const recurring = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
-	const temporaryMedical = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
-	const total = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
+	const total = mergeDefaultVisibleExpenses(expenses, breed).reduce((sum, item) => sum + item.amount, 0);
+	const suggestedPreparedTotal = total + emergencyReserve;
 	const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
 	const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
 	Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
@@ -3832,10 +3828,28 @@ function AssessmentReport({ petName, breed, profile, expenses, roomReady, hazard
 						"aria-label": "預估支出",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "預估支出" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "一次性準備費" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(oneTime)] })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "每月基本支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(recurring)] })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "臨時／醫療支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(temporaryMedical)] })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "總支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(total)] })] })
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "care-a4-money-types",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "支出包含" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "到家後必要支出" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+										className: "care-a4-money-note",
+										children: "（晶片與寵物登記、狂犬病疫苗、基礎疫苗與初期健康檢查）"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "一次性準備費" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "每月基本支出" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "臨時／醫療支出" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "建議預留醫療應急金" })
+								] })]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "care-a4-money-summary",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "金額摘要" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "目前模擬支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(total)] })] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "建議預留醫療應急金" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(emergencyReserve)] })] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "建議準備金額" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", money.format(suggestedPreparedTotal)] })] })
+								] })]
+							})
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("footer", {
