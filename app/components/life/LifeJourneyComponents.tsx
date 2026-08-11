@@ -954,7 +954,7 @@ function WalkingActivity({
       return;
     }
     setStarted(true);
-    setMessage("把滑鼠移到畫面右側，陪牠慢慢往前走。");
+    setMessage("");
   }
 
   function handleSceneMove(event: MouseEvent<HTMLElement>) {
@@ -993,7 +993,7 @@ function WalkingActivity({
         <div>
           <p className="life-stage-label">{lifeStageLabels.daily}</p>
           <h1>今天也要出門散步</h1>
-          <p>一天的照顧不只是在家餵食和陪伴，狗狗也需要規律外出活動。散步能讓牠探索環境、消耗體力、練習社會化，也有機會完成排泄。出門前，先把安全與清潔用品準備好吧。</p>
+          {!started && <p>一天的照顧不只是在家餵食和陪伴，狗狗也需要規律外出活動。散步能讓牠探索環境、消耗體力、練習社會化，也有機會完成排泄。出門前，先把安全與清潔用品準備好吧。</p>}
         </div>
       </div>
 
@@ -1025,6 +1025,7 @@ function WalkingActivity({
         </div>
       ) : (
         <div className="walking-game">
+          <p className="walking-game-hint">滑鼠往右移動時，人和狗會一起前進；走到畫面右側就會進入下一段路。</p>
           <div className="walking-progress" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
             <b>散步進度</b>
             <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
@@ -1044,7 +1045,7 @@ function WalkingActivity({
               />
               {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/assets/walking/poop.png" alt="" /></button>}
             </div>
-            <div className="walking-forward-zone" aria-hidden="true">滑鼠移到右側前進</div>
+            {!needsCleanup && position <= 8 && <div className="walk-mouse-hint" aria-hidden="true"><span className="mouse-icon" /><span className="mouse-arrow">→</span></div>}
           </div>
           <button
             type="button"

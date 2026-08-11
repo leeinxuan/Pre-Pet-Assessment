@@ -1071,6 +1071,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .walking-prep-actions { display: flex; justify-content: flex-end; margin-top: 6px; }
 .walking-prep-card .primary, .walking-prep-card .secondary { align-self: flex-start; }
 .walking-game { display: grid; gap: 14px; }
+.walking-game-hint { margin: 0; color: #7d6c58; font-size: 13px; font-weight: 900; line-height: 1.55; }
 .walking-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; color: var(--muted); font-weight: 850; }
 .walking-meta b { color: var(--gold-dark); font-size: 18px; }
 .walking-meta small { margin-left: auto; color: #4d7455; }
@@ -1088,7 +1089,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .walking-poop { position: absolute; left: 50%; bottom: 10%; transform: translate(-50%, 50%); z-index: 4; padding: 0; border: 0; background: transparent; cursor: pointer; }
 .walking-poop img { display: block; width: min(8vw, 78px); max-width: 78px; min-width: 44px; height: auto; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(48, 41, 31, .18)); }
 .walking-poop:hover img, .walking-poop:focus-visible img { transform: translateY(-3px) scale(1.05); }
-.walking-forward-zone { position: absolute; inset: 0 0 0 54%; display: grid; place-items: center; color: rgba(255,255,255,.82); font-size: 13px; font-weight: 900; letter-spacing: .08em; text-shadow: 0 2px 10px rgba(0,0,0,.32); opacity: .75; pointer-events: none; }
+.walk-mouse-hint { position: absolute; left: 54%; bottom: 34px; z-index: 8; display: flex; align-items: center; gap: 9px; opacity: .58; pointer-events: none; transform: translateX(-50%); animation: walkMouseHint 1.6s ease-in-out infinite; filter: drop-shadow(0 8px 16px rgba(55, 43, 24, .18)); }
+.walk-mouse-hint .mouse-icon { position: relative; display: block; width: 22px; height: 34px; border: 3px solid rgba(72, 62, 48, .72); border-radius: 999px; background: rgba(255, 250, 238, .72); }
+.walk-mouse-hint .mouse-icon::before { content: ""; position: absolute; left: 50%; top: 6px; width: 3px; height: 8px; border-radius: 999px; background: rgba(72, 62, 48, .55); transform: translateX(-50%); }
+.walk-mouse-hint .mouse-arrow { color: rgba(72, 62, 48, .72); font-size: 26px; font-weight: 900; line-height: 1; }
 .walking-clean-button { display: inline-flex; align-items: center; gap: 8px; }
 .walking-clean-button img { width: 34px; height: 34px; object-fit: contain; }
 .walking-mobile-forward { display: none; touch-action: none; }
@@ -1097,6 +1101,11 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .walking-complete-card h1 { margin: 0; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(32px, 4vw, 46px); }
 .walking-complete-card p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.85; }
 @keyframes walkingBounce { 50% { transform: translateX(-20%) translateY(-4px); } }
+@keyframes walkMouseHint {
+  0% { transform: translateX(-72%); opacity: .25; }
+  45% { transform: translateX(-45%); opacity: .65; }
+  100% { transform: translateX(-18%); opacity: .25; }
+}
 .video-scenario-heading { margin: 0 0 20px; }
 .video-scenario-heading > span { color: var(--gold-dark); font-size: 12px; font-weight: 900; letter-spacing: .06em; }
 .video-scenario-heading h1 { margin: 7px 0 9px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(30px, 4vw, 43px); }
@@ -1639,7 +1648,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .walking-prep-actions .primary { width: 100%; justify-content: center; }
   .walking-scene, .walking-bg { min-height: 300px; }
   .walking-character { width: min(100%, 570px); bottom: -4%; transform: translateX(-22%); }
-  .walking-forward-zone { display: none; }
+  .walk-mouse-hint { left: 58%; bottom: 24px; transform: translateX(-50%) scale(.9); }
   .walking-mobile-forward { display: inline-flex; justify-content: center; justify-self: center; margin-top: 2px; }
   .walking-meta small { width: 100%; margin-left: 0; }
   .video-scenario-layout, .video-scenario-positive { grid-template-columns: 1fr; }

@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CDLqaEW5.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-pRvuLvPr.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -2078,7 +2078,7 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 			return;
 		}
 		setStarted(true);
-		setMessage("把滑鼠移到畫面右側，陪牠慢慢往前走。");
+		setMessage("");
 	}
 	function handleSceneMove(event) {
 		if (!started || activity.walkingComplete) return;
@@ -2126,7 +2126,7 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 					children: lifeStageLabels.daily
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "今天也要出門散步" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "一天的照顧不只是在家餵食和陪伴，狗狗也需要規律外出活動。散步能讓牠探索環境、消耗體力、練習社會化，也有機會完成排泄。出門前，先把安全與清潔用品準備好吧。" })
+				!started && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "一天的照顧不只是在家餵食和陪伴，狗狗也需要規律外出活動。散步能讓牠探索環境、消耗體力、練習社會化，也有機會完成排泄。出門前，先把安全與清潔用品準備好吧。" })
 			] })
 		}), !started ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "walking-prep",
@@ -2178,6 +2178,10 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "walking-game",
 			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "walking-game-hint",
+					children: "滑鼠往右移動時，人和狗會一起前進；走到畫面右側就會進入下一段路。"
+				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "walking-progress",
 					"aria-label": `散步進度 ${progressMinutes} / 20 分鐘`,
@@ -2219,10 +2223,13 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 								})
 							})]
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "walking-forward-zone",
+						!needsCleanup && position <= 8 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "walk-mouse-hint",
 							"aria-hidden": "true",
-							children: "滑鼠移到右側前進"
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "mouse-icon" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "mouse-arrow",
+								children: "→"
+							})]
 						})
 					]
 				}),
