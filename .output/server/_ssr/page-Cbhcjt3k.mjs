@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-eWFsl5IS.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-Cbhcjt3k.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -724,6 +724,7 @@ var initialProfile = {
 	landlordConsent: "",
 	hasHousemates: null,
 	housematesConsent: null,
+	hasSensitiveHouseholdMembers: false,
 	housemateList: [],
 	housemateTypes: [],
 	otherHousemate: "",
@@ -781,7 +782,7 @@ var lifeScenarios = [
 				text: "保持距離，給牠安靜適應的時間",
 				result: "correct",
 				...positive,
-				explanation: "做得很好！剛到新家的小狗需要先觀察環境。保持距離並提供安靜、安全的空間，能減少壓力，讓牠以自己的速度建立安全感。",
+				explanation: "剛到新家的小狗需要先觀察環境。保持距離並提供安靜、安全的空間，能減少壓力，讓牠以自己的速度建立安全感。",
 				suggestion: "準備乾淨飲水與可休息的角落，等牠主動靠近後再慢慢增加互動。"
 			},
 			{
@@ -1176,6 +1177,15 @@ function getCorrectAnswerVideo(key) {
 	const index = typeof key === "number" ? key : scenarioCorrectAnswerVideoIndex[key] ?? 0;
 	return correctAnswerVideos[Math.abs(index) % correctAnswerVideos.length];
 }
+function useVideoMetadataPreload(src) {
+	(0, import_react.useEffect)(() => {
+		if (!src || typeof document === "undefined") return;
+		const video = document.createElement("video");
+		video.preload = "metadata";
+		video.src = src;
+		video.load();
+	}, [src]);
+}
 function withPetName(text, petName) {
 	return text.replaceAll("豆豆", petName).replaceAll("小狗", petName).replaceAll("狗狗", petName);
 }
@@ -1199,6 +1209,66 @@ function OtherCorrectTips({ scenario, choice, petName }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "other-correct-tips",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "也可以這樣做" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: tips.map((tip) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: tip }, tip)) })]
+	});
+}
+function CorrectFeedbackLayout({ variant, videoSrc, videoFailed, fallbackText, intro, suggestion, otherTips, correctItems, onVideoError, onVideoEnded, onContinue }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: `correct-feedback-layout correct-feedback-layout--${variant}`,
+		"aria-live": "polite",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "correct-feedback-media",
+			children: videoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "scene-video-fallback",
+				role: "status",
+				children: fallbackText
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
+				src: videoSrc,
+				autoPlay: true,
+				playsInline: true,
+				preload: "metadata",
+				"aria-label": "正確處置後的正向結果影片",
+				onEnded: onVideoEnded,
+				onError: onVideoError
+			})
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "correct-feedback-copy",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "做得很好！" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "correct-feedback-intro",
+					children: intro
+				}),
+				correctItems && correctItems.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+					className: "daily-behavior-correct-list",
+					children: correctItems.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: item }, item))
+				}),
+				suggestion && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "correct-feedback-suggestion",
+					children: suggestion
+				}),
+				otherTips,
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					type: "button",
+					className: "primary",
+					onClick: onContinue,
+					children: ["繼續 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})
+			]
+		})]
+	});
+}
+function ScenarioOptionCard({ type = "single", selected = false, disabled = false, children, onClick }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+		type: "button",
+		className: `scenario-option-card scenario-option-card--${type} ${selected ? "selected" : ""}`,
+		"aria-pressed": type === "multiple" ? selected : void 0,
+		disabled,
+		onClick,
+		children: [type === "multiple" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+			className: "scenario-option-marker",
+			"aria-hidden": "true",
+			children: selected ? "✓" : ""
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children })]
 	});
 }
 function ArrivalTransitionVideo({ onContinue }) {
@@ -1318,7 +1388,7 @@ function TimePassTransition({ onComplete }) {
 			src: "/assets/pet-journey/time-passes-aging.mp4",
 			autoPlay: true,
 			playsInline: true,
-			preload: "auto",
+			preload: "metadata",
 			"aria-label": "時間流逝過場動畫",
 			onEnded: finish,
 			onError: () => setNeedsManualPlay(true)
@@ -1332,6 +1402,8 @@ function TimePassTransition({ onComplete }) {
 }
 function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
 	const requiresRetry = scenario.id === "arrival-adjustment" || scenario.id === "illness-vet" || scenario.id === "growing-old";
+	const [feedbackVideoFailed, setFeedbackVideoFailed] = (0, import_react.useState)(false);
+	const [, setFeedbackVideoFinished] = (0, import_react.useState)(false);
 	const labels = {
 		correct: {
 			icon: "✓",
@@ -1347,6 +1419,25 @@ function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
 		}
 	};
 	const expenseChanges = (choice.expenseIds ?? []).map((id) => expenseCatalog[id]).filter(Boolean);
+	if (choice.result === "correct") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CorrectFeedbackLayout, {
+		variant: "single",
+		videoSrc: getCorrectAnswerVideo(scenario.id),
+		videoFailed: feedbackVideoFailed,
+		fallbackText: "正向結果影片目前無法播放，仍可繼續生活旅程。",
+		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(choice.explanation, petName) }),
+		suggestion: choice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(choice.suggestion, petName) }) : null,
+		otherTips: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OtherCorrectTips, {
+			scenario,
+			choice,
+			petName
+		}),
+		onVideoEnded: () => setFeedbackVideoFinished(true),
+		onVideoError: () => {
+			setFeedbackVideoFailed(true);
+			setFeedbackVideoFinished(true);
+		},
+		onContinue
+	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: `scenario-feedback ${choice.result}`,
 		"aria-live": "polite",
@@ -1407,6 +1498,7 @@ function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, on
 		src: "/assets/pet-journey/sick.mp4",
 		label: "小狗生病與就醫情境影片"
 	} : null;
+	useVideoMetadataPreload(scenarioVideo?.src);
 	(0, import_react.useEffect)(() => setSceneVideoFailed(false), [scenario.id]);
 	const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
 	if (feedbackOpen && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioFeedback, {
@@ -1458,9 +1550,9 @@ function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, on
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: scenario.id === "growing-old" ? "你會怎麼安排？" : "如果是你，會怎麼做？" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "choice-grid",
 			children: scenario.choices.filter((choice) => choice.id !== "assigned-helper" || hasBackup).map((choice) => {
-				return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+				return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioOptionCard, {
 					onClick: () => onChoose(choice),
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: choice.id === "assigned-helper" ? `請${backupNames.join("或")}依照事先安排的分工，協助今晚的餵食與活動。` : withPetName(choice.text, petName) })
+					children: choice.id === "assigned-helper" ? `請${backupNames.join("或")}依照事先安排的分工，協助今晚的餵食與活動。` : withPetName(choice.text, petName)
 				}, choice.id);
 			})
 		})]
@@ -1471,6 +1563,8 @@ function VideoScenarioActivity({ scenario, answer, petName, onChoose, onCorrectC
 	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
 	const [, setVideoFinished] = (0, import_react.useState)(false);
 	const source = scenario.id === "arrival-adjustment" ? "/assets/pet-journey/first-day.mp4" : scenario.id === "growing-old" ? "/assets/pet-journey/senior-life.mp4" : "/assets/pet-journey/sick.mp4";
+	useVideoMetadataPreload(source);
+	useVideoMetadataPreload(getCorrectAnswerVideo(scenario.id));
 	const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
 	function choose(choice) {
 		onChoose(choice);
@@ -1478,49 +1572,27 @@ function VideoScenarioActivity({ scenario, answer, petName, onChoose, onCorrectC
 		setVideoFinished(false);
 		setMode(choice.result === "correct" ? "positive" : "incorrect");
 	}
-	if (mode === "positive" && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		className: "video-scenario-positive",
-		"aria-live": "polite",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			className: "video-scenario-positive-video",
-			children: videoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "scene-video-fallback",
-				role: "status",
-				children: "正向結果影片目前無法播放，仍可繼續生活旅程。"
-			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
-				src: getCorrectAnswerVideo(scenario.id),
-				autoPlay: true,
-				playsInline: true,
-				preload: "metadata",
-				"aria-label": "正確處置後的正向結果影片",
-				onEnded: () => setVideoFinished(true),
-				onError: () => {
-					setVideoFailed(true);
-					setVideoFinished(true);
-				}
-			})
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: "video-scenario-positive-copy",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "做得很好！" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
-				scenario.id === "illness-vet" && selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "illness-health-note",
-					children: withPetName(selectedChoice.suggestion, petName).split("\n").map((line, index) => line ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: line }, `${line}-${index}`) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}, `break-${index}`))
-				}) : selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.suggestion, petName) }) : null,
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(OtherCorrectTips, {
-					scenario,
-					choice: selectedChoice,
-					petName
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					type: "button",
-					className: "primary",
-					onClick: onCorrectComplete,
-					children: ["繼續 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
-				})
-			]
-		})]
+	if (mode === "positive" && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CorrectFeedbackLayout, {
+		variant: "single",
+		videoSrc: getCorrectAnswerVideo(scenario.id),
+		videoFailed,
+		fallbackText: "正向結果影片目前無法播放，仍可繼續生活旅程。",
+		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
+		suggestion: scenario.id === "illness-vet" && selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "illness-health-note",
+			children: withPetName(selectedChoice.suggestion, petName).split("\n").map((line, index) => line ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: line }, `${line}-${index}`) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}, `break-${index}`))
+		}) : selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.suggestion, petName) }) : null,
+		otherTips: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OtherCorrectTips, {
+			scenario,
+			choice: selectedChoice,
+			petName
+		}),
+		onVideoEnded: () => setVideoFinished(true),
+		onVideoError: () => {
+			setVideoFailed(true);
+			setVideoFinished(true);
+		},
+		onContinue: onCorrectComplete
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "video-scenario-activity",
@@ -1570,10 +1642,9 @@ function VideoScenarioActivity({ scenario, answer, petName, onChoose, onCorrectC
 				]
 			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 				className: "video-scenario-options",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "你會怎麼做？" }), scenario.choices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-					type: "button",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "你會怎麼做？" }), scenario.choices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioOptionCard, {
 					onClick: () => choose(choice),
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: withPetName(choice.text, petName) })
+					children: withPetName(choice.text, petName)
 				}, choice.id))]
 			})]
 		})]
@@ -1599,10 +1670,16 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
 	const [, setVideoFinished] = (0, import_react.useState)(false);
 	const scenario = scenarios[currentIndex];
+	const behaviorVideoSource = scenario ? dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4" : void 0;
+	const nextBehaviorScenario = scenarios[currentIndex + 1];
+	useVideoMetadataPreload(behaviorVideoSource);
+	useVideoMetadataPreload(nextBehaviorScenario ? dailyBehaviorVideos[nextBehaviorScenario.id] : void 0);
+	useVideoMetadataPreload(getCorrectAnswerVideo(currentIndex));
 	if (!scenario) return null;
 	const correctChoiceIds = scenario.requiredCorrectOptionIds ?? scenario.choices.filter((choice) => choice.result === "correct").map((choice) => choice.id);
 	const wrongChoiceIds = scenario.wrongOptionIds ?? scenario.choices.filter((choice) => choice.result === "incorrect").map((choice) => choice.id);
 	const correctSummary = scenario.correctSummary ?? scenario.choices.filter((choice) => correctChoiceIds.includes(choice.id)).map((choice) => choice.text);
+	const correctSelectedCount = selectedIds.filter((id) => correctChoiceIds.includes(id)).length;
 	const displayPetName = petName || "小狗";
 	const correctIntroByScenario = {
 		"behavior-barking": `做得很好！面對${displayPetName}吠叫時，重點是先理解牠為什麼叫，再用合適的方式協助牠穩定下來，可以這樣做：`,
@@ -1661,44 +1738,19 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 		setVideoFailed(false);
 		setVideoFinished(false);
 	}
-	if (mode === "positive") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		className: "daily-behavior-positive",
-		"aria-live": "polite",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			className: "daily-behavior-positive-video",
-			children: videoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "scene-video-fallback",
-				role: "status",
-				children: "影片暫時無法播放，但你已完成這個情境。"
-			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
-				src: getCorrectAnswerVideo(currentIndex),
-				autoPlay: true,
-				playsInline: true,
-				preload: "metadata",
-				"aria-label": "正向回饋影片",
-				onEnded: () => setVideoFinished(true),
-				onError: () => {
-					setVideoFailed(true);
-					setVideoFinished(true);
-				}
-			})
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: "daily-behavior-positive-copy",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "做得很好！" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(correctIntroByScenario[scenario.id] ?? "做得很好！你選到了這個情境中幾個合適的照顧方式：", petName) }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
-					className: "daily-behavior-correct-list",
-					children: correctSummary.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: withPetName(item, petName) }, item))
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					type: "button",
-					className: "primary",
-					onClick: moveToNext,
-					children: ["繼續 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
-				})
-			]
-		})]
+	if (mode === "positive") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CorrectFeedbackLayout, {
+		variant: "multiple",
+		videoSrc: getCorrectAnswerVideo(currentIndex),
+		videoFailed,
+		fallbackText: "正向結果影片目前無法播放，仍可繼續生活旅程。",
+		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(correctIntroByScenario[scenario.id] ?? "做得很好！你選到了這個情境中幾個合適的照顧方式：", petName) }),
+		correctItems: correctSummary.map((item) => withPetName(item, petName)),
+		onVideoEnded: () => setVideoFinished(true),
+		onVideoError: () => {
+			setVideoFailed(true);
+			setVideoFinished(true);
+		},
+		onContinue: moveToNext
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "daily-behavior-activity",
@@ -1717,7 +1769,7 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "daily-behavior-video",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
-					src: dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4",
+					src: behaviorVideoSource,
 					autoPlay: true,
 					loop: true,
 					playsInline: true,
@@ -1754,24 +1806,24 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						className: "choice-grid",
 						children: scenario.choices.map((choice) => {
-							const selected = selectedIds.includes(choice.id);
-							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-								type: "button",
-								className: selected ? "selected" : "",
-								"aria-pressed": selected,
+							return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioOptionCard, {
+								type: "multiple",
+								selected: selectedIds.includes(choice.id),
 								onClick: () => toggleChoice(choice.id),
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"aria-hidden": "true",
-									children: selected ? "✓" : ""
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(choice.text, petName) })]
+								children: withPetName(choice.text, petName)
 							}, choice.id);
 						})
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: `daily-behavior-live-hint ${selectedIds.length > 0 && correctChoiceIds.some((id) => !selectedIds.includes(id)) ? "visible" : ""}`,
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						className: "daily-behavior-live-hint visible daily-behavior-progress-hint",
 						role: "status",
-						"aria-hidden": !(selectedIds.length > 0 && correctChoiceIds.some((id) => !selectedIds.includes(id))),
-						children: "還有可以補充的處理方式，請再看看其他選項。"
+						children: [
+							"已找到 ",
+							correctSelectedCount,
+							" / ",
+							correctChoiceIds.length,
+							" 個合適做法"
+						]
 					})
 				]
 			})
@@ -1806,50 +1858,28 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 		setVideoFinished(false);
 		setMode(choice.result === "correct" ? "positive" : "incorrect");
 	}
-	if (mode === "positive" && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		className: "busy-care-positive",
-		"aria-live": "polite",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			className: "busy-care-positive-video",
-			children: videoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "scene-video-fallback",
-				role: "status",
-				children: "正向結果影片目前無法播放，仍可繼續生活旅程。"
-			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
-				src: getCorrectAnswerVideo(scenario.id),
-				autoPlay: true,
-				playsInline: true,
-				preload: "metadata",
-				"aria-label": "安排照顧支援後的正向結果影片",
-				onEnded: () => setVideoFinished(true),
-				onError: () => {
-					setVideoFailed(true);
-					setVideoFinished(true);
-				}
-			})
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: "busy-care-positive-copy",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "做得很好！" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(OtherCorrectTips, {
-					scenario,
-					choice: selectedChoice,
-					petName
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
-					"事先確認與交接，能讓",
-					petName,
-					"在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。"
-				] }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					type: "button",
-					className: "primary",
-					onClick: onContinue,
-					children: ["繼續 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
-				})
-			]
-		})]
+	if (mode === "positive" && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CorrectFeedbackLayout, {
+		variant: "single",
+		videoSrc: getCorrectAnswerVideo(scenario.id),
+		videoFailed,
+		fallbackText: "正向結果影片目前無法播放，仍可繼續生活旅程。",
+		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
+		otherTips: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OtherCorrectTips, {
+			scenario,
+			choice: selectedChoice,
+			petName
+		}),
+		suggestion: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
+			"事先確認與交接，能讓",
+			petName || "小狗",
+			"在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。"
+		] }),
+		onVideoEnded: () => setVideoFinished(true),
+		onVideoError: () => {
+			setVideoFailed(true);
+			setVideoFinished(true);
+		},
+		onContinue
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "busy-care-activity",
@@ -1884,13 +1914,12 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "先確認家人是否真的能協助" }) }),
 					!familyFeedback && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						className: "busy-care-member-list busy-care-family-options",
-						children: familyOptions.map((member) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-							type: "button",
+						children: familyOptions.map((member) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioOptionCard, {
 							onClick: () => setFamilyFeedback({
 								name: member.name,
 								reason: member.reason
 							}),
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: member.label })
+							children: member.label
 						}, member.id))
 					}),
 					familyFeedback && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -1935,10 +1964,9 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 				]
 			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 				className: "busy-care-options",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "你會怎麼安排？" }), scenario.choices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-					type: "button",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "你會怎麼安排？" }), scenario.choices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioOptionCard, {
 					onClick: () => choose(choice),
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: withPetName(choice.text, petName) })
+					children: withPetName(choice.text, petName)
 				}, choice.id))]
 			})]
 		})]
@@ -2088,6 +2116,7 @@ var walkingPrepNotes = {
 	bag: "散步時清理排泄物，是對環境與他人的責任。",
 	water: "天氣熱或散步時間較長時，幫狗狗補充飲水。"
 };
+var walkingKeyStep = 4;
 function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue }) {
 	const [started, setStarted] = (0, import_react.useState)(activity.walkingMinutes > 0 || activity.walkingComplete);
 	const [position, setPosition] = (0, import_react.useState)(0);
@@ -2176,7 +2205,7 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 				setMoving(false);
 				return 50;
 			}
-			const next = Math.min(100, current + 3);
+			const next = Math.min(100, current + walkingKeyStep);
 			if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
 				completingSceneRef.current = sceneIndex;
 				setCompletedSceneIndex(sceneIndex);
@@ -3518,6 +3547,7 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 			housemateTypes: hasHousemates ? [] : ["無"],
 			housemateList: hasHousemates ? profile.housemateList.length ? profile.housemateList : [""] : [],
 			otherHousemate: "",
+			hasSensitiveHouseholdMembers: hasHousemates ? profile.hasSensitiveHouseholdMembers : false,
 			housematesConsent: hasHousemates ? profile.housematesConsent : null
 		});
 	};
@@ -3681,12 +3711,22 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 							children: [profile.hasHousemates === true && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), "有"]
 						})]
 					}),
-					profile.hasHousemates === true && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
-						className: "supplement-inline-input housemate-text-input",
-						children: ["請簡單填寫同住家人", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-							value: profile.housemateList[0] ?? "",
-							placeholder: "例如：爸爸、媽媽、妹妹",
-							onChange: (event) => updateHousemateText(event.target.value)
+					profile.hasHousemates === true && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "housemate-entry-row",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
+							className: "supplement-inline-input housemate-text-input",
+							children: ["請簡單填寫同住家人", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+								value: profile.housemateList[0] ?? "",
+								placeholder: "例如：爸爸、媽媽、妹妹",
+								onChange: (event) => updateHousemateText(event.target.value)
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
+							className: "supplement-checkbox",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+								type: "checkbox",
+								checked: profile.hasSensitiveHouseholdMembers,
+								onChange: (event) => update("hasSensitiveHouseholdMembers", event.target.checked)
+							}), "家中有幼童、長者、孕婦"]
 						})]
 					}),
 					profile.hasHousemates === true && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -3910,6 +3950,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 		["高齡階段", "提早準備醫療與長期照顧資源"]
 	];
 	const consentText = profile.hasHousemates === true ? profile.housematesConsent === true ? "已知情並同意" : profile.housematesConsent === false ? "不同意" : "尚未確認" : "";
+	const sensitiveHousemateText = profile.hasHousemates === true && profile.hasSensitiveHouseholdMembers ? "家中有幼童、長者、孕婦" : "";
 	const pastPets = [
 		profile.pastPetTypes.includes("狗") && `狗${profile.pastDogCount ? ` ${profile.pastDogCount} 隻` : ""}`,
 		profile.pastPetTypes.includes("貓") && `貓${profile.pastCatCount ? ` ${profile.pastCatCount} 隻` : ""}`,
@@ -3934,6 +3975,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 			title: "同住與活動空間",
 			rows: [
 				housemateStatus !== "待補充" && ["同居家人", housemateStatus],
+				sensitiveHousemateText && ["特殊同住者類型", sensitiveHousemateText],
 				consentText && ["同住者同意", consentText],
 				activitySpace !== "待補充" && ["寵物預計活動空間", activitySpace]
 			].filter(Boolean)

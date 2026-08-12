@@ -792,6 +792,11 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .supplement-choice.selected { border-color: #777; background: #d9d9d9; }
 .supplement-choice .choice-check { position: absolute; right: 10px; top: 9px; width: 23px; height: 23px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: white; }
 .supplement-choice .choice-check svg { width: 14px; height: 14px; display: block; fill: currentColor; }
+.housemate-entry-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(230px, auto); align-items: end; gap: 12px; margin-top: 16px; }
+.housemate-entry-row .housemate-text-input { margin-top: 0; }
+.supplement-checkbox { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 11px 14px; border: 1px solid #cfcfcf; border-radius: 13px; background: #fff; color: #3d3a35; font-weight: 900; line-height: 1.5; cursor: pointer; transition: background .18s ease, border-color .18s ease; }
+.supplement-checkbox:hover { background: #f4f4f2; border-color: #aaa; }
+.supplement-checkbox input { width: 18px; height: 18px; flex: 0 0 18px; accent-color: #3d3a35; }
 .housemate-presence-choice { max-width: 420px; }
 .housemate-list-editor { margin-top: 16px; display: grid; gap: 12px; padding: 16px; border-radius: 16px; background: #fffaf0; border: 1px solid var(--line); }
 .housemate-list-editor > b { color: var(--gold-dark); }
@@ -996,6 +1001,79 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .choice-grid span { font-size: 12px; font-weight: 900; letter-spacing: .06em; color: var(--gold-dark); }
 .choice-grid p { margin: 7px 0 0; line-height: 1.55; font-size: 14px; font-weight: 900; }
 .choice-grid button.selected { animation: choicePop .38s cubic-bezier(.2,1.5,.4,1); }
+.scenario-option-card,
+.choice-grid .scenario-option-card,
+.video-scenario-options > .scenario-option-card,
+.busy-care-options > .scenario-option-card,
+.busy-care-family-options .scenario-option-card {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 66px;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 16px 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: #fffdf7;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(72, 53, 31, .05);
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
+}
+.scenario-option-card:hover,
+.scenario-option-card:focus-visible,
+.choice-grid .scenario-option-card:hover,
+.choice-grid .scenario-option-card:focus-visible,
+.video-scenario-options > .scenario-option-card:hover,
+.video-scenario-options > .scenario-option-card:focus-visible,
+.busy-care-options > .scenario-option-card:hover,
+.busy-care-options > .scenario-option-card:focus-visible,
+.busy-care-family-options .scenario-option-card:hover,
+.busy-care-family-options .scenario-option-card:focus-visible {
+  border-color: var(--gold);
+  background: #fff9e7;
+  box-shadow: 0 14px 28px rgba(72, 53, 31, .08);
+  transform: translateY(-2px);
+}
+.scenario-option-card.selected,
+.choice-grid .scenario-option-card.selected,
+.video-scenario-options > .scenario-option-card.selected,
+.busy-care-options > .scenario-option-card.selected,
+.busy-care-family-options .scenario-option-card.selected {
+  border-color: var(--gold);
+  background: #fff4dc;
+  box-shadow: inset 0 0 0 2px rgba(212, 154, 36, .18), 0 14px 28px rgba(72, 53, 31, .08);
+}
+.scenario-option-card:disabled { cursor: not-allowed; opacity: .48; background: #eeeae1; transform: none; }
+.scenario-option-card p,
+.choice-grid .scenario-option-card p,
+.video-scenario-options > .scenario-option-card p,
+.busy-care-options > .scenario-option-card p,
+.busy-care-family-options .scenario-option-card p {
+  margin: 0;
+  color: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.55;
+}
+.scenario-option-marker {
+  display: grid;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 2px solid #d6c9ad;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--gold-dark);
+  font-size: 14px;
+  font-weight: 900;
+}
+.scenario-option-card.selected .scenario-option-marker { border-color: var(--gold); background: var(--gold); color: white; }
+.daily-behavior-choices .choice-grid .scenario-option-card > .scenario-option-marker { position: static; color: var(--gold-dark); letter-spacing: 0; }
 .reflection label { display: block; margin-top: 13px; }
 .reflection label span { font-size: 13px; color: var(--muted); }
 .reflection textarea { height: 60px; resize: vertical; margin-top: 5px; }
@@ -1017,10 +1095,21 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .daily-behavior-submit:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 .daily-behavior-live-hint { min-height: 42px; margin: 10px 0 14px; padding: 10px 14px; border-radius: 14px; background: #fff4dc; color: #7b4b12; font-size: 14px; font-weight: 850; line-height: 1.5; opacity: 0; visibility: hidden; transition: opacity .18s ease; }
 .daily-behavior-live-hint.visible { opacity: 1; visibility: visible; }
+.daily-behavior-progress-hint { display: inline-flex; width: fit-content; min-height: 0; margin-bottom: 0; background: #f7ead2; color: #7b4b12; }
 .daily-behavior-retry { align-self: stretch; padding: 26px; border: 2px solid var(--orange); border-radius: 25px; background: var(--orange-soft); }
 .daily-behavior-retry h2 { margin: 0 0 13px; font-size: 24px; }
 .daily-behavior-retry p { margin: 0 0 14px; color: #733817; line-height: 1.7; }
 .daily-behavior-retry .secondary { margin-top: 24px; }
+.correct-feedback-layout { min-height: 560px; display: grid; grid-template-columns: 1.08fr .92fr; overflow: hidden; border: 1px solid var(--mint); border-radius: 28px; background: var(--mint-soft); box-shadow: var(--shadow); }
+.correct-feedback-media { min-height: 560px; background: #2f2a22; }
+.correct-feedback-media video { display: block; width: 100%; height: 100%; min-height: 560px; object-fit: cover; }
+.correct-feedback-copy { min-height: 560px; display: flex; flex-direction: column; justify-content: center; padding: clamp(28px, 5vw, 58px); }
+.correct-feedback-copy h2 { margin: 0 0 16px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(30px, 4vw, 45px); }
+.correct-feedback-intro p, .correct-feedback-suggestion p { margin: 0; line-height: 1.85; font-size: 17px; }
+.correct-feedback-suggestion { margin-top: 18px; color: #547257; line-height: 1.7; }
+.correct-feedback-suggestion small { display: block; color: #547257; line-height: 1.7; }
+.correct-feedback-copy .other-correct-tips { margin-top: 18px; }
+.correct-feedback-copy .primary { align-self: flex-start; margin-top: auto; }
 .daily-behavior-positive { min-height: 560px; display: grid; grid-template-columns: 1.08fr .92fr; overflow: hidden; border: 1px solid var(--mint); border-radius: 28px; background: var(--mint-soft); box-shadow: var(--shadow); }
 .daily-behavior-positive-video { min-height: 560px; background: #2f2a22; }
 .daily-behavior-positive-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(28px, 5vw, 58px); }
@@ -1028,6 +1117,8 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .daily-behavior-positive-copy p { margin: 0; line-height: 1.85; font-size: 17px; }
 .daily-behavior-correct-list { margin: 14px 0 0; padding-left: 1.25rem; display: grid; gap: 8px; }
 .daily-behavior-correct-list li { line-height: 1.65; font-weight: 850; }
+.correct-feedback-layout--multiple .daily-behavior-correct-list { margin-top: 18px; padding: 16px 18px 16px 2.1rem; border: 1px solid rgba(215,205,187,.72); border-radius: 16px; background: rgba(255,253,247,.78); }
+.correct-feedback-layout--multiple .daily-behavior-correct-list li { padding-left: 2px; }
 .daily-behavior-positive-copy small { display: block; margin-top: 18px; color: #547257; line-height: 1.7; }
 .daily-behavior-positive-copy .primary, .busy-care-positive-copy .primary, .video-scenario-positive-copy .primary { align-self: flex-start; margin-top: 24px; }
 .busy-care-activity { margin-top: 4px; }
@@ -1327,6 +1418,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .profile-panel { padding: 22px 16px; border-radius: 18px; }
   .identity-options, .source-options, .reason-options, .experience-options, .housing-options, .landlord-options, .compact-options, .family-options, .photo-list { grid-template-columns: 1fr 1fr; gap: 10px; }
   .supplement-choice-grid, .supplement-choice-grid.compact, .pet-experience-row { grid-template-columns: 1fr 1fr; }
+  .housemate-entry-row { grid-template-columns: 1fr; align-items: stretch; }
   .housemate-list-row { grid-template-columns: 1fr; align-items: stretch; }
   .housemate-none-row { grid-template-columns: minmax(110px, 1fr); }
   .housemate-other-row { grid-template-columns: 1fr 1fr; }
@@ -1651,10 +1743,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .timeline-strip button { min-width: 105px; }
   .scenario-feedback { min-height: 480px; padding: 25px 20px; }
   .scenario-feedback > p { font-size: 16px; }
-  .daily-behavior-activity, .daily-behavior-positive { grid-template-columns: 1fr; }
-  .daily-behavior-video, .daily-behavior-video video, .daily-behavior-positive-video, .daily-behavior-positive-video video { min-height: 250px; }
+  .daily-behavior-activity, .daily-behavior-positive, .correct-feedback-layout { grid-template-columns: 1fr; }
+  .daily-behavior-video, .daily-behavior-video video, .daily-behavior-positive-video, .daily-behavior-positive-video video, .correct-feedback-media, .correct-feedback-media video { min-height: 250px; }
   .daily-behavior-choices, .daily-behavior-retry { padding: 20px; }
-  .daily-behavior-positive-copy { padding: 28px 22px; }
+  .daily-behavior-positive-copy, .correct-feedback-copy { min-height: auto; padding: 28px 22px; }
   .busy-care-layout, .busy-care-positive { grid-template-columns: 1fr; }
   .busy-care-room, .busy-care-room-background { min-height: 290px; }
   .busy-care-positive-video, .busy-care-positive-video video { min-height: 250px; }

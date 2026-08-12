@@ -25,7 +25,7 @@ export const lifeScenarios: Scenario[] = [
     topic: "適應新家與安全感",
     artIndex: 0,
     choices: [
-      { id: "quiet-explore", text: "保持距離，給牠安靜適應的時間", result: "correct", ...positive, explanation: "做得很好！剛到新家的小狗需要先觀察環境。保持距離並提供安靜、安全的空間，能減少壓力，讓牠以自己的速度建立安全感。", suggestion: "準備乾淨飲水與可休息的角落，等牠主動靠近後再慢慢增加互動。" },
+      { id: "quiet-explore", text: "保持距離，給牠安靜適應的時間", result: "correct", ...positive, explanation: "剛到新家的小狗需要先觀察環境。保持距離並提供安靜、安全的空間，能減少壓力，讓牠以自己的速度建立安全感。", suggestion: "準備乾淨飲水與可休息的角落，等牠主動靠近後再慢慢增加互動。" },
       { id: "force-pick-up", text: "強行抱出來", result: "incorrect", ...incorrect, explanation: "這個做法可能讓牠更緊張。被強行抱起會讓小狗失去退路，增加防衛反應，也可能降低牠對新環境的安全感。", suggestion: "保持距離，提供安靜安全的空間，讓牠用自己的速度探索。" },
       { id: "keep-calling", text: "持續靠近並呼喚牠", result: "incorrect", ...incorrect, explanation: "持續靠近與呼喚會增加刺激，讓還在適應中的小狗難以安心觀察，可能變得更緊張或躲避。", suggestion: "先給牠安靜的時間與可退回的安全空間，等待牠主動探索或靠近。" },
     ],

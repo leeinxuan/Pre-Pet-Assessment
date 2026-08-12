@@ -179,6 +179,7 @@ export function ProfileSupplementForm({
       housemateTypes: hasHousemates ? [] : ["無"],
       housemateList: hasHousemates ? (profile.housemateList.length ? profile.housemateList : [""]) : [],
       otherHousemate: "",
+      hasSensitiveHouseholdMembers: hasHousemates ? profile.hasSensitiveHouseholdMembers : false,
       housematesConsent: hasHousemates ? profile.housematesConsent : null,
     });
   };
@@ -218,7 +219,7 @@ export function ProfileSupplementForm({
           const selected = profile.landlordConsent === value || (value === "已確認並同意" && profile.landlordConsent === "房東已同意") || (value === "尚未確認" && profile.landlordConsent === "尚未取得同意");
           return <button type="button" key={value} className={`supplement-choice ${selected ? "selected" : ""}`} aria-pressed={selected} onClick={() => update("landlordConsent", value)}>{selected && <SelectedDot />}{value}</button>;
         })}</div></div>}</fieldset>
-        <fieldset><legend>同居家人</legend><div className="supplement-choice-grid compact housemate-presence-choice"><button type="button" className={`supplement-choice ${profile.hasHousemates === false ? "selected" : ""}`} aria-pressed={profile.hasHousemates === false} onClick={() => chooseHousematePresence(false)}>{profile.hasHousemates === false && <SelectedDot />}無</button><button type="button" className={`supplement-choice ${profile.hasHousemates === true ? "selected" : ""}`} aria-pressed={profile.hasHousemates === true} onClick={() => chooseHousematePresence(true)}>{profile.hasHousemates === true && <SelectedDot />}有</button></div>{profile.hasHousemates === true && <label className="supplement-inline-input housemate-text-input">請簡單填寫同住家人<input value={profile.housemateList[0] ?? ""} placeholder="例如：爸爸、媽媽、妹妹" onChange={(event) => updateHousemateText(event.target.value)} /></label>}{profile.hasHousemates === true && <div className="supplement-followup"><b>同住者是否知情並同意飼養？</b><div className="supplement-choice-grid compact">{consentOptions.map((option) => <button type="button" key={option.value} className={`supplement-choice ${option.selected ? "selected" : ""}`} aria-pressed={option.selected} onClick={() => update("housematesConsent", option.consent)}>{option.selected && <SelectedDot />}{option.label}</button>)}</div></div>}</fieldset>
+        <fieldset><legend>同居家人</legend><div className="supplement-choice-grid compact housemate-presence-choice"><button type="button" className={`supplement-choice ${profile.hasHousemates === false ? "selected" : ""}`} aria-pressed={profile.hasHousemates === false} onClick={() => chooseHousematePresence(false)}>{profile.hasHousemates === false && <SelectedDot />}無</button><button type="button" className={`supplement-choice ${profile.hasHousemates === true ? "selected" : ""}`} aria-pressed={profile.hasHousemates === true} onClick={() => chooseHousematePresence(true)}>{profile.hasHousemates === true && <SelectedDot />}有</button></div>{profile.hasHousemates === true && <div className="housemate-entry-row"><label className="supplement-inline-input housemate-text-input">請簡單填寫同住家人<input value={profile.housemateList[0] ?? ""} placeholder="例如：爸爸、媽媽、妹妹" onChange={(event) => updateHousemateText(event.target.value)} /></label><label className="supplement-checkbox"><input type="checkbox" checked={profile.hasSensitiveHouseholdMembers} onChange={(event) => update("hasSensitiveHouseholdMembers", event.target.checked)} />家中有幼童、長者、孕婦</label></div>}{profile.hasHousemates === true && <div className="supplement-followup"><b>同住者是否知情並同意飼養？</b><div className="supplement-choice-grid compact">{consentOptions.map((option) => <button type="button" key={option.value} className={`supplement-choice ${option.selected ? "selected" : ""}`} aria-pressed={option.selected} onClick={() => update("housematesConsent", option.consent)}>{option.selected && <SelectedDot />}{option.label}</button>)}</div></div>}</fieldset>
         <fieldset><legend>寵物預計活動空間</legend><div className="supplement-choice-grid">{["戶外空間", "室內客廳", "房間", "其他"].map((value) => <button type="button" key={value} className={`supplement-choice ${profile.activitySpace === value ? "selected" : ""}`} aria-pressed={profile.activitySpace === value} onClick={() => update("activitySpace", value)}>{profile.activitySpace === value && <SelectedDot />}{value}</button>)}</div>{profile.activitySpace === "其他" && <label className="supplement-inline-input">其他活動空間<input placeholder="請說明" value={profile.otherActivitySpace} onChange={(event) => update("otherActivitySpace", event.target.value)} /></label>}</fieldset>
         <fieldset><legend>居家空間</legend><div className="home-space-upload">
           <label>
@@ -347,6 +348,7 @@ export function AssessmentReport({
   const consentText = profile.hasHousemates === true
     ? profile.housematesConsent === true ? "已知情並同意" : profile.housematesConsent === false ? "不同意" : "尚未確認"
     : "";
+  const sensitiveHousemateText = profile.hasHousemates === true && profile.hasSensitiveHouseholdMembers ? "家中有幼童、長者、孕婦" : "";
   const pastPets = [
     profile.pastPetTypes.includes("狗") && `狗${profile.pastDogCount ? ` ${profile.pastDogCount} 隻` : ""}`,
     profile.pastPetTypes.includes("貓") && `貓${profile.pastCatCount ? ` ${profile.pastCatCount} 隻` : ""}`,
@@ -371,6 +373,7 @@ export function AssessmentReport({
       title: "同住與活動空間",
       rows: [
         housemateStatus !== "待補充" && ["同居家人", housemateStatus],
+        sensitiveHousemateText && ["特殊同住者類型", sensitiveHousemateText],
         consentText && ["同住者同意", consentText],
         activitySpace !== "待補充" && ["寵物預計活動空間", activitySpace],
       ].filter(Boolean) as string[][],

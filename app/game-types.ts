@@ -106,6 +106,7 @@ export type Profile = {
   landlordConsent: string;
   hasHousemates: boolean | null;
   housematesConsent: boolean | null;
+  hasSensitiveHouseholdMembers: boolean;
   housemateList: string[];
   housemateTypes: string[];
   otherHousemate: string;
