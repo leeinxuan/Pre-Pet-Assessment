@@ -483,6 +483,7 @@ export const initialProfile: Profile = {
   landlordConsent: "",
   hasHousemates: null,
   housematesConsent: null,
+  housemateList: [],
   housemateTypes: [],
   otherHousemate: "",
   activitySpace: "",

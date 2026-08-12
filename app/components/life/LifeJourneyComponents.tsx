@@ -11,6 +11,7 @@ import type {
   Scenario,
   ScenarioAnswer,
   ScenarioChoice,
+  ScenarioResult,
 } from "../../game-types";
 
 const arrivalVideoSource = "/assets/pet-journey/arrival-transition.mp4";
@@ -351,9 +352,9 @@ function VideoScenarioActivity({
             <div className="illness-health-note">
               {withPetName(selectedChoice.suggestion, petName).split("\n").map((line, index) => line ? <p key={`${line}-${index}`}>{line}</p> : <br key={`break-${index}`} />)}
             </div>
-          ) : (
-            <small>{scenario.id === "arrival-adjustment" ? "你已替牠保留適應新家的空間。接著一起準備第一餐吧。" : scenario.id === "growing-old" ? "提早安排醫療準備與健康觀察，能讓高齡階段的照顧更穩定。" : "及早觀察、記錄並聯絡獸醫，能讓小狗獲得更適當的照顧。"}</small>
-          )}
+          ) : selectedChoice.suggestion ? (
+            <p>{withPetName(selectedChoice.suggestion, petName)}</p>
+          ) : null}
           <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />
           <button type="button" className="primary" onClick={onCorrectComplete}>繼續 <span>→</span></button>
         </div>
@@ -462,10 +463,11 @@ function DailyBehaviorActivity({
         </div>
         <div className="daily-behavior-positive-copy">
           <h2>做得很好！</h2>
-          <p>{withPetName(selectedChoice.explanation, petName)}</p>
-          <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />
-          <small>改善後，牠能在安全又被理解的環境裡慢慢學習。</small>
-          <button type="button" className="primary" onClick={moveToNext}>繼續 <span>→</span></button>
+          <p>{withPetName(correctIntroByScenario[scenario.id] ?? "做得很好！你選到了這個情境中幾個合適的照顧方式：", petName)}</p>
+          <ul className="daily-behavior-correct-list">
+            {correctSummary.map((item) => <li key={item}>{withPetName(item, petName)}</li>)}
+          </ul>
+          <button type="button" className="primary" onClick={moveToNext}>繼續 <span>?</span></button>
         </div>
       </section>
     );
@@ -499,7 +501,7 @@ function DailyBehaviorActivity({
         </section>
       ) : (
         <section className="reflection daily-behavior-choices">
-          <h2>你會怎麼處理？</h2>
+          <h2>???????????</h2>
           <div className="choice-grid">
             {scenario.choices.map((choice) => (
               <button key={choice.id} type="button" onClick={() => choose(choice)}>
@@ -507,6 +509,192 @@ function DailyBehaviorActivity({
               </button>
             ))}
           </div>
+        </section>
+      )}
+    </section>
+  );
+}
+
+function DailyBehaviorActivityMulti({
+  answers,
+  petName,
+  onChooseMultiple,
+  onContinue,
+}: {
+  answers: Record<string, ScenarioAnswer>;
+  petName: string;
+  onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
+  onContinue: () => void;
+}) {
+  const scenarios = dailyBehaviorScenarioIds
+    .map((id) => lifeScenarios.find((entry) => entry.id === id))
+    .filter((entry): entry is Scenario => Boolean(entry));
+  const firstUnfinished = scenarios.findIndex((entry) => answers[entry.id]?.finalResult !== "correct");
+  const [currentIndex, setCurrentIndex] = useState(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
+  const [mode, setMode] = useState<"question" | "incorrect" | "positive">(
+    firstUnfinished === -1 ? "positive" : "question",
+  );
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [retryCopy, setRetryCopy] = useState<{ title: string; explanation: string; suggestion?: string } | null>(null);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [, setVideoFinished] = useState(false);
+  const scenario = scenarios[currentIndex];
+
+  if (!scenario) return null;
+
+  const correctChoiceIds = scenario.requiredCorrectOptionIds ?? scenario.choices.filter((choice) => choice.result === "correct").map((choice) => choice.id);
+  const wrongChoiceIds = scenario.wrongOptionIds ?? scenario.choices.filter((choice) => choice.result === "incorrect").map((choice) => choice.id);
+  const correctSummary = scenario.correctSummary ?? scenario.choices
+    .filter((choice) => correctChoiceIds.includes(choice.id))
+    .map((choice) => choice.text);
+  const displayPetName = petName || "小狗";
+  const correctIntroByScenario: Record<string, string> = {
+    "behavior-barking": `做得很好！面對${displayPetName}吠叫時，重點是先理解牠為什麼叫，再用合適的方式協助牠穩定下來，可以這樣做：`,
+    "behavior-chewing": `做得很好！${displayPetName}亂咬東西常和探索、無聊、換牙或壓力有關，先提供安全替代物並管理環境會更合適，可以這樣做：`,
+    "behavior-toileting": `做得很好！${displayPetName}如廁習慣需要時間建立，重點是提供固定地點、增加外出機會，並觀察是否有健康或壓力因素，可以這樣做：`,
+  };
+
+  function toggleChoice(choiceId: string) {
+    setRetryCopy(null);
+    const choice = scenario.choices.find((item) => item.id === choiceId);
+    if (!choice) return;
+
+    if (wrongChoiceIds.includes(choiceId) || choice.result === "incorrect") {
+      onChooseMultiple(scenario, [choice], "incorrect");
+      setRetryCopy({
+        title: "這個做法可能不太適合",
+        explanation: choice.explanation,
+        suggestion: choice.suggestion,
+      });
+      setMode("incorrect");
+      return;
+    }
+
+    const nextIds = selectedIds.includes(choiceId) ? selectedIds.filter((id) => id !== choiceId) : [...selectedIds, choiceId];
+    setSelectedIds(nextIds);
+    const selectedChoices = scenario.choices.filter((item) => nextIds.includes(item.id));
+    const wrongChoice = selectedChoices.find((choice) => wrongChoiceIds.includes(choice.id) || choice.result === "incorrect");
+    if (wrongChoice) {
+      onChooseMultiple(scenario, selectedChoices, "incorrect");
+      setRetryCopy({
+        title: "這個做法可能不太適合",
+        explanation: wrongChoice.explanation,
+        suggestion: wrongChoice.suggestion,
+      });
+      setMode("incorrect");
+      return;
+    }
+
+    const hasEveryCorrectChoice = correctChoiceIds.every((id) => nextIds.includes(id));
+    if (hasEveryCorrectChoice) {
+      onChooseMultiple(scenario, selectedChoices, "correct");
+      setVideoFailed(false);
+      setVideoFinished(false);
+      setMode("positive");
+    }
+  }
+
+  function retry() {
+    setSelectedIds([]);
+    setRetryCopy(null);
+    setMode("question");
+  }
+
+  function moveToNext() {
+    if (currentIndex === scenarios.length - 1) {
+      onContinue();
+      return;
+    }
+    setCurrentIndex((value) => value + 1);
+    setSelectedIds([]);
+    setRetryCopy(null);
+    setMode("question");
+    setVideoFailed(false);
+    setVideoFinished(false);
+  }
+
+  if (mode === "positive") {
+    return (
+      <section className="daily-behavior-positive" aria-live="polite">
+        <div className="daily-behavior-positive-video">
+          {videoFailed ? (
+            <div className="scene-video-fallback" role="status">影片暫時無法播放，但你已完成這個情境。</div>
+          ) : (
+            <video
+              src={getCorrectAnswerVideo(currentIndex)}
+              autoPlay
+              playsInline
+              preload="metadata"
+              aria-label="正向回饋影片"
+              onEnded={() => setVideoFinished(true)}
+              onError={() => {
+                setVideoFailed(true);
+                setVideoFinished(true);
+              }}
+            />
+          )}
+        </div>
+        <div className="daily-behavior-positive-copy">
+          <h2>做得很好！</h2>
+          <p>{withPetName(correctIntroByScenario[scenario.id] ?? "做得很好！你選到了這個情境中幾個合適的照顧方式：", petName)}</p>
+          <ul className="daily-behavior-correct-list">
+            {correctSummary.map((item) => <li key={item}>{withPetName(item, petName)}</li>)}
+          </ul>
+          <button type="button" className="primary" onClick={moveToNext}>繼續 <span>→</span></button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="daily-behavior-activity">
+      <div className="daily-behavior-head">
+        <p className="life-stage-label">{lifeStageLabels.daily}</p>
+        <h1>{withPetName(scenario.title, petName)}</h1>
+        <p>{withPetName(scenario.description, petName)}</p>
+      </div>
+      <div className="daily-behavior-video">
+        <video
+          src={dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4"}
+          autoPlay
+          loop
+          playsInline
+          preload="metadata"
+          aria-label="日常行為照顧影片"
+          onError={() => setVideoFailed(true)}
+        />
+        {videoFailed && <div className="scene-video-fallback" role="status">影片暫時無法播放，請直接完成右側互動。</div>}
+      </div>
+      {mode === "incorrect" && retryCopy ? (
+        <section className="daily-behavior-retry" aria-live="polite">
+          <h2>{retryCopy.title}</h2>
+          <p>{withPetName(retryCopy.explanation, petName)}</p>
+          {retryCopy.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(retryCopy.suggestion, petName)}</p></div>}
+          <button type="button" className="secondary" onClick={retry}>重新選擇</button>
+        </section>
+      ) : (
+                                <section className="reflection daily-behavior-choices">
+          <h2>你會怎麼處理？（複選）</h2>
+          <div className="choice-grid">
+            {scenario.choices.map((choice) => {
+              const selected = selectedIds.includes(choice.id);
+              return (
+                <button
+                  key={choice.id}
+                  type="button"
+                  className={selected ? "selected" : ""}
+                  aria-pressed={selected}
+                  onClick={() => toggleChoice(choice.id)}
+                >
+                  <span aria-hidden="true">{selected ? "✓" : ""}</span>
+                  <p>{withPetName(choice.text, petName)}</p>
+                </button>
+              );
+            })}
+          </div>
+          <p className={`daily-behavior-live-hint ${selectedIds.length > 0 && correctChoiceIds.some((id) => !selectedIds.includes(id)) ? "visible" : ""}`} role="status" aria-hidden={!(selectedIds.length > 0 && correctChoiceIds.some((id) => !selectedIds.includes(id)))}>
+            還有可以補充的處理方式，請再看看其他選項。
+          </p>
         </section>
       )}
     </section>
@@ -1041,17 +1229,17 @@ function WalkingActivity({
       ) : (
         <div className="walking-game">
           <p className="walking-game-hint">{walkingInstruction}</p>
-          <div className="walking-progress" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
-            <b>散步進度</b>
-            <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
-            <small>{progressMinutes} / 20 分鐘</small>
-          </div>
           <div
             className={`walking-scene ${moving ? "is-moving" : ""}`}
             tabIndex={0}
             aria-label="散步場景，按鍵盤右方向鍵前進"
           >
             <img className="walking-bg" src={scene.image} alt={scene.title} />
+            <div className="walking-progress walking-progress-overlay" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
+              <b>散步進度</b>
+              <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
+              <small>{progressMinutes} / 20 分鐘</small>
+            </div>
             {walkingEventMessage && (
               <div className="walking-event-card" role="status">
                 <b>{walkingEventMessage.title}</b>
@@ -1098,6 +1286,7 @@ export function LifeJourney({
   roomReady,
   onIndex,
   onChoose,
+  onChooseMultiple,
   onMembersChange,
   onActivityChange,
   onCompleteItem,
@@ -1117,6 +1306,7 @@ export function LifeJourney({
   roomReady: string[];
   onIndex: (index: number) => void;
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
+  onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
   onMembersChange: (members: CareMember[]) => void;
   onActivityChange: (patch: Partial<LifeActivityState>) => void;
   onCompleteItem: (id: string) => void;
@@ -1181,10 +1371,10 @@ export function LifeJourney({
   return (
     <div className="content-wrap life-journey-page">
       {isDailyBehaviorActivity ? (
-        <DailyBehaviorActivity
+        <DailyBehaviorActivityMulti
           answers={answers}
           petName={petName}
-          onChoose={onChoose}
+          onChooseMultiple={onChooseMultiple}
           onContinue={continueJourney}
         />
       ) : isWalkingActivity ? (
@@ -1238,7 +1428,6 @@ export function LifeJourney({
       ))}
       <div className="scenario-bottom-nav life-bottom-nav">
         <button className="secondary" onClick={() => index > 0 ? selectItem(index - 1) : onBack()}>← {index > 0 ? "上一個生活內容" : "返回出發前準備"}</button>
-        <span>{completedCount} / {journeyItems.length} 個生活內容已完成</span>
       </div>
       <span className="visually-hidden">目前共登記 {expenses.length} 筆費用，所有費用以唯一識別碼避免重複。</span>
     </div>

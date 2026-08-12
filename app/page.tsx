@@ -21,6 +21,7 @@ import type {
   Scenario,
   ScenarioAnswer,
   ScenarioChoice,
+  ScenarioResult,
 } from "./game-types";
 import {
   ArrivalTransitionVideo,
@@ -222,6 +223,32 @@ export default function Home() {
     choice.expenseIds?.forEach(addExpenseById);
   }
 
+  function answerScenarioMultiple(scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) {
+    const choiceIds = choices.map((choice) => choice.id);
+    const joinedChoiceId = choiceIds.join(",");
+    setScenarioAnswers((current) => {
+      const previous = current[scenario.id];
+      return {
+        ...current,
+        [scenario.id]: previous
+          ? { ...previous, finalChoiceId: joinedChoiceId, finalChoiceIds: choiceIds, finalResult: result, attempts: previous.attempts + 1 }
+          : {
+            scenarioId: scenario.id,
+            firstChoiceId: joinedChoiceId,
+            finalChoiceId: joinedChoiceId,
+            firstChoiceIds: choiceIds,
+            finalChoiceIds: choiceIds,
+            firstResult: result,
+            finalResult: result,
+            attempts: 1,
+          },
+      };
+    });
+    if (result === "correct") {
+      choices.flatMap((choice) => choice.expenseIds ?? []).forEach(addExpenseById);
+    }
+  }
+
   function resetJourney() {
     setCategory("");
     setBreed("");
@@ -285,6 +312,7 @@ export default function Home() {
         roomReady={roomReady}
         onIndex={setJourneyIndex}
         onChoose={answerScenario}
+        onChooseMultiple={answerScenarioMultiple}
         onMembersChange={updateMembers}
         onActivityChange={(patch) => setLifeActivity((current) => ({ ...current, ...patch }))}
         onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}

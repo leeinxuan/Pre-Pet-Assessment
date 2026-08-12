@@ -38,6 +38,10 @@ export const lifeScenarios: Scenario[] = [
     description: "晚上你正在休息，小狗突然對著門口一直吠叫。你看見牠有些警覺，也注意到附近有聲音經過。",
     topic: "日常行為照顧",
     artIndex: 4,
+    multipleChoice: true,
+    requiredCorrectOptionIds: ["bark-play", "bark-walk", "bark-expert"],
+    wrongOptionIds: ["bark-scold"],
+    correctSummary: ["提供遊戲與互動，增加安全感。", "帶牠適量散步，消耗精力。", "若情況持續或影響生活，尋求獸醫或行為專家協助。"],
     choices: [
       { id: "bark-play", text: "提供遊戲與互動，增加安全感", result: "correct", ...positive, explanation: "遊戲與溫和互動能提供安全感，也有助於把注意力轉向合適的活動。" },
       { id: "bark-walk", text: "帶牠適量散步，消耗精力", result: "correct", ...positive, explanation: "依小狗狀況安排適量散步，有助於滿足活動需求並降低累積的焦躁。" },
@@ -53,6 +57,10 @@ export const lifeScenarios: Scenario[] = [
     description: "你回到客廳時，發現小狗正在咬桌腳旁的物品。旁邊還有一些不能讓牠碰到的小東西。",
     topic: "日常行為照顧",
     artIndex: 4,
+    multipleChoice: true,
+    requiredCorrectOptionIds: ["chew-toys", "chew-store-hazards", "chew-expert"],
+    wrongOptionIds: ["chew-punish"],
+    correctSummary: ["提供多樣化且安全的啃咬玩具。", "把有害物品收好，避免牠接觸。", "若情況嚴重或持續，尋求獸醫或行為專家協助。"],
     choices: [
       { id: "chew-toys", text: "提供多樣化且安全的啃咬玩具", result: "correct", ...positive, explanation: "安全的啃咬玩具能提供合適的探索出口，也能讓牠把咬的需求放在正確物品上。" },
       { id: "chew-store-hazards", text: "把有害物品收好，避免牠接觸", result: "correct", ...positive, explanation: "先管理環境能降低誤食與受傷風險，也讓小狗更容易練習安全的選擇。" },
@@ -68,6 +76,10 @@ export const lifeScenarios: Scenario[] = [
     description: "你發現小狗在不適合的位置大小便。牠看起來不是故意搗亂，而是還沒建立固定如廁習慣。",
     topic: "日常行為照顧",
     artIndex: 4,
+    multipleChoice: true,
+    requiredCorrectOptionIds: ["toilet-material", "toilet-outings", "toilet-expert"],
+    wrongOptionIds: ["toilet-scold"],
+    correctSummary: ["使用適當材質鋪地，例如報紙或尿布墊。", "一天多安排幾次外出如廁機會。", "若頻率異常或持續困擾，尋求獸醫或行為專家協助。"],
     choices: [
       { id: "toilet-material", text: "使用適當材質鋪地，例如報紙或尿布墊", result: "correct", ...positive, explanation: "適當材質能幫助建立固定如廁位置，也讓清潔和引導更一致。" },
       { id: "toilet-outings", text: "一天多安排幾次外出如廁機會", result: "correct", ...positive, explanation: "增加合適的外出機會，能讓幼犬有更多時間練習正確如廁。" },

@@ -45,12 +45,18 @@ export type Scenario = {
   reminder?: string;
   artIndex: number;
   supportChoice?: boolean;
+  multipleChoice?: boolean;
+  requiredCorrectOptionIds?: string[];
+  wrongOptionIds?: string[];
+  correctSummary?: string[];
 };
 
 export type ScenarioAnswer = {
   scenarioId: string;
   firstChoiceId: string;
   finalChoiceId: string;
+  firstChoiceIds?: string[];
+  finalChoiceIds?: string[];
   firstResult: ScenarioResult;
   finalResult: ScenarioResult;
   attempts: number;
@@ -100,6 +106,7 @@ export type Profile = {
   landlordConsent: string;
   hasHousemates: boolean | null;
   housematesConsent: boolean | null;
+  housemateList: string[];
   housemateTypes: string[];
   otherHousemate: string;
   activitySpace: string;
