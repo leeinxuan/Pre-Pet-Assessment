@@ -155,7 +155,6 @@ function ScenarioOptionCard({
       disabled={disabled}
       onClick={onClick}
     >
-      {type === "multiple" && <span className="scenario-option-marker" aria-hidden="true">{selected ? "✓" : ""}</span>}
       <p>{children}</p>
     </button>
   );
@@ -461,11 +460,16 @@ function VideoScenarioActivity({
         videoSrc={getCorrectAnswerVideo(scenario.id)}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
+        intro={scenario.id === "illness-vet" && selectedChoice.suggestion ? (
+          <>
+            <p>{withPetName(selectedChoice.explanation, petName)}</p>
+            {withPetName(selectedChoice.suggestion, petName).split("\n\n")[0].split("\n").map((line, index) => (
+              <p key={`${line}-${index}`}>{line}</p>
+            ))}
+          </>
+        ) : <p>{withPetName(selectedChoice.explanation, petName)}</p>}
         suggestion={scenario.id === "illness-vet" && selectedChoice.suggestion ? (
-          <div className="illness-health-note">
-            {withPetName(selectedChoice.suggestion, petName).split("\n").map((line, index) => line ? <p key={`${line}-${index}`}>{line}</p> : <br key={`break-${index}`} />)}
-          </div>
+          <p>{withPetName(selectedChoice.suggestion, petName).split("\n\n").slice(1).join("\n\n")}</p>
         ) : selectedChoice.suggestion ? (
           <p>{withPetName(selectedChoice.suggestion, petName)}</p>
         ) : null}

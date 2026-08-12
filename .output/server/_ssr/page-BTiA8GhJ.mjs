@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-Cbhcjt3k.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-BTiA8GhJ.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1042,7 +1042,7 @@ var lifeScenarios = [
 				text: "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫",
 				result: "correct",
 				...positive,
-				explanation: "做得很好！提前準備能幫助飼主在高齡階段更穩定地照顧小狗，也能及早安排健康觀察、醫療需求與長期照顧。"
+				explanation: "提前準備能幫助飼主在高齡階段更穩定地照顧小狗，也能及早安排健康觀察、醫療需求與長期照顧。"
 			},
 			{
 				id: "senior-wait",
@@ -1258,17 +1258,13 @@ function CorrectFeedbackLayout({ variant, videoSrc, videoFailed, fallbackText, i
 	});
 }
 function ScenarioOptionCard({ type = "single", selected = false, disabled = false, children, onClick }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 		type: "button",
 		className: `scenario-option-card scenario-option-card--${type} ${selected ? "selected" : ""}`,
 		"aria-pressed": type === "multiple" ? selected : void 0,
 		disabled,
 		onClick,
-		children: [type === "multiple" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-			className: "scenario-option-marker",
-			"aria-hidden": "true",
-			children: selected ? "✓" : ""
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children })]
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children })
 	});
 }
 function ArrivalTransitionVideo({ onContinue }) {
@@ -1577,11 +1573,8 @@ function VideoScenarioActivity({ scenario, answer, petName, onChoose, onCorrectC
 		videoSrc: getCorrectAnswerVideo(scenario.id),
 		videoFailed,
 		fallbackText: "正向結果影片目前無法播放，仍可繼續生活旅程。",
-		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
-		suggestion: scenario.id === "illness-vet" && selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			className: "illness-health-note",
-			children: withPetName(selectedChoice.suggestion, petName).split("\n").map((line, index) => line ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: line }, `${line}-${index}`) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}, `break-${index}`))
-		}) : selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.suggestion, petName) }) : null,
+		intro: scenario.id === "illness-vet" && selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }), withPetName(selectedChoice.suggestion, petName).split("\n\n")[0].split("\n").map((line, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: line }, `${line}-${index}`))] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.explanation, petName) }),
+		suggestion: scenario.id === "illness-vet" && selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.suggestion, petName).split("\n\n").slice(1).join("\n\n") }) : selectedChoice.suggestion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(selectedChoice.suggestion, petName) }) : null,
 		otherTips: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OtherCorrectTips, {
 			scenario,
 			choice: selectedChoice,
