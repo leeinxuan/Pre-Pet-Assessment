@@ -195,7 +195,7 @@ export function ProfileSupplementForm({
           </label>
           {profile.homeSpaceImage && <figure><img src={profile.homeSpaceImage} alt="已上傳的居家空間照片預覽" /><figcaption>{profile.homeSpaceImageName}</figcaption></figure>}
         </div></fieldset>
-        <fieldset><legend>飼養經驗</legend><button type="button" className={`supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`} aria-pressed={profile.noShibaExperience} onClick={() => update("noShibaExperience", !profile.noShibaExperience)}>我沒有養過柴犬</button><div className="pet-experience-block"><b>曾經飼養：</b><div className="pet-experience-row">{experienceInputs("past")}</div><b>目前家中有寵物：</b><div className="pet-experience-row">{experienceInputs("current")}</div><label className="experience-note">其他飼養經驗分享：<textarea placeholder="請分享你的照顧經驗" value={profile.experienceNote} onChange={(event) => update("experienceNote", event.target.value)} /></label></div></fieldset>
+        <fieldset><legend>飼養經驗</legend><div className="pet-experience-block"><b>曾經飼養：</b><div className="pet-experience-row">{experienceInputs("past")}</div><button type="button" className={`supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`} aria-pressed={profile.noShibaExperience} onClick={() => update("noShibaExperience", !profile.noShibaExperience)}>我沒有養過柴犬</button><b>目前家中有寵物：</b><div className="pet-experience-row">{experienceInputs("current")}</div><label className="experience-note">其他飼養經驗分享：<textarea placeholder="請分享你的照顧經驗" value={profile.experienceNote} onChange={(event) => update("experienceNote", event.target.value)} /></label></div></fieldset>
         <fieldset><legend>飼養原因 <small>可複選</small></legend><div className="supplement-choice-grid reasons">{["陪伴與情緒支持", "喜愛動物", "單純想養", "看家守衛", "他人推薦", "其他"].map((reason) => <button type="button" key={reason} className={`supplement-choice ${profile.reasons.includes(reason) ? "selected" : ""}`} aria-pressed={profile.reasons.includes(reason)} onClick={() => toggle("reasons", reason)}>{profile.reasons.includes(reason) && <span>✓</span>}{reason}</button>)}</div>{profile.reasons.includes("其他") && <label className="supplement-inline-input">其他飼養原因<input placeholder="請說明" value={profile.reasonOther} onChange={(event) => update("reasonOther", event.target.value)} /></label>}</fieldset>
       </section>
     </section>
@@ -353,13 +353,16 @@ export function AssessmentReport({
             <span>把這趟練習整理成你真正帶得走的照顧清單</span>
           </div>
           <aside className="care-breed-card">
-            <b>{selectedBreed?.label ?? (petName || "小狗")}</b>
+            <span className="care-breed-copy">
+              <b>{selectedBreed?.label ?? (petName || "小狗")}</b>
+              {petName.trim() && <small>{petName}</small>}
+            </span>
             {selectedBreed?.image && <img src={selectedBreed.image} alt={selectedBreed.label} />}
           </aside>
         </header>
 
         <section className="care-a4-checklists" aria-labelledby="care-a4-checklist-title">
-          <h2 id="care-a4-checklist-title">Checklist</h2>
+          <h2 id="care-a4-checklist-title">準備清單</h2>
           {checklistGroups.map((group) => (
             <div key={group.title} className="care-a4-card">
               <h3>{group.title}</h3>

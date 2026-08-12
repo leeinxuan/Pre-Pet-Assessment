@@ -58,10 +58,8 @@ export function RoomPreparation({
   const hazardsDone = securedHazards.length;
   const complete = itemsDone === roomItems.length && hazardsDone === hazards.length && Boolean(petName.trim());
   const activeHazard = hazards.find((item) => item.id === activeHazardInfo);
-  const remainingRoomItems = roomItems.filter((item) => !selectedItems.includes(item.id) || exitingItems.includes(item.id));
-  const supplyRows = remainingRoomItems.length === roomItems.length
-    ? [remainingRoomItems.slice(0, 2), remainingRoomItems.slice(2, 4), remainingRoomItems.slice(4)].filter((row) => row.length > 0)
-    : Array.from({ length: Math.ceil(remainingRoomItems.length / 2) }, (_, index) => remainingRoomItems.slice(index * 2, index * 2 + 2)).filter((row) => row.length > 0);
+  const remainingRoomItems = roomItems.filter((item) => !selectedItems.includes(item.id));
+  const supplyRows = [roomItems.slice(0, 2), roomItems.slice(2, 4), roomItems.slice(4)].filter((row) => row.length > 0);
 
   useEffect(() => {
     setNameDraft(petName);
@@ -142,11 +140,16 @@ export function RoomPreparation({
             <h2>{itemsDone === roomItems.length ? "已準備的物品" : "用品準備箱"}</h2>
           </div>
           {remainingRoomItems.length > 0 && <div className="room-supply-rows">
-            {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} ${remainingRoomItems.length === roomItems.length ? "full-seven" : "compact-grid"}`}>
-              {row.map((item) => <button key={item.id} type="button" className={exitingItems.includes(item.id) ? "departing" : ""} aria-label={`${item.label}，可加入`} disabled={exitingItems.includes(item.id)} onClick={() => prepareItem(item.id)}>
-                <span className="room-supply-visual"><img className={`room-item-image room-item-image--${item.id}`} src={item.image} alt="" /></span>
-                <b>{item.label}</b>
-              </button>)}
+            {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} full-seven`}>
+              {row.map((item) => {
+                const selected = selectedItems.includes(item.id);
+                return <div key={item.id} className="supply-slot">
+                  {!selected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} aria-label={`${item.label}，可加入`} disabled={exitingItems.includes(item.id)} onClick={() => prepareItem(item.id)}>
+                    <span className="room-supply-visual"><img className={`room-item-image room-item-image--${item.id}`} src={item.image} alt="" /></span>
+                    <b>{item.label}</b>
+                  </button> : <div className="supply-slot-empty" aria-hidden="true" />}
+                </div>;
+              })}
             </div>)}
           </div>}
           {remainingRoomItems.length === 0 && <ul className="prepared-item-list" aria-label="已準備的房間物品">
@@ -214,10 +217,9 @@ export function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNex
   const documentDone = documents.filter((item) => selected.includes(item.id)).length;
   const supplyDone = supplies.filter((item) => selected.includes(item.id)).length;
   const complete = documentDone === documents.length && supplyDone === supplies.length;
-  const remainingItems = departureTrunkItems.filter((item) => !selected.includes(item.id) || exitingItems.includes(item.id));
   const supplyRows = Array.from(
-    { length: Math.ceil(remainingItems.length / 2) },
-    (_, index) => remainingItems.slice(index * 2, index * 2 + 2),
+    { length: Math.ceil(departureTrunkItems.length / 2) },
+    (_, index) => departureTrunkItems.slice(index * 2, index * 2 + 2),
   ).filter((row) => row.length > 0);
   // Kept only for the legacy markup below; the rendered interface returns before it.
   const [message, setMessage] = useState("");
@@ -256,9 +258,14 @@ export function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNex
         <div className="departure-supply-header"><h2>{complete ? "已準備的物品" : "準備物品"}</h2></div>
         {!complete && <div className="departure-supply-rows">
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
-            {row.map((item) => <button key={item.id} type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
-              <span className="departure-supply-visual"><img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /></span><b>{item.label}</b>
-            </button>)}
+            {row.map((item) => {
+              const itemSelected = selected.includes(item.id);
+              return <div key={item.id} className="supply-slot">
+                {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
+                  <span className="departure-supply-visual"><img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /></span><b>{item.label}</b>
+                </button> : <div className="supply-slot-empty" aria-hidden="true" />}
+              </div>;
+            })}
           </div>)}
         </div>}
         {complete && <ul className="prepared-item-list departure-prepared-list" aria-label="已準備的後車廂物品">

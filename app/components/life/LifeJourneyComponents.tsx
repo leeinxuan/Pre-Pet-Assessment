@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { expenseCatalog, money, roomItems } from "../../game-data";
 import { journeyItems, lifeScenarios } from "../../life-data";
 import { walkingPreloadImages, walkingPrepItems, walkingScenes } from "../../data/walkingScenes";
@@ -884,13 +884,14 @@ function WalkingActivity({
   const [message, setMessage] = useState("");
   const [completedSceneIndex, setCompletedSceneIndex] = useState<number | null>(null);
   const completingSceneRef = useRef<number | null>(null);
+  const movingTimerRef = useRef<number | null>(null);
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
   const scene = walkingScenes[sceneIndex];
   const prepared = activity.walkingPreparedItems;
   const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
   const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
   const progressMinutes = Math.min(20, activity.walkingMinutes);
-  const walkingInstruction = "慢慢把滑鼠往右移動，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
+  const walkingInstruction = "按下鍵盤右方向鍵，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
   const walkingEventMessage = scene.poopEvent && position >= 50
     ? activity.walkingPoopCleaned
       ? { title: "做得很好！", body: "散步時清理排泄物，也是照顧責任的一部分。" }
@@ -911,24 +912,9 @@ function WalkingActivity({
     completingSceneRef.current = null;
   }, [activity.walkingSceneIndex]);
 
-  useEffect(() => {
-    if (!started || activity.walkingComplete || !moving || needsCleanup) return;
-    const timer = window.setInterval(() => {
-      setPosition((current) => {
-        if (scene.poopEvent && current >= 50 && !activity.walkingPoopCleaned) {
-          setMoving(false);
-          return 50;
-        }
-        const next = Math.min(100, current + 0.72);
-        if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
-          completingSceneRef.current = sceneIndex;
-          setCompletedSceneIndex(sceneIndex);
-        }
-        return next;
-      });
-    }, 38);
-    return () => window.clearInterval(timer);
-  }, [activity.walkingComplete, activity.walkingPoopCleaned, moving, needsCleanup, scene.poopEvent, sceneIndex, started]);
+  useEffect(() => () => {
+    if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
+  }, []);
 
   useEffect(() => {
     if (!started || activity.walkingComplete || completedSceneIndex === null) return;
@@ -963,17 +949,40 @@ function WalkingActivity({
     setMessage("");
   }
 
-  function handleSceneMove(event: MouseEvent<HTMLElement>) {
+  const advanceWalk = useCallback(() => {
     if (!started || activity.walkingComplete) return;
     if (needsCleanup) {
       setMessage("先把排泄物清理乾淨，再繼續散步。");
       setMoving(false);
       return;
     }
-    const rect = event.currentTarget.getBoundingClientRect();
-    const ratio = (event.clientX - rect.left) / rect.width;
-    setMoving(ratio > 0.54);
-  }
+    setMoving(true);
+    if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
+    movingTimerRef.current = window.setTimeout(() => setMoving(false), 180);
+    setPosition((current) => {
+      if (scene.poopEvent && current >= 50 && !activity.walkingPoopCleaned) {
+        setMoving(false);
+        return 50;
+      }
+      const next = Math.min(100, current + 3);
+      if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
+        completingSceneRef.current = sceneIndex;
+        setCompletedSceneIndex(sceneIndex);
+      }
+      return next;
+    });
+  }, [activity.walkingComplete, activity.walkingPoopCleaned, needsCleanup, scene.poopEvent, sceneIndex, started]);
+
+  useEffect(() => {
+    if (!started || activity.walkingComplete) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== "ArrowRight") return;
+      event.preventDefault();
+      advanceWalk();
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [started, activity.walkingComplete, advanceWalk]);
 
   function cleanupPoop() {
     onChange({ walkingPoopCleaned: true });
@@ -1039,8 +1048,8 @@ function WalkingActivity({
           </div>
           <div
             className={`walking-scene ${moving ? "is-moving" : ""}`}
-            onMouseMove={handleSceneMove}
-            onMouseLeave={() => setMoving(false)}
+            tabIndex={0}
+            aria-label="散步場景，按鍵盤右方向鍵前進"
           >
             <img className="walking-bg" src={scene.image} alt={scene.title} />
             {walkingEventMessage && (
@@ -1056,23 +1065,20 @@ function WalkingActivity({
               />
               {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/assets/walking/poop.png" alt="" /></button>}
             </div>
-            <div className="walk-mouse-hint" aria-hidden="true">
-              <div className="walk-mouse-hint-inner">
-                <span className="mouse-icon" />
-                <span className="mouse-arrow">→</span>
+            <div className="walk-key-hint" aria-hidden="true">
+              <div className="walk-key-hint-inner">
+                <span className="keycap">→</span>
+                <span className="key-hint-text">按右鍵前進</span>
               </div>
             </div>
           </div>
           <button
             type="button"
             className="primary walking-mobile-forward"
-            onPointerDown={() => setMoving(true)}
-            onPointerUp={() => setMoving(false)}
-            onPointerCancel={() => setMoving(false)}
-            onPointerLeave={() => setMoving(false)}
+            onPointerDown={advanceWalk}
             disabled={needsCleanup}
           >
-            按住往前走
+            點一下往前走
           </button>
         </div>
       )}

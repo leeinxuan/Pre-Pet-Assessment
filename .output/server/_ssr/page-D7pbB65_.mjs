@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-C_puW2F5.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-D7pbB65_.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -2000,13 +2000,14 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 	const [message, setMessage] = (0, import_react.useState)("");
 	const [completedSceneIndex, setCompletedSceneIndex] = (0, import_react.useState)(null);
 	const completingSceneRef = (0, import_react.useRef)(null);
+	const movingTimerRef = (0, import_react.useRef)(null);
 	const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
 	const scene = walkingScenes[sceneIndex];
 	const prepared = activity.walkingPreparedItems;
 	const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
 	const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
 	const progressMinutes = Math.min(20, activity.walkingMinutes);
-	const walkingInstruction = "慢慢把滑鼠往右移動，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
+	const walkingInstruction = "按下鍵盤右方向鍵，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
 	const walkingEventMessage = scene.poopEvent && position >= 50 ? activity.walkingPoopCleaned ? {
 		title: "做得很好！",
 		body: "散步時清理排泄物，也是照顧責任的一部分。"
@@ -2026,32 +2027,9 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 		setCompletedSceneIndex(null);
 		completingSceneRef.current = null;
 	}, [activity.walkingSceneIndex]);
-	(0, import_react.useEffect)(() => {
-		if (!started || activity.walkingComplete || !moving || needsCleanup) return;
-		const timer = window.setInterval(() => {
-			setPosition((current) => {
-				if (scene.poopEvent && current >= 50 && !activity.walkingPoopCleaned) {
-					setMoving(false);
-					return 50;
-				}
-				const next = Math.min(100, current + .72);
-				if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
-					completingSceneRef.current = sceneIndex;
-					setCompletedSceneIndex(sceneIndex);
-				}
-				return next;
-			});
-		}, 38);
-		return () => window.clearInterval(timer);
-	}, [
-		activity.walkingComplete,
-		activity.walkingPoopCleaned,
-		moving,
-		needsCleanup,
-		scene.poopEvent,
-		sceneIndex,
-		started
-	]);
+	(0, import_react.useEffect)(() => () => {
+		if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
+	}, []);
 	(0, import_react.useEffect)(() => {
 		if (!started || activity.walkingComplete || completedSceneIndex === null) return;
 		if (completedSceneIndex !== sceneIndex) return;
@@ -2088,16 +2066,50 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 		setStarted(true);
 		setMessage("");
 	}
-	function handleSceneMove(event) {
+	const advanceWalk = (0, import_react.useCallback)(() => {
 		if (!started || activity.walkingComplete) return;
 		if (needsCleanup) {
 			setMessage("先把排泄物清理乾淨，再繼續散步。");
 			setMoving(false);
 			return;
 		}
-		const rect = event.currentTarget.getBoundingClientRect();
-		setMoving((event.clientX - rect.left) / rect.width > .54);
-	}
+		setMoving(true);
+		if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
+		movingTimerRef.current = window.setTimeout(() => setMoving(false), 180);
+		setPosition((current) => {
+			if (scene.poopEvent && current >= 50 && !activity.walkingPoopCleaned) {
+				setMoving(false);
+				return 50;
+			}
+			const next = Math.min(100, current + 3);
+			if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
+				completingSceneRef.current = sceneIndex;
+				setCompletedSceneIndex(sceneIndex);
+			}
+			return next;
+		});
+	}, [
+		activity.walkingComplete,
+		activity.walkingPoopCleaned,
+		needsCleanup,
+		scene.poopEvent,
+		sceneIndex,
+		started
+	]);
+	(0, import_react.useEffect)(() => {
+		if (!started || activity.walkingComplete) return;
+		function handleKeyDown(event) {
+			if (event.key !== "ArrowRight") return;
+			event.preventDefault();
+			advanceWalk();
+		}
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [
+		started,
+		activity.walkingComplete,
+		advanceWalk
+	]);
 	function cleanupPoop() {
 		onChange({ walkingPoopCleaned: true });
 		setMessage("已清理完成，散步時記得隨手清理排泄物。");
@@ -2201,8 +2213,8 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: `walking-scene ${moving ? "is-moving" : ""}`,
-					onMouseMove: handleSceneMove,
-					onMouseLeave: () => setMoving(false),
+					tabIndex: 0,
+					"aria-label": "散步場景，按鍵盤右方向鍵前進",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 							className: "walking-bg",
@@ -2232,13 +2244,16 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "walk-mouse-hint",
+							className: "walk-key-hint",
 							"aria-hidden": "true",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								className: "walk-mouse-hint-inner",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "mouse-icon" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									className: "mouse-arrow",
+								className: "walk-key-hint-inner",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "keycap",
 									children: "→"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "key-hint-text",
+									children: "按右鍵前進"
 								})]
 							})
 						})
@@ -2247,12 +2262,9 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 					type: "button",
 					className: "primary walking-mobile-forward",
-					onPointerDown: () => setMoving(true),
-					onPointerUp: () => setMoving(false),
-					onPointerCancel: () => setMoving(false),
-					onPointerLeave: () => setMoving(false),
+					onPointerDown: advanceWalk,
 					disabled: needsCleanup,
-					children: "按住往前走"
+					children: "點一下往前走"
 				})
 			]
 		})]
@@ -2957,12 +2969,12 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 	const hazardsDone = securedHazards.length;
 	const complete = itemsDone === roomItems.length && hazardsDone === hazards.length && Boolean(petName.trim());
 	const activeHazard = hazards.find((item) => item.id === activeHazardInfo);
-	const remainingRoomItems = roomItems.filter((item) => !selectedItems.includes(item.id) || exitingItems.includes(item.id));
-	const supplyRows = remainingRoomItems.length === roomItems.length ? [
-		remainingRoomItems.slice(0, 2),
-		remainingRoomItems.slice(2, 4),
-		remainingRoomItems.slice(4)
-	].filter((row) => row.length > 0) : Array.from({ length: Math.ceil(remainingRoomItems.length / 2) }, (_, index) => remainingRoomItems.slice(index * 2, index * 2 + 2)).filter((row) => row.length > 0);
+	const remainingRoomItems = roomItems.filter((item) => !selectedItems.includes(item.id));
+	const supplyRows = [
+		roomItems.slice(0, 2),
+		roomItems.slice(2, 4),
+		roomItems.slice(4)
+	].filter((row) => row.length > 0);
 	(0, import_react.useEffect)(() => {
 		setNameDraft(petName);
 		if (petName) setNameEditing(false);
@@ -3044,22 +3056,30 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 						remainingRoomItems.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							className: "room-supply-rows",
 							children: supplyRows.map((row, rowIndex) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								className: `room-supply-row room-supply-row--${row.length} ${remainingRoomItems.length === roomItems.length ? "full-seven" : "compact-grid"}`,
-								children: row.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-									type: "button",
-									className: exitingItems.includes(item.id) ? "departing" : "",
-									"aria-label": `${item.label}，可加入`,
-									disabled: exitingItems.includes(item.id),
-									onClick: () => prepareItem(item.id),
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										className: "room-supply-visual",
-										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-											className: `room-item-image room-item-image--${item.id}`,
-											src: item.image,
-											alt: ""
+								className: `room-supply-row room-supply-row--${row.length} full-seven`,
+								children: row.map((item) => {
+									return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "supply-slot",
+										children: !selectedItems.includes(item.id) ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+											type: "button",
+											className: exitingItems.includes(item.id) ? "departing" : "",
+											"aria-label": `${item.label}，可加入`,
+											disabled: exitingItems.includes(item.id),
+											onClick: () => prepareItem(item.id),
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												className: "room-supply-visual",
+												children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+													className: `room-item-image room-item-image--${item.id}`,
+													src: item.image,
+													alt: ""
+												})
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
+										}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											className: "supply-slot-empty",
+											"aria-hidden": "true"
 										})
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
-								}, item.id))
+									}, item.id);
+								})
 							}, `${rowIndex}-${row.map((item) => item.id).join("-")}`))
 						}),
 						remainingRoomItems.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
@@ -3211,8 +3231,7 @@ function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNext }) {
 	const documentDone = documents.filter((item) => selected.includes(item.id)).length;
 	const supplyDone = supplies.filter((item) => selected.includes(item.id)).length;
 	const complete = documentDone === documents.length && supplyDone === supplies.length;
-	const remainingItems = departureTrunkItems.filter((item) => !selected.includes(item.id) || exitingItems.includes(item.id));
-	const supplyRows = Array.from({ length: Math.ceil(remainingItems.length / 2) }, (_, index) => remainingItems.slice(index * 2, index * 2 + 2)).filter((row) => row.length > 0);
+	const supplyRows = Array.from({ length: Math.ceil(departureTrunkItems.length / 2) }, (_, index) => departureTrunkItems.slice(index * 2, index * 2 + 2)).filter((row) => row.length > 0);
 	const [message, setMessage] = (0, import_react.useState)("");
 	trunkItems[0];
 	function selectItem(id) {
@@ -3248,20 +3267,28 @@ function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNext }) {
 							className: "departure-supply-rows",
 							children: supplyRows.map((row, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 								className: `departure-supply-row departure-supply-row--${row.length}`,
-								children: row.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-									type: "button",
-									className: exitingItems.includes(item.id) ? "departing" : "",
-									onClick: () => selectItem(item.id),
-									"aria-label": `準備${item.label}`,
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										className: "departure-supply-visual",
-										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-											className: `departure-item-image departure-item-image--${item.id}`,
-											src: item.image,
-											alt: ""
+								children: row.map((item) => {
+									return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "supply-slot",
+										children: !selected.includes(item.id) ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+											type: "button",
+											className: exitingItems.includes(item.id) ? "departing" : "",
+											onClick: () => selectItem(item.id),
+											"aria-label": `準備${item.label}`,
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												className: "departure-supply-visual",
+												children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+													className: `departure-item-image departure-item-image--${item.id}`,
+													src: item.image,
+													alt: ""
+												})
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
+										}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											className: "supply-slot-empty",
+											"aria-hidden": "true"
 										})
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label })]
-								}, item.id))
+									}, item.id);
+								})
 							}, `${row.map((item) => item.id).join("-")}-${index}`))
 						}),
 						complete && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
@@ -3613,39 +3640,36 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 						alt: "已上傳的居家空間照片預覽"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("figcaption", { children: profile.homeSpaceImageName })] })]
 				})] }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("fieldset", { children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("legend", { children: "飼養經驗" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-						type: "button",
-						className: `supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`,
-						"aria-pressed": profile.noShibaExperience,
-						onClick: () => update("noShibaExperience", !profile.noShibaExperience),
-						children: "我沒有養過柴犬"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						className: "pet-experience-block",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "曾經飼養：" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								className: "pet-experience-row",
-								children: experienceInputs("past")
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "目前家中有寵物：" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								className: "pet-experience-row",
-								children: experienceInputs("current")
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
-								className: "experience-note",
-								children: ["其他飼養經驗分享：", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
-									placeholder: "請分享你的照顧經驗",
-									value: profile.experienceNote,
-									onChange: (event) => update("experienceNote", event.target.value)
-								})]
-							})
-						]
-					})
-				] }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("fieldset", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("legend", { children: "飼養經驗" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "pet-experience-block",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "曾經飼養：" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "pet-experience-row",
+							children: experienceInputs("past")
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+							type: "button",
+							className: `supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`,
+							"aria-pressed": profile.noShibaExperience,
+							onClick: () => update("noShibaExperience", !profile.noShibaExperience),
+							children: "我沒有養過柴犬"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "目前家中有寵物：" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "pet-experience-row",
+							children: experienceInputs("current")
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
+							className: "experience-note",
+							children: ["其他飼養經驗分享：", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
+								placeholder: "請分享你的照顧經驗",
+								value: profile.experienceNote,
+								onChange: (event) => update("experienceNote", event.target.value)
+							})]
+						})
+					]
+				})] }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("fieldset", { children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("legend", { children: ["飼養原因 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "可複選" })] }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -3830,7 +3854,10 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "把這趟練習整理成你真正帶得走的照顧清單" })
 						] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
 							className: "care-breed-card",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: selectedBreed?.label ?? (petName || "小狗") }), selectedBreed?.image && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+								className: "care-breed-copy",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: selectedBreed?.label ?? (petName || "小狗") }), petName.trim() && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: petName })]
+							}), selectedBreed?.image && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								src: selectedBreed.image,
 								alt: selectedBreed.label
 							})]
@@ -3841,7 +3868,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 						"aria-labelledby": "care-a4-checklist-title",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
 							id: "care-a4-checklist-title",
-							children: "Checklist"
+							children: "準備清單"
 						}), checklistGroups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "care-a4-card",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: group.title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: group.items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {

@@ -150,7 +150,7 @@ export const roomItems: RoomItem[] = [
   { id: "bed", label: "睡墊", icon: "🛏️", image: "/assets/room/pet-bed.png", placement: { x: 67, y: 83, width: 32, layer: 2 }, required: true, need: "休息", expenseId: "bed", purpose: "提供固定且舒適的休息空間，讓小狗能安心休息。" },
   { id: "toy", label: "玩具", icon: "🦴", image: "/assets/room/toy.png", placement: { x: 73, y: 80, width: 10, layer: 4 }, required: true, need: "活動", expenseId: "toy", purpose: "合適的玩具可以提供活動與探索，也能減少因無聊產生的破壞行為。" },
   { id: "water-bowl", label: "水碗", icon: "💧", image: "/assets/room/water-bowl.png", placement: { x: 32, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "每天確認水碗乾淨，並提供足量的新鮮飲水。" },
-  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/assets/room/food-bowl.png", placement: { x: 42, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
+  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/assets/room/food-bowl.png", placement: { x: 41, y: 90, width: 10, layer: 3 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
   { id: "toilet", label: "尿墊", icon: "▧", image: "/assets/room/pee-pad.png", placement: { x: 15, y: 85, width: 20, layer: 1 }, required: true, need: "排泄", expenseId: "toilet", purpose: "排泄用品應與食物及休息位置分開，方便小狗建立習慣。" },
   { id: "cleaner", label: "清潔用品", icon: "🧼", image: "/assets/room/cleaner.png", placement: { x: 39, y: 46, width: 10, layer: 3 }, required: true, need: "清潔", expenseId: "cleaner", purpose: "準備安全的清潔用品，並收在小狗無法自行取得的位置。" },
   { id: "food", label: "飼料", icon: "🦴", image: "/assets/room/food.png", placement: { x: 50, y: 85, width: 9, layer: 3 }, required: true, need: "飲食", expenseId: "starter-food", purpose: "選擇符合小狗年齡、體型及健康需求的主食，並妥善保存。" },
