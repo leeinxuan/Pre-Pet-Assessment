@@ -790,7 +790,8 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .supplement-choice:hover { border-color: #aaa69f; transform: translateY(-1px); }
 .supplement-choice:focus-visible { outline: 3px solid rgba(212,154,36,.35); outline-offset: 2px; }
 .supplement-choice.selected { border-color: #777; background: #d9d9d9; }
-.supplement-choice > span { position: absolute; right: 10px; top: 9px; font-size: 13px; }
+.supplement-choice .choice-check { position: absolute; right: 10px; top: 9px; width: 23px; height: 23px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: white; }
+.supplement-choice .choice-check svg { width: 14px; height: 14px; display: block; fill: currentColor; }
 .housemate-presence-choice { max-width: 420px; }
 .housemate-list-editor { margin-top: 16px; display: grid; gap: 12px; padding: 16px; border-radius: 16px; background: #fffaf0; border: 1px solid var(--line); }
 .housemate-list-editor > b { color: var(--gold-dark); }
@@ -858,6 +859,7 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .profile-option.simple { background: white; }
 .profile-option.simple.selected { background: #d9d9d9; }
 .profile-option > i { position: absolute; right: 8px; top: 8px; width: 23px; height: 23px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: white; font-style: normal; font-size: 12px; }
+.profile-option > i svg { width: 14px; height: 14px; display: block; fill: currentColor; }
 .profile-option > span { min-height: 36px; display: grid; place-items: center; font-size: 33px; line-height: 1; color: #111; }
 .profile-option > b { font-size: 15px; }
 .profile-option > small { color: var(--muted); font-size: 10px; }

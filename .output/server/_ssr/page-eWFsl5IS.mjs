@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-s7yi4iqi.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-eWFsl5IS.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1605,7 +1605,7 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 	const correctSummary = scenario.correctSummary ?? scenario.choices.filter((choice) => correctChoiceIds.includes(choice.id)).map((choice) => choice.text);
 	const displayPetName = petName || "小狗";
 	const correctIntroByScenario = {
-		"behavior-barking": `做得很好！面對${displayPetName}吠叫時，重點是先理解牝為什麼叫，再用合適的方式協助牝穩定下來，可以這樣做：`,
+		"behavior-barking": `做得很好！面對${displayPetName}吠叫時，重點是先理解牠為什麼叫，再用合適的方式協助牠穩定下來，可以這樣做：`,
 		"behavior-chewing": `做得很好！${displayPetName}亂咬東西常和探索、無聊、換牙或壓力有關，先提供安全替代物並管理環境會更合適，可以這樣做：`,
 		"behavior-toileting": `做得很好！${displayPetName}如廁習慣需要時間建立，重點是提供固定地點、增加外出機會，並觀察是否有健康或壓力因素，可以這樣做：`
 	};
@@ -1695,7 +1695,7 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 					type: "button",
 					className: "primary",
 					onClick: moveToNext,
-					children: ["繼續 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "?" })]
+					children: ["繼續 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
 				})
 			]
 		})]
@@ -3469,7 +3469,11 @@ function OptionButton({ label, selected, onClick, icon, simple = false }) {
 		children: [
 			selected && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
 				"aria-hidden": "true",
-				children: "?"
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", {
+					viewBox: "0 0 16 16",
+					focusable: "false",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M6.4 11.6 2.7 7.9l1.4-1.4 2.3 2.3 5.5-5.6 1.4 1.4z" })
+				})
 			}),
 			icon && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 				"aria-hidden": "true",
@@ -3478,6 +3482,17 @@ function OptionButton({ label, selected, onClick, icon, simple = false }) {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: label }),
 			!simple && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: selected ? "已選擇" : "點擊選擇" })
 		]
+	});
+}
+function SelectedDot() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+		className: "choice-check",
+		"aria-hidden": "true",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", {
+			viewBox: "0 0 16 16",
+			focusable: "false",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M6.4 11.6 2.7 7.9l1.4-1.4 2.3 2.3 5.5-5.6 1.4 1.4z" })
+		})
 	});
 }
 function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
@@ -3637,12 +3652,12 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 								"不同意"
 							].map((value) => {
 								const selected = profile.landlordConsent === value || value === "已確認並同意" && profile.landlordConsent === "房東已同意" || value === "尚未確認" && profile.landlordConsent === "尚未取得同意";
-								return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 									type: "button",
 									className: `supplement-choice ${selected ? "selected" : ""}`,
 									"aria-pressed": selected,
 									onClick: () => update("landlordConsent", value),
-									children: value
+									children: [selected && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), value]
 								}, value);
 							})
 						})]
@@ -3657,13 +3672,13 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 							className: `supplement-choice ${profile.hasHousemates === false ? "selected" : ""}`,
 							"aria-pressed": profile.hasHousemates === false,
 							onClick: () => chooseHousematePresence(false),
-							children: [profile.hasHousemates === false && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "✓" }), "無"]
+							children: [profile.hasHousemates === false && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), "無"]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 							type: "button",
 							className: `supplement-choice ${profile.hasHousemates === true ? "selected" : ""}`,
 							"aria-pressed": profile.hasHousemates === true,
 							onClick: () => chooseHousematePresence(true),
-							children: [profile.hasHousemates === true && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "✓" }), "有"]
+							children: [profile.hasHousemates === true && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), "有"]
 						})]
 					}),
 					profile.hasHousemates === true && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
@@ -3678,12 +3693,12 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 						className: "supplement-followup",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "同住者是否知情並同意飼養？" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							className: "supplement-choice-grid compact",
-							children: consentOptions.map((option) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+							children: consentOptions.map((option) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 								type: "button",
 								className: `supplement-choice ${option.selected ? "selected" : ""}`,
 								"aria-pressed": option.selected,
 								onClick: () => update("housematesConsent", option.consent),
-								children: option.label
+								children: [option.selected && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), option.label]
 							}, option.value))
 						})]
 					})
@@ -3702,7 +3717,7 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 							className: `supplement-choice ${profile.activitySpace === value ? "selected" : ""}`,
 							"aria-pressed": profile.activitySpace === value,
 							onClick: () => update("activitySpace", value),
-							children: [profile.activitySpace === value && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "✓" }), value]
+							children: [profile.activitySpace === value && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), value]
 						}, value))
 					}),
 					profile.activitySpace === "其他" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
@@ -3755,12 +3770,12 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 							})
 						]
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						type: "button",
 						className: `supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`,
 						"aria-pressed": profile.noShibaExperience,
 						onClick: () => update("noShibaExperience", !profile.noShibaExperience),
-						children: "我沒有養過柴犬"
+						children: [profile.noShibaExperience && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), "我沒有養過柴犬"]
 					})
 				] }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("fieldset", { children: [
@@ -3774,13 +3789,16 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 							"看家守衛",
 							"他人推薦",
 							"其他"
-						].map((reason) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-							type: "button",
-							className: `supplement-choice ${profile.reasons.includes(reason) ? "selected" : ""}`,
-							"aria-pressed": profile.reasons.includes(reason),
-							onClick: () => toggle("reasons", reason),
-							children: [profile.reasons.includes(reason) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "✓" }), reason]
-						}, reason))
+						].map((reason) => {
+							const selected = profile.reasons.includes(reason);
+							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								type: "button",
+								className: `supplement-choice ${selected ? "selected" : ""}`,
+								"aria-pressed": selected,
+								onClick: () => toggle("reasons", reason),
+								children: [selected && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), reason]
+							}, reason);
+						})
 					}),
 					profile.reasons.includes("其他") && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
 						className: "supplement-inline-input",
