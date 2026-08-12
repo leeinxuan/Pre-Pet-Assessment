@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-D7pbB65_.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-D-AdtZnf.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -407,9 +407,9 @@ var roomItems = [
 		icon: "🥣",
 		image: "/assets/room/food-bowl.png",
 		placement: {
-			x: 42,
+			x: 41,
 			y: 90,
-			width: 12,
+			width: 10,
 			layer: 3
 		},
 		required: true,
@@ -3648,13 +3648,6 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 							className: "pet-experience-row",
 							children: experienceInputs("past")
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-							type: "button",
-							className: `supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`,
-							"aria-pressed": profile.noShibaExperience,
-							onClick: () => update("noShibaExperience", !profile.noShibaExperience),
-							children: "我沒有養過柴犬"
-						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "目前家中有寵物：" }),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							className: "pet-experience-row",
@@ -3667,6 +3660,13 @@ function ProfileSupplementForm({ profile, onChange, onBack, onReset }) {
 								value: profile.experienceNote,
 								onChange: (event) => update("experienceNote", event.target.value)
 							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+							type: "button",
+							className: `supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`,
+							"aria-pressed": profile.noShibaExperience,
+							onClick: () => update("noShibaExperience", !profile.noShibaExperience),
+							children: "我沒有養過柴犬"
 						})
 					]
 				})] }),
