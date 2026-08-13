@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-BTiA8GhJ.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-DfLGhhrp.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1675,9 +1675,9 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 	const correctSelectedCount = selectedIds.filter((id) => correctChoiceIds.includes(id)).length;
 	const displayPetName = petName || "小狗";
 	const correctIntroByScenario = {
-		"behavior-barking": `做得很好！面對${displayPetName}吠叫時，重點是先理解牠為什麼叫，再用合適的方式協助牠穩定下來，可以這樣做：`,
-		"behavior-chewing": `做得很好！${displayPetName}亂咬東西常和探索、無聊、換牙或壓力有關，先提供安全替代物並管理環境會更合適，可以這樣做：`,
-		"behavior-toileting": `做得很好！${displayPetName}如廁習慣需要時間建立，重點是提供固定地點、增加外出機會，並觀察是否有健康或壓力因素，可以這樣做：`
+		"behavior-barking": `面對${displayPetName}吠叫時，重點是先理解牠為什麼叫，再用合適的方式協助牠穩定下來，可以這樣做：`,
+		"behavior-chewing": `${displayPetName}亂咬東西常和探索、無聊、換牙或壓力有關，先提供安全替代物並管理環境會更合適，可以這樣做：`,
+		"behavior-toileting": `${displayPetName}如廁習慣需要時間建立，重點是提供固定地點、增加外出機會，並觀察是否有健康或壓力因素，可以這樣做：`
 	};
 	function toggleChoice(choiceId) {
 		setRetryCopy(null);
@@ -1736,7 +1736,7 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 		videoSrc: getCorrectAnswerVideo(currentIndex),
 		videoFailed,
 		fallbackText: "正向結果影片目前無法播放，仍可繼續生活旅程。",
-		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(correctIntroByScenario[scenario.id] ?? "做得很好！你選到了這個情境中幾個合適的照顧方式：", petName) }),
+		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(correctIntroByScenario[scenario.id] ?? "你選到了這個情境中幾個合適的照顧方式：", petName) }),
 		correctItems: correctSummary.map((item) => withPetName(item, petName)),
 		onVideoEnded: () => setVideoFinished(true),
 		onVideoError: () => {
@@ -3070,7 +3070,6 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 	const [nameDraft, setNameDraft] = (0, import_react.useState)(petName);
 	const [nameError, setNameError] = (0, import_react.useState)("");
 	const [nameEditing, setNameEditing] = (0, import_react.useState)(!petName);
-	const [roomApproved, setRoomApproved] = (0, import_react.useState)(false);
 	const [roomCheckMessage, setRoomCheckMessage] = (0, import_react.useState)("");
 	const [dismissingHazard, setDismissingHazard] = (0, import_react.useState)(null);
 	const [activeHazardInfo, setActiveHazardInfo] = (0, import_react.useState)(null);
@@ -3107,13 +3106,11 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 		setExitingItems((current) => [...current, id]);
 		onPrepare(id);
 		window.setTimeout(() => setExitingItems((current) => current.filter((itemId) => itemId !== id)), 450);
-		setRoomApproved(false);
 		setRoomCheckMessage("");
 	}
 	function secureHazard(id) {
 		if (!hazards.find((item) => item.id === id) || securedHazards.includes(id) || dismissingHazard) return;
 		setDismissingHazard(id);
-		setRoomApproved(false);
 		setRoomCheckMessage("");
 		window.setTimeout(() => {
 			onToggleHazard(id);
@@ -3129,24 +3126,26 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 		onSavePetName(cleanName);
 		setNameDraft(cleanName);
 		setNameError("");
-		setRoomApproved(false);
 		setRoomCheckMessage("");
 		setNameEditing(false);
 	}
-	function checkRoom() {
-		if (complete) {
-			setRoomApproved(true);
-			setRoomCheckMessage("");
-			return;
-		}
-		setRoomApproved(false);
+	function getRoomCheckMessages() {
 		const missingItems = roomItems.length - itemsDone;
 		const remainingHazards = hazards.length - hazardsDone;
-		setRoomCheckMessage([
-			!petName.trim() ? "請先點選門牌，輸入小狗的名字" : "",
-			missingItems > 0 ? `還有${missingItems}項用品尚未準備` : "",
-			remainingHazards > 0 ? `還有${remainingHazards}項危險物品需要處理` : ""
-		].filter(Boolean).join("，"));
+		return [
+			!petName.trim() ? "請先替小狗取名字" : "",
+			missingItems > 0 ? `還有 ${missingItems} 件用品還沒準備好` : "",
+			remainingHazards > 0 ? "還有危險物品需要處理" : ""
+		].filter(Boolean);
+	}
+	function completeRoomCheck() {
+		if (complete) {
+			setRoomCheckMessage("");
+			onNext();
+			return;
+		}
+		const messages = getRoomCheckMessages();
+		setRoomCheckMessage(messages.length > 0 ? messages.join("，") : "房間還沒準備好，請再確認用品、危險物品與名字");
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "content-wrap preparation-page",
@@ -3312,24 +3311,15 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 					children: "← 返回"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "room-actions-right",
-					children: [
-						roomCheckMessage && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "room-check-message",
-							role: "alert",
-							children: roomCheckMessage
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-							className: "secondary",
-							onClick: checkRoom,
-							children: "檢查房間"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-							className: "primary",
-							onClick: onNext,
-							disabled: !roomApproved,
-							children: ["房間完成，準備出發 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
-						})
-					]
+					children: [roomCheckMessage && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "room-check-message",
+						role: "alert",
+						children: roomCheckMessage
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						className: "primary",
+						onClick: completeRoomCheck,
+						children: ["完成房間檢查，準備出發 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+					})]
 				})]
 			})
 		]

@@ -47,7 +47,6 @@ export function RoomPreparation({
   const [nameDraft, setNameDraft] = useState(petName);
   const [nameError, setNameError] = useState("");
   const [nameEditing, setNameEditing] = useState(!petName);
-  const [roomApproved, setRoomApproved] = useState(false);
   const [roomCheckMessage, setRoomCheckMessage] = useState("");
   const [dismissingHazard, setDismissingHazard] = useState<string | null>(null);
   const [activeHazardInfo, setActiveHazardInfo] = useState<string | null>(null);
@@ -84,7 +83,6 @@ export function RoomPreparation({
     setExitingItems((current) => [...current, id]);
     onPrepare(id);
     window.setTimeout(() => setExitingItems((current) => current.filter((itemId) => itemId !== id)), 450);
-    setRoomApproved(false);
     setRoomCheckMessage("");
   }
 
@@ -92,7 +90,6 @@ export function RoomPreparation({
     const hazard = hazards.find((item) => item.id === id);
     if (!hazard || securedHazards.includes(id) || dismissingHazard) return;
     setDismissingHazard(id);
-    setRoomApproved(false);
     setRoomCheckMessage("");
     window.setTimeout(() => {
       onToggleHazard(id);
@@ -109,26 +106,28 @@ export function RoomPreparation({
     onSavePetName(cleanName);
     setNameDraft(cleanName);
     setNameError("");
-    setRoomApproved(false);
     setRoomCheckMessage("");
     setNameEditing(false);
   }
 
-  function checkRoom() {
-    if (complete) {
-      setRoomApproved(true);
-      setRoomCheckMessage("");
-      return;
-    }
-    setRoomApproved(false);
+  function getRoomCheckMessages() {
     const missingItems = roomItems.length - itemsDone;
     const remainingHazards = hazards.length - hazardsDone;
-    const messages = [
-      !petName.trim() ? "請先點選門牌，輸入小狗的名字" : "",
-      missingItems > 0 ? `還有${missingItems}項用品尚未準備` : "",
-      remainingHazards > 0 ? `還有${remainingHazards}項危險物品需要處理` : "",
+    return [
+      !petName.trim() ? "請先替小狗取名字" : "",
+      missingItems > 0 ? `還有 ${missingItems} 件用品還沒準備好` : "",
+      remainingHazards > 0 ? "還有危險物品需要處理" : "",
     ].filter(Boolean);
-    setRoomCheckMessage(messages.join("，"));
+  }
+
+  function completeRoomCheck() {
+    if (complete) {
+      setRoomCheckMessage("");
+      onNext();
+      return;
+    }
+    const messages = getRoomCheckMessages();
+    setRoomCheckMessage(messages.length > 0 ? messages.join("，") : "房間還沒準備好，請再確認用品、危險物品與名字");
   }
 
   return (
@@ -176,7 +175,7 @@ export function RoomPreparation({
       </div>
       <div className="room-actions">
         <button className="secondary" onClick={onBack}>← 返回</button>
-        <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="secondary" onClick={checkRoom}>檢查房間</button><button className="primary" onClick={onNext} disabled={!roomApproved}>房間完成，準備出發 <span>→</span></button></div>
+        <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="primary" onClick={completeRoomCheck}>完成房間檢查，準備出發 <span>→</span></button></div>
       </div>
     </div>
   );
