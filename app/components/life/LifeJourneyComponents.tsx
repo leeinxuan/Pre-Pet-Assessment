@@ -582,7 +582,7 @@ function DailyBehaviorActivity({
         </div>
         <div className="daily-behavior-positive-copy">
           <h2>做得很好！</h2>
-          <p>{withPetName(correctIntroByScenario[scenario.id] ?? "做得很好！你選到了這個情境中幾個合適的照顧方式：", petName)}</p>
+          <p>{withPetName(correctIntroByScenario[scenario.id] ?? "你選到了這個情境中幾個合適的照顧方式：", petName)}</p>
           <ul className="daily-behavior-correct-list">
             {correctSummary.map((item) => <li key={item}>{withPetName(item, petName)}</li>)}
           </ul>
@@ -672,9 +672,9 @@ function DailyBehaviorActivityMulti({
   const correctSelectedCount = selectedIds.filter((id) => correctChoiceIds.includes(id)).length;
   const displayPetName = petName || "小狗";
   const correctIntroByScenario: Record<string, string> = {
-    "behavior-barking": `做得很好！面對${displayPetName}吠叫時，重點是先理解牠為什麼叫，再用合適的方式協助牠穩定下來，可以這樣做：`,
-    "behavior-chewing": `做得很好！${displayPetName}亂咬東西常和探索、無聊、換牙或壓力有關，先提供安全替代物並管理環境會更合適，可以這樣做：`,
-    "behavior-toileting": `做得很好！${displayPetName}如廁習慣需要時間建立，重點是提供固定地點、增加外出機會，並觀察是否有健康或壓力因素，可以這樣做：`,
+    "behavior-barking": `面對${displayPetName}吠叫時，重點是先理解牠為什麼叫，再用合適的方式協助牠穩定下來，可以這樣做：`,
+    "behavior-chewing": `${displayPetName}亂咬東西常和探索、無聊、換牙或壓力有關，先提供安全替代物並管理環境會更合適，可以這樣做：`,
+    "behavior-toileting": `${displayPetName}如廁習慣需要時間建立，重點是提供固定地點、增加外出機會，並觀察是否有健康或壓力因素，可以這樣做：`,
   };
 
   function toggleChoice(choiceId: string) {
@@ -743,7 +743,7 @@ function DailyBehaviorActivityMulti({
         videoSrc={getCorrectAnswerVideo(currentIndex)}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={<p>{withPetName(correctIntroByScenario[scenario.id] ?? "做得很好！你選到了這個情境中幾個合適的照顧方式：", petName)}</p>}
+        intro={<p>{withPetName(correctIntroByScenario[scenario.id] ?? "你選到了這個情境中幾個合適的照顧方式：", petName)}</p>}
         correctItems={correctSummary.map((item) => withPetName(item, petName))}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
