@@ -18,13 +18,6 @@ var public_assets_data_default = {
 		"size": 712,
 		"path": "../public/favicon.svg"
 	},
-	"/globe.svg": {
-		"type": "image/svg+xml",
-		"etag": "\"40b-LrojsBpGczu4Qj5tOOv19+lavsU\"",
-		"mtime": "2026-07-15T05:13:25.251Z",
-		"size": 1035,
-		"path": "../public/globe.svg"
-	},
 	"/file.svg": {
 		"type": "image/svg+xml",
 		"etag": "\"187-+zgO7/6H1QtZc4NmTAKYKWTQ0ow\"",
@@ -35,44 +28,30 @@ var public_assets_data_default = {
 	"/assets/framework-CXnKph_e.js": {
 		"type": "text/javascript; charset=utf-8",
 		"etag": "\"2e56d-yqm8KBIaXv+Y0pOthtGoU3MxBZg\"",
-		"mtime": "2026-08-13T03:11:20.126Z",
+		"mtime": "2026-08-13T13:29:46.691Z",
 		"size": 189805,
 		"path": "../public/assets/framework-CXnKph_e.js"
 	},
-	"/assets/layout-segment-context-BagqSWL3.js": {
+	"/globe.svg": {
+		"type": "image/svg+xml",
+		"etag": "\"40b-LrojsBpGczu4Qj5tOOv19+lavsU\"",
+		"mtime": "2026-07-15T05:13:25.251Z",
+		"size": 1035,
+		"path": "../public/globe.svg"
+	},
+	"/assets/layout-segment-context-DPSE0xJi.js": {
 		"type": "text/javascript; charset=utf-8",
-		"etag": "\"120-XzHmaGYAc0+AIDrqdAts1cFdcJ4\"",
-		"mtime": "2026-08-13T03:11:20.127Z",
+		"etag": "\"120-/d66lVkcwy2lpaIHPQCL3QNJfV8\"",
+		"mtime": "2026-08-13T13:29:46.691Z",
 		"size": 288,
-		"path": "../public/assets/layout-segment-context-BagqSWL3.js"
+		"path": "../public/assets/layout-segment-context-DPSE0xJi.js"
 	},
-	"/assets/index-X5pi6nKC.js": {
+	"/assets/index-r2WndqI4.js": {
 		"type": "text/javascript; charset=utf-8",
-		"etag": "\"13b49-9H0/AKn50x2cf/XCqmx6xfI/CvY\"",
-		"mtime": "2026-08-13T03:11:20.125Z",
-		"size": 80713,
-		"path": "../public/assets/index-X5pi6nKC.js"
-	},
-	"/assets/rolldown-runtime-S-ySWqyJ.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"2b6-wnqLLSlp3SaE+lbe74bKNe5Rpds\"",
-		"mtime": "2026-08-13T03:11:20.129Z",
-		"size": 694,
-		"path": "../public/assets/rolldown-runtime-S-ySWqyJ.js"
-	},
-	"/assets/page-7K_Mamn3.js": {
-		"type": "text/javascript; charset=utf-8",
-		"etag": "\"1a5d2-OgJ3BqsUb4H5TehBl0aHh7jRw8g\"",
-		"mtime": "2026-08-13T03:11:20.128Z",
-		"size": 107986,
-		"path": "../public/assets/page-7K_Mamn3.js"
-	},
-	"/assets/index-B0v3qCw-.css": {
-		"type": "text/css; charset=utf-8",
-		"etag": "\"2b631-zEuX7k41KXRdTkAqd9bAl1z2GJk\"",
-		"mtime": "2026-08-13T03:11:20.130Z",
-		"size": 177713,
-		"path": "../public/assets/index-B0v3qCw-.css"
+		"etag": "\"13b4b-sb3NzpO61cQWAbLIWtkW114X0Kc\"",
+		"mtime": "2026-08-13T13:29:46.690Z",
+		"size": 80715,
+		"path": "../public/assets/index-r2WndqI4.js"
 	},
 	"/window.svg": {
 		"type": "image/svg+xml",
@@ -81,19 +60,26 @@ var public_assets_data_default = {
 		"size": 385,
 		"path": "../public/window.svg"
 	},
+	"/assets/rolldown-runtime-S-ySWqyJ.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"2b6-wnqLLSlp3SaE+lbe74bKNe5Rpds\"",
+		"mtime": "2026-08-13T13:29:46.692Z",
+		"size": 694,
+		"path": "../public/assets/rolldown-runtime-S-ySWqyJ.js"
+	},
+	"/assets/page-Pi-sPn5K.js": {
+		"type": "text/javascript; charset=utf-8",
+		"etag": "\"1a7af-VLph+uYtW93FdQvF1rdU5qhrkzo\"",
+		"mtime": "2026-08-13T13:29:46.692Z",
+		"size": 108463,
+		"path": "../public/assets/page-Pi-sPn5K.js"
+	},
 	"/assets/car/carrier.png": {
 		"type": "image/png",
 		"etag": "\"1f84f-mIQeeXVntOUQbbLtXfXxYyxqTmg\"",
 		"mtime": "2026-07-21T06:21:27.988Z",
 		"size": 129103,
 		"path": "../public/assets/car/carrier.png"
-	},
-	"/assets/car/leash.png": {
-		"type": "image/png",
-		"etag": "\"fa51-g2PVZsKoHQjoU7gz7bRBTFAvEnE\"",
-		"mtime": "2026-07-21T06:23:05.878Z",
-		"size": 64081,
-		"path": "../public/assets/car/leash.png"
 	},
 	"/assets/car/adoption-documents.png": {
 		"type": "image/png",
@@ -102,12 +88,26 @@ var public_assets_data_default = {
 		"size": 265146,
 		"path": "../public/assets/car/adoption-documents.png"
 	},
-	"/assets/car/pee-pad.png": {
+	"/assets/car/car-trunk.png": {
 		"type": "image/png",
-		"etag": "\"12b18-ia1a0cyNI6GqS3jBsS7ZB7q60Zc\"",
-		"mtime": "2026-07-21T06:23:32.364Z",
-		"size": 76568,
-		"path": "../public/assets/car/pee-pad.png"
+		"etag": "\"698ac-uuJ/yYGkoBaM+UA71jCNbvC70+c\"",
+		"mtime": "2026-07-22T05:27:00.744Z",
+		"size": 432300,
+		"path": "../public/assets/car/car-trunk.png"
+	},
+	"/assets/index-CR7T2o4n.css": {
+		"type": "text/css; charset=utf-8",
+		"etag": "\"2b6c5-yuvKdFVkoNRjrmJwvyu2soFsoYQ\"",
+		"mtime": "2026-08-13T13:29:46.693Z",
+		"size": 177861,
+		"path": "../public/assets/index-CR7T2o4n.css"
+	},
+	"/assets/car/leash.png": {
+		"type": "image/png",
+		"etag": "\"fa51-g2PVZsKoHQjoU7gz7bRBTFAvEnE\"",
+		"mtime": "2026-07-21T06:23:05.878Z",
+		"size": 64081,
+		"path": "../public/assets/car/leash.png"
 	},
 	"/assets/car/id-card.png": {
 		"type": "image/png",
@@ -123,12 +123,12 @@ var public_assets_data_default = {
 		"size": 49398,
 		"path": "../public/assets/car/toy.png"
 	},
-	"/assets/car/car-trunk.png": {
+	"/assets/car/pee-pad.png": {
 		"type": "image/png",
-		"etag": "\"698ac-uuJ/yYGkoBaM+UA71jCNbvC70+c\"",
-		"mtime": "2026-07-22T05:27:00.744Z",
-		"size": 432300,
-		"path": "../public/assets/car/car-trunk.png"
+		"etag": "\"12b18-ia1a0cyNI6GqS3jBsS7ZB7q60Zc\"",
+		"mtime": "2026-07-21T06:23:32.364Z",
+		"size": 76568,
+		"path": "../public/assets/car/pee-pad.png"
 	},
 	"/assets/pet-journey/empty-food-bowl.png": {
 		"type": "image/png",
@@ -151,19 +151,19 @@ var public_assets_data_default = {
 		"size": 262476,
 		"path": "../public/assets/pet-journey/empty-water-bowl.png"
 	},
-	"/assets/pet-journey/macadamia-nuts.png": {
-		"type": "image/png",
-		"etag": "\"10f39-0QFUN2RQyMZwmM8znYWzQy8yZdY\"",
-		"mtime": "2026-08-03T11:18:26.972Z",
-		"size": 69433,
-		"path": "../public/assets/pet-journey/macadamia-nuts.png"
-	},
 	"/assets/pet-journey/leftover-bones.png": {
 		"type": "image/png",
 		"etag": "\"5a666-vo6YiJrefvLb/FxOt0G1veY5HrM\"",
 		"mtime": "2026-08-03T11:18:25.491Z",
 		"size": 370278,
 		"path": "../public/assets/pet-journey/leftover-bones.png"
+	},
+	"/assets/pet-journey/macadamia-nuts.png": {
+		"type": "image/png",
+		"etag": "\"10f39-0QFUN2RQyMZwmM8znYWzQy8yZdY\"",
+		"mtime": "2026-08-03T11:18:26.972Z",
+		"size": 69433,
+		"path": "../public/assets/pet-journey/macadamia-nuts.png"
 	},
 	"/assets/pet-journey/shiba-dog.png": {
 		"type": "image/png",
@@ -193,26 +193,12 @@ var public_assets_data_default = {
 		"size": 14851,
 		"path": "../public/assets/pet-journey/waterbottle.png"
 	},
-	"/assets/room/chocolate.png": {
+	"/assets/walking/poop-bag.png": {
 		"type": "image/png",
-		"etag": "\"ce3f-xzBNplRsBhWp4IIJBmRKj7Hk++A\"",
-		"mtime": "2026-08-11T02:52:18.712Z",
-		"size": 52799,
-		"path": "../public/assets/room/chocolate.png"
-	},
-	"/assets/room/detergent.png": {
-		"type": "image/png",
-		"etag": "\"abfb-h7NWlRvhCoDbTDPD0Lb2c3DZF8c\"",
-		"mtime": "2026-08-11T02:52:29.141Z",
-		"size": 44027,
-		"path": "../public/assets/room/detergent.png"
-	},
-	"/assets/room/cleaner.png": {
-		"type": "image/png",
-		"etag": "\"7fc7f-QWSEF3apbdBnGu5RWLfxm/s0IWE\"",
-		"mtime": "2026-08-03T12:21:42.792Z",
-		"size": 523391,
-		"path": "../public/assets/room/cleaner.png"
+		"etag": "\"abc8-w88z8sMJaOLoKmUoS5Rio9xfQV8\"",
+		"mtime": "2026-08-03T11:13:56.998Z",
+		"size": 43976,
+		"path": "../public/assets/walking/poop-bag.png"
 	},
 	"/og.png": {
 		"type": "image/png",
@@ -221,12 +207,12 @@ var public_assets_data_default = {
 		"size": 2368882,
 		"path": "../public/og.png"
 	},
-	"/assets/room/food-bowl.png": {
+	"/assets/walking/poop.png": {
 		"type": "image/png",
-		"etag": "\"123b8-6iVRcMQ5oRrBj8xCZI7gWTEqVPs\"",
-		"mtime": "2026-08-12T02:04:33.846Z",
-		"size": 74680,
-		"path": "../public/assets/room/food-bowl.png"
+		"etag": "\"4f939-0YEHkWJmgVEgs+Y4pGhtt24Sc3Q\"",
+		"mtime": "2026-08-03T11:14:05.908Z",
+		"size": 325945,
+		"path": "../public/assets/walking/poop.png"
 	},
 	"/assets/car/water-bottle.png": {
 		"type": "image/png",
@@ -249,12 +235,12 @@ var public_assets_data_default = {
 		"size": 2488257,
 		"path": "../public/assets/pet-journey/barking.mp4"
 	},
-	"/assets/room/empty-room.png": {
-		"type": "image/png",
-		"etag": "\"f1db0-WPh64SeqYCQMxhXWcwmi8pbWMgk\"",
-		"mtime": "2026-07-21T05:24:46.441Z",
-		"size": 990640,
-		"path": "../public/assets/room/empty-room.png"
+	"/assets/walking/door-to-sidewalk.jpg": {
+		"type": "image/jpeg",
+		"etag": "\"b1cb5-jE35lfquID5RFSGDBa9U5EjwvOY\"",
+		"mtime": "2026-08-04T16:19:51.941Z",
+		"size": 728245,
+		"path": "../public/assets/walking/door-to-sidewalk.jpg"
 	},
 	"/assets/pet-journey/correct-answer.mp4": {
 		"type": "video/mp4",
@@ -263,12 +249,131 @@ var public_assets_data_default = {
 		"size": 2453983,
 		"path": "../public/assets/pet-journey/correct-answer.mp4"
 	},
-	"/assets/room/food.png": {
+	"/assets/walking/park.png": {
 		"type": "image/png",
-		"etag": "\"880d7-hWiLdz/IMLPz8QA9BlW8mZ2Wz2c\"",
-		"mtime": "2026-08-03T11:16:24.492Z",
-		"size": 557271,
-		"path": "../public/assets/room/food.png"
+		"etag": "\"176e8e-K/LGcTO0ubu8RZcaIfZTt2fl1xY\"",
+		"mtime": "2026-08-04T16:19:55.611Z",
+		"size": 1535630,
+		"path": "../public/assets/walking/park.png"
+	},
+	"/assets/walking/sidewalk-to-home.jpg": {
+		"type": "image/jpeg",
+		"etag": "\"b866d-PfcnfqTeNBKalzHRQ5akk1i7DGo\"",
+		"mtime": "2026-08-04T16:19:57.037Z",
+		"size": 755309,
+		"path": "../public/assets/walking/sidewalk-to-home.jpg"
+	},
+	"/assets/walking/park-poop-event.png": {
+		"type": "image/png",
+		"etag": "\"1dbdce-5brOwT4FeLsr0uQEI0/zEwBb9KU\"",
+		"mtime": "2026-08-04T16:19:54.742Z",
+		"size": 1949134,
+		"path": "../public/assets/walking/park-poop-event.png"
+	},
+	"/assets/species/cat.png": {
+		"type": "image/png",
+		"etag": "\"6c0d-kjvexoQUlLSlYxAjZ1B4nRTDfMM\"",
+		"mtime": "2026-07-28T19:04:13.454Z",
+		"size": 27661,
+		"path": "../public/assets/species/cat.png"
+	},
+	"/assets/species/bird.png": {
+		"type": "image/png",
+		"etag": "\"451f-0Td2R9efWaGzKWo/euk5Xn5OOiI\"",
+		"mtime": "2026-07-28T19:04:51.759Z",
+		"size": 17695,
+		"path": "../public/assets/species/bird.png"
+	},
+	"/assets/species/dog.png": {
+		"type": "image/png",
+		"etag": "\"80a7-5Q4gj2TU1fEo3bsi094cfV7IueM\"",
+		"mtime": "2026-07-28T19:03:54.510Z",
+		"size": 32935,
+		"path": "../public/assets/species/dog.png"
+	},
+	"/assets/species/rabbit.png": {
+		"type": "image/png",
+		"etag": "\"4e3e-SL5iurh5uwbHlCaLZPk/jnHmips\"",
+		"mtime": "2026-07-28T19:04:30.431Z",
+		"size": 20030,
+		"path": "../public/assets/species/rabbit.png"
+	},
+	"/assets/species/reptile.png": {
+		"type": "image/png",
+		"etag": "\"66a4-My88tXVoCQpp4cW3SitrPjBzL5s\"",
+		"mtime": "2026-07-28T19:05:13.812Z",
+		"size": 26276,
+		"path": "../public/assets/species/reptile.png"
+	},
+	"/assets/pet-journey/first-day.mp4": {
+		"type": "video/mp4",
+		"etag": "\"27798a-iBjqROuEIbyja+wPexZ2/9NX9g0\"",
+		"mtime": "2026-08-03T16:31:09.061Z",
+		"size": 2587018,
+		"path": "../public/assets/pet-journey/first-day.mp4"
+	},
+	"/assets/walking/walker-and-dog-poop.png": {
+		"type": "image/png",
+		"etag": "\"e06f6-/h+/YVd1gxFfTfrMEkyPlxskHio\"",
+		"mtime": "2026-08-04T16:20:08.975Z",
+		"size": 919286,
+		"path": "../public/assets/walking/walker-and-dog-poop.png"
+	},
+	"/assets/species/small-mammal.png": {
+		"type": "image/png",
+		"etag": "\"8403-VPnALA1eu4rjbDIyOQNOGqLi/Xs\"",
+		"mtime": "2026-07-28T19:05:32.748Z",
+		"size": 33795,
+		"path": "../public/assets/species/small-mammal.png"
+	},
+	"/assets/pet-journey/urinate-and-defecate.mp4": {
+		"type": "video/mp4",
+		"etag": "\"22c546-rrzczsPWzd12AjoycKRiwLTk0/4\"",
+		"mtime": "2026-08-03T12:21:56.532Z",
+		"size": 2278726,
+		"path": "../public/assets/pet-journey/urinate-and-defecate.mp4"
+	},
+	"/assets/walking/walker-and-dog.png": {
+		"type": "image/png",
+		"etag": "\"9b4d4-YwzaSvMoejMt4hkKHuAgqb5XldI\"",
+		"mtime": "2026-08-04T16:20:17.079Z",
+		"size": 636116,
+		"path": "../public/assets/walking/walker-and-dog.png"
+	},
+	"/assets/room/chocolate.png": {
+		"type": "image/png",
+		"etag": "\"ce3f-xzBNplRsBhWp4IIJBmRKj7Hk++A\"",
+		"mtime": "2026-08-11T02:52:18.712Z",
+		"size": 52799,
+		"path": "../public/assets/room/chocolate.png"
+	},
+	"/assets/room/cleaner.png": {
+		"type": "image/png",
+		"etag": "\"7fc7f-QWSEF3apbdBnGu5RWLfxm/s0IWE\"",
+		"mtime": "2026-08-03T12:21:42.792Z",
+		"size": 523391,
+		"path": "../public/assets/room/cleaner.png"
+	},
+	"/assets/room/detergent.png": {
+		"type": "image/png",
+		"etag": "\"abfb-h7NWlRvhCoDbTDPD0Lb2c3DZF8c\"",
+		"mtime": "2026-08-11T02:52:29.141Z",
+		"size": 44027,
+		"path": "../public/assets/room/detergent.png"
+	},
+	"/assets/room/food-bowl.png": {
+		"type": "image/png",
+		"etag": "\"123b8-6iVRcMQ5oRrBj8xCZI7gWTEqVPs\"",
+		"mtime": "2026-08-12T02:04:33.846Z",
+		"size": 74680,
+		"path": "../public/assets/room/food-bowl.png"
+	},
+	"/assets/room/empty-room.png": {
+		"type": "image/png",
+		"etag": "\"f1db0-WPh64SeqYCQMxhXWcwmi8pbWMgk\"",
+		"mtime": "2026-07-21T05:24:46.441Z",
+		"size": 990640,
+		"path": "../public/assets/room/empty-room.png"
 	},
 	"/assets/room/leash.png": {
 		"type": "image/png",
@@ -283,13 +388,6 @@ var public_assets_data_default = {
 		"mtime": "2026-07-21T06:23:32.364Z",
 		"size": 76568,
 		"path": "../public/assets/room/pee-pad.png"
-	},
-	"/assets/room/pet-bed.png": {
-		"type": "image/png",
-		"etag": "\"1f692-I+bt2gythr6t3JbYNhQk6w9Wvrk\"",
-		"mtime": "2026-07-21T06:20:16.186Z",
-		"size": 128658,
-		"path": "../public/assets/room/pet-bed.png"
 	},
 	"/assets/room/small-items.png": {
 		"type": "image/png",
@@ -312,89 +410,19 @@ var public_assets_data_default = {
 		"size": 56862,
 		"path": "../public/assets/room/water-bowl.png"
 	},
-	"/assets/room/wire.png": {
+	"/assets/room/pet-bed.png": {
 		"type": "image/png",
-		"etag": "\"109ff-0IvnVUCzXc0W6iZW30YRMd916Uk\"",
-		"mtime": "2026-08-11T02:49:07.633Z",
-		"size": 68095,
-		"path": "../public/assets/room/wire.png"
+		"etag": "\"1f692-I+bt2gythr6t3JbYNhQk6w9Wvrk\"",
+		"mtime": "2026-07-21T06:20:16.186Z",
+		"size": 128658,
+		"path": "../public/assets/room/pet-bed.png"
 	},
-	"/assets/species/bird.png": {
+	"/assets/room/food.png": {
 		"type": "image/png",
-		"etag": "\"451f-0Td2R9efWaGzKWo/euk5Xn5OOiI\"",
-		"mtime": "2026-07-28T19:04:51.759Z",
-		"size": 17695,
-		"path": "../public/assets/species/bird.png"
-	},
-	"/assets/pet-journey/first-day.mp4": {
-		"type": "video/mp4",
-		"etag": "\"27798a-iBjqROuEIbyja+wPexZ2/9NX9g0\"",
-		"mtime": "2026-08-03T16:31:09.061Z",
-		"size": 2587018,
-		"path": "../public/assets/pet-journey/first-day.mp4"
-	},
-	"/assets/pet-journey/urinate-and-defecate.mp4": {
-		"type": "video/mp4",
-		"etag": "\"22c546-rrzczsPWzd12AjoycKRiwLTk0/4\"",
-		"mtime": "2026-08-03T12:21:56.532Z",
-		"size": 2278726,
-		"path": "../public/assets/pet-journey/urinate-and-defecate.mp4"
-	},
-	"/assets/species/dog.png": {
-		"type": "image/png",
-		"etag": "\"80a7-5Q4gj2TU1fEo3bsi094cfV7IueM\"",
-		"mtime": "2026-07-28T19:03:54.510Z",
-		"size": 32935,
-		"path": "../public/assets/species/dog.png"
-	},
-	"/assets/species/cat.png": {
-		"type": "image/png",
-		"etag": "\"6c0d-kjvexoQUlLSlYxAjZ1B4nRTDfMM\"",
-		"mtime": "2026-07-28T19:04:13.454Z",
-		"size": 27661,
-		"path": "../public/assets/species/cat.png"
-	},
-	"/assets/species/rabbit.png": {
-		"type": "image/png",
-		"etag": "\"4e3e-SL5iurh5uwbHlCaLZPk/jnHmips\"",
-		"mtime": "2026-07-28T19:04:30.431Z",
-		"size": 20030,
-		"path": "../public/assets/species/rabbit.png"
-	},
-	"/assets/species/reptile.png": {
-		"type": "image/png",
-		"etag": "\"66a4-My88tXVoCQpp4cW3SitrPjBzL5s\"",
-		"mtime": "2026-07-28T19:05:13.812Z",
-		"size": 26276,
-		"path": "../public/assets/species/reptile.png"
-	},
-	"/assets/species/small-mammal.png": {
-		"type": "image/png",
-		"etag": "\"8403-VPnALA1eu4rjbDIyOQNOGqLi/Xs\"",
-		"mtime": "2026-07-28T19:05:32.748Z",
-		"size": 33795,
-		"path": "../public/assets/species/small-mammal.png"
-	},
-	"/assets/walking/poop-bag.png": {
-		"type": "image/png",
-		"etag": "\"abc8-w88z8sMJaOLoKmUoS5Rio9xfQV8\"",
-		"mtime": "2026-08-03T11:13:56.998Z",
-		"size": 43976,
-		"path": "../public/assets/walking/poop-bag.png"
-	},
-	"/assets/walking/door-to-sidewalk.jpg": {
-		"type": "image/jpeg",
-		"etag": "\"b1cb5-jE35lfquID5RFSGDBa9U5EjwvOY\"",
-		"mtime": "2026-08-04T16:19:51.941Z",
-		"size": 728245,
-		"path": "../public/assets/walking/door-to-sidewalk.jpg"
-	},
-	"/assets/walking/poop.png": {
-		"type": "image/png",
-		"etag": "\"4f939-0YEHkWJmgVEgs+Y4pGhtt24Sc3Q\"",
-		"mtime": "2026-08-03T11:14:05.908Z",
-		"size": 325945,
-		"path": "../public/assets/walking/poop.png"
+		"etag": "\"880d7-hWiLdz/IMLPz8QA9BlW8mZ2Wz2c\"",
+		"mtime": "2026-08-03T11:16:24.492Z",
+		"size": 557271,
+		"path": "../public/assets/room/food.png"
 	},
 	"/assets/species/dog/border-collie.png": {
 		"type": "image/png",
@@ -403,82 +431,12 @@ var public_assets_data_default = {
 		"size": 36267,
 		"path": "../public/assets/species/dog/border-collie.png"
 	},
-	"/assets/species/dog/chihuahua.png": {
+	"/assets/room/wire.png": {
 		"type": "image/png",
-		"etag": "\"585b-fhyRajDLDh+rHhL7UTmQERla46U\"",
-		"mtime": "2026-07-28T19:05:57.376Z",
-		"size": 22619,
-		"path": "../public/assets/species/dog/chihuahua.png"
-	},
-	"/assets/walking/park.png": {
-		"type": "image/png",
-		"etag": "\"176e8e-K/LGcTO0ubu8RZcaIfZTt2fl1xY\"",
-		"mtime": "2026-08-04T16:19:55.611Z",
-		"size": 1535630,
-		"path": "../public/assets/walking/park.png"
-	},
-	"/assets/species/dog/labrador.png": {
-		"type": "image/png",
-		"etag": "\"7ccb-wy/iD93ZmdZtvGZlP6RGHqenrqQ\"",
-		"mtime": "2026-07-28T19:07:29.498Z",
-		"size": 31947,
-		"path": "../public/assets/species/dog/labrador.png"
-	},
-	"/assets/room/nameplate.png": {
-		"type": "image/png",
-		"etag": "\"21a69b-gYB9DL8y3ueMboYMYxOUoAkvN5g\"",
-		"mtime": "2026-07-28T18:05:54.045Z",
-		"size": 2205339,
-		"path": "../public/assets/room/nameplate.png"
-	},
-	"/assets/species/dog/poodle.png": {
-		"type": "image/png",
-		"etag": "\"6be5-s4qk06FWkeLl1ojAuUvCDjtBwOA\"",
-		"mtime": "2026-07-28T19:06:19.013Z",
-		"size": 27621,
-		"path": "../public/assets/species/dog/poodle.png"
-	},
-	"/assets/walking/sidewalk-to-home.jpg": {
-		"type": "image/jpeg",
-		"etag": "\"b866d-PfcnfqTeNBKalzHRQ5akk1i7DGo\"",
-		"mtime": "2026-08-04T16:19:57.037Z",
-		"size": 755309,
-		"path": "../public/assets/walking/sidewalk-to-home.jpg"
-	},
-	"/assets/walking/walker-and-dog-poop.png": {
-		"type": "image/png",
-		"etag": "\"e06f6-/h+/YVd1gxFfTfrMEkyPlxskHio\"",
-		"mtime": "2026-08-04T16:20:08.975Z",
-		"size": 919286,
-		"path": "../public/assets/walking/walker-and-dog-poop.png"
-	},
-	"/assets/walking/park-poop-event.png": {
-		"type": "image/png",
-		"etag": "\"1dbdce-5brOwT4FeLsr0uQEI0/zEwBb9KU\"",
-		"mtime": "2026-08-04T16:19:54.742Z",
-		"size": 1949134,
-		"path": "../public/assets/walking/park-poop-event.png"
-	},
-	"/assets/walking/walker-and-dog.png": {
-		"type": "image/png",
-		"etag": "\"9b4d4-YwzaSvMoejMt4hkKHuAgqb5XldI\"",
-		"mtime": "2026-08-04T16:20:17.079Z",
-		"size": 636116,
-		"path": "../public/assets/walking/walker-and-dog.png"
-	},
-	"/assets/species/dog/shiba.png": {
-		"type": "image/png",
-		"etag": "\"34fb0-ye79B46HiK1shmSLHOrtAmaZAMM\"",
-		"mtime": "2026-08-03T11:07:13.763Z",
-		"size": 217008,
-		"path": "../public/assets/species/dog/shiba.png"
-	},
-	"/assets/pet-journey/sick.mp4": {
-		"type": "video/mp4",
-		"etag": "\"4e4be1-c7dRlR8mpi2x9v6uc2bCYBwBEJs\"",
-		"mtime": "2026-08-12T06:03:13.799Z",
-		"size": 5131233,
-		"path": "../public/assets/pet-journey/sick.mp4"
+		"etag": "\"109ff-0IvnVUCzXc0W6iZW30YRMd916Uk\"",
+		"mtime": "2026-08-11T02:49:07.633Z",
+		"size": 68095,
+		"path": "../public/assets/room/wire.png"
 	},
 	"/assets/welcome/hero-life-preview.png": {
 		"type": "image/png",
@@ -487,6 +445,27 @@ var public_assets_data_default = {
 		"size": 2237292,
 		"path": "../public/assets/welcome/hero-life-preview.png"
 	},
+	"/assets/species/dog/labrador.png": {
+		"type": "image/png",
+		"etag": "\"7ccb-wy/iD93ZmdZtvGZlP6RGHqenrqQ\"",
+		"mtime": "2026-07-28T19:07:29.498Z",
+		"size": 31947,
+		"path": "../public/assets/species/dog/labrador.png"
+	},
+	"/assets/species/dog/chihuahua.png": {
+		"type": "image/png",
+		"etag": "\"585b-fhyRajDLDh+rHhL7UTmQERla46U\"",
+		"mtime": "2026-07-28T19:05:57.376Z",
+		"size": 22619,
+		"path": "../public/assets/species/dog/chihuahua.png"
+	},
+	"/assets/species/dog/poodle.png": {
+		"type": "image/png",
+		"etag": "\"6be5-s4qk06FWkeLl1ojAuUvCDjtBwOA\"",
+		"mtime": "2026-07-28T19:06:19.013Z",
+		"size": 27621,
+		"path": "../public/assets/species/dog/poodle.png"
+	},
 	"/assets/welcome/prep-room.png": {
 		"type": "image/png",
 		"etag": "\"26d90f-AN+idVI+QskIM3mx2GRMCXfxWD0\"",
@@ -494,19 +473,12 @@ var public_assets_data_default = {
 		"size": 2545935,
 		"path": "../public/assets/welcome/prep-room.png"
 	},
-	"/assets/pet-journey/senior-life.mp4": {
+	"/assets/pet-journey/sick.mp4": {
 		"type": "video/mp4",
-		"etag": "\"64f8da-x4J5MHFcx6IdK40zsN2r6w1wDSQ\"",
-		"mtime": "2026-08-10T02:41:27.429Z",
-		"size": 6617306,
-		"path": "../public/assets/pet-journey/senior-life.mp4"
-	},
-	"/assets/pet-journey/arrival-transition.mp4": {
-		"type": "video/mp4",
-		"etag": "\"7b23a2-H0H2es+D5x1gLjJaTH6VklOZlKY\"",
-		"mtime": "2026-08-03T16:42:25.570Z",
-		"size": 8070050,
-		"path": "../public/assets/pet-journey/arrival-transition.mp4"
+		"etag": "\"4e4be1-c7dRlR8mpi2x9v6uc2bCYBwBEJs\"",
+		"mtime": "2026-08-12T06:03:13.799Z",
+		"size": 5131233,
+		"path": "../public/assets/pet-journey/sick.mp4"
 	},
 	"/assets/welcome/lifetime-costs.png": {
 		"type": "image/png",
@@ -515,12 +487,40 @@ var public_assets_data_default = {
 		"size": 2644687,
 		"path": "../public/assets/welcome/lifetime-costs.png"
 	},
+	"/assets/species/dog/shiba.png": {
+		"type": "image/png",
+		"etag": "\"34fb0-ye79B46HiK1shmSLHOrtAmaZAMM\"",
+		"mtime": "2026-08-03T11:07:13.763Z",
+		"size": 217008,
+		"path": "../public/assets/species/dog/shiba.png"
+	},
 	"/assets/welcome/scenario-grid.png": {
 		"type": "image/png",
 		"etag": "\"28b0e3-b+LBUdrykjpn0vUDH/CYzNVUFCU\"",
 		"mtime": "2026-07-15T05:13:25.372Z",
 		"size": 2666723,
 		"path": "../public/assets/welcome/scenario-grid.png"
+	},
+	"/assets/room/nameplate.png": {
+		"type": "image/png",
+		"etag": "\"21a69b-gYB9DL8y3ueMboYMYxOUoAkvN5g\"",
+		"mtime": "2026-07-28T18:05:54.045Z",
+		"size": 2205339,
+		"path": "../public/assets/room/nameplate.png"
+	},
+	"/assets/pet-journey/arrival-transition.mp4": {
+		"type": "video/mp4",
+		"etag": "\"7b23a2-H0H2es+D5x1gLjJaTH6VklOZlKY\"",
+		"mtime": "2026-08-03T16:42:25.570Z",
+		"size": 8070050,
+		"path": "../public/assets/pet-journey/arrival-transition.mp4"
+	},
+	"/assets/pet-journey/senior-life.mp4": {
+		"type": "video/mp4",
+		"etag": "\"64f8da-x4J5MHFcx6IdK40zsN2r6w1wDSQ\"",
+		"mtime": "2026-08-10T02:41:27.429Z",
+		"size": 6617306,
+		"path": "../public/assets/pet-journey/senior-life.mp4"
 	},
 	"/assets/pet-journey/time-passes-aging.mp4": {
 		"type": "video/mp4",

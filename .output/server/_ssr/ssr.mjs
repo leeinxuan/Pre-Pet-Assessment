@@ -2,37 +2,37 @@ import * as __viteRscAsyncHooks from "node:async_hooks";
 import { AsyncLocalStorage as AsyncLocalStorage$1 } from "node:async_hooks";
 //#region node_modules/.nitro/vite/services/ssr/__vite_rsc_assets_manifest.js
 var __vite_rsc_assets_manifest_default = {
-	"bootstrapScriptContent": "import(\"/assets/index-X5pi6nKC.js\")",
+	"bootstrapScriptContent": "import(\"/assets/index-r2WndqI4.js\")",
 	"clientReferenceDeps": {
 		"6efdf509a785": {
 			"js": [
-				"/assets/page-7K_Mamn3.js",
+				"/assets/page-Pi-sPn5K.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js",
-				"/assets/index-X5pi6nKC.js"
+				"/assets/index-r2WndqI4.js"
 			],
 			"css": []
 		},
-		"d041429ec63f": {
+		"ee0430dd8bd8": {
 			"js": [
-				"/assets/index-X5pi6nKC.js",
+				"/assets/index-r2WndqI4.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
 			"css": []
 		},
-		"e562e7309659": {
+		"431ddbe7c781": {
 			"js": [
-				"/assets/layout-segment-context-BagqSWL3.js",
+				"/assets/layout-segment-context-DPSE0xJi.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
-				"/assets/index-X5pi6nKC.js",
+				"/assets/index-r2WndqI4.js",
 				"/assets/framework-CXnKph_e.js"
 			],
 			"css": []
 		},
-		"8a1c26e77cc3": {
+		"642af46202bf": {
 			"js": [
-				"/assets/index-X5pi6nKC.js",
+				"/assets/index-r2WndqI4.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
@@ -41,7 +41,7 @@ var __vite_rsc_assets_manifest_default = {
 	},
 	"serverResources": { "app/layout.tsx": {
 		"js": [],
-		"css": ["/assets/index-B0v3qCw-.css"]
+		"css": ["/assets/index-CR7T2o4n.css"]
 	} }
 };
 //#endregion
@@ -11598,13 +11598,13 @@ function createFromReadableStream(stream, options = {}) {
 	});
 }
 var client_references_default = {
-	"6efdf509a785": async () => {
-		const m = await import("./page-DfLGhhrp.mjs");
-		return { get "default"() {
-			return m["default"];
+	"431ddbe7c781": async () => {
+		const m = await import("./layout-segment-context-5v2E3fkH.mjs");
+		return { get "LayoutSegmentProvider"() {
+			return m["LayoutSegmentProvider"];
 		} };
 	},
-	"8a1c26e77cc3": async () => {
+	"642af46202bf": async () => {
 		const m = await Promise.resolve().then(() => slot_exports);
 		return {
 			get "Children"() {
@@ -11618,8 +11618,14 @@ var client_references_default = {
 			}
 		};
 	},
-	"d041429ec63f": async () => {
-		const m = await import("./error-boundary-DmlIdxYR.mjs");
+	"6efdf509a785": async () => {
+		const m = await import("./page-0r3uzViJ.mjs");
+		return { get "default"() {
+			return m["default"];
+		} };
+	},
+	"ee0430dd8bd8": async () => {
+		const m = await import("./error-boundary-BuZvYp6W.mjs");
 		return {
 			get "ErrorBoundary"() {
 				return m["ErrorBoundary"];
@@ -11637,12 +11643,6 @@ var client_references_default = {
 				return m["UnauthorizedBoundary"];
 			}
 		};
-	},
-	"e562e7309659": async () => {
-		const m = await import("./layout-segment-context-B1vUnmxP.mjs");
-		return { get "LayoutSegmentProvider"() {
-			return m["LayoutSegmentProvider"];
-		} };
 	}
 };
 var import_react_dom = /* @__PURE__ */ __toESM(require_react_dom(), 1);

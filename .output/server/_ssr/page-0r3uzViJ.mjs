@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-DfLGhhrp.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-0r3uzViJ.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -3469,7 +3469,14 @@ function PdfFab() {
 		type: "button",
 		className: "primary pdf-fab",
 		onClick: () => window.print(),
-		children: "輸出 PDF"
+		"aria-label": "列印照顧準備總覽 PDF",
+		title: "列印 PDF",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", {
+			viewBox: "0 0 24 24",
+			"aria-hidden": "true",
+			focusable: "false",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M7 3h10a1 1 0 0 1 1 1v4h1a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-1v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-1H5a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3h1V4a1 1 0 0 1 1-1Zm1 5h8V5H8v3Zm0 8v3h8v-3H8Zm11-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5 10a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h1v-2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2h1a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5Z" })
+		})
 	}), document.body);
 }
 function OptionButton({ label, selected, onClick, icon, simple = false }) {

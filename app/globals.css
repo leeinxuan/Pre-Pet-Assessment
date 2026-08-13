@@ -2916,9 +2916,20 @@ html, body { overflow-x: clip; }
   right: 24px !important;
   bottom: 24px !important;
   z-index: 9999 !important;
-  min-width: 132px;
-  border-radius: 999px;
+  width: 62px;
+  height: 62px;
+  min-width: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
   box-shadow: 0 9px 0 var(--gold), 0 18px 42px rgba(48, 41, 31, .24);
+}
+
+.pdf-fab svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
 }
 
 .pdf-fab:hover,
@@ -3023,8 +3034,13 @@ html, body { overflow-x: clip; }
   .floating-pdf-button {
     right: 16px !important;
     bottom: calc(16px + env(safe-area-inset-bottom)) !important;
-    min-width: 112px;
-    padding: 12px 16px;
+    width: 54px;
+    height: 54px;
+    padding: 0;
+  }
+  .pdf-fab svg {
+    width: 25px;
+    height: 25px;
   }
   .care-a4-header .care-breed-card {
     justify-content: center;

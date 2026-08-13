@@ -17,8 +17,8 @@ function PdfFab() {
   if (!mounted) return null;
 
   return createPortal(
-    <button type="button" className="primary pdf-fab" onClick={() => window.print()}>
-      輸出 PDF
+    <button type="button" className="primary pdf-fab" onClick={() => window.print()} aria-label="列印照顧準備總覽 PDF" title="列印 PDF">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h10a1 1 0 0 1 1 1v4h1a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-1v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-1H5a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3h1V4a1 1 0 0 1 1-1Zm1 5h8V5H8v3Zm0 8v3h8v-3H8Zm11-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5 10a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h1v-2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2h1a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5Z" /></svg>
     </button>,
     document.body
   );
