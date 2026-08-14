@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CM_luF5B.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-DY8lb48l.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -2183,21 +2183,21 @@ function lerp(start, end, progress) {
 }
 var walkingScenePaths = {
 	0: {
-		turnAt: .35,
+		turnAt: .55,
 		start: {
 			x: 8,
 			y: 50,
 			scale: 1
 		},
 		turn: {
-			x: 30,
+			x: 45,
 			y: 50,
 			scale: 1
 		},
 		end: {
-			x: 50,
+			x: 45,
 			y: 20,
-			scale: .55
+			scale: .4
 		}
 	},
 	1: {
@@ -2209,12 +2209,12 @@ var walkingScenePaths = {
 		},
 		turn: {
 			x: 34,
-			y: 35,
+			y: 28,
 			scale: .8
 		},
 		end: {
 			x: 60,
-			y: 20,
+			y: 6,
 			scale: .6
 		}
 	},
@@ -2228,24 +2228,29 @@ var walkingScenePaths = {
 		turn: {
 			x: 30,
 			y: 50,
-			scale: .8
+			scale: 1
 		},
 		end: {
-			x: 60,
+			x: 45,
 			y: 50,
 			scale: 1
 		}
 	}
 };
+var walkingSceneCompletionAt = { 1: 80 };
+function getWalkingCompletionPosition(sceneIndex) {
+	return walkingSceneCompletionAt[sceneIndex] ?? 100;
+}
 function getWalkingCharacterStyle(sceneIndex, position) {
 	const path = walkingScenePaths[sceneIndex];
+	const completionPosition = getWalkingCompletionPosition(sceneIndex);
 	if (!path) return {
 		"--walk-left": `${Math.min(78, 5 + position * .73)}%`,
 		"--walk-bottom": "2%",
 		"--walk-translate-y": "0",
 		"--walk-scale": 1
 	};
-	const progress = Math.max(0, Math.min(1, position / 100));
+	const progress = Math.max(0, Math.min(1, position / completionPosition));
 	const { turnAt, start, turn, end } = path;
 	const segmentProgress = progress <= turnAt ? progress / turnAt : (progress - turnAt) / (1 - turnAt);
 	const from = progress <= turnAt ? start : turn;
@@ -2347,6 +2352,7 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 			setMoving(false);
 			return;
 		}
+		const completionPosition = getWalkingCompletionPosition(sceneIndex);
 		setMoving(true);
 		if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
 		movingTimerRef.current = window.setTimeout(() => setMoving(false), 180);
@@ -2355,8 +2361,8 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 				setMoving(false);
 				return 50;
 			}
-			const next = Math.min(100, current + walkingStep);
-			if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
+			const next = Math.min(completionPosition, current + walkingStep);
+			if (next >= completionPosition && current < completionPosition && completingSceneRef.current !== sceneIndex) {
 				completingSceneRef.current = sceneIndex;
 				setCompletedSceneIndex(sceneIndex);
 			}

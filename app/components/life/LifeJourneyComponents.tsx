@@ -1264,29 +1264,39 @@ type WalkingScenePath = {
 const walkingScenePaths: Partial<Record<number, WalkingScenePath>> = {
   // 場景 1：家門口往人行道
   0: {
-    turnAt: 0.65,
+    turnAt: 0.55,
     start: { x: 8, y: 50, scale: 1 },
     turn: { x: 45, y: 50, scale: 1 },
-    end: { x: 45, y: 10, scale: 0.3 },
+    end: { x: 45, y: 20, scale: 0.4 },
   },
   // 場景 2：公園。這裡設定成斜直線；turn 放在 start/end 的中點即可避免轉彎。
   1: {
     turnAt: 0.5,
     start: { x: 8, y: 50, scale: 1 },
-    turn: { x: 34, y: 35, scale: 0.8 },
-    end: { x: 60, y: 20, scale: 0.6 },
+    turn: { x: 29, y: 32.5, scale: 0.8 },
+    end: { x: 50, y: 15, scale: 0.6 },
   },
   // 場景 4：人行道往家門口。可依畫面手動調整路徑與縮放。
   3: {
     turnAt: 0.55,
     start: { x: 5, y: 10, scale: 0.3 },
-    turn: { x: 30, y: 50, scale: 1 },
+    turn: { x: 15, y: 50, scale: 1 },
     end: { x: 45, y: 50, scale: 1 },
   },
 };
 
+const walkingSceneCompletionAt: Partial<Record<number, number>> = {
+  // 場景 2 視覺上較早抵達終點，縮短完成距離，避免最後還要多按幾下。
+  1: 80,
+};
+
+function getWalkingCompletionPosition(sceneIndex: number) {
+  return walkingSceneCompletionAt[sceneIndex] ?? 100;
+}
+
 function getWalkingCharacterStyle(sceneIndex: number, position: number): CSSProperties {
   const path = walkingScenePaths[sceneIndex];
+  const completionPosition = getWalkingCompletionPosition(sceneIndex);
 
   if (!path) {
     return {
@@ -1297,7 +1307,7 @@ function getWalkingCharacterStyle(sceneIndex: number, position: number): CSSProp
     } as CSSProperties;
   }
 
-  const progress = Math.max(0, Math.min(1, position / 100));
+  const progress = Math.max(0, Math.min(1, position / completionPosition));
   const { turnAt, start, turn, end } = path;
 
   const segmentProgress = progress <= turnAt
@@ -1416,6 +1426,7 @@ function WalkingActivity({
       setMoving(false);
       return;
     }
+    const completionPosition = getWalkingCompletionPosition(sceneIndex);
     setMoving(true);
     if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
     movingTimerRef.current = window.setTimeout(() => setMoving(false), 180);
@@ -1424,8 +1435,8 @@ function WalkingActivity({
         setMoving(false);
         return 50;
       }
-      const next = Math.min(100, current + walkingStep);
-      if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
+      const next = Math.min(completionPosition, current + walkingStep);
+      if (next >= completionPosition && current < completionPosition && completingSceneRef.current !== sceneIndex) {
         completingSceneRef.current = sceneIndex;
         setCompletedSceneIndex(sceneIndex);
       }
