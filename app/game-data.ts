@@ -131,7 +131,7 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   leash: { id: "leash", name: "牽繩與胸背帶", amount: 950, category: "用品", stage: "領養前準備", recurring: false },
   toy: { id: "toy", name: "\u73a9\u5177", amount: 450, category: "\u4e00\u6b21\u6027\u6e96\u5099\u8cbb", stage: "\u9818\u990a\u524d\u6e96\u5099", recurring: false },
   toilet: { id: "toilet", name: "尿墊或便盆", amount: 500, category: "清潔", stage: "領養前準備", recurring: false },
-  cleaner: { id: "cleaner", name: "寵物友善清潔用品", amount: 420, category: "清潔", stage: "領養前準備", recurring: false },
+  cleaner: { id: "cleaner", name: "寵物專用清潔用品", amount: 420, category: "清潔", stage: "領養前準備", recurring: false },
   "starter-food": { id: "starter-food", name: "初期飼料", amount: 800, category: "飲食", stage: "領養前準備", recurring: false },
   "monthly-food-main": { id: "monthly-food-main", name: "\u6bcf\u6708\u4e3b\u98df\u8cbb", amount: 1200, category: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa", stage: "\u65e5\u5e38\u7167\u8b77", recurring: true },
   "monthly-waste-bags": { id: "monthly-waste-bags", name: "\u6bcf\u6708\u64bf\u4fbf\u888b\u8207\u6e05\u6f54\u6d88\u8017\u54c1", amount: 200, category: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa", stage: "\u65e5\u5e38\u6563\u6b65", recurring: true },
@@ -152,14 +152,14 @@ export const roomItems: RoomItem[] = [
   { id: "water-bowl", label: "水碗", icon: "💧", image: "/assets/room/water-bowl.png", placement: { x: 32, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "每天確認水碗乾淨，並提供足量的新鮮飲水。" },
   { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/assets/room/food-bowl.png", placement: { x: 41, y: 90, width: 10, layer: 3 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
   { id: "toilet", label: "尿墊", icon: "▧", image: "/assets/room/pee-pad.png", placement: { x: 15, y: 85, width: 20, layer: 1 }, required: true, need: "排泄", expenseId: "toilet", purpose: "排泄用品應與食物及休息位置分開，方便小狗建立習慣。" },
-  { id: "cleaner", label: "清潔用品", icon: "🧼", image: "/assets/room/cleaner.png", placement: { x: 39, y: 46, width: 10, layer: 3 }, required: true, need: "清潔", expenseId: "cleaner", purpose: "準備安全的清潔用品，並收在小狗無法自行取得的位置。" },
+  { id: "cleaner", label: "寵物專用清潔用品", icon: "🧼", image: "/assets/room/cleaner.png", placement: { x: 39, y: 46, width: 10, layer: 3 }, required: true, need: "清潔", expenseId: "cleaner", purpose: "日常清潔請選擇寵物專用清潔用品，並妥善收納。" },
   { id: "food", label: "飼料", icon: "🦴", image: "/assets/room/food.png", placement: { x: 50, y: 85, width: 9, layer: 3 }, required: true, need: "飲食", expenseId: "starter-food", purpose: "選擇符合小狗年齡、體型及健康需求的主食，並妥善保存。" },
 ];
 
 export const hazards: HazardItem[] = [
   { id: "small-parts", label: "小物品", icon: "●", image: "/assets/room/small-items.png", placement: { x: 40, y: 75, width: 12, layer: 5 }, danger: "容易被誤吞，可能造成噎住或腸胃阻塞。", handling: "收進小狗無法取得的抽屜或收納盒。" },
   { id: "chocolate", label: "巧克力", icon: "🍫", image: "/assets/room/chocolate.png", placement: { x: 89, y: 78, width: 10, layer: 5  }, danger: "含有不適合狗狗的成分，可能危害健康。", handling: "放進有門的高處櫃子。" },
-  { id: "chemicals", label: "清潔劑", icon: "🧴", image: "/assets/room/detergent.png", placement: { x: 62, y: 64, width: 10, layer: 5 }, danger: "可能造成誤食或皮膚接觸風險。", handling: "收進上鎖或小狗無法開啟的櫃子。" },
+  { id: "chemicals", label: "一般清潔劑", icon: "🧴", image: "/assets/room/detergent.png", placement: { x: 62, y: 64, width: 10, layer: 5 }, danger: "一般清潔劑可能含有刺激性或不適合寵物接觸的成分。", handling: "應收在牠碰不到的地方；日常清潔請選擇寵物專用清潔用品。" },
   { id: "cables", label: "電線", icon: "🔌", image: "/assets/room/wire.png", placement: { x: 12, y: 78, width: 20, layer: 5 }, danger: "可能被啃咬，造成受傷或觸電。", handling: "整理固定或加裝電線保護套。" },
 ];
 
@@ -209,7 +209,7 @@ export const trunkItems: TrunkItem[] = [
     feedback: "牽繩已收好，抵達後可以先確認安全裝備再讓小狗下車。", expenseIds: ["leash"], placement: { x: 30, y: 60, width: 25, layer: 4 },
   },
   {
-    id: "cleaner", label: "清潔用品", kind: "supply", image: "/assets/room/cleaner.png", preparedLabel: "已準備",
+    id: "cleaner", label: "寵物專用清潔用品", kind: "supply", image: "/assets/room/cleaner.png", preparedLabel: "已準備",
     description: "小狗在陌生環境或移動途中可能因緊張而排泄或嘔吐，可準備清潔袋、擦拭用品及安全的清潔工具。",
     reason: "途中若發生排泄或髒污，可以盡快整理並維持運輸空間舒適。",
     caution: "包裝需密封，與飲水分開收納，也不要放進運輸籠或讓小狗直接咬到。",

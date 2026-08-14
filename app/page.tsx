@@ -290,9 +290,9 @@ export default function Home() {
 
   function renderPreparation() {
     if (preparationTask === 0) {
-      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} onPrepare={addRoomItem} onToggleHazard={toggleHazard} onSavePetName={setPetName} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
+      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} onPrepare={addRoomItem} onToggleHazard={toggleHazard} onSavePetName={setPetName} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
     }
-    return <CarTrunkPreparation selected={trunkSelected} petName={petName} onSelect={selectTrunkItem} onBack={() => changePreparationTask(0)} onNext={() => { setPreparationReached((current) => Math.max(current, 1)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation selected={trunkSelected} petName={petName} breed={breed} onSelect={selectTrunkItem} onBack={() => changePreparationTask(0)} onNext={() => { setPreparationReached((current) => Math.max(current, 1)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {

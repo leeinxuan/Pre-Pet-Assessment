@@ -115,7 +115,7 @@ function CorrectFeedbackLayout({
         {videoFailed ? (
           <div className="scene-video-fallback" role="status">{fallbackText}</div>
         ) : (
-          <video src={videoSrc} autoPlay playsInline preload="metadata" aria-label="正確處置後的正向結果影片" onEnded={onVideoEnded} onError={onVideoError} />
+          <VideoWithToggle src={videoSrc} ariaLabel="正確處置後的正向結果影片" onEnded={onVideoEnded} onError={onVideoError} />
         )}
       </div>
       <div className="correct-feedback-copy">
@@ -159,6 +159,68 @@ function ScenarioOptionCard({
     </button>
   );
 }
+
+function VideoWithToggle({
+  className,
+  src,
+  loop = false,
+  autoPlay = true,
+  ariaLabel,
+  onError,
+  onEnded,
+}: {
+  className?: string;
+  src: string;
+  loop?: boolean;
+  autoPlay?: boolean;
+  ariaLabel: string;
+  onError?: () => void;
+  onEnded?: () => void;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [paused, setPaused] = useState(!autoPlay);
+
+  useEffect(() => {
+    setPaused(!autoPlay);
+  }, [autoPlay, src]);
+
+  function toggleVideo() {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play().then(() => setPaused(false)).catch(() => setPaused(true));
+    } else {
+      video.pause();
+      setPaused(true);
+    }
+  }
+
+  return (
+    <>
+      <video
+        ref={videoRef}
+        className={className}
+        src={src}
+        autoPlay={autoPlay}
+        loop={loop}
+        playsInline
+        preload="metadata"
+        aria-label={ariaLabel}
+        onPlay={() => setPaused(false)}
+        onPause={() => setPaused(true)}
+        onEnded={() => {
+          setPaused(true);
+          onEnded?.();
+        }}
+        onError={onError}
+      />
+      <button type="button" className="video-toggle-button" onClick={toggleVideo} aria-label={paused ? "播放影片" : "暫停影片"} title={paused ? "播放" : "暫停"}>
+        {paused ? <span className="video-play-icon" aria-hidden="true" /> : <span className="video-pause-icon" aria-hidden="true"><i /><i /></span>}
+      </button>
+    </>
+  );
+}
+
 export function ArrivalTransitionVideo({ onContinue }: { onContinue: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hasFinishedArrivalVideo = useRef(false);
@@ -401,7 +463,7 @@ function ScenarioCard({
           {scenarioVideo ? (
             sceneVideoFailed
               ? <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>
-              : <video className="scene-video" src={scenarioVideo.src} autoPlay loop playsInline preload="metadata" aria-label={scenarioVideo.label} onError={() => setSceneVideoFailed(true)} />
+              : <VideoWithToggle className="scene-video" src={scenarioVideo.src} loop ariaLabel={scenarioVideo.label} onError={() => setSceneVideoFailed(true)} />
           ) : <div className="scene-sprite" aria-hidden="true" />}
           <p>{scenario.timeLabel}</p>
         </div>
@@ -427,12 +489,14 @@ function VideoScenarioActivity({
   petName,
   onChoose,
   onCorrectComplete,
+  resetSignal,
 }: {
   scenario: Scenario;
   answer?: ScenarioAnswer;
   petName: string;
   onChoose: (choice: ScenarioChoice) => void;
   onCorrectComplete: () => void;
+  resetSignal: number;
 }) {
   const [mode, setMode] = useState<"question" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
   const [videoFailed, setVideoFailed] = useState(false);
@@ -445,6 +509,13 @@ function VideoScenarioActivity({
   useVideoMetadataPreload(source);
   useVideoMetadataPreload(getCorrectAnswerVideo(scenario.id));
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
+
+  useEffect(() => {
+    if (resetSignal <= 0) return;
+    setMode("question");
+    setVideoFailed(false);
+    setVideoFinished(false);
+  }, [resetSignal]);
 
   function choose(choice: ScenarioChoice) {
     onChoose(choice);
@@ -486,7 +557,7 @@ function VideoScenarioActivity({
       <div className="video-scenario-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(scenario.title, petName)}</h1><p>{withPetName(scenario.description, petName)}</p></div>
       <div className="video-scenario-layout">
         <div className="video-scenario-visual">
-          <video src={source} autoPlay loop playsInline preload="metadata" aria-label={scenario.id === "arrival-adjustment" ? "小狗第一天適應新家的影片" : scenario.id === "growing-old" ? "小狗逐漸進入高齡的情境影片" : "柴犬常見健康問題觀察影片"} onError={() => setVideoFailed(true)} />
+          <VideoWithToggle src={source} loop ariaLabel={scenario.id === "arrival-adjustment" ? "小狗第一天適應新家的影片" : scenario.id === "growing-old" ? "小狗逐漸進入高齡的情境影片" : "柴犬常見健康問題觀察影片"} onError={() => setVideoFailed(true)} />
           {videoFailed && <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>}
         </div>
         {mode === "incorrect" && selectedChoice ? (
@@ -566,12 +637,9 @@ function DailyBehaviorActivity({
           {videoFailed ? (
             <div className="scene-video-fallback" role="status">正向結果影片目前無法播放，仍可繼續下一段生活互動。</div>
           ) : (
-            <video
+            <VideoWithToggle
               src={getCorrectAnswerVideo(currentIndex)}
-              autoPlay
-              playsInline
-              preload="metadata"
-              aria-label="改善後的正向結果影片"
+              ariaLabel="改善後的正向結果影片"
               onEnded={() => setVideoFinished(true)}
               onError={() => {
                 setVideoFailed(true);
@@ -600,13 +668,10 @@ function DailyBehaviorActivity({
         <p>{withPetName(scenario.description, petName)}</p>
       </div>
       <div className="daily-behavior-video">
-        <video
+        <VideoWithToggle
           src={dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4"}
-          autoPlay
           loop
-          playsInline
-          preload="metadata"
-          aria-label="小狗日常行為問題情境影片"
+          ariaLabel="小狗日常行為問題情境影片"
           onError={() => setVideoFailed(true)}
         />
         {videoFailed && <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>}
@@ -637,11 +702,13 @@ function DailyBehaviorActivityMulti({
   petName,
   onChooseMultiple,
   onContinue,
+  resetSignal,
 }: {
   answers: Record<string, ScenarioAnswer>;
   petName: string;
   onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
   onContinue: () => void;
+  resetSignal: number;
 }) {
   const scenarios = dailyBehaviorScenarioIds
     .map((id) => lifeScenarios.find((entry) => entry.id === id))
@@ -661,6 +728,14 @@ function DailyBehaviorActivityMulti({
   useVideoMetadataPreload(behaviorVideoSource);
   useVideoMetadataPreload(nextBehaviorScenario ? dailyBehaviorVideos[nextBehaviorScenario.id] : undefined);
   useVideoMetadataPreload(getCorrectAnswerVideo(currentIndex));
+
+  useEffect(() => {
+    if (resetSignal <= 0) return;
+    setMode("question");
+    setRetryCopy(null);
+    setVideoFailed(false);
+    setVideoFinished(false);
+  }, [resetSignal]);
 
   if (!scenario) return null;
 
@@ -683,7 +758,8 @@ function DailyBehaviorActivityMulti({
     if (!choice) return;
 
     if (wrongChoiceIds.includes(choiceId) || choice.result === "incorrect") {
-      onChooseMultiple(scenario, [choice], "incorrect");
+      const selectedChoices = scenario.choices.filter((item) => selectedIds.includes(item.id) || item.id === choice.id);
+      onChooseMultiple(scenario, selectedChoices, "incorrect");
       setRetryCopy({
         title: "這個做法可能不太適合",
         explanation: choice.explanation,
@@ -718,7 +794,6 @@ function DailyBehaviorActivityMulti({
   }
 
   function retry() {
-    setSelectedIds([]);
     setRetryCopy(null);
     setMode("question");
   }
@@ -760,13 +835,10 @@ function DailyBehaviorActivityMulti({
         <p>{withPetName(scenario.description, petName)}</p>
       </div>
       <div className="daily-behavior-video">
-        <video
+        <VideoWithToggle
           src={behaviorVideoSource}
-          autoPlay
           loop
-          playsInline
-          preload="metadata"
-          aria-label="日常行為照顧影片"
+          ariaLabel="日常行為照顧影片"
           onError={() => setVideoFailed(true)}
         />
         {videoFailed && <div className="scene-video-fallback" role="status">影片暫時無法播放，請直接完成右側互動。</div>}
@@ -808,6 +880,7 @@ function BusyCareActivity({
   onMembersChange: _onMembersChange,
   onChoose,
   onContinue,
+  resetSignal,
 }: {
   scenario: Scenario;
   answer?: ScenarioAnswer;
@@ -816,6 +889,7 @@ function BusyCareActivity({
   onMembersChange: (members: CareMember[]) => void;
   onChoose: (choice: ScenarioChoice) => void;
   onContinue: () => void;
+  resetSignal: number;
 }) {
   const [mode, setMode] = useState<"question" | "family" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : "question");
   const [familyFeedback, setFamilyFeedback] = useState<{ name: string; reason: string } | null>(null);
@@ -826,6 +900,14 @@ function BusyCareActivity({
     { id: "dad", name: "爸爸", label: "近期工作繁忙的爸爸", reason: "爸爸近期工作繁忙，可能無法穩定負責餵食、飲水、排泄與陪伴。" },
     { id: "younger-brother", name: "年幼的弟弟", label: "年幼的弟弟", reason: "弟弟年紀太小，還不能獨立照顧小狗，也不適合單獨承擔照顧責任。" },
   ];
+
+  useEffect(() => {
+    if (resetSignal <= 0) return;
+    setMode("question");
+    setFamilyFeedback(null);
+    setVideoFailed(false);
+    setVideoFinished(false);
+  }, [resetSignal]);
 
   function choose(choice: ScenarioChoice) {
     if (choice.id === "family-helper") {
@@ -1026,6 +1108,7 @@ function ArrivalMealActivity({
   const complete = activity.arrivalMealFoodReady && activity.arrivalMealWaterReady;
   const hasRecordedMeal = useRef(false);
   const [foodWarning, setFoodWarning] = useState<{ title: string; text: string } | null>(null);
+  const [unsafeFoodIds, setUnsafeFoodIds] = useState<("macadamia" | "bones")[]>([]);
   useEffect(() => {
     if (!complete || hasRecordedMeal.current) return;
     hasRecordedMeal.current = true;
@@ -1042,6 +1125,7 @@ function ArrivalMealActivity({
     onChange({ arrivalMealWaterReady: true });
   }
   function warnUnsafeFood(kind: "macadamia" | "bones") {
+    setUnsafeFoodIds((current) => current.includes(kind) ? current : [...current, kind]);
     setFoodWarning(kind === "macadamia"
       ? {
         title: "這個不能給小狗吃",
@@ -1062,8 +1146,8 @@ function ArrivalMealActivity({
       <aside className="arrival-meal-supplies" aria-label="晚餐用品">
         {!activity.arrivalMealFoodReady && <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src="/assets/room/food.png" alt="飼料" /><span>飼料</span></button>}
         {!activity.arrivalMealWaterReady && <button type="button" onClick={prepareWater}><img src="/assets/pet-journey/waterbottle.png" alt="水瓶" /><span>水</span></button>}
-        <button type="button" className={foodWarning?.title === "這個不能給小狗吃" ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood("macadamia")}><img src="/assets/pet-journey/macadamia-nuts.png" alt="夏威夷豆" /><span>夏威夷豆</span></button>
-        <button type="button" className={foodWarning?.title === "吃剩的骨頭不適合當作正餐" ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood("bones")}><img src="/assets/pet-journey/leftover-bones.png" alt="吃剩的骨頭" /><span>吃剩的骨頭</span></button>
+        <button type="button" className={unsafeFoodIds.includes("macadamia") ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood("macadamia")}><span className="unsafe-food-visual"><img src="/assets/pet-journey/macadamia-nuts.png" alt="夏威夷豆" />{unsafeFoodIds.includes("macadamia") && <i aria-hidden="true">🚫</i>}</span><span>夏威夷豆</span></button>
+        <button type="button" className={unsafeFoodIds.includes("bones") ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood("bones")}><span className="unsafe-food-visual"><img src="/assets/pet-journey/leftover-bones.png" alt="吃剩的骨頭" />{unsafeFoodIds.includes("bones") && <i aria-hidden="true">🚫</i>}</span><span>吃剩的骨頭</span></button>
       </aside>
       <div className="arrival-meal-scene">
         <img className="arrival-meal-room" src="/assets/room/empty-room.png" alt="小狗的新家房間" />
@@ -1158,7 +1242,7 @@ const walkingPrepNotes: Record<string, string> = {
   water: "天氣熱或散步時間較長時，幫狗狗補充飲水。",
 };
 
-const walkingKeyStep = 4;
+const walkingStep = 5;
 
 function WalkingActivity({
   activity,
@@ -1180,13 +1264,14 @@ function WalkingActivity({
   const [completedSceneIndex, setCompletedSceneIndex] = useState<number | null>(null);
   const completingSceneRef = useRef<number | null>(null);
   const movingTimerRef = useRef<number | null>(null);
+  const forwardIntervalRef = useRef<number | null>(null);
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
   const scene = walkingScenes[sceneIndex];
   const prepared = activity.walkingPreparedItems;
   const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
   const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
   const progressMinutes = Math.min(20, activity.walkingMinutes);
-  const walkingInstruction = "按下鍵盤右方向鍵，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
+  const walkingInstruction = "按住「往前走」，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
   const walkingEventMessage = scene.poopEvent && position >= 50
     ? activity.walkingPoopCleaned
       ? { title: "做得很好！", body: "散步時清理排泄物，也是照顧責任的一部分。" }
@@ -1203,12 +1288,21 @@ function WalkingActivity({
   useEffect(() => {
     setPosition(0);
     setMoving(false);
+    if (forwardIntervalRef.current !== null) {
+      window.clearInterval(forwardIntervalRef.current);
+      forwardIntervalRef.current = null;
+    }
     setCompletedSceneIndex(null);
     completingSceneRef.current = null;
   }, [activity.walkingSceneIndex]);
 
+  useEffect(() => {
+    if (needsCleanup || activity.walkingComplete) stopForward();
+  }, [needsCleanup, activity.walkingComplete]);
+
   useEffect(() => () => {
     if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
+    if (forwardIntervalRef.current !== null) window.clearInterval(forwardIntervalRef.current);
   }, []);
 
   useEffect(() => {
@@ -1259,7 +1353,7 @@ function WalkingActivity({
         setMoving(false);
         return 50;
       }
-      const next = Math.min(100, current + walkingKeyStep);
+      const next = Math.min(100, current + walkingStep);
       if (next >= 100 && current < 100 && completingSceneRef.current !== sceneIndex) {
         completingSceneRef.current = sceneIndex;
         setCompletedSceneIndex(sceneIndex);
@@ -1268,16 +1362,23 @@ function WalkingActivity({
     });
   }, [activity.walkingComplete, activity.walkingPoopCleaned, needsCleanup, scene.poopEvent, sceneIndex, started]);
 
-  useEffect(() => {
-    if (!started || activity.walkingComplete) return;
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key !== "ArrowRight") return;
-      event.preventDefault();
-      advanceWalk();
+  function stopForward() {
+    if (forwardIntervalRef.current !== null) {
+      window.clearInterval(forwardIntervalRef.current);
+      forwardIntervalRef.current = null;
     }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [started, activity.walkingComplete, advanceWalk]);
+    setMoving(false);
+  }
+
+  function startForward() {
+    if (!started || activity.walkingComplete || needsCleanup) {
+      if (needsCleanup) setMessage("先把排泄物清理乾淨，再繼續散步。");
+      return;
+    }
+    advanceWalk();
+    if (forwardIntervalRef.current !== null) window.clearInterval(forwardIntervalRef.current);
+    forwardIntervalRef.current = window.setInterval(advanceWalk, 170);
+  }
 
   function cleanupPoop() {
     onChange({ walkingPoopCleaned: true });
@@ -1339,7 +1440,7 @@ function WalkingActivity({
           <div
             className={`walking-scene ${moving ? "is-moving" : ""}`}
             tabIndex={0}
-            aria-label="散步場景，按鍵盤右方向鍵前進"
+            aria-label="散步場景，按往前走按鈕前進"
           >
             <img className="walking-bg" src={scene.image} alt={scene.title} />
             <div className="walking-progress walking-progress-overlay" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
@@ -1360,21 +1461,26 @@ function WalkingActivity({
               />
               {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/assets/walking/poop.png" alt="" /></button>}
             </div>
-            <div className="walk-key-hint" aria-hidden="true">
-              <div className="walk-key-hint-inner">
-                <span className="keycap">→</span>
-                <span className="key-hint-text">按右鍵前進</span>
-              </div>
-            </div>
+            <button
+              type="button"
+              className="walking-forward-button"
+              disabled={needsCleanup}
+              onPointerDown={(event) => {
+                event.preventDefault();
+                event.currentTarget.setPointerCapture?.(event.pointerId);
+                startForward();
+              }}
+              onPointerUp={(event) => {
+                event.currentTarget.releasePointerCapture?.(event.pointerId);
+                stopForward();
+              }}
+              onPointerCancel={stopForward}
+              onPointerLeave={stopForward}
+              aria-label="往前走"
+            >
+              往前走 <span>→</span>
+            </button>
           </div>
-          <button
-            type="button"
-            className="primary walking-mobile-forward"
-            onPointerDown={advanceWalk}
-            disabled={needsCleanup}
-          >
-            點一下往前走
-          </button>
         </div>
       )}
     </section>
@@ -1433,6 +1539,7 @@ export function LifeJourney({
   const showArrivalMeal = scenario?.id === "arrival-adjustment" && answer?.finalResult === "correct" && arrivalMealOpen;
   const [feedbackOpen, setFeedbackOpen] = useState(Boolean(answer));
   const [timePassOpen, setTimePassOpen] = useState(false);
+  const [resetSignal, setResetSignal] = useState(0);
   useEffect(() => {
     setTimePassOpen(false);
     setArrivalMealOpen(false);
@@ -1467,6 +1574,28 @@ export function LifeJourney({
     setFeedbackOpen(true);
   }
 
+  function resetCurrentQuestion() {
+    setFeedbackOpen(false);
+    setArrivalMealOpen(false);
+    setTimePassOpen(false);
+    setResetSignal((current) => current + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleBackNavigation() {
+    const dailyBehaviorHasAnswer = isDailyBehaviorActivity && dailyBehaviorScenarioIds.some((id) => Boolean(answers[id]));
+    const canResetCurrent =
+      Boolean(answer) ||
+      showArrivalMeal ||
+      dailyBehaviorHasAnswer;
+    if (canResetCurrent) {
+      resetCurrentQuestion();
+      return;
+    }
+    if (index > 0) selectItem(index - 1);
+    else onBack();
+  }
+
   if (timePassOpen && item.scenarioId === "illness-vet") {
     return <TimePassTransition onComplete={() => {
       onActivityChange({ sickTimePassComplete: true });
@@ -1483,6 +1612,7 @@ export function LifeJourney({
           petName={petName}
           onChooseMultiple={onChooseMultiple}
           onContinue={continueJourney}
+          resetSignal={resetSignal}
         />
       ) : isWalkingActivity ? (
         <WalkingActivity
@@ -1501,6 +1631,7 @@ export function LifeJourney({
           onMembersChange={onMembersChange}
           onChoose={choose}
           onContinue={continueJourney}
+          resetSignal={resetSignal}
         />
       ) : isVideoFeedbackScenario && scenario && !showArrivalMeal ? (
         <VideoScenarioActivity
@@ -1512,6 +1643,7 @@ export function LifeJourney({
             if (scenario.id === "arrival-adjustment") setArrivalMealOpen(true);
             else continueJourney();
           }}
+          resetSignal={resetSignal}
         />
       ) : scenario && (showArrivalMeal ? (
         <ArrivalMealActivity
@@ -1534,7 +1666,7 @@ export function LifeJourney({
         />
       ))}
       <div className="scenario-bottom-nav life-bottom-nav">
-        <button className="secondary" onClick={() => index > 0 ? selectItem(index - 1) : onBack()}>← {index > 0 ? "上一個生活內容" : "返回出發前準備"}</button>
+        <button className="secondary" onClick={handleBackNavigation}>← {index > 0 ? "上一個生活內容" : "返回出發前準備"}</button>
       </div>
       <span className="visually-hidden">目前共登記 {expenses.length} 筆費用，所有費用以唯一識別碼避免重複。</span>
     </div>

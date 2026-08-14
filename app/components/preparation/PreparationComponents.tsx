@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { departureTrunkItems, hazards, roomItems, trunkItems } from "../../game-data";
-import type { CareMember } from "../../game-types";
+import { applySizeBasedExpenseAmount, departureTrunkItems, expenseCatalog, getPetSizeForBreed, hazards, money, roomItems, trunkItems } from "../../game-data";
+import type { CareMember, ExpenseRecord } from "../../game-types";
 import { NavButtons, StepHeading } from "../shared/SharedComponents";
 
 const preparedRoomItemNotes: Record<string, { label: string; note: string }> = {
@@ -11,7 +11,7 @@ const preparedRoomItemNotes: Record<string, { label: string; note: string }> = {
   "water-bowl": { label: "水碗", note: "每天確認有乾淨、足量的飲水。" },
   "food-bowl": { label: "狗碗", note: "固定飲食器具，幫助建立規律餵食。" },
   toilet: { label: "尿墊", note: "協助建立如廁位置，減少環境壓力。" },
-  cleaner: { label: "清潔用品", note: "維持居家清潔，降低病原與異味。" },
+  cleaner: { label: "寵物專用清潔用品", note: "維持居家清潔，降低病原與異味。" },
   food: { label: "飼料", note: "選擇符合年齡、體型與健康需求的主食。" },
 };
 
@@ -22,8 +22,21 @@ const preparedTrunkItemNotes: Record<string, { label: string; note: string }> = 
   "pee-pad": { label: "尿墊", note: "接回途中可降低排泄與清潔壓力。" },
   "water-kit": { label: "水碗", note: "必要時補充飲水，避免長時間缺水。" },
   leash: { label: "牽繩", note: "下車或移動時維持安全防護。" },
-  cleaner: { label: "清潔用品", note: "處理接回途中可能發生的髒污。" },
+  cleaner: { label: "寵物專用清潔用品", note: "處理接回途中可能發生的髒污。" },
 };
+
+const roomExpenseIds = new Set(roomItems.map((item) => item.expenseId).filter(Boolean) as string[]);
+
+function expensePriceText(expenseIds: string[] = [], breed: string) {
+  const petSize = getPetSizeForBreed(breed);
+  const prices = expenseIds
+    .map((id) => expenseCatalog[id])
+    .filter((item): item is ExpenseRecord => Boolean(item))
+    .map((item) => applySizeBasedExpenseAmount(item, petSize));
+  if (prices.length === 0) return "";
+  const total = prices.reduce((sum, item) => sum + item.amount, 0);
+  return `NT$${money.format(total)}`;
+}
 
 export function RoomPreparation({
   selectedItems,
@@ -34,6 +47,7 @@ export function RoomPreparation({
   onSavePetName,
   onBack,
   onNext,
+  breed,
 }: {
   selectedItems: string[];
   securedHazards: string[];
@@ -43,6 +57,7 @@ export function RoomPreparation({
   onSavePetName: (name: string) => void;
   onBack: () => void;
   onNext: () => void;
+  breed: string;
 }) {
   const [nameDraft, setNameDraft] = useState(petName);
   const [nameError, setNameError] = useState("");
@@ -62,7 +77,6 @@ export function RoomPreparation({
 
   useEffect(() => {
     setNameDraft(petName);
-    if (petName) setNameEditing(false);
   }, [petName]);
 
   useEffect(() => {
@@ -110,6 +124,13 @@ export function RoomPreparation({
     setNameEditing(false);
   }
 
+  function updateNameDraft(value: string) {
+    setNameDraft(value);
+    setNameError("");
+    setRoomCheckMessage("");
+    onSavePetName(value);
+  }
+
   function getRoomCheckMessages() {
     const missingItems = roomItems.length - itemsDone;
     const remainingHazards = hazards.length - hazardsDone;
@@ -154,7 +175,7 @@ export function RoomPreparation({
           {remainingRoomItems.length === 0 && <ul className="prepared-item-list" aria-label="已準備的房間物品">
             {roomItems.map((item) => {
               const note = preparedRoomItemNotes[item.id] ?? { label: item.label, note: item.purpose };
-              return <li key={item.id}><b>{note.label}</b><span>{note.note}</span></li>;
+              return <li key={item.id}><b>{note.label}{item.expenseId && <small className="prepared-item-price"> {expensePriceText([item.expenseId], breed)}</small>}</b><span>{note.note}</span></li>;
             })}
           </ul>}
         </section>
@@ -166,7 +187,7 @@ export function RoomPreparation({
             {hazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
             <div className={`pet-doorplate ${nameEditing ? "editing" : ""}`}>
               <img src="/assets/room/nameplate.png" alt="小狗名字門牌" />
-              {nameEditing ? <div className="pet-doorplate-editor"><label htmlFor="pet-name" className="sr-only">小狗名字</label><input id="pet-name" value={nameDraft} maxLength={12} placeholder="請輸入小狗的名字" onChange={(event) => setNameDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveName(); }} aria-invalid={Boolean(nameError)} aria-describedby="pet-name-error" autoFocus />{nameError && <p id="pet-name-error" className="field-error" role="alert">{nameError}</p>}</div> : <button type="button" className={petName ? "named" : "placeholder"} onClick={() => { setNameEditing(true); setNameError(""); }}>{petName || "請輸入小狗的名字"}</button>}
+              {nameEditing ? <div className="pet-doorplate-editor"><label htmlFor="pet-name" className="sr-only">小狗名字</label><input id="pet-name" value={nameDraft} maxLength={12} placeholder="請輸入小狗的名字" onChange={(event) => updateNameDraft(event.target.value)} aria-invalid={Boolean(nameError)} aria-describedby="pet-name-error" autoFocus />{nameError && <p id="pet-name-error" className="field-error" role="alert">{nameError}</p>}</div> : <button type="button" className={petName ? "named" : "placeholder"} onClick={() => { setNameEditing(true); setNameError(""); }}>{petName || "請輸入小狗的名字"}</button>}
             </div>
             {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已收起</h2><p><b>為什麼危險：</b>{activeHazard.danger}</p><p><b>建議如何處理：</b>{activeHazard.handling}</p></section>}
           </div>
@@ -208,7 +229,7 @@ export function CareMemberSetup({ members, onChange, onBack, onNext }: { members
   </div>;
 }
 
-export function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNext }: { selected: string[]; petName: string; onSelect: (id: string) => void; onBack: () => void; onNext: () => void }) {
+export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack, onNext }: { selected: string[]; petName: string; breed: string; onSelect: (id: string) => void; onBack: () => void; onNext: () => void }) {
   const [exitingItems, setExitingItems] = useState<string[]>([]);
   const [departing, setDeparting] = useState(false);
   const documents = departureTrunkItems.filter((item) => item.kind === "document");
@@ -270,7 +291,8 @@ export function CarTrunkPreparation({ selected, petName, onSelect, onBack, onNex
         {complete && <ul className="prepared-item-list departure-prepared-list" aria-label="已準備的後車廂物品">
           {departureTrunkItems.map((item) => {
             const note = preparedTrunkItemNotes[item.id] ?? { label: item.label, note: item.description };
-            return <li key={item.id}><b>{note.label}</b><span>{note.note}</span></li>;
+            const newExpenseIds = (item.expenseIds ?? []).filter((id) => !roomExpenseIds.has(id));
+            return <li key={item.id}><b>{note.label}{newExpenseIds.length > 0 && <small className="prepared-item-price"> {expensePriceText(newExpenseIds, breed)}</small>}</b><span>{note.note}</span></li>;
           })}
         </ul>}
       </aside>
