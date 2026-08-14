@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-BELS2OcC.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-CgGFW7k8.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -2601,7 +2601,7 @@ function LifeJourney({ index, petName, answers, activity, completedIds, expenses
 function StepHeading({ title, body }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "step-heading",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: body })]
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: title }), body && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: body })]
 	});
 }
 function NavButtons({ onBack, onNext, nextLabel = "繼續下一站", disabled = false }) {
@@ -2646,19 +2646,21 @@ function statusAt(index, current, reached) {
 	return "locked";
 }
 function StageRail({ step, furthestStep, selectionPage, selectionReached, preparationTask, preparationReached, lifePhase, journeyIndex, journeyCompleted, onGoTo, onSelectionPage, onPreparationTask, onLifeStage }) {
-	const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : 3;
+	const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
 	const currentLifeStage = lifePhase === "arrival-video" ? 0 : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
 	const mainTargets = [
 		1,
 		2,
 		Math.max(3, Math.min(6, step)),
-		7
+		7,
+		8
 	];
 	const mainUnlockSteps = [
 		1,
 		2,
 		3,
-		7
+		7,
+		8
 	];
 	const mainStatus = (index) => {
 		if (index === currentMain) return "current";
@@ -2715,6 +2717,13 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 			label: "照顧準備總覽",
 			status: mainStatus(3),
 			onClick: () => onGoTo(7)
+		},
+		{
+			id: "legal-acquisition",
+			number: "05",
+			label: "合法取得寵物",
+			status: mainStatus(4),
+			onClick: () => onGoTo(8)
 		}
 	];
 	function renderNavigation() {
@@ -2760,12 +2769,12 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 function Welcome({ onStart }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "welcome",
-		"aria-label": "毛日子新手村封面",
+		"aria-label": "伴日子新手村封面",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "welcome-hero-copy",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
-					"毛日子",
+					"伴日子",
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
 					"新手村"
 				] }),
@@ -2815,10 +2824,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, onCatego
 		className: "content-wrap partner-picker",
 		children: selectionPage === "species" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 			className: "partner-selection-page",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				title: "你想領養哪一種動物？",
-				body: "先選擇物種，再挑一個目前最感興趣的品種。這一版先以犬隻示範完整時間軸。"
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "你想領養哪一種動物？" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "category-grid species-page-grid",
 				children: categories.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: category === item.id ? "selected" : "",
@@ -2839,10 +2845,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, onCatego
 		}, "species") : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 			className: "partner-selection-page",
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-					title: "選擇你想領養的品種",
-					body: "品種會影響後續提醒，但每隻動物仍有自己的個性與需求。"
-				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "選擇你想領養的品種" }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "breed-row breed-page-grid",
 					children: breeds.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
@@ -2952,18 +2955,16 @@ function detailGroupForExpense(item) {
 	if (isOneTimePreparationExpense(item)) return expenseLabels.oneTimePrep;
 	return expenseLabels.temporaryMedical;
 }
-function flashKeysForExpense(item) {
-	if (isRequiredAfterArrivalExpense(item)) return ["total"];
-	if (isMonthlyExpense(item)) return ["monthly", "total"];
-	if (isTemporaryOrMedicalExpense(item)) return ["medical", "total"];
-	return ["prep", "total"];
-}
 function expenseTypeLabel(item) {
 	if (isMonthlyExpense(item)) return expenseLabels.monthlyType;
 	return expenseLabels.oneTimeType;
 }
 function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }) {
 	const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
+	const preparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+	const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
+	const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
+	const accumulatedTotal = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
 	const grouped = expenseDetailGroupOrder.map((group) => ({
 		group,
 		items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group)
@@ -2992,6 +2993,19 @@ function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }) {
 						"aria-label": expenseLabels.closeDetails,
 						children: "x"
 					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "expense-modal-summary",
+					"aria-label": "費用摘要",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.oneTimePrep }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(preparationTotal)] })] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.monthlyBasic }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(monthlyTotal)] })] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.temporaryMedical }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(temporaryMedicalTotal)] })] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", {
+							title: expenseLabels.accumulatedHelp,
+							children: expenseLabels.accumulatedTotal
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(accumulatedTotal)] })] })
+					]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "expense-groups",
@@ -3023,84 +3037,141 @@ function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }) {
 }
 function CostBar({ expenses, emergencyReserve, latestExpense, breed }) {
 	const [detailsOpen, setDetailsOpen] = (0, import_react.useState)(false);
-	const [flashKeys, setFlashKeys] = (0, import_react.useState)([]);
 	const [flashExpense, setFlashExpense] = (0, import_react.useState)(null);
-	const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
-	const preparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
-	const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
-	const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
-	const accumulatedTotal = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
 	(0, import_react.useEffect)(() => {
 		if (!latestExpense) return;
-		setFlashKeys(flashKeysForExpense(latestExpense));
 		setFlashExpense(latestExpense);
 		const timer = window.setTimeout(() => {
-			setFlashKeys([]);
 			setFlashExpense(null);
-		}, 1600);
+		}, 2400);
 		return () => window.clearTimeout(timer);
 	}, [latestExpense]);
-	function costCellClass(key) {
-		return `cost-cell${flashKeys.includes(key) ? " flash" : ""}`;
-	}
-	function flashMessage(key) {
-		if (key === "total") return null;
-		if (!flashExpense || !flashKeys.includes(key)) return null;
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-			className: "cost-added-name",
-			children: [expenseLabels.addedPrefix, flashExpense.name]
-		});
-	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		className: "cost-bar",
+		className: "cost-bar cost-bar-compact",
 		"aria-label": expenseLabels.currentCostStatus,
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: costCellClass("prep"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "cost-cell-main",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.oneTimePrep }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(preparationTotal)] })]
-				}), flashMessage("prep")]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: costCellClass("monthly"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "cost-cell-main",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.monthlyBasic }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(monthlyTotal)] })]
-				}), flashMessage("monthly")]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: costCellClass("medical"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "cost-cell-main",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: expenseLabels.temporaryMedical }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(temporaryMedicalTotal)] })]
-				}), flashMessage("medical")]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: costCellClass("total"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "cost-cell-main",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", {
-						title: expenseLabels.accumulatedHelp,
-						children: expenseLabels.accumulatedTotal
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(accumulatedTotal)] })]
-				}), flashMessage("total")]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-				onClick: () => setDetailsOpen(true),
-				children: [
-					expenseLabels.viewDetails,
-					" ",
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "+" })
-				]
-			})
-		]
+		children: [flashExpense && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+			className: "cost-toast",
+			role: "status",
+			children: [
+				"新增「",
+				flashExpense.name,
+				"」NT$ ",
+				money.format(flashExpense.amount),
+				isMonthlyExpense(flashExpense) ? expenseLabels.monthlySuffix : ""
+			]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+			type: "button",
+			className: "bill-trigger",
+			onClick: () => setDetailsOpen(true),
+			"aria-label": expenseLabels.viewDetails,
+			title: expenseLabels.viewDetails,
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", {
+				viewBox: "0 0 24 24",
+				"aria-hidden": "true",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M7 3h10a2 2 0 0 1 2 2v16l-3-1.7-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Z" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M8 8h8M8 12h8M8 16h5" })]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: expenseLabels.viewDetails })]
+		})]
 	}), detailsOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ExpenseDetails, {
 		expenses,
 		emergencyReserve,
 		breed,
 		onClose: () => setDetailsOpen(false)
 	})] });
+}
+function LegalAcquisitionStep({ breed, category, onBack, onReset }) {
+	const selectedBreed = breeds.find((item) => item.id === breed);
+	const selectedCategory = categories.find((item) => item.id === category);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "content-wrap legal-acquisition-page",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "legal-acquisition-hero",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "合法取得寵物" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "下一步，透過合法管道迎接牠" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "完成準備後，請選擇透明、合法且能提供完整資訊的取得方式。" })
+				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
+					className: "legal-selected-pet",
+					"aria-label": "已選擇寵物",
+					children: [
+						selectedBreed?.image && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							src: selectedBreed.image,
+							alt: ""
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "你選擇的是" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: selectedBreed?.label ?? selectedCategory?.label ?? "尚未選擇" })
+					]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "legal-acquisition-grid",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+					className: "legal-card legal-card--adoption",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "legal-card-icon",
+							"aria-hidden": "true",
+							children: "♡"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "領養" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "你可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "可查看地區收容所與開放認養資訊" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "確認認養流程與後續照顧責任" })] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "legal-card-actions",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+								className: "primary",
+								href: "https://paws.ixda.tw/",
+								target: "_blank",
+								rel: "noopener noreferrer",
+								children: ["前往合作認養平台 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "↗" })]
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "建議確認動物基本資料、健康狀況、認養流程與後續照顧責任。" })
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+					className: "legal-card",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "legal-card-icon",
+							"aria-hidden": "true",
+							children: "◎"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "購買" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "若選擇購買，請確認店家來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "未來可依所在地區篩選合法寵物店" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "可優先參考你選擇的物種與品種" })] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "legal-card-actions",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								className: "secondary",
+								type: "button",
+								disabled: true,
+								children: "合法寵物店查詢功能準備中"
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "未來可依所在地區、想養物種與品種，整理更貼近需求的合法取得管道。" })
+					]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "legal-acquisition-reminder",
+				children: "無論選擇領養或購買，都請確認來源合法，並保留相關文件與健康紀錄。"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "nav-buttons",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					className: "secondary",
+					type: "button",
+					onClick: onBack,
+					children: "← 返回照顧準備總覽"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary",
+					type: "button",
+					onClick: onReset,
+					children: ["重新開始 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "↺" })]
+				})]
+			})
+		]
+	});
 }
 var preparedRoomItemNotes = {
 	bed: {
@@ -4092,12 +4163,12 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
 				className: "care-a4-sheet",
-				"aria-label": "毛日子照顧準備總覽 A4",
+				"aria-label": "伴日子照顧準備總覽 A4",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
 						className: "care-a4-header",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "毛日子新手村" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "伴日子新手村" }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "照顧準備總覽" }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "把這趟練習整理成你真正帶得走的照顧清單" })
 						] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
@@ -4434,7 +4505,7 @@ function Home() {
 		setExpenses((current) => {
 			if (current.some((item) => item.id === id)) return current;
 			setLatestExpense(sizedExpense);
-			window.setTimeout(() => setLatestExpense((active) => active?.id === id ? null : active), 1800);
+			window.setTimeout(() => setLatestExpense((active) => active?.id === id ? null : active), 2400);
 			return [...current, sizedExpense];
 		});
 	}
@@ -4661,7 +4732,7 @@ function Home() {
 					className: "stage",
 					"aria-live": "polite",
 					children: [
-						step >= 2 && step <= 7 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CostBar, {
+						step >= 2 && step <= 8 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CostBar, {
 							expenses,
 							emergencyReserve,
 							latestExpense,
@@ -4681,21 +4752,65 @@ function Home() {
 						}),
 						step === 2 && renderPreparation(),
 						step >= 3 && step <= 6 && renderLifeJourney(),
-						step === 7 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AssessmentReport, {
-							petName,
+						step === 7 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AssessmentReport, {
+								petName,
+								breed,
+								profile,
+								expenses,
+								emergencyReserve,
+								roomReady,
+								hazardsReady,
+								members,
+								trunkSelected,
+								trunkPassed,
+								answers: scenarioAnswers,
+								lifeActivity,
+								onBack: () => {
+									setStep(6);
+									setIntroOpen(false);
+									window.scrollTo({
+										top: 0,
+										behavior: "smooth"
+									});
+								},
+								onReset: resetAll
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProfileSupplementForm, {
+								profile,
+								onChange: setProfile,
+								onBack: () => {
+									setStep(6);
+									setIntroOpen(false);
+									window.scrollTo({
+										top: 0,
+										behavior: "smooth"
+									});
+								},
+								onReset: resetAll
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "report-next-step-actions",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+									className: "primary",
+									type: "button",
+									onClick: () => {
+										setStep(8);
+										setFurthestStep((current) => Math.max(current, 8));
+										window.scrollTo({
+											top: 0,
+											behavior: "smooth"
+										});
+									},
+									children: ["前往合法取得寵物 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+								})
+							})
+						] }),
+						step === 8 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LegalAcquisitionStep, {
 							breed,
-							profile,
-							expenses,
-							emergencyReserve,
-							roomReady,
-							hazardsReady,
-							members,
-							trunkSelected,
-							trunkPassed,
-							answers: scenarioAnswers,
-							lifeActivity,
+							category,
 							onBack: () => {
-								setStep(6);
+								setStep(7);
 								setIntroOpen(false);
 								window.scrollTo({
 									top: 0,
@@ -4703,19 +4818,7 @@ function Home() {
 								});
 							},
 							onReset: resetAll
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProfileSupplementForm, {
-							profile,
-							onChange: setProfile,
-							onBack: () => {
-								setStep(6);
-								setIntroOpen(false);
-								window.scrollTo({
-									top: 0,
-									behavior: "smooth"
-								});
-							},
-							onReset: resetAll
-						})] })
+						})
 					]
 				})]
 			}),

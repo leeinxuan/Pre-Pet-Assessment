@@ -2,20 +2,20 @@ import * as __viteRscAsyncHooks from "node:async_hooks";
 import { AsyncLocalStorage as AsyncLocalStorage$1 } from "node:async_hooks";
 //#region node_modules/.nitro/vite/services/rsc/__vite_rsc_assets_manifest.js
 var __vite_rsc_assets_manifest_default = {
-	"bootstrapScriptContent": "import(\"/assets/index-Bh_XiEvs.js\")",
+	"bootstrapScriptContent": "import(\"/assets/index-k00UjiFJ.js\")",
 	"clientReferenceDeps": {
 		"6efdf509a785": {
 			"js": [
-				"/assets/page-HarQp2LX.js",
+				"/assets/page-BQfao5c4.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js",
-				"/assets/index-Bh_XiEvs.js"
+				"/assets/index-k00UjiFJ.js"
 			],
 			"css": []
 		},
 		"ee0430dd8bd8": {
 			"js": [
-				"/assets/index-Bh_XiEvs.js",
+				"/assets/index-k00UjiFJ.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
@@ -23,16 +23,16 @@ var __vite_rsc_assets_manifest_default = {
 		},
 		"431ddbe7c781": {
 			"js": [
-				"/assets/layout-segment-context-Be0hLwVO.js",
+				"/assets/layout-segment-context-BFumbsRx.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
-				"/assets/index-Bh_XiEvs.js",
+				"/assets/index-k00UjiFJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
 			"css": []
 		},
 		"642af46202bf": {
 			"js": [
-				"/assets/index-Bh_XiEvs.js",
+				"/assets/index-k00UjiFJ.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
@@ -41,7 +41,7 @@ var __vite_rsc_assets_manifest_default = {
 	},
 	"serverResources": { "app/layout.tsx": {
 		"js": [],
-		"css": ["/assets/index-DsxvtgKt.css"]
+		"css": ["/assets/index-0_JWUjxM.css"]
 	} }
 };
 //#endregion
@@ -4028,42 +4028,6 @@ function markDynamicUsage() {
 	if (state.headersContext?.forceStatic) return;
 	state.dynamicUsageDetected = true;
 }
-/** Symbol used by cache-runtime.ts to store the "use cache" ALS on globalThis */
-var _USE_CACHE_ALS_KEY = Symbol.for("vinext.cacheRuntime.contextAls");
-/** Symbol used by cache.ts to store the unstable_cache ALS on globalThis */
-var _UNSTABLE_CACHE_ALS_KEY = Symbol.for("vinext.unstableCache.als");
-var _gHeaders = globalThis;
-function _isInsideUseCache() {
-	return _gHeaders[_USE_CACHE_ALS_KEY]?.getStore() != null;
-}
-function _isInsideUnstableCache() {
-	return _gHeaders[_UNSTABLE_CACHE_ALS_KEY]?.getStore() === true;
-}
-/**
-* Throw if the current execution is inside a "use cache" or unstable_cache()
-* scope. Called by dynamic request APIs (headers, cookies, connection) to
-* prevent request-specific data from being frozen into cached results.
-*
-* @param apiName - The name of the API being called (e.g. "connection()")
-*/
-function throwIfInsideCacheScope(apiName) {
-	if (_isInsideUseCache()) {
-		const error = /* @__PURE__ */ new Error(`\`${apiName}\` cannot be called inside "use cache". If you need this data inside a cached function, call \`${apiName}\` outside and pass the required data as an argument.`);
-		try {
-			const ctx = getRequestContext();
-			if (ctx) ctx.invalidDynamicUsageError = error;
-		} catch {}
-		throw error;
-	}
-	if (_isInsideUnstableCache()) {
-		const error = /* @__PURE__ */ new Error(`\`${apiName}\` cannot be called inside a function cached with \`unstable_cache()\`. If you need this data inside a cached function, call \`${apiName}\` outside and pass the required data as an argument.`);
-		try {
-			const ctx = getRequestContext();
-			if (ctx) ctx.invalidDynamicUsageError = error;
-		} catch {}
-		throw error;
-	}
-}
 /**
 * Check, consume, and return any invalid dynamic usage error recorded during
 * the render (e.g. cookies() called inside "use cache"). This error persists
@@ -4175,63 +4139,6 @@ var _HEADERS_MUTATING_METHODS = new Set([
 	"delete",
 	"append"
 ]);
-var ReadonlyHeadersError = class ReadonlyHeadersError extends Error {
-	constructor() {
-		super("Headers cannot be modified. Read more: https://nextjs.org/docs/app/api-reference/functions/headers");
-	}
-	static callable() {
-		throw new ReadonlyHeadersError();
-	}
-};
-function _decorateRequestApiPromise(promise, target) {
-	return new Proxy(promise, {
-		get(promiseTarget, prop) {
-			if (prop in promiseTarget) {
-				const value = Reflect.get(promiseTarget, prop, promiseTarget);
-				return typeof value === "function" ? value.bind(promiseTarget) : value;
-			}
-			const value = Reflect.get(target, prop, target);
-			return typeof value === "function" ? value.bind(target) : value;
-		},
-		has(promiseTarget, prop) {
-			return prop in promiseTarget || prop in target;
-		},
-		ownKeys(promiseTarget) {
-			return Array.from(new Set([...Reflect.ownKeys(promiseTarget), ...Reflect.ownKeys(target)]));
-		},
-		getOwnPropertyDescriptor(promiseTarget, prop) {
-			return Reflect.getOwnPropertyDescriptor(promiseTarget, prop) ?? Reflect.getOwnPropertyDescriptor(target, prop);
-		}
-	});
-}
-var _decoratedHeadersPromises = /* @__PURE__ */ new WeakMap();
-function _getOrCreateDecoratedRequestApiPromise(cache, target) {
-	const cached = cache.get(target);
-	if (cached) return cached;
-	const promise = _decorateRequestApiPromise(Promise.resolve(target), target);
-	cache.set(target, promise);
-	return promise;
-}
-function _decorateRejectedRequestApiPromise(error) {
-	const normalizedError = error instanceof Error ? error : new Error(String(error));
-	const promise = Promise.reject(normalizedError);
-	promise.catch(() => {});
-	return _decorateRequestApiPromise(promise, new Proxy({}, { get(_target, prop) {
-		if (prop === "then" || prop === "catch" || prop === "finally") return;
-		throw normalizedError;
-	} }));
-}
-function _sealHeaders(headers) {
-	return new Proxy(headers, { get(target, prop) {
-		if (typeof prop === "string" && _HEADERS_MUTATING_METHODS.has(prop)) throw new ReadonlyHeadersError();
-		const value = Reflect.get(target, prop, target);
-		return typeof value === "function" ? value.bind(target) : value;
-	} });
-}
-function _getReadonlyHeaders(ctx) {
-	if (!ctx.readonlyHeaders) ctx.readonlyHeaders = _sealHeaders(ctx.headers);
-	return ctx.readonlyHeaders;
-}
 /**
 * Create a HeadersContext from a standard Request object.
 *
@@ -4277,23 +4184,6 @@ function headersContextFromRequest(request) {
 		}
 	};
 }
-/**
-* Read-only Headers instance from the incoming request.
-* Returns a Promise in Next.js 15+ style (but resolves synchronously since
-* the context is already available).
-*/
-function headers() {
-	try {
-		throwIfInsideCacheScope("headers()");
-	} catch (error) {
-		return _decorateRejectedRequestApiPromise(error);
-	}
-	const state = _getState$2();
-	if (!state.headersContext) return _decorateRejectedRequestApiPromise(/* @__PURE__ */ new Error("headers() can only be called from a Server Component, Route Handler, or Server Action. Make sure you're not calling it from a Client Component."));
-	if (state.headersContext.accessError) return _decorateRejectedRequestApiPromise(state.headersContext.accessError);
-	markDynamicUsage();
-	return _getOrCreateDecoratedRequestApiPromise(_decoratedHeadersPromises, _getReadonlyHeaders(state.headersContext));
-}
 /** Accumulated Set-Cookie headers from cookies().set() / .delete() calls */
 /**
 * Get and clear all pending Set-Cookie headers generated by cookies().set()/delete().
@@ -4308,7 +4198,7 @@ function getAndClearPendingCookies() {
 var DRAFT_MODE_COOKIE = "__prerender_bypass";
 (/* @__PURE__ */ new Date(0)).toUTCString();
 function getDraftSecret() {
-	return "5cb8b7b9-7b0b-4e38-b5ff-d05fb463decc";
+	return "90a440c4-ca40-45ea-b5a2-1fe96efb55b3";
 }
 /**
 * Get any Set-Cookie header generated by draftMode().enable()/disable().
@@ -7419,7 +7309,7 @@ var NextURL = class NextURL {
 	* Matches the Next.js API: `request.nextUrl.buildId`.
 	*/
 	get buildId() {
-		return "48dbbcc2-b1e2-4f4a-bb3e-5c08ed0319fb";
+		return "d6bf378c-6f4f-4ae3-9666-9edcf8fbf225";
 	}
 };
 var RequestCookies = class {
@@ -12443,7 +12333,7 @@ function buildCacheKey(prefix, pathname, suffix) {
 * The suffix mirrors Next.js's separate on-disk app artifacts while keeping the
 * Cloudflare KV key under its 512-byte limit for long pathnames.
 */
-function appIsrCacheKey(pathname, suffix, buildId = "48dbbcc2-b1e2-4f4a-bb3e-5c08ed0319fb") {
+function appIsrCacheKey(pathname, suffix, buildId = "d6bf378c-6f4f-4ae3-9666-9edcf8fbf225") {
 	return buildCacheKey(buildId ? `app:${buildId}` : "app", pathname, suffix);
 }
 function appIsrHtmlKey(pathname) {
@@ -12764,7 +12654,7 @@ function createAppPageArtifactCompatibility(element, routePattern) {
 			routePattern,
 			rootBoundaryId
 		}),
-		deploymentVersion: "48dbbcc2-b1e2-4f4a-bb3e-5c08ed0319fb",
+		deploymentVersion: "d6bf378c-6f4f-4ae3-9666-9edcf8fbf225",
 		rootBoundaryId
 	});
 }
@@ -14154,40 +14044,34 @@ var Resources = ((React, deps, RemoveDuplicateServerCss, precedence) => {
 })(import_react_react_server.default, __vite_rsc_assets_manifest_default.serverResources["app/layout.tsx"], void 0, "vite-rsc/importer-resources");
 var layout_exports = /* @__PURE__ */ __exportAll({
 	default: () => $$wrap_RootLayout,
-	generateMetadata: () => generateMetadata
+	metadata: () => metadata
 });
-async function generateMetadata() {
-	const requestHeaders = await headers();
-	const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
-	const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
-	const base = new URL(`${protocol}://${host}`);
-	return {
-		metadataBase: base,
-		title: "毛日子新手村｜領養前生活練習",
-		description: "在真正領養前，先用情境遊戲練習準備空間、接回家、日常照顧、散步、就醫與生活變化。",
-		icons: {
-			icon: "/favicon.svg",
-			shortcut: "/favicon.svg"
-		},
-		openGraph: {
-			title: "毛日子新手村",
-			description: "沿著真實時間軸，預演領養前準備、日常照顧、健康事件與生活變化。",
-			type: "website",
-			images: [{
-				url: new URL("/og.png", base),
-				width: 1200,
-				height: 630,
-				alt: "準飼主與柴犬在家中安靜相處"
-			}]
-		},
-		twitter: {
-			card: "summary_large_image",
-			title: "毛日子新手村",
-			description: "沿著真實時間軸，預演領養前準備、日常照顧、健康事件與生活變化。",
-			images: [new URL("/og.png", base)]
-		}
-	};
-}
+var metadata = {
+	metadataBase: new URL("https://pre-pet-assessment.vercel.app"),
+	title: "伴日子新手村｜領養前生活練習",
+	description: "在真正領養前，先用情境遊戲練習準備空間、接回家、日常照顧、散步、就醫與生活變化。",
+	icons: {
+		icon: "/favicon.svg",
+		shortcut: "/favicon.svg"
+	},
+	openGraph: {
+		title: "伴日子新手村",
+		description: "沿著真實時間軸，預演領養前準備、日常照顧、健康事件與生活變化。",
+		type: "website",
+		images: [{
+			url: "/og.png",
+			width: 1200,
+			height: 630,
+			alt: "準飼主與柴犬在家中安靜相處"
+		}]
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "伴日子新手村",
+		description: "沿著真實時間軸，預演領養前準備、日常照顧、健康事件與生活變化。",
+		images: ["/og.png"]
+	}
+};
 function RootLayout({ children }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime_react_server.jsx)("html", {
 		lang: "zh-Hant",

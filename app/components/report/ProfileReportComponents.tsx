@@ -394,10 +394,10 @@ export function AssessmentReport({
     <>
     <PdfFab />
     <div className="content-wrap summary-page assessment-report compact-assessment">
-      <article className="care-a4-sheet" aria-label="毛日子照顧準備總覽 A4">
+      <article className="care-a4-sheet" aria-label="伴日子照顧準備總覽 A4">
         <header className="care-a4-header">
           <div>
-            <p>毛日子新手村</p>
+            <p>伴日子新手村</p>
             <h1>照顧準備總覽</h1>
             <span>把這趟練習整理成你真正帶得走的照顧清單</span>
           </div>

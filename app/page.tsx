@@ -34,6 +34,7 @@ import {
 import { AssessmentReport, ProfileSupplementForm } from "./components/report/ProfileReportComponents";
 import {
   CostBar,
+  LegalAcquisitionStep,
   SpeciesStep,
   StageRail,
   Welcome,
@@ -169,7 +170,7 @@ export default function Home() {
     setExpenses((current) => {
       if (current.some((item) => item.id === id)) return current;
       setLatestExpense(sizedExpense);
-      window.setTimeout(() => setLatestExpense((active) => active?.id === id ? null : active), 1800);
+      window.setTimeout(() => setLatestExpense((active) => active?.id === id ? null : active), 2400);
       return [...current, sizedExpense];
     });
   }
@@ -352,14 +353,18 @@ export default function Home() {
             onLifeStage={goToLifeStage}
           />
           <section className="stage" aria-live="polite">
-            {step >= 2 && step <= 7 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} breed={breed} />}
+            {step >= 2 && step <= 8 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} breed={breed} />}
             {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} onCategory={setCategory} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>
               <AssessmentReport petName={petName} breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <ProfileSupplementForm profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+              <div className="report-next-step-actions">
+                <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "smooth" }); }}>前往合法取得寵物 <span>→</span></button>
+              </div>
             </>}
+            {step === 8 && <LegalAcquisitionStep breed={breed} category={category} onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
           </section>
         </div>
       )}

@@ -5,8 +5,8 @@ import { applySizeBasedExpenseAmount, breeds, categories, expenseCatalog, getPet
 import { journeyItems } from "../../life-data";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
 
-export function StepHeading({ title, body }: { title: string; body: string }) {
-  return <div className="step-heading"><h1>{title}</h1><p>{body}</p></div>;
+export function StepHeading({ title, body }: { title: string; body?: string }) {
+  return <div className="step-heading"><h1>{title}</h1>{body && <p>{body}</p>}</div>;
 }
 
 export function NavButtons({
@@ -87,12 +87,12 @@ export function StageRail({
   onPreparationTask: (task: number) => void;
   onLifeStage: (stage: number) => void;
 }) {
-  const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : 3;
+  const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
   const currentLifeStage = lifePhase === "arrival-video"
     ? 0
     : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
-  const mainTargets = [1, 2, Math.max(3, Math.min(6, step)), 7];
-  const mainUnlockSteps = [1, 2, 3, 7];
+  const mainTargets = [1, 2, Math.max(3, Math.min(6, step)), 7, 8];
+  const mainUnlockSteps = [1, 2, 3, 7, 8];
 
   const mainStatus = (index: number): NavigationStatus => {
     if (index === currentMain) return "current";
@@ -151,6 +151,13 @@ export function StageRail({
       status: mainStatus(3),
       onClick: () => onGoTo(7),
     },
+    {
+      id: "legal-acquisition",
+      number: "05",
+      label: "合法取得寵物",
+      status: mainStatus(4),
+      onClick: () => onGoTo(8),
+    },
   ];
 
   function renderNavigation() {
@@ -191,9 +198,9 @@ export function StageRail({
 
 export function Welcome({ onStart }: { onStart: () => void }) {
   return (
-    <section className="welcome" aria-label="毛日子新手村封面">
+    <section className="welcome" aria-label="伴日子新手村封面">
       <div className="welcome-hero-copy">
-        <h1>毛日子<br />新手村</h1>
+        <h1>伴日子<br />新手村</h1>
         <p className="welcome-subtitle">在真正飼養前，先走過一次與毛小孩的完整旅程</p>
         <button className="primary large welcome-start" onClick={onStart}>開始生活練習 <span>→</span></button>
       </div>
@@ -243,7 +250,7 @@ export function SpeciesStep({
     <div className="content-wrap partner-picker">
       {selectionPage === "species" ? (
         <section className="partner-selection-page" key="species">
-          <StepHeading title="你想領養哪一種動物？" body="先選擇物種，再挑一個目前最感興趣的品種。這一版先以犬隻示範完整時間軸。" />
+          <StepHeading title="你想領養哪一種動物？" />
           <div className="category-grid species-page-grid">
             {categories.map((item) => (
               <button
@@ -261,7 +268,7 @@ export function SpeciesStep({
         </section>
       ) : (
         <section className="partner-selection-page" key="breed">
-          <StepHeading title="選擇你想領養的品種" body="品種會影響後續提醒，但每隻動物仍有自己的個性與需求。" />
+          <StepHeading title="選擇你想領養的品種" />
           <div className="breed-row breed-page-grid">
             {breeds.map((item) => (
               <button key={item.id} className={breed === item.id ? "selected" : ""} onClick={() => onBreed(item.id)} aria-pressed={breed === item.id}>
@@ -281,8 +288,6 @@ export function SpeciesStep({
 }
 
 type ExpenseDetailGroup = string;
-type CostFlashKey = "prep" | "monthly" | "medical" | "total";
-
 const expenseLabels = {
   requiredAfterArrival: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa",
   oneTimePrep: "\u4e00\u6b21\u6027\u6e96\u5099\u8cbb",
@@ -354,13 +359,6 @@ function detailGroupForExpense(item: ExpenseRecord): ExpenseDetailGroup {
   return expenseLabels.temporaryMedical;
 }
 
-function flashKeysForExpense(item: ExpenseRecord): CostFlashKey[] {
-  if (isRequiredAfterArrivalExpense(item)) return ["total"];
-  if (isMonthlyExpense(item)) return ["monthly", "total"];
-  if (isTemporaryOrMedicalExpense(item)) return ["medical", "total"];
-  return ["prep", "total"];
-}
-
 function expenseTypeLabel(item: ExpenseRecord) {
   if (isMonthlyExpense(item)) return expenseLabels.monthlyType;
   return expenseLabels.oneTimeType;
@@ -368,6 +366,10 @@ function expenseTypeLabel(item: ExpenseRecord) {
 
 export function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }: { expenses: ExpenseRecord[]; emergencyReserve: number; breed: string; onClose: () => void }) {
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
+  const preparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+  const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
+  const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
+  const accumulatedTotal = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
   const grouped = expenseDetailGroupOrder.map((group) => ({
     group,
     items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group),
@@ -377,6 +379,12 @@ export function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }: {
     <div className="expense-modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section className="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-title" onMouseDown={(event) => event.stopPropagation()}>
         <div className="expense-modal-head"><div><p className="eyebrow">{expenseLabels.detailEyebrow}</p><h2 id="expense-title">{expenseLabels.detailTitle}</h2></div><button onClick={onClose} aria-label={expenseLabels.closeDetails}>x</button></div>
+        <div className="expense-modal-summary" aria-label="費用摘要">
+          <div><small>{expenseLabels.oneTimePrep}</small><b>NT$ {money.format(preparationTotal)}</b></div>
+          <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
+          <div><small>{expenseLabels.temporaryMedical}</small><b>NT$ {money.format(temporaryMedicalTotal)}</b></div>
+          <div><small title={expenseLabels.accumulatedHelp}>{expenseLabels.accumulatedTotal}</small><b>NT$ {money.format(accumulatedTotal)}</b></div>
+        </div>
         <div className="expense-groups">
           {grouped.map(({ group, items }) => (
             <div key={group}>
@@ -411,45 +419,101 @@ export function CostBar({
   breed: string;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [flashKeys, setFlashKeys] = useState<CostFlashKey[]>([]);
   const [flashExpense, setFlashExpense] = useState<ExpenseRecord | null>(null);
-  const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
-  const preparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
-  const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
-  const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
-  const accumulatedTotal = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
 
   useEffect(() => {
     if (!latestExpense) return;
-    setFlashKeys(flashKeysForExpense(latestExpense));
     setFlashExpense(latestExpense);
     const timer = window.setTimeout(() => {
-      setFlashKeys([]);
       setFlashExpense(null);
-    }, 1600);
+    }, 2400);
     return () => window.clearTimeout(timer);
   }, [latestExpense]);
 
-  function costCellClass(key: CostFlashKey) {
-    return `cost-cell${flashKeys.includes(key) ? " flash" : ""}`;
-  }
-
-  function flashMessage(key: CostFlashKey) {
-    if (key === "total") return null;
-    if (!flashExpense || !flashKeys.includes(key)) return null;
-    return <span className="cost-added-name">{expenseLabels.addedPrefix}{flashExpense.name}</span>;
-  }
-
   return (
     <>
-      <div className="cost-bar" aria-label={expenseLabels.currentCostStatus}>
-        <div className={costCellClass("prep")}><div className="cost-cell-main"><small>{expenseLabels.oneTimePrep}</small><b>NT$ {money.format(preparationTotal)}</b></div>{flashMessage("prep")}</div>
-        <div className={costCellClass("monthly")}><div className="cost-cell-main"><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>{flashMessage("monthly")}</div>
-        <div className={costCellClass("medical")}><div className="cost-cell-main"><small>{expenseLabels.temporaryMedical}</small><b>NT$ {money.format(temporaryMedicalTotal)}</b></div>{flashMessage("medical")}</div>
-        <div className={costCellClass("total")}><div className="cost-cell-main"><small title={expenseLabels.accumulatedHelp}>{expenseLabels.accumulatedTotal}</small><b>NT$ {money.format(accumulatedTotal)}</b></div>{flashMessage("total")}</div>
-        <button onClick={() => setDetailsOpen(true)}>{expenseLabels.viewDetails} <span>+</span></button>
+      <div className="cost-bar cost-bar-compact" aria-label={expenseLabels.currentCostStatus}>
+        {flashExpense && (
+          <p className="cost-toast" role="status">
+            新增「{flashExpense.name}」NT$ {money.format(flashExpense.amount)}{isMonthlyExpense(flashExpense) ? expenseLabels.monthlySuffix : ""}
+          </p>
+        )}
+        <button type="button" className="bill-trigger" onClick={() => setDetailsOpen(true)} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 3h10a2 2 0 0 1 2 2v16l-3-1.7-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Z" />
+            <path d="M8 8h8M8 12h8M8 16h5" />
+          </svg>
+          <em>{expenseLabels.viewDetails}</em>
+        </button>
       </div>
       {detailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} onClose={() => setDetailsOpen(false)} />}
     </>
+  );
+}
+
+export function LegalAcquisitionStep({
+  breed,
+  category,
+  onBack,
+  onReset,
+}: {
+  breed: string;
+  category: string;
+  onBack: () => void;
+  onReset: () => void;
+}) {
+  const selectedBreed = breeds.find((item) => item.id === breed);
+  const selectedCategory = categories.find((item) => item.id === category);
+  return (
+    <div className="content-wrap legal-acquisition-page">
+      <div className="legal-acquisition-hero">
+        <div>
+          <small>合法取得寵物</small>
+          <h1>下一步，透過合法管道迎接牠</h1>
+          <p>完成準備後，請選擇透明、合法且能提供完整資訊的取得方式。</p>
+        </div>
+        <aside className="legal-selected-pet" aria-label="已選擇寵物">
+          {selectedBreed?.image && <img src={selectedBreed.image} alt="" />}
+          <b>你選擇的是</b>
+          <span>{selectedBreed?.label ?? selectedCategory?.label ?? "尚未選擇"}</span>
+        </aside>
+      </div>
+
+      <div className="legal-acquisition-grid">
+        <article className="legal-card legal-card--adoption">
+          <span className="legal-card-icon" aria-hidden="true">♡</span>
+          <h2>領養</h2>
+          <p>你可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。</p>
+          <ul>
+            <li>可查看地區收容所與開放認養資訊</li>
+            <li>確認認養流程與後續照顧責任</li>
+          </ul>
+          <div className="legal-card-actions">
+            <a className="primary" href="https://paws.ixda.tw/" target="_blank" rel="noopener noreferrer">前往合作認養平台 <span>↗</span></a>
+          </div>
+          <small>建議確認動物基本資料、健康狀況、認養流程與後續照顧責任。</small>
+        </article>
+
+        <article className="legal-card">
+          <span className="legal-card-icon" aria-hidden="true">◎</span>
+          <h2>購買</h2>
+          <p>若選擇購買，請確認店家來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。</p>
+          <ul>
+            <li>未來可依所在地區篩選合法寵物店</li>
+            <li>可優先參考你選擇的物種與品種</li>
+          </ul>
+          <div className="legal-card-actions">
+            <button className="secondary" type="button" disabled>合法寵物店查詢功能準備中</button>
+          </div>
+          <small>未來可依所在地區、想養物種與品種，整理更貼近需求的合法取得管道。</small>
+        </article>
+      </div>
+
+      <p className="legal-acquisition-reminder">無論選擇領養或購買，都請確認來源合法，並保留相關文件與健康紀錄。</p>
+      <div className="nav-buttons">
+        <button className="secondary" type="button" onClick={onBack}>← 返回照顧準備總覽</button>
+        <button className="primary" type="button" onClick={onReset}>重新開始 <span>↺</span></button>
+      </div>
+    </div>
   );
 }
