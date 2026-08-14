@@ -1,6 +1,6 @@
 export const walkingPrepItems = [
   { id: "leash", label: "牽繩／胸背帶", image: "/assets/car/leash.png" },
-  { id: "bag", label: "撿便袋", image: "/assets/walking/poop-bag.png" },
+  { id: "bag", label: "撿便袋", image: "/assets/walking/poop-bag-1.png" },
   { id: "water", label: "水", image: "/assets/pet-journey/waterbottle.png" },
 ] as const;
 
@@ -16,5 +16,7 @@ export const walkingPreloadImages = [
   ...walkingPrepItems.map((item) => item.image),
   "/assets/walking/walker-and-dog.png",
   "/assets/walking/walker-and-dog-poop.png",
+  "/assets/walking/walker-dog-bag.png",
+  "/assets/walking/poop-bag-1.png",
   "/assets/walking/poop.png",
 ] as const;

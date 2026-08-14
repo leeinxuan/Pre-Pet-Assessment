@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { expenseCatalog, money, roomItems } from "../../game-data";
 import { journeyItems, lifeScenarios } from "../../life-data";
 import { walkingPreloadImages, walkingPrepItems, walkingScenes } from "../../data/walkingScenes";
@@ -1342,10 +1342,13 @@ function WalkingActivity({
   const [position, setPosition] = useState(0);
   const [moving, setMoving] = useState(false);
   const [message, setMessage] = useState("");
-  const [completedSceneIndex, setCompletedSceneIndex] = useState<number | null>(null);
   const completingSceneRef = useRef<number | null>(null);
   const movingTimerRef = useRef<number | null>(null);
   const forwardIntervalRef = useRef<number | null>(null);
+  const sceneRef = useRef<HTMLDivElement | null>(null);
+  const poopTargetRef = useRef<HTMLDivElement | null>(null);
+  const draggingBagRef = useRef(false);
+  const [draggedBag, setDraggedBag] = useState<{ x: number; y: number } | null>(null);
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
   const scene = walkingScenes[sceneIndex];
   const prepared = activity.walkingPreparedItems;
@@ -1373,7 +1376,8 @@ function WalkingActivity({
       window.clearInterval(forwardIntervalRef.current);
       forwardIntervalRef.current = null;
     }
-    setCompletedSceneIndex(null);
+    draggingBagRef.current = false;
+    setDraggedBag(null);
     completingSceneRef.current = null;
   }, [activity.walkingSceneIndex]);
 
@@ -1385,19 +1389,6 @@ function WalkingActivity({
     if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
     if (forwardIntervalRef.current !== null) window.clearInterval(forwardIntervalRef.current);
   }, []);
-
-  useEffect(() => {
-    if (!started || activity.walkingComplete || completedSceneIndex === null) return;
-    if (completedSceneIndex !== sceneIndex) return;
-    const complete = completedSceneIndex >= walkingScenes.length - 1;
-    const nextMinutes = Math.min(20, activity.walkingMinutes + 5);
-    onChange({
-      walkingMinutes: nextMinutes,
-      walkingSceneIndex: complete ? completedSceneIndex : completedSceneIndex + 1,
-      walkingComplete: complete,
-    });
-    setMessage(complete ? "散步時間達到 20 分鐘！" : `完成「${walkingScenes[completedSceneIndex].title}」，散步時間 +5 分鐘。`);
-  }, [activity.walkingComplete, activity.walkingMinutes, completedSceneIndex, onChange, sceneIndex, started]);
 
   function prepare(id: string) {
     if (prepared.includes(id)) return;
@@ -1419,6 +1410,20 @@ function WalkingActivity({
     setMessage("");
   }
 
+  function completeWalkingScene(completedIndex: number) {
+    if (completingSceneRef.current === completedIndex) return;
+    completingSceneRef.current = completedIndex;
+    stopForward();
+    const complete = completedIndex >= walkingScenes.length - 1;
+    const nextMinutes = Math.min(20, activity.walkingMinutes + 5);
+    onChange({
+      walkingMinutes: nextMinutes,
+      walkingSceneIndex: complete ? completedIndex : completedIndex + 1,
+      walkingComplete: complete,
+    });
+    setMessage(complete ? "散步時間達到 20 分鐘！" : `完成「${walkingScenes[completedIndex].title}」，散步時間 +5 分鐘。`);
+  }
+
   const advanceWalk = useCallback(() => {
     if (!started || activity.walkingComplete) return;
     if (needsCleanup) {
@@ -1437,12 +1442,11 @@ function WalkingActivity({
       }
       const next = Math.min(completionPosition, current + walkingStep);
       if (next >= completionPosition && current < completionPosition && completingSceneRef.current !== sceneIndex) {
-        completingSceneRef.current = sceneIndex;
-        setCompletedSceneIndex(sceneIndex);
+        completeWalkingScene(sceneIndex);
       }
       return next;
     });
-  }, [activity.walkingComplete, activity.walkingPoopCleaned, needsCleanup, scene.poopEvent, sceneIndex, started]);
+  }, [activity.walkingComplete, activity.walkingPoopCleaned, activity.walkingMinutes, needsCleanup, onChange, scene.poopEvent, sceneIndex, started]);
 
   function stopForward() {
     if (forwardIntervalRef.current !== null) {
@@ -1460,6 +1464,80 @@ function WalkingActivity({
     advanceWalk();
     if (forwardIntervalRef.current !== null) window.clearInterval(forwardIntervalRef.current);
     forwardIntervalRef.current = window.setInterval(advanceWalk, 170);
+  }
+
+  const draggedBagSize = 74;
+
+  function getDraggedBagPosition(event: ReactPointerEvent<HTMLButtonElement>) {
+    const sceneRect = sceneRef.current?.getBoundingClientRect();
+    if (!sceneRect) return null;
+    return {
+      x: event.clientX - sceneRect.left - draggedBagSize / 2,
+      y: event.clientY - sceneRect.top - draggedBagSize / 2,
+    };
+  }
+
+  function startDraggingBag(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (!needsCleanup) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    const nextPosition = getDraggedBagPosition(event);
+    if (nextPosition) {
+      draggingBagRef.current = true;
+      setDraggedBag(nextPosition);
+    }
+  }
+
+  function dragBag(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (!draggingBagRef.current) return;
+    event.preventDefault();
+    const nextPosition = getDraggedBagPosition(event);
+    if (nextPosition) setDraggedBag(nextPosition);
+  }
+
+  function finishDraggingBag(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (!draggingBagRef.current) return;
+    event.preventDefault();
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+    const finalBagPosition = getDraggedBagPosition(event) ?? draggedBag;
+    if (!finalBagPosition) {
+      draggingBagRef.current = false;
+      setDraggedBag(null);
+      return;
+    }
+    const sceneRect = sceneRef.current?.getBoundingClientRect();
+    const poopRect = poopTargetRef.current?.getBoundingClientRect();
+    const tolerance = 58;
+    const bagRect = {
+      left: finalBagPosition.x,
+      top: finalBagPosition.y,
+      right: finalBagPosition.x + draggedBagSize,
+      bottom: finalBagPosition.y + draggedBagSize,
+      centerX: finalBagPosition.x + draggedBagSize / 2,
+      centerY: finalBagPosition.y + draggedBagSize / 2,
+    };
+    const hitPoop = sceneRect && poopRect
+      ? (
+        bagRect.centerX >= poopRect.left - sceneRect.left - tolerance &&
+        bagRect.centerX <= poopRect.right - sceneRect.left + tolerance &&
+        bagRect.centerY >= poopRect.top - sceneRect.top - tolerance &&
+        bagRect.centerY <= poopRect.bottom - sceneRect.top + tolerance
+      ) || (
+        bagRect.right >= poopRect.left - sceneRect.left - tolerance &&
+        bagRect.left <= poopRect.right - sceneRect.left + tolerance &&
+        bagRect.bottom >= poopRect.top - sceneRect.top - tolerance &&
+        bagRect.top <= poopRect.bottom - sceneRect.top + tolerance
+      )
+      : false;
+
+    draggingBagRef.current = false;
+    setDraggedBag(null);
+    if (hitPoop) cleanupPoop();
+  }
+
+  function cancelDraggingBag() {
+    draggingBagRef.current = false;
+    setDraggedBag(null);
   }
 
   function cleanupPoop() {
@@ -1521,6 +1599,7 @@ function WalkingActivity({
           <p className="walking-game-hint">{walkingInstruction}</p>
           <div
             className={`walking-scene ${moving ? "is-moving" : ""}`}
+            ref={sceneRef}
             tabIndex={0}
             aria-label="散步場景，按往前走按鈕前進"
           >
@@ -1534,14 +1613,39 @@ function WalkingActivity({
               <div className="walking-event-card" role="status">
                 <b>{walkingEventMessage.title}</b>
                 <p>{walkingEventMessage.body}</p>
+                {needsCleanup && (
+                  <div className="walking-drag-row">
+                    <button
+                      type="button"
+                      className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}`}
+                      onPointerDown={startDraggingBag}
+                      onPointerMove={dragBag}
+                      onPointerUp={finishDraggingBag}
+                      onPointerCancel={cancelDraggingBag}
+                      aria-label="拖曳撿便袋清理排泄物"
+                    >
+                      <img src="/assets/walking/poop-bag-1.png" alt="" />
+                    </button>
+                    <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
+                  </div>
+                )}
               </div>
+            )}
+            {draggedBag && (
+              <img
+                className="walking-drag-bag-ghost"
+                src="/assets/walking/poop-bag-1.png"
+                alt=""
+                aria-hidden="true"
+                style={{ left: draggedBag.x, top: draggedBag.y }}
+              />
             )}
             <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position)}>
               <img
-                src={needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png"}
+                src={activity.walkingPoopCleaned ? "/assets/walking/walker-dog-bag.png" : needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png"}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
-              {needsCleanup && <button type="button" className="walking-poop" onClick={cleanupPoop} aria-label="清理排泄物"><img src="/assets/walking/poop.png" alt="" /></button>}
+              {needsCleanup && <div className="walking-poop" ref={poopTargetRef} aria-hidden="true"><img src="/assets/walking/poop.png" alt="" /></div>}
             </div>
             <button
               type="button"
