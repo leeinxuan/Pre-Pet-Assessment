@@ -29,6 +29,7 @@ const taiwanCities = [
 
 type AcquisitionCard = {
   title: string;
+  city?: string;
   image?: string;
   icon?: string;
   href?: string;
@@ -37,6 +38,7 @@ type AcquisitionCard = {
 const adoptionCards: AcquisitionCard[] = [
   {
     title: "毛孩生活故事卡",
+    city: "台南市",
     image: "/assets/acquisition/paws-life-village.jpg",
     href: "https://paws.ixda.tw/",
   },
@@ -58,11 +60,22 @@ function AcquisitionOptionCard({ card }: { card: AcquisitionCard }) {
     <span aria-hidden="true">{card.icon ?? "🐾"}</span>
   );
 
+  const cardBody = (
+    <>
+      <span className="legal-option-visual">{visual}</span>
+      <span className="legal-option-copy">
+        <b>{card.title}</b>
+        <span className="legal-option-city" aria-label={card.city ? `縣市：${card.city}` : undefined}>
+          {card.city ?? "\u00A0"}
+        </span>
+      </span>
+    </>
+  );
+
   if (card.href) {
     return (
       <a className="legal-option-card is-active" href={card.href} target="_blank" rel="noopener noreferrer">
-        <span className="legal-option-visual">{visual}</span>
-        <span className="legal-option-copy"><b>{card.title}</b></span>
+        {cardBody}
         <em className="legal-option-action">前往查看</em>
       </a>
     );
@@ -70,8 +83,7 @@ function AcquisitionOptionCard({ card }: { card: AcquisitionCard }) {
 
   return (
     <article className="legal-option-card is-disabled" aria-disabled="true">
-      <span className="legal-option-visual">{visual}</span>
-      <span className="legal-option-copy"><b>{card.title}</b></span>
+      {cardBody}
       <button className="legal-option-action" type="button" onClick={() => undefined}>前往查看</button>
     </article>
   );
@@ -90,7 +102,6 @@ export function PetAcquisitionPage({ onBack, onReset }: { onBack: () => void; on
     <div className="content-wrap legal-acquisition-page">
       <div className="legal-acquisition-hero">
         <div>
-          <small>取得寵物</small>
           <h1><span>下一步</span>透過合法管道迎接牠</h1>
           <p>完成準備後，請選擇透明、合法且能提供完整資訊的取得方式。</p>
         </div>

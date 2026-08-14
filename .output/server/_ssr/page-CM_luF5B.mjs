@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-BOJ-okcr.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-CM_luF5B.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -2177,7 +2177,87 @@ var walkingPrepNotes = {
 	bag: "散步時清理排泄物，是對環境與他人的責任。",
 	water: "天氣熱或散步時間較長時，幫狗狗補充飲水。"
 };
-var walkingStep = 5;
+var walkingStep = 7;
+function lerp(start, end, progress) {
+	return start + (end - start) * progress;
+}
+var walkingScenePaths = {
+	0: {
+		turnAt: .35,
+		start: {
+			x: 8,
+			y: 50,
+			scale: 1
+		},
+		turn: {
+			x: 30,
+			y: 50,
+			scale: 1
+		},
+		end: {
+			x: 50,
+			y: 20,
+			scale: .55
+		}
+	},
+	1: {
+		turnAt: .5,
+		start: {
+			x: 8,
+			y: 50,
+			scale: 1
+		},
+		turn: {
+			x: 34,
+			y: 35,
+			scale: .8
+		},
+		end: {
+			x: 60,
+			y: 20,
+			scale: .6
+		}
+	},
+	3: {
+		turnAt: .55,
+		start: {
+			x: 5,
+			y: 10,
+			scale: .3
+		},
+		turn: {
+			x: 30,
+			y: 50,
+			scale: .8
+		},
+		end: {
+			x: 60,
+			y: 50,
+			scale: 1
+		}
+	}
+};
+function getWalkingCharacterStyle(sceneIndex, position) {
+	const path = walkingScenePaths[sceneIndex];
+	if (!path) return {
+		"--walk-left": `${Math.min(78, 5 + position * .73)}%`,
+		"--walk-bottom": "2%",
+		"--walk-translate-y": "0",
+		"--walk-scale": 1
+	};
+	const progress = Math.max(0, Math.min(1, position / 100));
+	const { turnAt, start, turn, end } = path;
+	const segmentProgress = progress <= turnAt ? progress / turnAt : (progress - turnAt) / (1 - turnAt);
+	const from = progress <= turnAt ? start : turn;
+	const to = progress <= turnAt ? turn : end;
+	return {
+		"--walk-left": `${lerp(from.x, to.x, segmentProgress)}%`,
+		"--walk-top": `${lerp(from.y, to.y, segmentProgress)}%`,
+		"--walk-bottom": "auto",
+		"--walk-translate-y": "-50%",
+		"--walk-scale": lerp(from.scale, to.scale, segmentProgress)
+	};
+}
 function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue }) {
 	const [started, setStarted] = (0, import_react.useState)(activity.walkingMinutes > 0 || activity.walkingComplete);
 	const [position, setPosition] = (0, import_react.useState)(0);
@@ -2422,7 +2502,7 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "walking-character",
-						style: { left: `${Math.min(78, 5 + position * .73)}%` },
+						style: getWalkingCharacterStyle(sceneIndex, position),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 							src: needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png",
 							alt: `正在和${petName}散步的人物與小狗`
@@ -4253,6 +4333,7 @@ var taiwanCities = [
 var adoptionCards = [
 	{
 		title: "毛孩生活故事卡",
+		city: "台南市",
 		image: "/assets/acquisition/paws-life-village.jpg",
 		href: "https://paws.ixda.tw/"
 	},
@@ -4284,52 +4365,42 @@ var purchaseCards = [
 	}
 ];
 function AcquisitionOptionCard({ card }) {
-	const visual = card.image ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-		src: card.image,
-		alt: ""
-	}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"aria-hidden": "true",
-		children: card.icon ?? "🐾"
-	});
+	const cardBody = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+		className: "legal-option-visual",
+		children: card.image ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+			src: card.image,
+			alt: ""
+		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+			"aria-hidden": "true",
+			children: card.icon ?? "🐾"
+		})
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+		className: "legal-option-copy",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: card.title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+			className: "legal-option-city",
+			"aria-label": card.city ? `縣市：${card.city}` : void 0,
+			children: card.city ?? "\xA0"
+		})]
+	})] });
 	if (card.href) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
 		className: "legal-option-card is-active",
 		href: card.href,
 		target: "_blank",
 		rel: "noopener noreferrer",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-				className: "legal-option-visual",
-				children: visual
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-				className: "legal-option-copy",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: card.title })
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", {
-				className: "legal-option-action",
-				children: "前往查看"
-			})
-		]
+		children: [cardBody, /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", {
+			className: "legal-option-action",
+			children: "前往查看"
+		})]
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
 		className: "legal-option-card is-disabled",
 		"aria-disabled": "true",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-				className: "legal-option-visual",
-				children: visual
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-				className: "legal-option-copy",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: card.title })
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-				className: "legal-option-action",
-				type: "button",
-				onClick: () => void 0,
-				children: "前往查看"
-			})
-		]
+		children: [cardBody, /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+			className: "legal-option-action",
+			type: "button",
+			onClick: () => void 0,
+			children: "前往查看"
+		})]
 	});
 }
 function PetAcquisitionPage({ onBack, onReset }) {
@@ -4344,11 +4415,7 @@ function PetAcquisitionPage({ onBack, onReset }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "legal-acquisition-hero",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "取得寵物" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "下一步" }), "透過合法管道迎接牠"] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "完成準備後，請選擇透明、合法且能提供完整資訊的取得方式。" })
-				] })
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "下一步" }), "透過合法管道迎接牠"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "完成準備後，請選擇透明、合法且能提供完整資訊的取得方式。" })] })
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", {
 				className: "legal-search",

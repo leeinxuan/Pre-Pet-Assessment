@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { expenseCatalog, money, roomItems } from "../../game-data";
 import { journeyItems, lifeScenarios } from "../../life-data";
 import { walkingPreloadImages, walkingPrepItems, walkingScenes } from "../../data/walkingScenes";
@@ -1242,7 +1242,78 @@ const walkingPrepNotes: Record<string, string> = {
   water: "天氣熱或散步時間較長時，幫狗狗補充飲水。",
 };
 
-const walkingStep = 5;
+const walkingStep = 7;
+
+function lerp(start: number, end: number, progress: number) {
+  return start + (end - start) * progress;
+}
+
+type WalkingPathPoint = {
+  x: number;
+  y: number;
+  scale: number;
+};
+
+type WalkingScenePath = {
+  turnAt: number;
+  start: WalkingPathPoint;
+  turn: WalkingPathPoint;
+  end: WalkingPathPoint;
+};
+
+const walkingScenePaths: Partial<Record<number, WalkingScenePath>> = {
+  // 場景 1：家門口往人行道
+  0: {
+    turnAt: 0.65,
+    start: { x: 8, y: 50, scale: 1 },
+    turn: { x: 45, y: 50, scale: 1 },
+    end: { x: 45, y: 10, scale: 0.3 },
+  },
+  // 場景 2：公園。這裡設定成斜直線；turn 放在 start/end 的中點即可避免轉彎。
+  1: {
+    turnAt: 0.5,
+    start: { x: 8, y: 50, scale: 1 },
+    turn: { x: 34, y: 35, scale: 0.8 },
+    end: { x: 60, y: 20, scale: 0.6 },
+  },
+  // 場景 4：人行道往家門口。可依畫面手動調整路徑與縮放。
+  3: {
+    turnAt: 0.55,
+    start: { x: 5, y: 10, scale: 0.3 },
+    turn: { x: 30, y: 50, scale: 1 },
+    end: { x: 45, y: 50, scale: 1 },
+  },
+};
+
+function getWalkingCharacterStyle(sceneIndex: number, position: number): CSSProperties {
+  const path = walkingScenePaths[sceneIndex];
+
+  if (!path) {
+    return {
+      "--walk-left": `${Math.min(78, 5 + position * 0.73)}%`,
+      "--walk-bottom": "2%",
+      "--walk-translate-y": "0",
+      "--walk-scale": 1,
+    } as CSSProperties;
+  }
+
+  const progress = Math.max(0, Math.min(1, position / 100));
+  const { turnAt, start, turn, end } = path;
+
+  const segmentProgress = progress <= turnAt
+    ? progress / turnAt
+    : (progress - turnAt) / (1 - turnAt);
+  const from = progress <= turnAt ? start : turn;
+  const to = progress <= turnAt ? turn : end;
+
+  return {
+    "--walk-left": `${lerp(from.x, to.x, segmentProgress)}%`,
+    "--walk-top": `${lerp(from.y, to.y, segmentProgress)}%`,
+    "--walk-bottom": "auto",
+    "--walk-translate-y": "-50%",
+    "--walk-scale": lerp(from.scale, to.scale, segmentProgress),
+  } as CSSProperties;
+}
 
 function WalkingActivity({
   activity,
@@ -1454,7 +1525,7 @@ function WalkingActivity({
                 <p>{walkingEventMessage.body}</p>
               </div>
             )}
-            <div className="walking-character" style={{ left: `${Math.min(78, 5 + position * 0.73)}%` }}>
+            <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position)}>
               <img
                 src={needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png"}
                 alt={`正在和${petName}散步的人物與小狗`}
