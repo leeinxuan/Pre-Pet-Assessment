@@ -1,5 +1,5 @@
 import { n as require_jsx_runtime, o as require_react, s as __toESM, t as require_react_dom } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CgGFW7k8.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-D2ThE34G.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -2453,7 +2453,23 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 						onPointerCancel: stopForward,
 						onPointerLeave: stopForward,
 						"aria-label": "往前走",
-						children: ["往前走 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "walking-forward-orb",
+							"aria-hidden": "true",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", {
+								viewBox: "0 0 24 24",
+								focusable: "false",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M8 11.2V4.8a1.7 1.7 0 1 1 3.4 0v5.4" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M11.4 10V8.3a1.55 1.55 0 1 1 3.1 0v2.3" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M14.5 10.7V9.4a1.45 1.45 0 1 1 2.9 0v2.4" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M17.4 12.2v-1a1.35 1.35 0 1 1 2.7 0v4.1c0 3.3-2.3 5.7-6.1 5.7h-1.6c-2.2 0-3.7-.9-4.9-2.5l-3-4.1a1.7 1.7 0 0 1 2.6-2.1l1.1 1.1" })
+								]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "walking-forward-label",
+							children: "往前走"
+						})]
 					})
 				]
 			})]
@@ -2721,7 +2737,7 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 		{
 			id: "legal-acquisition",
 			number: "05",
-			label: "合法取得寵物",
+			label: "取得寵物",
 			status: mainStatus(4),
 			onClick: () => onGoTo(8)
 		}
@@ -3087,8 +3103,8 @@ function LegalAcquisitionStep({ breed, category, onBack, onReset }) {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "legal-acquisition-hero",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "合法取得寵物" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "下一步，透過合法管道迎接牠" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "取得寵物" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "下一步" }), "透過合法管道迎接牠"] }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "完成準備後，請選擇透明、合法且能提供完整資訊的取得方式。" })
 				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
 					className: "legal-selected-pet",
@@ -3104,52 +3120,93 @@ function LegalAcquisitionStep({ breed, category, onBack, onReset }) {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "legal-acquisition-grid",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-					className: "legal-card legal-card--adoption",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				className: "legal-acquisition-sections",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+					className: "legal-section",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "legal-section-head",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							className: "legal-card-icon",
 							"aria-hidden": "true",
 							children: "♡"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "領養" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "你可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "可查看地區收容所與開放認養資訊" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "確認認養流程與後續照顧責任" })] }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "legal-card-actions",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
-								className: "primary",
-								href: "https://paws.ixda.tw/",
-								target: "_blank",
-								rel: "noopener noreferrer",
-								children: ["前往合作認養平台 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "↗" })]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "領養" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。" })] })]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "legal-option-grid",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+								className: "legal-option-card is-active",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "毛孩生活故事卡" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "查看目前開放認養的動物與故事資訊。" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+										href: "https://paws.ixda.tw/",
+										target: "_blank",
+										rel: "noopener noreferrer",
+										children: ["前往查看 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "↗" })]
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+								className: "legal-option-card is-disabled",
+								"aria-disabled": "true",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "地區收容所資訊" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "依所在地區整理收容所與領養窗口。" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "即將開放" })
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+								className: "legal-option-card is-disabled",
+								"aria-disabled": "true",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "合作認養平台" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "彙整更多合作平台與認養服務入口。" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "即將開放" })
+								]
 							})
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "建議確認動物基本資料、健康狀況、認養流程與後續照顧責任。" })
-					]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-					className: "legal-card",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						]
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+					className: "legal-section",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "legal-section-head",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							className: "legal-card-icon",
 							"aria-hidden": "true",
 							children: "◎"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "購買" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "若選擇購買，請確認店家來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "未來可依所在地區篩選合法寵物店" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "可優先參考你選擇的物種與品種" })] }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "legal-card-actions",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-								className: "secondary",
-								type: "button",
-								disabled: true,
-								children: "合法寵物店查詢功能準備中"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "購買" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "若選擇購買，請確認來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。" })] })]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "legal-option-grid",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+								className: "legal-option-card is-disabled",
+								"aria-disabled": "true",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "合法寵物店查詢" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "查詢符合規範、資訊透明的合法店家。" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "查詢功能準備中" })
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+								className: "legal-option-card is-disabled",
+								"aria-disabled": "true",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "依地區篩選" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "未來可依所在地區整理附近合法取得管道。" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "即將開放" })
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+								className: "legal-option-card is-disabled",
+								"aria-disabled": "true",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "依物種篩選" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "依你選擇的物種與品種，提供更適合的查詢入口。" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "即將開放" })
+								]
 							})
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "未來可依所在地區、想養物種與品種，整理更貼近需求的合法取得管道。" })
-					]
+						]
+					})]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -4802,7 +4859,7 @@ function Home() {
 											behavior: "smooth"
 										});
 									},
-									children: ["前往合法取得寵物 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+									children: ["取得寵物 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
 								})
 							})
 						] }),

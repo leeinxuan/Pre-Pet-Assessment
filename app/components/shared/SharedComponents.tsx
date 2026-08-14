@@ -154,7 +154,7 @@ export function StageRail({
     {
       id: "legal-acquisition",
       number: "05",
-      label: "合法取得寵物",
+      label: "取得寵物",
       status: mainStatus(4),
       onClick: () => onGoTo(8),
     },
@@ -468,8 +468,8 @@ export function LegalAcquisitionStep({
     <div className="content-wrap legal-acquisition-page">
       <div className="legal-acquisition-hero">
         <div>
-          <small>合法取得寵物</small>
-          <h1>下一步，透過合法管道迎接牠</h1>
+          <small>取得寵物</small>
+          <h1><span>下一步</span>透過合法管道迎接牠</h1>
           <p>完成準備後，請選擇透明、合法且能提供完整資訊的取得方式。</p>
         </div>
         <aside className="legal-selected-pet" aria-label="已選擇寵物">
@@ -479,34 +479,60 @@ export function LegalAcquisitionStep({
         </aside>
       </div>
 
-      <div className="legal-acquisition-grid">
-        <article className="legal-card legal-card--adoption">
-          <span className="legal-card-icon" aria-hidden="true">♡</span>
-          <h2>領養</h2>
-          <p>你可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。</p>
-          <ul>
-            <li>可查看地區收容所與開放認養資訊</li>
-            <li>確認認養流程與後續照顧責任</li>
-          </ul>
-          <div className="legal-card-actions">
-            <a className="primary" href="https://paws.ixda.tw/" target="_blank" rel="noopener noreferrer">前往合作認養平台 <span>↗</span></a>
+      <div className="legal-acquisition-sections">
+        <section className="legal-section">
+          <div className="legal-section-head">
+            <span className="legal-card-icon" aria-hidden="true">♡</span>
+            <div>
+              <h2>領養</h2>
+              <p>可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。</p>
+            </div>
           </div>
-          <small>建議確認動物基本資料、健康狀況、認養流程與後續照顧責任。</small>
-        </article>
+          <div className="legal-option-grid">
+            <article className="legal-option-card is-active">
+              <h3>毛孩生活故事卡</h3>
+              <p>查看目前開放認養的動物與故事資訊。</p>
+              <a href="https://paws.ixda.tw/" target="_blank" rel="noopener noreferrer">前往查看 <span>↗</span></a>
+            </article>
+            <article className="legal-option-card is-disabled" aria-disabled="true">
+              <h3>地區收容所資訊</h3>
+              <p>依所在地區整理收容所與領養窗口。</p>
+              <span>即將開放</span>
+            </article>
+            <article className="legal-option-card is-disabled" aria-disabled="true">
+              <h3>合作認養平台</h3>
+              <p>彙整更多合作平台與認養服務入口。</p>
+              <span>即將開放</span>
+            </article>
+          </div>
+        </section>
 
-        <article className="legal-card">
-          <span className="legal-card-icon" aria-hidden="true">◎</span>
-          <h2>購買</h2>
-          <p>若選擇購買，請確認店家來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。</p>
-          <ul>
-            <li>未來可依所在地區篩選合法寵物店</li>
-            <li>可優先參考你選擇的物種與品種</li>
-          </ul>
-          <div className="legal-card-actions">
-            <button className="secondary" type="button" disabled>合法寵物店查詢功能準備中</button>
+        <section className="legal-section">
+          <div className="legal-section-head">
+            <span className="legal-card-icon" aria-hidden="true">◎</span>
+            <div>
+              <h2>購買</h2>
+              <p>若選擇購買，請確認來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。</p>
+            </div>
           </div>
-          <small>未來可依所在地區、想養物種與品種，整理更貼近需求的合法取得管道。</small>
-        </article>
+          <div className="legal-option-grid">
+            <article className="legal-option-card is-disabled" aria-disabled="true">
+              <h3>合法寵物店查詢</h3>
+              <p>查詢符合規範、資訊透明的合法店家。</p>
+              <span>查詢功能準備中</span>
+            </article>
+            <article className="legal-option-card is-disabled" aria-disabled="true">
+              <h3>依地區篩選</h3>
+              <p>未來可依所在地區整理附近合法取得管道。</p>
+              <span>即將開放</span>
+            </article>
+            <article className="legal-option-card is-disabled" aria-disabled="true">
+              <h3>依物種篩選</h3>
+              <p>依你選擇的物種與品種，提供更適合的查詢入口。</p>
+              <span>即將開放</span>
+            </article>
+          </div>
+        </section>
       </div>
 
       <p className="legal-acquisition-reminder">無論選擇領養或購買，都請確認來源合法，並保留相關文件與健康紀錄。</p>

@@ -1478,7 +1478,15 @@ function WalkingActivity({
               onPointerLeave={stopForward}
               aria-label="往前走"
             >
-              往前走 <span>→</span>
+              <span className="walking-forward-orb" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M8 11.2V4.8a1.7 1.7 0 1 1 3.4 0v5.4" />
+                  <path d="M11.4 10V8.3a1.55 1.55 0 1 1 3.1 0v2.3" />
+                  <path d="M14.5 10.7V9.4a1.45 1.45 0 1 1 2.9 0v2.4" />
+                  <path d="M17.4 12.2v-1a1.35 1.35 0 1 1 2.7 0v4.1c0 3.3-2.3 5.7-6.1 5.7h-1.6c-2.2 0-3.7-.9-4.9-2.5l-3-4.1a1.7 1.7 0 0 1 2.6-2.1l1.1 1.1" />
+                </svg>
+              </span>
+              <span className="walking-forward-label">往前走</span>
             </button>
           </div>
         </div>
