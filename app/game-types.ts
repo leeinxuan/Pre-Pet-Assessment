@@ -114,6 +114,8 @@ export type Profile = {
   otherActivitySpace: string;
   homeSpaceImage: string;
   homeSpaceImageName: string;
+  homeSpaceImages: string[];
+  homeSpaceImageNames: string[];
   noShibaExperience: boolean;
   pastPetTypes: string[];
   pastDogCount: string;

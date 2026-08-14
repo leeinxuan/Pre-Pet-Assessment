@@ -491,6 +491,8 @@ export const initialProfile: Profile = {
   otherActivitySpace: "",
   homeSpaceImage: "",
   homeSpaceImageName: "",
+  homeSpaceImages: [],
+  homeSpaceImageNames: [],
   noShibaExperience: false,
   pastPetTypes: [],
   pastDogCount: "",

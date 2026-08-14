@@ -7,8 +7,194 @@ import { lifeScenarios } from "../../life-data";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, ScenarioAnswer } from "../../game-types";
 import { mergeDefaultVisibleExpenses, NavButtons } from "../shared/SharedComponents";
 
-function PdfFab() {
+const a4PageWidthPt = 595.28;
+const a4PageHeightPt = 841.89;
+
+function sanitizePdfFileName(value: string) {
+  return value.replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
+}
+
+function dataUrlToBytes(dataUrl: string) {
+  const base64 = dataUrl.split(",")[1] ?? "";
+  const binary = window.atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}
+
+function textBytes(text: string) {
+  return new TextEncoder().encode(text);
+}
+
+function concatBytes(chunks: Uint8Array[]) {
+  const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+  const output = new Uint8Array(totalLength);
+  let offset = 0;
+  chunks.forEach((chunk) => {
+    output.set(chunk, offset);
+    offset += chunk.length;
+  });
+  return output;
+}
+
+function createPdfBlobFromCanvases(canvases: HTMLCanvasElement[]) {
+  const chunks: Uint8Array[] = [];
+  const offsets: number[] = [0];
+  let byteLength = 0;
+  const objectCount = 2 + canvases.length * 3;
+
+  const push = (chunk: string | Uint8Array) => {
+    const bytes = typeof chunk === "string" ? textBytes(chunk) : chunk;
+    chunks.push(bytes);
+    byteLength += bytes.length;
+  };
+
+  const startObject = (id: number) => {
+    offsets[id] = byteLength;
+    push(`${id} 0 obj\n`);
+  };
+
+  push("%PDF-1.4\n%\u00e2\u00e3\u00cf\u00d3\n");
+  startObject(1);
+  push("<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+  startObject(2);
+  push(`<< /Type /Pages /Kids [${canvases.map((_, index) => `${3 + index * 3} 0 R`).join(" ")}] /Count ${canvases.length} >>\nendobj\n`);
+
+  canvases.forEach((canvas, index) => {
+    const pageObjectId = 3 + index * 3;
+    const imageObjectId = pageObjectId + 1;
+    const contentObjectId = pageObjectId + 2;
+    const imageBytes = dataUrlToBytes(canvas.toDataURL("image/jpeg", 0.92));
+    const content = `q\n${a4PageWidthPt} 0 0 ${a4PageHeightPt} 0 0 cm\n/Im${index + 1} Do\nQ\n`;
+    const contentBytes = textBytes(content);
+
+    startObject(pageObjectId);
+    push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${a4PageWidthPt} ${a4PageHeightPt}] /Resources << /XObject << /Im${index + 1} ${imageObjectId} 0 R >> >> /Contents ${contentObjectId} 0 R >>\nendobj\n`);
+
+    startObject(imageObjectId);
+    push(`<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >>\nstream\n`);
+    push(imageBytes);
+    push("\nendstream\nendobj\n");
+
+    startObject(contentObjectId);
+    push(`<< /Length ${contentBytes.length} >>\nstream\n`);
+    push(contentBytes);
+    push("endstream\nendobj\n");
+  });
+
+  const xrefOffset = byteLength;
+  push(`xref\n0 ${objectCount + 1}\n0000000000 65535 f \n`);
+  for (let id = 1; id <= objectCount; id += 1) push(`${String(offsets[id]).padStart(10, "0")} 00000 n \n`);
+  push(`trailer\n<< /Size ${objectCount + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
+
+  return new Blob([concatBytes(chunks)], { type: "application/pdf" });
+}
+
+async function imageToDataUrl(src: string) {
+  if (src.startsWith("data:")) return src;
+  const response = await fetch(src);
+  const blob = await response.blob();
+  return await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function replaceImagesWithDataUrls(root: HTMLElement) {
+  const images = Array.from(root.querySelectorAll("img"));
+  await Promise.all(images.map(async (image) => {
+    const source = image.getAttribute("src") || image.src;
+    if (!source) return;
+    try {
+      image.src = await imageToDataUrl(new URL(source, window.location.href).toString());
+    } catch {
+      // Keep the original source as a fallback; failed images should not stop the whole export.
+    }
+  }));
+}
+
+function inlineComputedStyles(source: Element, clone: Element) {
+  const styles = window.getComputedStyle(source);
+  Array.from(styles).forEach((property) => {
+    (clone as HTMLElement).style.setProperty(property, styles.getPropertyValue(property), styles.getPropertyPriority(property));
+  });
+  Array.from(source.children).forEach((child, index) => {
+    const clonedChild = clone.children.item(index);
+    if (clonedChild) inlineComputedStyles(child, clonedChild);
+  });
+}
+
+async function elementToCanvas(source: HTMLElement) {
+  const width = source.offsetWidth;
+  const height = source.offsetHeight;
+  const clone = source.cloneNode(true) as HTMLElement;
+  clone.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+  await replaceImagesWithDataUrls(clone);
+  inlineComputedStyles(source, clone);
+  clone.style.margin = "0";
+  clone.style.boxSizing = "border-box";
+
+  const html = new XMLSerializer().serializeToString(clone);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><foreignObject width="100%" height="100%">${html}</foreignObject></svg>`;
+  const image = new Image();
+  image.decoding = "sync";
+  await new Promise<void>((resolve, reject) => {
+    image.onload = () => resolve();
+    image.onerror = () => reject(new Error("PDF page render failed"));
+    image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  });
+
+  const scale = Math.min(2, window.devicePixelRatio || 1.5);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Canvas is not available");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  return canvas;
+}
+
+async function downloadAssessmentPdf(petName: string) {
+  const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(".care-a4-sheet, .care-print-profile"));
+  if (!sourcePages.length) throw new Error("PDF source pages not found");
+
+  const stage = document.createElement("div");
+  stage.className = "pdf-export-stage";
+  sourcePages.forEach((page) => stage.appendChild(page.cloneNode(true)));
+  document.body.appendChild(stage);
+
+  try {
+    await document.fonts?.ready;
+    await replaceImagesWithDataUrls(stage);
+    const pages = Array.from(stage.children) as HTMLElement[];
+    const canvases = [];
+    for (const page of pages) canvases.push(await elementToCanvas(page));
+    const blob = createPdfBlobFromCanvases(canvases);
+    const safePetName = sanitizePdfFileName(petName);
+    const fileName = safePetName
+      ? `伴日子新手村_照顧準備總覽_${safePetName}.pdf`
+      : "伴日子新手村_照顧準備總覽.pdf";
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } finally {
+    stage.remove();
+  }
+}
+
+function PdfFab({ petName }: { petName: string }) {
   const [mounted, setMounted] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -17,9 +203,37 @@ function PdfFab() {
   if (!mounted) return null;
 
   return createPortal(
-    <button type="button" className="primary pdf-fab" onClick={() => window.print()} aria-label="列印照顧準備總覽 PDF" title="列印 PDF">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h10a1 1 0 0 1 1 1v4h1a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-1v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-1H5a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3h1V4a1 1 0 0 1 1-1Zm1 5h8V5H8v3Zm0 8v3h8v-3H8Zm11-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5 10a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h1v-2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2h1a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5Z" /></svg>
-    </button>,
+    <>
+      {error && <p className="pdf-download-error" role="alert">{error}</p>}
+      <button
+        type="button"
+        className={`primary pdf-fab ${generating ? "is-generating" : ""}`}
+        onClick={async () => {
+          if (generating) return;
+          setGenerating(true);
+          setError("");
+          try {
+            await downloadAssessmentPdf(petName);
+          } catch {
+            setError("PDF 下載失敗，請再試一次。");
+          } finally {
+            setGenerating(false);
+          }
+        }}
+        disabled={generating}
+        aria-label="下載照顧準備總覽 PDF"
+        title="下載 PDF"
+      >
+        {generating ? (
+          <span className="pdf-fab-spinner" aria-hidden="true" />
+        ) : (
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 3a1 1 0 0 1 1 1v9.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 0 1 1.4-1.4l3.3 3.3V4a1 1 0 0 1 1-1Z" />
+            <path d="M5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
+          </svg>
+        )}
+      </button>
+    </>,
     document.body
   );
 }
@@ -197,8 +411,34 @@ export function ProfileSupplementForm({
     if (!file) return;
     if (!file.type.startsWith("image/")) return;
     const reader = new FileReader();
-    reader.onload = () => onChange({ ...profile, homeSpaceImage: String(reader.result ?? ""), homeSpaceImageName: file.name });
+    reader.onload = () => {
+      const image = String(reader.result ?? "");
+      const images = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
+      const imageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
+      const nextImages = [...images, image];
+      const nextImageNames = [...imageNames, file.name];
+      onChange({
+        ...profile,
+        homeSpaceImage: nextImages[0] ?? "",
+        homeSpaceImageName: nextImageNames[0] ?? "",
+        homeSpaceImages: nextImages,
+        homeSpaceImageNames: nextImageNames,
+      });
+    };
     reader.readAsDataURL(file);
+  }
+  function removeHomeSpaceImage(indexToRemove: number) {
+    const images = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
+    const imageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
+    const nextImages = images.filter((_, index) => index !== indexToRemove);
+    const nextImageNames = imageNames.filter((_, index) => index !== indexToRemove);
+    onChange({
+      ...profile,
+      homeSpaceImage: nextImages[0] ?? "",
+      homeSpaceImageName: nextImageNames[0] ?? "",
+      homeSpaceImages: nextImages,
+      homeSpaceImageNames: nextImageNames,
+    });
   }
   const experienceInputs = (prefix: "past" | "current") => {
     const types = prefix === "past" ? profile.pastPetTypes : profile.currentPetTypes;
@@ -209,6 +449,8 @@ export function ProfileSupplementForm({
       return <label key={type}><input type="checkbox" checked={enabled} onChange={() => toggle(prefix === "past" ? "pastPetTypes" : "currentPetTypes", type)} />{type}{type === "其他" ? <input disabled={!enabled} value={profile[otherKey]} onChange={(event) => update(otherKey, event.target.value)} placeholder="請說明" /> : <input type="number" min="0" disabled={!enabled} value={profile[countKey]} onChange={(event) => setCount(countKey, event.target.value)} placeholder="隻" />}</label>;
     });
   };
+  const homeSpaceImages = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
+  const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
 
   return (
     <section className="content-wrap profile-supplement" aria-labelledby="profile-supplement-title">
@@ -222,13 +464,29 @@ export function ProfileSupplementForm({
         <fieldset><legend>同居家人</legend><div className="supplement-choice-grid compact housemate-presence-choice"><button type="button" className={`supplement-choice ${profile.hasHousemates === false ? "selected" : ""}`} aria-pressed={profile.hasHousemates === false} onClick={() => chooseHousematePresence(false)}>{profile.hasHousemates === false && <SelectedDot />}無</button><button type="button" className={`supplement-choice ${profile.hasHousemates === true ? "selected" : ""}`} aria-pressed={profile.hasHousemates === true} onClick={() => chooseHousematePresence(true)}>{profile.hasHousemates === true && <SelectedDot />}有</button></div>{profile.hasHousemates === true && <div className="housemate-entry-row"><label className="supplement-inline-input housemate-text-input">請簡單填寫同住家人<input value={profile.housemateList[0] ?? ""} placeholder="例如：爸爸、媽媽、妹妹" onChange={(event) => updateHousemateText(event.target.value)} /></label><label className="supplement-checkbox"><input type="checkbox" checked={profile.hasSensitiveHouseholdMembers} onChange={(event) => update("hasSensitiveHouseholdMembers", event.target.checked)} />家中有幼童、長者、孕婦</label></div>}{profile.hasHousemates === true && <div className="supplement-followup"><b>同住者是否知情並同意飼養？</b><div className="supplement-choice-grid compact">{consentOptions.map((option) => <button type="button" key={option.value} className={`supplement-choice ${option.selected ? "selected" : ""}`} aria-pressed={option.selected} onClick={() => update("housematesConsent", option.consent)}>{option.selected && <SelectedDot />}{option.label}</button>)}</div></div>}</fieldset>
         <fieldset><legend>寵物預計活動空間</legend><div className="supplement-choice-grid">{["戶外空間", "室內客廳", "房間", "其他"].map((value) => <button type="button" key={value} className={`supplement-choice ${profile.activitySpace === value ? "selected" : ""}`} aria-pressed={profile.activitySpace === value} onClick={() => update("activitySpace", value)}>{profile.activitySpace === value && <SelectedDot />}{value}</button>)}</div>{profile.activitySpace === "其他" && <label className="supplement-inline-input">其他活動空間<input placeholder="請說明" value={profile.otherActivitySpace} onChange={(event) => update("otherActivitySpace", event.target.value)} /></label>}</fieldset>
         <fieldset><legend>居家空間</legend><div className="home-space-upload">
-          <label>
-            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => handleHomeSpaceImage(event.target.files?.[0])} />
-            <b>共同為毛孩的安全把關</b>
-            <span>可上傳未來寵物活動空間照片，協助評估環境安全與照顧安排。</span>
-            <em>{profile.homeSpaceImageName || "選擇 PNG、JPG、JPEG 或 WebP 圖片"}</em>
-          </label>
-          {profile.homeSpaceImage && <figure><img src={profile.homeSpaceImage} alt="已上傳的居家空間照片預覽" /><figcaption>{profile.homeSpaceImageName}</figcaption></figure>}
+          {homeSpaceImages.length === 0 ? (
+            <label className="home-space-dropzone">
+              <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => { handleHomeSpaceImage(event.target.files?.[0]); event.currentTarget.value = ""; }} />
+              <b>共同為毛孩的安全把關</b>
+              <span>可上傳未來寵物活動空間照片，協助評估環境安全與照顧安排。</span>
+              <em>選擇 PNG、JPG、JPEG 或 WebP 圖片</em>
+            </label>
+          ) : (
+            <div className="home-space-gallery">
+              {homeSpaceImages.map((image, index) => (
+                <figure key={`${homeSpaceImageNames[index] ?? "home-space"}-${index}`}>
+                  <button type="button" className="home-space-remove-photo" onClick={() => removeHomeSpaceImage(index)} aria-label={`刪除居家空間照片 ${index + 1}`}>×</button>
+                  <img src={image} alt={`已上傳的居家空間照片預覽 ${index + 1}`} />
+                  <figcaption>{homeSpaceImageNames[index] || `居家空間照片 ${index + 1}`}</figcaption>
+                </figure>
+              ))}
+              <label className="home-space-add-photo" aria-label="新增居家空間照片">
+                <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => { handleHomeSpaceImage(event.target.files?.[0]); event.currentTarget.value = ""; }} />
+                <span aria-hidden="true">＋</span>
+                <b>新增照片</b>
+              </label>
+            </div>
+          )}
         </div></fieldset>
         <fieldset><legend>飼養經驗</legend><div className="pet-experience-block"><b>曾經飼養：</b><div className="pet-experience-row">{experienceInputs("past")}</div><b>目前家中有寵物：</b><div className="pet-experience-row">{experienceInputs("current")}</div><label className="experience-note">其他飼養經驗分享：<textarea placeholder="請分享你的照顧經驗" value={profile.experienceNote} onChange={(event) => update("experienceNote", event.target.value)} /></label></div><button type="button" className={`supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`} aria-pressed={profile.noShibaExperience} onClick={() => update("noShibaExperience", !profile.noShibaExperience)}>{profile.noShibaExperience && <SelectedDot />}我沒有養過柴犬</button></fieldset>
         <fieldset><legend>飼養原因 <small>可複選</small></legend><div className="supplement-choice-grid reasons">{["陪伴與情緒支持", "喜愛動物", "單純想養", "看家守衛", "他人推薦", "其他"].map((reason) => {
@@ -332,6 +590,8 @@ export function AssessmentReport({
     "和同住家人討論活動空間與日常照顧安排",
   ];
   const selectedBreed = breeds.find((item) => item.id === breed);
+  const homeSpaceImages = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
+  const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
 
   const checklistGroups = [
     { title: "每日照顧", items: ["固定餵食", "提供乾淨飲水", "觀察精神、食慾與排泄", "安排陪伴與活動", "外出散步或合適活動", "清理排泄物"] },
@@ -392,7 +652,7 @@ export function AssessmentReport({
 
   return (
     <>
-    <PdfFab />
+    <PdfFab petName={petName} />
     <div className="content-wrap summary-page assessment-report compact-assessment">
       <article className="care-a4-sheet" aria-label="伴日子照顧準備總覽 A4">
         <header className="care-a4-header">
@@ -484,7 +744,16 @@ export function AssessmentReport({
         </div>
         <section className="print-home-space-photo" aria-label="居家空間照片">
           <h2>居家空間照片</h2>
-          {profile.homeSpaceImage ? <figure><img src={profile.homeSpaceImage} alt="使用者上傳的居家空間照片" /><figcaption>{profile.homeSpaceImageName || "已上傳居家空間照片"}</figcaption></figure> : <p>尚未上傳居家空間照片</p>}
+          {homeSpaceImages.length ? (
+            <div className="print-home-space-gallery">
+              {homeSpaceImages.map((image, index) => (
+                <figure key={`${homeSpaceImageNames[index] ?? "print-home-space"}-${index}`}>
+                  <img src={image} alt={`使用者上傳的居家空間照片 ${index + 1}`} />
+                  <figcaption>{homeSpaceImageNames[index] || `居家空間照片 ${index + 1}`}</figcaption>
+                </figure>
+              ))}
+            </div>
+          ) : <p>尚未上傳居家空間照片</p>}
         </section>
       </article>
     </div>
