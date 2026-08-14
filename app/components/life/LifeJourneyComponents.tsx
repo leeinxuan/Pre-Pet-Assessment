@@ -1267,7 +1267,7 @@ const walkingScenePaths: Partial<Record<number, WalkingScenePath>> = {
     turnAt: 0.55,
     start: { x: 8, y: 50, scale: 1 },
     turn: { x: 45, y: 50, scale: 1 },
-    end: { x: 45, y: 20, scale: 0.4 },
+    end: { x: 42, y: 20, scale: 0.3 },
   },
   // 場景 2：公園。這裡設定成斜直線；turn 放在 start/end 的中點即可避免轉彎。
   1: {
