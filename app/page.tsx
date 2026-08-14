@@ -32,9 +32,9 @@ import {
   RoomPreparation,
 } from "./components/preparation/PreparationComponents";
 import { AssessmentReport, ProfileSupplementForm } from "./components/report/ProfileReportComponents";
+import { PetAcquisitionPage } from "./components/acquisition/PetAcquisitionPage";
 import {
   CostBar,
-  LegalAcquisitionStep,
   SpeciesStep,
   StageRail,
   Welcome,
@@ -364,7 +364,7 @@ export default function Home() {
                 <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "smooth" }); }}>取得寵物 <span>→</span></button>
               </div>
             </>}
-            {step === 8 && <LegalAcquisitionStep breed={breed} category={category} onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
+            {step === 8 && <PetAcquisitionPage onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
           </section>
         </div>
       )}

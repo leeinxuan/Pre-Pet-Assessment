@@ -835,48 +835,34 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
   font-weight: 800;
   line-height: 1.8;
 }
-.legal-selected-pet {
-  flex: 0 0 220px;
-  padding: 18px;
-  border: 1px solid rgba(216, 199, 170, .8);
-  border-radius: 22px;
-  background: rgba(255, 253, 247, .78);
-}
-.legal-selected-pet img {
-  display: block;
-  width: 112px;
-  height: 112px;
-  object-fit: contain;
-  margin: 0 auto 10px;
-}
-.legal-selected-pet b {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--ink);
-}
-.legal-selected-pet span {
-  display: block;
-  color: #5f735f;
-  font-size: 14px;
-  font-weight: 900;
-  line-height: 1.6;
-}
+.legal-search { margin-top: 22px; padding: 18px; border: 1px solid rgba(216, 199, 170, .72); border-radius: 22px; background: rgba(255, 253, 247, .72); box-shadow: 0 10px 28px rgba(70, 53, 26, .06); }
+.legal-search label { display: block; margin-bottom: 10px; color: var(--gold-dark); font-size: 13px; font-weight: 900; }
+.legal-search > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+.legal-search input,
+.legal-search select { min-height: 48px; width: 100%; border: 1px solid var(--line); border-radius: 15px; background: white; padding: 0 15px; color: var(--ink); font: inherit; font-weight: 850; }
+.legal-search input:focus,
+.legal-search select:focus { outline: 3px solid rgba(212, 154, 36, .26); border-color: var(--gold); }
+.legal-search button { min-height: 48px; border: 0; border-radius: 15px; background: var(--ink); color: white; padding: 0 22px; font: inherit; font-weight: 900; cursor: pointer; box-shadow: inset 0 -5px 0 rgba(174, 109, 6, .9); }
+.legal-search p { margin: 10px 0 0; color: #6b7f62; font-size: 13px; font-weight: 900; }
 .legal-acquisition-sections { display: grid; gap: 22px; margin-top: 24px; }
-.legal-section { padding: clamp(22px, 4vw, 34px); border: 1px solid var(--line); border-radius: 26px; background: white; box-shadow: 0 14px 42px rgba(70, 53, 26, .07); }
-.legal-section-head { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; margin-bottom: 18px; }
+.legal-section { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.legal-section-head { display: block; margin-bottom: 14px; }
 .legal-section-head h2 { margin: 0 0 8px; font-size: 30px; }
 .legal-section-head p { max-width: 720px; margin: 0; color: var(--muted); font-weight: 800; line-height: 1.75; }
-.legal-option-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-.legal-option-card { min-height: 190px; display: flex; flex-direction: column; gap: 10px; padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); }
-.legal-option-card h3 { margin: 0; font-size: 18px; }
-.legal-option-card p { margin: 0; color: var(--muted); font-size: 13px; font-weight: 800; line-height: 1.65; }
-.legal-option-card a,
-.legal-option-card > span { margin-top: auto; min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; font-size: 13px; font-weight: 900; text-decoration: none; }
-.legal-option-card.is-active { border-color: rgba(212, 154, 36, .5); background: #fffaf0; }
-.legal-option-card.is-active a { background: var(--ink); color: white; box-shadow: inset 0 -5px 0 rgba(174, 109, 6, .92); }
-.legal-option-card.is-active a:hover { transform: translateY(-1px); }
-.legal-option-card.is-disabled { opacity: .82; cursor: default; }
-.legal-option-card.is-disabled > span { border: 1px solid #ddd4c7; background: #f1ece3; color: #84786a; cursor: default; }
+.legal-option-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.legal-option-card { min-height: 0; display: grid; gap: 0; overflow: hidden; border: 1px solid rgba(216, 199, 170, .8); border-radius: 22px; background: rgba(255, 253, 247, .9); color: var(--ink); text-decoration: none; box-shadow: 0 14px 34px rgba(70, 53, 26, .08); transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease; }
+.legal-option-card.is-active:hover { transform: translateY(-3px); box-shadow: 0 18px 42px rgba(70, 53, 26, .13); }
+.legal-option-visual { aspect-ratio: 16 / 9; min-height: 0; display: grid; place-items: center; overflow: hidden; background: linear-gradient(135deg, #fff4d8, #e6f2df); font-size: 48px; }
+.legal-option-visual img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.legal-option-visual > span { display: grid; place-items: center; width: 100%; height: 100%; }
+.legal-option-copy { display: grid; gap: 6px; padding: 15px 16px 12px; }
+.legal-option-copy b { font-size: 16px; font-weight: 950; }
+.legal-option-copy small { color: #6d7f66; font-size: 12px; font-weight: 900; }
+.legal-option-action { margin: 0 16px 16px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 13px; background: var(--ink); color: white; font: inherit; font-style: normal; font-size: 13px; font-weight: 900; box-shadow: inset 0 -5px 0 rgba(174, 109, 6, .92); }
+.legal-option-card button.legal-option-action { cursor: default; }
+.legal-option-card.is-disabled { opacity: .72; cursor: default; }
+.legal-option-card.is-disabled .legal-option-visual { filter: grayscale(.32); background: linear-gradient(135deg, #f4efe5, #e7e3db); }
+.legal-option-card.is-disabled .legal-option-action { background: #6f675d; box-shadow: inset 0 -5px 0 rgba(75, 63, 47, .55); }
 .legal-acquisition-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2160,7 +2146,8 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .report-next-step-actions .primary { width: 100%; justify-content: center; }
   .legal-acquisition-page { padding: 24px 16px 62px; }
   .legal-acquisition-hero { align-items: stretch; flex-direction: column; padding: 24px; }
-  .legal-selected-pet { flex: none; }
+  .legal-search > div { grid-template-columns: 1fr; }
+  .legal-search button { width: 100%; }
   .legal-option-grid, .legal-acquisition-grid { grid-template-columns: 1fr; }
   .daily-behavior-activity, .daily-behavior-positive, .correct-feedback-layout { grid-template-columns: 1fr; }
   .daily-behavior-video, .daily-behavior-video video, .daily-behavior-positive-video, .daily-behavior-positive-video video, .correct-feedback-media, .correct-feedback-media video { min-height: 250px; }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { applySizeBasedExpenseAmount, breeds, categories, expenseCatalog, getPetSizeForBreed, money } from "../../game-data";
 import { journeyItems } from "../../life-data";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
@@ -420,14 +420,25 @@ export function CostBar({
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [flashExpense, setFlashExpense] = useState<ExpenseRecord | null>(null);
+  const toastTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!latestExpense) return;
+    if (toastTimerRef.current !== null) {
+      window.clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = null;
+    }
     setFlashExpense(latestExpense);
-    const timer = window.setTimeout(() => {
+    toastTimerRef.current = window.setTimeout(() => {
       setFlashExpense(null);
+      toastTimerRef.current = null;
     }, 2400);
-    return () => window.clearTimeout(timer);
+    return () => {
+      if (toastTimerRef.current !== null) {
+        window.clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = null;
+      }
+    };
   }, [latestExpense]);
 
   return (
@@ -448,98 +459,5 @@ export function CostBar({
       </div>
       {detailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} onClose={() => setDetailsOpen(false)} />}
     </>
-  );
-}
-
-export function LegalAcquisitionStep({
-  breed,
-  category,
-  onBack,
-  onReset,
-}: {
-  breed: string;
-  category: string;
-  onBack: () => void;
-  onReset: () => void;
-}) {
-  const selectedBreed = breeds.find((item) => item.id === breed);
-  const selectedCategory = categories.find((item) => item.id === category);
-  return (
-    <div className="content-wrap legal-acquisition-page">
-      <div className="legal-acquisition-hero">
-        <div>
-          <small>取得寵物</small>
-          <h1><span>下一步</span>透過合法管道迎接牠</h1>
-          <p>完成準備後，請選擇透明、合法且能提供完整資訊的取得方式。</p>
-        </div>
-        <aside className="legal-selected-pet" aria-label="已選擇寵物">
-          {selectedBreed?.image && <img src={selectedBreed.image} alt="" />}
-          <b>你選擇的是</b>
-          <span>{selectedBreed?.label ?? selectedCategory?.label ?? "尚未選擇"}</span>
-        </aside>
-      </div>
-
-      <div className="legal-acquisition-sections">
-        <section className="legal-section">
-          <div className="legal-section-head">
-            <span className="legal-card-icon" aria-hidden="true">♡</span>
-            <div>
-              <h2>領養</h2>
-              <p>可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。</p>
-            </div>
-          </div>
-          <div className="legal-option-grid">
-            <article className="legal-option-card is-active">
-              <h3>毛孩生活故事卡</h3>
-              <p>查看目前開放認養的動物與故事資訊。</p>
-              <a href="https://paws.ixda.tw/" target="_blank" rel="noopener noreferrer">前往查看 <span>↗</span></a>
-            </article>
-            <article className="legal-option-card is-disabled" aria-disabled="true">
-              <h3>地區收容所資訊</h3>
-              <p>依所在地區整理收容所與領養窗口。</p>
-              <span>即將開放</span>
-            </article>
-            <article className="legal-option-card is-disabled" aria-disabled="true">
-              <h3>合作認養平台</h3>
-              <p>彙整更多合作平台與認養服務入口。</p>
-              <span>即將開放</span>
-            </article>
-          </div>
-        </section>
-
-        <section className="legal-section">
-          <div className="legal-section-head">
-            <span className="legal-card-icon" aria-hidden="true">◎</span>
-            <div>
-              <h2>購買</h2>
-              <p>若選擇購買，請確認來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。</p>
-            </div>
-          </div>
-          <div className="legal-option-grid">
-            <article className="legal-option-card is-disabled" aria-disabled="true">
-              <h3>合法寵物店查詢</h3>
-              <p>查詢符合規範、資訊透明的合法店家。</p>
-              <span>查詢功能準備中</span>
-            </article>
-            <article className="legal-option-card is-disabled" aria-disabled="true">
-              <h3>依地區篩選</h3>
-              <p>未來可依所在地區整理附近合法取得管道。</p>
-              <span>即將開放</span>
-            </article>
-            <article className="legal-option-card is-disabled" aria-disabled="true">
-              <h3>依物種篩選</h3>
-              <p>依你選擇的物種與品種，提供更適合的查詢入口。</p>
-              <span>即將開放</span>
-            </article>
-          </div>
-        </section>
-      </div>
-
-      <p className="legal-acquisition-reminder">無論選擇領養或購買，都請確認來源合法，並保留相關文件與健康紀錄。</p>
-      <div className="nav-buttons">
-        <button className="secondary" type="button" onClick={onBack}>← 返回照顧準備總覽</button>
-        <button className="primary" type="button" onClick={onReset}>重新開始 <span>↺</span></button>
-      </div>
-    </div>
   );
 }
