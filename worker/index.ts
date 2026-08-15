@@ -28,6 +28,8 @@ interface ExecutionContext {
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+    const runtime = globalThis as typeof globalThis & { __PRE_PET_RESULTS_DB__?: D1Database };
+    runtime.__PRE_PET_RESULTS_DB__ = env.DB;
 
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];

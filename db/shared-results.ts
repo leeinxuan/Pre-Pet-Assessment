@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import type { SharedAssessmentResult } from "../app/shared-result-types";
 
 const createTableSql = `
@@ -10,18 +9,21 @@ const createTableSql = `
 `;
 
 function getResultsDb() {
-  if (!env.DB) throw new Error("Share result storage is unavailable");
-  return env.DB;
+  const runtime = globalThis as typeof globalThis & { __PRE_PET_RESULTS_DB__?: D1Database };
+  if (!runtime.__PRE_PET_RESULTS_DB__) throw new Error("Share result storage is unavailable");
+  return runtime.__PRE_PET_RESULTS_DB__;
 }
 
 async function ensureResultsTable() {
-  await getResultsDb().prepare(createTableSql).run();
+  const db = getResultsDb();
+  await db.prepare(createTableSql).run();
+  return db;
 }
 
 export async function saveSharedAssessmentResult(result: SharedAssessmentResult) {
-  await ensureResultsTable();
+  const db = await ensureResultsTable();
   const id = crypto.randomUUID().replaceAll("-", "");
-  await getResultsDb()
+  await db
     .prepare("INSERT INTO shared_assessment_results (id, payload, created_at) VALUES (?, ?, ?)")
     .bind(id, JSON.stringify(result), Date.now())
     .run();
@@ -30,8 +32,8 @@ export async function saveSharedAssessmentResult(result: SharedAssessmentResult)
 
 export async function readSharedAssessmentResult(id: string) {
   if (!/^[a-f0-9]{32}$/.test(id)) return null;
-  await ensureResultsTable();
-  const row = await getResultsDb()
+  const db = await ensureResultsTable();
+  const row = await db
     .prepare("SELECT payload FROM shared_assessment_results WHERE id = ? LIMIT 1")
     .bind(id)
     .first<{ payload: string }>();
