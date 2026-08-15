@@ -70,6 +70,7 @@ export type LifeJourneyPhase =
 export type JourneyItemType =
   | "scenario"
   | "walking"
+  | "breed-challenge"
   | "body-language"
   | "body-care"
   | "senior-room";

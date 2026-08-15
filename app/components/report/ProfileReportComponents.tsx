@@ -511,6 +511,8 @@ export function AssessmentReport({
   trunkPassed,
   answers,
   lifeActivity,
+  committed,
+  onCommittedChange,
   onBack,
   onReset,
 }: {
@@ -526,10 +528,11 @@ export function AssessmentReport({
   trunkPassed: boolean;
   answers: Record<string, ScenarioAnswer>;
   lifeActivity: LifeActivityState;
+  committed: boolean;
+  onCommittedChange: (committed: boolean) => void;
   onBack: () => void;
   onReset: () => void;
 }) {
-  const [committed, setCommitted] = useState(false);
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
   const total = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
   const suggestedPreparedTotal = total + emergencyReserve;
@@ -717,7 +720,7 @@ export function AssessmentReport({
       <section className="care-commitment overview-commitment" aria-labelledby="overview-care-commitment-title">
         <h2 id="overview-care-commitment-title">照顧承諾</h2>
         <label>
-          <input type="checkbox" checked={committed} onChange={(event) => setCommitted(event.target.checked)} />
+          <input type="checkbox" checked={committed} onChange={(event) => onCommittedChange(event.target.checked)} />
           <span>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</span>
         </label>
       </section>

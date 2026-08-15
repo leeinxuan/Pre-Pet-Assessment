@@ -46,11 +46,15 @@ type MainNavigation = {
   children?: NavigationChild[];
 };
 
-const lifeStageRanges = [
-  { label: "接回家", start: 0, end: 0 },
-  { label: "日常生活", start: 1, end: 2 },
-  { label: "生活變化", start: 3, end: 4 },
-] as const;
+function getLifeStageRanges(breed: string) {
+  const breedLabel = breeds.find((item) => item.id === breed)?.label ?? "品種";
+  return [
+    { label: "接回家", start: 0, end: 0 },
+    { label: "日常照護", start: 1, end: 2 },
+    { label: `${breedLabel}的考驗`, start: 3, end: 3 },
+    { label: "生活變化", start: 4, end: 6 },
+  ] as const;
+}
 
 function statusAt(index: number, current: number, reached: number): NavigationStatus {
   if (index === current) return "current";
@@ -66,6 +70,7 @@ export function StageRail({
   preparationTask,
   preparationReached,
   lifePhase,
+  breed,
   journeyIndex,
   journeyCompleted,
   onGoTo,
@@ -80,6 +85,7 @@ export function StageRail({
   preparationTask: number;
   preparationReached: number;
   lifePhase: LifeJourneyPhase;
+  breed: string;
   journeyIndex: number;
   journeyCompleted: string[];
   onGoTo: (step: number) => void;
@@ -87,6 +93,7 @@ export function StageRail({
   onPreparationTask: (task: number) => void;
   onLifeStage: (stage: number) => void;
 }) {
+  const lifeStageRanges = getLifeStageRanges(breed);
   const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
   const currentLifeStage = lifePhase === "arrival-video"
     ? 0
@@ -165,14 +172,14 @@ export function StageRail({
       <nav className="station-navigation">
         {navigation.map((item, index) => (
           <div className={`nav-main ${item.status}`} key={item.id}>
-            <button className="nav-main-button" onClick={item.onClick} aria-current={item.status === "current" ? "step" : undefined}>
+            <button className="nav-main-button" disabled={item.status === "locked"} onClick={item.onClick} aria-current={item.status === "current" ? "step" : undefined}>
               <span>{item.status === "completed" ? "✓" : item.number}</span><em>{item.label}</em>
             </button>
             {item.children && (
               <div className="nav-children">
                 {item.children.map((child, childIndex) => (
                   <div className={`nav-child ${child.status}`} key={child.id}>
-                    <button onClick={child.onClick} aria-current={child.status === "current" ? "step" : undefined}>
+                    <button disabled={child.status === "locked"} onClick={child.onClick} aria-current={child.status === "current" ? "step" : undefined}>
                       <span>{child.status === "completed" ? "✓" : childIndex + 1}</span><em>{child.label}</em>
                     </button>
                   </div>

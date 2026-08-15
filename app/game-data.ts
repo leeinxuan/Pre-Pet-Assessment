@@ -331,8 +331,8 @@ export const scenarios: Scenario[] = [
   },
   {
     id: "daily-feeding",
-    stage: "建立日常生活",
-    timeLabel: "日常生活開始後",
+    stage: "建立日常照護",
+    timeLabel: "日常照護開始後",
     title: "每天的餵食與飲水",
     description: "生活漸漸穩定，你要建立家中每個人都能遵守的餵食方式。",
     artIndex: 2,
@@ -344,7 +344,7 @@ export const scenarios: Scenario[] = [
   },
   {
     id: "exercise",
-    stage: "建立日常生活",
+    stage: "建立日常照護",
     timeLabel: "普通的下班日",
     title: "今天很累，還是需要活動",
     description: "你下班後很疲倦，但牠正在門邊期待今天的散步或陪玩。",
@@ -358,7 +358,7 @@ export const scenarios: Scenario[] = [
   },
   {
     id: "grooming",
-    stage: "建立日常生活",
+    stage: "建立日常照護",
     timeLabel: "週末上午",
     title: "清潔、梳毛與例行照顧",
     description: "今天沒有意外，只是到了梳毛、清潔用品與檢查耳朵腳掌的時間。",

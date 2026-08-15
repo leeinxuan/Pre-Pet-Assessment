@@ -120,6 +120,7 @@ export default function Home() {
   const [lifeActivity, setLifeActivity] = useState<LifeActivityState>(initialLifeActivityState);
   const [scenarioAnswers, setScenarioAnswers] = useState<Record<string, ScenarioAnswer>>({});
   const [profile, setProfile] = useState<Profile>(initialProfile);
+  const [careCommitted, setCareCommitted] = useState(false);
   const costToastTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -149,8 +150,8 @@ export default function Home() {
   }
 
   function goToLifeStage(stageIndex: number) {
-    const firstJourneyItem = [0, 1, 3];
-    const underlyingStep = [3, 4, 6];
+    const firstJourneyItem = [0, 1, 3, 4];
+    const underlyingStep = [3, 4, 4, 6];
     if (lifePhase === "arrival-video" && stageIndex === 0) {
       setStep(3);
       setIntroOpen(false);
@@ -292,6 +293,7 @@ export default function Home() {
     setLifeActivity(initialLifeActivityState);
     setScenarioAnswers({});
     setProfile(initialProfile);
+    setCareCommitted(false);
   }
 
   function startFreshJourney() {
@@ -325,6 +327,7 @@ export default function Home() {
       <LifeJourney
         index={journeyIndex}
         petName={petName}
+        breed={breed}
         answers={scenarioAnswers}
         activity={lifeActivity}
         completedIds={journeyCompleted}
@@ -366,6 +369,7 @@ export default function Home() {
             preparationTask={preparationTask}
             preparationReached={preparationReached}
             lifePhase={lifePhase}
+            breed={breed}
             journeyIndex={journeyIndex}
             journeyCompleted={journeyCompleted}
             onGoTo={goToStation}
@@ -379,10 +383,11 @@ export default function Home() {
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>
-              <AssessmentReport petName={petName} breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+              <AssessmentReport petName={petName} breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <ProfileSupplementForm profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <div className="report-next-step-actions">
-                <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "smooth" }); }}>取得寵物 <span>→</span></button>
+                <button className="primary" type="button" disabled={!careCommitted} aria-describedby="care-commitment-gate" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "smooth" }); }}>取得寵物 <span>→</span></button>
+                {!careCommitted && <p id="care-commitment-gate" className="report-commitment-hint">請先勾選上方的照顧承諾，才能進入下一步。</p>}
               </div>
             </>}
             {step === 8 && <PetAcquisitionPage onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
