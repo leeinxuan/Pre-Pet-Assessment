@@ -423,7 +423,19 @@ export function CostBar({
   const toastTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!latestExpense) return;
+    return () => {
+      if (toastTimerRef.current !== null) {
+        window.clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!latestExpense) {
+      setFlashExpense(null);
+      return;
+    }
     if (toastTimerRef.current !== null) {
       window.clearTimeout(toastTimerRef.current);
       toastTimerRef.current = null;
@@ -433,12 +445,6 @@ export function CostBar({
       setFlashExpense(null);
       toastTimerRef.current = null;
     }, 2400);
-    return () => {
-      if (toastTimerRef.current !== null) {
-        window.clearTimeout(toastTimerRef.current);
-        toastTimerRef.current = null;
-      }
-    };
   }, [latestExpense]);
 
   return (

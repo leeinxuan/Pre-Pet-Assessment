@@ -175,7 +175,14 @@ export function RoomPreparation({
           {remainingRoomItems.length === 0 && <ul className="prepared-item-list" aria-label="已準備的房間物品">
             {roomItems.map((item) => {
               const note = preparedRoomItemNotes[item.id] ?? { label: item.label, note: item.purpose };
-              return <li key={item.id}><b>{note.label}{item.expenseId && <small className="prepared-item-price"> {expensePriceText([item.expenseId], breed)}</small>}</b><span>{note.note}</span></li>;
+              const price = item.expenseId ? expensePriceText([item.expenseId], breed) : "";
+              return <li key={item.id}>
+                <div className="prepared-item-row">
+                  <b>{note.label}</b>
+                  {price && <small className="prepared-item-price">{price}</small>}
+                </div>
+                <span>{note.note}</span>
+              </li>;
             })}
           </ul>}
         </section>
@@ -292,7 +299,14 @@ export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack
           {departureTrunkItems.map((item) => {
             const note = preparedTrunkItemNotes[item.id] ?? { label: item.label, note: item.description };
             const newExpenseIds = (item.expenseIds ?? []).filter((id) => !roomExpenseIds.has(id));
-            return <li key={item.id}><b>{note.label}{newExpenseIds.length > 0 && <small className="prepared-item-price"> {expensePriceText(newExpenseIds, breed)}</small>}</b><span>{note.note}</span></li>;
+            const price = newExpenseIds.length > 0 ? expensePriceText(newExpenseIds, breed) : "";
+            return <li key={item.id}>
+              <div className="prepared-item-row">
+                <b>{note.label}</b>
+                {price && <small className="prepared-item-price">{price}</small>}
+              </div>
+              <span>{note.note}</span>
+            </li>;
           })}
         </ul>}
       </aside>

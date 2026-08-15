@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   applySizeBasedExpenseAmount,
   expenseCatalog,
@@ -120,6 +120,16 @@ export default function Home() {
   const [lifeActivity, setLifeActivity] = useState<LifeActivityState>(initialLifeActivityState);
   const [scenarioAnswers, setScenarioAnswers] = useState<Record<string, ScenarioAnswer>>({});
   const [profile, setProfile] = useState<Profile>(initialProfile);
+  const costToastTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (costToastTimerRef.current !== null) {
+        window.clearTimeout(costToastTimerRef.current);
+        costToastTimerRef.current = null;
+      }
+    };
+  }, []);
 
   const backupNames = useMemo(() => {
     return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
@@ -169,8 +179,15 @@ export default function Home() {
     const sizedExpense = applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed));
     setExpenses((current) => {
       if (current.some((item) => item.id === id)) return current;
+      if (costToastTimerRef.current !== null) {
+        window.clearTimeout(costToastTimerRef.current);
+        costToastTimerRef.current = null;
+      }
       setLatestExpense(sizedExpense);
-      window.setTimeout(() => setLatestExpense((active) => active?.id === id ? null : active), 2400);
+      costToastTimerRef.current = window.setTimeout(() => {
+        setLatestExpense((active) => active?.id === id ? null : active);
+        costToastTimerRef.current = null;
+      }, 2600);
       return [...current, sizedExpense];
     });
   }
@@ -264,6 +281,10 @@ export default function Home() {
     setTrunkPassed(false);
     setExpenses([]);
     setLatestExpense(null);
+    if (costToastTimerRef.current !== null) {
+      window.clearTimeout(costToastTimerRef.current);
+      costToastTimerRef.current = null;
+    }
     setLifePhase("arrival-video");
     setPetName("");
     setJourneyIndex(0);
