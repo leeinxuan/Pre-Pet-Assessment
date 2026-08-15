@@ -46,7 +46,9 @@ export function RoomPreparation({
   onToggleHazard,
   onSavePetName,
   onBack,
+  onReplay,
   onNext,
+  reviewing = false,
   breed,
 }: {
   selectedItems: string[];
@@ -56,7 +58,9 @@ export function RoomPreparation({
   onToggleHazard: (id: string) => void;
   onSavePetName: (name: string) => void;
   onBack: () => void;
+  onReplay: () => void;
   onNext: () => void;
+  reviewing?: boolean;
   breed: string;
 }) {
   const [nameDraft, setNameDraft] = useState(petName);
@@ -163,11 +167,12 @@ export function RoomPreparation({
             {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} full-seven`}>
               {row.map((item) => {
                 const selected = selectedItems.includes(item.id);
+                const note = preparedRoomItemNotes[item.id] ?? { label: item.label, note: item.purpose };
                 return <div key={item.id} className="supply-slot">
                   {!selected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} aria-label={`${item.label}，可加入`} disabled={exitingItems.includes(item.id)} onClick={() => prepareItem(item.id)}>
                     <span className="room-supply-visual"><img className={`room-item-image room-item-image--${item.id}`} src={item.image} alt="" /></span>
                     <b>{item.label}</b>
-                  </button> : <div className="supply-slot-empty" aria-hidden="true" />}
+                  </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small></div>}
                 </div>;
               })}
             </div>)}
@@ -202,7 +207,7 @@ export function RoomPreparation({
         </div>
       </div>
       <div className="room-actions">
-        <button className="secondary" onClick={onBack}>← 返回</button>
+        <button className="secondary" onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
         <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="primary" onClick={completeRoomCheck}>完成房間檢查，準備出發 <span>→</span></button></div>
       </div>
     </div>
@@ -236,7 +241,7 @@ export function CareMemberSetup({ members, onChange, onBack, onNext }: { members
   </div>;
 }
 
-export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack, onNext }: { selected: string[]; petName: string; breed: string; onSelect: (id: string) => void; onBack: () => void; onNext: () => void }) {
+export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack, onReplay, onNext, reviewing = false }: { selected: string[]; petName: string; breed: string; onSelect: (id: string) => void; onBack: () => void; onReplay: () => void; onNext: () => void; reviewing?: boolean }) {
   const [exitingItems, setExitingItems] = useState<string[]>([]);
   const [departing, setDeparting] = useState(false);
   const documents = departureTrunkItems.filter((item) => item.kind === "document");
@@ -287,10 +292,11 @@ export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
             {row.map((item) => {
               const itemSelected = selected.includes(item.id);
+              const note = preparedTrunkItemNotes[item.id] ?? { label: item.label, note: item.description };
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
                   <span className="departure-supply-visual"><img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /></span><b>{item.label}</b>
-                </button> : <div className="supply-slot-empty" aria-hidden="true" />}
+                </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small></div>}
               </div>;
             })}
           </div>)}
@@ -323,7 +329,7 @@ export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack
       </section>
     </div>
     <div className="departure-actions">
-      <button type="button" className="secondary" onClick={onBack}>← 返回</button>
+      <button type="button" className="secondary" onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
       <div><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
     </div>
   </div>;

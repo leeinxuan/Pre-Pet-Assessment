@@ -196,7 +196,24 @@ export function StageRail({
     <>
       <aside className="station-rail" aria-label="體驗進度">{renderNavigation()}</aside>
       <details className="mobile-progress-nav">
-        <summary><span>目前進度</span><b>{navigation[currentMain].number} {navigation[currentMain].label}</b></summary>
+        <summary aria-label={`目前在第 ${currentMain + 1} 站：${navigation[currentMain].label}。點擊查看完整進度`}>
+          <span className="mobile-progress-copy">
+            <b>{navigation[currentMain].number} {navigation[currentMain].label}</b>
+          </span>
+          <span
+            className="mobile-progress-track"
+            role="img"
+            aria-label={`共 ${navigation.length} 站，目前在第 ${currentMain + 1} 站：${navigation[currentMain].label}`}
+          >
+            {navigation.map((item) => (
+              <span className={`mobile-progress-step ${item.status}`} key={`mobile-${item.id}`}>
+                <i aria-hidden="true" />
+                <span className="visually-hidden">{item.label}：{item.status === "completed" ? "已完成" : item.status === "current" ? "目前位置" : "尚未開始"}</span>
+              </span>
+            ))}
+          </span>
+          <span className="mobile-progress-toggle" aria-hidden="true" />
+        </summary>
         <div aria-label="體驗進度">{renderNavigation()}</div>
       </details>
     </>
@@ -463,10 +480,7 @@ export function CostBar({
           </p>
         )}
         <button type="button" className="bill-trigger" onClick={() => setDetailsOpen(true)} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M7 3h10a2 2 0 0 1 2 2v16l-3-1.7-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Z" />
-            <path d="M8 8h8M8 12h8M8 16h5" />
-          </svg>
+          <span className="bill-trigger-icon" aria-hidden="true">＄</span>
           <em>{expenseLabels.viewDetails}</em>
         </button>
       </div>

@@ -90,17 +90,17 @@ export const lifeScenarios: Scenario[] = [
   },
   {
     id: "busy-daily-care",
-    stage: "穩定生活的日常",
-    timeLabel: "穩定生活的日常",
-    title: "忙碌時的日常照顧",
-    description: "今天工作特別忙，你很疲累，但豆豆仍需要晚餐、乾淨飲水、排泄與適當活動。",
+    stage: "當生活發生變化",
+    timeLabel: "當生活發生變化",
+    title: "疲憊忙碌的日子",
+    description: "今天臨時需要加班，早上出門後一路忙到很晚。你已經很疲累，但豆豆仍需要晚餐、乾淨飲水、排泄與適當活動。",
     topic: "時間安排與照顧支援",
     artIndex: 5,
     choices: [
-      { id: "alone-with-food", text: "先多放一些飼料和水，等忙完再好好陪牠", result: "incorrect", ...incorrect, explanation: "多放食物和水不能取代排泄、活動與狀況觀察，也可能造成過量進食或突發狀況沒有人發現。", suggestion: "離家前應先確認能接手餵食、飲水、排泄與活動的人選，並清楚交接照顧需求。" },
+      { id: "alone-with-food", text: "早上出門前先多放一些飼料和水，晚上忙完再好好陪牠", result: "incorrect", ...incorrect, explanation: "早上多放食物和水仍不能取代一整天的排泄、活動與狀況觀察，也可能造成過量進食或突發狀況沒有人發現。", suggestion: "確定要加班時，應先確認能接手餵食、飲水、排泄與活動的人選，並清楚交接照顧需求。" },
       { id: "family-helper", text: "請家庭成員協助", result: "correct", ...positive, explanation: "事先確認家庭成員能協助照顧，能讓小狗持續獲得餵食、飲水、排泄照顧與陪伴，不會長時間完全無人照護。" },
       { id: "trusted-helper", text: "請最近幾天有空、也了解照顧需求的朋友協助", result: "correct", ...positive, explanation: "狗狗不能長時間完全無人照護。忙碌或離家時，可以找最近幾天有空、可信任，且願意依照交接內容協助照顧的朋友，協助餵食、換水、清理排泄與觀察狀況。" },
-      { id: "hold-until-tomorrow", text: "狗狗忍耐一天不上廁所應該還好，明天再多遛一點補回來", result: "incorrect", ...incorrect, explanation: "把排泄和活動延到隔天，可能讓小狗長時間不舒服，也無法處理今天的基本需求。", suggestion: "今天就安排可信任的人協助排泄與基本活動；照顧不能用隔天加倍來補足。" },
+      { id: "hold-until-tomorrow", text: "傍晚到家再餵，至少睡前有吃到晚餐就好", result: "incorrect", ...incorrect, explanation: "把晚餐、排泄與活動一路延後到回家，會讓小狗長時間等待，也無法因應加班比預期更晚或臨時狀況。", suggestion: "確定會晚歸時，就先安排可信任的人按平常時間協助餵食、換水、排泄與基本活動。" },
     ],
   },
   {
@@ -312,7 +312,7 @@ export const journeyItems: JourneyItem[] = [
   { id: "behavior", type: "scenario", timeLabel: "日常行為照顧", title: "日常行為照顧" },
   { id: "walking", type: "walking", timeLabel: "日常照護", title: "今天也要出門散步" },
   { id: "breed-challenge", type: "breed-challenge", timeLabel: "品種的考驗", title: "品種的考驗" },
-  { id: "busy-care", type: "scenario", timeLabel: "穩定生活的日常", title: "忙碌時的日常照顧", scenarioId: "busy-daily-care" },
+  { id: "busy-care", type: "scenario", timeLabel: "當生活發生變化", title: "疲憊忙碌的日子", scenarioId: "busy-daily-care" },
   { id: "sick", type: "scenario", timeLabel: "生病與就醫", title: "生病與就醫", scenarioId: "illness-vet" },
   { id: "senior", type: "scenario", timeLabel: "逐漸進入高齡", title: "小狗逐漸老去", scenarioId: "growing-old" },
 ];

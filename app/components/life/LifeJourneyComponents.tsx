@@ -78,7 +78,7 @@ function healthSuggestionForBreed(breed: string, shibaSuggestion: string) {
 
 function lifeStageLabelForScenario(scenario: Scenario) {
   if (scenario.id === "arrival-adjustment") return lifeStageLabels.arrival;
-  if (scenario.id === "illness-vet" || scenario.id === "growing-old") return lifeStageLabels.change;
+  if (scenario.id === "busy-daily-care" || scenario.id === "illness-vet" || scenario.id === "growing-old") return lifeStageLabels.change;
   return lifeStageLabels.daily;
 }
 
@@ -95,6 +95,29 @@ function OtherCorrectTips({ scenario, choice, petName }: { scenario: Scenario; c
   const tips = otherCorrectChoices(scenario, choice, petName);
   if (tips.length === 0) return null;
   return <div className="other-correct-tips"><b>也可以這樣做</b><ul>{tips.map((tip) => <li key={tip}>{tip}</li>)}</ul></div>;
+}
+
+function DelayedContinueButton({
+  label = "繼續",
+  onContinue,
+}: {
+  label?: string;
+  onContinue: () => void;
+}) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setVisible(true), 3000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className={`delayed-continue ${visible ? "is-visible" : "is-waiting"}`} aria-live="polite">
+      <button type="button" className="primary" tabIndex={visible ? 0 : -1} aria-hidden={!visible} onClick={onContinue}>
+        {label} <span>→</span>
+      </button>
+    </div>
+  );
 }
 
 
@@ -127,22 +150,6 @@ function CorrectFeedbackLayout({
   onVideoEnded?: () => void;
   onContinue: () => void;
 }) {
-  const [secondsRemaining, setSecondsRemaining] = useState(3);
-
-  useEffect(() => {
-    setSecondsRemaining(3);
-    const timer = window.setInterval(() => {
-      setSecondsRemaining((current) => {
-        if (current <= 1) {
-          window.clearInterval(timer);
-          return 0;
-        }
-        return current - 1;
-      });
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-
   return (
     <section className={`correct-feedback-layout correct-feedback-layout--${variant}`} aria-live="polite">
       <div className="correct-feedback-media">
@@ -155,7 +162,7 @@ function CorrectFeedbackLayout({
       <div className="correct-feedback-copy">
         <h2>做得很好！</h2>
         <div className="correct-feedback-intro">{intro}</div>
-        {breedHighlight && <div className="correct-feedback-breed-highlight">{breedHighlight}</div>}
+        {breedHighlight}
         {correctItems && correctItems.length > 0 && (
           <ul className="daily-behavior-correct-list">
             {correctItems.map((item) => <li key={item}>{item}</li>)}
@@ -163,12 +170,7 @@ function CorrectFeedbackLayout({
         )}
         {suggestion && <div className="correct-feedback-suggestion">{suggestion}</div>}
         {otherTips}
-        <div className={`correct-feedback-countdown ${secondsRemaining > 0 ? "is-waiting" : "is-ready"}`}>
-          {secondsRemaining > 0 && <div className="countdown-numbers" aria-hidden="true"><span>{secondsRemaining}</span><span>{secondsRemaining}</span><span>{secondsRemaining}</span></div>}
-          <button type="button" className="primary" disabled={secondsRemaining > 0} onClick={onContinue}>
-            {secondsRemaining > 0 ? `請先閱讀（${secondsRemaining}）` : "繼續"} <span>→</span>
-          </button>
-        </div>
+        <DelayedContinueButton onContinue={onContinue} />
       </div>
     </section>
   );
@@ -579,7 +581,7 @@ function VideoScenarioActivity({
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
         breedHighlight={breedKnowledge ? (
-          <><b>{breedLabelForId(breed)}照護重點</b>{withPetName(breedKnowledge, petName).split("\n").map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}</>
+          <div className="breed-knowledge-highlight"><b>{breedLabelForId(breed)}照護重點</b>{withPetName(breedKnowledge, petName).split("\n").map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}</div>
         ) : null}
         suggestion={followupSuggestion ? (
           <p>{withPetName(followupSuggestion, petName)}</p>
@@ -780,7 +782,9 @@ function DailyBehaviorActivityMulti({
 
   useEffect(() => {
     if (resetSignal <= 0) return;
+    setCurrentIndex(0);
     setMode("question");
+    setSelectedIds([]);
     setRetryCopy(null);
     setVideoFailed(false);
     setVideoFinished(false);
@@ -973,6 +977,7 @@ function BusyCareActivity({
   if (mode === "positive" && selectedChoice) {
     return (
       <CorrectFeedbackLayout
+        key={scenario.id}
         variant="single"
         videoSrc={getCorrectAnswerVideo(scenario.id)}
         videoFailed={videoFailed}
@@ -989,7 +994,7 @@ function BusyCareActivity({
 
   return (
     <section className="busy-care-activity">
-      <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabels.daily}</p><h1>忙碌時的日常照顧</h1><p>{withPetName(scenario.description, petName)}</p></div>
+      <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{scenario.title}</h1><p>{withPetName(scenario.description, petName)}</p></div>
       <div className="busy-care-layout">
         <div className="busy-care-room" aria-label="小狗在房間中等待照顧的情境">
           <img className="busy-care-room-background" src="/assets/room/empty-room.png" alt="居家房間場景" />
@@ -1066,13 +1071,14 @@ function BreedChallengeActivity({
   if (mode === "positive" && selectedChoice) {
     return (
       <CorrectFeedbackLayout
+        key={scenario.id}
         variant="single"
         videoSrc=""
         videoFailed={false}
         fallbackText=""
         mediaPlaceholder={<div className="breed-challenge-video-placeholder"><span>影片製作中</span><b>{breedLabel}的生活片段</b><p>之後會在這裡補上這一題的情境影片。</p></div>}
         intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
-        breedHighlight={<><b>{breedLabel}照護重點</b><p>這不是偶爾才遇到的事件，而是選擇和{breedLabel}一起生活後，需要反覆面對的日常。</p></>}
+        breedHighlight={<div className="walking-reflection-note breed-care-reflection"><b>{breedLabel}照護重點</b><p>這不是偶爾才遇到的事件，而是選擇和{breedLabel}一起生活後，需要反覆面對的日常。</p></div>}
         onVideoError={() => undefined}
         onContinue={moveToNext}
       />
@@ -1278,7 +1284,7 @@ function ArrivalMealActivity({
   return (
     <section className="arrival-meal-activity" aria-label={`為${petName}準備第一餐`}>
       <div className="arrival-meal-heading">
-        <p className="life-stage-label">{lifeStageLabels.daily}</p>
+        <p className="life-stage-label">{lifeStageLabels.arrival}</p>
         <h1>幫{petName}準備第一餐</h1>
         <p>{petName}剛到新家，還有些不安。先幫{petName}準備合適的主食與乾淨飲水，讓牠慢慢安心下來。</p>
       </div>
@@ -1470,12 +1476,14 @@ function WalkingActivity({
   onChange,
   onAddExpense,
   onContinue,
+  resetSignal,
 }: {
   activity: LifeActivityState;
   petName: string;
   onChange: (patch: Partial<LifeActivityState>) => void;
   onAddExpense: (id: string) => void;
   onContinue: () => void;
+  resetSignal: number;
 }) {
   const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
   const [safetyStep, setSafetyStep] = useState<"question" | "law" | "prepared">(
@@ -1490,6 +1498,7 @@ function WalkingActivity({
   const sceneRef = useRef<HTMLDivElement | null>(null);
   const poopTargetRef = useRef<HTMLDivElement | null>(null);
   const draggingBagRef = useRef(false);
+  const forwardHeldRef = useRef(false);
   const [draggedBag, setDraggedBag] = useState<{ x: number; y: number } | null>(null);
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
   const scene = walkingScenes[sceneIndex];
@@ -1510,6 +1519,19 @@ function WalkingActivity({
       image.src = src;
     });
   }, []);
+
+  useEffect(() => {
+    if (resetSignal <= 0) return;
+    setStarted(false);
+    setSafetyStep("question");
+    setPosition(0);
+    setMoving(false);
+    setMessage("");
+    setDraggedBag(null);
+    draggingBagRef.current = false;
+    forwardHeldRef.current = false;
+    completingSceneRef.current = null;
+  }, [resetSignal]);
 
   useEffect(() => {
     setPosition(0);
@@ -1555,7 +1577,7 @@ function WalkingActivity({
   function completeWalkingScene(completedIndex: number) {
     if (completingSceneRef.current === completedIndex) return;
     completingSceneRef.current = completedIndex;
-    stopForward();
+    stopForward(false);
     const complete = completedIndex >= walkingScenes.length - 1;
     const nextMinutes = Math.min(20, activity.walkingMinutes + 5);
     onChange({
@@ -1590,7 +1612,8 @@ function WalkingActivity({
     });
   }, [activity.walkingComplete, activity.walkingPoopCleaned, activity.walkingMinutes, needsCleanup, onChange, scene.poopEvent, sceneIndex, started]);
 
-  function stopForward() {
+  function stopForward(releaseHold = true) {
+    if (releaseHold) forwardHeldRef.current = false;
     if (forwardIntervalRef.current !== null) {
       window.clearInterval(forwardIntervalRef.current);
       forwardIntervalRef.current = null;
@@ -1603,10 +1626,16 @@ function WalkingActivity({
       if (needsCleanup) setMessage("先把排泄物清理乾淨，再繼續散步。");
       return;
     }
+    forwardHeldRef.current = true;
     advanceWalk();
     if (forwardIntervalRef.current !== null) window.clearInterval(forwardIntervalRef.current);
     forwardIntervalRef.current = window.setInterval(advanceWalk, 170);
   }
+
+  useEffect(() => {
+    if (!forwardHeldRef.current || !started || needsCleanup || activity.walkingComplete) return;
+    startForward();
+  }, [activity.walkingSceneIndex]);
 
   const draggedBagSize = 74;
 
@@ -1695,7 +1724,7 @@ function WalkingActivity({
           <p>你陪{petName}完成了至少 20 分鐘的活動，也記得清理排泄物。</p>
           <p>規律散步能讓狗狗有機會探索環境、消耗體力，也有助於維持生理與心理健康。</p>
           <div className="walking-reflection-note"><b>把一次散步，想成十多年的日常</b><p>遛狗不是今天完成就結束的任務。晴天、下雨、疲累或工作忙碌時，排泄、嗅聞、活動與安全仍會每天回來。請想一想：你願意為這段反覆出現的時間，長期保留多少生活空間？</p></div>
-          <button type="button" className="primary" onClick={onContinue}>繼續生活旅程 <span>→</span></button>
+          <DelayedContinueButton label="繼續生活旅程" onContinue={onContinue} />
         </div>
       </section>
     );
@@ -1828,8 +1857,7 @@ function WalkingActivity({
                 event.currentTarget.releasePointerCapture?.(event.pointerId);
                 stopForward();
               }}
-              onPointerCancel={stopForward}
-              onPointerLeave={stopForward}
+              onPointerCancel={() => stopForward()}
               aria-label="往前走"
             >
               <span className="walking-forward-orb" aria-hidden="true">
@@ -1905,9 +1933,12 @@ export function LifeJourney({
   const [feedbackOpen, setFeedbackOpen] = useState(Boolean(answer));
   const [timePassOpen, setTimePassOpen] = useState(false);
   const [resetSignal, setResetSignal] = useState(0);
+  const [resetItemId, setResetItemId] = useState<string | null>(null);
+  const [replayInProgress, setReplayInProgress] = useState(false);
   useEffect(() => {
     setTimePassOpen(false);
     setArrivalMealOpen(false);
+    setReplayInProgress(false);
   }, [index]);
 
   const completedCount = completedIds.length;
@@ -1915,6 +1946,7 @@ export function LifeJourney({
   function selectItem(next: number) {
     const nextScenarioId = journeyItems[next].scenarioId;
     setFeedbackOpen(Boolean(nextScenarioId && answers[nextScenarioId]));
+    setReplayInProgress(false);
     onIndex(next);
     onStageChange(stageForIndex(next));
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1943,24 +1975,26 @@ export function LifeJourney({
     setFeedbackOpen(false);
     setArrivalMealOpen(false);
     setTimePassOpen(false);
+    if (isWalkingActivity) {
+      onActivityChange({
+        walkingPreparedItems: [],
+        walkingSceneIndex: 0,
+        walkingMinutes: 0,
+        walkingPoopCleaned: false,
+        walkingComplete: false,
+      });
+    }
+    setReplayInProgress(true);
+    setResetItemId(item.id);
     setResetSignal((current) => current + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function handleBackNavigation() {
-    const dailyBehaviorHasAnswer = isDailyBehaviorActivity && dailyBehaviorScenarioIds.some((id) => Boolean(answers[id]));
-    const breedChallengeHasAnswer = isBreedChallengeActivity && getBreedChallengeScenarios(breed).some((entry) => Boolean(answers[entry.id]));
-    const canResetCurrent =
-      Boolean(answer) ||
-      showArrivalMeal ||
-      dailyBehaviorHasAnswer ||
-      breedChallengeHasAnswer;
-    if (canResetCurrent) {
-      resetCurrentQuestion();
-      return;
-    }
-    if (index > 0) selectItem(index - 1);
-    else onBack();
+  const canResetCurrent = completedIds.includes(item.id) && !replayInProgress;
+  const currentResetSignal = resetItemId === item.id ? resetSignal : 0;
+
+  function handleReplay() {
+    if (canResetCurrent) resetCurrentQuestion();
   }
 
   if (timePassOpen && item.scenarioId === "illness-vet") {
@@ -1972,14 +2006,14 @@ export function LifeJourney({
   }
 
   return (
-    <div className="content-wrap life-journey-page">
+    <div className={`content-wrap life-journey-page ${canResetCurrent ? "is-reviewing" : ""}`}>
       {isDailyBehaviorActivity ? (
         <DailyBehaviorActivityMulti
           answers={answers}
           petName={petName}
           onChooseMultiple={onChooseMultiple}
           onContinue={continueJourney}
-          resetSignal={resetSignal}
+          resetSignal={currentResetSignal}
         />
       ) : isWalkingActivity ? (
         <WalkingActivity
@@ -1988,6 +2022,7 @@ export function LifeJourney({
           onChange={onActivityChange}
           onAddExpense={onAddExpense}
           onContinue={continueJourney}
+          resetSignal={currentResetSignal}
         />
       ) : isBreedChallengeActivity ? (
         <BreedChallengeActivity
@@ -1996,7 +2031,7 @@ export function LifeJourney({
           answers={answers}
           onChoose={onChoose}
           onContinue={continueJourney}
-          resetSignal={resetSignal}
+          resetSignal={currentResetSignal}
         />
       ) : isBusyCareActivity && scenario ? (
         <BusyCareActivity
@@ -2007,7 +2042,7 @@ export function LifeJourney({
           onMembersChange={onMembersChange}
           onChoose={choose}
           onContinue={continueJourney}
-          resetSignal={resetSignal}
+          resetSignal={currentResetSignal}
         />
       ) : isVideoFeedbackScenario && scenario && !showArrivalMeal ? (
         <VideoScenarioActivity
@@ -2020,7 +2055,7 @@ export function LifeJourney({
             if (scenario.id === "arrival-adjustment") setArrivalMealOpen(true);
             else continueJourney();
           }}
-          resetSignal={resetSignal}
+          resetSignal={currentResetSignal}
         />
       ) : scenario && (showArrivalMeal ? (
         <ArrivalMealActivity
@@ -2042,9 +2077,7 @@ export function LifeJourney({
           onContinue={continueJourney}
         />
       ))}
-      <div className="scenario-bottom-nav life-bottom-nav">
-        <button className="secondary" onClick={handleBackNavigation}>← {index > 0 ? "上一個生活內容" : "返回出發前準備"}</button>
-      </div>
+      {canResetCurrent && <div className="scenario-bottom-nav life-bottom-nav"><button className="secondary" onClick={handleReplay}>↻ 再玩一次</button></div>}
       <span className="visually-hidden">目前共登記 {expenses.length} 筆費用，所有費用以唯一識別碼避免重複。</span>
     </div>
   );
