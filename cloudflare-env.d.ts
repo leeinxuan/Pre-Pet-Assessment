@@ -2,9 +2,23 @@ interface Fetcher {
   fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
 }
 
+interface D1Result<T = unknown> {
+  results?: T[];
+  success: boolean;
+  meta?: Record<string, unknown>;
+}
+
+interface D1PreparedStatement {
+  bind(...values: unknown[]): D1PreparedStatement;
+  first<T = unknown>(column?: string): Promise<T | null>;
+  run<T = unknown>(): Promise<D1Result<T>>;
+  all<T = unknown>(): Promise<D1Result<T>>;
+  raw<T = unknown[]>(): Promise<T[]>;
+}
+
 interface D1Database {
-  prepare(query: string): unknown;
-  batch<T = unknown>(statements: unknown[]): Promise<T[]>;
+  prepare(query: string): D1PreparedStatement;
+  batch<T = unknown>(statements: D1PreparedStatement[]): Promise<T[]>;
   exec(query: string): Promise<unknown>;
   dump(): Promise<ArrayBuffer>;
 }

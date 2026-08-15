@@ -3,12 +3,26 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { breeds, hazards, money, roomItems } from "../../game-data";
-import { lifeScenarios } from "../../life-data";
-import type { CareMember, ExpenseRecord, LifeActivityState, Profile, ScenarioAnswer } from "../../game-types";
+import { getBreedChallengeScenarios, lifeScenarios } from "../../life-data";
+import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, ScenarioAnswer } from "../../game-types";
+import type { SharedAssessmentResult, SharedDiscussionTopic } from "../../shared-result-types";
 import { mergeDefaultVisibleExpenses, NavButtons } from "../shared/SharedComponents";
 
 const a4PageWidthPt = 595.28;
 const a4PageHeightPt = 841.89;
+
+function personalizeReportText(text: string, petName: string) {
+  const name = petName.trim() || "小狗";
+  return text.replaceAll("豆豆", name).replaceAll("小狗", name).replaceAll("狗狗", name);
+}
+
+function knowledgePointsForScenario(scenario: Scenario, petName: string) {
+  const correctChoices = scenario.choices.filter((choice) => choice.result === "correct");
+  const rawPoints = scenario.correctSummary?.length
+    ? scenario.correctSummary
+    : correctChoices.flatMap((choice) => [choice.text, choice.explanation, choice.suggestion ?? ""]);
+  return Array.from(new Set(rawPoints.flatMap((point) => point.split("\n")).map((point) => personalizeReportText(point.trim(), petName)).filter(Boolean))).slice(0, 6);
+}
 
 function sanitizePdfFileName(value: string) {
   return value.replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
@@ -533,6 +547,18 @@ export function AssessmentReport({
   onBack: () => void;
   onReset: () => void;
 }) {
+  const [activeDiscussionId, setActiveDiscussionId] = useState("");
+  const [shareUrl, setShareUrl] = useState("");
+  const [shareStatus, setShareStatus] = useState<"idle" | "saving" | "ready" | "error">("idle");
+  const [shareMessage, setShareMessage] = useState("");
+  useEffect(() => {
+    if (!activeDiscussionId) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActiveDiscussionId("");
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [activeDiscussionId]);
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
   const total = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
   const suggestedPreparedTotal = total + emergencyReserve;
@@ -593,6 +619,18 @@ export function AssessmentReport({
     "和同住家人討論活動空間與日常照顧安排",
   ];
   const selectedBreed = breeds.find((item) => item.id === breed);
+  const reportScenarios = [...lifeScenarios, ...getBreedChallengeScenarios(breed)];
+  const discussionTopics: SharedDiscussionTopic[] = Object.values(answers)
+    .filter((answer) => answer.firstResult !== "correct")
+    .map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId))
+    .filter((scenario): scenario is Scenario => Boolean(scenario))
+    .map((scenario) => ({
+      id: scenario.id,
+      title: personalizeReportText(scenario.title, petName),
+      topic: scenario.topic ?? scenario.stage,
+      knowledgePoints: knowledgePointsForScenario(scenario, petName),
+    }));
+  const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
   const homeSpaceImages = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
   const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
 
@@ -653,6 +691,58 @@ export function AssessmentReport({
     },
   ].map((section) => ({ ...section, rows: section.rows.slice(0, 6) })).filter((section) => section.rows.length > 0);
 
+  async function createShareLink() {
+    setShareStatus("saving");
+    setShareMessage("");
+    const result: SharedAssessmentResult = {
+      version: 1,
+      createdAt: new Date().toISOString(),
+      petName: petName.trim(),
+      breedId: breed,
+      breedLabel: selectedBreed?.label ?? "犬",
+      readinessLevel: level,
+      preparation: {
+        roomCompletion,
+        hazardsComplete: hazardsReady.length === hazards.length,
+        transportComplete: trunkPassed,
+      },
+      costs: {
+        simulatedTotal: total,
+        emergencyReserve,
+        suggestedTotal: suggestedPreparedTotal,
+      },
+      preparedItems: prepared,
+      itemsToConfirm: confirm.length ? confirm : ["目前沒有未完成的準備項目"],
+      discussionTopics,
+      committed,
+    };
+    try {
+      const response = await fetch("/api/results", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(result),
+      });
+      const body = await response.json() as { url?: string; error?: string };
+      if (!response.ok || !body.url) throw new Error(body.error || "目前無法產生分享連結");
+      setShareUrl(body.url);
+      setShareStatus("ready");
+      setShareMessage("分享頁已建立。擁有連結的人可以查看這份照顧摘要。");
+    } catch (reason) {
+      setShareStatus("error");
+      setShareMessage(reason instanceof Error ? reason.message : "目前無法產生分享連結，請稍後再試。");
+    }
+  }
+
+  async function copyShareLink() {
+    if (!shareUrl) return;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareMessage("連結已複製，可以傳給家人或專業人員。");
+    } catch {
+      setShareMessage("請選取連結後手動複製。");
+    }
+  }
+
   return (
     <>
     <PdfFab petName={petName} />
@@ -688,6 +778,12 @@ export function AssessmentReport({
           <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
         </section>
 
+        {discussionTopics.length > 0 && <section className="care-a4-discussion" aria-label="建議深入討論的題目">
+          <h2><span aria-hidden="true">△</span> 建議深入討論</h2>
+          <ul>{discussionTopics.slice(0, 4).map((topic) => <li key={topic.id}>{topic.title}</li>)}</ul>
+          {discussionTopics.length > 4 && <small>另有 {discussionTopics.length - 4} 題，請查看分享頁完整知識點。</small>}
+        </section>}
+
         <section className="care-a4-money" aria-label="預估支出">
           <h2>預估支出</h2>
           <div className="care-a4-money-types">
@@ -717,12 +813,37 @@ export function AssessmentReport({
         </footer>
       </article>
 
+      {discussionTopics.length > 0 ? (
+        <section className="overview-discussion" aria-labelledby="overview-discussion-title">
+          <header className="overview-discussion-heading"><span aria-hidden="true">△</span><div><h2 id="overview-discussion-title">建議再深入討論的題目</h2><p>這些題目曾經需要再想一次。不是紅字扣分，而是提醒你和家人、領養單位或專業人員把情境談得更具體。</p></div></header>
+          <div className="overview-discussion-list">
+            {discussionTopics.map((topic) => (
+              <article key={topic.id} className="overview-discussion-card">
+                <span aria-hidden="true">△</span>
+                <div><b>{topic.title}</b><small>{topic.topic}</small></div>
+                <button type="button" className="discussion-info-button" onClick={() => setActiveDiscussionId(topic.id)} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : <section className="overview-discussion-clear"><span aria-hidden="true">✓</span><div><h2>目前沒有需要特別標示的題目</h2><p>仍建議帶著總覽和家人討論實際分工與生活安排。</p></div></section>}
+
       <section className="care-commitment overview-commitment" aria-labelledby="overview-care-commitment-title">
         <h2 id="overview-care-commitment-title">照顧承諾</h2>
         <label>
           <input type="checkbox" checked={committed} onChange={(event) => onCommittedChange(event.target.checked)} />
           <span>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</span>
         </label>
+      </section>
+
+      <section className="result-share-panel" aria-labelledby="result-share-title">
+        <div><p className="life-stage-label">保存這份結果</p><h2 id="result-share-title">產生一頁式結果連結</h2><p>之後可以從連結重新查看，也能傳給家人、領養單位或專業人員一起討論。分享摘要不包含居家照片、家庭成員姓名或其他個人資料。</p></div>
+        <div className="result-share-actions">
+          {shareUrl && <input aria-label="結果分享連結" value={shareUrl} readOnly onFocus={(event) => event.currentTarget.select()} />}
+          <button type="button" className="primary" disabled={shareStatus === "saving"} onClick={shareUrl ? copyShareLink : createShareLink}>{shareStatus === "saving" ? "正在建立…" : shareUrl ? "複製連結" : "產生結果連結"}</button>
+          {shareUrl && <a href={shareUrl} target="_blank" rel="noreferrer">開啟分享頁</a>}
+        </div>
+        {shareMessage && <p className={`result-share-message ${shareStatus === "error" ? "error" : ""}`} role="status">{shareMessage}</p>}
       </section>
 
       <article className="care-print-profile" aria-label="使用者填寫的個人資料">
@@ -759,6 +880,16 @@ export function AssessmentReport({
           ) : <p>尚未上傳居家空間照片</p>}
         </section>
       </article>
+      {activeDiscussion && <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
+        <section className="knowledge-modal" role="dialog" aria-modal="true" aria-labelledby="knowledge-modal-title">
+          <button type="button" className="knowledge-modal-close" onClick={() => setActiveDiscussionId("")} aria-label="關閉知識點">×</button>
+          <p className="life-stage-label">{activeDiscussion.topic}</p>
+          <h2 id="knowledge-modal-title">{activeDiscussion.title}</h2>
+          <p>回顧這一題較合適的照護知識點：</p>
+          <ul>{activeDiscussion.knowledgePoints.map((point) => <li key={point}>{point}</li>)}</ul>
+          <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveDiscussionId("")}>我知道了</button>
+        </section>
+      </div>}
     </div>
     </>
   );

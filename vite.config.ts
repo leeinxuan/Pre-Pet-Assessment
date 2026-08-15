@@ -7,4 +7,10 @@ import { defineConfig } from "vite";
 // serverless output expected by the platform.
 export default defineConfig({
   plugins: [tailwindcss(), vinext(), nitro()],
+  build: {
+    rolldownOptions: {
+      // Cloudflare provides this runtime-only module when the site is deployed.
+      external: ["cloudflare:workers"],
+    },
+  },
 });
