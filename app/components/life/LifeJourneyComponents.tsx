@@ -1326,7 +1326,7 @@ function ArrivalMealActivity({
         </div>
         <div className="arrival-meal-supply-slot">
           {!activity.arrivalMealWaterReady ? (
-            <button type="button" onClick={prepareWater}><img src="/assets/pet-journey/waterbottle.png" alt="水瓶" /><span>水</span></button>
+            <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src="/assets/pet-journey/waterbottle.png" alt="水瓶" /><span>水</span></button>
           ) : (
             <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
           )}

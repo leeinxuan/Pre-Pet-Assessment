@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-C9QB7tu2.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-lzb6jSrZ.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -596,19 +596,19 @@ var hazards = [
 var arrivalMealMobilePlacements = {
 	dog: {
 		left: 32,
-		bottom: 20,
+		bottom: 10,
 		width: 50,
 		maxHeight: 58
 	},
 	water: {
-		left: 18,
-		bottom: 16,
-		width: 22
+		left: 10,
+		bottom: 10,
+		width: 24
 	},
 	food: {
-		left: 41,
-		bottom: 15,
-		width: 22
+		left: 28,
+		bottom: 5,
+		width: 24
 	}
 };
 var initialMembers = [{

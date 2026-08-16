@@ -3447,12 +3447,27 @@ html, body { overflow-x: clip; }
 }
 
 @media (max-width: 768px) {
+  .stage-layout:has(.arrival-video-screen),
+  .stage-layout:has(.time-pass-transition) {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  .stage:has(> .arrival-video-screen),
+  .stage:has(> .time-pass-transition) {
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: stretch;
+  }
+
   .arrival-video-screen,
   .time-pass-transition {
     width: min(100%, 100svw);
     height: auto;
     max-width: 100svw;
-    max-height: min(100svh, 100%);
+    max-height: calc(100dvh - 96px);
     aspect-ratio: 16 / 9;
     transform: none;
     transform-origin: center center;
@@ -3478,14 +3493,13 @@ html, body { overflow-x: clip; }
   }
 
   .walking-scene {
-    width: min(100svh, 920px);
-    height: min(100svw, 560px);
-    max-width: none;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
     min-height: 0;
-    aspect-ratio: auto;
-    transform: rotate(90deg);
-    transform-origin: center center;
-    margin: clamp(72px, 18vw, 120px) 0;
+    aspect-ratio: 16 / 9;
+    transform: none;
+    margin: 0;
   }
 
   .walking-bg {
@@ -3495,23 +3509,29 @@ html, body { overflow-x: clip; }
 }
 
 @media (max-width: 720px) {
+  .partner-selection-page:has(.breed-carousel) {
+    overflow: visible;
+  }
+
   .breed-carousel {
     display: flex;
     grid-template-columns: none;
-    margin-inline: -16px;
-    padding-inline: 22vw;
-    scroll-padding-inline: 22vw;
+    width: 100%;
+    margin-inline: 0;
+    padding-inline: max(18px, 12vw);
+    padding-block: 6px 10px;
+    scroll-padding-inline: max(18px, 12vw);
     gap: 14px;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;
     scroll-snap-type: x mandatory;
     scrollbar-width: thin;
     -webkit-overflow-scrolling: touch;
   }
 
   .breed-carousel button {
-    flex: 0 0 62vw;
-    flex-basis: 62vw;
+    flex: 0 0 min(72vw, 280px);
+    flex-basis: min(72vw, 280px);
     min-height: 180px;
     scroll-snap-align: center;
   }
@@ -3700,6 +3720,13 @@ html, body { overflow-x: clip; }
   .arrival-meal-supplies .arrival-meal-supply-food-button {
     max-width: none;
     min-height: 104px;
+  }
+
+  /* 手機版餵食頁面物品欄水瓶大小：要再放大／縮小就改這裡 */
+  .arrival-meal-supplies img.arrival-meal-supply-water {
+    width: 130px !important;
+    height: 130px !important;
+    max-width: none;
   }
 
   .arrival-meal-footer {
@@ -4644,6 +4671,11 @@ html, body { overflow-x: clip; }
 }
 
 @media (max-width: 720px) {
+  /* 手機版首頁背景顯示位置：數字越大越往圖片右側看，不影響電腦版 */
+  .welcome {
+    background-position: 75% center;
+  }
+
   .room-preparation-layout.simplified-room-layout { grid-template-columns: 1fr; }
   .prepared-item-list { grid-template-columns: 1fr; }
   .report-download-footer { padding-bottom: env(safe-area-inset-bottom); }
