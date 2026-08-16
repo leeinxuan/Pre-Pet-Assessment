@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-Byt_NiFd.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-CghZRaeh.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -4665,6 +4665,21 @@ async function elementToCanvas(source) {
 	context.drawImage(image, 0, 0, canvas.width, canvas.height);
 	return canvas;
 }
+function useMobileDownloadMode() {
+	const [mobile, setMobile] = (0, import_react.useState)(false);
+	(0, import_react.useEffect)(() => {
+		if (typeof window === "undefined") return;
+		const query = window.matchMedia("(max-width: 720px)");
+		const update = () => setMobile(query.matches);
+		update();
+		query.addEventListener?.("change", update);
+		return () => query.removeEventListener?.("change", update);
+	}, []);
+	return mobile;
+}
+function sourceSelectorForReportKind(kind) {
+	return kind === "profile" ? ".care-print-profile" : ".care-a4-sheet:not(.care-a4-sheet--followup)";
+}
 async function downloadAssessmentPdf(petName, kind) {
 	const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
 	const sourcePages = Array.from(document.querySelectorAll(selector));
@@ -4694,10 +4709,45 @@ async function downloadAssessmentPdf(petName, kind) {
 		stage.remove();
 	}
 }
+async function downloadAssessmentImage(petName, kind) {
+	const sourcePage = document.querySelector(sourceSelectorForReportKind(kind));
+	if (!sourcePage) throw new Error("Image source page not found");
+	const stage = document.createElement("div");
+	stage.className = "pdf-export-stage image-export-stage";
+	stage.appendChild(sourcePage.cloneNode(true));
+	document.body.appendChild(stage);
+	try {
+		await document.fonts?.ready;
+		await replaceImagesWithDataUrls(stage);
+		const page = stage.firstElementChild;
+		if (!page) throw new Error("Image page render failed");
+		const canvas = await elementToCanvas(page);
+		const blob = await new Promise((resolve, reject) => {
+			canvas.toBlob((nextBlob) => {
+				if (nextBlob) resolve(nextBlob);
+				else reject(/* @__PURE__ */ new Error("PNG export failed"));
+			}, "image/png");
+		});
+		const safePetName = sanitizePdfFileName(petName);
+		const fileName = safePetName ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}_${safePetName}.png` : `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}.png`;
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = fileName;
+		document.body.appendChild(link);
+		link.click();
+		link.remove();
+		window.setTimeout(() => URL.revokeObjectURL(url), 1e3);
+	} finally {
+		stage.remove();
+	}
+}
 function PdfDownloadButton({ petName, kind = "overview", label }) {
 	const [generating, setGenerating] = (0, import_react.useState)(false);
 	const [error, setError] = (0, import_react.useState)("");
-	const buttonLabel = label ?? (kind === "profile" ? "下載個人資料 PDF" : "下載照顧準備總覽 PDF");
+	const mobileDownload = useMobileDownloadMode();
+	const buttonLabel = mobileDownload ? kind === "profile" ? "儲存個人資料" : "儲存照護總覽" : label ?? (mobileDownload ? kind === "profile" ? "儲存個人資料" : "儲存照護總覽" : kind === "profile" ? "下載個人資料" : "下載照顧準備總覽");
+	const exportKindLabel = mobileDownload ? "圖片" : "PDF";
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "report-download-control",
 		children: [error && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -4712,16 +4762,17 @@ function PdfDownloadButton({ petName, kind = "overview", label }) {
 				setGenerating(true);
 				setError("");
 				try {
-					await downloadAssessmentPdf(petName, kind);
+					if (mobileDownload) await downloadAssessmentImage(petName, kind);
+					else await downloadAssessmentPdf(petName, kind);
 				} catch {
-					setError("PDF 下載失敗，請再試一次。");
+					setError(`${exportKindLabel}下載失敗，請再試一次。`);
 				} finally {
 					setGenerating(false);
 				}
 			},
 			disabled: generating,
 			"aria-label": buttonLabel,
-			title: "下載 PDF",
+			title: mobileDownload ? "儲存圖片" : "下載 PDF",
 			children: [generating ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 				className: "pdf-download-spinner",
 				"aria-hidden": "true"
@@ -4730,7 +4781,7 @@ function PdfDownloadButton({ petName, kind = "overview", label }) {
 				"aria-hidden": "true",
 				focusable: "false",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M12 3a1 1 0 0 1 1 1v9.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 0 1 1.4-1.4l3.3 3.3V4a1 1 0 0 1 1-1Z" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" })]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: generating ? "正在整理 PDF…" : buttonLabel })]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: generating ? `正在整理${exportKindLabel}…` : buttonLabel })]
 		})]
 	});
 }
@@ -5164,7 +5215,7 @@ function ProfileSupplementForm({ profile, petName, onChange, onBack, onReset }) 
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PdfDownloadButton, {
 					petName,
 					kind: "profile",
-					label: "下載個人資料 PDF"
+					label: "下載個人資料"
 				})
 			})
 		]
@@ -6159,7 +6210,13 @@ function Home() {
 				setPreparationReplayTask(0);
 			},
 			onBack: () => goTo(1),
-			onNext: () => changePreparationTask(1)
+			onNext: () => {
+				changePreparationTask(1);
+				window.scrollTo({
+					top: 0,
+					behavior: "auto"
+				});
+			}
 		});
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarTrunkPreparation, {
 			selected: trunkSelected,
@@ -6350,7 +6407,7 @@ function Home() {
 										setFurthestStep((current) => Math.max(current, 8));
 										window.scrollTo({
 											top: 0,
-											behavior: "smooth"
+											behavior: "auto"
 										});
 									},
 									children: ["取得寵物 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]

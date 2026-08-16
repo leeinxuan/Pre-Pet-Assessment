@@ -324,7 +324,7 @@ export default function Home() {
   function renderPreparation() {
     if (preparationTask === 0) {
       const reviewing = preparationReached >= 1 && preparationReplayTask !== 0;
-      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(0); }} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
+      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(0); }} onBack={() => goTo(1)} onNext={() => { changePreparationTask(1); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
     }
     const reviewing = furthestStep >= 3 && preparationReplayTask !== 1;
     return <CarTrunkPreparation selected={trunkSelected} petName={petName} breed={breed} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { setPreparationReached((current) => Math.max(current, 1)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
@@ -397,7 +397,7 @@ export default function Home() {
               <AssessmentReport petName={petName} breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <ProfileSupplementForm profile={profile} petName={petName} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <div className="report-next-step-actions">
-                <button className="primary" type="button" disabled={!careCommitted} aria-describedby="care-commitment-gate" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "smooth" }); }}>取得寵物 <span>→</span></button>
+                <button className="primary" type="button" disabled={!careCommitted} aria-describedby="care-commitment-gate" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "auto" }); }}>取得寵物 <span>→</span></button>
                 {!careCommitted && <p id="care-commitment-gate" className="report-commitment-hint">請先勾選上方的照顧承諾，才能進入下一步。</p>}
               </div>
             </>}

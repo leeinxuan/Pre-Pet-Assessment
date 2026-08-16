@@ -174,6 +174,25 @@ async function elementToCanvas(source: HTMLElement) {
 
 type ReportPdfKind = "overview" | "profile";
 
+function useMobileDownloadMode() {
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const query = window.matchMedia("(max-width: 720px)");
+    const update = () => setMobile(query.matches);
+    update();
+    query.addEventListener?.("change", update);
+    return () => query.removeEventListener?.("change", update);
+  }, []);
+
+  return mobile;
+}
+
+function sourceSelectorForReportKind(kind: ReportPdfKind) {
+  return kind === "profile" ? ".care-print-profile" : ".care-a4-sheet:not(.care-a4-sheet--followup)";
+}
+
 async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind) {
   const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
   const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
@@ -208,10 +227,55 @@ async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind) {
   }
 }
 
+async function downloadAssessmentImage(petName: string, kind: ReportPdfKind) {
+  const sourcePage = document.querySelector<HTMLElement>(sourceSelectorForReportKind(kind));
+  if (!sourcePage) throw new Error("Image source page not found");
+
+  const stage = document.createElement("div");
+  stage.className = "pdf-export-stage image-export-stage";
+  stage.appendChild(sourcePage.cloneNode(true));
+  document.body.appendChild(stage);
+
+  try {
+    await document.fonts?.ready;
+    await replaceImagesWithDataUrls(stage);
+    const page = stage.firstElementChild as HTMLElement | null;
+    if (!page) throw new Error("Image page render failed");
+    const canvas = await elementToCanvas(page);
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((nextBlob) => {
+        if (nextBlob) resolve(nextBlob);
+        else reject(new Error("PNG export failed"));
+      }, "image/png");
+    });
+    const safePetName = sanitizePdfFileName(petName);
+    const fileName = safePetName
+      ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}_${safePetName}.png`
+      : `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}.png`;
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } finally {
+    stage.remove();
+  }
+}
+
 function PdfDownloadButton({ petName, kind = "overview", label }: { petName: string; kind?: ReportPdfKind; label?: string }) {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
-  const buttonLabel = label ?? (kind === "profile" ? "下載個人資料 PDF" : "下載照顧準備總覽 PDF");
+  const mobileDownload = useMobileDownloadMode();
+  const defaultLabel = mobileDownload
+    ? (kind === "profile" ? "儲存個人資料" : "儲存照護總覽")
+    : (kind === "profile" ? "下載個人資料" : "下載照顧準備總覽");
+  const buttonLabel = mobileDownload
+    ? (kind === "profile" ? "儲存個人資料" : "儲存照護總覽")
+    : (label ?? defaultLabel);
+  const exportKindLabel = mobileDownload ? "圖片" : "PDF";
 
   return (
     <div className="report-download-control">
@@ -224,16 +288,17 @@ function PdfDownloadButton({ petName, kind = "overview", label }: { petName: str
           setGenerating(true);
           setError("");
           try {
-            await downloadAssessmentPdf(petName, kind);
+            if (mobileDownload) await downloadAssessmentImage(petName, kind);
+            else await downloadAssessmentPdf(petName, kind);
           } catch {
-            setError("PDF 下載失敗，請再試一次。");
+            setError(`${exportKindLabel}下載失敗，請再試一次。`);
           } finally {
             setGenerating(false);
           }
         }}
         disabled={generating}
         aria-label={buttonLabel}
-        title="下載 PDF"
+        title={mobileDownload ? "儲存圖片" : "下載 PDF"}
       >
         {generating ? (
           <span className="pdf-download-spinner" aria-hidden="true" />
@@ -243,7 +308,7 @@ function PdfDownloadButton({ petName, kind = "overview", label }: { petName: str
             <path d="M5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
           </svg>
         )}
-        <span>{generating ? "正在整理 PDF…" : buttonLabel}</span>
+        <span>{generating ? `正在整理${exportKindLabel}…` : buttonLabel}</span>
       </button>
     </div>
   );
@@ -508,7 +573,7 @@ export function ProfileSupplementForm({
         })}</div>{profile.reasons.includes("其他") && <label className="supplement-inline-input">其他飼養原因<input placeholder="請說明" value={profile.reasonOther} onChange={(event) => update("reasonOther", event.target.value)} /></label>}</fieldset>
       </section>
       <div className="profile-pdf-actions">
-        <PdfDownloadButton petName={petName} kind="profile" label="下載個人資料 PDF" />
+        <PdfDownloadButton petName={petName} kind="profile" label="下載個人資料" />
       </div>
     </section>
   );

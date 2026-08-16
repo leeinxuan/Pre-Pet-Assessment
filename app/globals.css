@@ -2480,8 +2480,24 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .overview-discussion-clear,
   .result-share-panel { border-radius: 18px; }
   .overview-discussion { padding: 19px; }
-  .overview-discussion-card { align-items: flex-start; flex-wrap: wrap; }
-  .discussion-info-button { margin-left: 32px; }
+  .overview-discussion-card {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: flex-start;
+    gap: 10px 12px;
+    padding: 16px;
+  }
+  .overview-discussion-card div { min-width: 0; }
+  .overview-discussion-card small {
+    margin-top: 4px;
+    line-height: 1.65;
+    white-space: normal;
+  }
+  .discussion-info-button {
+    grid-column: 2;
+    width: fit-content;
+    margin-left: 0;
+  }
   .result-share-ready { align-items: stretch; flex-direction: column; }
   .knowledge-modal { padding: 25px 21px; border-radius: 20px; }
   .shared-result-page { padding: 20px 15px 36px; }
@@ -2500,6 +2516,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .shared-discussion-list summary em { margin-left: 33px; }
   .shared-discussion-list details ul { padding: 0 24px 16px 42px; }
   .shared-result-costs dl { min-width: 0; }
+}
+
+@media (max-width: 360px) {
+  .expense-modal-summary { grid-template-columns: 1fr; }
 }
 
 @media print {
@@ -2846,7 +2866,11 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .cost-toast { top: 8px; right: 66px; max-width: calc(100vw - 92px); padding: 10px 12px; font-size: 12px; }
   .expense-modal-backdrop { align-items: end; padding: 0; }
   .expense-modal { width: 100%; max-height: 86vh; padding: 20px; border-radius: 24px 24px 0 0; }
-  .expense-modal-summary, .expense-groups { grid-template-columns: 1fr; }
+  .expense-modal-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .expense-groups { grid-template-columns: 1fr; }
+  .expense-modal-summary > div { min-width: 0; padding: 12px 10px; }
+  .expense-modal-summary small { font-size: 9.5px; line-height: 1.35; }
+  .expense-modal-summary b { font-size: 14px; }
   .room-preparation { min-height: 430px; }
   .room-preparation .room-supply-shelf { min-height: 445px; }
   .room-actions { flex-direction: column; align-items: stretch; }
@@ -2873,11 +2897,29 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .legal-search > div { grid-template-columns: 1fr; }
   .legal-search button { width: 100%; }
   .legal-option-grid, .legal-acquisition-grid { grid-template-columns: 1fr; }
-  .daily-behavior-activity, .daily-behavior-positive, .correct-feedback-layout { grid-template-columns: 1fr; }
+  .arrival-video-screen,
+  .time-pass-transition {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+  .arrival-video-screen video,
+  .time-pass-transition video {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+  .daily-behavior-activity, .daily-behavior-positive, .correct-feedback-layout { grid-template-columns: 1fr; min-height: auto; }
   .daily-behavior-video, .daily-behavior-video video, .daily-behavior-positive-video, .daily-behavior-positive-video video, .correct-feedback-media, .correct-feedback-media video { min-height: 250px; }
   .daily-behavior-choices { padding: 26px 20px 24px; }
   .daily-behavior-retry { padding: 20px; }
-  .daily-behavior-positive-copy, .correct-feedback-copy { min-height: auto; padding: 28px 22px; }
+  .daily-behavior-positive-copy, .correct-feedback-copy { min-height: auto; padding: 22px 20px 24px; justify-content: flex-start; }
+  .correct-feedback-copy h2 { margin-bottom: 14px; font-size: clamp(30px, 10vw, 42px); }
+  .correct-feedback-intro p { line-height: 1.75; }
+  .correct-feedback-suggestion { margin-top: 14px; padding: 14px; }
+  .correct-feedback-copy .delayed-continue { margin-top: 18px; }
   .busy-care-layout, .busy-care-positive { grid-template-columns: 1fr; }
   .breed-challenge-layout, .walking-safety-grid { grid-template-columns: 1fr; }
   .breed-challenge-video-placeholder { min-height: 260px; }
@@ -2891,6 +2933,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .walking-activity { padding: 22px 16px; }
   .walking-head { display: grid; align-items: start; }
   .walking-time { width: 100%; flex-basis: auto; }
+  .walking-scene { aspect-ratio: 16 / 9; min-height: 0; }
   .walking-progress { grid-template-columns: 1fr auto; gap: 8px; }
   .walking-progress b { grid-column: 1 / -1; }
   .walking-progress-overlay { top: 14px; width: min(92%, calc(100% - 24px)); padding: 9px 12px; border-radius: 18px; }
@@ -4122,6 +4165,10 @@ html, body { overflow-x: clip; }
   background: white !important;
   box-shadow: none !important;
   page-break-inside: avoid;
+}
+
+.pdf-export-stage .care-a4-sheet--followup {
+  display: block !important;
 }
 
 .pdf-export-stage .care-print-profile {
