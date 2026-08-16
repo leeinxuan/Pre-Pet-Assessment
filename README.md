@@ -83,6 +83,73 @@ Lint：
 corepack pnpm run lint
 ```
 
+## 分支與合併流程
+
+建議每次要改一個新功能或一批內容時，先從最新版 `main` 開新分支。
+
+### 開新分支
+
+先切回 `main` 並更新：
+
+```bash
+git checkout main
+git pull --ff-only origin main
+```
+
+再建立新分支：
+
+```bash
+git checkout -b feature/分支名稱
+```
+
+例如：
+
+```bash
+git checkout -b feature/update-readme
+```
+
+### 修改後提交
+
+修改完成後，先確認狀態：
+
+```bash
+git status
+```
+
+提交修改：
+
+```bash
+git add .
+git commit -m "描述這次修改"
+git push -u origin feature/分支名稱
+```
+
+### 合併回 main（指令版）
+
+確認分支內容都完成後，切回 `main`：
+
+```bash
+git checkout main
+git pull --ff-only origin main
+```
+
+把分支合併進 `main`：
+
+```bash
+git merge feature/分支名稱
+git push origin main
+```
+
+### 合併回 main（VS Code 介面版）
+
+1. 點 VS Code 左下角的分支名稱，切到 `main`。
+2. 在 Source Control 裡執行 Pull，先更新 `main`。
+3. 按 `Ctrl + Shift + P`，搜尋 `Git: Merge Branch`。
+4. 選擇要合併進來的分支，例如 `feature/update-readme`。
+5. 合併成功後，按 Push 或 Sync Changes 推上 GitHub。
+
+合併時要記得：先站在 `main` 上，再選要合併進來的分支。
+
 ## 主要目錄
 
 ```txt
