@@ -69,7 +69,12 @@ export function RoomPreparation({
   const hazardsDone = securedHazards.length;
   const complete = itemsDone === roomItems.length && hazardsDone === hazards.length;
   const activeHazard = hazards.find((item) => item.id === activeHazardInfo);
-  const supplyRows = [roomItems.slice(0, 2), roomItems.slice(2, 4), roomItems.slice(4)].filter((row) => row.length > 0);
+  const supplyRows = [
+    roomItems.slice(0, 2),
+    roomItems.slice(2, 4),
+    roomItems.slice(4, 6),
+    roomItems.slice(6, 7),
+  ].filter((row) => row.length > 0);
 
   useEffect(() => {
     const scene = roomSceneRef.current;

@@ -2,20 +2,30 @@ import * as __viteRscAsyncHooks from "node:async_hooks";
 import { AsyncLocalStorage as AsyncLocalStorage$1 } from "node:async_hooks";
 //#region node_modules/.nitro/vite/services/ssr/__vite_rsc_assets_manifest.js
 var __vite_rsc_assets_manifest_default = {
-	"bootstrapScriptContent": "import(\"/assets/index-Ocd8l1J6.js\")",
+	"bootstrapScriptContent": "import(\"/assets/index-zJjt3U-t.js\")",
 	"clientReferenceDeps": {
 		"6efdf509a785": {
 			"js": [
-				"/assets/page-DSR1CCSy.js",
+				"/assets/page-DeV3Kgap.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js",
-				"/assets/index-Ocd8l1J6.js"
+				"/assets/index-zJjt3U-t.js"
+			],
+			"css": []
+		},
+		"257243a48472": {
+			"js": [
+				"/assets/page-CJk3Cm2L.js",
+				"/assets/rolldown-runtime-S-ySWqyJ.js",
+				"/assets/index-zJjt3U-t.js",
+				"/assets/framework-CXnKph_e.js",
+				"/assets/query-BbOc3VB2.js"
 			],
 			"css": []
 		},
 		"ee0430dd8bd8": {
 			"js": [
-				"/assets/index-Ocd8l1J6.js",
+				"/assets/index-zJjt3U-t.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
@@ -23,16 +33,16 @@ var __vite_rsc_assets_manifest_default = {
 		},
 		"431ddbe7c781": {
 			"js": [
-				"/assets/layout-segment-context-Cus6mqjt.js",
+				"/assets/layout-segment-context-Bdljnavx.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
-				"/assets/index-Ocd8l1J6.js",
+				"/assets/index-zJjt3U-t.js",
 				"/assets/framework-CXnKph_e.js"
 			],
 			"css": []
 		},
 		"642af46202bf": {
 			"js": [
-				"/assets/index-Ocd8l1J6.js",
+				"/assets/index-zJjt3U-t.js",
 				"/assets/rolldown-runtime-S-ySWqyJ.js",
 				"/assets/framework-CXnKph_e.js"
 			],
@@ -41,7 +51,7 @@ var __vite_rsc_assets_manifest_default = {
 	},
 	"serverResources": { "app/layout.tsx": {
 		"js": [],
-		"css": ["/assets/index-B0sHCf88.css"]
+		"css": ["/assets/index-Cl1pb-uv.css"]
 	} }
 };
 //#endregion
@@ -11598,8 +11608,14 @@ function createFromReadableStream(stream, options = {}) {
 	});
 }
 var client_references_default = {
+	"257243a48472": async () => {
+		const m = await import("./page-CHf_5RCd.mjs");
+		return { get "default"() {
+			return m["default"];
+		} };
+	},
 	"431ddbe7c781": async () => {
-		const m = await import("./layout-segment-context-5v2E3fkH.mjs");
+		const m = await import("./layout-segment-context-BxrzOlNp.mjs");
 		return { get "LayoutSegmentProvider"() {
 			return m["LayoutSegmentProvider"];
 		} };
@@ -11619,13 +11635,13 @@ var client_references_default = {
 		};
 	},
 	"6efdf509a785": async () => {
-		const m = await import("./page-DY8lb48l.mjs");
+		const m = await import("./page-Q-ab4uQC.mjs");
 		return { get "default"() {
 			return m["default"];
 		} };
 	},
 	"ee0430dd8bd8": async () => {
-		const m = await import("./error-boundary-BuZvYp6W.mjs");
+		const m = await import("./error-boundary-BpYnz3JH.mjs");
 		return {
 			get "ErrorBoundary"() {
 				return m["ErrorBoundary"];
@@ -11803,4 +11819,4 @@ var app_ssr_entry_default = { async fetch(request) {
 	return new Response(String(result), { status: 200 });
 } };
 //#endregion
-export { useRouter as a, app_ssr_entry_default as default, handleSsr, usePathname as i, require_jsx_runtime as n, require_react as o, getLayoutSegmentContext as r, __toESM as s, require_react_dom as t };
+export { stripBasePath as C, hasBasePath as S, withBasePath as _, getPrefetchedUrls as a, require_react as b, usePathname as c, createRscRequestHeaders as d, app_ssr_entry_default as default, createRscRequestUrl as f, toSameOriginAppPath as g, toBrowserNavigationHref as h, handleSsr, getMountedSlotsHeader as i, useRouter as l, resolveRelativeHref as m, getCurrentInterceptionContext as n, navigateClientSide as o, isHashOnlyBrowserUrlChange as p, getLayoutSegmentContext as r, prefetchRscResponse as s, require_jsx_runtime as t, ReadonlyURLSearchParams as u, isDangerousScheme as v, __toESM as w, VINEXT_MOUNTED_SLOTS_HEADER as x, AppElementsWire as y };

@@ -171,8 +171,11 @@ async function elementToCanvas(source: HTMLElement) {
   return canvas;
 }
 
-async function downloadAssessmentPdf(petName: string) {
-  const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(".care-a4-sheet, .care-print-profile"));
+type ReportPdfKind = "overview" | "profile";
+
+async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind) {
+  const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
+  const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
   if (!sourcePages.length) throw new Error("PDF source pages not found");
 
   const stage = document.createElement("div");
@@ -189,8 +192,8 @@ async function downloadAssessmentPdf(petName: string) {
     const blob = createPdfBlobFromCanvases(canvases);
     const safePetName = sanitizePdfFileName(petName);
     const fileName = safePetName
-      ? `伴日子新手村_照顧準備總覽_${safePetName}.pdf`
-      : "伴日子新手村_照顧準備總覽.pdf";
+      ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照顧準備總覽"}_${safePetName}.pdf`
+      : `伴日子新手村_${kind === "profile" ? "個人資料" : "照顧準備總覽"}.pdf`;
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -204,9 +207,10 @@ async function downloadAssessmentPdf(petName: string) {
   }
 }
 
-function PdfDownloadButton({ petName }: { petName: string }) {
+function PdfDownloadButton({ petName, kind = "overview", label }: { petName: string; kind?: ReportPdfKind; label?: string }) {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
+  const buttonLabel = label ?? (kind === "profile" ? "下載個人資料 PDF" : "下載照顧準備總覽 PDF");
 
   return (
     <div className="report-download-control">
@@ -219,7 +223,7 @@ function PdfDownloadButton({ petName }: { petName: string }) {
           setGenerating(true);
           setError("");
           try {
-            await downloadAssessmentPdf(petName);
+            await downloadAssessmentPdf(petName, kind);
           } catch {
             setError("PDF 下載失敗，請再試一次。");
           } finally {
@@ -227,7 +231,7 @@ function PdfDownloadButton({ petName }: { petName: string }) {
           }
         }}
         disabled={generating}
-        aria-label="下載照顧準備總覽 PDF"
+        aria-label={buttonLabel}
         title="下載 PDF"
       >
         {generating ? (
@@ -238,7 +242,7 @@ function PdfDownloadButton({ petName }: { petName: string }) {
             <path d="M5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
           </svg>
         )}
-        <span>{generating ? "正在整理 PDF…" : "下載照顧準備總覽 PDF"}</span>
+        <span>{generating ? "正在整理 PDF…" : buttonLabel}</span>
       </button>
     </div>
   );
@@ -371,11 +375,13 @@ export function ProfileForm({
 
 export function ProfileSupplementForm({
   profile,
+  petName,
   onChange,
   onBack,
   onReset,
 }: {
   profile: Profile;
+  petName: string;
   onChange: (profile: Profile) => void;
   onBack: () => void;
   onReset: () => void;
@@ -500,6 +506,9 @@ export function ProfileSupplementForm({
           return <button type="button" key={reason} className={`supplement-choice ${selected ? "selected" : ""}`} aria-pressed={selected} onClick={() => toggle("reasons", reason)}>{selected && <SelectedDot />}{reason}</button>;
         })}</div>{profile.reasons.includes("其他") && <label className="supplement-inline-input">其他飼養原因<input placeholder="請說明" value={profile.reasonOther} onChange={(event) => update("reasonOther", event.target.value)} /></label>}</fieldset>
       </section>
+      <div className="profile-pdf-actions">
+        <PdfDownloadButton petName={petName} kind="profile" label="下載個人資料 PDF" />
+      </div>
     </section>
   );
 }
@@ -542,11 +551,16 @@ export function AssessmentReport({
   const [activeDiscussionId, setActiveDiscussionId] = useState("");
   useEffect(() => {
     if (!activeDiscussionId) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setActiveDiscussionId("");
     };
     window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
   }, [activeDiscussionId]);
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
   const total = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);

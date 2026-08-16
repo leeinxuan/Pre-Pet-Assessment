@@ -1,5 +1,5 @@
-import { a as useRouter, i as usePathname, n as require_jsx_runtime, o as require_react, s as __toESM } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/error-boundary-BuZvYp6W.js
+import { b as require_react, c as usePathname, l as useRouter, t as require_jsx_runtime, w as __toESM } from "./ssr.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/error-boundary-BpYnz3JH.js
 function getErrorDigest(error) {
 	if (!error || typeof error !== "object" || !("digest" in error)) return null;
 	return String(error.digest);

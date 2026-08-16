@@ -395,7 +395,7 @@ export default function Home() {
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>
               <AssessmentReport petName={petName} breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
-              <ProfileSupplementForm profile={profile} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+              <ProfileSupplementForm profile={profile} petName={petName} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <div className="report-next-step-actions">
                 <button className="primary" type="button" disabled={!careCommitted} aria-describedby="care-commitment-gate" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "smooth" }); }}>取得寵物 <span>→</span></button>
                 {!careCommitted && <p id="care-commitment-gate" className="report-commitment-hint">請先勾選上方的照顧承諾，才能進入下一步。</p>}

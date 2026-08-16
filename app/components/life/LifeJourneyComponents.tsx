@@ -176,6 +176,21 @@ function CorrectFeedbackLayout({
   );
 }
 
+function BreedKnowledgeHighlight({ text }: { text: string }) {
+  const lines = text.includes("\n")
+    ? text.split(/\n+/)
+    : text
+      .replaceAll("：", "：\n")
+      .replaceAll("；", "；\n")
+      .replaceAll("。", "。\n")
+      .split(/\n+/);
+  return (
+    <div className="walking-reflection-note breed-care-reflection">
+      {lines.map((line, index) => line.trim() && <p key={`${line}-${index}`}>{line.trim()}</p>)}
+    </div>
+  );
+}
+
 function ScenarioOptionCard({
   type = "single",
   selected = false,
@@ -1041,6 +1056,7 @@ function BreedChallengeActivity({
   const firstUnfinished = scenarios.findIndex((scenario) => answers[scenario.id]?.finalResult !== "correct");
   const [currentIndex, setCurrentIndex] = useState(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
   const [mode, setMode] = useState<"question" | "incorrect" | "positive">(firstUnfinished === -1 ? "positive" : "question");
+  const [feedbackVideoFailed, setFeedbackVideoFailed] = useState(false);
   const scenario = scenarios[currentIndex];
   const selectedChoice = scenario?.choices.find((choice) => choice.id === answers[scenario.id]?.finalChoiceId);
   const breedLabel = breedLabelForId(breed);
@@ -1049,11 +1065,13 @@ function BreedChallengeActivity({
     if (resetSignal <= 0) return;
     setCurrentIndex(0);
     setMode("question");
+    setFeedbackVideoFailed(false);
   }, [resetSignal]);
 
   if (!scenario) return null;
 
   function choose(choice: ScenarioChoice) {
+    setFeedbackVideoFailed(false);
     onChoose(scenario, choice);
     setMode(choice.result === "correct" ? "positive" : "incorrect");
   }
@@ -1065,6 +1083,7 @@ function BreedChallengeActivity({
     }
     setCurrentIndex((current) => current + 1);
     setMode("question");
+    setFeedbackVideoFailed(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -1074,13 +1093,12 @@ function BreedChallengeActivity({
       <CorrectFeedbackLayout
         key={scenario.id}
         variant="single"
-        videoSrc=""
-        videoFailed={false}
-        fallbackText=""
-        mediaPlaceholder={<div className="breed-challenge-video-placeholder"><span>影片製作中</span><b>{breedLabel}的生活片段</b><p>之後會在這裡補上這一題的情境影片。</p></div>}
+        videoSrc={getCorrectAnswerVideo(scenario.id)}
+        videoFailed={feedbackVideoFailed}
+        fallbackText="正向結果影片目前無法播放，仍可繼續。"
         intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
-        breedHighlight={<div className="walking-reflection-note breed-care-reflection"><p>{withPetName(breedKnowledge, petName)}</p></div>}
-        onVideoError={() => undefined}
+        breedHighlight={<BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} />}
+        onVideoError={() => setFeedbackVideoFailed(true)}
         onContinue={moveToNext}
       />
     );
@@ -1089,7 +1107,6 @@ function BreedChallengeActivity({
   return (
     <section className="breed-challenge-activity">
       <header className="breed-challenge-heading">
-        <p className="life-stage-label">品種生活情境 · {currentIndex + 1} / {scenarios.length}</p>
         <h1>{breedLabel}的考驗</h1>
         <p>先把最容易被可愛外表蓋過去的生活份量，放進你的真實日常裡想一遍。</p>
       </header>
@@ -1297,7 +1314,11 @@ function ArrivalMealActivity({
       </aside>
       <div className="arrival-meal-scene">
         <img className="arrival-meal-room" src="/assets/room/empty-room.png" alt="小狗的新家房間" />
-        {foodWarning && <div className="arrival-meal-warning" role="alert"><b>{foodWarning.title}</b><p>{foodWarning.text}</p></div>}
+        {foodWarning && <div className="arrival-meal-warning" role="alert">
+          <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
+          <b>{foodWarning.title}</b>
+          <p>{foodWarning.text}</p>
+        </div>}
         <img className="arrival-meal-dog" src={complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png"} alt={complete ? `${petName}開心地坐在房間裡` : `${petName}還在等待晚餐與飲水`} />
         <img className="arrival-meal-water" src={activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png"} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
         <img className="arrival-meal-food" src={activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png"} alt={activity.arrivalMealFoodReady ? "裝好飼料的狗碗" : "空飼料碗"} />
@@ -1500,7 +1521,6 @@ function WalkingActivity({
   const poopTargetRef = useRef<HTMLDivElement | null>(null);
   const draggingBagRef = useRef(false);
   const forwardHeldRef = useRef(false);
-  const resumeAfterCleanupRef = useRef(false);
   const [draggedBag, setDraggedBag] = useState<{ x: number; y: number } | null>(null);
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
   const scene = walkingScenes[sceneIndex];
@@ -1532,7 +1552,6 @@ function WalkingActivity({
     setDraggedBag(null);
     draggingBagRef.current = false;
     forwardHeldRef.current = false;
-    resumeAfterCleanupRef.current = false;
     completingSceneRef.current = null;
   }, [resetSignal]);
 
@@ -1640,12 +1659,6 @@ function WalkingActivity({
     startForward();
   }, [activity.walkingSceneIndex]);
 
-  useEffect(() => {
-    if (!resumeAfterCleanupRef.current || !activity.walkingPoopCleaned || activity.walkingComplete) return;
-    resumeAfterCleanupRef.current = false;
-    startForward();
-  }, [activity.walkingPoopCleaned]);
-
   const draggedBagSize = 74;
 
   function getDraggedBagPosition(event: ReactPointerEvent<HTMLButtonElement>) {
@@ -1721,7 +1734,9 @@ function WalkingActivity({
   }
 
   function cleanupPoop() {
-    resumeAfterCleanupRef.current = true;
+    stopForward();
+    draggingBagRef.current = false;
+    setDraggedBag(null);
     onChange({ walkingPoopCleaned: true });
     setMessage("已清理完成，繼續陪牠往前走。");
   }
