@@ -25,34 +25,62 @@
 
 專案使用 Vinext / Vite / React / TypeScript。
 
+## 本機開啟網站
+
+在 VS Code 打開專案資料夾後，開啟 Terminal，輸入：
+
+```bash
+corepack pnpm dev
+```
+
+成功後，終端機會顯示本機網址：
+
+```txt
+http://localhost:3000/
+```
+
+把這個網址貼到瀏覽器就可以看到網站。
+
+要關掉本機網站時，在同一個 Terminal 按：
+
+```txt
+Ctrl + C
+```
+
+如果第一次開啟、或套件有更新，請先執行：
+
+```bash
+corepack pnpm install
+```
+
 安裝依賴：
 
 ```bash
-pnpm install
+corepack pnpm install
 ```
 
 啟動本機開發環境：
 
 ```bash
-pnpm dev
+corepack pnpm dev
 ```
 
 正式建置：
 
 ```bash
-pnpm run build
+corepack pnpm run build
 ```
 
 測試：
 
 ```bash
-pnpm test
+corepack pnpm test
 ```
 
 Lint：
 
 ```bash
-pnpm run lint
+corepack pnpm run lint
 ```
 
 ## 主要目錄
