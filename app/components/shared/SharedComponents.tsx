@@ -279,12 +279,38 @@ export function SpeciesStep({
 }) {
   const selectedBreed = breeds.find((item) => item.id === breed);
   const selectedPreviousBreed = breeds.find((item) => item.id === previousBreed);
+  const breedCarouselRef = useRef<HTMLDivElement>(null);
+  const breedScrollTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (breedScrollTimerRef.current) window.clearTimeout(breedScrollTimerRef.current);
+  }, []);
 
   function chooseCategory(id: string) {
     onCategory(id);
     onBreed("");
     onSelectionPage("breed");
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function syncBreedFromCarousel() {
+    const container = breedCarouselRef.current;
+    if (!container) return;
+    const containerCenter = container.getBoundingClientRect().left + container.clientWidth / 2;
+    const cards = Array.from(container.querySelectorAll<HTMLButtonElement>("[data-breed-id]"));
+    const centered = cards.reduce<{ id: string; distance: number } | null>((closest, card) => {
+      const rect = card.getBoundingClientRect();
+      const distance = Math.abs(rect.left + rect.width / 2 - containerCenter);
+      const id = card.dataset.breedId ?? "";
+      if (!id || (closest && closest.distance <= distance)) return closest;
+      return { id, distance };
+    }, null);
+    if (centered && centered.id !== breed) onBreed(centered.id);
+  }
+
+  function handleBreedCarouselScroll() {
+    if (breedScrollTimerRef.current) window.clearTimeout(breedScrollTimerRef.current);
+    breedScrollTimerRef.current = window.setTimeout(syncBreedFromCarousel, 120);
   }
 
   return (
@@ -310,9 +336,9 @@ export function SpeciesStep({
       ) : selectionPage === "breed" ? (
         <section className="partner-selection-page" key="breed">
           <StepHeading title="選擇你想領養的品種" />
-          <div className="breed-row breed-page-grid">
+          <div className="breed-row breed-page-grid breed-carousel" ref={breedCarouselRef} onScroll={handleBreedCarouselScroll} aria-label="品種橫向滑動選擇">
             {breeds.map((item) => (
-              <button key={item.id} className={breed === item.id ? "selected" : ""} onClick={() => onBreed(item.id)} aria-pressed={breed === item.id}>
+              <button key={item.id} data-breed-id={item.id} className={breed === item.id ? "selected" : ""} onClick={() => onBreed(item.id)} aria-pressed={breed === item.id}>
                 {item.image ? <img className="partner-card-image" src={item.image} alt="" /> : <span>{item.icon}</span>}<b>{item.label}</b>{breed === item.id && <i>✓</i>}
               </button>
             ))}

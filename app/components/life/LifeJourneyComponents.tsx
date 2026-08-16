@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
-import { breeds, expenseCatalog, money, roomItems } from "../../game-data";
+import { arrivalMealMobilePlacements, breeds, expenseCatalog, money, roomItems } from "../../game-data";
 import { getBreedChallengeScenarios, journeyItems, lifeScenarios } from "../../life-data";
 import { walkingPreloadImages, walkingPrepItems, walkingScenes } from "../../data/walkingScenes";
 import type {
@@ -27,6 +27,16 @@ const scenarioCorrectAnswerVideoIndex: Record<string, number> = {
   "growing-old": 0,
   "busy-daily-care": 1,
 };
+
+function arrivalMealPlacementStyle(kind: keyof typeof arrivalMealMobilePlacements): CSSProperties {
+  const placement = arrivalMealMobilePlacements[kind];
+  return {
+    "--mobile-arrival-meal-left": `${placement.left}%`,
+    "--mobile-arrival-meal-bottom": `${placement.bottom}%`,
+    "--mobile-arrival-meal-width": `${placement.width}%`,
+    "--mobile-arrival-meal-max-height": "maxHeight" in placement ? `${placement.maxHeight}%` : "none",
+  } as CSSProperties;
+}
 
 function getCorrectAnswerVideo(key: number | string) {
   const index = typeof key === "number" ? key : (scenarioCorrectAnswerVideoIndex[key] ?? 0);
@@ -1306,22 +1316,35 @@ function ArrivalMealActivity({
         <h1>幫{petName}準備第一餐</h1>
         <p>{petName}剛到新家，還有些不安。先幫{petName}準備合適的主食與乾淨飲水，讓牠慢慢安心下來。</p>
       </div>
-      <aside className="arrival-meal-supplies" aria-label="晚餐用品">
-        {!activity.arrivalMealFoodReady && <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src="/assets/room/food.png" alt="飼料" /><span>飼料</span></button>}
-        {!activity.arrivalMealWaterReady && <button type="button" onClick={prepareWater}><img src="/assets/pet-journey/waterbottle.png" alt="水瓶" /><span>水</span></button>}
+      <aside className={`arrival-meal-supplies ${activity.arrivalMealFoodReady && activity.arrivalMealWaterReady ? "mobile-condensed" : ""}`} aria-label="晚餐用品">
+        <div className="arrival-meal-supply-slot">
+          {!activity.arrivalMealFoodReady ? (
+            <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src="/assets/room/food.png" alt="飼料" /><span>飼料</span></button>
+          ) : (
+            <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
+          )}
+        </div>
+        <div className="arrival-meal-supply-slot">
+          {!activity.arrivalMealWaterReady ? (
+            <button type="button" onClick={prepareWater}><img src="/assets/pet-journey/waterbottle.png" alt="水瓶" /><span>水</span></button>
+          ) : (
+            <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
+          )}
+        </div>
         <button type="button" className={unsafeFoodIds.includes("macadamia") ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood("macadamia")}><span className="unsafe-food-visual"><img src="/assets/pet-journey/macadamia-nuts.png" alt="夏威夷豆" />{unsafeFoodIds.includes("macadamia") && <i aria-hidden="true">🚫</i>}</span><span>夏威夷豆</span></button>
         <button type="button" className={unsafeFoodIds.includes("bones") ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood("bones")}><span className="unsafe-food-visual"><img src="/assets/pet-journey/leftover-bones.png" alt="吃剩的骨頭" />{unsafeFoodIds.includes("bones") && <i aria-hidden="true">🚫</i>}</span><span>吃剩的骨頭</span></button>
       </aside>
       <div className="arrival-meal-scene">
-        <img className="arrival-meal-room" src="/assets/room/empty-room.png" alt="小狗的新家房間" />
+        <img className="arrival-meal-room arrival-meal-room--desktop" src="/assets/room/empty-room.png" alt="小狗的新家房間" />
+        <img className="arrival-meal-room arrival-meal-room--mobile" src="/assets/room/empty-room-mobile.png" alt="小狗的新家房間" />
         {foodWarning && <div className="arrival-meal-warning" role="alert">
           <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
           <b>{foodWarning.title}</b>
           <p>{foodWarning.text}</p>
         </div>}
-        <img className="arrival-meal-dog" src={complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png"} alt={complete ? `${petName}開心地坐在房間裡` : `${petName}還在等待晚餐與飲水`} />
-        <img className="arrival-meal-water" src={activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png"} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
-        <img className="arrival-meal-food" src={activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png"} alt={activity.arrivalMealFoodReady ? "裝好飼料的狗碗" : "空飼料碗"} />
+        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png"} alt={complete ? `${petName}開心地坐在房間裡` : `${petName}還在等待晚餐與飲水`} />
+        <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png"} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
+        <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png"} alt={activity.arrivalMealFoodReady ? "裝好飼料的狗碗" : "空飼料碗"} />
       </div>
       <div className="arrival-meal-footer">
         {complete && <p role="status">晚餐準備好了！合適的主食與乾淨飲水，是每天照顧的重要部分。</p>}

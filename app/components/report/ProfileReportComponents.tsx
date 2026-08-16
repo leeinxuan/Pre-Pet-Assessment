@@ -189,10 +189,6 @@ function useMobileDownloadMode() {
   return mobile;
 }
 
-function sourceSelectorForReportKind(kind: ReportPdfKind) {
-  return kind === "profile" ? ".care-print-profile" : ".care-a4-sheet:not(.care-a4-sheet--followup)";
-}
-
 async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind) {
   const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
   const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
@@ -227,39 +223,49 @@ async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind) {
   }
 }
 
+function downloadBlob(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 async function downloadAssessmentImage(petName: string, kind: ReportPdfKind) {
-  const sourcePage = document.querySelector<HTMLElement>(sourceSelectorForReportKind(kind));
-  if (!sourcePage) throw new Error("Image source page not found");
+  const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
+  const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
+  if (!sourcePages.length) throw new Error("Image source pages not found");
 
   const stage = document.createElement("div");
-  stage.className = "pdf-export-stage image-export-stage";
-  stage.appendChild(sourcePage.cloneNode(true));
+  stage.className = "pdf-export-stage image-export-stage desktop-pdf-layout";
+  sourcePages.forEach((page) => stage.appendChild(page.cloneNode(true)));
   document.body.appendChild(stage);
 
   try {
     await document.fonts?.ready;
     await replaceImagesWithDataUrls(stage);
-    const page = stage.firstElementChild as HTMLElement | null;
-    if (!page) throw new Error("Image page render failed");
-    const canvas = await elementToCanvas(page);
-    const blob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob((nextBlob) => {
-        if (nextBlob) resolve(nextBlob);
-        else reject(new Error("PNG export failed"));
-      }, "image/png");
-    });
+    const pages = Array.from(stage.children) as HTMLElement[];
+    const canvases = [];
+    for (const page of pages) canvases.push(await elementToCanvas(page));
     const safePetName = sanitizePdfFileName(petName);
-    const fileName = safePetName
-      ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}_${safePetName}.png`
-      : `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}.png`;
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const baseFileName = safePetName
+      ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}_${safePetName}`
+      : `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}`;
+
+    for (let index = 0; index < canvases.length; index += 1) {
+      const canvas = canvases[index];
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((nextBlob) => {
+          if (nextBlob) resolve(nextBlob);
+          else reject(new Error("PNG export failed"));
+        }, "image/png");
+      });
+      const fileName = canvases.length > 1 ? `${baseFileName}_${index + 1}.png` : `${baseFileName}.png`;
+      downloadBlob(blob, fileName);
+    }
   } finally {
     stage.remove();
   }

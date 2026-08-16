@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CghZRaeh.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-C9QB7tu2.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -364,6 +364,11 @@ var roomItems = [
 			width: 32,
 			layer: 2
 		},
+		mobilePlacement: {
+			x: 62,
+			y: 85,
+			width: 45
+		},
 		required: true,
 		need: "休息",
 		expenseId: "bed",
@@ -379,6 +384,11 @@ var roomItems = [
 			y: 80,
 			width: 10,
 			layer: 4
+		},
+		mobilePlacement: {
+			x: 69,
+			y: 80,
+			width: 15
 		},
 		required: true,
 		need: "活動",
@@ -396,6 +406,11 @@ var roomItems = [
 			width: 12,
 			layer: 3
 		},
+		mobilePlacement: {
+			x: 10,
+			y: 90,
+			width: 18
+		},
 		required: true,
 		need: "飲食",
 		expenseId: "water-bowl",
@@ -411,6 +426,11 @@ var roomItems = [
 			y: 90,
 			width: 10,
 			layer: 3
+		},
+		mobilePlacement: {
+			x: 25,
+			y: 90,
+			width: 15
 		},
 		required: true,
 		need: "飲食",
@@ -428,6 +448,11 @@ var roomItems = [
 			width: 20,
 			layer: 1
 		},
+		mobilePlacement: {
+			x: 35,
+			y: 70,
+			width: 25
+		},
 		required: true,
 		need: "排泄",
 		expenseId: "toilet",
@@ -443,6 +468,11 @@ var roomItems = [
 			y: 46,
 			width: 10,
 			layer: 3
+		},
+		mobilePlacement: {
+			x: 10,
+			y: 46,
+			width: 18
 		},
 		required: true,
 		need: "清潔",
@@ -460,12 +490,31 @@ var roomItems = [
 			width: 9,
 			layer: 3
 		},
+		mobilePlacement: {
+			x: 39,
+			y: 86,
+			width: 13
+		},
 		required: true,
 		need: "飲食",
 		expenseId: "starter-food",
 		purpose: "選擇符合小狗年齡、體型及健康需求的主食，並妥善保存。"
 	}
 ];
+var roomDoorplatePlacement = {
+	mobile: {
+		x: 33,
+		y: 20,
+		width: 40
+	},
+	mobileText: {
+		left: 4,
+		top: 56,
+		width: 95,
+		height: 20,
+		fontSize: 16
+	}
+};
 var hazards = [
 	{
 		id: "small-parts",
@@ -477,6 +526,11 @@ var hazards = [
 			y: 75,
 			width: 12,
 			layer: 5
+		},
+		mobilePlacement: {
+			x: 80,
+			y: 55,
+			width: 16
 		},
 		danger: "容易被誤吞，可能造成噎住或腸胃阻塞。",
 		handling: "收進小狗無法取得的抽屜或收納盒。"
@@ -492,6 +546,11 @@ var hazards = [
 			width: 10,
 			layer: 5
 		},
+		mobilePlacement: {
+			x: 89,
+			y: 78,
+			width: 16
+		},
 		danger: "含有不適合狗狗的成分，可能危害健康。",
 		handling: "放進有門的高處櫃子。"
 	},
@@ -505,6 +564,11 @@ var hazards = [
 			y: 64,
 			width: 10,
 			layer: 5
+		},
+		mobilePlacement: {
+			x: 55,
+			y: 65,
+			width: 15
 		},
 		danger: "一般清潔劑可能含有刺激性或不適合寵物接觸的成分。",
 		handling: "應收在牠碰不到的地方；日常清潔請選擇寵物專用清潔用品。"
@@ -520,10 +584,33 @@ var hazards = [
 			width: 20,
 			layer: 5
 		},
+		mobilePlacement: {
+			x: 15,
+			y: 78,
+			width: 25
+		},
 		danger: "可能被啃咬，造成受傷或觸電。",
 		handling: "整理固定或加裝電線保護套。"
 	}
 ];
+var arrivalMealMobilePlacements = {
+	dog: {
+		left: 32,
+		bottom: 20,
+		width: 50,
+		maxHeight: 58
+	},
+	water: {
+		left: 18,
+		bottom: 16,
+		width: 22
+	},
+	food: {
+		left: 41,
+		bottom: 15,
+		width: 22
+	}
+};
 var initialMembers = [{
 	id: "player",
 	name: "",
@@ -1513,6 +1600,15 @@ var scenarioCorrectAnswerVideoIndex = {
 	"growing-old": 0,
 	"busy-daily-care": 1
 };
+function arrivalMealPlacementStyle(kind) {
+	const placement = arrivalMealMobilePlacements[kind];
+	return {
+		"--mobile-arrival-meal-left": `${placement.left}%`,
+		"--mobile-arrival-meal-bottom": `${placement.bottom}%`,
+		"--mobile-arrival-meal-width": `${placement.width}%`,
+		"--mobile-arrival-meal-max-height": "maxHeight" in placement ? `${placement.maxHeight}%` : "none"
+	};
+}
 function getCorrectAnswerVideo(key) {
 	const index = typeof key === "number" ? key : scenarioCorrectAnswerVideoIndex[key] ?? 0;
 	return correctAnswerVideos[Math.abs(index) % correctAnswerVideos.length];
@@ -2550,26 +2646,38 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
-				className: "arrival-meal-supplies",
+				className: `arrival-meal-supplies ${activity.arrivalMealFoodReady && activity.arrivalMealWaterReady ? "mobile-condensed" : ""}`,
 				"aria-label": "晚餐用品",
 				children: [
-					!activity.arrivalMealFoodReady && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						type: "button",
-						className: "arrival-meal-supply-food-button",
-						onClick: prepareFood,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							className: "arrival-meal-supply-food",
-							src: "/assets/room/food.png",
-							alt: "飼料"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "飼料" })]
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "arrival-meal-supply-slot",
+						children: !activity.arrivalMealFoodReady ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+							type: "button",
+							className: "arrival-meal-supply-food-button",
+							onClick: prepareFood,
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								className: "arrival-meal-supply-food",
+								src: "/assets/room/food.png",
+								alt: "飼料"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "飼料" })]
+						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "arrival-meal-supply-placeholder",
+							"aria-hidden": "true"
+						})
 					}),
-					!activity.arrivalMealWaterReady && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						type: "button",
-						onClick: prepareWater,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							src: "/assets/pet-journey/waterbottle.png",
-							alt: "水瓶"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "水" })]
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "arrival-meal-supply-slot",
+						children: !activity.arrivalMealWaterReady ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+							type: "button",
+							onClick: prepareWater,
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								src: "/assets/pet-journey/waterbottle.png",
+								alt: "水瓶"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "水" })]
+						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "arrival-meal-supply-placeholder",
+							"aria-hidden": "true"
+						})
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						type: "button",
@@ -2607,8 +2715,13 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 				className: "arrival-meal-scene",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-						className: "arrival-meal-room",
+						className: "arrival-meal-room arrival-meal-room--desktop",
 						src: "/assets/room/empty-room.png",
+						alt: "小狗的新家房間"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						className: "arrival-meal-room arrival-meal-room--mobile",
+						src: "/assets/room/empty-room-mobile.png",
 						alt: "小狗的新家房間"
 					}),
 					foodWarning && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -2628,16 +2741,19 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-dog",
+						style: arrivalMealPlacementStyle("dog"),
 						src: complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png",
 						alt: complete ? `${petName}開心地坐在房間裡` : `${petName}還在等待晚餐與飲水`
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-water",
+						style: arrivalMealPlacementStyle("water"),
 						src: activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png",
 						alt: activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-food",
+						style: arrivalMealPlacementStyle("food"),
 						src: activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png",
 						alt: activity.arrivalMealFoodReady ? "裝好飼料的狗碗" : "空飼料碗"
 					})
@@ -3642,6 +3758,11 @@ function Welcome({ onStart }) {
 function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName, onCategory, onBreed, onPetName, hasPreviousDog, previousBreed, previousDogName, onHasPreviousDog, onPreviousBreed, onPreviousDogName, onNext }) {
 	const selectedBreed = breeds.find((item) => item.id === breed);
 	const selectedPreviousBreed = breeds.find((item) => item.id === previousBreed);
+	const breedCarouselRef = (0, import_react.useRef)(null);
+	const breedScrollTimerRef = (0, import_react.useRef)(null);
+	(0, import_react.useEffect)(() => () => {
+		if (breedScrollTimerRef.current) window.clearTimeout(breedScrollTimerRef.current);
+	}, []);
 	function chooseCategory(id) {
 		onCategory(id);
 		onBreed("");
@@ -3650,6 +3771,26 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 			top: 0,
 			behavior: "smooth"
 		});
+	}
+	function syncBreedFromCarousel() {
+		const container = breedCarouselRef.current;
+		if (!container) return;
+		const containerCenter = container.getBoundingClientRect().left + container.clientWidth / 2;
+		const centered = Array.from(container.querySelectorAll("[data-breed-id]")).reduce((closest, card) => {
+			const rect = card.getBoundingClientRect();
+			const distance = Math.abs(rect.left + rect.width / 2 - containerCenter);
+			const id = card.dataset.breedId ?? "";
+			if (!id || closest && closest.distance <= distance) return closest;
+			return {
+				id,
+				distance
+			};
+		}, null);
+		if (centered && centered.id !== breed) onBreed(centered.id);
+	}
+	function handleBreedCarouselScroll() {
+		if (breedScrollTimerRef.current) window.clearTimeout(breedScrollTimerRef.current);
+		breedScrollTimerRef.current = window.setTimeout(syncBreedFromCarousel, 120);
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "content-wrap partner-picker",
@@ -3678,8 +3819,12 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "選擇你想領養的品種" }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "breed-row breed-page-grid",
+					className: "breed-row breed-page-grid breed-carousel",
+					ref: breedCarouselRef,
+					onScroll: handleBreedCarouselScroll,
+					"aria-label": "品種橫向滑動選擇",
 					children: breeds.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						"data-breed-id": item.id,
 						className: breed === item.id ? "selected" : "",
 						onClick: () => onBreed(item.id),
 						"aria-pressed": breed === item.id,
@@ -4188,6 +4333,40 @@ function expensePriceText(expenseIds = [], breed) {
 	const total = prices.reduce((sum, item) => sum + item.amount, 0);
 	return `NT$${money.format(total)}`;
 }
+function roomItemPlacementStyle(item) {
+	return {
+		left: `${item.placement.x}%`,
+		top: `${item.placement.y}%`,
+		width: `${item.placement.width}%`,
+		zIndex: item.placement.layer,
+		"--mobile-room-item-x": `${item.mobilePlacement?.x ?? item.placement.x}%`,
+		"--mobile-room-item-y": `${item.mobilePlacement?.y ?? item.placement.y}%`,
+		"--mobile-room-item-width": `${item.mobilePlacement?.width ?? item.placement.width}%`
+	};
+}
+function roomHazardPlacementStyle(item) {
+	return {
+		left: `${item.placement.x}%`,
+		top: `${item.placement.y}%`,
+		width: `${item.placement.width}%`,
+		zIndex: item.placement.layer,
+		"--mobile-room-hazard-x": `${item.mobilePlacement?.x ?? item.placement.x}%`,
+		"--mobile-room-hazard-y": `${item.mobilePlacement?.y ?? item.placement.y}%`,
+		"--mobile-room-hazard-width": `${item.mobilePlacement?.width ?? item.placement.width}%`
+	};
+}
+function roomDoorplatePlacementStyle() {
+	return {
+		"--mobile-doorplate-x": `${roomDoorplatePlacement.mobile.x}%`,
+		"--mobile-doorplate-y": `${roomDoorplatePlacement.mobile.y}%`,
+		"--mobile-doorplate-width": `${roomDoorplatePlacement.mobile.width}%`,
+		"--mobile-doorplate-text-left": `${roomDoorplatePlacement.mobileText.left}%`,
+		"--mobile-doorplate-text-top": `${roomDoorplatePlacement.mobileText.top}%`,
+		"--mobile-doorplate-text-width": `${roomDoorplatePlacement.mobileText.width}%`,
+		"--mobile-doorplate-text-height": `${roomDoorplatePlacement.mobileText.height}%`,
+		"--mobile-doorplate-text-font-size": `${roomDoorplatePlacement.mobileText.fontSize}px`
+	};
+}
 function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, onToggleHazard, onBack, onReplay, onNext, reviewing = false, breed }) {
 	const [roomCheckMessage, setRoomCheckMessage] = (0, import_react.useState)("");
 	const [dismissingHazard, setDismissingHazard] = (0, import_react.useState)(null);
@@ -4315,18 +4494,18 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 						"aria-label": "寵物生活空間",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								className: "room-scene-background",
+								className: "room-scene-background room-scene-background--desktop",
 								src: "/assets/room/empty-room.png",
 								alt: "空的寵物生活房間"
 							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								className: "room-scene-background room-scene-background--mobile",
+								src: "/assets/room/empty-room-mobile.png",
+								alt: "空的寵物生活房間"
+							}),
 							roomItems.filter((item) => selectedItems.includes(item.id)).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								className: `room-object placed-supply auto-room-object ${item.id === "food" ? "placed-room-item--food" : ""}`,
-								style: {
-									left: `${item.placement.x}%`,
-									top: `${item.placement.y}%`,
-									width: `${item.placement.width}%`,
-									zIndex: item.placement.layer
-								},
+								className: `room-object placed-supply auto-room-object placed-room-item--${item.id}`,
+								style: roomItemPlacementStyle(item),
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 									src: item.image,
 									alt: `房間中已配置的${item.label}`
@@ -4335,12 +4514,7 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 							hazards.filter((item) => !securedHazards.includes(item.id)).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 								type: "button",
 								className: `room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`,
-								style: {
-									left: `${item.placement.x}%`,
-									top: `${item.placement.y}%`,
-									width: `${item.placement.width}%`,
-									zIndex: item.placement.layer
-								},
+								style: roomHazardPlacementStyle(item),
 								onClick: () => secureHazard(item.id),
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 									src: item.image,
@@ -4349,6 +4523,7 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 							}, item.id)),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								className: "pet-doorplate",
+								style: roomDoorplatePlacementStyle(),
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 									src: "/assets/room/nameplate.png",
 									alt: "小狗名字門牌"
@@ -4677,9 +4852,6 @@ function useMobileDownloadMode() {
 	}, []);
 	return mobile;
 }
-function sourceSelectorForReportKind(kind) {
-	return kind === "profile" ? ".care-print-profile" : ".care-a4-sheet:not(.care-a4-sheet--followup)";
-}
 async function downloadAssessmentPdf(petName, kind) {
 	const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
 	const sourcePages = Array.from(document.querySelectorAll(selector));
@@ -4709,35 +4881,41 @@ async function downloadAssessmentPdf(petName, kind) {
 		stage.remove();
 	}
 }
+function downloadBlob(blob, fileName) {
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement("a");
+	link.href = url;
+	link.download = fileName;
+	document.body.appendChild(link);
+	link.click();
+	link.remove();
+	window.setTimeout(() => URL.revokeObjectURL(url), 1e3);
+}
 async function downloadAssessmentImage(petName, kind) {
-	const sourcePage = document.querySelector(sourceSelectorForReportKind(kind));
-	if (!sourcePage) throw new Error("Image source page not found");
+	const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
+	const sourcePages = Array.from(document.querySelectorAll(selector));
+	if (!sourcePages.length) throw new Error("Image source pages not found");
 	const stage = document.createElement("div");
-	stage.className = "pdf-export-stage image-export-stage";
-	stage.appendChild(sourcePage.cloneNode(true));
+	stage.className = "pdf-export-stage image-export-stage desktop-pdf-layout";
+	sourcePages.forEach((page) => stage.appendChild(page.cloneNode(true)));
 	document.body.appendChild(stage);
 	try {
 		await document.fonts?.ready;
 		await replaceImagesWithDataUrls(stage);
-		const page = stage.firstElementChild;
-		if (!page) throw new Error("Image page render failed");
-		const canvas = await elementToCanvas(page);
-		const blob = await new Promise((resolve, reject) => {
-			canvas.toBlob((nextBlob) => {
-				if (nextBlob) resolve(nextBlob);
-				else reject(/* @__PURE__ */ new Error("PNG export failed"));
-			}, "image/png");
-		});
+		const pages = Array.from(stage.children);
+		const canvases = [];
+		for (const page of pages) canvases.push(await elementToCanvas(page));
 		const safePetName = sanitizePdfFileName(petName);
-		const fileName = safePetName ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}_${safePetName}.png` : `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}.png`;
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement("a");
-		link.href = url;
-		link.download = fileName;
-		document.body.appendChild(link);
-		link.click();
-		link.remove();
-		window.setTimeout(() => URL.revokeObjectURL(url), 1e3);
+		const baseFileName = safePetName ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}_${safePetName}` : `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}`;
+		for (let index = 0; index < canvases.length; index += 1) {
+			const canvas = canvases[index];
+			downloadBlob(await new Promise((resolve, reject) => {
+				canvas.toBlob((nextBlob) => {
+					if (nextBlob) resolve(nextBlob);
+					else reject(/* @__PURE__ */ new Error("PNG export failed"));
+				}, "image/png");
+			}), canvases.length > 1 ? `${baseFileName}_${index + 1}.png` : `${baseFileName}.png`);
+		}
 	} finally {
 		stage.remove();
 	}

@@ -1,7 +1,8 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
-import { applySizeBasedExpenseAmount, departureTrunkItems, expenseCatalog, getPetSizeForBreed, hazards, money, roomItems, trunkItems } from "../../game-data";
+import { applySizeBasedExpenseAmount, departureTrunkItems, expenseCatalog, getPetSizeForBreed, hazards, money, roomDoorplatePlacement, roomItems, trunkItems } from "../../game-data";
 import type { CareMember, ExpenseRecord } from "../../game-types";
 import { NavButtons, StepHeading } from "../shared/SharedComponents";
 
@@ -34,6 +35,43 @@ function expensePriceText(expenseIds: string[] = [], breed: string) {
   if (prices.length === 0) return "";
   const total = prices.reduce((sum, item) => sum + item.amount, 0);
   return `NT$${money.format(total)}`;
+}
+
+function roomItemPlacementStyle(item: (typeof roomItems)[number]): CSSProperties {
+  return {
+    left: `${item.placement.x}%`,
+    top: `${item.placement.y}%`,
+    width: `${item.placement.width}%`,
+    zIndex: item.placement.layer,
+    "--mobile-room-item-x": `${item.mobilePlacement?.x ?? item.placement.x}%`,
+    "--mobile-room-item-y": `${item.mobilePlacement?.y ?? item.placement.y}%`,
+    "--mobile-room-item-width": `${item.mobilePlacement?.width ?? item.placement.width}%`,
+  } as CSSProperties;
+}
+
+function roomHazardPlacementStyle(item: (typeof hazards)[number]): CSSProperties {
+  return {
+    left: `${item.placement.x}%`,
+    top: `${item.placement.y}%`,
+    width: `${item.placement.width}%`,
+    zIndex: item.placement.layer,
+    "--mobile-room-hazard-x": `${item.mobilePlacement?.x ?? item.placement.x}%`,
+    "--mobile-room-hazard-y": `${item.mobilePlacement?.y ?? item.placement.y}%`,
+    "--mobile-room-hazard-width": `${item.mobilePlacement?.width ?? item.placement.width}%`,
+  } as CSSProperties;
+}
+
+function roomDoorplatePlacementStyle(): CSSProperties {
+  return {
+    "--mobile-doorplate-x": `${roomDoorplatePlacement.mobile.x}%`,
+    "--mobile-doorplate-y": `${roomDoorplatePlacement.mobile.y}%`,
+    "--mobile-doorplate-width": `${roomDoorplatePlacement.mobile.width}%`,
+    "--mobile-doorplate-text-left": `${roomDoorplatePlacement.mobileText.left}%`,
+    "--mobile-doorplate-text-top": `${roomDoorplatePlacement.mobileText.top}%`,
+    "--mobile-doorplate-text-width": `${roomDoorplatePlacement.mobileText.width}%`,
+    "--mobile-doorplate-text-height": `${roomDoorplatePlacement.mobileText.height}%`,
+    "--mobile-doorplate-text-font-size": `${roomDoorplatePlacement.mobileText.fontSize}px`,
+  } as CSSProperties;
 }
 
 export function RoomPreparation({
@@ -156,10 +194,11 @@ export function RoomPreparation({
 
         <div className="room-interaction-column">
           <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomSceneReady ? "room-scene-ready" : ""}`} role="group" aria-label="寵物生活空間">
-            <img className="room-scene-background" src="/assets/room/empty-room.png" alt="空的寵物生活房間" />
-            {roomItems.filter((item) => selectedItems.includes(item.id)).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object ${item.id === "food" ? "placed-room-item--food" : ""}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }}><img src={item.image} alt={`房間中已配置的${item.label}`} /><span>{item.label}</span></div>)}
-            {hazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
-            <div className="pet-doorplate">
+            <img className="room-scene-background room-scene-background--desktop" src="/assets/room/empty-room.png" alt="空的寵物生活房間" />
+            <img className="room-scene-background room-scene-background--mobile" src="/assets/room/empty-room-mobile.png" alt="空的寵物生活房間" />
+            {roomItems.filter((item) => selectedItems.includes(item.id)).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><img src={item.image} alt={`房間中已配置的${item.label}`} /><span>{item.label}</span></div>)}
+            {hazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
+            <div className="pet-doorplate" style={roomDoorplatePlacementStyle()}>
               <img src="/assets/room/nameplate.png" alt="小狗名字門牌" />
               <span className="pet-doorplate-name">{petName}</span>
             </div>

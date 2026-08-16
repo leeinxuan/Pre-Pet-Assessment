@@ -275,6 +275,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .journey-map i { position: absolute; right: 7px; color: var(--line); letter-spacing: 3px; }
 
 /* Hallmark 繚 macrostructure: Cinematic Village Hero 繚 tone: warm-practical 繚 anchor hue: teal */
+/* 首頁背景圖顯示位置調整點：
+   - 圖片來源在這裡的 url("/assets/welcome/prep-room.png")
+   - 桌機/共用位置改 background-position，尺寸改 background-size
+   - 手機版請看下方 @media (max-width: 768px) 的 .welcome background-position */
 .welcome {
   min-height: 100vh;
   padding: clamp(18px, 3vw, 34px);
@@ -1480,6 +1484,11 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .daily-behavior-retry h2 { margin: 0 0 13px; font-size: 24px; }
 .daily-behavior-retry p { margin: 0 0 14px; color: #733817; line-height: 1.7; }
 .daily-behavior-retry .secondary { margin-top: 24px; }
+/* 「做得很好！」頁面間距調整點：
+   - 整體卡片高度/上下空間：.correct-feedback-layout、.correct-feedback-media、.correct-feedback-copy 的 min-height / padding
+   - 標題與內文距離：.correct-feedback-copy h2 的 margin-bottom
+   - 補充區與按鈕距離：.correct-feedback-suggestion、.delayed-continue
+   - 手機版留白：搜尋 @media (max-width: 720px) 裡的 .correct-feedback-* 規則 */
 .correct-feedback-layout { min-height: 560px; display: grid; grid-template-columns: 1.08fr .92fr; overflow: hidden; border: 1px solid var(--mint); border-radius: 28px; background: var(--mint-soft); box-shadow: var(--shadow); }
 .correct-feedback-layout--single {
   grid-template-columns: 1.08fr .92fr;
@@ -3045,9 +3054,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   page-break-inside: avoid;
 }
 .care-a4-header { display: flex; justify-content: space-between; gap: 14mm; align-items: flex-start; padding-bottom: 8mm; border-bottom: 2px solid #e7d9bd; }
+.care-a4-header > div { flex: 1 1 auto; min-width: 0; }
 .care-a4-header p { margin: 0 0 4mm; color: var(--gold-dark); font-size: 11px; font-weight: 900; letter-spacing: .1em; }
-.care-a4-header h1 { margin: 0; font-size: 28px; line-height: 1.05; letter-spacing: -.04em; }
-.care-a4-header span { display: block; margin-top: 3mm; color: var(--muted); font-weight: 800; }
+.care-a4-header h1 { margin: 0; font-size: 28px; line-height: 1.05; letter-spacing: -.04em; word-break: keep-all; overflow-wrap: normal; }
+.care-a4-header span { display: block; margin-top: 3mm; color: var(--muted); font-weight: 800; word-break: keep-all; overflow-wrap: normal; }
 .care-a4-header aside { flex: 0 0 42mm; padding: 5mm; border-radius: 12px; background: var(--cream); text-align: center; }
 .care-a4-header aside b { display: block; font-size: 20px; }
 .care-a4-header aside small { display: block; margin-top: 2mm; color: var(--muted); line-height: 1.45; }
@@ -3410,6 +3420,299 @@ html, body { overflow-x: clip; }
   }
 }
 
+.room-scene-background--mobile,
+.arrival-meal-room--mobile {
+  display: none;
+}
+
+.arrival-meal-supply-slot {
+  width: 100%;
+  min-height: 132px;
+  display: grid;
+  place-items: center;
+}
+
+.arrival-meal-supply-placeholder {
+  width: 100%;
+  min-height: 112px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.image-export-stage .care-a4-sheet,
+.image-export-stage .care-print-profile {
+  width: 210mm !important;
+  height: 297mm !important;
+  min-height: 297mm !important;
+}
+
+@media (max-width: 768px) {
+  .arrival-video-screen,
+  .time-pass-transition {
+    width: min(100%, 100svw);
+    height: auto;
+    max-width: 100svw;
+    max-height: min(100svh, 100%);
+    aspect-ratio: 16 / 9;
+    transform: none;
+    transform-origin: center center;
+    align-self: center;
+    justify-self: center;
+    place-items: center;
+  }
+
+  .arrival-video-screen video,
+  .time-pass-transition video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .walking-game {
+    justify-items: center;
+    overflow: visible;
+  }
+
+  .walking-game-hint {
+    width: 100%;
+  }
+
+  .walking-scene {
+    width: min(100svh, 920px);
+    height: min(100svw, 560px);
+    max-width: none;
+    min-height: 0;
+    aspect-ratio: auto;
+    transform: rotate(90deg);
+    transform-origin: center center;
+    margin: clamp(72px, 18vw, 120px) 0;
+  }
+
+  .walking-bg {
+    min-height: 0;
+    height: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .breed-carousel {
+    display: flex;
+    grid-template-columns: none;
+    margin-inline: -16px;
+    padding-inline: 22vw;
+    scroll-padding-inline: 22vw;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .breed-carousel button {
+    flex: 0 0 62vw;
+    flex-basis: 62vw;
+    min-height: 180px;
+    scroll-snap-align: center;
+  }
+
+  .breed-carousel button.selected {
+    transform: translateY(-3px) scale(1.03);
+  }
+
+  .breed-description {
+    min-height: auto;
+    margin-top: 12px;
+  }
+
+  .room-preparation-layout.simplified-room-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .report-download-footer .report-download-control,
+  .profile-pdf-actions .report-download-control {
+    width: 100%;
+  }
+
+  .room-interaction-column {
+    order: 1;
+  }
+
+  .room-supply-shelf {
+    order: 2;
+  }
+
+  /* Mobile departure layout:
+     手機版「出發接牠回家」改為後車廂畫面在上、物品準備欄在下；桌機版維持原本左右排列。 */
+  .departure-car,
+  .car-trunk-scene {
+    order: 1;
+    justify-self: center;
+    width: 100%;
+  }
+
+  .departure-supply-shelf,
+  .car-preparation-panel {
+    order: 2;
+  }
+
+  .room-scene-background--desktop,
+  .arrival-meal-room--desktop {
+    display: none;
+  }
+
+  .room-scene-background--mobile,
+  .arrival-meal-room--mobile {
+    display: block;
+  }
+
+  .room-scene {
+    aspect-ratio: 1 / 1;
+  }
+
+  .room-scene-background--mobile,
+  .arrival-meal-room--mobile {
+    object-fit: cover;
+    object-position: right center;
+  }
+
+  /* Mobile room item positions:
+     手機版「布置房間」物品位置/大小現在請到 app/game-data.ts 的 roomItems[].mobilePlacement 調整。
+     這裡只負責讓手機版讀取 mobilePlacement 產生的 CSS 變數，不影響桌機版 placement。 */
+  .room-scene .placed-supply {
+    left: var(--mobile-room-item-x) !important;
+    top: var(--mobile-room-item-y) !important;
+    width: var(--mobile-room-item-width) !important;
+  }
+
+  /* Mobile hazard positions:
+     手機版「布置房間」危險物品位置/大小請到 app/game-data.ts 的 hazards[].mobilePlacement 調整。 */
+  .room-scene .room-hazard {
+    left: var(--mobile-room-hazard-x) !important;
+    top: var(--mobile-room-hazard-y) !important;
+    width: var(--mobile-room-hazard-width) !important;
+  }
+
+  /* Mobile doorplate position:
+     手機版「布置房間」門牌位置/大小請到 app/game-data.ts 的 roomDoorplatePlacement.mobile 調整。 */
+  .room-scene .pet-doorplate {
+    left: var(--mobile-doorplate-x) !important;
+    top: var(--mobile-doorplate-y) !important;
+    width: var(--mobile-doorplate-width) !important;
+    min-width: 0;
+  }
+
+  /* Mobile doorplate text position:
+     手機版門牌裡「名字文字 / 輸入文字」的位置與大小請到 app/game-data.ts 的 roomDoorplatePlacement.mobileText 調整。 */
+  .room-scene .pet-doorplate-name,
+  .room-scene .pet-doorplate > button,
+  .room-scene .pet-doorplate-editor {
+    inset: auto !important;
+    left: var(--mobile-doorplate-text-left) !important;
+    top: var(--mobile-doorplate-text-top) !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: var(--mobile-doorplate-text-width) !important;
+    height: var(--mobile-doorplate-text-height) !important;
+    font-size: var(--mobile-doorplate-text-font-size) !important;
+  }
+
+  .room-scene .pet-doorplate-editor input {
+    font-size: var(--mobile-doorplate-text-font-size) !important;
+  }
+
+  .room-supply-rows {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+    min-height: 0;
+  }
+
+  .room-supply-row {
+    display: contents;
+  }
+
+  .room-supply-row .supply-slot,
+  .room-supply-row--1 .supply-slot,
+  .room-supply-row--2 .supply-slot {
+    width: auto;
+    min-width: 0;
+    min-height: 118px;
+    flex: initial;
+  }
+
+  .room-supply-row button {
+    min-height: 118px;
+  }
+
+  .supply-slot-note {
+    min-height: 118px;
+    padding: 10px 8px;
+  }
+
+  .arrival-meal-activity {
+    grid-template-columns: 1fr;
+  }
+
+  .arrival-meal-heading {
+    order: 0;
+  }
+
+  .arrival-meal-scene {
+    order: 1;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Mobile feeding item positions:
+     手機版「準備第一餐」房間裡狗狗、裝水碗、裝食物碗的位置與大小，
+     請到 app/game-data.ts 的 arrivalMealMobilePlacements 調整。 */
+  .arrival-meal-dog,
+  .arrival-meal-water,
+  .arrival-meal-food {
+    left: var(--mobile-arrival-meal-left) !important;
+    bottom: var(--mobile-arrival-meal-bottom) !important;
+    width: var(--mobile-arrival-meal-width) !important;
+    max-height: var(--mobile-arrival-meal-max-height) !important;
+  }
+
+  .arrival-meal-supplies {
+    order: 2;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .arrival-meal-supply-slot {
+    min-height: 104px;
+  }
+
+  .arrival-meal-supplies.mobile-condensed {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .arrival-meal-supplies.mobile-condensed .arrival-meal-supply-slot {
+    display: none;
+  }
+
+  .arrival-meal-supplies button,
+  .arrival-meal-supplies .arrival-meal-supply-food-button {
+    max-width: none;
+    min-height: 104px;
+  }
+
+  .arrival-meal-footer {
+    order: 3;
+  }
+}
+
+@media (max-width: 430px) {
+  .arrival-meal-supplies {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* Final cover overrides: image-only first screen */
 .welcome {
   min-height: 100svh;
@@ -3732,6 +4035,10 @@ html, body { overflow-x: clip; }
   }
 }
 
+/* 首頁目前真正生效的背景在這一段：
+   - 現版首頁用 CSS 漸層與村莊圖形，不是 <img>
+   - 要調整桌機/手機背景顯示位置，可從 .welcome 的 background / .welcome::before / .welcome::after 開始
+   - 若改回圖片背景，請在這裡設定 background-position / background-size，手機版再到下方 max-width: 768px 補覆寫 */
 /* Hallmark · cover refresh: sky-village marquee · tone: warm-practical · anchor hue: teal */
 .welcome {
   min-height: 100svh;
@@ -4177,8 +4484,30 @@ html, body { overflow-x: clip; }
 
 .pdf-export-stage .care-a4-header {
   display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 14mm !important;
   padding-bottom: 6mm !important;
   border-bottom: 2px solid #e7d9bd !important;
+}
+
+.pdf-export-stage .care-a4-header > div {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 128mm !important;
+}
+
+.pdf-export-stage .care-a4-header p,
+.pdf-export-stage .care-a4-header h1,
+.pdf-export-stage .care-a4-header span {
+  display: block !important;
+  width: auto !important;
+  max-width: none !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  white-space: normal !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
 }
 
 .pdf-export-stage .care-a4-header h1 { font-size: 28px !important; }
@@ -4205,6 +4534,12 @@ html, body { overflow-x: clip; }
 .pdf-export-stage .care-a4-commitment { display: grid !important; grid-template-columns: 7mm 1fr !important; margin-top: 6mm !important; padding: 4mm !important; }
 .pdf-export-stage .care-print-profile .care-a4-header aside { display: none !important; }
 .pdf-export-stage .care-print-profile .care-a4-header > div { max-width: 100% !important; }
+
+.pdf-export-stage .care-a4-header .care-breed-card {
+  flex: 0 0 42mm !important;
+  width: 42mm !important;
+  min-width: 42mm !important;
+}
 
 .care-a4-header .care-breed-card {
   flex: 0 0 auto;

@@ -145,6 +145,7 @@ export type RoomItem = {
   icon: string;
   image: string;
   placement: { x: number; y: number; width: number; layer: number };
+  mobilePlacement?: { x: number; y: number; width: number };
   required: boolean;
   need: "飲食" | "休息" | "排泄" | "安全" | "活動" | "清潔";
   expenseId?: string;
@@ -157,6 +158,7 @@ export type HazardItem = {
   icon: string;
   image: string;
   placement: { x: number; y: number; width: number; layer: number };
+  mobilePlacement?: { x: number; y: number; width: number };
   danger: string;
   handling: string;
 };

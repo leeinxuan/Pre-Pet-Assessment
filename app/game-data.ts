@@ -147,21 +147,47 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
 };
 
 export const roomItems: RoomItem[] = [
-  { id: "bed", label: "睡墊", icon: "🛏️", image: "/assets/room/pet-bed.png", placement: { x: 67, y: 83, width: 32, layer: 2 }, required: true, need: "休息", expenseId: "bed", purpose: "提供固定且舒適的休息空間，讓小狗能安心休息。" },
-  { id: "toy", label: "玩具", icon: "🦴", image: "/assets/room/toy.png", placement: { x: 73, y: 80, width: 10, layer: 4 }, required: true, need: "活動", expenseId: "toy", purpose: "合適的玩具可以提供活動與探索，也能減少因無聊產生的破壞行為。" },
-  { id: "water-bowl", label: "水碗", icon: "💧", image: "/assets/room/water-bowl.png", placement: { x: 32, y: 90, width: 12, layer: 3 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "每天確認水碗乾淨，並提供足量的新鮮飲水。" },
-  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/assets/room/food-bowl.png", placement: { x: 41, y: 90, width: 10, layer: 3 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
-  { id: "toilet", label: "尿墊", icon: "▧", image: "/assets/room/pee-pad.png", placement: { x: 15, y: 85, width: 20, layer: 1 }, required: true, need: "排泄", expenseId: "toilet", purpose: "排泄用品應與食物及休息位置分開，方便小狗建立習慣。" },
-  { id: "cleaner", label: "寵物專用清潔用品", icon: "🧼", image: "/assets/room/cleaner.png", placement: { x: 39, y: 46, width: 10, layer: 3 }, required: true, need: "清潔", expenseId: "cleaner", purpose: "日常清潔請選擇寵物專用清潔用品，並妥善收納。" },
-  { id: "food", label: "飼料", icon: "🦴", image: "/assets/room/food.png", placement: { x: 50, y: 85, width: 9, layer: 3 }, required: true, need: "飲食", expenseId: "starter-food", purpose: "選擇符合小狗年齡、體型及健康需求的主食，並妥善保存。" },
+  // Mobile room item positions:
+  // 在這裡調整手機版「布置房間」畫面中已放入物品的位置與大小。
+  // mobilePlacement 的 x / y / width 都是百分比，基準是手機版 1:1 房間容器；不會影響桌機版 placement。
+  { id: "bed", label: "睡墊", icon: "🛏️", image: "/assets/room/pet-bed.png", placement: { x: 67, y: 83, width: 32, layer: 2 }, mobilePlacement: { x: 62, y: 85, width: 45 }, required: true, need: "休息", expenseId: "bed", purpose: "提供固定且舒適的休息空間，讓小狗能安心休息。" },
+  { id: "toy", label: "玩具", icon: "🦴", image: "/assets/room/toy.png", placement: { x: 73, y: 80, width: 10, layer: 4 }, mobilePlacement: { x: 69, y: 80, width: 15 }, required: true, need: "活動", expenseId: "toy", purpose: "合適的玩具可以提供活動與探索，也能減少因無聊產生的破壞行為。" },
+  { id: "water-bowl", label: "水碗", icon: "💧", image: "/assets/room/water-bowl.png", placement: { x: 32, y: 90, width: 12, layer: 3 }, mobilePlacement: { x: 10, y: 90, width: 18 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "每天確認水碗乾淨，並提供足量的新鮮飲水。" },
+  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/assets/room/food-bowl.png", placement: { x: 41, y: 90, width: 10, layer: 3 }, mobilePlacement: { x: 25, y: 90, width: 15 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定的飲食器具能幫助建立規律的餵食習慣。" },
+  { id: "toilet", label: "尿墊", icon: "▧", image: "/assets/room/pee-pad.png", placement: { x: 15, y: 85, width: 20, layer: 1 }, mobilePlacement: { x: 35, y: 70, width: 25 }, required: true, need: "排泄", expenseId: "toilet", purpose: "排泄用品應與食物及休息位置分開，方便小狗建立習慣。" },
+  { id: "cleaner", label: "寵物專用清潔用品", icon: "🧼", image: "/assets/room/cleaner.png", placement: { x: 39, y: 46, width: 10, layer: 3 }, mobilePlacement: { x: 10, y: 46, width: 18 }, required: true, need: "清潔", expenseId: "cleaner", purpose: "日常清潔請選擇寵物專用清潔用品，並妥善收納。" },
+  { id: "food", label: "飼料", icon: "🦴", image: "/assets/room/food.png", placement: { x: 50, y: 85, width: 9, layer: 3 }, mobilePlacement: { x: 39, y: 86, width: 13 }, required: true, need: "飲食", expenseId: "starter-food", purpose: "選擇符合小狗年齡、體型及健康需求的主食，並妥善保存。" },
 ];
 
+// Mobile doorplate position:
+// 在這裡調整手機版「布置房間」門牌的位置與大小。
+// mobile 的 x / y / width 都是百分比，基準是手機版 1:1 房間容器；不會影響桌機版門牌 CSS。
+export const roomDoorplatePlacement = {
+  mobile: { x: 33, y: 20, width: 40 },
+  // Mobile doorplate text position:
+  // 在這裡調整手機版門牌裡「名字文字 / 輸入文字」的位置與大小。
+  // left / top / width / height 是相對於門牌圖片本身的百分比；fontSize 是 px。
+  mobileText: { left: 4, top: 56, width: 95,height: 20, fontSize: 16 },
+} as const;
+
 export const hazards: HazardItem[] = [
-  { id: "small-parts", label: "小物品", icon: "●", image: "/assets/room/small-items.png", placement: { x: 40, y: 75, width: 12, layer: 5 }, danger: "容易被誤吞，可能造成噎住或腸胃阻塞。", handling: "收進小狗無法取得的抽屜或收納盒。" },
-  { id: "chocolate", label: "巧克力", icon: "🍫", image: "/assets/room/chocolate.png", placement: { x: 89, y: 78, width: 10, layer: 5  }, danger: "含有不適合狗狗的成分，可能危害健康。", handling: "放進有門的高處櫃子。" },
-  { id: "chemicals", label: "一般清潔劑", icon: "🧴", image: "/assets/room/detergent.png", placement: { x: 62, y: 64, width: 10, layer: 5 }, danger: "一般清潔劑可能含有刺激性或不適合寵物接觸的成分。", handling: "應收在牠碰不到的地方；日常清潔請選擇寵物專用清潔用品。" },
-  { id: "cables", label: "電線", icon: "🔌", image: "/assets/room/wire.png", placement: { x: 12, y: 78, width: 20, layer: 5 }, danger: "可能被啃咬，造成受傷或觸電。", handling: "整理固定或加裝電線保護套。" },
+  // Mobile hazard positions:
+  // 在這裡調整手機版「布置房間」危險物品的位置與大小。
+  // mobilePlacement 的 x / y / width 都是百分比，基準是手機版 1:1 房間容器；不會影響桌機版 placement。
+  { id: "small-parts", label: "小物品", icon: "●", image: "/assets/room/small-items.png", placement: { x: 40, y: 75, width: 12, layer: 5 }, mobilePlacement: { x: 80, y: 55, width: 16 }, danger: "容易被誤吞，可能造成噎住或腸胃阻塞。", handling: "收進小狗無法取得的抽屜或收納盒。" },
+  { id: "chocolate", label: "巧克力", icon: "🍫", image: "/assets/room/chocolate.png", placement: { x: 89, y: 78, width: 10, layer: 5  }, mobilePlacement: { x: 89, y: 78, width: 16 }, danger: "含有不適合狗狗的成分，可能危害健康。", handling: "放進有門的高處櫃子。" },
+  { id: "chemicals", label: "一般清潔劑", icon: "🧴", image: "/assets/room/detergent.png", placement: { x: 62, y: 64, width: 10, layer: 5 }, mobilePlacement: { x: 55, y: 65, width: 15 }, danger: "一般清潔劑可能含有刺激性或不適合寵物接觸的成分。", handling: "應收在牠碰不到的地方；日常清潔請選擇寵物專用清潔用品。" },
+  { id: "cables", label: "電線", icon: "🔌", image: "/assets/room/wire.png", placement: { x: 12, y: 78, width: 20, layer: 5 }, mobilePlacement: { x: 15, y: 78, width: 25 }, danger: "可能被啃咬，造成受傷或觸電。", handling: "整理固定或加裝電線保護套。" },
 ];
+
+// Mobile feeding item positions:
+// 在這裡調整手機版「準備第一餐」房間裡狗狗、裝水碗、裝食物碗的位置與大小。
+// left / bottom / width / maxHeight 都是百分比，基準是手機版 1:1 餵食房間容器；不會影響桌機版。
+export const arrivalMealMobilePlacements = {
+  dog: { left: 32, bottom: 10, width: 50, maxHeight: 58 },
+  water: { left: 10, bottom: 10, width: 24 },
+  food: { left: 28, bottom: 5, width: 24 },
+} as const;
 
 export const initialMembers: CareMember[] = [
   { id: "player", name: "", age: null, isPlayer: true },
