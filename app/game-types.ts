@@ -41,6 +41,8 @@ export type Scenario = {
   title: string;
   description: string;
   topic?: string;
+  reportSummary?: string;
+  breedKnowledge?: string;
   choices: ScenarioChoice[];
   reminder?: string;
   artIndex: number;

@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import { breeds, hazards, money, roomItems } from "../../game-data";
 import { getBreedChallengeScenarios, lifeScenarios } from "../../life-data";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, ScenarioAnswer } from "../../game-types";
-import type { SharedAssessmentResult, SharedDiscussionTopic } from "../../shared-result-types";
+import type { SharedDiscussionTopic } from "../../shared-result-types";
 import { mergeDefaultVisibleExpenses, NavButtons } from "../shared/SharedComponents";
 
 const a4PageWidthPt = 595.28;
@@ -205,23 +204,16 @@ async function downloadAssessmentPdf(petName: string) {
   }
 }
 
-function PdfFab({ petName }: { petName: string }) {
-  const [mounted, setMounted] = useState(false);
+function PdfDownloadButton({ petName }: { petName: string }) {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
-  return createPortal(
-    <>
+  return (
+    <div className="report-download-control">
       {error && <p className="pdf-download-error" role="alert">{error}</p>}
       <button
         type="button"
-        className={`primary pdf-fab ${generating ? "is-generating" : ""}`}
+        className={`primary pdf-download-button ${generating ? "is-generating" : ""}`}
         onClick={async () => {
           if (generating) return;
           setGenerating(true);
@@ -239,16 +231,16 @@ function PdfFab({ petName }: { petName: string }) {
         title="下載 PDF"
       >
         {generating ? (
-          <span className="pdf-fab-spinner" aria-hidden="true" />
+          <span className="pdf-download-spinner" aria-hidden="true" />
         ) : (
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M12 3a1 1 0 0 1 1 1v9.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 0 1 1.4-1.4l3.3 3.3V4a1 1 0 0 1 1-1Z" />
             <path d="M5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
           </svg>
         )}
+        <span>{generating ? "正在整理 PDF…" : "下載照顧準備總覽 PDF"}</span>
       </button>
-    </>,
-    document.body
+    </div>
   );
 }
 
@@ -548,9 +540,6 @@ export function AssessmentReport({
   onReset: () => void;
 }) {
   const [activeDiscussionId, setActiveDiscussionId] = useState("");
-  const [shareUrl, setShareUrl] = useState("");
-  const [shareStatus, setShareStatus] = useState<"idle" | "saving" | "ready" | "error">("idle");
-  const [shareMessage, setShareMessage] = useState("");
   useEffect(() => {
     if (!activeDiscussionId) return;
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -628,6 +617,7 @@ export function AssessmentReport({
       id: scenario.id,
       title: personalizeReportText(scenario.title, petName),
       topic: scenario.topic ?? scenario.stage,
+      summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
       knowledgePoints: knowledgePointsForScenario(scenario, petName),
     }));
   const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
@@ -691,61 +681,8 @@ export function AssessmentReport({
     },
   ].map((section) => ({ ...section, rows: section.rows.slice(0, 6) })).filter((section) => section.rows.length > 0);
 
-  async function createShareLink() {
-    setShareStatus("saving");
-    setShareMessage("");
-    const result: SharedAssessmentResult = {
-      version: 1,
-      createdAt: new Date().toISOString(),
-      petName: petName.trim(),
-      breedId: breed,
-      breedLabel: selectedBreed?.label ?? "犬",
-      readinessLevel: level,
-      preparation: {
-        roomCompletion,
-        hazardsComplete: hazardsReady.length === hazards.length,
-        transportComplete: trunkPassed,
-      },
-      costs: {
-        simulatedTotal: total,
-        emergencyReserve,
-        suggestedTotal: suggestedPreparedTotal,
-      },
-      preparedItems: prepared,
-      itemsToConfirm: confirm.length ? confirm : ["目前沒有未完成的準備項目"],
-      discussionTopics,
-      committed,
-    };
-    try {
-      const response = await fetch("/api/results", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(result),
-      });
-      const body = await response.json() as { url?: string; error?: string };
-      if (!response.ok || !body.url) throw new Error(body.error || "目前無法產生分享連結");
-      setShareUrl(body.url);
-      setShareStatus("ready");
-      setShareMessage("分享頁已建立。擁有連結的人可以查看這份照顧摘要。");
-    } catch (reason) {
-      setShareStatus("error");
-      setShareMessage(reason instanceof Error ? reason.message : "目前無法產生分享連結，請稍後再試。");
-    }
-  }
-
-  async function copyShareLink() {
-    if (!shareUrl) return;
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setShareMessage("連結已複製，可以傳給家人或專業人員。");
-    } catch {
-      setShareMessage("請選取連結後手動複製。");
-    }
-  }
-
   return (
     <>
-    <PdfFab petName={petName} />
     <div className="content-wrap summary-page assessment-report compact-assessment">
       <article className="care-a4-sheet" aria-label="伴日子照顧準備總覽 A4">
         <header className="care-a4-header">
@@ -778,9 +715,9 @@ export function AssessmentReport({
           <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
         </section>
 
-        {discussionTopics.length > 0 && <section className="care-a4-discussion" aria-label="建議深入討論的題目">
-          <h2><span aria-hidden="true">△</span> 建議深入討論</h2>
-          <ul>{discussionTopics.slice(0, 4).map((topic) => <li key={topic.id}>{topic.title}</li>)}</ul>
+        {discussionTopics.length > 0 && <section className="care-a4-discussion" aria-label="知識點複習摘要">
+          <h2><span aria-hidden="true">△</span> 知識點複習摘要</h2>
+          <ul>{discussionTopics.slice(0, 4).map((topic) => <li key={topic.id}>{topic.summary ?? topic.title}</li>)}</ul>
           {discussionTopics.length > 4 && <small>另有 {discussionTopics.length - 4} 題，請查看分享頁完整知識點。</small>}
         </section>}
 
@@ -815,12 +752,12 @@ export function AssessmentReport({
 
       {discussionTopics.length > 0 ? (
         <section className="overview-discussion" aria-labelledby="overview-discussion-title">
-          <header className="overview-discussion-heading"><span aria-hidden="true">△</span><div><h2 id="overview-discussion-title">建議再深入討論的題目</h2><p>這些題目曾經需要再想一次。不是紅字扣分，而是提醒你和家人、領養單位或專業人員把情境談得更具體。</p></div></header>
+          <header className="overview-discussion-heading"><span aria-hidden="true">△</span><div><h2 id="overview-discussion-title">建議再深入討論的題目</h2><p>這些題目可以特別再複習一次相關的知識點。</p></div></header>
           <div className="overview-discussion-list">
             {discussionTopics.map((topic) => (
               <article key={topic.id} className="overview-discussion-card">
                 <span aria-hidden="true">△</span>
-                <div><b>{topic.title}</b><small>{topic.topic}</small></div>
+                <div><b>{topic.title}</b><small>{topic.summary ?? topic.topic}</small></div>
                 <button type="button" className="discussion-info-button" onClick={() => setActiveDiscussionId(topic.id)} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button>
               </article>
             ))}
@@ -834,16 +771,6 @@ export function AssessmentReport({
           <input type="checkbox" checked={committed} onChange={(event) => onCommittedChange(event.target.checked)} />
           <span>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</span>
         </label>
-      </section>
-
-      <section className="result-share-panel" aria-labelledby="result-share-title">
-        <div><p className="life-stage-label">保存這份結果</p><h2 id="result-share-title">產生一頁式結果連結</h2><p>之後可以從連結重新查看，也能傳給家人、領養單位或專業人員一起討論。分享摘要不包含居家照片、家庭成員姓名或其他個人資料。</p></div>
-        <div className="result-share-actions">
-          {shareUrl && <input aria-label="結果分享連結" value={shareUrl} readOnly onFocus={(event) => event.currentTarget.select()} />}
-          <button type="button" className="primary" disabled={shareStatus === "saving"} onClick={shareUrl ? copyShareLink : createShareLink}>{shareStatus === "saving" ? "正在建立…" : shareUrl ? "複製連結" : "產生結果連結"}</button>
-          {shareUrl && <a href={shareUrl} target="_blank" rel="noreferrer">開啟分享頁</a>}
-        </div>
-        {shareMessage && <p className={`result-share-message ${shareStatus === "error" ? "error" : ""}`} role="status">{shareMessage}</p>}
       </section>
 
       <article className="care-print-profile" aria-label="使用者填寫的個人資料">
@@ -880,6 +807,9 @@ export function AssessmentReport({
           ) : <p>尚未上傳居家空間照片</p>}
         </section>
       </article>
+      <div className="report-download-footer">
+        <PdfDownloadButton petName={petName} />
+      </div>
       {activeDiscussion && <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
         <section className="knowledge-modal" role="dialog" aria-modal="true" aria-labelledby="knowledge-modal-title">
           <button type="button" className="knowledge-modal-close" onClick={() => setActiveDiscussionId("")} aria-label="關閉知識點">×</button>

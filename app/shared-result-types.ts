@@ -2,6 +2,7 @@ export type SharedDiscussionTopic = {
   id: string;
   title: string;
   topic: string;
+  summary?: string;
   knowledgePoints: string[];
 };
 

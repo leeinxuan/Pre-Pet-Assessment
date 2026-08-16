@@ -23,6 +23,7 @@ export const lifeScenarios: Scenario[] = [
     title: "第一天適應新家",
     description: "豆豆剛走進陌生的新家，躲在外出籠旁觀察，家人都很想立刻和牠打招呼。",
     topic: "適應新家與安全感",
+    reportSummary: "第一天適應新家時，狗狗可能因陌生而躲藏或緊張；保留安靜、安全且能退回的空間，等待牠主動探索。",
     artIndex: 0,
     choices: [
       { id: "force-pick-up", text: "強行抱出來", result: "incorrect", ...incorrect, explanation: "這個做法可能讓牠更緊張。被強行抱起會讓小狗失去退路，增加防衛反應，也可能降低牠對新環境的安全感。", suggestion: "保持距離，提供安靜安全的空間，讓牠用自己的速度探索。" },
@@ -38,6 +39,7 @@ export const lifeScenarios: Scenario[] = [
     title: "牠一直吠叫，該怎麼辦？",
     description: "晚上你正在休息，小狗突然對著門口一直吠叫。你看見牠有些警覺，也注意到附近有聲音經過。",
     topic: "日常行為照顧",
+    reportSummary: "狗狗持續吠叫時，先理解聲音、壓力或活動不足等原因，再用陪伴、適量活動與專業協助調整。",
     artIndex: 4,
     multipleChoice: true,
     requiredCorrectOptionIds: ["bark-play", "bark-walk", "bark-expert"],
@@ -57,6 +59,7 @@ export const lifeScenarios: Scenario[] = [
     title: "牠開始亂咬東西，該怎麼辦？",
     description: "你回到客廳時，發現小狗正在咬桌腳旁的物品。旁邊還有一些不能讓牠碰到的小東西。",
     topic: "日常行為照顧",
+    reportSummary: "狗狗亂咬東西時，應收好危險物並提供安全啃咬玩具；打罵可能增加壓力，也無法教會合適做法。",
     artIndex: 4,
     multipleChoice: true,
     requiredCorrectOptionIds: ["chew-toys", "chew-store-hazards", "chew-expert"],
@@ -76,6 +79,7 @@ export const lifeScenarios: Scenario[] = [
     title: "牠在不適合的地方大小便，該怎麼辦？",
     description: "你發現小狗在不適合的位置大小便。牠看起來不是故意搗亂，而是還沒建立固定如廁習慣。",
     topic: "日常行為照顧",
+    reportSummary: "狗狗在錯誤位置排泄時，應增加合適的如廁機會、固定位置並正向引導，而不是事後責罵。",
     artIndex: 4,
     multipleChoice: true,
     requiredCorrectOptionIds: ["toilet-material", "toilet-outings", "toilet-expert"],
@@ -95,6 +99,7 @@ export const lifeScenarios: Scenario[] = [
     title: "疲憊忙碌的日子",
     description: "今天臨時需要加班，早上出門後一路忙到很晚。你已經很疲累，但豆豆仍需要晚餐、乾淨飲水、排泄與適當活動。",
     topic: "時間安排與照顧支援",
+    reportSummary: "臨時加班或晚歸時，仍要事先安排可信任的人按時協助餵食、換水、排泄、活動與狀況觀察。",
     artIndex: 5,
     choices: [
       { id: "alone-with-food", text: "早上出門前先多放一些飼料和水，晚上忙完再好好陪牠", result: "incorrect", ...incorrect, explanation: "早上多放食物和水仍不能取代一整天的排泄、活動與狀況觀察，也可能造成過量進食或突發狀況沒有人發現。", suggestion: "確定要加班時，應先確認能接手餵食、飲水、排泄與活動的人選，並清楚交接照顧需求。" },
@@ -110,6 +115,7 @@ export const lifeScenarios: Scenario[] = [
     title: "柴犬常見健康問題觀察",
     description: "最近你發現小狗常常舔腳、抓癢，走路時偶爾不太想跳上跳下，眼睛也有些紅紅的。",
     topic: "健康觀察與就醫判斷",
+    reportSummary: "出現搔癢、活動力下降或眼睛紅等變化時，應記錄食慾、精神與症狀並詢問獸醫，不要自行餵人用藥。",
     artIndex: 3,
     choices: [
       { id: "wait-and-see", text: "先等幾天看看，牠可能只是心情不好", result: "incorrect", ...incorrect, explanation: "等太久可能延誤皮膚過敏、關節不適或眼部問題的處理，讓小狗持續不舒服。", suggestion: "記錄具體症狀與變化，並聯絡獸醫確認是否需要檢查。" },
@@ -123,8 +129,9 @@ export const lifeScenarios: Scenario[] = [
     stage: "逐漸進入高齡",
     timeLabel: "逐漸進入高齡",
     title: "高齡後的照顧準備",
-    description: "小狗進入高齡階段後，健康檢查與醫療照顧變得更重要。你開始發現牠需要比以前更多觀察與照顧。",
+    description: "小狗走路開始變慢，後腳偶爾使不上力，曾經輕鬆走完的路如今需要停下休息。你花更多時間陪牠慢慢曬太陽，也要留意牠來不及走到如廁處時，協助清理排泄物、保持身體乾爽。",
     topic: "高齡照顧與醫療準備",
+    reportSummary: "狗狗進入高齡後，可能出現行動退化、排泄照護與醫療需求；應提早準備時間、環境調整和醫療基金。",
     artIndex: 1,
     choices: [
       { id: "senior-plan-ahead", text: "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫", result: "correct", ...positive, explanation: "提前準備能幫助飼主在高齡階段更穩定地照顧小狗，也能及早安排健康觀察、醫療需求與長期照顧。" },
@@ -139,6 +146,8 @@ type BreedChallengeQuestion = {
   title: string;
   description: string;
   topic: string;
+  reportSummary: string;
+  breedKnowledge?: string;
   correctText: string;
   correctExplanation: string;
   distractors: Array<{ text: string; explanation: string; suggestion: string }>;
@@ -150,6 +159,8 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "一年四季都在掉毛",
       description: "柴犬換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
       topic: "柴犬的換毛與居家清潔",
+      reportSummary: "柴犬有雙層被毛，平時與換毛期都可能讓家中累積大量毛髮，需要把梳毛、吸塵與衣物除毛納入長期日常。",
+      breedKnowledge: "柴犬具有雙層被毛，平時就會掉毛，換毛期更會大量脫落底毛；生活在較溫暖或室內環境時，掉毛也可能分散在全年。規律梳毛與吸塵能減少散落毛髮，但無法讓家中完全沒有毛，也不建議只為了止掉毛就任意剃除雙層毛。",
       correctText: "固定梳毛與吸塵，把清潔排進每週生活，也接受家裡不可能完全沒有毛",
       correctExplanation: "規律梳理、清潔與可接受的生活標準，比追求一次清到完全沒毛更能長期維持。",
       distractors: [
@@ -162,6 +173,8 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "颳風下雨也要出門上廁所",
       description: "柴犬通常很愛乾淨，有些柴犬不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？",
       topic: "柴犬的外出排泄需求",
+      reportSummary: "許多柴犬傾向離開生活區域後才排泄，飼主需要每天安排穩定外出，也要準備雨天短路線與室內備案。",
+      breedKnowledge: "柴犬往往很重視生活區域的清潔，許多個體會傾向離開睡眠與活動空間後才排泄，因此可能逐漸習慣在戶外如廁。這不代表牠能長時間憋尿；飼主仍需每天安排穩定的外出機會，也要準備雨具、短路線，以及必要時可逐步練習的室內備案。",
       correctText: "準備雨具與擦腳用品，依天氣調整路線和時間，但仍完成安全的外出排泄與基本散步",
       correctExplanation: "把雨具、短路線與回家清潔準備好，才能在壞天氣中持續滿足排泄與活動需求。",
       distractors: [
@@ -176,6 +189,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "體型小，也需要每天活動",
       description: "吉娃娃體型小，家人覺得在家裡走動就夠了。牠卻常在門邊等著外出，你會怎麼安排？",
       topic: "吉娃娃的日常活動",
+      reportSummary: "吉娃娃體型雖小，仍需要依體力安排規律短散步、嗅聞與安全的環境探索。",
       correctText: "依體力與天氣安排規律短散步，讓牠嗅聞、活動並安全接觸環境",
       correctExplanation: "小型犬仍需要合適的外出活動與環境探索；重點是依牠的體力調整，而不是完全取消。",
       distractors: [
@@ -188,6 +202,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "牙齒清潔不能等有味道才做",
       description: "吉娃娃不太喜歡碰嘴巴，你也常忙到忘記刷牙。你會怎麼建立可持續的口腔照護？",
       topic: "吉娃娃的口腔照護",
+      reportSummary: "吉娃娃的口腔照護應從短時間碰觸與刷牙練習開始，並配合定期獸醫檢查。",
       correctText: "從短時間碰觸與獎勵開始，慢慢建立刷牙習慣，並配合定期獸醫檢查",
       correctExplanation: "把口腔照護拆成小步驟，通常比等問題出現後才處理更容易長期維持。",
       distractors: [
@@ -202,6 +217,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "捲毛需要持續整理",
       description: "貴賓犬的毛看起來不太會掉，但只要幾天沒整理就容易打結。你會怎麼把美容照護放進生活？",
       topic: "貴賓犬的毛髮照護",
+      reportSummary: "貴賓犬需要固定梳理與專業美容，不能等到毛結明顯時才一次處理。",
       correctText: "固定在家梳理並預約專業美容，把時間和費用都算進長期照顧",
       correctExplanation: "規律梳理與專業修整能降低打結，也讓身體檢查與清潔更穩定。",
       distractors: [
@@ -214,6 +230,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "聰明也需要動腦",
       description: "貴賓犬很快就學會日常規則，但最近開始因無聊而一直找東西玩。你會怎麼安排？",
       topic: "貴賓犬的互動與腦力刺激",
+      reportSummary: "貴賓犬需要把散步、嗅聞、短訓練、益智互動與休息排成可持續的生活節奏。",
       correctText: "把散步、嗅聞、短訓練和益智遊戲輪流安排，並保留休息時間",
       correctExplanation: "多樣但不過量的身體與腦力活動，更能形成可持續的生活節奏。",
       distractors: [
@@ -228,6 +245,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "精力不只靠跑步消耗",
       description: "邊境牧羊犬散步回家後仍很有精神，開始在家追逐移動的人和物。你會怎麼調整？",
       topic: "邊境牧羊犬的身心活動",
+      reportSummary: "邊境牧羊犬除了規律運動，也需要嗅聞、解題與安定休息，不能只靠增加跑步量消耗精力。",
       correctText: "在規律運動之外加入嗅聞、短訓練與解題遊戲，也練習安定休息",
       correctExplanation: "身體活動、腦力刺激與休息能力都重要，不能只靠增加跑步量。",
       distractors: [
@@ -240,6 +258,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "追逐與牧羊本能需要引導",
       description: "散步時，邊境牧羊犬會盯著腳踏車和跑動的小孩，甚至想衝過去。你會怎麼做？",
       topic: "邊境牧羊犬的追逐管理",
+      reportSummary: "邊境牧羊犬出現追逐反應時，應先保持安全距離與牽繩控制，再循序練習把注意力帶回飼主。",
       correctText: "保持安全距離與牽繩控制，練習把注意力帶回飼主，必要時尋求專業協助",
       correctExplanation: "先管理距離與安全，再用循序練習建立新的反應，比硬碰刺激更穩定。",
       distractors: [
@@ -254,6 +273,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "很愛吃，更需要份量管理",
       description: "拉布拉多總像沒吃飽，家人也很容易被牠的眼神說服多給一點。你會怎麼管理？",
       topic: "拉布拉多的飲食與體重管理",
+      reportSummary: "拉布拉多的主食與零食需要全家統一計量和記錄，並依體態與獸醫建議持續調整。",
       correctText: "量好每日主食與零食總量，全家共用紀錄，並依體態和獸醫建議調整",
       correctExplanation: "全家用一致份量與紀錄，比各自憑感覺餵食更容易維持健康體態。",
       distractors: [
@@ -266,6 +286,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       title: "力氣大，散步安全要先練",
       description: "拉布拉多看到喜歡的人和狗就想往前衝，家人有時拉不住。你會怎麼安排散步？",
       topic: "拉布拉多的牽繩與衝動控制",
+      reportSummary: "拉布拉多力氣大且容易興奮，主要照顧者都應熟悉合適裝備、距離管理與循序鬆繩練習。",
       correctText: "使用合適胸背與牽繩，從低干擾環境練習鬆繩和回應，再逐步增加難度",
       correctExplanation: "設備、安全距離和循序訓練一起做，能讓散步更可控，也保留探索樂趣。",
       distractors: [
@@ -286,6 +307,8 @@ export function getBreedChallengeScenarios(breedId: string): Scenario[] {
     title: question.title,
     description: question.description,
     topic: question.topic,
+    reportSummary: question.reportSummary,
+    breedKnowledge: question.breedKnowledge,
     artIndex: 4,
     choices: [
       {

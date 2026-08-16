@@ -102,8 +102,11 @@ export default function Home() {
   const [introOpen, setIntroOpen] = useState(false);
   const [category, setCategory] = useState("");
   const [breed, setBreed] = useState("");
-  const [selectionPage, setSelectionPage] = useState<"species" | "breed">("species");
+  const [selectionPage, setSelectionPage] = useState<"species" | "breed" | "name" | "history" | "transition">("species");
   const [selectionReached, setSelectionReached] = useState(0);
+  const [hasPreviousDog, setHasPreviousDog] = useState<boolean | null>(null);
+  const [previousBreed, setPreviousBreed] = useState("");
+  const [previousDogName, setPreviousDogName] = useState("");
   const [preparationTask, setPreparationTask] = useState(0);
   const [preparationReached, setPreparationReached] = useState(0);
   const [preparationReplayTask, setPreparationReplayTask] = useState<number | null>(null);
@@ -165,9 +168,10 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function changeSelectionPage(page: "species" | "breed") {
+  function changeSelectionPage(page: "species" | "breed" | "name" | "history" | "transition") {
     setSelectionPage(page);
-    setSelectionReached((current) => Math.max(current, page === "breed" ? 1 : 0));
+    const pageIndex = ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[page];
+    setSelectionReached((current) => Math.max(current, pageIndex));
   }
 
   function changePreparationTask(task: number) {
@@ -275,6 +279,9 @@ export default function Home() {
     setBreed("");
     setSelectionPage("species");
     setSelectionReached(0);
+    setHasPreviousDog(null);
+    setPreviousBreed("");
+    setPreviousDogName("");
     setPreparationTask(0);
     setPreparationReached(0);
     setRoomReady([]);
@@ -317,7 +324,7 @@ export default function Home() {
   function renderPreparation() {
     if (preparationTask === 0) {
       const reviewing = preparationReached >= 1 && preparationReplayTask !== 0;
-      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} onPrepare={addRoomItem} onToggleHazard={toggleHazard} onSavePetName={setPetName} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(0); }} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
+      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(0); }} onBack={() => goTo(1)} onNext={() => changePreparationTask(1)} />;
     }
     const reviewing = furthestStep >= 3 && preparationReplayTask !== 1;
     return <CarTrunkPreparation selected={trunkSelected} petName={petName} breed={breed} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { setPreparationReached((current) => Math.max(current, 1)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
@@ -383,7 +390,7 @@ export default function Home() {
           />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} breed={breed} />}
-            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} onCategory={setCategory} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onNext={() => goTo(2)} />}
+            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={setCategory} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>

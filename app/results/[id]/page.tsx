@@ -44,11 +44,11 @@ export default function SharedResultPage() {
 
       {result.discussionTopics.length > 0 ? (
         <section className="shared-discussion-section" aria-labelledby="shared-discussion-title">
-          <div className="shared-section-heading"><span aria-hidden="true">△</span><div><h2 id="shared-discussion-title">建議再深入討論</h2><p>這些題目曾經需要再想一次，不代表不適合飼養，而是值得和家人、領養單位或專業人員談得更具體。</p></div></div>
+          <div className="shared-section-heading"><span aria-hidden="true">△</span><div><h2 id="shared-discussion-title">建議再深入討論的題目</h2><p>這些題目可以特別再複習一次相關的知識點。</p></div></div>
           <div className="shared-discussion-list">
             {result.discussionTopics.map((topic) => (
               <details key={topic.id}>
-                <summary><span>△</span><div><b>{topic.title}</b><small>{topic.topic}</small></div><em>查看知識點</em></summary>
+                <summary><span>△</span><div><b>{topic.title}</b><small>{topic.summary ?? topic.topic}</small></div><em>查看知識點</em></summary>
                 <ul>{topic.knowledgePoints.map((point) => <li key={point}>{point}</li>)}</ul>
               </details>
             ))}

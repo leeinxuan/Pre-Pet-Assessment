@@ -581,7 +581,7 @@ function VideoScenarioActivity({
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
         breedHighlight={breedKnowledge ? (
-          <div className="breed-knowledge-highlight"><b>{breedLabelForId(breed)}照護重點</b>{withPetName(breedKnowledge, petName).split("\n").map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}</div>
+          <div className="walking-reflection-note breed-care-reflection">{withPetName(breedKnowledge, petName).split("\n").map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}</div>
         ) : null}
         suggestion={followupSuggestion ? (
           <p>{withPetName(followupSuggestion, petName)}</p>
@@ -1069,6 +1069,7 @@ function BreedChallengeActivity({
   }
 
   if (mode === "positive" && selectedChoice) {
+    const breedKnowledge = scenario.breedKnowledge ?? `${scenario.description} ${selectedChoice.explanation}`;
     return (
       <CorrectFeedbackLayout
         key={scenario.id}
@@ -1078,7 +1079,7 @@ function BreedChallengeActivity({
         fallbackText=""
         mediaPlaceholder={<div className="breed-challenge-video-placeholder"><span>影片製作中</span><b>{breedLabel}的生活片段</b><p>之後會在這裡補上這一題的情境影片。</p></div>}
         intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
-        breedHighlight={<div className="walking-reflection-note breed-care-reflection"><b>{breedLabel}照護重點</b><p>這不是偶爾才遇到的事件，而是選擇和{breedLabel}一起生活後，需要反覆面對的日常。</p></div>}
+        breedHighlight={<div className="walking-reflection-note breed-care-reflection"><p>{withPetName(breedKnowledge, petName)}</p></div>}
         onVideoError={() => undefined}
         onContinue={moveToNext}
       />
@@ -1499,6 +1500,7 @@ function WalkingActivity({
   const poopTargetRef = useRef<HTMLDivElement | null>(null);
   const draggingBagRef = useRef(false);
   const forwardHeldRef = useRef(false);
+  const resumeAfterCleanupRef = useRef(false);
   const [draggedBag, setDraggedBag] = useState<{ x: number; y: number } | null>(null);
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
   const scene = walkingScenes[sceneIndex];
@@ -1530,6 +1532,7 @@ function WalkingActivity({
     setDraggedBag(null);
     draggingBagRef.current = false;
     forwardHeldRef.current = false;
+    resumeAfterCleanupRef.current = false;
     completingSceneRef.current = null;
   }, [resetSignal]);
 
@@ -1637,6 +1640,12 @@ function WalkingActivity({
     startForward();
   }, [activity.walkingSceneIndex]);
 
+  useEffect(() => {
+    if (!resumeAfterCleanupRef.current || !activity.walkingPoopCleaned || activity.walkingComplete) return;
+    resumeAfterCleanupRef.current = false;
+    startForward();
+  }, [activity.walkingPoopCleaned]);
+
   const draggedBagSize = 74;
 
   function getDraggedBagPosition(event: ReactPointerEvent<HTMLButtonElement>) {
@@ -1712,8 +1721,9 @@ function WalkingActivity({
   }
 
   function cleanupPoop() {
+    resumeAfterCleanupRef.current = true;
     onChange({ walkingPoopCleaned: true });
-    setMessage("已清理完成，散步時記得隨手清理排泄物。");
+    setMessage("已清理完成，繼續陪牠往前走。");
   }
 
   if (activity.walkingComplete) {

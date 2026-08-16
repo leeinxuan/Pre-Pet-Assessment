@@ -80,7 +80,7 @@ export function StageRail({
 }: {
   step: number;
   furthestStep: number;
-  selectionPage: "species" | "breed";
+  selectionPage: "species" | "breed" | "name" | "history" | "transition";
   selectionReached: number;
   preparationTask: number;
   preparationReached: number;
@@ -89,7 +89,7 @@ export function StageRail({
   journeyIndex: number;
   journeyCompleted: string[];
   onGoTo: (step: number) => void;
-  onSelectionPage: (page: "species" | "breed") => void;
+  onSelectionPage: (page: "species" | "breed" | "name" | "history" | "transition") => void;
   onPreparationTask: (task: number) => void;
   onLifeStage: (stage: number) => void;
 }) {
@@ -114,11 +114,11 @@ export function StageRail({
       label: "選擇寵物",
       status: mainStatus(0),
       onClick: () => onGoTo(1),
-      children: ["選擇物種", "選擇品種"].map((label, index) => ({
-        id: index === 0 ? "species" : "breed",
+      children: ["選擇物種", "選擇品種", "替牠取名", "過往經驗", "新的開始"].map((label, index) => ({
+        id: ["species", "breed", "name", "history", "transition"][index],
         label,
-        status: step > 1 && index <= selectionReached ? "completed" : statusAt(index, selectionPage === "species" ? 0 : 1, selectionReached),
-        onClick: () => onSelectionPage(index === 0 ? "species" : "breed"),
+        status: step > 1 && index <= selectionReached ? "completed" : statusAt(index, ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[selectionPage], selectionReached),
+        onClick: () => onSelectionPage((["species", "breed", "name", "history", "transition"] as const)[index]),
       })),
     },
     {
@@ -249,19 +249,36 @@ export function SpeciesStep({
   onSelectionPage,
   category,
   breed,
+  petName,
   onCategory,
   onBreed,
+  onPetName,
+  hasPreviousDog,
+  previousBreed,
+  previousDogName,
+  onHasPreviousDog,
+  onPreviousBreed,
+  onPreviousDogName,
   onNext,
 }: {
-  selectionPage: "species" | "breed";
-  onSelectionPage: (page: "species" | "breed") => void;
+  selectionPage: "species" | "breed" | "name" | "history" | "transition";
+  onSelectionPage: (page: "species" | "breed" | "name" | "history" | "transition") => void;
   category: string;
   breed: string;
+  petName: string;
   onCategory: (value: string) => void;
   onBreed: (value: string) => void;
+  onPetName: (value: string) => void;
+  hasPreviousDog: boolean | null;
+  previousBreed: string;
+  previousDogName: string;
+  onHasPreviousDog: (value: boolean) => void;
+  onPreviousBreed: (value: string) => void;
+  onPreviousDogName: (value: string) => void;
   onNext: () => void;
 }) {
   const selectedBreed = breeds.find((item) => item.id === breed);
+  const selectedPreviousBreed = breeds.find((item) => item.id === previousBreed);
 
   function chooseCategory(id: string) {
     onCategory(id);
@@ -290,7 +307,7 @@ export function SpeciesStep({
             ))}
           </div>
         </section>
-      ) : (
+      ) : selectionPage === "breed" ? (
         <section className="partner-selection-page" key="breed">
           <StepHeading title="選擇你想領養的品種" />
           <div className="breed-row breed-page-grid">
@@ -304,7 +321,66 @@ export function SpeciesStep({
             {selectedBreed?.image ? <img className="selection-note-image" src={selectedBreed.image} alt="" /> : <span aria-hidden="true">{selectedBreed?.icon ?? "🐾"}</span>}
             <div><b>{selectedBreed ? `你選擇了：${selectedBreed.label}` : "品種飼養特性"}</b><p>{selectedBreed?.shortDescription ?? "點選一個品種，查看牠的飼養特性。"}</p></div>
           </div>
-          <NavButtons onBack={() => onSelectionPage("species")} onNext={onNext} disabled={!breed} nextLabel="開始領養前準備" />
+          <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("name")} disabled={!breed} nextLabel="下一步" />
+        </section>
+      ) : selectionPage === "name" ? (
+        <section className="partner-selection-page pet-naming-page" key="name">
+          <StepHeading title="先幫牠取一個名字" body="這個名字會陪著牠走進接下來的生活，也會出現在後面的情境演練裡。" />
+          <div className="pet-naming-stage">
+            <img src="/assets/room/nameplate.png" alt="小狗名字吊牌" />
+            <label htmlFor="new-pet-name" className="sr-only">小狗的名字</label>
+            <input id="new-pet-name" value={petName} maxLength={12} placeholder="請輸入小狗的名字" onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} autoFocus />
+          </div>
+          <NavButtons onBack={() => onSelectionPage("breed")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
+        </section>
+      ) : selectionPage === "history" ? (
+        <section className="partner-selection-page previous-dog-page" key="history">
+          <StepHeading title="你以前有養過狗嗎？" body="過去的經驗很珍貴，也可能讓我們自然沿用熟悉的照顧方式。先簡單告訴我們，你是否曾經和狗狗一起生活。" />
+          <div className="previous-dog-choice" role="group" aria-label="是否曾經養過狗">
+            <button type="button" className={hasPreviousDog === true ? "selected" : ""} aria-pressed={hasPreviousDog === true} onClick={() => onHasPreviousDog(true)}><b>有，曾經有養過狗</b><small>接著填寫牠的品種與名字</small></button>
+            <button type="button" className={hasPreviousDog === false ? "selected" : ""} aria-pressed={hasPreviousDog === false} onClick={() => onHasPreviousDog(false)}><b>沒有，這是第一次</b><small>直接開始這次的領養前準備</small></button>
+          </div>
+          {hasPreviousDog === true && (
+            <div className="previous-dog-details">
+              <div><p className="life-stage-label">以前陪伴你的狗狗</p><h2>牠是哪一個品種？</h2></div>
+              <div className="breed-row previous-breed-grid">
+                {breeds.map((item) => (
+                  <button type="button" key={item.id} className={previousBreed === item.id ? "selected" : ""} onClick={() => onPreviousBreed(item.id)} aria-pressed={previousBreed === item.id}>
+                    <img className="partner-card-image" src={item.image} alt="" /><b>{item.label}</b>{previousBreed === item.id && <i>✓</i>}
+                  </button>
+                ))}
+              </div>
+              <label className="previous-dog-name">牠的名字<input value={previousDogName} maxLength={12} placeholder="例如：豆豆" onChange={(event) => onPreviousDogName(event.target.value)} /></label>
+            </div>
+          )}
+          <NavButtons
+            onBack={() => onSelectionPage("name")}
+            onNext={() => hasPreviousDog ? onSelectionPage("transition") : onNext()}
+            disabled={hasPreviousDog === null || (hasPreviousDog && (!previousBreed || !previousDogName.trim()))}
+            nextLabel="下一步"
+          />
+        </section>
+      ) : (
+        <section className="experience-transition-page" key="transition" aria-labelledby="experience-transition-title">
+          <div className="experience-dogs" aria-label="從過去的陪伴經驗走向新的生命">
+            <article className="experience-dog-card experience-dog-card--past">
+              <span>過去熟悉的生活</span>
+              <img src={selectedPreviousBreed?.image} alt={`${previousDogName || "以前的狗狗"}，${selectedPreviousBreed?.label ?? "犬"}`} />
+              <div><h2>{previousDogName || "以前的狗狗"}</h2><b>{selectedPreviousBreed?.label}</b><p>{selectedPreviousBreed?.shortDescription}</p></div>
+            </article>
+            <div className="experience-arrow" aria-hidden="true"><i>→</i></div>
+            <article className="experience-dog-card experience-dog-card--next">
+              <span>準備迎接的新生活</span>
+              <img src={selectedBreed?.image} alt={`這次想迎接的${selectedBreed?.label ?? "狗狗"}`} />
+              <div><h2>{petName || `新的${selectedBreed?.label ?? "狗狗"}`}</h2><b>{selectedBreed?.label}</b><p>{selectedBreed?.shortDescription}</p></div>
+            </article>
+          </div>
+          <div className="experience-story">
+            <p id="experience-transition-title" className="experience-story-line experience-story-line--past">你熟悉的是和<strong>{previousDogName || selectedPreviousBreed?.label}</strong>經過一段時間磨合後的生活。</p>
+            <p className="experience-story-line experience-story-line--next"><strong>{petName || `新的${selectedBreed?.label ?? "狗狗"}`}</strong>是一隻不一樣的生命，可能有不同的個性、經歷、健康狀況與適應速度。</p>
+            <p className="experience-story-line experience-story-line--bridge">接下來，請先暫時放下<strong>「以前就是這樣照顧」</strong>的想法，陪<strong>{petName || "牠"}</strong>從到家第一天演練一次，也重新確認現在的你是否準備好和牠建立新的生活。</p>
+          </div>
+          <div className="experience-transition-actions"><button type="button" className="secondary" onClick={() => onSelectionPage("history")}>← 返回</button><button type="button" className="primary" onClick={onNext}>開始領養前準備 <span>→</span></button></div>
         </section>
       )}
     </div>

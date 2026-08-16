@@ -25,8 +25,6 @@ const preparedTrunkItemNotes: Record<string, { label: string; note: string }> = 
   cleaner: { label: "寵物專用清潔用品", note: "處理接回途中可能發生的髒污。" },
 };
 
-const roomExpenseIds = new Set(roomItems.map((item) => item.expenseId).filter(Boolean) as string[]);
-
 function expensePriceText(expenseIds: string[] = [], breed: string) {
   const petSize = getPetSizeForBreed(breed);
   const prices = expenseIds
@@ -44,7 +42,6 @@ export function RoomPreparation({
   petName,
   onPrepare,
   onToggleHazard,
-  onSavePetName,
   onBack,
   onReplay,
   onNext,
@@ -56,16 +53,12 @@ export function RoomPreparation({
   petName: string;
   onPrepare: (id: string) => void;
   onToggleHazard: (id: string) => void;
-  onSavePetName: (name: string) => void;
   onBack: () => void;
   onReplay: () => void;
   onNext: () => void;
   reviewing?: boolean;
   breed: string;
 }) {
-  const [nameDraft, setNameDraft] = useState(petName);
-  const [nameError, setNameError] = useState("");
-  const [nameEditing, setNameEditing] = useState(!petName);
   const [roomCheckMessage, setRoomCheckMessage] = useState("");
   const [dismissingHazard, setDismissingHazard] = useState<string | null>(null);
   const [activeHazardInfo, setActiveHazardInfo] = useState<string | null>(null);
@@ -74,14 +67,9 @@ export function RoomPreparation({
   const [roomSceneReady, setRoomSceneReady] = useState(false);
   const itemsDone = roomItems.filter((item) => selectedItems.includes(item.id)).length;
   const hazardsDone = securedHazards.length;
-  const complete = itemsDone === roomItems.length && hazardsDone === hazards.length && Boolean(petName.trim());
+  const complete = itemsDone === roomItems.length && hazardsDone === hazards.length;
   const activeHazard = hazards.find((item) => item.id === activeHazardInfo);
-  const remainingRoomItems = roomItems.filter((item) => !selectedItems.includes(item.id));
   const supplyRows = [roomItems.slice(0, 2), roomItems.slice(2, 4), roomItems.slice(4)].filter((row) => row.length > 0);
-
-  useEffect(() => {
-    setNameDraft(petName);
-  }, [petName]);
 
   useEffect(() => {
     const scene = roomSceneRef.current;
@@ -117,29 +105,10 @@ export function RoomPreparation({
     window.setTimeout(() => setActiveHazardInfo((current) => current === id ? null : current), 4260);
   }
 
-  function saveName() {
-    const cleanName = nameDraft.trim();
-    if (!cleanName) return setNameError("請先幫小狗取一個名字。");
-    if ([...cleanName].length > 12) return setNameError("名字請控制在12個字以內。");
-    onSavePetName(cleanName);
-    setNameDraft(cleanName);
-    setNameError("");
-    setRoomCheckMessage("");
-    setNameEditing(false);
-  }
-
-  function updateNameDraft(value: string) {
-    setNameDraft(value);
-    setNameError("");
-    setRoomCheckMessage("");
-    onSavePetName(value);
-  }
-
   function getRoomCheckMessages() {
     const missingItems = roomItems.length - itemsDone;
     const remainingHazards = hazards.length - hazardsDone;
     return [
-      !petName.trim() ? "請先替小狗取名字" : "",
       missingItems > 0 ? `還有 ${missingItems} 件用品還沒準備好` : "",
       remainingHazards > 0 ? "還有危險物品需要處理" : "",
     ].filter(Boolean);
@@ -152,7 +121,7 @@ export function RoomPreparation({
       return;
     }
     const messages = getRoomCheckMessages();
-    setRoomCheckMessage(messages.length > 0 ? messages.join("，") : "房間還沒準備好，請再確認用品、危險物品與名字");
+    setRoomCheckMessage(messages.length > 0 ? messages.join("，") : "房間還沒準備好，請再確認用品與危險物品");
   }
 
   return (
@@ -161,35 +130,23 @@ export function RoomPreparation({
       <div className="room-preparation-layout simplified-room-layout">
         <section className="room-supply-shelf" aria-label="生活用品準備區">
           <div className="room-supply-header">
-            <h2>{itemsDone === roomItems.length ? "已準備的物品" : "用品準備箱"}</h2>
+            <h2>用品準備箱</h2>
           </div>
-          {remainingRoomItems.length > 0 && <div className="room-supply-rows">
+          <div className="room-supply-rows">
             {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} full-seven`}>
               {row.map((item) => {
                 const selected = selectedItems.includes(item.id);
                 const note = preparedRoomItemNotes[item.id] ?? { label: item.label, note: item.purpose };
+                const price = item.expenseId ? expensePriceText([item.expenseId], breed) : "";
                 return <div key={item.id} className="supply-slot">
                   {!selected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} aria-label={`${item.label}，可加入`} disabled={exitingItems.includes(item.id)} onClick={() => prepareItem(item.id)}>
                     <span className="room-supply-visual"><img className={`room-item-image room-item-image--${item.id}`} src={item.image} alt="" /></span>
                     <b>{item.label}</b>
-                  </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small></div>}
+                  </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small><span className="supply-slot-price">{price || "不另計費"}</span></div>}
                 </div>;
               })}
             </div>)}
-          </div>}
-          {remainingRoomItems.length === 0 && <ul className="prepared-item-list" aria-label="已準備的房間物品">
-            {roomItems.map((item) => {
-              const note = preparedRoomItemNotes[item.id] ?? { label: item.label, note: item.purpose };
-              const price = item.expenseId ? expensePriceText([item.expenseId], breed) : "";
-              return <li key={item.id}>
-                <div className="prepared-item-row">
-                  <b>{note.label}</b>
-                  {price && <small className="prepared-item-price">{price}</small>}
-                </div>
-                <span>{note.note}</span>
-              </li>;
-            })}
-          </ul>}
+          </div>
         </section>
 
         <div className="room-interaction-column">
@@ -197,9 +154,9 @@ export function RoomPreparation({
             <img className="room-scene-background" src="/assets/room/empty-room.png" alt="空的寵物生活房間" />
             {roomItems.filter((item) => selectedItems.includes(item.id)).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object ${item.id === "food" ? "placed-room-item--food" : ""}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }}><img src={item.image} alt={`房間中已配置的${item.label}`} /><span>{item.label}</span></div>)}
             {hazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
-            <div className={`pet-doorplate ${nameEditing ? "editing" : ""}`}>
+            <div className="pet-doorplate">
               <img src="/assets/room/nameplate.png" alt="小狗名字門牌" />
-              {nameEditing ? <div className="pet-doorplate-editor"><label htmlFor="pet-name" className="sr-only">小狗名字</label><input id="pet-name" name="pet-display-name-input" value={nameDraft} maxLength={12} placeholder="請輸入小狗的名字" onChange={(event) => updateNameDraft(event.target.value)} aria-invalid={Boolean(nameError)} aria-describedby="pet-name-error" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} autoFocus />{nameError && <p id="pet-name-error" className="field-error" role="alert">{nameError}</p>}</div> : <button type="button" className={petName ? "named" : "placeholder"} onClick={() => { setNameEditing(true); setNameError(""); }}>{petName || "請輸入小狗的名字"}</button>}
+              <span className="pet-doorplate-name">{petName}</span>
             </div>
             {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已收起</h2><p><b>為什麼危險：</b>{activeHazard.danger}</p><p><b>建議如何處理：</b>{activeHazard.handling}</p></section>}
           </div>
@@ -207,7 +164,7 @@ export function RoomPreparation({
         </div>
       </div>
       <div className="room-actions">
-        <button className="secondary" onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
+        <button className="secondary" onClick={complete || reviewing ? onReplay : onBack}>{complete || reviewing ? "↻ 再玩一次" : "← 返回"}</button>
         <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="primary" onClick={completeRoomCheck}>完成房間檢查，準備出發 <span>→</span></button></div>
       </div>
     </div>
@@ -287,34 +244,21 @@ export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack
     <StepHeading title="出發接牠回家" body={`今天要去接 ${petName || "小狗"} 回家了。出門前先把需要的文件與接回用品準備好，讓牠在路上有安全的位置，也讓你能從容處理突發狀況。`} />
     <div className={`departure-layout ${departing ? "departing" : ""}`}>
       <aside className="departure-supply-shelf" aria-label="準備物品">
-        <div className="departure-supply-header"><h2>{complete ? "已準備的物品" : "準備物品"}</h2></div>
-        {!complete && <div className="departure-supply-rows">
+        <div className="departure-supply-header"><h2>準備物品</h2></div>
+        <div className="departure-supply-rows">
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
             {row.map((item) => {
               const itemSelected = selected.includes(item.id);
               const note = preparedTrunkItemNotes[item.id] ?? { label: item.label, note: item.description };
+              const price = expensePriceText(item.expenseIds ?? [], breed);
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
                   <span className="departure-supply-visual"><img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /></span><b>{item.label}</b>
-                </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small></div>}
+                </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small><span className="supply-slot-price">{price || "不另計費"}</span></div>}
               </div>;
             })}
           </div>)}
-        </div>}
-        {complete && <ul className="prepared-item-list departure-prepared-list" aria-label="已準備的後車廂物品">
-          {departureTrunkItems.map((item) => {
-            const note = preparedTrunkItemNotes[item.id] ?? { label: item.label, note: item.description };
-            const newExpenseIds = (item.expenseIds ?? []).filter((id) => !roomExpenseIds.has(id));
-            const price = newExpenseIds.length > 0 ? expensePriceText(newExpenseIds, breed) : "";
-            return <li key={item.id}>
-              <div className="prepared-item-row">
-                <b>{note.label}</b>
-                {price && <small className="prepared-item-price">{price}</small>}
-              </div>
-              <span>{note.note}</span>
-            </li>;
-          })}
-        </ul>}
+        </div>
       </aside>
 
       <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">
@@ -329,7 +273,7 @@ export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack
       </section>
     </div>
     <div className="departure-actions">
-      <button type="button" className="secondary" onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
+      <button type="button" className="secondary" onClick={complete || reviewing ? onReplay : onBack}>{complete || reviewing ? "↻ 再玩一次" : "← 返回"}</button>
       <div><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
     </div>
   </div>;
