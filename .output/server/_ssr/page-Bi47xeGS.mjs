@@ -1,6 +1,6 @@
-import { C as stripBasePath, S as hasBasePath, _ as withBasePath, a as getPrefetchedUrls, b as require_react, d as createRscRequestHeaders, f as createRscRequestUrl, g as toSameOriginAppPath, h as toBrowserNavigationHref, i as getMountedSlotsHeader, m as resolveRelativeHref, n as getCurrentInterceptionContext, o as navigateClientSide, s as prefetchRscResponse, t as require_jsx_runtime, u as ReadonlyURLSearchParams, v as isDangerousScheme, w as __toESM, x as VINEXT_MOUNTED_SLOTS_HEADER, y as AppElementsWire } from "./ssr.mjs";
+import { C as hasBasePath, S as VINEXT_MOUNTED_SLOTS_HEADER, T as __toESM, _ as toSameOriginAppPath, a as getMountedSlotsHeader, b as AppElementsWire, c as prefetchRscResponse, d as ReadonlyURLSearchParams, f as createRscRequestHeaders, g as toBrowserNavigationHref, h as resolveRelativeHref, n as require_jsx_runtime, o as getPrefetchedUrls, p as createRscRequestUrl, r as getCurrentInterceptionContext, s as navigateClientSide, v as withBasePath, w as stripBasePath, x as require_react, y as isDangerousScheme } from "./ssr.mjs";
 import { a as urlQueryToSearchParams, i as getDomainLocaleUrl, r as appendSearchParamsToUrl, t as addLocalePrefix } from "./query-nqHbrvzS.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CHf_5RCd.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-Bi47xeGS.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var _SERVER_INSERTED_HTML_CTX_KEY = Symbol.for("vinext.serverInsertedHTMLContext");
 function getServerInsertedHTMLContext() {
@@ -712,7 +712,7 @@ var Link = (0, import_react.forwardRef)(function Link({ href, as, replace = fals
 			});
 			return;
 		} else try {
-			const Router = (await import("./router-JLlu4Lia.mjs")).default;
+			const Router = (await import("./router-B7ddL0gv.mjs")).default;
 			if (replace) await Router.replace(absoluteHref, void 0, { scroll });
 			else await Router.push(absoluteHref, void 0, { scroll });
 		} catch {

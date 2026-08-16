@@ -1,6 +1,6 @@
-import { C as stripBasePath, b as require_react, g as toSameOriginAppPath, h as toBrowserNavigationHref, p as isHashOnlyBrowserUrlChange, w as __toESM } from "./ssr.mjs";
+import { T as __toESM, _ as toSameOriginAppPath, g as toBrowserNavigationHref, m as isHashOnlyBrowserUrlChange, w as stripBasePath, x as require_react } from "./ssr.mjs";
 import { a as urlQueryToSearchParams, i as getDomainLocaleUrl, n as addQueryParam, r as appendSearchParamsToUrl, t as addLocalePrefix } from "./query-nqHbrvzS.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-JLlu4Lia.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-B7ddL0gv.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 /**
 * Shim for next/dist/shared/lib/router-context.shared-runtime
@@ -347,7 +347,7 @@ async function navigateClient(url) {
 		assertStillCurrent();
 		const PageComponent = pageModule.default;
 		if (!PageComponent) scheduleHardNavigationAndThrow(url, "Navigation failed: page module has no default export");
-		const React = (await import("./ssr.mjs").then((n) => /* @__PURE__ */ __toESM(n.b(), 1))).default;
+		const React = (await import("./ssr.mjs").then((n) => /* @__PURE__ */ __toESM(n.x(), 1))).default;
 		assertStillCurrent();
 		let AppComponent = window.__VINEXT_APP__;
 		const appModuleUrl = nextData.__vinext?.appModuleUrl;

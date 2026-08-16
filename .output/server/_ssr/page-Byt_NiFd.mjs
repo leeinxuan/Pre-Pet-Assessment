@@ -1,5 +1,5 @@
-import { b as require_react, t as require_jsx_runtime, w as __toESM } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-Q-ab4uQC.js
+import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/page-Byt_NiFd.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1354,7 +1354,9 @@ var breedChallengeContent = {
 	}]
 };
 function getBreedChallengeScenarios(breedId) {
-	return (breedChallengeContent[breedId] ?? breedChallengeContent.shiba).map((question, index) => ({
+	const questions = breedChallengeContent[breedId] ?? breedChallengeContent.shiba;
+	const resolvedBreedId = breedChallengeContent[breedId] ? breedId : "shiba";
+	return questions.map((question, index) => ({
 		id: `breed-challenge-${index + 1}`,
 		stage: "品種的考驗",
 		timeLabel: "日常照護",
@@ -1364,7 +1366,20 @@ function getBreedChallengeScenarios(breedId) {
 		reportSummary: question.reportSummary,
 		breedKnowledge: question.breedKnowledge,
 		artIndex: 4,
-		choices: [{
+		choices: resolvedBreedId === "shiba" && index === 1 ? [...question.distractors.map((choice, choiceIndex) => ({
+			id: `breed-challenge-${index + 1}-distractor-${choiceIndex + 1}`,
+			text: choice.text,
+			result: "incorrect",
+			...incorrect,
+			explanation: choice.explanation,
+			suggestion: choice.suggestion
+		})), {
+			id: `breed-challenge-${index + 1}-correct`,
+			text: question.correctText,
+			result: "correct",
+			...positive,
+			explanation: question.correctExplanation
+		}] : [{
 			id: `breed-challenge-${index + 1}-correct`,
 			text: question.correctText,
 			result: "correct",
@@ -4511,6 +4526,7 @@ function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack, onRep
 		]
 	});
 }
+var import_react_dom = /* @__PURE__ */ __toESM(require_react_dom(), 1);
 var a4PageWidthPt = 595.28;
 var a4PageHeightPt = 841.89;
 function personalizeReportText(text, petName) {
@@ -5230,6 +5246,43 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 		knowledgePoints: knowledgePointsForScenario(scenario, petName)
 	}));
 	const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
+	const knowledgeModal = activeDiscussion && typeof document !== "undefined" ? (0, import_react_dom.createPortal)(/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "knowledge-modal-backdrop",
+		onMouseDown: (event) => {
+			if (event.target === event.currentTarget) setActiveDiscussionId("");
+		},
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+			className: "knowledge-modal",
+			role: "dialog",
+			"aria-modal": "true",
+			"aria-labelledby": "knowledge-modal-title",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					className: "knowledge-modal-close",
+					onClick: () => setActiveDiscussionId(""),
+					"aria-label": "關閉知識點",
+					children: "×"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "life-stage-label",
+					children: activeDiscussion.topic
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+					id: "knowledge-modal-title",
+					children: activeDiscussion.title
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "回顧這一題較合適的照護知識點：" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: activeDiscussion.knowledgePoints.map((point) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: point }, point)) }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					className: "knowledge-modal-confirm",
+					onClick: () => setActiveDiscussionId(""),
+					children: "我知道了"
+				})
+			]
+		})
+	}), document.body) : null;
 	const homeSpaceImages = profile.homeSpaceImages.length ? profile.homeSpaceImages : profile.homeSpaceImage ? [profile.homeSpaceImage] : [];
 	const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : profile.homeSpaceImageName ? [profile.homeSpaceImageName] : [];
 	const checklistGroups = [
@@ -5368,22 +5421,6 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 							children: handlingRows.map(([situation, advice]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: situation }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: advice })] }, situation))
 						})]
 					}),
-					discussionTopics.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-						className: "care-a4-discussion",
-						"aria-label": "知識點複習摘要",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"aria-hidden": "true",
-								children: "△"
-							}), " 知識點複習摘要"] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: discussionTopics.slice(0, 4).map((topic) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: topic.summary ?? topic.title }, topic.id)) }),
-							discussionTopics.length > 4 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
-								"另有 ",
-								discussionTopics.length - 4,
-								" 題，請查看分享頁完整知識點。"
-							] })
-						]
-					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 						className: "care-a4-money",
 						"aria-label": "預估支出",
@@ -5412,6 +5449,39 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 								] })]
 							})
 						]
+					}),
+					discussionTopics.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("footer", {
+						className: "care-a4-commitment",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"aria-hidden": "true",
+							children: committed ? "☑" : "□"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。" })]
+					})
+				]
+			}),
+			discussionTopics.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+				className: "care-a4-sheet care-a4-sheet--followup",
+				"aria-label": "伴日子知識點複習摘要 A4",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", {
+						className: "care-a4-header care-a4-header--compact",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "伴日子新手村" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "知識點複習摘要" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "把還可以再討論的題目，整理成清楚的回顧重點" })
+						] })
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+						className: "care-a4-discussion care-a4-discussion--cards",
+						"aria-label": "知識點複習摘要",
+						children: discussionTopics.map((topic) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+							className: "care-a4-discussion-card",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: topic.topic }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "情境：" }), topic.summary ?? topic.title] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "建議複習：" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: topic.knowledgePoints.slice(0, 4).map((point) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: point }, point)) })] })
+							]
+						}, topic.id))
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("footer", {
 						className: "care-a4-commitment",
@@ -5512,43 +5582,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 				className: "report-download-footer",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PdfDownloadButton, { petName })
 			}),
-			activeDiscussion && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "knowledge-modal-backdrop",
-				onMouseDown: (event) => {
-					if (event.target === event.currentTarget) setActiveDiscussionId("");
-				},
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-					className: "knowledge-modal",
-					role: "dialog",
-					"aria-modal": "true",
-					"aria-labelledby": "knowledge-modal-title",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-							type: "button",
-							className: "knowledge-modal-close",
-							onClick: () => setActiveDiscussionId(""),
-							"aria-label": "關閉知識點",
-							children: "×"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "life-stage-label",
-							children: activeDiscussion.topic
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-							id: "knowledge-modal-title",
-							children: activeDiscussion.title
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "回顧這一題較合適的照護知識點：" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: activeDiscussion.knowledgePoints.map((point) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: point }, point)) }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-							type: "button",
-							className: "knowledge-modal-confirm",
-							onClick: () => setActiveDiscussionId(""),
-							children: "我知道了"
-						})
-					]
-				})
-			})
+			knowledgeModal
 		]
 	}) });
 }

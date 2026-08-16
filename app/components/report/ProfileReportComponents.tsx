@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { breeds, hazards, money, roomItems } from "../../game-data";
 import { getBreedChallengeScenarios, lifeScenarios } from "../../life-data";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, ScenarioAnswer } from "../../game-types";
@@ -635,6 +636,21 @@ export function AssessmentReport({
       knowledgePoints: knowledgePointsForScenario(scenario, petName),
     }));
   const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
+  const knowledgeModal = activeDiscussion && typeof document !== "undefined"
+    ? createPortal(
+      <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
+        <section className="knowledge-modal" role="dialog" aria-modal="true" aria-labelledby="knowledge-modal-title">
+          <button type="button" className="knowledge-modal-close" onClick={() => setActiveDiscussionId("")} aria-label="關閉知識點">×</button>
+          <p className="life-stage-label">{activeDiscussion.topic}</p>
+          <h2 id="knowledge-modal-title">{activeDiscussion.title}</h2>
+          <p>回顧這一題較合適的照護知識點：</p>
+          <ul>{activeDiscussion.knowledgePoints.map((point) => <li key={point}>{point}</li>)}</ul>
+          <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveDiscussionId("")}>我知道了</button>
+        </section>
+      </div>,
+      document.body,
+    )
+    : null;
   const homeSpaceImages = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
   const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
 
@@ -729,12 +745,6 @@ export function AssessmentReport({
           <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
         </section>
 
-        {discussionTopics.length > 0 && <section className="care-a4-discussion" aria-label="知識點複習摘要">
-          <h2><span aria-hidden="true">△</span> 知識點複習摘要</h2>
-          <ul>{discussionTopics.slice(0, 4).map((topic) => <li key={topic.id}>{topic.summary ?? topic.title}</li>)}</ul>
-          {discussionTopics.length > 4 && <small>另有 {discussionTopics.length - 4} 題，請查看分享頁完整知識點。</small>}
-        </section>}
-
         <section className="care-a4-money" aria-label="預估支出">
           <h2>預估支出</h2>
           <div className="care-a4-money-types">
@@ -758,11 +768,41 @@ export function AssessmentReport({
           </div>
         </section>
 
-        <footer className="care-a4-commitment">
-          <span aria-hidden="true">{committed ? "☑" : "□"}</span>
-          <p>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</p>
-        </footer>
+        {discussionTopics.length === 0 && (
+          <footer className="care-a4-commitment">
+            <span aria-hidden="true">{committed ? "☑" : "□"}</span>
+            <p>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</p>
+          </footer>
+        )}
       </article>
+
+      {discussionTopics.length > 0 && (
+        <article className="care-a4-sheet care-a4-sheet--followup" aria-label="伴日子知識點複習摘要 A4">
+          <header className="care-a4-header care-a4-header--compact">
+            <div>
+              <p>伴日子新手村</p>
+              <h1>知識點複習摘要</h1>
+              <span>把還可以再討論的題目，整理成清楚的回顧重點</span>
+            </div>
+          </header>
+          <section className="care-a4-discussion care-a4-discussion--cards" aria-label="知識點複習摘要">
+            {discussionTopics.map((topic) => (
+              <article key={topic.id} className="care-a4-discussion-card">
+                <h2>{topic.topic}</h2>
+                <p><b>情境：</b>{topic.summary ?? topic.title}</p>
+                <div>
+                  <b>建議複習：</b>
+                  <ul>{topic.knowledgePoints.slice(0, 4).map((point) => <li key={point}>{point}</li>)}</ul>
+                </div>
+              </article>
+            ))}
+          </section>
+          <footer className="care-a4-commitment">
+            <span aria-hidden="true">{committed ? "☑" : "□"}</span>
+            <p>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</p>
+          </footer>
+        </article>
+      )}
 
       {discussionTopics.length > 0 ? (
         <section className="overview-discussion" aria-labelledby="overview-discussion-title">
@@ -824,16 +864,7 @@ export function AssessmentReport({
       <div className="report-download-footer">
         <PdfDownloadButton petName={petName} />
       </div>
-      {activeDiscussion && <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
-        <section className="knowledge-modal" role="dialog" aria-modal="true" aria-labelledby="knowledge-modal-title">
-          <button type="button" className="knowledge-modal-close" onClick={() => setActiveDiscussionId("")} aria-label="關閉知識點">×</button>
-          <p className="life-stage-label">{activeDiscussion.topic}</p>
-          <h2 id="knowledge-modal-title">{activeDiscussion.title}</h2>
-          <p>回顧這一題較合適的照護知識點：</p>
-          <ul>{activeDiscussion.knowledgePoints.map((point) => <li key={point}>{point}</li>)}</ul>
-          <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveDiscussionId("")}>我知道了</button>
-        </section>
-      </div>}
+      {knowledgeModal}
     </div>
     </>
   );

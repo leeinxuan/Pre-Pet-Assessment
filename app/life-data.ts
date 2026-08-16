@@ -300,6 +300,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
 
 export function getBreedChallengeScenarios(breedId: string): Scenario[] {
   const questions = breedChallengeContent[breedId] ?? breedChallengeContent.shiba;
+  const resolvedBreedId = breedChallengeContent[breedId] ? breedId : "shiba";
   return questions.map((question, index) => ({
     id: `breed-challenge-${index + 1}`,
     stage: "品種的考驗",
@@ -310,23 +311,41 @@ export function getBreedChallengeScenarios(breedId: string): Scenario[] {
     reportSummary: question.reportSummary,
     breedKnowledge: question.breedKnowledge,
     artIndex: 4,
-    choices: [
-      {
-        id: `breed-challenge-${index + 1}-correct`,
-        text: question.correctText,
-        result: "correct",
-        ...positive,
-        explanation: question.correctExplanation,
-      },
-      ...question.distractors.map((choice, choiceIndex) => ({
-        id: `breed-challenge-${index + 1}-distractor-${choiceIndex + 1}`,
-        text: choice.text,
-        result: "incorrect" as const,
-        ...incorrect,
-        explanation: choice.explanation,
-        suggestion: choice.suggestion,
-      })),
-    ],
+    choices: resolvedBreedId === "shiba" && index === 1
+      ? [
+        ...question.distractors.map((choice, choiceIndex) => ({
+          id: `breed-challenge-${index + 1}-distractor-${choiceIndex + 1}`,
+          text: choice.text,
+          result: "incorrect" as const,
+          ...incorrect,
+          explanation: choice.explanation,
+          suggestion: choice.suggestion,
+        })),
+        {
+          id: `breed-challenge-${index + 1}-correct`,
+          text: question.correctText,
+          result: "correct" as const,
+          ...positive,
+          explanation: question.correctExplanation,
+        },
+      ]
+      : [
+        {
+          id: `breed-challenge-${index + 1}-correct`,
+          text: question.correctText,
+          result: "correct" as const,
+          ...positive,
+          explanation: question.correctExplanation,
+        },
+        ...question.distractors.map((choice, choiceIndex) => ({
+          id: `breed-challenge-${index + 1}-distractor-${choiceIndex + 1}`,
+          text: choice.text,
+          result: "incorrect" as const,
+          ...incorrect,
+          explanation: choice.explanation,
+          suggestion: choice.suggestion,
+        })),
+      ],
   }));
 }
 
