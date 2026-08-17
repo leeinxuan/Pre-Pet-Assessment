@@ -28,6 +28,11 @@ const scenarioCorrectAnswerVideoIndex: Record<string, number> = {
   "busy-daily-care": 1,
 };
 
+const breedChallengeVideos: Record<string, string> = {
+  "一年四季都在掉毛": "/assets/pet-journey/shedding.mp4",
+  "颳風下雨也要出門上廁所": "/assets/pet-journey/rainy-day-walk.mp4",
+};
+
 function arrivalMealPlacementStyle(kind: keyof typeof arrivalMealMobilePlacements): CSSProperties {
   const placement = arrivalMealMobilePlacements[kind];
   return {
@@ -282,7 +287,7 @@ function VideoWithToggle({
         onError={onError}
       />
       <button type="button" className="video-toggle-button" onClick={toggleVideo} aria-label={paused ? "播放影片" : "暫停影片"} title={paused ? "播放" : "暫停"}>
-        {paused ? <span className="video-play-icon" aria-hidden="true" /> : <span className="video-pause-icon" aria-hidden="true"><i /><i /></span>}
+        {paused ? <span className="video-play-icon" aria-hidden="true" /> : <span className="video-pause-icon" aria-hidden="true" />}
       </button>
     </>
   );
@@ -473,7 +478,7 @@ function ScenarioFeedback({
       </div>
       {scenario.reminder && <div className="law-reminder"><span>i</span><p><b>生活裡的責任提醒</b>{withPetName(scenario.reminder, petName)}</p></div>}
       <div className="feedback-actions">
-        {choice.result === "incorrect" && <button className="secondary" onClick={onRetry}>重新選一次</button>}
+        {choice.result === "incorrect" && <button className="secondary" onClick={onRetry}>重新想一次</button>}
         {(!requiresRetry || choice.result !== "incorrect") && <button className="primary" onClick={onContinue}>{scenario.id === "arrival-adjustment" ? "繼續" : labels[choice.result].button} <span>→</span></button>}
       </div>
     </section>
@@ -634,7 +639,7 @@ function VideoScenarioActivity({
             <h2>這個做法可能不太適合</h2>
             <p>{withPetName(withBreedName(selectedChoice.explanation, breed), petName)}</p>
             {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(withBreedName(selectedChoice.suggestion, breed), petName)}</p></div>}
-            <button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button>
+            <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (
           <section className="video-scenario-options"><h2>你會怎麼做？</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</section>
@@ -757,7 +762,7 @@ function DailyBehaviorActivity({
           <h2>這個做法可能不太適合</h2>
           <p>{withPetName(selectedChoice.explanation, petName)}</p>
           {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
-          <button type="button" className="secondary" onClick={retry}>重新選擇</button>
+          <button type="button" className="secondary" onClick={retry}>重新想一次</button>
         </section>
       ) : (
         <section className="reflection daily-behavior-choices">
@@ -926,7 +931,7 @@ function DailyBehaviorActivityMulti({
           <h2>{retryCopy.title}</h2>
           <p>{withPetName(retryCopy.explanation, petName)}</p>
           {retryCopy.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(retryCopy.suggestion, petName)}</p></div>}
-          <button type="button" className="secondary" onClick={retry}>重新選擇</button>
+          <button type="button" className="secondary" onClick={retry}>重新想一次</button>
         </section>
       ) : (
                                 <section className="reflection daily-behavior-choices">
@@ -971,6 +976,7 @@ function BusyCareActivity({
 }) {
   const [mode, setMode] = useState<"question" | "family" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : "question");
   const [familyFeedback, setFamilyFeedback] = useState<{ name: string; reason: string } | null>(null);
+  const [sceneVideoFailed, setSceneVideoFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
@@ -983,6 +989,7 @@ function BusyCareActivity({
     if (resetSignal <= 0) return;
     setMode("question");
     setFamilyFeedback(null);
+    setSceneVideoFailed(false);
     setVideoFailed(false);
     setVideoFinished(false);
   }, [resetSignal]);
@@ -1022,8 +1029,14 @@ function BusyCareActivity({
       <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{scenario.title}</h1><p>{withPetName(scenario.description, petName)}</p></div>
       <div className="busy-care-layout">
         <div className="busy-care-room" aria-label="小狗在房間中等待照顧的情境">
-          <img className="busy-care-room-background" src="/assets/room/empty-room.png" alt="居家房間場景" />
-          <img className="busy-care-hungry-dog" src="/assets/pet-journey/shiba-hungry.png" alt={`${petName}趴在房間裡等待照顧`} />
+          {!sceneVideoFailed ? (
+            <VideoWithToggle className="busy-care-room-video" src="/assets/pet-journey/busy-daily-care.mp4" loop ariaLabel="疲憊忙碌的日子情境影片" onError={() => setSceneVideoFailed(true)} />
+          ) : (
+            <>
+              <img className="busy-care-room-background" src="/assets/room/empty-room.png" alt="居家房間場景" />
+              <img className="busy-care-hungry-dog" src="/assets/pet-journey/shiba-hungry.png" alt={`${petName}趴在房間裡等待照顧`} />
+            </>
+          )}
         </div>
         {mode === "family" ? (
           <section className="busy-care-members" aria-live="polite">
@@ -1037,7 +1050,7 @@ function BusyCareActivity({
             <h2>這個做法可能不太適合</h2>
             <p>{withPetName(selectedChoice.explanation, petName)}</p>
             {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
-            <button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button>
+            <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (
           <section className="busy-care-options"><h2>你會怎麼安排？</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</section>
@@ -1067,16 +1080,23 @@ function BreedChallengeActivity({
   const [currentIndex, setCurrentIndex] = useState(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
   const [mode, setMode] = useState<"question" | "incorrect" | "positive">(firstUnfinished === -1 ? "positive" : "question");
   const [feedbackVideoFailed, setFeedbackVideoFailed] = useState(false);
+  const [questionVideoFailed, setQuestionVideoFailed] = useState(false);
   const scenario = scenarios[currentIndex];
   const selectedChoice = scenario?.choices.find((choice) => choice.id === answers[scenario.id]?.finalChoiceId);
   const breedLabel = breedLabelForId(breed);
+  const challengeVideoSource = scenario ? breedChallengeVideos[scenario.title] : undefined;
 
   useEffect(() => {
     if (resetSignal <= 0) return;
     setCurrentIndex(0);
     setMode("question");
     setFeedbackVideoFailed(false);
+    setQuestionVideoFailed(false);
   }, [resetSignal]);
+
+  useEffect(() => {
+    setQuestionVideoFailed(false);
+  }, [scenario?.title]);
 
   if (!scenario) return null;
 
@@ -1094,6 +1114,7 @@ function BreedChallengeActivity({
     setCurrentIndex((current) => current + 1);
     setMode("question");
     setFeedbackVideoFailed(false);
+    setQuestionVideoFailed(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -1121,13 +1142,19 @@ function BreedChallengeActivity({
         <p>先把最容易被可愛外表蓋過去的生活份量，放進你的真實日常裡想一遍。</p>
       </header>
       <div className="breed-challenge-layout">
-        <div className="breed-challenge-video-placeholder"><span>影片製作中</span><b>{scenario.title}</b><p>情境影片將於後續補上。</p></div>
+        <div className={challengeVideoSource && !questionVideoFailed ? "breed-challenge-video-placeholder breed-challenge-video-frame" : "breed-challenge-video-placeholder"}>
+          {challengeVideoSource && !questionVideoFailed ? (
+            <VideoWithToggle className="breed-challenge-video" src={challengeVideoSource} loop ariaLabel={`${scenario.title}情境影片`} onError={() => setQuestionVideoFailed(true)} />
+          ) : (
+            <><span>影片製作中</span><b>{scenario.title}</b><p>情境影片將於後續補上。</p></>
+          )}
+        </div>
         {mode === "incorrect" && selectedChoice ? (
           <section className="breed-challenge-retry" aria-live="polite">
             <h2>這個想法很常見，但可能還不夠</h2>
             <p>{withPetName(selectedChoice.explanation, petName)}</p>
             {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
-            <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
+            <button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button>
           </section>
         ) : (
           <section className="breed-challenge-options">
@@ -2100,7 +2127,10 @@ export function LifeJourney({
           breed={breed}
           onChoose={choose}
           onCorrectComplete={() => {
-            if (scenario.id === "arrival-adjustment") setArrivalMealOpen(true);
+            if (scenario.id === "arrival-adjustment") {
+              setArrivalMealOpen(true);
+              window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+            }
             else continueJourney();
           }}
           resetSignal={currentResetSignal}

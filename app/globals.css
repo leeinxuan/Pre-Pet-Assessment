@@ -1334,12 +1334,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   border-radius: 50%;
   background: rgba(42, 34, 25, .64);
   color: #fff;
-  font-size: 17px;
-  font-weight: 900;
   line-height: 1;
   cursor: pointer;
   box-shadow: 0 8px 18px rgba(37, 28, 17, .18);
-  backdrop-filter: blur(5px);
+  overflow: hidden;
 }
 .video-toggle-button:hover,
 .video-toggle-button:focus-visible { background: rgba(42, 34, 25, .82); transform: translateY(-1px); }
@@ -1352,18 +1350,23 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   border-left: 13px solid #fff;
 }
 .video-pause-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-.video-pause-icon i {
+  position: relative;
   display: block;
+  width: 17px;
+  height: 18px;
+}
+.video-pause-icon::before,
+.video-pause-icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
   width: 5px;
-  height: 17px;
+  height: 18px;
   border-radius: 2px;
   background: #fff;
 }
+.video-pause-icon::before { left: 1px; }
+.video-pause-icon::after { right: 1px; }
 .stage-layout:has(.time-pass-transition) { height: 100svh; min-height: 0; overflow: hidden; }
 .stage:has(> .time-pass-transition) { height: 100%; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); overflow: hidden; }
 .time-pass-transition { min-width: 0; min-height: 0; height: 100%; position: relative; display: grid; place-items: center; overflow: hidden; background: #27241f; }
@@ -1555,6 +1558,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .busy-care-heading p { max-width: 720px; margin: 0; color: var(--muted); line-height: 1.8; }
 .busy-care-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(310px, .88fr); gap: 20px; align-items: stretch; }
 .busy-care-room { position: relative; min-height: 420px; overflow: hidden; border-radius: 26px; background: var(--cream); box-shadow: var(--shadow); }
+.busy-care-room-video { display: block; width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
 .busy-care-room-background { display: block; width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
 .busy-care-hungry-dog { position: absolute; width: 42%; max-height: 58%; left: 25%; bottom: 0%; z-index: 2; object-fit: contain; }
 .busy-care-options, .busy-care-members, .busy-care-feedback { padding: 25px; border: 1px solid var(--line); border-radius: 26px; background: white; box-shadow: var(--shadow); }
@@ -1588,8 +1592,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .breed-challenge-heading > p:last-child { max-width: 720px; margin: 0; color: var(--muted); line-height: 1.8; }
 .breed-challenge-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(340px, .95fr); gap: 20px; align-items: stretch; }
 .breed-challenge-video-placeholder { min-height: 470px; display: grid; place-content: center; justify-items: center; gap: 10px; padding: 34px; border: 2px dashed rgba(142,128,101,.42); border-radius: 26px; background: linear-gradient(145deg, #f4efe3, #e7eee2); color: #746955; text-align: center; }
+.breed-challenge-video-frame { position: relative; overflow: hidden; padding: 0; border: 0; background: #2f2a22; }
+.breed-challenge-video { display: block; width: 100%; height: 100%; min-height: inherit; object-fit: cover; }
 .correct-feedback-media > .breed-challenge-video-placeholder { height: 100%; min-height: 560px; border: 0; border-radius: 0; }
-.breed-challenge-video-placeholder span { padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,.8); color: #85714f; font-size: 12px; font-weight: 900; }
+.breed-challenge-video-placeholder > span { padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,.8); color: #85714f; font-size: 12px; font-weight: 900; }
 .breed-challenge-video-placeholder b { color: var(--ink); font-size: clamp(24px, 3vw, 34px); }
 .breed-challenge-video-placeholder p { max-width: 300px; margin: 0; line-height: 1.7; }
 .breed-challenge-options, .breed-challenge-retry { padding: 26px; border: 1px solid var(--line); border-radius: 26px; background: #fff; box-shadow: var(--shadow); }
@@ -2934,7 +2940,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .breed-challenge-video-placeholder { min-height: 260px; }
   .walking-law-feedback { grid-template-columns: 42px 1fr; padding: 22px 18px; }
   .walking-law-feedback > span { width: 42px; height: 42px; }
-  .busy-care-room, .busy-care-room-background { min-height: 290px; }
+  .busy-care-room, .busy-care-room-video, .busy-care-room-background { min-height: 290px; }
   .busy-care-positive-video, .busy-care-positive-video video { min-height: 250px; }
   .busy-care-options, .busy-care-members, .busy-care-feedback { padding: 20px; }
   .busy-care-positive-copy { padding: 28px 22px; }
@@ -3575,6 +3581,34 @@ html, body { overflow-x: clip; }
   .departure-supply-shelf,
   .car-preparation-panel {
     order: 2;
+  }
+
+  /* Mobile car-trunk supply slots:
+     手機版「出發接牠回家」物品欄固定為 3 / 3 / 1；桌機版仍使用上方原本的 row/flex 排列。
+     row 使用 display: contents 只攤平成固定 slot，不會讓點選後的其他物品往前補位。 */
+  .departure-supply-rows {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+    min-height: 0;
+  }
+
+  .departure-supply-row {
+    display: contents;
+  }
+
+  .departure-supply-row .supply-slot,
+  .departure-supply-row--1 .supply-slot,
+  .departure-supply-row--2 .supply-slot,
+  .departure-supply-row--3 .supply-slot {
+    width: auto;
+    min-width: 0;
+    min-height: 118px;
+    flex: initial;
+  }
+
+  .departure-supply-row button {
+    min-height: 118px;
   }
 
   .room-scene-background--desktop,
