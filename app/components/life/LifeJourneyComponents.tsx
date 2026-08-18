@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { arrivalMealMobilePlacements, breeds, expenseCatalog, money, roomItems } from "../../game-data";
 import { getBreedChallengeScenarios, journeyItems, lifeScenarios } from "../../life-data";
-import { walkingPreloadImages, walkingPrepItems, walkingScenes } from "../../data/walkingScenes";
+import { mobileWalkingScenePlacements, walkingPreloadImages, walkingPrepItems, walkingScenes } from "../../data/walkingScenes";
 import type {
   CareMember,
   ExpenseRecord,
@@ -1511,7 +1511,31 @@ function getWalkingCompletionPosition(sceneIndex: number) {
   return walkingSceneCompletionAt[sceneIndex] ?? 100;
 }
 
-function getWalkingCharacterStyle(sceneIndex: number, position: number): CSSProperties {
+function getWalkingCharacterStyle(sceneIndex: number, position: number, mobile = false): CSSProperties {
+  if (mobile) {
+    const placement = mobileWalkingScenePlacements[sceneIndex];
+    if (placement) {
+      const completionPosition = getWalkingCompletionPosition(sceneIndex);
+      const progress = Math.max(0, Math.min(1, position / completionPosition));
+      const { start, waypoint, end } = placement;
+      const hasWaypoint = Boolean(waypoint);
+      const turnAt = 0.55;
+      const segmentProgress = hasWaypoint
+        ? (progress <= turnAt ? progress / turnAt : (progress - turnAt) / (1 - turnAt))
+        : progress;
+      const from = hasWaypoint && progress > turnAt ? waypoint! : start;
+      const to = hasWaypoint && progress <= turnAt ? waypoint! : end;
+
+      return {
+        "--walk-left": `${lerp(from.left, to.left, segmentProgress)}%`,
+        "--walk-top": "auto",
+        "--walk-bottom": `${lerp(from.bottom, to.bottom, segmentProgress)}%`,
+        "--walk-translate-y": "0",
+        "--walk-scale": lerp(from.scale, to.scale, segmentProgress),
+      } as CSSProperties;
+    }
+  }
+
   const path = walkingScenePaths[sceneIndex];
   const completionPosition = getWalkingCompletionPosition(sceneIndex);
 
@@ -1540,6 +1564,20 @@ function getWalkingCharacterStyle(sceneIndex: number, position: number): CSSProp
     "--walk-translate-y": "-50%",
     "--walk-scale": lerp(from.scale, to.scale, segmentProgress),
   } as CSSProperties;
+}
+
+function useMobileWalkingLayout() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 720px)");
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
+  return isMobile;
 }
 
 function WalkingActivity({
@@ -1572,6 +1610,7 @@ function WalkingActivity({
   const draggingBagRef = useRef(false);
   const forwardHeldRef = useRef(false);
   const [draggedBag, setDraggedBag] = useState<{ x: number; y: number } | null>(null);
+  const isMobileWalkingLayout = useMobileWalkingLayout();
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
   const scene = walkingScenes[sceneIndex];
   const prepared = activity.walkingPreparedItems;
@@ -1584,6 +1623,10 @@ function WalkingActivity({
       ? { title: "做得很好！", body: "散步時清理排泄物，也是照顧責任的一部分。" }
       : { title: "散步中的小事件", body: "牠在路上排泄了，先停下來幫牠清理乾淨，再繼續往前走。" }
     : null;
+  const mobilePoopPlacement = mobileWalkingScenePlacements[sceneIndex]?.poop;
+  const mobilePoopStyle = mobilePoopPlacement
+    ? ({ "--mobile-walk-poop-left": `${mobilePoopPlacement.left}%`, "--mobile-walk-poop-bottom": `${mobilePoopPlacement.bottom}%` } as CSSProperties)
+    : undefined;
 
   useEffect(() => {
     walkingPreloadImages.forEach((src) => {
@@ -1869,40 +1912,22 @@ function WalkingActivity({
       ) : (
         <div className="walking-game">
           <p className="walking-game-hint">{walkingInstruction}</p>
+          <div className="walking-scene-shell">
+            <div className="walking-progress walking-progress-overlay" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
+              <b>散步進度</b>
+              <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
+              <small>{progressMinutes} / 20 分鐘</small>
+            </div>
           <div
             className={`walking-scene ${moving ? "is-moving" : ""}`}
             ref={sceneRef}
             tabIndex={0}
             aria-label="散步場景，按往前走按鈕前進"
           >
-            <img className="walking-bg" src={scene.image} alt={scene.title} />
-            <div className="walking-progress walking-progress-overlay" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
-              <b>散步進度</b>
-              <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
-              <small>{progressMinutes} / 20 分鐘</small>
-            </div>
-            {walkingEventMessage && (
-              <div className="walking-event-card" role="status">
-                <b>{walkingEventMessage.title}</b>
-                <p>{walkingEventMessage.body}</p>
-                {needsCleanup && (
-                  <div className="walking-drag-row">
-                    <button
-                      type="button"
-                      className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}`}
-                      onPointerDown={startDraggingBag}
-                      onPointerMove={dragBag}
-                      onPointerUp={finishDraggingBag}
-                      onPointerCancel={cancelDraggingBag}
-                      aria-label="拖曳撿便袋清理排泄物"
-                    >
-                      <img src="/assets/walking/poop-bag-1.png" alt="" />
-                    </button>
-                    <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
-                  </div>
-                )}
-              </div>
-            )}
+            <picture>
+              <source media="(max-width: 720px)" srcSet={scene.mobileImage} />
+              <img className="walking-bg" src={scene.image} alt={scene.title} />
+            </picture>
             {draggedBag && (
               <img
                 className="walking-drag-bag-ghost"
@@ -1912,13 +1937,14 @@ function WalkingActivity({
                 style={{ left: draggedBag.x, top: draggedBag.y }}
               />
             )}
-            <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position)}>
+            <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position, isMobileWalkingLayout)}>
               <img
                 src={activity.walkingPoopCleaned ? "/assets/walking/walker-dog-bag.png" : needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png"}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
-              {needsCleanup && <div className="walking-poop" ref={poopTargetRef} aria-hidden="true"><img src="/assets/walking/poop.png" alt="" /></div>}
+              {needsCleanup && !isMobileWalkingLayout && <div className="walking-poop" ref={poopTargetRef} aria-hidden="true"><img src="/assets/walking/poop.png" alt="" /></div>}
             </div>
+            {needsCleanup && isMobileWalkingLayout && <div className="walking-poop walking-poop--mobile" ref={poopTargetRef} style={mobilePoopStyle} aria-hidden="true"><img src="/assets/walking/poop.png" alt="" /></div>}
             <button
               type="button"
               className="walking-forward-button"
@@ -1945,6 +1971,29 @@ function WalkingActivity({
               </span>
               <span className="walking-forward-label">往前走</span>
             </button>
+          </div>
+          {walkingEventMessage && (
+            <div className="walking-event-card" role="status">
+              <b>{walkingEventMessage.title}</b>
+              <p>{walkingEventMessage.body}</p>
+              {needsCleanup && (
+                <div className="walking-drag-row">
+                  <button
+                    type="button"
+                    className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}`}
+                    onPointerDown={startDraggingBag}
+                    onPointerMove={dragBag}
+                    onPointerUp={finishDraggingBag}
+                    onPointerCancel={cancelDraggingBag}
+                    aria-label="拖曳撿便袋清理排泄物"
+                  >
+                    <img src="/assets/walking/poop-bag-1.png" alt="" />
+                  </button>
+                  <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
+                </div>
+              )}
+            </div>
+          )}
           </div>
         </div>
       )}

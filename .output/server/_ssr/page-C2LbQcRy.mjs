@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-6MXtfKYQ.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-C2LbQcRy.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1564,26 +1564,90 @@ var walkingScenes = [
 	{
 		title: "家門口往人行道",
 		image: "/assets/walking/door-to-sidewalk.jpg",
+		mobileImage: "/assets/walking/door-to-sidewalk-mobile.jpg",
 		poopEvent: false
 	},
 	{
 		title: "公園",
 		image: "/assets/walking/park.png",
+		mobileImage: "/assets/walking/park-mobile.jpg",
 		poopEvent: false
 	},
 	{
 		title: "公園 2",
 		image: "/assets/walking/park-poop-event.png",
+		mobileImage: "/assets/walking/park-poop-event-mobile.jpg",
 		poopEvent: true
 	},
 	{
 		title: "人行道往家門口",
 		image: "/assets/walking/sidewalk-to-home.jpg",
+		mobileImage: "/assets/walking/sidewalk-to-home-mobile.jpg",
 		poopEvent: false
 	}
 ];
+var mobileWalkingScenePlacements = {
+	0: {
+		start: {
+			left: 8,
+			bottom: 8,
+			scale: 1
+		},
+		waypoint: {
+			left: 54,
+			bottom: 26,
+			scale: .82
+		},
+		end: {
+			left: 72,
+			bottom: 45,
+			scale: .62
+		}
+	},
+	1: {
+		start: {
+			left: 8,
+			bottom: 10,
+			scale: 1
+		},
+		end: {
+			left: 76,
+			bottom: 18,
+			scale: .9
+		}
+	},
+	2: {
+		start: {
+			left: 8,
+			bottom: 14,
+			scale: 1
+		},
+		end: {
+			left: 78,
+			bottom: 18,
+			scale: .9
+		},
+		poop: {
+			left: 70,
+			bottom: 15
+		}
+	},
+	3: {
+		start: {
+			left: 8,
+			bottom: 12,
+			scale: 1
+		},
+		end: {
+			left: 78,
+			bottom: 28,
+			scale: .82
+		}
+	}
+};
 var walkingPreloadImages = [
 	...walkingScenes.map((scene) => scene.image),
+	...walkingScenes.map((scene) => scene.mobileImage),
 	...walkingPrepItems.map((item) => item.image),
 	"/assets/walking/walker-and-dog.png",
 	"/assets/walking/walker-and-dog-poop.png",
@@ -2868,7 +2932,27 @@ var walkingSceneCompletionAt = { 1: 80 };
 function getWalkingCompletionPosition(sceneIndex) {
 	return walkingSceneCompletionAt[sceneIndex] ?? 100;
 }
-function getWalkingCharacterStyle(sceneIndex, position) {
+function getWalkingCharacterStyle(sceneIndex, position, mobile = false) {
+	if (mobile) {
+		const placement = mobileWalkingScenePlacements[sceneIndex];
+		if (placement) {
+			const completionPosition = getWalkingCompletionPosition(sceneIndex);
+			const progress = Math.max(0, Math.min(1, position / completionPosition));
+			const { start, waypoint, end } = placement;
+			const hasWaypoint = Boolean(waypoint);
+			const turnAt = .55;
+			const segmentProgress = hasWaypoint ? progress <= turnAt ? progress / turnAt : (progress - turnAt) / (1 - turnAt) : progress;
+			const from = hasWaypoint && progress > turnAt ? waypoint : start;
+			const to = hasWaypoint && progress <= turnAt ? waypoint : end;
+			return {
+				"--walk-left": `${lerp(from.left, to.left, segmentProgress)}%`,
+				"--walk-top": "auto",
+				"--walk-bottom": `${lerp(from.bottom, to.bottom, segmentProgress)}%`,
+				"--walk-translate-y": "0",
+				"--walk-scale": lerp(from.scale, to.scale, segmentProgress)
+			};
+		}
+	}
 	const path = walkingScenePaths[sceneIndex];
 	const completionPosition = getWalkingCompletionPosition(sceneIndex);
 	if (!path) return {
@@ -2890,6 +2974,17 @@ function getWalkingCharacterStyle(sceneIndex, position) {
 		"--walk-scale": lerp(from.scale, to.scale, segmentProgress)
 	};
 }
+function useMobileWalkingLayout() {
+	const [isMobile, setIsMobile] = (0, import_react.useState)(false);
+	(0, import_react.useEffect)(() => {
+		const mediaQuery = window.matchMedia("(max-width: 720px)");
+		const update = () => setIsMobile(mediaQuery.matches);
+		update();
+		mediaQuery.addEventListener("change", update);
+		return () => mediaQuery.removeEventListener("change", update);
+	}, []);
+	return isMobile;
+}
 function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue, resetSignal }) {
 	const [started, setStarted] = (0, import_react.useState)(activity.walkingMinutes > 0 || activity.walkingComplete);
 	const [safetyStep, setSafetyStep] = (0, import_react.useState)(activity.walkingMinutes > 0 || activity.walkingComplete ? "prepared" : "question");
@@ -2904,6 +2999,7 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 	const draggingBagRef = (0, import_react.useRef)(false);
 	const forwardHeldRef = (0, import_react.useRef)(false);
 	const [draggedBag, setDraggedBag] = (0, import_react.useState)(null);
+	const isMobileWalkingLayout = useMobileWalkingLayout();
 	const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
 	const scene = walkingScenes[sceneIndex];
 	const prepared = activity.walkingPreparedItems;
@@ -2918,6 +3014,11 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 		title: "散步中的小事件",
 		body: "牠在路上排泄了，先停下來幫牠清理乾淨，再繼續往前走。"
 	} : null;
+	const mobilePoopPlacement = mobileWalkingScenePlacements[sceneIndex]?.poop;
+	const mobilePoopStyle = mobilePoopPlacement ? {
+		"--mobile-walk-poop-left": `${mobilePoopPlacement.left}%`,
+		"--mobile-walk-poop-bottom": `${mobilePoopPlacement.bottom}%`
+	} : void 0;
 	(0, import_react.useEffect)(() => {
 		walkingPreloadImages.forEach((src) => {
 			const image = new Image();
@@ -3240,16 +3341,8 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 				className: "walking-game-hint",
 				children: walkingInstruction
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: `walking-scene ${moving ? "is-moving" : ""}`,
-				ref: sceneRef,
-				tabIndex: 0,
-				"aria-label": "散步場景，按往前走按鈕前進",
+				className: "walking-scene-shell",
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-						className: "walking-bg",
-						src: scene.image,
-						alt: scene.title
-					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "walking-progress walking-progress-overlay",
 						"aria-label": `散步進度 ${progressMinutes} / 20 分鐘`,
@@ -3257,6 +3350,91 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "散步進度" }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { width: `${progressMinutes / 20 * 100}%` } }) }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [progressMinutes, " / 20 分鐘"] })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: `walking-scene ${moving ? "is-moving" : ""}`,
+						ref: sceneRef,
+						tabIndex: 0,
+						"aria-label": "散步場景，按往前走按鈕前進",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("picture", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("source", {
+								media: "(max-width: 720px)",
+								srcSet: scene.mobileImage
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								className: "walking-bg",
+								src: scene.image,
+								alt: scene.title
+							})] }),
+							draggedBag && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								className: "walking-drag-bag-ghost",
+								src: "/assets/walking/poop-bag-1.png",
+								alt: "",
+								"aria-hidden": "true",
+								style: {
+									left: draggedBag.x,
+									top: draggedBag.y
+								}
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "walking-character",
+								style: getWalkingCharacterStyle(sceneIndex, position, isMobileWalkingLayout),
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: activity.walkingPoopCleaned ? "/assets/walking/walker-dog-bag.png" : needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png",
+									alt: `正在和${petName}散步的人物與小狗`
+								}), needsCleanup && !isMobileWalkingLayout && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "walking-poop",
+									ref: poopTargetRef,
+									"aria-hidden": "true",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+										src: "/assets/walking/poop.png",
+										alt: ""
+									})
+								})]
+							}),
+							needsCleanup && isMobileWalkingLayout && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "walking-poop walking-poop--mobile",
+								ref: poopTargetRef,
+								style: mobilePoopStyle,
+								"aria-hidden": "true",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: "/assets/walking/poop.png",
+									alt: ""
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								type: "button",
+								className: "walking-forward-button",
+								disabled: needsCleanup,
+								onPointerDown: (event) => {
+									event.preventDefault();
+									event.currentTarget.setPointerCapture?.(event.pointerId);
+									startForward();
+								},
+								onPointerUp: (event) => {
+									event.currentTarget.releasePointerCapture?.(event.pointerId);
+									stopForward();
+								},
+								onPointerCancel: () => stopForward(),
+								"aria-label": "往前走",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "walking-forward-orb",
+									"aria-hidden": "true",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", {
+										viewBox: "0 0 24 24",
+										focusable: "false",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M8 11.2V4.8a1.7 1.7 0 1 1 3.4 0v5.4" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M11.4 10V8.3a1.55 1.55 0 1 1 3.1 0v2.3" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M14.5 10.7V9.4a1.45 1.45 0 1 1 2.9 0v2.4" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M17.4 12.2v-1a1.35 1.35 0 1 1 2.7 0v4.1c0 3.3-2.3 5.7-6.1 5.7h-1.6c-2.2 0-3.7-.9-4.9-2.5l-3-4.1a1.7 1.7 0 0 1 2.6-2.1l1.1 1.1" })
+										]
+									})
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "walking-forward-label",
+									children: "往前走"
+								})]
+							})
 						]
 					}),
 					walkingEventMessage && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -3285,65 +3463,6 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 								})]
 							})
 						]
-					}),
-					draggedBag && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-						className: "walking-drag-bag-ghost",
-						src: "/assets/walking/poop-bag-1.png",
-						alt: "",
-						"aria-hidden": "true",
-						style: {
-							left: draggedBag.x,
-							top: draggedBag.y
-						}
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						className: "walking-character",
-						style: getWalkingCharacterStyle(sceneIndex, position),
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							src: activity.walkingPoopCleaned ? "/assets/walking/walker-dog-bag.png" : needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png",
-							alt: `正在和${petName}散步的人物與小狗`
-						}), needsCleanup && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "walking-poop",
-							ref: poopTargetRef,
-							"aria-hidden": "true",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								src: "/assets/walking/poop.png",
-								alt: ""
-							})
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						type: "button",
-						className: "walking-forward-button",
-						disabled: needsCleanup,
-						onPointerDown: (event) => {
-							event.preventDefault();
-							event.currentTarget.setPointerCapture?.(event.pointerId);
-							startForward();
-						},
-						onPointerUp: (event) => {
-							event.currentTarget.releasePointerCapture?.(event.pointerId);
-							stopForward();
-						},
-						onPointerCancel: () => stopForward(),
-						"aria-label": "往前走",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							className: "walking-forward-orb",
-							"aria-hidden": "true",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", {
-								viewBox: "0 0 24 24",
-								focusable: "false",
-								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M8 11.2V4.8a1.7 1.7 0 1 1 3.4 0v5.4" }),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M11.4 10V8.3a1.55 1.55 0 1 1 3.1 0v2.3" }),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M14.5 10.7V9.4a1.45 1.45 0 1 1 2.9 0v2.4" }),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M17.4 12.2v-1a1.35 1.35 0 1 1 2.7 0v4.1c0 3.3-2.3 5.7-6.1 5.7h-1.6c-2.2 0-3.7-.9-4.9-2.5l-3-4.1a1.7 1.7 0 0 1 2.6-2.1l1.1 1.1" })
-								]
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							className: "walking-forward-label",
-							children: "往前走"
-						})]
 					})
 				]
 			})]
