@@ -21,7 +21,7 @@ type MobileWalkingScenePlacement = {
   start: MobileWalkingPoint;
   waypoint?: MobileWalkingPoint;
   end: MobileWalkingPoint;
-  poop?: { left: number; bottom: number };
+  poop?: { left: number; bottom: number; size: number };
 };
 
 // 僅手機版散步位置設定：可在這裡單獨微調人物＋小狗、轉折點、尺寸與便便位置。
@@ -29,25 +29,26 @@ type MobileWalkingScenePlacement = {
 export const mobileWalkingScenePlacements: Record<number, MobileWalkingScenePlacement> = {
   // 場景 1：家門口往人行道，兩段式往遠方移動。
   0: {
-    start: { left: 8, bottom: 8, scale: 1 },
-    waypoint: { left: 54, bottom: 26, scale: 0.82 },
-    end: { left: 72, bottom: 45, scale: 0.62 },
+    start: { left: 8, bottom: 23, scale: 0.7 },
+    waypoint: { left: 40, bottom: 18, scale: 0.7 },
+    end: { left: 40, bottom: 40, scale: 0.4 },
   },
   // 場景 2：公園，斜直線移動；沒有 waypoint 即為直線。
   1: {
-    start: { left: 8, bottom: 10, scale: 1 },
-    end: { left: 76, bottom: 18, scale: 0.9 },
+    start: { left: 7, bottom: 0, scale: 1 },
+    end: { left: 35, bottom: 30, scale: 0.6 },
   },
-  // 場景 3：公園便便事件。poop 可獨立調整，不會跟著人物位置改動。
+  // 場景 3：公園便便事件。poop 的 left / bottom / size 可獨立調整，不會跟著人物位置改動。
   2: {
-    start: { left: 8, bottom: 14, scale: 1 },
-    end: { left: 78, bottom: 18, scale: 0.9 },
-    poop: { left: 70, bottom: 15 },
+    start: { left: 8, bottom: 0, scale: 1 },
+    end: { left: 78, bottom: 0, scale: 1 },
+    poop: { left: 78, bottom: 15, size: 50 },
   },
   // 場景 4：人行道回家門口。
   3: {
-    start: { left: 8, bottom: 12, scale: 1 },
-    end: { left: 78, bottom: 28, scale: 0.82 },
+    start: { left: 4, bottom: 35, scale: 0.4 },
+    waypoint: { left: 5, bottom: 20, scale: 0.7 },
+    end: { left: 45, bottom: 20, scale: 0.82 },
   },
 };
 

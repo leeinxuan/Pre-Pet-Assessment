@@ -1625,7 +1625,11 @@ function WalkingActivity({
     : null;
   const mobilePoopPlacement = mobileWalkingScenePlacements[sceneIndex]?.poop;
   const mobilePoopStyle = mobilePoopPlacement
-    ? ({ "--mobile-walk-poop-left": `${mobilePoopPlacement.left}%`, "--mobile-walk-poop-bottom": `${mobilePoopPlacement.bottom}%` } as CSSProperties)
+    ? ({
+      "--mobile-walk-poop-left": `${mobilePoopPlacement.left}%`,
+      "--mobile-walk-poop-bottom": `${mobilePoopPlacement.bottom}%`,
+      "--mobile-walk-poop-size": `${mobilePoopPlacement.size}%`,
+    } as CSSProperties)
     : undefined;
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-C2LbQcRy.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-UNtBKowF.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1590,46 +1590,47 @@ var mobileWalkingScenePlacements = {
 	0: {
 		start: {
 			left: 8,
-			bottom: 8,
-			scale: 1
+			bottom: 23,
+			scale: .7
 		},
 		waypoint: {
-			left: 54,
-			bottom: 26,
-			scale: .82
+			left: 40,
+			bottom: 18,
+			scale: .7
 		},
 		end: {
-			left: 72,
-			bottom: 45,
-			scale: .62
+			left: 40,
+			bottom: 40,
+			scale: .4
 		}
 	},
 	1: {
 		start: {
 			left: 8,
-			bottom: 10,
+			bottom: 0,
 			scale: 1
 		},
 		end: {
-			left: 76,
-			bottom: 18,
-			scale: .9
+			left: 40,
+			bottom: 30,
+			scale: .6
 		}
 	},
 	2: {
 		start: {
 			left: 8,
-			bottom: 14,
+			bottom: 0,
 			scale: 1
 		},
 		end: {
 			left: 78,
-			bottom: 18,
-			scale: .9
+			bottom: 0,
+			scale: 1
 		},
 		poop: {
 			left: 70,
-			bottom: 15
+			bottom: 15,
+			size: 16
 		}
 	},
 	3: {
@@ -3017,7 +3018,8 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 	const mobilePoopPlacement = mobileWalkingScenePlacements[sceneIndex]?.poop;
 	const mobilePoopStyle = mobilePoopPlacement ? {
 		"--mobile-walk-poop-left": `${mobilePoopPlacement.left}%`,
-		"--mobile-walk-poop-bottom": `${mobilePoopPlacement.bottom}%`
+		"--mobile-walk-poop-bottom": `${mobilePoopPlacement.bottom}%`,
+		"--mobile-walk-poop-size": `${mobilePoopPlacement.size}%`
 	} : void 0;
 	(0, import_react.useEffect)(() => {
 		walkingPreloadImages.forEach((src) => {

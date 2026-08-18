@@ -1510,7 +1510,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   padding: clamp(34px, 5vw, 58px);
 }
 .correct-feedback-copy h2 { margin: 0 0 22px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(34px, 4.5vw, 50px); line-height: 1.15; }
-.correct-feedback-intro p { margin: 0; color: var(--ink); line-height: 1.9; font-size: clamp(13px, 2vw, 17px);  }
+.correct-feedback-intro p { margin: 0; color: var(--ink); line-height: 1.9; font-size: clamp(17px, 2vw, 17px);  }
 .correct-feedback-layout--multiple .correct-feedback-copy h2 { margin-bottom: 16px; font-size: clamp(30px, 4vw, 45px); }
 .correct-feedback-layout--multiple .correct-feedback-intro p { line-height: 1.85; font-size: 17px; }
 .correct-feedback-suggestion {
@@ -1528,7 +1528,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   display: block;
   margin: 0;
   color: #4f6d51;
-  font-size: clamp(12px, 1.5vw, 14px);
+  font-size: clamp(14px, 1.5vw, 14px);
   font-weight: 850;
   line-height: 1.72;
 }
@@ -2937,7 +2937,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .daily-behavior-positive-copy, .correct-feedback-copy { min-height: auto; padding: 22px 20px 24px; justify-content: flex-start; }
   .correct-feedback-copy h2 { margin-bottom: 14px; font-size: clamp(30px, 10vw, 42px); }
   .correct-feedback-intro p { line-height: 1.75; }
-  .correct-feedback-suggestion { margin-top: 14px; padding: 14px; }
+  .correct-feedback-suggestion { margin-top: 14px;  }
   .correct-feedback-copy .delayed-continue { margin-top: 18px; }
   .busy-care-layout, .busy-care-positive { grid-template-columns: 1fr; }
   .breed-challenge-layout, .walking-safety-grid { grid-template-columns: 1fr; }
@@ -4845,5 +4845,9 @@ html, body { overflow-x: clip; }
     transform: translate(-50%, 50%);
     z-index: 5;
   }
-  .walking-poop--mobile img { width: min(16vw, 64px); min-width: 38px; }
+  .walking-poop--mobile img {
+    width: var(--mobile-walk-poop-size, 16%);
+    min-width: 0;
+    max-width: none;
+  }
 }
