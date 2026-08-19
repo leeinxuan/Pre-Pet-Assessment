@@ -204,8 +204,8 @@ export const trunkItems: TrunkItem[] = [
   },
   {
     id: "documents", label: "領養文件", kind: "document", image: "/assets/car/adoption-documents.png", preparedLabel: "已攜帶",
-    description: "如有租屋，須提供房東許可之證明。",
-    reason: "如有租屋，須提供房東許可之證明。",
+    description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。",
+    reason: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。",
     caution: "實際需要攜帶的文件，請依領養單位通知及評估流程確認。",
     sourceLabel: "領養單位提供的領養評估單與接回注意事項",
     feedback: "領養文件已放入文件夾。", placement: { x: 22, y: 32, width: 24, layer: 3 },

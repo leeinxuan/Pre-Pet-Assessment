@@ -18,7 +18,7 @@ const preparedRoomItemNotes: Record<string, { label: string; note: string }> = {
 
 const preparedTrunkItemNotes: Record<string, { label: string; note: string }> = {
   id: { label: "身分證", note: "辦理認養與核對身分時使用。" },
-  documents: { label: "領養文件", note: "如有租屋，須提供房東許可之證明。" },
+  documents: { label: "領養文件", note: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。" },
   carrier: { label: "運輸籠", note: "讓小狗在移動途中有安全固定的空間。" },
   "pee-pad": { label: "尿墊", note: "接回途中可降低排泄與清潔壓力。" },
   "water-kit": { label: "水碗", note: "必要時補充飲水，避免長時間缺水。" },
