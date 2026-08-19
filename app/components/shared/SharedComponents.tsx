@@ -225,7 +225,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
     <section className="welcome" aria-label="伴日子新手村封面">
       <div className="welcome-hero-copy">
         <h1>伴日子<br />新手村</h1>
-        <p className="welcome-subtitle">在真正飼養前，先走過一次與毛小孩的完整旅程</p>
+        <p className="welcome-subtitle">在真正飼養前，先走過一次與寵物的完整旅程</p>
         <button className="primary large welcome-start" onClick={onStart}>開始生活練習 <span>→</span></button>
       </div>
       <div className="welcome-village" aria-hidden="true">
