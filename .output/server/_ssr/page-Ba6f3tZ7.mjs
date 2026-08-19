@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-UNtBKowF.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-Ba6f3tZ7.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -642,8 +642,8 @@ var trunkItems = [
 		kind: "document",
 		image: "/assets/car/adoption-documents.png",
 		preparedLabel: "已攜帶",
-		description: "如有租屋，須提供房東許可之證明。",
-		reason: "如有租屋，須提供房東許可之證明。",
+		description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。",
+		reason: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。",
 		caution: "實際需要攜帶的文件，請依領養單位通知及評估流程確認。",
 		sourceLabel: "領養單位提供的領養評估單與接回注意事項",
 		feedback: "領養文件已放入文件夾。",
@@ -1606,12 +1606,12 @@ var mobileWalkingScenePlacements = {
 	},
 	1: {
 		start: {
-			left: 8,
+			left: 7,
 			bottom: 0,
 			scale: 1
 		},
 		end: {
-			left: 40,
+			left: 35,
 			bottom: 30,
 			scale: .6
 		}
@@ -1628,20 +1628,25 @@ var mobileWalkingScenePlacements = {
 			scale: 1
 		},
 		poop: {
-			left: 70,
+			left: 78,
 			bottom: 15,
-			size: 16
+			size: 50
 		}
 	},
 	3: {
 		start: {
-			left: 8,
-			bottom: 12,
-			scale: 1
+			left: 4,
+			bottom: 35,
+			scale: .4
+		},
+		waypoint: {
+			left: 5,
+			bottom: 20,
+			scale: .7
 		},
 		end: {
-			left: 78,
-			bottom: 28,
+			left: 45,
+			bottom: 20,
 			scale: .82
 		}
 	}
@@ -3877,7 +3882,7 @@ function Welcome({ onStart }) {
 				] }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "welcome-subtitle",
-					children: "在真正飼養前，先走過一次與毛小孩的完整旅程"
+					children: "在真正飼養前，先走過一次與寵物的完整旅程"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: "primary large welcome-start",
@@ -4454,7 +4459,7 @@ var preparedTrunkItemNotes = {
 	},
 	documents: {
 		label: "領養文件",
-		note: "如有租屋，須提供房東許可之證明。"
+		note: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。"
 	},
 	carrier: {
 		label: "運輸籠",
@@ -6066,6 +6071,7 @@ function AcquisitionOptionCard({ card }) {
 function PetAcquisitionPage({ onBack, onReset }) {
 	const [selectedCity, setSelectedCity] = (0, import_react.useState)("");
 	const [searchMessage, setSearchMessage] = (0, import_react.useState)("");
+	const [activeAcquireTab, setActiveAcquireTab] = (0, import_react.useState)("adopt");
 	function searchRegion(event) {
 		event.preventDefault();
 		setSearchMessage("目前先提供取得管道參考，縣市查詢功能準備中。");
@@ -6107,9 +6113,29 @@ function PetAcquisitionPage({ onBack, onReset }) {
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "legal-acquisition-tabs",
+				role: "tablist",
+				"aria-label": "取得寵物方式",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					role: "tab",
+					"aria-selected": activeAcquireTab === "adopt",
+					className: activeAcquireTab === "adopt" ? "active" : "",
+					onClick: () => setActiveAcquireTab("adopt"),
+					children: "領養"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					role: "tab",
+					"aria-selected": activeAcquireTab === "buy",
+					className: activeAcquireTab === "buy" ? "active" : "",
+					onClick: () => setActiveAcquireTab("buy"),
+					children: "購買"
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "legal-acquisition-sections",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-					className: "legal-section",
+					className: `legal-section ${activeAcquireTab === "adopt" ? "is-mobile-active" : ""}`,
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "legal-section-head",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "領養" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。" })]
@@ -6118,7 +6144,7 @@ function PetAcquisitionPage({ onBack, onReset }) {
 						children: adoptionCards.map((card) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AcquisitionOptionCard, { card }, card.title))
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-					className: "legal-section",
+					className: `legal-section ${activeAcquireTab === "buy" ? "is-mobile-active" : ""}`,
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "legal-section-head",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "購買" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "若選擇購買，請確認來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。" })]

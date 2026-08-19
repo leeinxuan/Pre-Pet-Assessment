@@ -92,6 +92,7 @@ function AcquisitionOptionCard({ card }: { card: AcquisitionCard }) {
 export function PetAcquisitionPage({ onBack, onReset }: { onBack: () => void; onReset: () => void }) {
   const [selectedCity, setSelectedCity] = useState("");
   const [searchMessage, setSearchMessage] = useState("");
+  const [activeAcquireTab, setActiveAcquireTab] = useState<"adopt" | "buy">("adopt");
 
   function searchRegion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -119,8 +120,29 @@ export function PetAcquisitionPage({ onBack, onReset }: { onBack: () => void; on
         {searchMessage && <p role="status">{searchMessage}</p>}
       </form>
 
+      <div className="legal-acquisition-tabs" role="tablist" aria-label="取得寵物方式">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeAcquireTab === "adopt"}
+          className={activeAcquireTab === "adopt" ? "active" : ""}
+          onClick={() => setActiveAcquireTab("adopt")}
+        >
+          領養
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeAcquireTab === "buy"}
+          className={activeAcquireTab === "buy" ? "active" : ""}
+          onClick={() => setActiveAcquireTab("buy")}
+        >
+          購買
+        </button>
+      </div>
+
       <div className="legal-acquisition-sections">
-        <section className="legal-section">
+        <section className={`legal-section ${activeAcquireTab === "adopt" ? "is-mobile-active" : ""}`}>
           <div className="legal-section-head">
             <h2>領養</h2>
             <p>可以先從收容所、合作認養平台或數位認養服務查看目前開放認養的動物。</p>
@@ -130,7 +152,7 @@ export function PetAcquisitionPage({ onBack, onReset }: { onBack: () => void; on
           </div>
         </section>
 
-        <section className="legal-section">
+        <section className={`legal-section ${activeAcquireTab === "buy" ? "is-mobile-active" : ""}`}>
           <div className="legal-section-head">
             <h2>購買</h2>
             <p>若選擇購買，請確認來源合法、資訊透明，並了解動物來源、健康紀錄與後續照顧責任。</p>
