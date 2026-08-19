@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pre-pet-assessment.vercel.app"),
-  title: "伴日子新手村｜領養前生活練習",
+  title: "伴日子新手村｜飼養前生活練習",
   description: "在真正領養前，先用情境遊戲練習準備空間、接回家、日常照顧、散步、就醫與生活變化。",
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   openGraph: {
