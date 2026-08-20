@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-Ba6f3tZ7.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-BT13K5Zq.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -136,6 +136,22 @@ var breeds = [
 		image: "/assets/species/dog/labrador.png",
 		size: "large",
 		shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。"
+	},
+	{
+		id: "doberman",
+		label: "杜賓犬",
+		icon: "🐕",
+		image: "/assets/species/dog/doberman.png",
+		size: "large",
+		shortDescription: "警覺、聰明且活動量高，需要穩定訓練、規律運動與清楚界線。適合能投入陪伴、社會化與安全管理的家庭。"
+	},
+	{
+		id: "mixed",
+		label: "米克斯",
+		icon: "🐕",
+		image: "/assets/species/dog/mixed-breed.png",
+		size: "medium",
+		shortDescription: "個性與體型差異較大，適合先了解牠的實際年齡、體態與生活習慣。準備時可保留彈性，依牠到家後的反應慢慢調整。"
 	}
 ];
 var sizeBasedCosts = {
