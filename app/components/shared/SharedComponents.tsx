@@ -279,8 +279,9 @@ export function SpeciesStep({
 }) {
   const selectedBreed = breeds.find((item) => item.id === breed);
   const selectedPreviousBreed = breeds.find((item) => item.id === previousBreed);
+  const sameBreed = Boolean(breed && previousBreed && breed === previousBreed);
   const breedCarouselRef = useRef<HTMLDivElement>(null);
-  const breedScrollTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const breedScrollTimerRef = useRef<number | null>(null);
 
   useEffect(() => () => {
     if (breedScrollTimerRef.current) window.clearTimeout(breedScrollTimerRef.current);
@@ -396,15 +397,24 @@ export function SpeciesStep({
             </article>
             <div className="experience-arrow" aria-hidden="true"><i>→</i></div>
             <article className="experience-dog-card experience-dog-card--next">
-              <span>準備迎接的新生活</span>
+              <span>{sameBreed ? "相同品種，新的個體" : "準備迎接的新生活"}</span>
               <img src={selectedBreed?.image} alt={`這次想迎接的${selectedBreed?.label ?? "狗狗"}`} />
               <div><h2>{petName || `新的${selectedBreed?.label ?? "狗狗"}`}</h2><b>{selectedBreed?.label}</b><p>{selectedBreed?.shortDescription}</p></div>
             </article>
           </div>
           <div className="experience-story">
             <p id="experience-transition-title" className="experience-story-line experience-story-line--past">你熟悉的是和<strong>{previousDogName || selectedPreviousBreed?.label}</strong>經過一段時間磨合後的生活。</p>
-            <p className="experience-story-line experience-story-line--next"><strong>{petName || `新的${selectedBreed?.label ?? "狗狗"}`}</strong>是一隻不一樣的生命，可能有不同的個性、經歷、健康狀況與適應速度。</p>
-            <p className="experience-story-line experience-story-line--bridge">接下來，請先暫時放下<strong>「以前就是這樣照顧」</strong>的想法，陪<strong>{petName || "牠"}</strong>從到家第一天演練一次，也重新確認現在的你是否準備好和牠建立新的生活。</p>
+            {sameBreed ? (
+              <>
+                <p className="experience-story-line experience-story-line--next"><strong>{petName || "新的狗狗"}</strong>和<strong>{previousDogName || "以前的狗狗"}</strong>雖然都是{selectedBreed?.label}，仍然是<strong>兩個不同的個體</strong>。牠可能有不同的個性、經歷、健康狀況與適應速度。</p>
+                <p className="experience-story-line experience-story-line--bridge">接下來，請先暫時放下<strong>「同一個品種就會一樣」</strong>或<strong>「以前就是這樣照顧」</strong>的想法，陪<strong>{petName || "牠"}</strong>從到家第一天演練一次，也重新確認現在的你是否準備好和牠建立新的生活。</p>
+              </>
+            ) : (
+              <>
+                <p className="experience-story-line experience-story-line--next"><strong>{petName || `新的${selectedBreed?.label ?? "狗狗"}`}</strong>是一隻不一樣的生命，可能有不同的個性、經歷、健康狀況與適應速度。</p>
+                <p className="experience-story-line experience-story-line--bridge">接下來，請先暫時放下<strong>「以前就是這樣照顧」</strong>的想法，陪<strong>{petName || "牠"}</strong>從到家第一天演練一次，也重新確認現在的你是否準備好和牠建立新的生活。</p>
+              </>
+            )}
           </div>
           <div className="experience-transition-actions"><button type="button" className="secondary" onClick={() => onSelectionPage("history")}>← 返回</button><button type="button" className="primary" onClick={onNext}>開始領養前準備 <span>→</span></button></div>
         </section>

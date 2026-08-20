@@ -298,7 +298,7 @@ export function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
                   <span className="departure-supply-visual"><img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /></span><b>{item.label}</b>
-                </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small><span className="supply-slot-price">{price || "不另計費"}</span></div>}
+                </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{price && <span className="supply-slot-price">{price}</span>}</div>}
               </div>;
             })}
           </div>)}
