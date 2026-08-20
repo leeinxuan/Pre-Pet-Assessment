@@ -63,6 +63,7 @@ function statusAt(index: number, current: number, reached: number): NavigationSt
 }
 
 export function StageRail({
+  testMode,
   step,
   furthestStep,
   selectionPage,
@@ -78,6 +79,7 @@ export function StageRail({
   onPreparationTask,
   onLifeStage,
 }: {
+  testMode?: boolean;
   step: number;
   furthestStep: number;
   selectionPage: "species" | "breed" | "name" | "history" | "transition";
@@ -103,6 +105,7 @@ export function StageRail({
 
   const mainStatus = (index: number): NavigationStatus => {
     if (index === currentMain) return "current";
+    if (testMode) return "completed";
     if (mainUnlockSteps[index] <= furthestStep) return "completed";
     return "locked";
   };
@@ -117,7 +120,9 @@ export function StageRail({
       children: ["選擇物種", "選擇品種", "替牠取名", "過往經驗", "新的開始"].map((label, index) => ({
         id: ["species", "breed", "name", "history", "transition"][index],
         label,
-        status: step > 1 && index <= selectionReached ? "completed" : statusAt(index, ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[selectionPage], selectionReached),
+        status: testMode
+          ? (index === ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[selectionPage] && step === 1 ? "current" : "completed")
+          : step > 1 && index <= selectionReached ? "completed" : statusAt(index, ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[selectionPage], selectionReached),
         onClick: () => onSelectionPage((["species", "breed", "name", "history", "transition"] as const)[index]),
       })),
     },
@@ -130,7 +135,9 @@ export function StageRail({
       children: ["布置生活空間", "出發前準備"].map((label, index) => ({
         id: `preparation-${index}`,
         label,
-        status: step > 2 && index <= preparationReached ? "completed" : statusAt(index, preparationTask, preparationReached),
+        status: testMode
+          ? (index === preparationTask && step === 2 ? "current" : "completed")
+          : step > 2 && index <= preparationReached ? "completed" : statusAt(index, preparationTask, preparationReached),
         onClick: () => onPreparationTask(index),
       })),
     },
@@ -139,10 +146,10 @@ export function StageRail({
       number: "03",
       label: "飼養生活",
       status: mainStatus(2),
-      onClick: () => onGoTo(mainTargets[2]),
+      onClick: () => testMode ? onLifeStage(0) : onGoTo(mainTargets[2]),
       children: lifeStageRanges.map((range, index) => {
         const completed = lifePhase === "complete" || journeyItems.slice(range.start, range.end + 1).every((item) => journeyCompleted.includes(item.id));
-        const status: NavigationStatus = index === currentLifeStage ? "current" : completed ? "completed" : "locked";
+        const status: NavigationStatus = index === currentLifeStage && step >= 3 && step <= 6 ? "current" : testMode || completed ? "completed" : "locked";
         return {
           id: `life-${index}`,
           label: range.label,
@@ -170,6 +177,7 @@ export function StageRail({
   function renderNavigation() {
     return (
       <nav className="station-navigation">
+        {testMode && <p className="test-mode-badge">測試模式・關卡已解鎖</p>}
         {navigation.map((item, index) => (
           <div className={`nav-main ${item.status}`} key={item.id}>
             <button className="nav-main-button" disabled={item.status === "locked"} onClick={item.onClick} aria-current={item.status === "current" ? "step" : undefined}>
@@ -220,7 +228,7 @@ export function StageRail({
   );
 }
 
-export function Welcome({ onStart }: { onStart: () => void }) {
+export function Welcome({ onStart, onTestStart }: { onStart: () => void; onTestStart: () => void }) {
   return (
     <section className="welcome" aria-label="伴日子新手村封面">
       <div className="welcome-hero-copy">
@@ -240,6 +248,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
           <span className="welcome-house welcome-house--e" />
         </div>
       </div>
+      <button type="button" className="hidden-test-entry" aria-label="開啟測試模式" onClick={onTestStart}><span aria-hidden="true">·</span></button>
     </section>
   );
 }

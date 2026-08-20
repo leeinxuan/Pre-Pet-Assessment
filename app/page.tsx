@@ -98,6 +98,7 @@ function IntroIcon({ step }: { step: number }) {
 
 export default function Home() {
   const [step, setStep] = useState(0);
+  const [testMode, setTestMode] = useState(false);
   const [furthestStep, setFurthestStep] = useState(1);
   const [introOpen, setIntroOpen] = useState(false);
   const [category, setCategory] = useState("");
@@ -307,6 +308,7 @@ export default function Home() {
 
   function startFreshJourney() {
     resetJourney();
+    setTestMode(false);
     setStep(1);
     setFurthestStep(1);
     setIntroOpen(true);
@@ -315,8 +317,27 @@ export default function Home() {
 
   function resetAll() {
     resetJourney();
+    setTestMode(false);
     setStep(0);
     setFurthestStep(1);
+    setIntroOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function startTestJourney() {
+    resetJourney();
+    setTestMode(true);
+    setCategory("dog");
+    setBreed("shiba");
+    setPetName("小伴");
+    setHasPreviousDog(true);
+    setPreviousBreed("poodle");
+    setPreviousDogName("豆豆");
+    setSelectionReached(4);
+    setPreparationReached(1);
+    setFurthestStep(8);
+    setLifePhase("life-journey");
+    setStep(1);
     setIntroOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -368,11 +389,12 @@ export default function Home() {
 
   return (
     <main className="app-shell">
-      {step === 0 && <Welcome onStart={startFreshJourney} />}
+      {step === 0 && <Welcome onStart={startFreshJourney} onTestStart={startTestJourney} />}
 
       {step > 0 && !introOpen && (
         <div className="stage-layout">
           <StageRail
+            testMode={testMode}
             step={step}
             furthestStep={furthestStep}
             selectionPage={selectionPage}

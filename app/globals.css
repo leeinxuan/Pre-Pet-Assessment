@@ -216,6 +216,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .welcome { min-height: 100vh; padding: 26px clamp(24px, 5vw, 76px) 40px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
 .welcome::before { content: ""; width: 440px; height: 440px; border: 1px solid rgba(212,154,36,.2); border-radius: 50%; position: absolute; left: -260px; top: 220px; }
 .welcome::after { content: ""; width: 520px; height: 520px; border-radius: 50%; position: absolute; right: -240px; bottom: -240px; background: radial-gradient(circle, rgba(212,154,36,.14), transparent 62%); pointer-events: none; }
+.hidden-test-entry { position: absolute; z-index: 5; right: 11px; bottom: 9px; width: 12px; height: 12px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: rgba(76,68,55,.08); color: rgba(76,68,55,.13); font: inherit; font-size: 9px; line-height: 1; cursor: default; opacity: .28; transition: opacity .2s ease, background .2s ease; }
+.hidden-test-entry:hover { opacity: .62; background: rgba(76,68,55,.16); }
+.hidden-test-entry:focus-visible { width: 18px; height: 18px; outline: 2px solid rgba(168,101,9,.45); outline-offset: 2px; opacity: .9; }
+.test-mode-badge { margin: 0 0 12px; padding: 7px 9px; border: 1px dashed rgba(168,101,9,.3); border-radius: 9px; background: rgba(255,248,229,.65); color: #94601a; font-size: 10px; font-weight: 900; letter-spacing: .04em; text-align: center; }
 .welcome-nav { max-width: 1440px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
 .prototype-tag { border: 1px solid var(--line); padding: 10px 16px; border-radius: 999px; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: .08em; }
 .welcome-grid { width: 100%; max-width: 1440px; margin: auto; min-height: 650px; display: grid; grid-template-columns: minmax(320px, .78fr) minmax(520px, 1.22fr); gap: clamp(32px, 6vw, 96px); align-items: center; position: relative; z-index: 1; }
@@ -1635,6 +1639,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .walking-law-feedback h2 { margin: 3px 0 0; font-size: 26px; }
 .walking-law-feedback > p { grid-column: 2; margin: 0; color: #6c3e21; line-height: 1.75; }
 .walking-law-feedback .secondary { grid-column: 2; justify-self: start; margin-top: 6px; }
+.walking-law-feedback--correct { border-color: #8fbd96; background: var(--mint-soft); }
+.walking-law-feedback--correct > span { background: #5f9368; }
+.walking-law-feedback--correct > p { color: #496b50; }
+.walking-law-feedback--correct .primary { grid-column: 2; justify-self: start; margin-top: 6px; }
 .walking-prep { display: grid; grid-template-columns: minmax(360px, 1.08fr) minmax(300px, .92fr); gap: 22px; align-items: stretch; }
 .walking-prep-supplies,
 .walking-prep-card { border: 1px solid var(--line); border-radius: 24px; background: #fffdf7; box-shadow: 0 16px 40px rgba(82, 61, 28, .07); }

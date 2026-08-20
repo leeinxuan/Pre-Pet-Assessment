@@ -1596,7 +1596,7 @@ function WalkingActivity({
   resetSignal: number;
 }) {
   const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
-  const [safetyStep, setSafetyStep] = useState<"question" | "law" | "prepared">(
+  const [safetyStep, setSafetyStep] = useState<"question" | "law" | "correct" | "prepared">(
     activity.walkingMinutes > 0 || activity.walkingComplete ? "prepared" : "question",
   );
   const [position, setPosition] = useState(0);
@@ -1868,7 +1868,7 @@ function WalkingActivity({
           <section className="walking-safety-choice" aria-labelledby="walking-safety-title">
             <h2 id="walking-safety-title">你會用哪一種方式陪牠散步？</h2>
             <div className="walking-safety-grid">
-              <button type="button" onClick={() => setSafetyStep("prepared")}>
+              <button type="button" onClick={() => setSafetyStep("correct")}>
                 <img src="/assets/walking/leash-choice.png" alt="飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境" />
                 <span><b>繫好牽繩，保持鬆弛</b><small>讓狗狗在可控距離內嗅聞、探索環境。</small></span>
               </button>
@@ -1885,6 +1885,14 @@ function WalkingActivity({
             <p>《動物保護法》第 20 條要求寵物出入公共場所時須有人伴同；各縣市也可能以自治規範要求使用牽繩、箱籠或其他適當防護措施。外出前應查明所在地規定。</p>
             <p>即使在沒有明確禁止的地點，牽繩仍能降低走失、突然衝向車道、驚嚇他人或與其他動物衝突的風險。保持牽繩鬆弛，狗狗仍然可以嗅聞和探索。</p>
             <button type="button" className="secondary" onClick={() => setSafetyStep("question")}>回去重新選擇</button>
+          </section>
+        ) : safetyStep === "correct" ? (
+          <section className="walking-law-feedback walking-law-feedback--correct" aria-live="polite">
+            <span aria-hidden="true">✓</span>
+            <div><p className="life-stage-label">你選得很好</p><h2>牽繩不是限制探索，而是讓探索更安全</h2></div>
+            <p>繫好合適的胸背帶或項圈並保持牽繩鬆弛，狗狗仍然可以嗅聞、觀察環境；遇到車輛、陌生動物或突然受驚時，你也能及時控制距離，降低走失與衝突風險。</p>
+            <p>《動物保護法》第 20 條要求寵物出入公共場所時須有人伴同，各縣市也可能要求使用牽繩、箱籠或其他適當防護措施。因此另一個「不繫牽繩」的選項，即使看似自由，也不是安全的散步方式。</p>
+            <button type="button" className="primary" onClick={() => setSafetyStep("prepared")}>繼續準備散步用品 <span>→</span></button>
           </section>
         ) : (
         <div className="walking-prep">
