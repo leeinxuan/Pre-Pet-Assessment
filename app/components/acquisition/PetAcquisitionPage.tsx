@@ -92,11 +92,34 @@ function AcquisitionOptionCard({ card }: { card: AcquisitionCard }) {
 export function PetAcquisitionPage({ onBack, onReset }: { onBack: () => void; onReset: () => void }) {
   const [selectedCity, setSelectedCity] = useState("");
   const [searchMessage, setSearchMessage] = useState("");
+  const [shareMessage, setShareMessage] = useState("");
   const [activeAcquireTab, setActiveAcquireTab] = useState<"adopt" | "buy">("adopt");
 
   function searchRegion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSearchMessage("目前先提供取得管道參考，縣市查詢功能準備中。");
+  }
+
+  async function shareWithOthers() {
+    const url = new URL("/", window.location.href).toString();
+    const shareData = {
+      title: "伴日子新手村",
+      text: "一起完成飼主準備度練習，想一想與狗狗共同生活的每一天。",
+      url,
+    };
+    setShareMessage("");
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        setShareMessage("已開啟分享選單。");
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setShareMessage("連結已複製，可以貼給家人或朋友。");
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setShareMessage("目前無法自動分享，請複製瀏覽器網址列中的連結。");
+    }
   }
 
   return (
@@ -164,10 +187,14 @@ export function PetAcquisitionPage({ onBack, onReset }: { onBack: () => void; on
       </div>
 
       <p className="legal-acquisition-reminder">無論選擇領養或購買，都請確認來源合法，並保留相關文件與健康紀錄。</p>
-      <div className="nav-buttons">
+      <div className="nav-buttons legal-acquisition-footer-actions">
         <button className="secondary" type="button" onClick={onBack}>← 返回照顧準備總覽</button>
-        <button className="primary" type="button" onClick={onReset}>重新開始 <span>→</span></button>
+        <div className="legal-final-actions">
+          <button className="secondary" type="button" onClick={shareWithOthers}>分享給他人 <span>↗</span></button>
+          <button className="primary" type="button" onClick={onReset}>重新體驗 <span>↻</span></button>
+        </div>
       </div>
+      {shareMessage && <p className="legal-share-status" role="status">{shareMessage}</p>}
     </div>
   );
 }

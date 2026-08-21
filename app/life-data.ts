@@ -116,7 +116,7 @@ export const lifeScenarios: Scenario[] = [
     choices: [
       { id: "alone-with-food", text: "早上出門前先多放一些飼料和水，晚上忙完再好好陪牠", result: "incorrect", ...incorrect, explanation: "早上多放食物和水仍不能取代一整天的排泄、活動與狀況觀察，也可能造成過量進食或突發狀況沒有人發現。確定要加班時，應先安排能接手照顧的人，並清楚交接需求。" },
       { id: "family-helper", text: "請同住家人或朋友協助", result: "correct", ...positive, explanation: "你不只是想到一個人，也認真確認對方的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓小狗在你忙碌時仍獲得穩定照顧。" },
-      { id: "guard-dog-can-wait", text: "狗狗本來就有顧家的功能，在家裡睡久一點沒關係", result: "incorrect", ...incorrect, explanation: "會顧家不等於能夠長時間獨處。不建議把超過八小時的無人照護當成日常安排；狗狗可能錯過排泄、飲水、活動與互動的機會，也可能出現焦慮、無聊、吠叫或破壞行為，突發不適時更無人及時發現。確定會晚歸時，仍要安排合適的人中途協助照顧。" },
+      { id: "guard-dog-can-wait", text: "狗狗本來就有顧家的功能，在家裡睡久一點沒關係", result: "incorrect", ...incorrect, explanation: "會顧家，不等於能長時間獨處。超過八小時無人照護，狗狗可能錯過排泄、飲水與活動，也可能因焦慮或無聊而吠叫、破壞物品。確定會晚歸時，仍要安排合適的人中途協助照顧。" },
       { id: "hold-until-tomorrow", text: "傍晚到家再餵，至少睡前有吃到晚餐就好", result: "incorrect", ...incorrect, explanation: "把晚餐、排泄與活動一路延後到回家，會讓小狗長時間等待，也無法因應加班比預期更晚或臨時狀況。確定會晚歸時，應先安排可信任的人按平常時間協助基本照顧。" },
     ],
   },
@@ -132,7 +132,7 @@ export const lifeScenarios: Scenario[] = [
     choices: [
       { id: "wait-and-see", text: "先等幾天看看，牠可能只是心情不好", result: "incorrect", ...incorrect, explanation: "等太久可能延誤皮膚過敏、關節不適或眼部問題的處理，讓小狗持續不舒服。", suggestion: "記錄具體症狀與變化，並聯絡獸醫確認是否需要檢查。" },
       { id: "human-medicine", text: "先拿家裡剩下的感冒藥餵一點，看看今晚會不會舒服些", result: "incorrect", ...incorrect, explanation: "即使只是少量，家中的人用感冒藥也可能含有不適合狗狗的成分，並讓原本的症狀更難判斷。", suggestion: "先不要自行給藥；記錄症狀、使用中的用品與可能接觸物，再向獸醫說明。" },
-      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "及早觀察與記錄能幫助獸醫判斷。", suggestion: "柴犬較常見需要留意的健康問題包括：\n皮膚過敏或搔癢、掉毛、紅腫；\n關節不適、跛行或活動力下降；\n眼睛分泌物增加、紅眼或視力異常。\n\n如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。", expenseIds: ["sick-vet-care"] },
+      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "及早觀察與記錄能幫助獸醫判斷。", suggestion: "柴犬較常見需要留意的健康問題包括：\n**皮膚過敏或搔癢**、掉毛、紅腫；\n**關節不適**、跛行或活動力下降；\n**眼睛分泌物增加、紅眼或視力異常**。\n\n如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。", expenseIds: ["sick-vet-care"] },
       { id: "ask-experienced-friend", text: "先拍照問有養狗的朋友，照他以前遇過的方式處理", result: "incorrect", ...incorrect, explanation: "朋友的經驗可以提供陪伴，但相似外觀不一定代表相同原因，仍可能錯過需要檢查的狀況。可以整理朋友提醒的觀察重點，但醫療判斷與用藥仍應交給獸醫。" },
     ],
   },
@@ -172,7 +172,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       description: "柴犬換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
       topic: "柴犬的換毛與居家清潔",
       reportSummary: "柴犬有雙層被毛，平時與換毛期都可能讓家中累積大量毛髮，需要把梳毛、吸塵與衣物除毛納入長期日常。",
-      breedKnowledge: "柴犬具有雙層被毛，平時就會掉毛，換毛期更會大量脫落底毛；生活在較溫暖或室內環境時，掉毛也可能分散在全年。規律梳毛與吸塵能減少散落毛髮，但無法讓家中完全沒有毛，也不建議只為了止掉毛就任意剃除雙層毛。",
+      breedKnowledge: "柴犬具有**雙層被毛**，平時就會掉毛，換毛期更會**大量脫落底毛**；生活在較溫暖或室內環境時，掉毛也可能分散在**全年**。規律梳毛與吸塵能減少散落毛髮，但**無法讓家中完全沒有毛**，也不建議只為了止掉毛就任意剃除雙層毛。",
       correctText: "固定梳毛與吸塵，把清潔排進每週生活，也接受家裡不可能完全沒有毛",
       correctExplanation: "規律梳理、清潔與可接受的生活標準，比追求一次清到完全沒毛更能長期維持。",
       distractors: [
@@ -186,7 +186,7 @@ const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
       description: "柴犬通常很愛乾淨，有些柴犬不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？",
       topic: "柴犬的外出排泄需求",
       reportSummary: "許多柴犬傾向離開生活區域後才排泄，飼主需要每天安排穩定外出，也要準備雨天短路線與室內備案。",
-      breedKnowledge: "柴犬往往很重視生活區域的清潔，許多個體會傾向離開睡眠與活動空間後才排泄，因此可能逐漸習慣在戶外如廁。這不代表牠能長時間憋尿；飼主仍需每天安排穩定的外出機會，也要準備雨具、短路線，以及必要時可逐步練習的室內備案。",
+      breedKnowledge: "柴犬往往很重視生活區域的清潔，許多個體會**傾向離開睡眠與活動空間後才排泄**，因此可能逐漸習慣在戶外如廁。這**不代表牠能長時間憋尿**；飼主仍需每天安排**穩定的外出機會**，也要準備雨具、短路線，以及必要時可逐步練習的室內備案。",
       correctText: "準備雨具與擦腳用品，依天氣調整路線和時間，但仍完成安全的外出排泄與基本散步",
       correctExplanation: "把雨具、短路線與回家清潔準備好，才能在壞天氣中持續滿足排泄與活動需求。",
       distractors: [

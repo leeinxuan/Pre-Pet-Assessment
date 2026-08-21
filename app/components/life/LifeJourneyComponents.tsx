@@ -154,6 +154,13 @@ function renderKnowledgeText(text: string) {
   ));
 }
 
+function IncorrectExplanation({ text }: { text: string }) {
+  const firstSentenceEnd = text.search(/[。！？]/);
+  const keyPoint = firstSentenceEnd >= 0 ? text.slice(0, firstSentenceEnd + 1) : text;
+  const detail = firstSentenceEnd >= 0 ? text.slice(firstSentenceEnd + 1) : "";
+  return <p className="incorrect-feedback-explanation"><strong className="incorrect-feedback-key">{keyPoint}</strong>{detail && <span>{detail}</span>}</p>;
+}
+
 
 function CorrectFeedbackLayout({
   variant,
@@ -223,17 +230,11 @@ function CorrectFeedbackLayout({
 }
 
 function BreedKnowledgeHighlight({ text, label = "品種小知識" }: { text: string; label?: string }) {
-  const lines = text.includes("\n")
-    ? text.split(/\n+/)
-    : text
-      .replaceAll("：", "：\n")
-      .replaceAll("；", "；\n")
-      .replaceAll("。", "。\n")
-      .split(/\n+/);
+  const lines = text.split(/\n+/);
   return (
     <div className="walking-reflection-note breed-care-reflection">
       <div className="breed-knowledge-heading"><span aria-hidden="true">💡</span><b>{label}</b></div>
-      {lines.map((line, index) => line.trim() && <p key={`${line}-${index}`}>{line.trim()}</p>)}
+      {lines.map((line, index) => line.trim() && <p key={`${line}-${index}`}>{renderKnowledgeText(line.trim())}</p>)}
     </div>
   );
 }
@@ -499,7 +500,7 @@ function ScenarioFeedback({
   return (
     <section className={`scenario-feedback ${choice.result}`} aria-live="polite">
       <div className="feedback-title"><span>{labels[choice.result].icon}</span><div><small>{scenario.timeLabel}</small><h2>{withPetName(choice.feedbackTitle, petName)}</h2></div></div>
-      <p>{withPetName(choice.explanation, petName)}</p>
+      <IncorrectExplanation text={withPetName(choice.explanation, petName)} />
       <OtherCorrectTips scenario={scenario} choice={choice} petName={petName} />
       {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整：</b><p>{withPetName(choice.suggestion, petName)}</p></div>}
       <div className="feedback-expense">
@@ -677,7 +678,7 @@ function VideoScenarioActivity({
         {mode === "incorrect" && selectedChoice ? (
           <section className="video-scenario-retry" aria-live="polite">
             <h2>這個做法可能不太適合</h2>
-            <p>{withPetName(withBreedName(selectedChoice.explanation, breed), petName)}</p>
+            <IncorrectExplanation text={withPetName(withBreedName(selectedChoice.explanation, breed), petName)} />
             {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(withBreedName(selectedChoice.suggestion, breed), petName)}</p></div>}
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
@@ -804,7 +805,7 @@ function DailyBehaviorActivity({
       {mode === "incorrect" && selectedChoice ? (
         <section className="daily-behavior-retry" aria-live="polite">
           <h2>這個做法可能不太適合</h2>
-          <p>{withPetName(selectedChoice.explanation, petName)}</p>
+          <IncorrectExplanation text={withPetName(selectedChoice.explanation, petName)} />
           {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
           <button type="button" className="secondary" onClick={retry}>重新想一次</button>
         </section>
@@ -975,7 +976,7 @@ function DailyBehaviorActivityMulti({
       {mode === "incorrect" && retryCopy ? (
         <section className="daily-behavior-retry" aria-live="polite">
           <h2>{retryCopy.title}</h2>
-          <p>{withPetName(retryCopy.explanation, petName)}</p>
+          <IncorrectExplanation text={withPetName(retryCopy.explanation, petName)} />
           {retryCopy.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(retryCopy.suggestion, petName)}</p></div>}
           <button type="button" className="secondary" onClick={retry}>重新想一次</button>
         </section>
@@ -1126,16 +1127,16 @@ function BusyCareActivity({
               </>
             ) : (
               <>
-                <div><span>協助者 2 / 2</span><h2>一起確認{helperName.trim()}是否合適</h2><p>這不是在考驗對方，而是幫你把「應該可以幫忙」變成清楚可執行的安排。</p></div>
+                <div><span>協助者 2 / 2</span><h2>一起確認{helperName.trim()}是否合適</h2></div>
                 <div className="busy-helper-checklist">
                   {helperQuestions.map((question, questionIndex) => (
-                    <fieldset key={question.id}>
-                      <legend><span>{questionIndex + 1}</span>{question.text}</legend>
+                    <div className="busy-helper-question" role="group" aria-label={question.text} key={question.id}>
+                      <p><span>{questionIndex + 1}</span>{question.text}</p>
                       <div>
                         <button type="button" className={helperChecks[question.id] === "yes" ? "is-selected" : ""} aria-pressed={helperChecks[question.id] === "yes"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "yes" }))}>是</button>
                         <button type="button" className={helperChecks[question.id] === "no" ? "is-selected is-no" : ""} aria-pressed={helperChecks[question.id] === "no"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "no" }))}>還不確定</button>
                       </div>
-                    </fieldset>
+                    </div>
                   ))}
                 </div>
                 {shouldShowHelperUncertainty && (
@@ -1148,7 +1149,7 @@ function BusyCareActivity({
         ) : mode === "incorrect" && selectedChoice ? (
           <section className="busy-care-feedback incorrect busy-care-feedback--standard" aria-live="polite">
             <h2>這個做法可能不太適合</h2>
-            <p>{withPetName(selectedChoice.explanation, petName)}</p>
+            <IncorrectExplanation text={withPetName(selectedChoice.explanation, petName)} />
             {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
@@ -1252,7 +1253,7 @@ function BreedChallengeActivity({
         {mode === "incorrect" && selectedChoice ? (
           <section className="breed-challenge-retry" aria-live="polite">
             <h2>這個想法很常見，但可能還不夠</h2>
-            <p>{withPetName(selectedChoice.explanation, petName)}</p>
+            <IncorrectExplanation text={withPetName(selectedChoice.explanation, petName)} />
             {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button>
           </section>
