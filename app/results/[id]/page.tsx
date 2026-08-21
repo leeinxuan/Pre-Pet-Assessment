@@ -62,8 +62,8 @@ export default function SharedResultPage() {
       </section>
 
       <section className="shared-result-costs">
-        <div><h2>照顧費用摘要</h2><p>費用為互動過程中的模擬估算，實際金額仍需依地區、體型與健康狀況確認。</p></div>
-        <dl><div><dt>模擬支出</dt><dd>NT$ {currency.format(result.costs.simulatedTotal)}</dd></div><div><dt>醫療應急金</dt><dd>NT$ {currency.format(result.costs.emergencyReserve)}</dd></div><div><dt>建議準備金額</dt><dd>NT$ {currency.format(result.costs.suggestedTotal)}</dd></div></dl>
+        <div><h2>照顧費用摘要</h2><p>費用為互動過程中的模擬估算，實際金額仍需依地區、體型與健康狀況確認。這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。</p></div>
+        <dl><div><dt>模擬支出</dt><dd>NT$ {currency.format(result.costs.simulatedTotal)}</dd></div><div><dt>初始醫療應急金</dt><dd>NT$ {currency.format(result.costs.emergencyReserve)}</dd></div><div className="shared-result-cost-total"><dt>最低應準備金額</dt><dd>NT$ {currency.format(result.costs.suggestedTotal)}</dd></div></dl>
       </section>
 
       <footer className="shared-result-footer"><p>{result.committed ? "✓ 產生連結時，飼主已勾選照顧承諾。" : "這份摘要產生時尚未勾選照顧承諾。"}</p><small>此分享頁不包含居家照片、家庭成員姓名或其他個人資料。</small><Link href="/">我也要做飼主準備度練習</Link></footer>

@@ -51,6 +51,7 @@ export type Scenario = {
   requiredCorrectOptionIds?: string[];
   wrongOptionIds?: string[];
   correctSummary?: string[];
+  learningPoints?: string[];
 };
 
 export type ScenarioAnswer = {

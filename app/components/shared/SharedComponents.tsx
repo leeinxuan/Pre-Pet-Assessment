@@ -438,8 +438,8 @@ const expenseLabels = {
   oneTimePrep: "\u4e00\u6b21\u6027\u6e96\u5099\u8cbb",
   monthlyBasic: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa",
   temporaryMedical: "\u81e8\u6642\uff0f\u91ab\u7642\u652f\u51fa",
-  suggestedReserve: "\u5efa\u8b70\u9810\u7559",
-  emergencyReserveTitle: "\u5efa\u8b70\u9810\u7559\u91ab\u7642\u61c9\u6025\u91d1",
+  suggestedReserve: "\u73fe\u5728\u80fd\u7acb\u5373\u52d5\u7528\u7684\u91ab\u7642\u7de9\u885d",
+  emergencyReserveTitle: "\u521d\u59cb\u91ab\u7642\u61c9\u6025\u91d1",
   detailEyebrow: "\u82b1\u8cbb\u660e\u7d30",
   detailTitle: "\u76ee\u524d\u5df2\u767b\u8a18\u7684\u652f\u51fa",
   closeDetails: "\u95dc\u9589\u660e\u7d30",
@@ -544,6 +544,7 @@ export function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }: {
           <div className="expense-reserve-note">
             <h3>{expenseLabels.suggestedReserve}</h3>
             <b>{expenseLabels.emergencyReserveTitle}: NT$ {money.format(emergencyReserve)}</b>
+            <p>這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。</p>
           </div>
         </div>
         <button className="primary" onClick={onClose}>{expenseLabels.closeDetails}</button>

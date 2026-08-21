@@ -6,7 +6,14 @@ import { breeds, hazards, money, roomItems } from "../../game-data";
 import { getBreedChallengeScenarios, lifeScenarios } from "../../life-data";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, ScenarioAnswer } from "../../game-types";
 import type { SharedDiscussionTopic } from "../../shared-result-types";
-import { mergeDefaultVisibleExpenses, NavButtons } from "../shared/SharedComponents";
+import {
+  isMonthlyExpense,
+  isOneTimePreparationExpense,
+  isRequiredAfterArrivalExpense,
+  isTemporaryOrMedicalExpense,
+  mergeDefaultVisibleExpenses,
+  NavButtons,
+} from "../shared/SharedComponents";
 
 const a4PageWidthPt = 595.28;
 const a4PageHeightPt = 841.89;
@@ -637,6 +644,10 @@ export function AssessmentReport({
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
   const total = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
   const suggestedPreparedTotal = total + emergencyReserve;
+  const requiredAfterArrivalTotal = visibleExpenses.filter(isRequiredAfterArrivalExpense).reduce((sum, item) => sum + item.amount, 0);
+  const oneTimePreparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+  const monthlyBasicTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
+  const temporaryMedicalTotal = visibleExpenses.filter((item) => !isMonthlyExpense(item) && isTemporaryOrMedicalExpense(item)).reduce((sum, item) => sum + item.amount, 0);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
   const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
@@ -823,22 +834,23 @@ export function AssessmentReport({
           <div className="care-a4-money-types">
             <h3>支出包含</h3>
             <ul>
-              <li>到家後必要支出</li>
+              <li><span>到家後必要支出</span><b>NT$ {money.format(requiredAfterArrivalTotal)}</b></li>
               <li className="care-a4-money-note">（晶片與寵物登記、狂犬病疫苗、基礎疫苗與初期健康檢查）</li>
-              <li>一次性準備費</li>
-              <li>每月基本支出</li>
-              <li>臨時／醫療支出</li>
-              <li>建議預留醫療應急金</li>
+              <li><span>一次性準備費</span><b>NT$ {money.format(oneTimePreparationTotal)}</b></li>
+              <li><span>每月基本支出</span><b>NT$ {money.format(monthlyBasicTotal)}／月</b></li>
+              <li><span>臨時／醫療支出</span><b>NT$ {money.format(temporaryMedicalTotal)}</b></li>
+              <li><span>初始醫療應急金</span><b>NT$ {money.format(emergencyReserve)}</b></li>
             </ul>
           </div>
           <div className="care-a4-money-summary">
             <h3>金額摘要</h3>
             <dl>
               <div><dt>目前模擬支出</dt><dd>NT$ {money.format(total)}</dd></div>
-              <div><dt>建議預留醫療應急金</dt><dd>NT$ {money.format(emergencyReserve)}</dd></div>
-              <div><dt>建議準備金額</dt><dd>NT$ {money.format(suggestedPreparedTotal)}</dd></div>
+              <div><dt>初始醫療應急金</dt><dd>NT$ {money.format(emergencyReserve)}</dd></div>
+              <div className="care-a4-money-total"><dt>最低應準備金額</dt><dd>NT$ {money.format(suggestedPreparedTotal)}</dd></div>
             </dl>
           </div>
+          <p className="care-a4-money-disclaimer"><span className="care-a4-money-disclaimer-icon" aria-hidden="true">💡</span><span>這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。</span></p>
         </section>
 
         {discussionTopics.length === 0 && (

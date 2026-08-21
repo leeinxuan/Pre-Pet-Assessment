@@ -334,7 +334,7 @@ export default function Home() {
     setTestMode(true);
     setCategory("dog");
     setBreed("shiba");
-    setPetName("小伴");
+    setPetName("小狗");
     setHasPreviousDog(true);
     setPreviousBreed("poodle");
     setPreviousDogName("豆豆");
