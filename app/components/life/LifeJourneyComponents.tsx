@@ -1131,7 +1131,7 @@ function BusyCareActivity({
                 <div className="busy-helper-checklist">
                   {helperQuestions.map((question, questionIndex) => (
                     <div className="busy-helper-question" role="group" aria-label={question.text} key={question.id}>
-                      <p><span>{questionIndex + 1}</span>{question.text}</p>
+                      <p><span>{questionIndex + 1}</span><span className="busy-helper-question-text">{question.text}</span></p>
                       <div>
                         <button type="button" className={helperChecks[question.id] === "yes" ? "is-selected" : ""} aria-pressed={helperChecks[question.id] === "yes"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "yes" }))}>是</button>
                         <button type="button" className={helperChecks[question.id] === "no" ? "is-selected is-no" : ""} aria-pressed={helperChecks[question.id] === "no"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "no" }))}>還不確定</button>
