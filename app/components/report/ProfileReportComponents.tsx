@@ -696,14 +696,16 @@ export function AssessmentReport({
   const selectedBreed = breeds.find((item) => item.id === breed);
   const reportScenarios = [...lifeScenarios, ...getBreedChallengeScenarios(breed)];
   const discussionTopics: SharedDiscussionTopic[] = Object.values(answers)
-    .filter((answer) => answer.firstResult !== "correct")
+    .filter((answer) => answer.firstResult !== "correct" || answer.discussionFlags?.includes("unsuitable-family-helper"))
     .map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId))
     .filter((scenario): scenario is Scenario => Boolean(scenario))
     .map((scenario) => ({
       id: scenario.id,
       title: personalizeReportText(scenario.title, petName),
       topic: scenario.topic ?? scenario.stage,
-      summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
+      summary: scenario.id === "busy-daily-care"
+        ? "忙碌時的日常照顧：需要確認協助者是否真的有時間、能力與意願照顧寵物。"
+        : personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
       knowledgePoints: knowledgePointsForScenario(scenario, petName),
     }));
   const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);

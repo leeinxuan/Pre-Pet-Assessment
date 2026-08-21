@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-BT13K5Zq.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-B54CTGjy.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1737,11 +1737,16 @@ function lifeStageLabelForScenario(scenario) {
 }
 function otherCorrectChoices(scenario, choice, petName) {
 	if (choice.result !== "correct") return [];
+	if (scenario.id === "busy-daily-care") return choice.id === "trusted-helper" ? ["找有空且了解照護需求的家人協助"] : ["請最近幾天有空、也了解照顧需求的朋友協助"];
 	return scenario.choices.filter((entry) => entry.result === "correct" && entry.id !== choice.id).filter((entry) => !(scenario.id === "busy-daily-care" && entry.id === "family-helper")).slice(0, 2).map((entry) => withPetName(entry.text, petName));
 }
 function OtherCorrectTips({ scenario, choice, petName }) {
 	const tips = otherCorrectChoices(scenario, choice, petName);
 	if (tips.length === 0) return null;
+	if (scenario.id === "busy-daily-care") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "busy-care-warm-note",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "也可以這樣做" }), tips.map((tip) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: tip }, tip))]
+	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "other-correct-tips",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "也可以這樣做" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: tips.map((tip) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: tip }, tip)) })]
@@ -1770,7 +1775,7 @@ function DelayedContinueButton({ label = "繼續", onContinue }) {
 		})
 	});
 }
-function CorrectFeedbackLayout({ variant, videoSrc, videoFailed, fallbackText, intro, suggestion, breedHighlight, otherTips, correctItems, mediaPlaceholder, onVideoError, onVideoEnded, onContinue }) {
+function CorrectFeedbackLayout({ variant, videoSrc, videoFailed, fallbackText, intro, suggestion, breedHighlight, otherTips, otherTipsBeforeSuggestion = false, correctItems, mediaPlaceholder, onVideoError, onVideoEnded, onContinue }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: `correct-feedback-layout correct-feedback-layout--${variant}`,
 		"aria-live": "polite",
@@ -1799,11 +1804,12 @@ function CorrectFeedbackLayout({ variant, videoSrc, videoFailed, fallbackText, i
 					className: "daily-behavior-correct-list",
 					children: correctItems.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: item }, item))
 				}),
+				otherTipsBeforeSuggestion && otherTips,
 				suggestion && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "correct-feedback-suggestion",
 					children: suggestion
 				}),
-				otherTips,
+				!otherTipsBeforeSuggestion && otherTips,
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DelayedContinueButton, { onContinue })
 			]
 		})]
@@ -2446,17 +2452,30 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
 	const [, setVideoFinished] = (0, import_react.useState)(false);
 	const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
-	const familyOptions = [{
-		id: "dad",
-		name: "爸爸",
-		label: "近期工作繁忙的爸爸",
-		reason: "爸爸近期工作繁忙，可能無法穩定負責餵食、飲水、排泄與陪伴。"
-	}, {
-		id: "younger-brother",
-		name: "年幼的弟弟",
-		label: "年幼的弟弟",
-		reason: "弟弟年紀太小，還不能獨立照顧小狗，也不適合單獨承擔照顧責任。"
-	}];
+	const familySupportChoice = scenario.choices.find((choice) => choice.id === "family-helper");
+	const familyOptions = [
+		{
+			id: "dad",
+			name: "爸爸",
+			label: "近期工作繁忙的爸爸",
+			result: "incorrect",
+			reason: "爸爸近期工作繁忙，可能無法穩定負責餵食、飲水、排泄與陪伴。"
+		},
+		{
+			id: "younger-brother",
+			name: "年幼的弟弟",
+			label: "年幼的弟弟",
+			result: "incorrect",
+			reason: "弟弟年紀太小，還不能獨立照顧小狗，也不適合單獨承擔照顧責任。"
+		},
+		{
+			id: "mom",
+			name: "媽媽",
+			label: "有空且了解照護需求的媽媽",
+			result: "correct",
+			reason: ""
+		}
+	];
 	(0, import_react.useEffect)(() => {
 		if (resetSignal <= 0) return;
 		setMode("question");
@@ -2476,6 +2495,33 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 		setVideoFinished(false);
 		setMode(choice.result === "correct" ? "positive" : "incorrect");
 	}
+	function chooseFamilyMember(member) {
+		if (member.result === "correct" && familySupportChoice) {
+			onChoose(familySupportChoice);
+			setFamilyFeedback(null);
+			setVideoFailed(false);
+			setVideoFinished(false);
+			setMode("positive");
+			return;
+		}
+		onChoose({
+			id: `family-helper-${member.id}`,
+			text: member.label,
+			result: "incorrect",
+			feedbackTitle: "需要再確認協助者",
+			explanation: member.reason,
+			suggestion: "請重新確認協助者是否真的有時間、能力與意願，並清楚交接餵食、飲水、排泄清理與安全互動方式。",
+			effects: {
+				trust: -1,
+				wellbeing: -1,
+				support: 0
+			}
+		});
+		setFamilyFeedback({
+			name: member.name,
+			reason: member.reason
+		});
+	}
 	if (mode === "positive" && selectedChoice) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CorrectFeedbackLayout, {
 		variant: "single",
 		videoSrc: getCorrectAnswerVideo(scenario.id),
@@ -2487,10 +2533,11 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 			choice: selectedChoice,
 			petName
 		}),
+		otherTipsBeforeSuggestion: true,
 		suggestion: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
-			"事先確認與交接，能讓",
+			"不管是請朋友或家人協助，都要清楚交接餵食、飲水、排泄清理、陪伴方式，以及如何和",
 			petName || "小狗",
-			"在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。"
+			"安全互動，讓牠在你忙碌時也能被穩定照顧。"
 		] }),
 		onVideoEnded: () => setVideoFinished(true),
 		onVideoError: () => {
@@ -2539,10 +2586,7 @@ function BusyCareActivity({ scenario, answer, petName, members: _members, onMemb
 					!familyFeedback && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						className: "busy-care-member-list busy-care-family-options",
 						children: familyOptions.map((member) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScenarioOptionCard, {
-							onClick: () => setFamilyFeedback({
-								name: member.name,
-								reason: member.reason
-							}),
+							onClick: () => chooseFamilyMember(member),
 							children: member.label
 						}, member.id))
 					}),
@@ -3269,7 +3313,7 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 				className: "walking-safety-grid",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					type: "button",
-					onClick: () => setSafetyStep("prepared"),
+					onClick: () => setSafetyStep("correct"),
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						src: "/assets/walking/leash-choice.png",
 						alt: "飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境"
@@ -3302,6 +3346,27 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 					className: "secondary",
 					onClick: () => setSafetyStep("question"),
 					children: "回去重新選擇"
+				})
+			]
+		}) : safetyStep === "correct" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+			className: "walking-law-feedback walking-law-feedback--correct",
+			"aria-live": "polite",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					"aria-hidden": "true",
+					children: "✓"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "life-stage-label",
+					children: "你選得很好"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "牽繩不是限制探索，而是讓探索更安全" })] }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "繫好合適的胸背帶或項圈並保持牽繩鬆弛，狗狗仍然可以嗅聞、觀察環境；遇到車輛、陌生動物或突然受驚時，你也能及時控制距離，降低走失與衝突風險。" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "《動物保護法》第 20 條要求寵物出入公共場所時須有人伴同，各縣市也可能要求使用牽繩、箱籠或其他適當防護措施。因此另一個「不繫牽繩」的選項，即使看似自由，也不是安全的散步方式。" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					type: "button",
+					className: "primary",
+					onClick: () => setSafetyStep("prepared"),
+					children: ["繼續準備散步用品 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
 				})
 			]
 		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -3708,7 +3773,7 @@ function statusAt(index, current, reached) {
 	if (index <= reached) return "completed";
 	return "locked";
 }
-function StageRail({ step, furthestStep, selectionPage, selectionReached, preparationTask, preparationReached, lifePhase, breed, journeyIndex, journeyCompleted, onGoTo, onSelectionPage, onPreparationTask, onLifeStage }) {
+function StageRail({ testMode, step, furthestStep, selectionPage, selectionReached, preparationTask, preparationReached, lifePhase, breed, journeyIndex, journeyCompleted, onGoTo, onSelectionPage, onPreparationTask, onLifeStage }) {
 	const lifeStageRanges = getLifeStageRanges(breed);
 	const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
 	const currentLifeStage = lifePhase === "arrival-video" ? 0 : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
@@ -3728,6 +3793,7 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 	];
 	const mainStatus = (index) => {
 		if (index === currentMain) return "current";
+		if (testMode) return "completed";
 		if (mainUnlockSteps[index] <= furthestStep) return "completed";
 		return "locked";
 	};
@@ -3753,7 +3819,13 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 					"transition"
 				][index],
 				label,
-				status: step > 1 && index <= selectionReached ? "completed" : statusAt(index, {
+				status: testMode ? index === {
+					species: 0,
+					breed: 1,
+					name: 2,
+					history: 3,
+					transition: 4
+				}[selectionPage] && step === 1 ? "current" : "completed" : step > 1 && index <= selectionReached ? "completed" : statusAt(index, {
 					species: 0,
 					breed: 1,
 					name: 2,
@@ -3778,7 +3850,7 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 			children: ["布置生活空間", "出發前準備"].map((label, index) => ({
 				id: `preparation-${index}`,
 				label,
-				status: step > 2 && index <= preparationReached ? "completed" : statusAt(index, preparationTask, preparationReached),
+				status: testMode ? index === preparationTask && step === 2 ? "current" : "completed" : step > 2 && index <= preparationReached ? "completed" : statusAt(index, preparationTask, preparationReached),
 				onClick: () => onPreparationTask(index)
 			}))
 		},
@@ -3787,10 +3859,10 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 			number: "03",
 			label: "飼養生活",
 			status: mainStatus(2),
-			onClick: () => onGoTo(mainTargets[2]),
+			onClick: () => testMode ? onLifeStage(0) : onGoTo(mainTargets[2]),
 			children: lifeStageRanges.map((range, index) => {
 				const completed = lifePhase === "complete" || journeyItems.slice(range.start, range.end + 1).every((item) => journeyCompleted.includes(item.id));
-				const status = index === currentLifeStage ? "current" : completed ? "completed" : "locked";
+				const status = index === currentLifeStage && step >= 3 && step <= 6 ? "current" : testMode || completed ? "completed" : "locked";
 				return {
 					id: `life-${index}`,
 					label: range.label,
@@ -3815,9 +3887,12 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 		}
 	];
 	function renderNavigation() {
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
 			className: "station-navigation",
-			children: navigation.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			children: [testMode && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "test-mode-badge",
+				children: "測試模式・關卡已解鎖"
+			}), navigation.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: `nav-main ${item.status}`,
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: "nav-main-button",
@@ -3837,7 +3912,7 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 						})
 					}, child.id))
 				})]
-			}, item.id))
+			}, item.id))]
 		});
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("aside", {
@@ -3884,52 +3959,66 @@ function StageRail({ step, furthestStep, selectionPage, selectionReached, prepar
 		})]
 	})] });
 }
-function Welcome({ onStart }) {
+function Welcome({ onStart, onTestStart }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "welcome",
 		"aria-label": "伴日子新手村封面",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: "welcome-hero-copy",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
-					"伴日子",
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
-					"新手村"
-				] }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					className: "welcome-subtitle",
-					children: "在真正飼養前，先走過一次與寵物的完整旅程"
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					className: "primary large welcome-start",
-					onClick: onStart,
-					children: ["開始生活練習 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "welcome-hero-copy",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
+						"伴日子",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+						"新手村"
+					] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "welcome-subtitle",
+						children: "在真正飼養前，先走過一次與寵物的完整旅程"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						className: "primary large welcome-start",
+						onClick: onStart,
+						children: ["開始生活練習 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "welcome-village",
+				"aria-hidden": "true",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-cloud welcome-cloud--left" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-cloud welcome-cloud--center" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-cloud welcome-cloud--right" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "welcome-houses",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--a" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--b" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--c" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--d" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--e" })
+						]
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+				type: "button",
+				className: "hidden-test-entry",
+				"aria-label": "開啟測試模式",
+				onClick: onTestStart,
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					"aria-hidden": "true",
+					children: "·"
 				})
-			]
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: "welcome-village",
-			"aria-hidden": "true",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-cloud welcome-cloud--left" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-cloud welcome-cloud--center" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-cloud welcome-cloud--right" }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "welcome-houses",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--a" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--b" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--c" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--d" }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "welcome-house welcome-house--e" })
-					]
-				})
-			]
-		})]
+			})
+		]
 	});
 }
 function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName, onCategory, onBreed, onPetName, hasPreviousDog, previousBreed, previousDogName, onHasPreviousDog, onPreviousBreed, onPreviousDogName, onNext }) {
 	const selectedBreed = breeds.find((item) => item.id === breed);
 	const selectedPreviousBreed = breeds.find((item) => item.id === previousBreed);
+	const sameBreed = Boolean(breed && previousBreed && breed === previousBreed);
 	const breedCarouselRef = (0, import_react.useRef)(null);
 	const breedScrollTimerRef = (0, import_react.useRef)(null);
 	(0, import_react.useEffect)(() => () => {
@@ -3968,7 +4057,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 		className: "content-wrap partner-picker",
 		children: selectionPage === "species" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 			className: "partner-selection-page",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "你想領養哪一種動物？" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "你想飼養哪一種動物？" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "category-grid species-page-grid",
 				children: categories.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: category === item.id ? "selected" : "",
@@ -3989,7 +4078,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 		}, "species") : selectionPage === "breed" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 			className: "partner-selection-page",
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "選擇你想領養的品種" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "選擇你想飼養的品種" }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "breed-row breed-page-grid breed-carousel",
 					ref: breedCarouselRef,
@@ -4171,7 +4260,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
 							className: "experience-dog-card experience-dog-card--next",
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "準備迎接的新生活" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: sameBreed ? "相同品種，新的個體" : "準備迎接的新生活" }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 									src: selectedBreed?.image,
 									alt: `這次想迎接的${selectedBreed?.label ?? "狗狗"}`
@@ -4187,31 +4276,50 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "experience-story",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-							id: "experience-transition-title",
-							className: "experience-story-line experience-story-line--past",
-							children: [
-								"你熟悉的是和",
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: previousDogName || selectedPreviousBreed?.label }),
-								"經過一段時間磨合後的生活。"
-							]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-							className: "experience-story-line experience-story-line--next",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || `新的${selectedBreed?.label ?? "狗狗"}` }), "是一隻不一樣的生命，可能有不同的個性、經歷、健康狀況與適應速度。"]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-							className: "experience-story-line experience-story-line--bridge",
-							children: [
-								"接下來，請先暫時放下",
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "「以前就是這樣照顧」" }),
-								"的想法，陪",
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || "牠" }),
-								"從到家第一天演練一次，也重新確認現在的你是否準備好和牠建立新的生活。"
-							]
-						})
-					]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						id: "experience-transition-title",
+						className: "experience-story-line experience-story-line--past",
+						children: [
+							"你熟悉的是和",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: previousDogName || selectedPreviousBreed?.label }),
+							"經過一段時間磨合後的生活。"
+						]
+					}), sameBreed ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						className: "experience-story-line experience-story-line--next",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || "新的狗狗" }),
+							"和",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: previousDogName || "以前的狗狗" }),
+							"雖然都是",
+							selectedBreed?.label,
+							"，仍然是",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "兩個不同的個體" }),
+							"。牠可能有不同的個性、經歷、健康狀況與適應速度。"
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						className: "experience-story-line experience-story-line--bridge",
+						children: [
+							"接下來，請先暫時放下",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "「同一個品種就會一樣」" }),
+							"或",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "「以前就是這樣照顧」" }),
+							"的想法，陪",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || "牠" }),
+							"從到家第一天演練一次，也重新確認現在的你是否準備好和牠建立新的生活。"
+						]
+					})] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						className: "experience-story-line experience-story-line--next",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || `新的${selectedBreed?.label ?? "狗狗"}` }), "是一隻不一樣的生命，可能有不同的個性、經歷、健康狀況與適應速度。"]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						className: "experience-story-line experience-story-line--bridge",
+						children: [
+							"接下來，請先暫時放下",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "「以前就是這樣照顧」" }),
+							"的想法，陪",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || "牠" }),
+							"從到家第一天演練一次，也重新確認現在的你是否準備好和牠建立新的生活。"
+						]
+					})] })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "experience-transition-actions",
@@ -4810,9 +4918,9 @@ function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack, onRep
 										children: [
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: note.label }),
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: note.note }),
-											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											price && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 												className: "supply-slot-price",
-												children: price || "不另計費"
+												children: price
 											})
 										]
 									})
@@ -5639,11 +5747,11 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	[...confirm.slice(0, 5)];
 	const selectedBreed = breeds.find((item) => item.id === breed);
 	const reportScenarios = [...lifeScenarios, ...getBreedChallengeScenarios(breed)];
-	const discussionTopics = Object.values(answers).filter((answer) => answer.firstResult !== "correct").map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId)).filter((scenario) => Boolean(scenario)).map((scenario) => ({
+	const discussionTopics = Object.values(answers).filter((answer) => answer.firstResult !== "correct" || answer.discussionFlags?.includes("unsuitable-family-helper")).map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId)).filter((scenario) => Boolean(scenario)).map((scenario) => ({
 		id: scenario.id,
 		title: personalizeReportText(scenario.title, petName),
 		topic: scenario.topic ?? scenario.stage,
-		summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
+		summary: scenario.id === "busy-daily-care" ? "忙碌時的日常照顧：需要確認協助者是否真的有時間、能力與意願照顧寵物。" : personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
 		knowledgePoints: knowledgePointsForScenario(scenario, petName)
 	}));
 	const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
@@ -6325,6 +6433,7 @@ function IntroIcon({ step }) {
 }
 function Home() {
 	const [step, setStep] = (0, import_react.useState)(0);
+	const [testMode, setTestMode] = (0, import_react.useState)(false);
 	const [furthestStep, setFurthestStep] = (0, import_react.useState)(1);
 	const [introOpen, setIntroOpen] = (0, import_react.useState)(false);
 	const [category, setCategory] = (0, import_react.useState)("");
@@ -6470,20 +6579,24 @@ function Home() {
 	function answerScenario(scenario, choice) {
 		setScenarioAnswers((current) => {
 			const previous = current[scenario.id];
+			const discussionFlag = scenario.id === "busy-daily-care" && choice.id.startsWith("family-helper-") ? "unsuitable-family-helper" : "";
+			const discussionFlags = discussionFlag ? Array.from(new Set([...previous?.discussionFlags ?? [], discussionFlag])) : previous?.discussionFlags;
 			return {
 				...current,
 				[scenario.id]: previous ? {
 					...previous,
 					finalChoiceId: choice.id,
 					finalResult: choice.result,
-					attempts: previous.attempts + 1
+					attempts: previous.attempts + 1,
+					discussionFlags
 				} : {
 					scenarioId: scenario.id,
 					firstChoiceId: choice.id,
 					finalChoiceId: choice.id,
 					firstResult: choice.result,
 					finalResult: choice.result,
-					attempts: 1
+					attempts: 1,
+					discussionFlags
 				}
 			};
 		});
@@ -6548,6 +6661,7 @@ function Home() {
 	}
 	function startFreshJourney() {
 		resetJourney();
+		setTestMode(false);
 		setStep(1);
 		setFurthestStep(1);
 		setIntroOpen(true);
@@ -6558,8 +6672,29 @@ function Home() {
 	}
 	function resetAll() {
 		resetJourney();
+		setTestMode(false);
 		setStep(0);
 		setFurthestStep(1);
+		setIntroOpen(false);
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth"
+		});
+	}
+	function startTestJourney() {
+		resetJourney();
+		setTestMode(true);
+		setCategory("dog");
+		setBreed("shiba");
+		setPetName("小伴");
+		setHasPreviousDog(true);
+		setPreviousBreed("poodle");
+		setPreviousDogName("豆豆");
+		setSelectionReached(4);
+		setPreparationReached(1);
+		setFurthestStep(8);
+		setLifePhase("life-journey");
+		setStep(1);
 		setIntroOpen(false);
 		window.scrollTo({
 			top: 0,
@@ -6664,10 +6799,14 @@ function Home() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
 		className: "app-shell",
 		children: [
-			step === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Welcome, { onStart: startFreshJourney }),
+			step === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Welcome, {
+				onStart: startFreshJourney,
+				onTestStart: startTestJourney
+			}),
 			step > 0 && !introOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "stage-layout",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StageRail, {
+					testMode,
 					step,
 					furthestStep,
 					selectionPage,

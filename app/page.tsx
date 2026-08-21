@@ -232,10 +232,14 @@ export default function Home() {
   function answerScenario(scenario: Scenario, choice: ScenarioChoice) {
     setScenarioAnswers((current) => {
       const previous = current[scenario.id];
+      const discussionFlag = scenario.id === "busy-daily-care" && choice.id.startsWith("family-helper-") ? "unsuitable-family-helper" : "";
+      const discussionFlags = discussionFlag
+        ? Array.from(new Set([...(previous?.discussionFlags ?? []), discussionFlag]))
+        : previous?.discussionFlags;
       return {
         ...current,
         [scenario.id]: previous
-          ? { ...previous, finalChoiceId: choice.id, finalResult: choice.result, attempts: previous.attempts + 1 }
+          ? { ...previous, finalChoiceId: choice.id, finalResult: choice.result, attempts: previous.attempts + 1, discussionFlags }
           : {
             scenarioId: scenario.id,
             firstChoiceId: choice.id,
@@ -243,6 +247,7 @@ export default function Home() {
             firstResult: choice.result,
             finalResult: choice.result,
             attempts: 1,
+            discussionFlags,
           },
       };
     });

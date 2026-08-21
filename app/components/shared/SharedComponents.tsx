@@ -327,7 +327,7 @@ export function SpeciesStep({
     <div className="content-wrap partner-picker">
       {selectionPage === "species" ? (
         <section className="partner-selection-page" key="species">
-          <StepHeading title="你想領養哪一種動物？" />
+          <StepHeading title="你想飼養哪一種動物？" />
           <div className="category-grid species-page-grid">
             {categories.map((item) => (
               <button
@@ -345,7 +345,7 @@ export function SpeciesStep({
         </section>
       ) : selectionPage === "breed" ? (
         <section className="partner-selection-page" key="breed">
-          <StepHeading title="選擇你想領養的品種" />
+          <StepHeading title="選擇你想飼養的品種" />
           <div className="breed-row breed-page-grid breed-carousel" ref={breedCarouselRef} onScroll={handleBreedCarouselScroll} aria-label="品種橫向滑動選擇">
             {breeds.map((item) => (
               <button key={item.id} data-breed-id={item.id} className={breed === item.id ? "selected" : ""} onClick={() => onBreed(item.id)} aria-pressed={breed === item.id}>

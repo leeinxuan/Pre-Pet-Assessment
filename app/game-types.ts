@@ -62,6 +62,7 @@ export type ScenarioAnswer = {
   firstResult: ScenarioResult;
   finalResult: ScenarioResult;
   attempts: number;
+  discussionFlags?: string[];
 };
 
 export type LifeJourneyPhase =

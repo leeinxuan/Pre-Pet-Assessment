@@ -99,6 +99,11 @@ function lifeStageLabelForScenario(scenario: Scenario) {
 
 function otherCorrectChoices(scenario: Scenario, choice: ScenarioChoice, petName: string) {
   if (choice.result !== "correct") return [];
+  if (scenario.id === "busy-daily-care") {
+    return choice.id === "trusted-helper"
+      ? ["找有空且了解照護需求的家人協助"]
+      : ["請最近幾天有空、也了解照顧需求的朋友協助"];
+  }
   return scenario.choices
     .filter((entry) => entry.result === "correct" && entry.id !== choice.id)
     .filter((entry) => !(scenario.id === "busy-daily-care" && entry.id === "family-helper"))
@@ -109,6 +114,9 @@ function otherCorrectChoices(scenario: Scenario, choice: ScenarioChoice, petName
 function OtherCorrectTips({ scenario, choice, petName }: { scenario: Scenario; choice: ScenarioChoice; petName: string }) {
   const tips = otherCorrectChoices(scenario, choice, petName);
   if (tips.length === 0) return null;
+  if (scenario.id === "busy-daily-care") {
+    return <div className="busy-care-warm-note"><b>也可以這樣做</b>{tips.map((tip) => <p key={tip}>{tip}</p>)}</div>;
+  }
   return <div className="other-correct-tips"><b>也可以這樣做</b><ul>{tips.map((tip) => <li key={tip}>{tip}</li>)}</ul></div>;
 }
 
@@ -145,6 +153,7 @@ function CorrectFeedbackLayout({
   suggestion,
   breedHighlight,
   otherTips,
+  otherTipsBeforeSuggestion = false,
   correctItems,
   mediaPlaceholder,
   onVideoError,
@@ -159,6 +168,7 @@ function CorrectFeedbackLayout({
   suggestion?: ReactNode;
   breedHighlight?: ReactNode;
   otherTips?: ReactNode;
+  otherTipsBeforeSuggestion?: boolean;
   correctItems?: string[];
   mediaPlaceholder?: ReactNode;
   onVideoError: () => void;
@@ -183,8 +193,9 @@ function CorrectFeedbackLayout({
             {correctItems.map((item) => <li key={item}>{item}</li>)}
           </ul>
         )}
+        {otherTipsBeforeSuggestion && otherTips}
         {suggestion && <div className="correct-feedback-suggestion">{suggestion}</div>}
-        {otherTips}
+        {!otherTipsBeforeSuggestion && otherTips}
         <DelayedContinueButton onContinue={onContinue} />
       </div>
     </section>
@@ -980,9 +991,11 @@ function BusyCareActivity({
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
+  const familySupportChoice = scenario.choices.find((choice) => choice.id === "family-helper");
   const familyOptions = [
-    { id: "dad", name: "爸爸", label: "近期工作繁忙的爸爸", reason: "爸爸近期工作繁忙，可能無法穩定負責餵食、飲水、排泄與陪伴。" },
-    { id: "younger-brother", name: "年幼的弟弟", label: "年幼的弟弟", reason: "弟弟年紀太小，還不能獨立照顧小狗，也不適合單獨承擔照顧責任。" },
+    { id: "dad", name: "爸爸", label: "近期工作繁忙的爸爸", result: "incorrect" as const, reason: "爸爸近期工作繁忙，可能無法穩定負責餵食、飲水、排泄與陪伴。" },
+    { id: "younger-brother", name: "年幼的弟弟", label: "年幼的弟弟", result: "incorrect" as const, reason: "弟弟年紀太小，還不能獨立照顧小狗，也不適合單獨承擔照顧責任。" },
+    { id: "mom", name: "媽媽", label: "有空且了解照護需求的媽媽", result: "correct" as const, reason: "" },
   ];
 
   useEffect(() => {
@@ -1006,6 +1019,27 @@ function BusyCareActivity({
     setMode(choice.result === "correct" ? "positive" : "incorrect");
   }
 
+  function chooseFamilyMember(member: (typeof familyOptions)[number]) {
+    if (member.result === "correct" && familySupportChoice) {
+      onChoose(familySupportChoice);
+      setFamilyFeedback(null);
+      setVideoFailed(false);
+      setVideoFinished(false);
+      setMode("positive");
+      return;
+    }
+    onChoose({
+      id: `family-helper-${member.id}`,
+      text: member.label,
+      result: "incorrect",
+      feedbackTitle: "需要再確認協助者",
+      explanation: member.reason,
+      suggestion: "請重新確認協助者是否真的有時間、能力與意願，並清楚交接餵食、飲水、排泄清理與安全互動方式。",
+      effects: { trust: -1, wellbeing: -1, support: 0 },
+    });
+    setFamilyFeedback({ name: member.name, reason: member.reason });
+  }
+
   if (mode === "positive" && selectedChoice) {
     return (
       <CorrectFeedbackLayout
@@ -1016,7 +1050,8 @@ function BusyCareActivity({
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
         otherTips={<OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />}
-        suggestion={<small>事先確認與交接，能讓{petName || "小狗"}在你忙碌時仍獲得餵食、飲水、排泄照顧與陪伴。</small>}
+        otherTipsBeforeSuggestion
+        suggestion={<small>不管是請朋友或家人協助，都要清楚交接餵食、飲水、排泄清理、陪伴方式，以及如何和{petName || "小狗"}安全互動，讓牠在你忙碌時也能被穩定照顧。</small>}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
         onContinue={onContinue}
@@ -1041,7 +1076,7 @@ function BusyCareActivity({
         {mode === "family" ? (
           <section className="busy-care-members" aria-live="polite">
             <div><h2>先確認家人是否真的能協助</h2></div>
-            {!familyFeedback && <div className="busy-care-member-list busy-care-family-options">{familyOptions.map((member) => <ScenarioOptionCard key={member.id} onClick={() => setFamilyFeedback({ name: member.name, reason: member.reason })}>{member.label}</ScenarioOptionCard>)}</div>}
+            {!familyFeedback && <div className="busy-care-member-list busy-care-family-options">{familyOptions.map((member) => <ScenarioOptionCard key={member.id} onClick={() => chooseFamilyMember(member)}>{member.label}</ScenarioOptionCard>)}</div>}
             {familyFeedback && <div className="busy-care-family-feedback" role="alert"><b>{familyFeedback.name}目前不適合協助</b><p>{withPetName(familyFeedback.reason, petName)}</p></div>}
             <div className="busy-care-member-actions">{familyFeedback && <button type="button" className="secondary" onClick={() => setFamilyFeedback(null)}>選擇其他家庭成員</button>}<button type="button" className="primary" onClick={() => { setFamilyFeedback(null); setMode("question"); }}>返回上一層，改選其他照顧方式 <span>→</span></button></div>
           </section>
