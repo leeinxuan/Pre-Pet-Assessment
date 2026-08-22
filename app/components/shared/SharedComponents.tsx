@@ -129,7 +129,7 @@ export function StageRail({
     {
       id: "preparation",
       number: "02",
-      label: "領養前準備",
+      label: "飼養前準備",
       status: mainStatus(1),
       onClick: () => onGoTo(2),
       children: ["布置生活空間", "出發前準備"].map((label, index) => ({
@@ -374,7 +374,7 @@ export function SpeciesStep({
           <StepHeading title="你以前有養過狗嗎？" body="過去的經驗很珍貴，也可能讓我們自然沿用熟悉的照顧方式。先簡單告訴我們，你是否曾經和狗狗一起生活。" />
           <div className="previous-dog-choice" role="group" aria-label="是否曾經養過狗">
             <button type="button" className={hasPreviousDog === true ? "selected" : ""} aria-pressed={hasPreviousDog === true} onClick={() => onHasPreviousDog(true)}><b>有，曾經有養過狗</b><small>接著填寫牠的品種與名字</small></button>
-            <button type="button" className={hasPreviousDog === false ? "selected" : ""} aria-pressed={hasPreviousDog === false} onClick={() => onHasPreviousDog(false)}><b>沒有，這是第一次</b><small>直接開始這次的領養前準備</small></button>
+            <button type="button" className={hasPreviousDog === false ? "selected" : ""} aria-pressed={hasPreviousDog === false} onClick={() => onHasPreviousDog(false)}><b>沒有，這是第一次</b><small>直接開始這次的飼養前準備</small></button>
           </div>
           {hasPreviousDog === true && (
             <div className="previous-dog-details">
@@ -425,7 +425,7 @@ export function SpeciesStep({
               </>
             )}
           </div>
-          <div className="experience-transition-actions"><button type="button" className="secondary" onClick={() => onSelectionPage("history")}>← 返回</button><button type="button" className="primary" onClick={onNext}>開始領養前準備 <span>→</span></button></div>
+          <div className="experience-transition-actions"><button type="button" className="secondary" onClick={() => onSelectionPage("history")}>← 返回</button><button type="button" className="primary" onClick={onNext}>開始飼養前準備 <span>→</span></button></div>
         </section>
       )}
     </div>

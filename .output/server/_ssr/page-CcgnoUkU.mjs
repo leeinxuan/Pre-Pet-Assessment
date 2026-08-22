@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-DGWCAEi-.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-CcgnoUkU.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -10,7 +10,7 @@ var intros = [
 		tip: ""
 	},
 	{
-		title: "領養前準備",
+		title: "飼養前準備",
 		body: "整理生活空間、接回用品與基本照顧安排，讓到家第一天更安穩。",
 		icon: "home",
 		tip: ""
@@ -3978,7 +3978,7 @@ function StageRail({ testMode, step, furthestStep, selectionPage, selectionReach
 		{
 			id: "preparation",
 			number: "02",
-			label: "領養前準備",
+			label: "飼養前準備",
 			status: mainStatus(1),
 			onClick: () => onGoTo(2),
 			children: ["布置生活空間", "出發前準備"].map((label, index) => ({
@@ -4317,7 +4317,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 						className: hasPreviousDog === false ? "selected" : "",
 						"aria-pressed": hasPreviousDog === false,
 						onClick: () => onHasPreviousDog(false),
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "沒有，這是第一次" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "直接開始這次的領養前準備" })]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "沒有，這是第一次" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "直接開始這次的飼養前準備" })]
 					})]
 				}),
 				hasPreviousDog === true && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -4466,7 +4466,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 						type: "button",
 						className: "primary",
 						onClick: onNext,
-						children: ["開始領養前準備 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+						children: ["開始飼養前準備 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
 					})]
 				})
 			]

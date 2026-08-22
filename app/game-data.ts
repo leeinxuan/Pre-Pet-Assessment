@@ -12,7 +12,7 @@ export const money = new Intl.NumberFormat("zh-TW");
 
 export const stations = [
   ["01", "選擇寵物", "遇見想領養的牠"],
-  ["02", "領養前準備", "為牠準備一個家"],
+  ["02", "飼養前準備", "為牠準備一個家"],
   ["03", "飼養生活", "從接回家到長期陪伴"],
   ["04", "照顧準備總覽", "把練習整理成清單"],
   ["05", "取得寵物", "銜接合法領養與購買資訊"],
@@ -26,7 +26,7 @@ export const intros = [
     tip: "",
   },
   {
-    title: "\u9818\u990a\u524d\u6e96\u5099",
+    title: "飼養前準備",
     body: "\u6574\u7406\u751f\u6d3b\u7a7a\u9593\u3001\u63a5\u56de\u7528\u54c1\u8207\u57fa\u672c\u7167\u9867\u5b89\u6392\uff0c\u8b93\u5230\u5bb6\u7b2c\u4e00\u5929\u66f4\u5b89\u7a69\u3002",
     icon: "home",
     tip: "",
