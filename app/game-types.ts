@@ -115,7 +115,7 @@ export type Profile = {
   housemateList: string[];
   housemateTypes: string[];
   otherHousemate: string;
-  activitySpace: string;
+  activitySpace: string[];
   otherActivitySpace: string;
   homeSpaceImage: string;
   homeSpaceImageName: string;

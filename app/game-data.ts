@@ -515,7 +515,7 @@ export const initialProfile: Profile = {
   housemateList: [],
   housemateTypes: [],
   otherHousemate: "",
-  activitySpace: "",
+  activitySpace: [],
   otherActivitySpace: "",
   homeSpaceImage: "",
   homeSpaceImageName: "",

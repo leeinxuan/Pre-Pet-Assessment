@@ -1,6 +1,6 @@
 import { C as hasBasePath, S as VINEXT_MOUNTED_SLOTS_HEADER, T as __toESM, _ as toSameOriginAppPath, a as getMountedSlotsHeader, b as AppElementsWire, c as prefetchRscResponse, d as ReadonlyURLSearchParams, f as createRscRequestHeaders, g as toBrowserNavigationHref, h as resolveRelativeHref, n as require_jsx_runtime, o as getPrefetchedUrls, p as createRscRequestUrl, r as getCurrentInterceptionContext, s as navigateClientSide, v as withBasePath, w as stripBasePath, x as require_react, y as isDangerousScheme } from "./ssr.mjs";
 import { a as urlQueryToSearchParams, i as getDomainLocaleUrl, r as appendSearchParamsToUrl, t as addLocalePrefix } from "./query-nqHbrvzS.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-Bi47xeGS.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-Cvm0V3eE.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var _SERVER_INSERTED_HTML_CTX_KEY = Symbol.for("vinext.serverInsertedHTMLContext");
 function getServerInsertedHTMLContext() {
@@ -827,10 +827,13 @@ function SharedResultPage() {
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 				className: "shared-result-costs",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "照顧費用摘要" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "費用為互動過程中的模擬估算，實際金額仍需依地區、體型與健康狀況確認。" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "照顧費用摘要" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "費用為互動過程中的模擬估算，實際金額仍需依地區、體型與健康狀況確認。這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "模擬支出" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", currency.format(result.costs.simulatedTotal)] })] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "醫療應急金" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", currency.format(result.costs.emergencyReserve)] })] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "建議準備金額" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", currency.format(result.costs.suggestedTotal)] })] })
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "初始醫療應急金" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", currency.format(result.costs.emergencyReserve)] })] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "shared-result-cost-total",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "最低應準備金額" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dd", { children: ["NT$ ", currency.format(result.costs.suggestedTotal)] })]
+					})
 				] })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("footer", {
