@@ -123,18 +123,24 @@ function DelayedContinueButton({
   onContinue,
   disabled = false,
   hint,
+  immediate = false,
 }: {
   label?: string;
   onContinue: () => void;
   disabled?: boolean;
   hint?: string;
+  immediate?: boolean;
 }) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(immediate);
 
   useEffect(() => {
+    if (immediate) {
+      setVisible(true);
+      return;
+    }
     const timer = window.setTimeout(() => setVisible(true), 3000);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [immediate]);
 
   return (
     <div className={`delayed-continue ${visible ? "is-visible" : "is-waiting"}`} aria-live="polite">
@@ -175,9 +181,11 @@ function CorrectFeedbackLayout({
   correctItems,
   knowledgeTitle = "狗狗小知識",
   mediaPlaceholder,
+  onReplay,
   onVideoError,
   onVideoEnded,
   onContinue,
+  continueImmediately = false,
   continueDisabled = false,
   continueHint,
 }: {
@@ -193,9 +201,11 @@ function CorrectFeedbackLayout({
   correctItems?: string[];
   knowledgeTitle?: string;
   mediaPlaceholder?: ReactNode;
+  onReplay?: () => void;
   onVideoError: () => void;
   onVideoEnded?: () => void;
   onContinue: () => void;
+  continueImmediately?: boolean;
   continueDisabled?: boolean;
   continueHint?: string;
 }) {
@@ -223,7 +233,10 @@ function CorrectFeedbackLayout({
         {otherTipsBeforeSuggestion && otherTips}
         {suggestion && <div className="correct-feedback-suggestion">{suggestion}</div>}
         {!otherTipsBeforeSuggestion && otherTips}
-        <DelayedContinueButton onContinue={onContinue} disabled={continueDisabled} hint={continueHint} />
+        <div className={`correct-feedback-actions ${onReplay ? "has-replay" : ""}`}>
+          {onReplay && <button type="button" className="secondary correct-feedback-replay" onClick={onReplay}>↻ 再玩一次</button>}
+          <DelayedContinueButton onContinue={onContinue} immediate={continueImmediately} disabled={continueDisabled} hint={continueHint} />
+        </div>
       </div>
     </section>
   );
@@ -465,12 +478,16 @@ function ScenarioFeedback({
   petName,
   onRetry,
   onContinue,
+  onReplay,
+  continueImmediately = false,
 }: {
   scenario: Scenario;
   choice: ScenarioChoice;
   petName: string;
   onRetry: () => void;
   onContinue: () => void;
+  onReplay?: () => void;
+  continueImmediately?: boolean;
 }) {
   const requiresRetry = scenario.id === "arrival-adjustment" || scenario.id === "illness-vet" || scenario.id === "growing-old";
   const [feedbackVideoFailed, setFeedbackVideoFailed] = useState(false);
@@ -493,7 +510,9 @@ function ScenarioFeedback({
         otherTips={<OtherCorrectTips scenario={scenario} choice={choice} petName={petName} />}
         onVideoEnded={() => setFeedbackVideoFinished(true)}
         onVideoError={() => { setFeedbackVideoFailed(true); setFeedbackVideoFinished(true); }}
+        onReplay={onReplay}
         onContinue={onContinue}
+        continueImmediately={continueImmediately}
       />
     );
   }
@@ -527,6 +546,8 @@ function ScenarioCard({
   onChoose,
   onRetry,
   onContinue,
+  onReplay,
+  continueImmediately = false,
 }: {
   scenario: Scenario;
   petName: string;
@@ -536,6 +557,8 @@ function ScenarioCard({
   onChoose: (choice: ScenarioChoice) => void;
   onRetry: () => void;
   onContinue: () => void;
+  onReplay?: () => void;
+  continueImmediately?: boolean;
 }) {
   const [sceneVideoFailed, setSceneVideoFailed] = useState(false);
   const scenarioVideo = scenario.id === "arrival-adjustment"
@@ -547,7 +570,7 @@ function ScenarioCard({
   useEffect(() => setSceneVideoFailed(false), [scenario.id]);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   if (feedbackOpen && selectedChoice) {
-    return <ScenarioFeedback scenario={scenario} choice={selectedChoice} petName={petName} onRetry={onRetry} onContinue={onContinue} />;
+    return <ScenarioFeedback scenario={scenario} choice={selectedChoice} petName={petName} onRetry={onRetry} onContinue={onContinue} onReplay={onReplay} continueImmediately={continueImmediately} />;
   }
   const hasBackup = backupNames.length > 0;
   return (
@@ -605,6 +628,8 @@ function VideoScenarioActivity({
   onChoose,
   onCorrectComplete,
   resetSignal,
+  onReplay,
+  continueImmediately = false,
 }: {
   scenario: Scenario;
   answer?: ScenarioAnswer;
@@ -613,6 +638,8 @@ function VideoScenarioActivity({
   onChoose: (choice: ScenarioChoice) => void;
   onCorrectComplete: () => void;
   resetSignal: number;
+  onReplay?: () => void;
+  continueImmediately?: boolean;
 }) {
   const [mode, setMode] = useState<"question" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
   const [videoFailed, setVideoFailed] = useState(false);
@@ -662,7 +689,9 @@ function VideoScenarioActivity({
         otherTips={isSeniorScenario ? <SeniorMedicalKnowledge /> : <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
+        onReplay={onReplay}
         onContinue={onCorrectComplete}
+        continueImmediately={continueImmediately}
       />
     );
   }
@@ -829,12 +858,16 @@ function DailyBehaviorActivityMulti({
   onChooseMultiple,
   onContinue,
   resetSignal,
+  onReplay,
+  continueImmediately = false,
 }: {
   answers: Record<string, ScenarioAnswer>;
   petName: string;
   onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
   onContinue: () => void;
   resetSignal: number;
+  onReplay?: () => void;
+  continueImmediately?: boolean;
 }) {
   const scenarios = dailyBehaviorScenarioIds
     .map((id) => lifeScenarios.find((entry) => entry.id === id))
@@ -952,7 +985,9 @@ function DailyBehaviorActivityMulti({
         knowledgeTitle="狗狗小知識"
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
+        onReplay={onReplay}
         onContinue={moveToNext}
+        continueImmediately={continueImmediately}
       />
     );
   }
@@ -1011,6 +1046,8 @@ function BusyCareActivity({
   onChoose,
   onContinue,
   resetSignal,
+  onReplay,
+  continueImmediately = false,
 }: {
   scenario: Scenario;
   answer?: ScenarioAnswer;
@@ -1020,6 +1057,8 @@ function BusyCareActivity({
   onChoose: (choice: ScenarioChoice) => void;
   onContinue: () => void;
   resetSignal: number;
+  onReplay?: () => void;
+  continueImmediately?: boolean;
 }) {
   const [mode, setMode] = useState<"question" | "family" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : "question");
   const [familyStep, setFamilyStep] = useState<"name" | "check">("name");
@@ -1098,7 +1137,9 @@ function BusyCareActivity({
         suggestion={<small>不管是請朋友或家人協助，都要清楚交接餵食、飲水、排泄清理、陪伴方式，以及如何和{petName || "小狗"}安全互動，讓牠在你忙碌時也能被穩定照顧。</small>}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
+        onReplay={onReplay}
         onContinue={onContinue}
+        continueImmediately={continueImmediately}
       />
     );
   }
@@ -1168,6 +1209,8 @@ function BreedChallengeActivity({
   onChoose,
   onContinue,
   resetSignal,
+  onReplay,
+  continueImmediately = false,
 }: {
   breed: string;
   petName: string;
@@ -1175,6 +1218,8 @@ function BreedChallengeActivity({
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
   onContinue: () => void;
   resetSignal: number;
+  onReplay?: () => void;
+  continueImmediately?: boolean;
 }) {
   const scenarios = getBreedChallengeScenarios(breed);
   const firstUnfinished = scenarios.findIndex((scenario) => answers[scenario.id]?.finalResult !== "correct");
@@ -1231,7 +1276,9 @@ function BreedChallengeActivity({
         intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
         breedHighlight={<BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={`${breedLabel}小知識`} />}
         onVideoError={() => setFeedbackVideoFailed(true)}
+        onReplay={onReplay}
         onContinue={moveToNext}
+        continueImmediately={continueImmediately}
       />
     );
   }
@@ -2227,8 +2274,12 @@ export function LifeJourney({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  const canResetCurrent = completedIds.includes(item.id) && !replayInProgress;
+  const isReviewingCompletedItem = completedIds.includes(item.id);
+  const canResetCurrent = isReviewingCompletedItem && !replayInProgress;
   const currentResetSignal = resetItemId === item.id ? resetSignal : 0;
+  const replayCorrectProps = isReviewingCompletedItem
+    ? { ...(replayInProgress ? { onReplay: resetCurrentQuestion } : {}), continueImmediately: true }
+    : {};
 
   function handleReplay() {
     if (canResetCurrent) resetCurrentQuestion();
@@ -2251,6 +2302,7 @@ export function LifeJourney({
           onChooseMultiple={onChooseMultiple}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
+          {...replayCorrectProps}
         />
       ) : isWalkingActivity ? (
         <WalkingActivity
@@ -2269,6 +2321,7 @@ export function LifeJourney({
           onChoose={onChoose}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
+          {...replayCorrectProps}
         />
       ) : isBusyCareActivity && scenario ? (
         <BusyCareActivity
@@ -2280,6 +2333,7 @@ export function LifeJourney({
           onChoose={choose}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
+          {...replayCorrectProps}
         />
       ) : isVideoFeedbackScenario && scenario && !showArrivalMeal ? (
         <VideoScenarioActivity
@@ -2296,6 +2350,7 @@ export function LifeJourney({
             else continueJourney();
           }}
           resetSignal={currentResetSignal}
+          {...replayCorrectProps}
         />
       ) : scenario && (showArrivalMeal ? (
         <ArrivalMealActivity
@@ -2315,6 +2370,7 @@ export function LifeJourney({
           onChoose={choose}
           onRetry={() => setFeedbackOpen(false)}
           onContinue={continueJourney}
+          {...replayCorrectProps}
         />
       ))}
       {canResetCurrent && <div className="scenario-bottom-nav life-bottom-nav"><button className="secondary" onClick={handleReplay}>↻ 再玩一次</button></div>}

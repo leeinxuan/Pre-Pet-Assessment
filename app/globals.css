@@ -1545,13 +1545,16 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .breed-knowledge-highlight b { display: block; margin-bottom: 7px; color: #724c05; font-size: 14px; }
 .breed-knowledge-highlight p { margin: 4px 0 0; color: #5f4210; font-size: 14px; font-weight: 800; line-height: 1.65; }
 .correct-feedback-copy .other-correct-tips { margin-top: 18px; }
-.delayed-continue { min-height: 56px; align-self: flex-start; margin-top: 34px; display: grid; gap: 9px; }
+.delayed-continue { min-height: 56px; align-self: flex-start; margin-top: 18px; display: grid; gap: 9px; }
 .correct-feedback-layout--multiple .delayed-continue { margin-top: auto; }
 .delayed-continue .primary { min-width: 176px; justify-content: center; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(7px); transition: opacity .58s ease, transform .58s cubic-bezier(.16,1,.3,1), visibility 0s linear .58s; }
 .delayed-continue.is-visible .primary { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); transition-delay: 0s; }
 .delayed-continue.is-visible .primary:disabled { opacity: .52; pointer-events: none; }
 .delayed-continue-hint { color: #5f735f; font-size: 12px; font-weight: 850; line-height: 1.45; }
-.life-journey-page.is-reviewing .delayed-continue { display: none; }
+.correct-feedback-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; margin-top: 18px; }
+.correct-feedback-actions .delayed-continue { margin-top: 0; }
+.correct-feedback-actions.has-replay .delayed-continue { min-height: 0; }
+.correct-feedback-replay { margin-top: 0; }
 .senior-medical-knowledge { display: grid; gap: 10px; margin-top: 22px; padding: 20px; border: 1px solid rgba(95,115,95,.28); border-radius: 20px; background: rgba(255,253,247,.82); }
 .senior-medical-knowledge-heading { display: flex; align-items: center; gap: 10px; }
 .senior-medical-knowledge-heading > span { display: grid; width: 32px; height: 32px; flex: 0 0 32px; place-items: center; border-radius: 50%; background: #ffe9a5; font-size: 19px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(194,139,20,.2); }
@@ -1571,7 +1574,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .feedback-knowledge-card .daily-behavior-correct-list { margin-top: 12px; }
 .correct-feedback-layout--multiple .daily-behavior-correct-list li { padding-left: 2px; }
 .daily-behavior-positive-copy small { display: block; margin-top: 18px; color: #547257; line-height: 1.7; }
-.daily-behavior-positive-copy .primary, .busy-care-positive-copy .primary, .video-scenario-positive-copy .primary { align-self: flex-start; margin-top: 24px; }
+.daily-behavior-positive-copy .primary, .busy-care-positive-copy .primary, .video-scenario-positive-copy .primary { align-self: flex-start; margin-top: 18px; }
 .busy-care-activity { margin-top: 4px; }
 .busy-care-heading { margin: 0 0 20px; }
 .busy-care-heading h1 { margin: 0 0 9px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(30px, 4vw, 43px); }
@@ -1622,7 +1625,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .busy-care-feedback.incorrect { border: 2px solid var(--orange); background: var(--orange-soft); }
 .busy-care-feedback p { color: #733817; line-height: 1.75; }
 .busy-care-feedback--standard .secondary { margin-top: 24px; }
-.incorrect-feedback-key { color: #8d3e1c; font-weight: 950; }
+.incorrect-feedback-key { color: #b63a2b; font-weight: 950; }
 
 .breed-challenge-heading { margin-bottom: 20px; }
 .breed-challenge-heading h1 { margin: 4px 0 9px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(34px, 5vw, 50px); }
@@ -2839,8 +2842,8 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .feedback-suggestion { flex-direction: column; gap: 3px; }
 .scenario-feedback.incorrect .feedback-suggestion,
 .incorrect-suggestion { display: flex; flex-direction: column; gap: 5px; max-width: 820px; margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: #fff4dc; }
-.incorrect-suggestion b { color: #733817; }
-.incorrect-suggestion p { margin: 0; color: #733817; line-height: 1.65; font-size: 13px; }
+.incorrect-suggestion b { color: #b63a2b; }
+.incorrect-suggestion p { margin: 0; color: #9f3328; line-height: 1.65; font-size: 13px; }
 .other-correct-tips { flex-direction: column; gap: 4px; background: rgba(255, 255, 255, .78); }
 .other-correct-tips b { color: var(--gold-dark); font-size: 13px; }
 .other-correct-tips ul { display: grid; gap: 6px; margin: 0; padding-left: 1.1em; color: var(--muted); line-height: 1.65; font-size: 13px; }

@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CcgnoUkU.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-Dr5QCWdW.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -1745,12 +1745,16 @@ function OtherCorrectTips({ scenario, choice, petName }) {
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "也可以這樣做" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: tips.map((tip) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: tip }, tip)) })]
 	});
 }
-function DelayedContinueButton({ label = "繼續", onContinue, disabled = false, hint }) {
-	const [visible, setVisible] = (0, import_react.useState)(false);
+function DelayedContinueButton({ label = "繼續", onContinue, disabled = false, hint, immediate = false }) {
+	const [visible, setVisible] = (0, import_react.useState)(immediate);
 	(0, import_react.useEffect)(() => {
+		if (immediate) {
+			setVisible(true);
+			return;
+		}
 		const timer = window.setTimeout(() => setVisible(true), 3e3);
 		return () => window.clearTimeout(timer);
-	}, []);
+	}, [immediate]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: `delayed-continue ${visible ? "is-visible" : "is-waiting"}`,
 		"aria-live": "polite",
@@ -1790,7 +1794,7 @@ function IncorrectExplanation({ text }) {
 		}), detail && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: detail })]
 	});
 }
-function CorrectFeedbackLayout({ variant, videoSrc, videoFailed, fallbackText, intro, suggestion, breedHighlight, otherTips, otherTipsBeforeSuggestion = false, correctItems, knowledgeTitle = "狗狗小知識", mediaPlaceholder, onVideoError, onVideoEnded, onContinue, continueDisabled = false, continueHint }) {
+function CorrectFeedbackLayout({ variant, videoSrc, videoFailed, fallbackText, intro, suggestion, breedHighlight, otherTips, otherTipsBeforeSuggestion = false, correctItems, knowledgeTitle = "狗狗小知識", mediaPlaceholder, onReplay, onVideoError, onVideoEnded, onContinue, continueImmediately = false, continueDisabled = false, continueHint }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: `correct-feedback-layout correct-feedback-layout--${variant}`,
 		"aria-live": "polite",
@@ -1834,10 +1838,19 @@ function CorrectFeedbackLayout({ variant, videoSrc, videoFailed, fallbackText, i
 					children: suggestion
 				}),
 				!otherTipsBeforeSuggestion && otherTips,
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DelayedContinueButton, {
-					onContinue,
-					disabled: continueDisabled,
-					hint: continueHint
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: `correct-feedback-actions ${onReplay ? "has-replay" : ""}`,
+					children: [onReplay && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						type: "button",
+						className: "secondary correct-feedback-replay",
+						onClick: onReplay,
+						children: "↻ 再玩一次"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DelayedContinueButton, {
+						onContinue,
+						immediate: continueImmediately,
+						disabled: continueDisabled,
+						hint: continueHint
+					})]
 				})
 			]
 		})]
@@ -2041,7 +2054,7 @@ function TimePassTransition({ onComplete }) {
 		})]
 	});
 }
-function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
+function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue, onReplay, continueImmediately = false }) {
 	const requiresRetry = scenario.id === "arrival-adjustment" || scenario.id === "illness-vet" || scenario.id === "growing-old";
 	const [feedbackVideoFailed, setFeedbackVideoFailed] = (0, import_react.useState)(false);
 	const [, setFeedbackVideoFinished] = (0, import_react.useState)(false);
@@ -2077,7 +2090,9 @@ function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
 			setFeedbackVideoFailed(true);
 			setFeedbackVideoFinished(true);
 		},
-		onContinue
+		onReplay,
+		onContinue,
+		continueImmediately
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: `scenario-feedback ${choice.result}`,
@@ -2130,7 +2145,7 @@ function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue }) {
 		]
 	});
 }
-function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, onChoose, onRetry, onContinue }) {
+function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, onChoose, onRetry, onContinue, onReplay, continueImmediately = false }) {
 	const [sceneVideoFailed, setSceneVideoFailed] = (0, import_react.useState)(false);
 	const scenarioVideo = scenario.id === "arrival-adjustment" ? {
 		src: "/assets/pet-journey/first-day.mp4",
@@ -2147,7 +2162,9 @@ function ScenarioCard({ scenario, petName, answer, backupNames, feedbackOpen, on
 		choice: selectedChoice,
 		petName,
 		onRetry,
-		onContinue
+		onContinue,
+		onReplay,
+		continueImmediately
 	});
 	const hasBackup = backupNames.length > 0;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
@@ -2212,7 +2229,7 @@ function SeniorMedicalKnowledge() {
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "高齡後，醫療不一定只是一次突發支出。健康檢查、慢性病追蹤、用藥、牙科、影像檢查與行動照護，都可能成為反覆出現的費用。" })]
 	});
 }
-function VideoScenarioActivity({ scenario, answer, petName, breed, onChoose, onCorrectComplete, resetSignal }) {
+function VideoScenarioActivity({ scenario, answer, petName, breed, onChoose, onCorrectComplete, resetSignal, onReplay, continueImmediately = false }) {
 	const [mode, setMode] = (0, import_react.useState)(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
 	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
 	const [, setVideoFinished] = (0, import_react.useState)(false);
@@ -2256,7 +2273,9 @@ function VideoScenarioActivity({ scenario, answer, petName, breed, onChoose, onC
 				setVideoFailed(true);
 				setVideoFinished(true);
 			},
-			onContinue: onCorrectComplete
+			onReplay,
+			onContinue: onCorrectComplete,
+			continueImmediately
 		});
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
@@ -2322,7 +2341,7 @@ var dailyBehaviorVideos = {
 	"behavior-chewing": "/assets/pet-journey/chewing-on-things.mp4",
 	"behavior-toileting": "/assets/pet-journey/urinate-and-defecate.mp4"
 };
-function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onContinue, resetSignal }) {
+function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onContinue, resetSignal, onReplay, continueImmediately = false }) {
 	const scenarios = dailyBehaviorScenarioIds.map((id) => lifeScenarios.find((entry) => entry.id === id)).filter((entry) => Boolean(entry));
 	const firstUnfinished = scenarios.findIndex((entry) => answers[entry.id]?.finalResult !== "correct");
 	const [currentIndex, setCurrentIndex] = (0, import_react.useState)(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
@@ -2422,7 +2441,9 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 			setVideoFailed(true);
 			setVideoFinished(true);
 		},
-		onContinue: moveToNext
+		onReplay,
+		onContinue: moveToNext,
+		continueImmediately
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "daily-behavior-activity",
@@ -2499,7 +2520,7 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 		]
 	});
 }
-function BusyCareActivity({ scenario, answer, petName, members, onMembersChange, onChoose, onContinue, resetSignal }) {
+function BusyCareActivity({ scenario, answer, petName, members, onMembersChange, onChoose, onContinue, resetSignal, onReplay, continueImmediately = false }) {
 	const [mode, setMode] = (0, import_react.useState)(answer?.finalResult === "correct" ? "positive" : "question");
 	const [familyStep, setFamilyStep] = (0, import_react.useState)("name");
 	const [helperName, setHelperName] = (0, import_react.useState)("");
@@ -2608,7 +2629,9 @@ function BusyCareActivity({ scenario, answer, petName, members, onMembersChange,
 			setVideoFailed(true);
 			setVideoFinished(true);
 		},
-		onContinue
+		onReplay,
+		onContinue,
+		continueImmediately
 	}, scenario.id);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "busy-care-activity",
@@ -2771,7 +2794,7 @@ function BusyCareActivity({ scenario, answer, petName, members, onMembersChange,
 		})]
 	});
 }
-function BreedChallengeActivity({ breed, petName, answers, onChoose, onContinue, resetSignal }) {
+function BreedChallengeActivity({ breed, petName, answers, onChoose, onContinue, resetSignal, onReplay, continueImmediately = false }) {
 	const scenarios = getBreedChallengeScenarios(breed);
 	const firstUnfinished = scenarios.findIndex((scenario) => answers[scenario.id]?.finalResult !== "correct");
 	const [currentIndex, setCurrentIndex] = (0, import_react.useState)(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
@@ -2825,7 +2848,9 @@ function BreedChallengeActivity({ breed, petName, answers, onChoose, onContinue,
 				label: `${breedLabel}小知識`
 			}),
 			onVideoError: () => setFeedbackVideoFailed(true),
-			onContinue: moveToNext
+			onReplay,
+			onContinue: moveToNext,
+			continueImmediately
 		}, scenario.id);
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
@@ -3760,8 +3785,13 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 			behavior: "smooth"
 		});
 	}
-	const canResetCurrent = completedIds.includes(item.id) && !replayInProgress;
+	const isReviewingCompletedItem = completedIds.includes(item.id);
+	const canResetCurrent = isReviewingCompletedItem && !replayInProgress;
 	const currentResetSignal = resetItemId === item.id ? resetSignal : 0;
+	const replayCorrectProps = isReviewingCompletedItem ? {
+		...replayInProgress ? { onReplay: resetCurrentQuestion } : {},
+		continueImmediately: true
+	} : {};
 	function handleReplay() {
 		if (canResetCurrent) resetCurrentQuestion();
 	}
@@ -3778,7 +3808,8 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 				petName,
 				onChooseMultiple,
 				onContinue: continueJourney,
-				resetSignal: currentResetSignal
+				resetSignal: currentResetSignal,
+				...replayCorrectProps
 			}) : isWalkingActivity ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WalkingActivity, {
 				activity,
 				petName,
@@ -3792,7 +3823,8 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 				answers,
 				onChoose,
 				onContinue: continueJourney,
-				resetSignal: currentResetSignal
+				resetSignal: currentResetSignal,
+				...replayCorrectProps
 			}) : isBusyCareActivity && scenario ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BusyCareActivity, {
 				scenario,
 				answer,
@@ -3801,7 +3833,8 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 				onMembersChange,
 				onChoose: choose,
 				onContinue: continueJourney,
-				resetSignal: currentResetSignal
+				resetSignal: currentResetSignal,
+				...replayCorrectProps
 			}) : isVideoFeedbackScenario && scenario && !showArrivalMeal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VideoScenarioActivity, {
 				scenario,
 				answer,
@@ -3817,7 +3850,8 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 						}));
 					} else continueJourney();
 				},
-				resetSignal: currentResetSignal
+				resetSignal: currentResetSignal,
+				...replayCorrectProps
 			}) : scenario && (showArrivalMeal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrivalMealActivity, {
 				activity,
 				petName,
@@ -3832,7 +3866,8 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 				feedbackOpen,
 				onChoose: choose,
 				onRetry: () => setFeedbackOpen(false),
-				onContinue: continueJourney
+				onContinue: continueJourney,
+				...replayCorrectProps
 			})),
 			canResetCurrent && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "scenario-bottom-nav life-bottom-nav",
