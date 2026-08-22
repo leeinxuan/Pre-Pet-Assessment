@@ -206,12 +206,12 @@ export const trunkItems: TrunkItem[] = [
     feedback: "身分證已放入文件夾。", placement: { x: 20, y: 36, width: 15, layer: 4 },
   },
   {
-    id: "documents", label: "領養文件", kind: "document", image: "/assets/car/adoption-documents.png", preparedLabel: "已攜帶",
+    id: "documents", label: "飼養文件", kind: "document", image: "/assets/car/adoption-documents.png", preparedLabel: "已攜帶",
     description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。",
     reason: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。",
     caution: "實際需要攜帶的文件，請依領養單位通知及評估流程確認。",
     sourceLabel: "領養單位提供的領養評估單與接回注意事項",
-    feedback: "領養文件已放入文件夾。", placement: { x: 22, y: 32, width: 24, layer: 3 },
+    feedback: "飼養文件已放入文件夾。", placement: { x: 22, y: 32, width: 24, layer: 3 },
   },
   {
     id: "carrier-kit", label: "運輸籠＋尿墊", kind: "supply", image: "/assets/car/carrier.png", preparedLabel: "已準備",
