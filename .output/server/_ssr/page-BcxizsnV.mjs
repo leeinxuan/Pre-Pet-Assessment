@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-Dr5QCWdW.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-BcxizsnV.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -144,6 +144,14 @@ var breeds = [
 		image: "/assets/species/dog/doberman.png",
 		size: "large",
 		shortDescription: "警覺、聰明且活動量高，需要穩定訓練、規律運動與清楚界線。適合能投入陪伴、社會化與安全管理的家庭。"
+	},
+	{
+		id: "old-english-sheepdog",
+		label: "英國古代牧羊犬",
+		icon: "🐕",
+		image: "/assets/species/dog/old-english-sheepdog.png",
+		size: "large",
+		shortDescription: "溫和親人、體型較大且毛量豐厚，需要規律梳理、充足活動與舒適的生活空間。適合願意投入日常照護與毛髮整理的家庭。"
 	},
 	{
 		id: "mixed",
