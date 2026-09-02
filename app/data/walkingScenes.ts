@@ -11,44 +11,103 @@ export const walkingScenes = [
   { title: "人行道往家門口", image: "/assets/walking/sidewalk-to-home.jpg", mobileImage: "/assets/walking/sidewalk-to-home-mobile.jpg", poopEvent: false },
 ] as const;
 
-type MobileWalkingPoint = {
-  left: number;
-  bottom: number;
+type WalkingSceneLayoutPoint = {
+  x: number;
+  y: number;
   scale: number;
 };
 
-type MobileWalkingScenePlacement = {
-  start: MobileWalkingPoint;
-  waypoint?: MobileWalkingPoint;
-  end: MobileWalkingPoint;
-  poop?: { left: number; bottom: number; size: number };
+type WalkingSceneLayout = {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  scale: number;
+  mobileStartX: number;
+  mobileStartY: number;
+  mobileScale: number;
+  turnAt?: number;
+  waypoint?: WalkingSceneLayoutPoint;
+  endScale?: number;
+  mobileWaypoint?: WalkingSceneLayoutPoint;
+  mobileEndX?: number;
+  mobileEndY?: number;
+  mobileEndScale?: number;
+  poop?: { x: number; y: number; size: number };
+  mobilePoop?: { x: number; y: number; size: number };
 };
 
-// 僅手機版散步位置設定：可在這裡單獨微調人物＋小狗、轉折點、尺寸與便便位置。
-// left / bottom 為相對於手機 1:1 場景容器的百分比；不會影響桌機版路徑。
-export const mobileWalkingScenePlacements: Record<number, MobileWalkingScenePlacement> = {
-  // 場景 1：家門口往人行道，兩段式往遠方移動。
+// 散步人物位置設定：桌機與手機的人物＋小狗路徑都集中在這裡。
+// x / y 都是相對於散步 stage 的百分比座標，使用 top/left 定位；請避免負值或超出 0～100。
+// 之後要微調 Mac/Safari/Chrome 的人物位置，只改這個 walkingSceneLayout，不用改 CSS。
+export const walkingSceneLayout: Record<number, WalkingSceneLayout> = {
+  // 場景 1：家門口往人行道，桌機與手機都可用 waypoint 做兩段式路線。
   0: {
-    start: { left: 8, bottom: 23, scale: 0.7 },
-    waypoint: { left: 40, bottom: 18, scale: 0.7 },
-    end: { left: 40, bottom: 40, scale: 0.4 },
+    startX: 30,
+    startY: 50,
+    endX: 65,
+    endY: 50,
+    scale: 1.5,
+    endScale: 0.3,
+    turnAt: 0.55,
+    waypoint: { x: 70, y: 60, scale: 1.5 },
+    mobileStartX: 35,
+    mobileStartY: 50,
+    mobileScale: 0.7,
+    mobileWaypoint: { x: 70, y: 60, scale: 0.7 },
+    mobileEndX: 70,
+    mobileEndY: 50,
+    mobileEndScale: 0.3,
   },
-  // 場景 2：公園，斜直線移動；沒有 waypoint 即為直線。
+  // 場景 2：公園，斜直線移動。
   1: {
-    start: { left: 7, bottom: 0, scale: 1 },
-    end: { left: 35, bottom: 30, scale: 0.6 },
+    startX: 25,
+    startY: 60,
+    endX: 70,
+    endY: 45,
+    scale: 1.5,
+    endScale: 1,
+    mobileStartX: 40,
+    mobileStartY: 60,
+    mobileScale: 1,
+    mobileEndX: 60,
+    mobileEndY: 45,
+    mobileEndScale: 0.5,
   },
-  // 場景 3：公園便便事件。poop 的 left / bottom / size 可獨立調整，不會跟著人物位置改動。
+  // 場景 3：公園便便事件，poop / mobilePoop 可獨立微調便便位置與大小。
   2: {
-    start: { left: 8, bottom: 0, scale: 1 },
-    end: { left: 78, bottom: 0, scale: 1 },
-    poop: { left: 78, bottom: 15, size: 50 },
+    startX: 20,
+    startY: 58,
+    endX: 90,
+    endY: 58,
+    scale: 1.5,
+    endScale: 1.5,
+    mobileStartX: 30,
+    mobileStartY: 65,
+    mobileScale: 1,
+    mobileEndX: 78,
+    mobileEndY: 65,
+    mobileEndScale: 1,
+    poop: { x: 70, y: 85, size: 20 },
+    mobilePoop: { x: 65, y: 85, size: 40 },
   },
-  // 場景 4：人行道回家門口。
+  // 場景 4：人行道回家門口，可依畫面手動調整路徑與縮放。
   3: {
-    start: { left: 4, bottom: 35, scale: 0.4 },
-    waypoint: { left: 5, bottom: 20, scale: 0.7 },
-    end: { left: 45, bottom: 20, scale: 0.82 },
+    startX: 25,
+    startY: 50,
+    endX: 70,
+    endY: 60,
+    scale: 0.3,
+    endScale: 1.5,
+    turnAt: 0.55,
+    waypoint: { x: 30, y: 60, scale: 1.5 },
+    mobileStartX: 30,
+    mobileStartY: 50,
+    mobileScale: 0.4,
+    mobileWaypoint: { x: 40, y: 55, scale: 0.7 },
+    mobileEndX: 65,
+    mobileEndY: 55,
+    mobileEndScale: 0.82,
   },
 };
 

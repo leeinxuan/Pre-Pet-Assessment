@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { arrivalMealMobilePlacements, breeds, expenseCatalog, money, roomItems } from "../../game-data";
 import { getBreedChallengeScenarios, journeyItems, lifeScenarios } from "../../life-data";
-import { mobileWalkingScenePlacements, walkingPreloadImages, walkingPrepItems, walkingScenes } from "../../data/walkingScenes";
+import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/walkingScenes";
 import type {
   CareMember,
   ExpenseRecord,
@@ -1619,37 +1619,6 @@ type WalkingPathPoint = {
   scale: number;
 };
 
-type WalkingScenePath = {
-  turnAt: number;
-  start: WalkingPathPoint;
-  turn: WalkingPathPoint;
-  end: WalkingPathPoint;
-};
-
-const walkingScenePaths: Partial<Record<number, WalkingScenePath>> = {
-  // 場景 1：家門口往人行道
-  0: {
-    turnAt: 0.55,
-    start: { x: 8, y: 50, scale: 1 },
-    turn: { x: 45, y: 50, scale: 1 },
-    end: { x: 42, y: 20, scale: 0.4 },
-  },
-  // 場景 2：公園。這裡設定成斜直線；turn 放在 start/end 的中點即可避免轉彎。
-  1: {
-    turnAt: 0.5,
-    start: { x: 8, y: 50, scale: 1 },
-    turn: { x: 29, y: 32.5, scale: 0.8 },
-    end: { x: 50, y: 15, scale: 0.6 },
-  },
-  // 場景 4：人行道往家門口。可依畫面手動調整路徑與縮放。
-  3: {
-    turnAt: 0.55,
-    start: { x: 5, y: 10, scale: 0.3 },
-    turn: { x: 15, y: 50, scale: 1 },
-    end: { x: 45, y: 50, scale: 1 },
-  },
-};
-
 const walkingSceneCompletionAt: Partial<Record<number, number>> = {
   // 場景 2 視覺上較早抵達終點，縮短完成距離，避免最後還要多按幾下。
   1: 80,
@@ -1659,58 +1628,45 @@ function getWalkingCompletionPosition(sceneIndex: number) {
   return walkingSceneCompletionAt[sceneIndex] ?? 100;
 }
 
-function getWalkingCharacterStyle(sceneIndex: number, position: number, mobile = false): CSSProperties {
-  if (mobile) {
-    const placement = mobileWalkingScenePlacements[sceneIndex];
-    if (placement) {
-      const completionPosition = getWalkingCompletionPosition(sceneIndex);
-      const progress = Math.max(0, Math.min(1, position / completionPosition));
-      const { start, waypoint, end } = placement;
-      const hasWaypoint = Boolean(waypoint);
-      const turnAt = 0.55;
-      const segmentProgress = hasWaypoint
-        ? (progress <= turnAt ? progress / turnAt : (progress - turnAt) / (1 - turnAt))
-        : progress;
-      const from = hasWaypoint && progress > turnAt ? waypoint! : start;
-      const to = hasWaypoint && progress <= turnAt ? waypoint! : end;
+function clampPercent(value: number) {
+  return Math.max(0, Math.min(100, value));
+}
 
-      return {
-        "--walk-left": `${lerp(from.left, to.left, segmentProgress)}%`,
-        "--walk-top": "auto",
-        "--walk-bottom": `${lerp(from.bottom, to.bottom, segmentProgress)}%`,
-        "--walk-translate-y": "0",
-        "--walk-scale": lerp(from.scale, to.scale, segmentProgress),
-      } as CSSProperties;
-    }
-  }
-
-  const path = walkingScenePaths[sceneIndex];
-  const completionPosition = getWalkingCompletionPosition(sceneIndex);
-
-  if (!path) {
-    return {
-      "--walk-left": `${Math.min(78, 5 + position * 0.73)}%`,
-      "--walk-bottom": "2%",
-      "--walk-translate-y": "0",
-      "--walk-scale": 1,
-    } as CSSProperties;
-  }
-
-  const progress = Math.max(0, Math.min(1, position / completionPosition));
-  const { turnAt, start, turn, end } = path;
-
-  const segmentProgress = progress <= turnAt
-    ? progress / turnAt
-    : (progress - turnAt) / (1 - turnAt);
-  const from = progress <= turnAt ? start : turn;
-  const to = progress <= turnAt ? turn : end;
+function interpolateWalkingPoint(start: WalkingPathPoint, waypoint: WalkingPathPoint | undefined, end: WalkingPathPoint, progress: number, turnAt = 0.55) {
+  const safeProgress = Math.max(0, Math.min(1, progress));
+  const safeTurnAt = Math.max(0.05, Math.min(0.95, turnAt));
+  const hasWaypoint = Boolean(waypoint);
+  const segmentProgress = hasWaypoint
+    ? (safeProgress <= safeTurnAt ? safeProgress / safeTurnAt : (safeProgress - safeTurnAt) / (1 - safeTurnAt))
+    : safeProgress;
+  const from = hasWaypoint && safeProgress > safeTurnAt ? waypoint! : start;
+  const to = hasWaypoint && safeProgress <= safeTurnAt ? waypoint! : end;
 
   return {
-    "--walk-left": `${lerp(from.x, to.x, segmentProgress)}%`,
-    "--walk-top": `${lerp(from.y, to.y, segmentProgress)}%`,
-    "--walk-bottom": "auto",
-    "--walk-translate-y": "-50%",
-    "--walk-scale": lerp(from.scale, to.scale, segmentProgress),
+    x: clampPercent(lerp(from.x, to.x, segmentProgress)),
+    y: clampPercent(lerp(from.y, to.y, segmentProgress)),
+    scale: Math.max(0.05, lerp(from.scale, to.scale, segmentProgress)),
+  };
+}
+
+function getWalkingCharacterStyle(sceneIndex: number, position: number, mobile = false): CSSProperties {
+  const layout = walkingSceneLayout[sceneIndex];
+  const completionPosition = getWalkingCompletionPosition(sceneIndex);
+  const progress = Math.max(0, Math.min(1, position / completionPosition));
+
+  const start = mobile
+    ? { x: layout.mobileStartX, y: layout.mobileStartY, scale: layout.mobileScale }
+    : { x: layout.startX, y: layout.startY, scale: layout.scale };
+  const end = mobile
+    ? { x: layout.mobileEndX ?? layout.endX, y: layout.mobileEndY ?? layout.endY, scale: layout.mobileEndScale ?? layout.endScale ?? layout.scale }
+    : { x: layout.endX, y: layout.endY, scale: layout.endScale ?? layout.scale };
+  const waypoint = mobile ? layout.mobileWaypoint : layout.waypoint;
+  const point = interpolateWalkingPoint(start, waypoint, end, progress, layout.turnAt);
+
+  return {
+    "--walk-left": `${point.x}%`,
+    "--walk-top": `${point.y}%`,
+    "--walk-scale": point.scale,
   } as CSSProperties;
 }
 
@@ -1771,12 +1727,20 @@ function WalkingActivity({
       ? { title: "做得很好！", body: "散步時清理排泄物，也是照顧責任的一部分。" }
       : { title: "散步中的小事件", body: "牠在路上排泄了，先停下來幫牠清理乾淨，再繼續往前走。" }
     : null;
-  const mobilePoopPlacement = mobileWalkingScenePlacements[sceneIndex]?.poop;
+  const mobilePoopPlacement = walkingSceneLayout[sceneIndex]?.mobilePoop;
   const mobilePoopStyle = mobilePoopPlacement
     ? ({
-      "--mobile-walk-poop-left": `${mobilePoopPlacement.left}%`,
-      "--mobile-walk-poop-bottom": `${mobilePoopPlacement.bottom}%`,
+      "--mobile-walk-poop-left": `${mobilePoopPlacement.x}%`,
+      "--mobile-walk-poop-top": `${mobilePoopPlacement.y}%`,
       "--mobile-walk-poop-size": `${mobilePoopPlacement.size}%`,
+    } as CSSProperties)
+    : undefined;
+  const desktopPoopPlacement = walkingSceneLayout[sceneIndex]?.poop;
+  const desktopPoopStyle = desktopPoopPlacement
+    ? ({
+      "--walk-poop-left": `${desktopPoopPlacement.x}%`,
+      "--walk-poop-top": `${desktopPoopPlacement.y}%`,
+      "--walk-poop-size": `${desktopPoopPlacement.size}%`,
     } as CSSProperties)
     : undefined;
 
@@ -1986,6 +1950,29 @@ function WalkingActivity({
     setMessage("已清理完成，繼續陪牠往前走。");
   }
 
+  const renderWalkingEventCard = (className = "") => walkingEventMessage ? (
+    <div className={`walking-event-card ${className}`} role="status">
+      <b>{walkingEventMessage.title}</b>
+      <p>{walkingEventMessage.body}</p>
+      {needsCleanup && (
+        <div className="walking-drag-row">
+          <button
+            type="button"
+            className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}`}
+            onPointerDown={startDraggingBag}
+            onPointerMove={dragBag}
+            onPointerUp={finishDraggingBag}
+            onPointerCancel={cancelDraggingBag}
+            aria-label="拖曳撿便袋清理排泄物"
+          >
+            <img src="/assets/walking/poop-bag-1.png" alt="" />
+          </button>
+          <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
+        </div>
+      )}
+    </div>
+  ) : null;
+
   if (activity.walkingComplete) {
     return (
       <section className="walking-activity walking-complete">
@@ -2073,17 +2060,17 @@ function WalkingActivity({
         <div className="walking-game">
           <p className="walking-game-hint">{walkingInstruction}</p>
           <div className="walking-scene-shell">
-            <div className="walking-progress walking-progress-overlay" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
-              <b>散步進度</b>
-              <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
-              <small>{progressMinutes} / 20 分鐘</small>
-            </div>
           <div
             className={`walking-scene ${moving ? "is-moving" : ""}`}
             ref={sceneRef}
             tabIndex={0}
             aria-label="散步場景，按往前走按鈕前進"
           >
+            <div className="walking-progress walking-progress-overlay" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
+              <b>散步進度</b>
+              <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
+              <small>{progressMinutes} / 20 分鐘</small>
+            </div>
             <picture>
               <source media="(max-width: 720px)" srcSet={scene.mobileImage} />
               <img className="walking-bg" src={scene.image} alt={scene.title} />
@@ -2102,9 +2089,18 @@ function WalkingActivity({
                 src={activity.walkingPoopCleaned ? "/assets/walking/walker-dog-bag.png" : needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png"}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
-              {needsCleanup && !isMobileWalkingLayout && <div className="walking-poop" ref={poopTargetRef} aria-hidden="true"><img src="/assets/walking/poop.png" alt="" /></div>}
             </div>
-            {needsCleanup && isMobileWalkingLayout && <div className="walking-poop walking-poop--mobile" ref={poopTargetRef} style={mobilePoopStyle} aria-hidden="true"><img src="/assets/walking/poop.png" alt="" /></div>}
+            {needsCleanup && (
+              <div
+                className={isMobileWalkingLayout ? "walking-poop walking-poop--mobile" : "walking-poop"}
+                ref={poopTargetRef}
+                style={isMobileWalkingLayout ? mobilePoopStyle : desktopPoopStyle}
+                aria-hidden="true"
+              >
+                <img src="/assets/walking/poop.png" alt="" />
+              </div>
+            )}
+            {renderWalkingEventCard("walking-event-card--desktop")}
             <button
               type="button"
               className="walking-forward-button"
@@ -2132,28 +2128,7 @@ function WalkingActivity({
               <span className="walking-forward-label">往前走</span>
             </button>
           </div>
-          {walkingEventMessage && (
-            <div className="walking-event-card" role="status">
-              <b>{walkingEventMessage.title}</b>
-              <p>{walkingEventMessage.body}</p>
-              {needsCleanup && (
-                <div className="walking-drag-row">
-                  <button
-                    type="button"
-                    className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}`}
-                    onPointerDown={startDraggingBag}
-                    onPointerMove={dragBag}
-                    onPointerUp={finishDraggingBag}
-                    onPointerCancel={cancelDraggingBag}
-                    aria-label="拖曳撿便袋清理排泄物"
-                  >
-                    <img src="/assets/walking/poop-bag-1.png" alt="" />
-                  </button>
-                  <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
-                </div>
-              )}
-            </div>
-          )}
+          {renderWalkingEventCard("walking-event-card--mobile")}
           </div>
         </div>
       )}

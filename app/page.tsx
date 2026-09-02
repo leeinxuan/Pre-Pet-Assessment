@@ -341,7 +341,8 @@ export default function Home() {
     setSelectionReached(4);
     setPreparationReached(1);
     setFurthestStep(8);
-    setLifePhase("life-journey");
+    setLifePhase("arrival-video");
+    setJourneyIndex(0);
     setStep(1);
     setIntroOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
