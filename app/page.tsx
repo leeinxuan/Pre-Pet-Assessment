@@ -4,13 +4,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   applySizeBasedExpenseAmount,
   expenseCatalog,
-  departureTrunkItems,
   getPetSizeForBreed,
   initialMembers,
   initialProfile,
   intros,
-  roomItems,
 } from "./game-data";
+import { getSpeciesGameConfig } from "./data/speciesGameConfig";
 import { initialLifeActivityState } from "./life-data";
 import type {
   CareMember,
@@ -140,6 +139,7 @@ export default function Home() {
   const backupNames = useMemo(() => {
     return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
   }, [members]);
+  const speciesConfig = getSpeciesGameConfig(category);
 
   function goTo(next: number) {
     setStep(next);
@@ -203,7 +203,7 @@ export default function Home() {
   function addRoomItem(id: string) {
     if (!id) return;
     setRoomReady((current) => current.includes(id) ? current : [...current, id]);
-    const expenseId = roomItems.find((item) => item.id === id)?.expenseId;
+    const expenseId = speciesConfig.roomItems.find((item) => item.id === id)?.expenseId;
     if (expenseId) addExpenseById(expenseId);
   }
 
@@ -217,11 +217,11 @@ export default function Home() {
 
   function selectTrunkItem(id: string) {
     if (!id) return;
-    const expenseIds = departureTrunkItems.find((item) => item.id === id)?.expenseIds ?? [];
+    const expenseIds = speciesConfig.trunkItems.find((item) => item.id === id)?.expenseIds ?? [];
     setTrunkSelected((current) => {
       if (current.includes(id)) return current;
       const next = [...current, id];
-      const trunkComplete = departureTrunkItems.every((item) => next.includes(item.id));
+      const trunkComplete = speciesConfig.trunkItems.every((item) => next.includes(item.id));
       setTrunkPassed(trunkComplete);
       if (trunkComplete) setPreparationReached((current) => Math.max(current, 1));
       return next;
@@ -351,21 +351,22 @@ export default function Home() {
   function renderPreparation() {
     if (preparationTask === 0) {
       const reviewing = preparationReached >= 1 && preparationReplayTask !== 0;
-      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(0); }} onBack={() => goTo(1)} onNext={() => { changePreparationTask(1); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
+      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(0); }} onBack={() => goTo(1)} onNext={() => { changePreparationTask(1); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
     }
     const reviewing = furthestStep >= 3 && preparationReplayTask !== 1;
-    return <CarTrunkPreparation selected={trunkSelected} petName={petName} breed={breed} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { setPreparationReached((current) => Math.max(current, 1)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { setPreparationReached((current) => Math.max(current, 1)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
     if (lifePhase === "arrival-video") {
-      return <ArrivalTransitionVideo onContinue={() => { setJourneyIndex(0); setLifePhase("life-journey"); }} />;
+      return <ArrivalTransitionVideo species={category} onContinue={() => { setJourneyIndex(0); setLifePhase("life-journey"); }} />;
     }
     return (
       <LifeJourney
         index={journeyIndex}
         petName={petName}
         breed={breed}
+        species={category}
         answers={scenarioAnswers}
         activity={lifeActivity}
         completedIds={journeyCompleted}
@@ -409,6 +410,7 @@ export default function Home() {
             preparationReached={preparationReached}
             lifePhase={lifePhase}
             breed={breed}
+            species={category}
             journeyIndex={journeyIndex}
             journeyCompleted={journeyCompleted}
             onGoTo={goToStation}
@@ -422,8 +424,8 @@ export default function Home() {
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>
-              <AssessmentReport petName={petName} breed={breed} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
-              <ProfileSupplementForm profile={profile} petName={petName} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+              <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+              <ProfileSupplementForm profile={profile} petName={petName} breed={breed} species={category} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <div className="report-next-step-actions">
                 <button className="primary" type="button" disabled={!careCommitted} aria-describedby="care-commitment-gate" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "auto" }); }}>取得寵物 <span>→</span></button>
                 {!careCommitted && <p id="care-commitment-gate" className="report-commitment-hint">請先勾選上方的照顧承諾，才能進入下一步。</p>}

@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-CbnNHoI4.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-BL_794E_.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
@@ -65,7 +65,7 @@ var categories = [
 		label: "貓",
 		icon: "🐈",
 		image: "/assets/species/cat.png",
-		active: false
+		active: true
 	},
 	{
 		id: "rabbit",
@@ -99,6 +99,7 @@ var categories = [
 var breeds = [
 	{
 		id: "chihuahua",
+		species: "dog",
 		label: "吉娃娃",
 		icon: "🐕",
 		image: "/assets/species/dog/chihuahua.png",
@@ -107,6 +108,7 @@ var breeds = [
 	},
 	{
 		id: "poodle",
+		species: "dog",
 		label: "貴賓犬",
 		icon: "🐩",
 		image: "/assets/species/dog/poodle.png",
@@ -115,6 +117,7 @@ var breeds = [
 	},
 	{
 		id: "shiba",
+		species: "dog",
 		label: "柴犬",
 		icon: "🐕",
 		image: "/assets/species/dog/shiba.png",
@@ -123,6 +126,7 @@ var breeds = [
 	},
 	{
 		id: "border",
+		species: "dog",
 		label: "邊境牧羊犬",
 		icon: "🐕‍🦺",
 		image: "/assets/species/dog/border-collie.png",
@@ -131,6 +135,7 @@ var breeds = [
 	},
 	{
 		id: "labrador",
+		species: "dog",
 		label: "拉布拉多",
 		icon: "🦮",
 		image: "/assets/species/dog/labrador.png",
@@ -139,6 +144,7 @@ var breeds = [
 	},
 	{
 		id: "doberman",
+		species: "dog",
 		label: "杜賓犬",
 		icon: "🐕",
 		image: "/assets/species/dog/doberman.png",
@@ -147,6 +153,7 @@ var breeds = [
 	},
 	{
 		id: "old-english-sheepdog",
+		species: "dog",
 		label: "英國古代牧羊犬",
 		icon: "🐕",
 		image: "/assets/species/dog/old-english-sheepdog.png",
@@ -155,11 +162,30 @@ var breeds = [
 	},
 	{
 		id: "mixed",
+		species: "dog",
 		label: "米克斯",
 		icon: "🐕",
 		image: "/assets/species/dog/mixed-breed.png",
 		size: "medium",
 		shortDescription: "個性與體型差異較大，適合先了解牠的實際年齡、體態與生活習慣。準備時可保留彈性，依牠到家後的反應慢慢調整。"
+	},
+	{
+		id: "orange-cat",
+		species: "cat",
+		label: "米克斯－橘貓",
+		icon: "🐈",
+		image: "",
+		size: "medium",
+		shortDescription: "多數親人、表達需求明顯，常喜歡主動互動與撒嬌。牠也較需要注意體重管理，建議採定時定量餵食，搭配益智漏食玩具與日常活動，避免因過度進食而變胖。"
+	},
+	{
+		id: "tabby-cat",
+		species: "cat",
+		label: "米克斯－虎斑貓",
+		icon: "🐈‍⬛",
+		image: "",
+		size: "medium",
+		shortDescription: "聰明、互動性高，也常保有旺盛的獵捕本能。牠喜歡和人玩耍，適合每天安排逗貓棒等獵捕遊戲，並提供貓跳台或安全的垂直空間，幫助牠消耗精力。"
 	}
 ];
 var sizeBasedCosts = {
@@ -373,6 +399,94 @@ var expenseCatalog = {
 		amount: 1800,
 		category: "高齡用品",
 		stage: "調整高齡生活空間",
+		recurring: false
+	},
+	"cat-hide-box": {
+		id: "cat-hide-box",
+		name: "躲藏紙箱",
+		amount: 120,
+		category: "用品",
+		stage: "飼養前準備",
+		recurring: false
+	},
+	"cat-safe-window": {
+		id: "cat-safe-window",
+		name: "門窗與紗窗安全防護",
+		amount: 900,
+		category: "用品",
+		stage: "飼養前準備",
+		recurring: false
+	},
+	"cat-rest-bed": {
+		id: "cat-rest-bed",
+		name: "貓咪休息空間",
+		amount: 900,
+		category: "用品",
+		stage: "飼養前準備",
+		recurring: false
+	},
+	"cat-litter-box": {
+		id: "cat-litter-box",
+		name: "貓砂盆",
+		amount: 700,
+		category: "清潔",
+		stage: "飼養前準備",
+		recurring: false
+	},
+	"cat-litter": {
+		id: "cat-litter",
+		name: "貓砂",
+		amount: 500,
+		category: "每月基本支出",
+		stage: "日常照護",
+		recurring: true
+	},
+	"cat-scratcher": {
+		id: "cat-scratcher",
+		name: "抓板",
+		amount: 350,
+		category: "用品",
+		stage: "飼養前準備",
+		recurring: false
+	},
+	"cat-tree": {
+		id: "cat-tree",
+		name: "跳台",
+		amount: 1800,
+		category: "用品",
+		stage: "飼養前準備",
+		recurring: false
+	},
+	"cat-safe-toy": {
+		id: "cat-safe-toy",
+		name: "安全玩具",
+		amount: 300,
+		category: "用品",
+		stage: "飼養前準備",
+		recurring: false
+	},
+	"cat-monthly-food": {
+		id: "cat-monthly-food",
+		name: "每月貓主食費",
+		amount: 1300,
+		category: "每月基本支出",
+		stage: "日常照護",
+		recurring: true
+	},
+	"cat-carrier": {
+		id: "cat-carrier",
+		name: "貓用外出籠",
+		amount: 1200,
+		category: "用品",
+		stage: "飼養前準備",
+		recurring: false
+	},
+	"cat-senior-room": {
+		id: "cat-senior-room",
+		name: "高齡貓環境調整用品",
+		amount: 1600,
+		category: "高齡用品",
+		stage: "逐漸進入高齡",
 		recurring: false
 	}
 };
@@ -864,6 +978,514 @@ var initialProfile = {
 	emergencyFund: null,
 	backupSupport: null
 };
+var catRoomItems = [
+	{
+		id: "cat-safe-window",
+		label: "穩固的門窗與紗窗",
+		icon: "□",
+		image: "/assets/room/small-items.png",
+		placement: {
+			x: 88,
+			y: 44,
+			width: 11,
+			layer: 5
+		},
+		mobilePlacement: {
+			x: 86,
+			y: 45,
+			width: 17
+		},
+		required: true,
+		need: "安全",
+		expenseId: "cat-safe-window",
+		purpose: "先確認門窗、紗窗與陽台防護穩固，避免貓咪逃脫或墜落。"
+	},
+	{
+		id: "cat-hide-box",
+		label: "可退避的安全躲藏空間",
+		icon: "▣",
+		image: "/assets/car/carrier.png",
+		placement: {
+			x: 66,
+			y: 73,
+			width: 22,
+			layer: 3
+		},
+		mobilePlacement: {
+			x: 58,
+			y: 74,
+			width: 32
+		},
+		required: true,
+		need: "安全",
+		expenseId: "cat-hide-box",
+		purpose: "準備緊張時可躲避的隱蔽空間，讓貓咪能用自己的速度觀察與適應。"
+	},
+	{
+		id: "cat-rest-space",
+		label: "休息空間",
+		icon: "🛏️",
+		image: "/assets/room/pet-bed.png",
+		placement: {
+			x: 72,
+			y: 84,
+			width: 18,
+			layer: 2
+		},
+		mobilePlacement: {
+			x: 70,
+			y: 84,
+			width: 28
+		},
+		required: true,
+		need: "休息",
+		expenseId: "cat-rest-bed",
+		purpose: "日常睡眠與舒適休息的位置要安靜、穩定，避免一直被打擾。"
+	},
+	{
+		id: "cat-litter-box",
+		label: "貓砂盆",
+		icon: "▤",
+		image: "/assets/room/pee-pad.png",
+		placement: {
+			x: 16,
+			y: 84,
+			width: 20,
+			layer: 2
+		},
+		mobilePlacement: {
+			x: 15,
+			y: 78,
+			width: 30
+		},
+		required: true,
+		need: "排泄",
+		expenseId: "cat-litter-box",
+		purpose: "貓砂盆應放在安靜、容易到達且與食水分開的位置。"
+	},
+	{
+		id: "cat-litter",
+		label: "貓砂",
+		icon: "◌",
+		image: "/assets/room/cleaner.png",
+		placement: {
+			x: 25,
+			y: 84,
+			width: 12,
+			layer: 3
+		},
+		mobilePlacement: {
+			x: 28,
+			y: 78,
+			width: 22
+		},
+		required: true,
+		need: "清潔",
+		expenseId: "cat-litter",
+		purpose: "維持足夠砂量並每天清理，才能觀察排泄與降低壓力。"
+	},
+	{
+		id: "cat-food-bowl",
+		label: "食盆",
+		icon: "🥣",
+		image: "/assets/room/food-bowl.png",
+		placement: {
+			x: 42,
+			y: 89,
+			width: 10,
+			layer: 3
+		},
+		mobilePlacement: {
+			x: 37,
+			y: 87,
+			width: 17
+		},
+		required: true,
+		need: "飲食",
+		expenseId: "food-bowl",
+		purpose: "固定食盆位置，避免和砂盆太接近，讓進食更安心。"
+	},
+	{
+		id: "cat-water-bowl",
+		label: "水碗",
+		icon: "💧",
+		image: "/assets/room/water-bowl.png",
+		placement: {
+			x: 32,
+			y: 89,
+			width: 12,
+			layer: 3
+		},
+		mobilePlacement: {
+			x: 22,
+			y: 88,
+			width: 18
+		},
+		required: true,
+		need: "飲食",
+		expenseId: "water-bowl",
+		purpose: "水碗可與食盆稍微分開，並每天更換乾淨飲水。"
+	},
+	{
+		id: "cat-scratcher",
+		label: "抓板",
+		icon: "▥",
+		image: "/assets/room/toy.png",
+		placement: {
+			x: 75,
+			y: 82,
+			width: 12,
+			layer: 4
+		},
+		mobilePlacement: {
+			x: 68,
+			y: 83,
+			width: 20
+		},
+		required: true,
+		need: "活動",
+		expenseId: "cat-scratcher",
+		purpose: "抓板能提供自然抓磨出口，降低家具被抓的機會。"
+	},
+	{
+		id: "cat-tree",
+		label: "跳台",
+		icon: "▧",
+		image: "/assets/room/pet-bed.png",
+		placement: {
+			x: 83,
+			y: 66,
+			width: 18,
+			layer: 2
+		},
+		mobilePlacement: {
+			x: 78,
+			y: 66,
+			width: 27
+		},
+		required: true,
+		need: "活動",
+		expenseId: "cat-tree",
+		purpose: "垂直空間能讓貓咪觀察環境、活動與保有安全距離。"
+	},
+	{
+		id: "cat-safe-toy",
+		label: "安全玩具",
+		icon: "✦",
+		image: "/assets/room/toy.png",
+		placement: {
+			x: 54,
+			y: 84,
+			width: 10,
+			layer: 4
+		},
+		mobilePlacement: {
+			x: 49,
+			y: 83,
+			width: 17
+		},
+		required: true,
+		need: "活動",
+		expenseId: "cat-safe-toy",
+		purpose: "選擇不易吞食、可收納的安全玩具，互動後也要整理。"
+	}
+];
+var catHazards = [
+	{
+		id: "cat-toxic-plants",
+		label: "百合／有毒植物",
+		icon: "✿",
+		image: "/assets/room/small-items.png",
+		placement: {
+			x: 31,
+			y: 48,
+			width: 11,
+			layer: 5
+		},
+		mobilePlacement: {
+			x: 28,
+			y: 52,
+			width: 17
+		},
+		danger: "百合等植物可能對貓造成嚴重危害，即使少量接觸也應避免。",
+		handling: "移出貓咪能到達的空間，並確認家中植物是否安全。"
+	},
+	{
+		id: "cat-human-medicine",
+		label: "人類藥品",
+		icon: "▣",
+		image: "/assets/room/chocolate.png",
+		placement: {
+			x: 84,
+			y: 76,
+			width: 9,
+			layer: 5
+		},
+		mobilePlacement: {
+			x: 83,
+			y: 76,
+			width: 15
+		},
+		danger: "人用藥品不應自行給貓使用，誤食也可能造成中毒。",
+		handling: "收到有門的櫃內，並避免把藥放在桌面或包包外層。"
+	},
+	{
+		id: "cat-string",
+		label: "線狀異物",
+		icon: "⌁",
+		image: "/assets/room/wire.png",
+		placement: {
+			x: 12,
+			y: 79,
+			width: 18,
+			layer: 5
+		},
+		mobilePlacement: {
+			x: 13,
+			y: 80,
+			width: 24
+		},
+		danger: "線、繩、橡皮筋等可能被吞食，造成腸胃阻塞或傷害。",
+		handling: "收進抽屜或盒內，玩具使用後也要收好。"
+	},
+	{
+		id: "cat-essential-oil",
+		label: "精油／薰香",
+		icon: "◍",
+		image: "/assets/room/detergent.png",
+		placement: {
+			x: 61,
+			y: 63,
+			width: 9,
+			layer: 5
+		},
+		mobilePlacement: {
+			x: 58,
+			y: 66,
+			width: 15
+		},
+		danger: "部分精油與薰香對貓不適合，密閉空間中風險更高。",
+		handling: "避免在貓咪活動區使用，並保持通風與安全距離。"
+	},
+	{
+		id: "cat-cleaner",
+		label: "清潔劑",
+		icon: "🧴",
+		image: "/assets/room/detergent.png",
+		placement: {
+			x: 69,
+			y: 71,
+			width: 9,
+			layer: 5
+		},
+		mobilePlacement: {
+			x: 70,
+			y: 70,
+			width: 15
+		},
+		danger: "清潔劑可能刺激皮膚、呼吸道或被舔入體內。",
+		handling: "使用後確實收納，地面乾燥前避免貓咪進入。"
+	},
+	{
+		id: "cat-cooling-product",
+		label: "涼感產品",
+		icon: "❄",
+		image: "/assets/room/small-items.png",
+		placement: {
+			x: 88,
+			y: 44,
+			width: 11,
+			layer: 5
+		},
+		mobilePlacement: {
+			x: 86,
+			y: 45,
+			width: 17
+		},
+		danger: "部分涼感墊、冰包或凝膠產品若被咬破，可能造成誤食、滑倒或受傷風險。",
+		handling: "改用通風陰涼處、乾淨飲水與可清洗墊材；任何降溫用品都要確認材質安全並避免貓咪啃咬。"
+	}
+];
+var catTrunkItems = departureTrunkItems.filter((item) => item.id !== "leash").map((item) => {
+	if (item.id === "carrier") return {
+		...item,
+		label: "外出籠",
+		description: "外出籠可降低行車途中貓咪在車內移動或逃脫的風險。",
+		reason: "提供平穩、可固定且降低刺激的安全運輸空間。",
+		caution: "外出籠尺寸需合適並固定在平坦位置；抵達前不要抱著貓咪直接上下車。",
+		feedback: "外出籠已放入後車廂。"
+	};
+	if (item.id === "pee-pad") return {
+		...item,
+		description: "尿墊可協助處理移動途中可能發生的排泄、嘔吐或髒污。",
+		reason: "讓外出籠與運輸區域保持乾淨。",
+		caution: "平整鋪在外出籠預定位置下方，並確認不會滑動或被貓咪抓成一團。",
+		feedback: "尿墊已放入後車廂底部。"
+	};
+	if (item.id === "water-kit") return {
+		...item,
+		description: "途中應準備飲水及可使用的水碗，視貓咪狀況與路程在安全停靠處補充。",
+		reason: "途中可在安全停靠時補充飲水，避免長時間等待造成不適。",
+		caution: "行車中避免開籠餵水，也不要放置裝滿水且容易打翻的開放水碗。",
+		feedback: "水碗與飲水已收妥。"
+	};
+	if (item.id === "cleaner") return {
+		...item,
+		description: "貓咪在陌生環境或移動途中可能因緊張而排泄或嘔吐，可準備清潔袋、擦拭用品及安全的清潔工具。",
+		reason: "途中若發生排泄或髒污，可以盡快整理並維持運輸空間舒適。",
+		caution: "包裝需密封，與飲水分開收納，也不要放進外出籠或讓貓咪直接咬到。",
+		feedback: "清潔用品已收妥，可以處理途中可能發生的髒污。"
+	};
+	return item;
+});
+var speciesGameConfig = {
+	dog: {
+		id: "dog",
+		copy: {
+			animalName: "狗狗",
+			animalNameFallback: "小狗",
+			typeLabel: "品種",
+			selectionTitle: "你想飼養哪一種動物？",
+			breedTitle: "選擇你想飼養的品種",
+			nameTitle: "先幫牠取一個名字",
+			namePlaceholder: "請輸入小狗的名字",
+			historyTitle: "你以前有養過狗嗎？",
+			historyBody: "過去的經驗很珍貴，也可能讓我們自然沿用熟悉的照顧方式。先簡單告訴我們，你是否曾經和狗狗一起生活。",
+			hasPreviousLabel: "有，曾經有養過狗",
+			noPreviousLabel: "沒有，這是第一次",
+			previousSectionTitle: "以前陪伴你的狗狗",
+			roomTitle: "先替牠布置安全的生活空間",
+			roomBody: (petName) => `${petName || "小狗"} 還沒到家，但牠的生活角落可以先準備起來。先把每天會用到的用品放進房間，再看看有哪些東西可能讓牠誤咬、誤食或受傷。`,
+			departureTitle: "出發接牠回家",
+			departureBody: (petName) => `今天要去接 ${petName || "小狗"} 回家了。出門前先把需要的文件與接回用品準備好，讓牠在路上有安全的位置，也讓你能從容處理突發狀況。`,
+			lifeChallengeLabel: (selectedLabel) => `${selectedLabel}的考驗`
+		},
+		roomItems,
+		hazards,
+		trunkItems: departureTrunkItems,
+		report: {
+			checklistGroups: [
+				{
+					title: "每日照顧",
+					items: [
+						"固定餵食",
+						"提供乾淨飲水",
+						"觀察精神、食慾與排泄",
+						"安排陪伴與活動",
+						"外出散步或合適活動",
+						"清理排泄物"
+					]
+				},
+				{
+					title: "家中環境",
+					items: [
+						"睡墊",
+						"水碗與狗碗",
+						"尿墊或如廁區",
+						"寵物專用清潔用品",
+						"危險物品收好",
+						"安靜休息空間"
+					]
+				},
+				{
+					title: "外出與接回",
+					items: [
+						"身分證",
+						"飼養文件",
+						"運輸籠",
+						"尿墊",
+						"牽繩",
+						"飲水與清潔用品"
+					]
+				}
+			],
+			handlingRows: [
+				["忙碌或離家", "安排家人、朋友或合適照護者協助"],
+				["食慾、精神或排泄異常", "記錄並聯絡獸醫"],
+				["行為困擾", "調整環境、提供活動，必要時尋求專業協助"],
+				["生活改變", "重新安排照顧時間與支援"],
+				["高齡階段", "提早準備醫療與長期照顧資源"]
+			],
+			moneyDisclaimer: "這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。"
+		}
+	},
+	cat: {
+		id: "cat",
+		copy: {
+			animalName: "貓咪",
+			animalNameFallback: "貓咪",
+			typeLabel: "品種",
+			selectionTitle: "你想飼養哪一種動物？",
+			breedTitle: "選擇你想飼養的品種",
+			nameTitle: "先幫牠取一個名字",
+			namePlaceholder: "請輸入貓咪的名字",
+			historyTitle: "你以前有養過貓嗎？",
+			historyBody: "過去的陪伴經驗很珍貴，但每隻貓的適應速度、個性與生活需求仍可能不同。先簡單告訴我們，你是否曾經和貓咪一起生活。",
+			hasPreviousLabel: "有，曾經有養過貓",
+			noPreviousLabel: "沒有，這是第一次",
+			previousSectionTitle: "以前陪伴你的貓咪",
+			roomTitle: "先替牠布置安靜安全的生活空間",
+			roomBody: (petName) => `${petName || "貓咪"} 還沒到家，但安全房可以先準備好。先確認門窗與紗窗穩固，放好砂盆、食水、躲藏處、休息空間、抓板與安全玩具，再確認哪些物品需要收起。`,
+			departureTitle: "出發接牠回家",
+			departureBody: (petName) => `今天要去接 ${petName || "貓咪"} 回家了。出門前先把需要的文件與接回用品準備好，讓牠在路上有安全的位置，也讓你能從容處理突發狀況。`,
+			lifeChallengeLabel: (selectedLabel) => `${selectedLabel}的考驗`
+		},
+		roomItems: catRoomItems,
+		hazards: catHazards,
+		trunkItems: catTrunkItems,
+		report: {
+			checklistGroups: [
+				{
+					title: "每日照顧",
+					items: [
+						"固定餵食",
+						"提供乾淨飲水",
+						"每日巡視並清除排泄物",
+						"維持足夠且乾淨的貓砂",
+						"留意排泄異常，記錄後儘速聯絡獸醫",
+						"安排安全陪玩",
+						"保留安靜休息與躲藏處"
+					]
+				},
+				{
+					title: "家中環境",
+					items: [
+						"門窗與紗窗穩固",
+						"可退避的安全躲藏空間",
+						"日常休息空間",
+						"貓砂盆與貓砂",
+						"食盆與水碗",
+						"抓板或跳台",
+						"線狀物、有毒植物與涼感產品收好"
+					]
+				},
+				{
+					title: "外出與接回",
+					items: [
+						"身分證",
+						"飼養文件",
+						"外出籠",
+						"尿墊",
+						"水碗",
+						"飲水與清潔用品"
+					]
+				}
+			],
+			handlingRows: [
+				["忙碌或離家", "交接食水、砂盆、環境巡視與狀況回報"],
+				["食慾、飲水或尿便異常", "記錄變化並儘速聯絡獸醫"],
+				["每週清洗貓砂盆", "先放置備用砂盆，清洗後完全晾乾再放回"],
+				["躲藏或壓力增加", "降低刺激，保留可退回的安全空間"],
+				["居家安全", "收好線狀物、有毒植物、人用藥與清潔劑"],
+				["高齡階段", "調整低入口砂盆、階梯式跳台與溫暖休息處"]
+			],
+			moneyDisclaimer: "這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是貓咪一生的醫療費。"
+		}
+	}
+};
+function getSpeciesGameConfig(species) {
+	return species === "cat" ? speciesGameConfig.cat : speciesGameConfig.dog;
+}
 var positive = {
 	feedbackTitle: "做得很好！",
 	effects: {
@@ -1208,7 +1830,497 @@ var lifeScenarios = [
 		]
 	}
 ];
+var catLifeScenarios = [
+	{
+		id: "cat-arrival-adjustment",
+		stage: "一起生活的第一天",
+		timeLabel: "一起生活的第一天",
+		title: "第一次進安全房",
+		description: "貓咪剛到陌生的新家，躲在外出籠裡觀察。家人很想立刻摸摸牠、抱牠出來看看房間。",
+		topic: "貓咪適應新家與安全感",
+		reportSummary: "貓咪到家第一天應先進安靜安全的小房間，關好門窗，讓牠自行走出外出籠並用自己的速度探索。",
+		artIndex: 0,
+		choices: [
+			{
+				id: "cat-pull-out",
+				text: "把牠抱出籠，讓牠快點認識新家。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "強迫離開外出籠可能讓貓咪更緊張，也可能引發防衛或躲藏。",
+				suggestion: "先準備安全房，讓牠自己決定何時探索。"
+			},
+			{
+				id: "cat-safe-room",
+				text: "關好門窗，放好食水與砂盆，打開外出籠讓牠自行探索。",
+				result: "correct",
+				...positive,
+				explanation: "保留退路並降低刺激，能幫助貓咪建立安全感。"
+			},
+			{
+				id: "cat-welcome-party",
+				text: "請家人圍過來叫牠，讓牠知道大家都歡迎牠。",
+				result: "incorrect",
+				...incorrect,
+				explanation: "多人靠近、聲音和注視會讓剛到家的貓咪壓力更高。",
+				suggestion: "先限制人數與聲音，等牠穩定後再慢慢增加互動。"
+			},
+			{
+				id: "cat-sit-nearby",
+				text: "安靜坐在附近，不主動伸手，等牠願意出來。",
+				result: "correct",
+				...positive,
+				explanation: "穩定陪伴但不強迫互動，是剛到家時很合適的做法。"
+			}
+		]
+	},
+	{
+		id: "cat-night-energy-care",
+		stage: "日常照護",
+		timeLabel: "日常照護",
+		title: "晚上還很有精神",
+		description: "晚上你準備休息時，貓咪開始在家裡奔跑、叫喚，還會撲向晃動的手腳。你會怎麼安排牠的精力與互動？",
+		topic: "貓咪精力與獵捕需求",
+		reportSummary: "貓咪晚上仍很有精神、奔跑叫喚或撲咬手腳時，應安排規律獵捕式遊戲，使用安全玩具並避免用手腳直接逗弄。",
+		artIndex: 4,
+		multipleChoice: true,
+		requiredCorrectOptionIds: [
+			"cat-night-play-routine",
+			"cat-night-safe-toys",
+			"cat-night-no-hands"
+		],
+		wrongOptionIds: ["cat-night-scold"],
+		correctSummary: [
+			"每天安排短段獵捕式互動遊戲，讓牠有機會追逐、捕捉並收尾。",
+			"使用逗貓棒、球或益智玩具等安全玩具。",
+			"不用手腳直接逗弄，避免讓牠把人當獵物。"
+		],
+		learningPoints: ["夜間奔跑、叫喚或撲咬常和精力、獵捕需求或生活節奏有關，先用**規律遊戲與環境豐富化**提供出口。", "手腳逗弄可能讓貓咪學會撲咬人；改用安全玩具，並讓遊戲有追逐、捕捉、收尾與休息。"],
+		choices: [
+			{
+				id: "cat-night-scold",
+				text: "牠晚上太吵就大聲罵牠，讓牠知道不可以",
+				result: "incorrect",
+				...incorrect,
+				explanation: "責罵可能增加壓力，也沒有滿足牠真正需要的活動與獵捕出口。",
+				suggestion: "白天與睡前安排合適遊戲，並觀察是否有食水、環境或健康變化。"
+			},
+			{
+				id: "cat-night-safe-toys",
+				text: "提供安全玩具或益智漏食玩具，讓牠有合適的活動出口",
+				result: "correct",
+				...positive,
+				explanation: "安全玩具能分散精力，也能降低無聊造成的撲咬或叫喚。"
+			},
+			{
+				id: "cat-night-play-routine",
+				text: "睡前安排短段逗貓棒遊戲，讓牠追逐、捕捉後慢慢收尾",
+				result: "correct",
+				...positive,
+				explanation: "規律互動能滿足獵捕與活動需求，也比較容易形成穩定的夜間節奏。"
+			},
+			{
+				id: "cat-night-no-hands",
+				text: "不用手腳直接逗弄，改用玩具保持安全距離",
+				result: "correct",
+				...positive,
+				explanation: "讓牠追玩具而不是追人的手腳，能降低互動時受傷與誤會。"
+			}
+		]
+	},
+	{
+		id: "cat-scratching-care",
+		stage: "日常照護",
+		timeLabel: "日常照護",
+		title: "抓沙發不是故意搗蛋",
+		description: "貓咪最近比較常抓沙發、窗簾和衣櫃邊角，家人擔心家具一直被破壞。你會怎麼引導牠？",
+		topic: "貓咪抓磨需求與居家安全",
+		reportSummary: "貓咪抓沙發、窗簾或家具時，應提供穩固抓板、調整擺放位置並管理環境安全，而不是只處罰或忽略抓磨需求。",
+		artIndex: 4,
+		multipleChoice: true,
+		requiredCorrectOptionIds: [
+			"cat-scratch-board",
+			"cat-scratch-location",
+			"cat-scratch-safe-space"
+		],
+		wrongOptionIds: ["cat-scratch-punish"],
+		correctSummary: [
+			"提供穩固抓板或抓柱，並放在牠常經過或常抓的位置。",
+			"用替代物與環境管理引導牠抓合適物品。",
+			"確認窗簾、衣櫃、門窗與高處安全，避免攀爬時受傷。"
+		],
+		learningPoints: ["抓磨是貓咪自然行為，和伸展、標記與放鬆有關；重點是提供**可抓、穩固、位置合適**的替代物。", "抓板位置、材質與穩定度會影響使用意願；同時也要檢查窗簾、高處與門窗是否安全。"],
+		choices: [
+			{
+				id: "cat-scratch-board",
+				text: "準備穩固抓板或抓柱，放在牠常抓或常經過的位置",
+				result: "correct",
+				...positive,
+				explanation: "抓板能提供自然抓磨出口；放在牠真的會經過的位置，才更容易替代家具。"
+			},
+			{
+				id: "cat-scratch-punish",
+				text: "牠一抓就拍牠或噴水，讓牠不要再碰家具",
+				result: "incorrect",
+				...incorrect,
+				explanation: "處罰可能讓貓咪更緊張，也沒有提供合適的抓磨出口。",
+				suggestion: "先提供穩固抓板、調整位置，並用環境管理降低牠抓錯物品的機會。"
+			},
+			{
+				id: "cat-scratch-location",
+				text: "在抓對地方時給鼓勵，並用家具保護或動線調整降低抓錯機會",
+				result: "correct",
+				...positive,
+				explanation: "用替代物加上環境管理，比只要求牠不要抓更容易讓行為穩定。"
+			},
+			{
+				id: "cat-scratch-safe-space",
+				text: "整理窗簾、衣櫃與高處路線，確認門窗和紗窗穩固",
+				result: "correct",
+				...positive,
+				explanation: "有些抓磨和攀爬會牽涉安全風險，先整理環境能避免受傷或逃脫。"
+			}
+		]
+	},
+	{
+		id: "cat-indoor-outdoor-care",
+		stage: "日常照護",
+		timeLabel: "日常照護",
+		title: "牠不想出門",
+		description: "家人覺得貓咪也應該像散步一樣出門走走，但牠看到外出籠就緊張後退。你會怎麼安排？",
+		topic: "貓咪外出壓力與室內照護",
+		reportSummary: "貓咪不想出門或害怕外出籠時，不應強迫外出散步；日常以安全室內環境、穩定照護與外出籠減敏為主。",
+		artIndex: 2,
+		multipleChoice: true,
+		requiredCorrectOptionIds: [
+			"cat-outdoor-respect-boundary",
+			"cat-outdoor-indoor-enrichment",
+			"cat-outdoor-carrier-practice"
+		],
+		wrongOptionIds: ["cat-outdoor-force-walk"],
+		correctSummary: [
+			"尊重牠對外出的壓力反應，不強迫牠出門散步。",
+			"在室內提供抓板、跳台、安全玩具與穩定互動。",
+			"需要就醫或移動時，平時先練習外出籠減敏並保留安全遮蔽。"
+		],
+		learningPoints: ["多數貓咪的日常活動可以在安全室內環境完成；外出不是必要的每日散步任務。", "真正需要外出時，重點是**外出籠減敏、安全運輸與降低刺激**，而不是把牠直接抱到陌生環境。"],
+		choices: [
+			{
+				id: "cat-outdoor-respect-boundary",
+				text: "看見牠緊張就先停止，不強迫牠出門散步",
+				result: "correct",
+				...positive,
+				explanation: "尊重壓力訊號能減少恐懼累積，也能保留牠對外出籠和照顧者的信任。"
+			},
+			{
+				id: "cat-outdoor-force-walk",
+				text: "直接抱牠出門，多去幾次就會習慣",
+				result: "incorrect",
+				...incorrect,
+				explanation: "強迫外出可能讓貓咪更害怕外出籠、門口或照顧者，也增加逃脫風險。",
+				suggestion: "日常先維持室內安全活動；必要外出時用外出籠減敏、遮蔽與穩定運輸。"
+			},
+			{
+				id: "cat-outdoor-indoor-enrichment",
+				text: "在室內安排跳台、抓板、安全玩具與陪玩時間",
+				result: "correct",
+				...positive,
+				explanation: "室內環境豐富化能滿足活動、觀察與互動需求，不需要用強迫外出取代。"
+			},
+			{
+				id: "cat-outdoor-carrier-practice",
+				text: "把外出籠放在日常可接觸的位置，慢慢練習需要外出時的安全移動",
+				result: "correct",
+				...positive,
+				explanation: "平時讓外出籠變成可接受的安全物，真正就醫或移動時壓力會比較低。"
+			}
+		]
+	},
+	{
+		id: "cat-busy-care",
+		stage: "當生活發生變化",
+		timeLabel: "當生活發生變化",
+		title: "臨時晚歸，誰來接手？",
+		description: "今天臨時需要晚歸，貓咪仍需要食水確認、貓砂盆清理、環境巡視、適當陪玩與狀況觀察。",
+		topic: "忙碌時的貓咪日常照顧",
+		reportSummary: "臨時晚歸時，應安排可信任且了解照護需求的人協助，清楚交接食水、砂盆、環境巡視、陪玩與狀況觀察。",
+		artIndex: 5,
+		choices: [
+			{
+				id: "cat-alone-food",
+				text: "出門前多放一些食物和水，回家後再一起處理砂盆和陪玩",
+				result: "incorrect",
+				...incorrect,
+				explanation: "食物和水不能取代砂盆清理、環境巡視、陪玩與狀況觀察，也可能造成食物過量或變質。",
+				suggestion: "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。"
+			},
+			{
+				id: "family-helper",
+				text: "請可信任、了解照護需求的家人或朋友協助",
+				result: "correct",
+				...positive,
+				explanation: "貓咪看起來獨立，仍需要穩定的食水、乾淨砂盆、安全環境、適量互動與細心觀察。忙碌時先安排可信任的人協助，能讓牠的日常維持安心與規律。",
+				suggestion: "交接時要說明貓咪個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。"
+			},
+			{
+				id: "cat-no-check",
+				text: "貓咪本來就很獨立，晚一點回家再看就好",
+				result: "incorrect",
+				...incorrect,
+				explanation: "獨立不代表不需要日常照護與安全巡視。砂盆、飲水、食慾、活動與異常狀況仍需要有人確認。",
+				suggestion: "至少安排可信任者確認基本需求、環境安全與是否有異常。"
+			},
+			{
+				id: "cat-late-meal",
+				text: "只請人倒飼料，不用交代砂盆、陪玩或觀察狀況",
+				result: "incorrect",
+				...incorrect,
+				explanation: "只補食物會漏掉砂盆、飲水、環境安全與行為變化，也可能讓協助者不知道如何安全互動。",
+				suggestion: "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。"
+			}
+		]
+	},
+	{
+		id: "cat-illness-vet",
+		stage: "生病與就醫",
+		timeLabel: "生病與就醫",
+		title: "牠突然變得不太一樣",
+		description: "貓咪今天吃得少、躲得更久，尿量和精神也和平常不太一樣。",
+		topic: "貓咪健康觀察與就醫判斷",
+		reportSummary: "貓咪食慾、飲水、尿便、活動或躲藏習慣改變時，應記錄變化並聯絡獸醫，不自行診斷或給藥。",
+		artIndex: 3,
+		choices: [
+			{
+				id: "cat-human-meds",
+				text: "先用家裡的人用藥試試看",
+				result: "incorrect",
+				...incorrect,
+				explanation: "人用藥可能對貓造成嚴重危害，也會干擾獸醫判斷。",
+				suggestion: "先停止自行給藥，記錄症狀並聯絡獸醫。"
+			},
+			{
+				id: "cat-record-vet",
+				text: "記錄食慾、飲水、尿便、活動與躲藏變化，並聯絡獸醫",
+				result: "correct",
+				...positive,
+				explanation: "具體紀錄能幫助獸醫判斷狀況，也能降低延誤風險。",
+				suggestion: "請不要自行診斷或餵人用藥；若精神差、嘔吐、排尿異常或持續不吃，應儘快詢問獸醫。",
+				expenseIds: ["sick-vet-care"]
+			},
+			{
+				id: "cat-wait",
+				text: "牠只是想躲起來，等幾天再說",
+				result: "incorrect",
+				...incorrect,
+				explanation: "食慾、精神和尿便同時改變可能是健康警訊。",
+				suggestion: "先記錄變化，依持續時間與嚴重程度詢問獸醫。"
+			}
+		]
+	},
+	{
+		id: "cat-growing-old",
+		stage: "逐漸進入高齡",
+		timeLabel: "逐漸進入高齡",
+		title: "貓咪慢慢變老",
+		description: "貓咪跳上跳下變少，進出砂盆比較慢，也更喜歡溫暖安靜的休息處。",
+		topic: "高齡貓環境與健康照顧",
+		reportSummary: "高齡貓需要低入口砂盆、階梯式跳台、溫暖休息處，以及體重、飲食、飲水與排泄的持續觀察。",
+		artIndex: 1,
+		choices: [
+			{
+				id: "cat-senior-same",
+				text: "維持原本高跳台和深砂盆，牠會自己適應",
+				result: "incorrect",
+				...incorrect,
+				explanation: "忽略行動變化可能讓牠減少使用砂盆或增加受傷風險。",
+				suggestion: "先降低出入口、增加階梯與安全休息點。"
+			},
+			{
+				id: "cat-senior-supplement",
+				text: "先買保健品，不用觀察其他變化",
+				result: "incorrect",
+				...incorrect,
+				explanation: "保健品不能取代健康觀察與獸醫評估。",
+				suggestion: "把體重、食水、尿便與活動變化記下來，再和獸醫討論。"
+			},
+			{
+				id: "cat-senior-adapt",
+				text: "調整低入口砂盆、階梯式跳台與溫暖休息處，並安排獸醫追蹤",
+				result: "correct",
+				...positive,
+				explanation: "依行動與生活需求調整環境，能讓高齡貓更安全舒適。",
+				suggestion: "也請持續觀察體重、食慾、飲水與排泄變化，並依獸醫建議安排檢查。",
+				expenseIds: ["cat-senior-room", "senior-checkup"]
+			}
+		]
+	}
+];
 var breedChallengeContent = {
+	"orange-cat": [
+		{
+			title: "撒嬌也需要合適的遊戲",
+			description: "橘貓很親人，常主動靠近討摸、討玩，也會在無聊時一直討食。你會怎麼安排牠的精力與互動？",
+			topic: "貓咪精力與獵捕需求",
+			reportSummary: "橘貓親人愛互動時，也需要規律遊戲與環境豐富化，避免用加餐取代活動需求。",
+			breedKnowledge: "親人與撒嬌不代表每次靠近都是餓了。規律互動遊戲、安全玩具與益智漏食玩具，可以讓貓咪用更健康的方式消耗精力。",
+			correctChoiceIndex: 1,
+			correctText: "每天安排逗貓棒等互動遊戲，不用手腳逗弄，並提供安全玩具與益智漏食玩具",
+			correctExplanation: "規律遊戲能滿足獵捕與互動需求，也避免把無聊或撒嬌都用食物回應。",
+			distractors: [
+				{
+					text: "牠撒嬌就先餵零食，吃飽自然會安靜",
+					explanation: "把互動需求都用食物回應，可能造成過度進食，也沒有真正滿足活動需求。",
+					suggestion: "先用短段遊戲、撫摸界線與益智玩具回應，再依固定份量餵食。"
+				},
+				{
+					text: "用手腳逗牠撲咬，牠會比較有互動感",
+					explanation: "用手腳逗弄可能讓貓咪把人的身體當成獵物。",
+					suggestion: "改用逗貓棒或安全玩具，讓牠追逐可捕捉的物件。"
+				},
+				{
+					text: "買很多玩具散在地上，牠想玩就自己玩",
+					explanation: "玩具若沒有輪替、檢查或陪玩，可能很快失去吸引力，也可能留下誤食風險。",
+					suggestion: "安排固定陪玩時間，並在結束後收好線狀玩具。"
+				}
+			]
+		},
+		{
+			title: "舒服生活也需要安全高處",
+			description: "橘貓常待在沙發旁邊，也喜歡找安靜角落休息。你想讓牠不無聊，又能安全活動。你會怎麼做？",
+			topic: "貓咪垂直空間與安全環境",
+			reportSummary: "橘貓需要安全高處、休息空間與穩固門窗，避免因環境單調而長時間無聊或冒險攀爬。",
+			breedKnowledge: "貓咪需要能觀察環境的高處，也需要可安靜休息的地方。高處必須穩固，門窗與紗窗也要先確認安全。",
+			correctChoiceIndex: 3,
+			correctText: "提供穩固貓跳台或層架、安靜休息處，並確認門窗與紗窗穩固",
+			correctExplanation: "安全高處與休息空間能讓牠活動、觀察與退回，不必靠危險攀爬或長時間無聊來打發生活。",
+			distractors: [
+				{
+					text: "只放一個軟墊就好，高處容易弄亂不用準備",
+					explanation: "只有睡覺位置可能不足以滿足觀察、活動與安全感需求。",
+					suggestion: "準備穩固高處與可退回的休息點，並整理危險物。"
+				},
+				{
+					text: "讓牠自己爬窗簾和衣櫃，貓咪很會平衡",
+					explanation: "窗簾、衣櫃與未固定高處可能造成跌落、夾傷或逃脫風險。",
+					suggestion: "提供可承重的跳台或層架，並確認門窗防護。"
+				},
+				{
+					text: "牠無聊就多餵一點，環境不用特別改",
+					explanation: "食物不能取代活動與環境豐富化，也可能增加體重負擔。",
+					suggestion: "用安全高處、抓板與玩具提供日常活動。"
+				}
+			]
+		},
+		{
+			title: "討食時也要管理體重",
+			description: "橘貓常在餐桌旁討食，甚至想翻垃圾桶。家人覺得牠可愛，想持續加餐。你會怎麼做？",
+			topic: "貓咪飲食與體重管理",
+			reportSummary: "橘貓討食或翻找食物時，應定時定量、收好食物與垃圾，搭配益智漏食玩具並觀察體態。",
+			breedKnowledge: "討食不一定代表營養不足。定時定量、家庭餵食紀錄與體態觀察，能降低過度進食與慢性病風險。",
+			correctChoiceIndex: 2,
+			correctText: "定時定量餵食，收好食物與垃圾，搭配益智漏食玩具並定期觀察體態",
+			correctExplanation: "固定份量和環境管理能降低偷吃與翻垃圾桶風險，益智漏食玩具則能讓進食變成安全活動。",
+			distractors: [
+				{
+					text: "牠討食很可愛，每次靠近都加一點",
+					explanation: "持續加餐會讓熱量難以掌握，增加變胖和健康風險。",
+					suggestion: "把零食納入每日總量，並用遊戲或撫摸回應互動需求。"
+				},
+				{
+					text: "垃圾桶不用特別收，牠吃到就當作加菜",
+					explanation: "垃圾桶可能有調味、尖銳包材或不適合貓咪的食物。",
+					suggestion: "把食物和垃圾確實收好，避免誤食。"
+				},
+				{
+					text: "活動量看起來正常，所以可以無限制任食",
+					explanation: "活動量高低仍需要搭配年齡、體態與食量管理，不能直接無限制餵食。",
+					suggestion: "依體態與獸醫建議調整份量，定期記錄變化。"
+				}
+			]
+		}
+	],
+	"tabby-cat": [
+		{
+			title: "半夜的獵捕開關",
+			description: "虎斑貓白天沒怎麼活動，半夜開始奔跑、飛撲，還把家人的手腳當成獵物。你會怎麼安排？",
+			topic: "貓咪精力與獵捕需求",
+			reportSummary: "虎斑貓精力未滿足時，可能夜間奔跑或撲咬手腳；應用規律互動遊戲與安全玩具提供出口。",
+			breedKnowledge: "虎斑花紋不代表固定個性，但許多貓都需要獵捕式互動。逗貓棒、球與可捕捉玩具能讓牠追逐、撲抓與收尾。",
+			correctChoiceIndex: 2,
+			correctText: "安排規律逗貓棒遊戲，不用手腳逗弄，並提供安全玩具讓牠消耗精力",
+			correctExplanation: "可捕捉的互動遊戲能滿足獵捕需求，也能避免牠把人的手腳當成玩具。",
+			distractors: [
+				{
+					text: "用手繼續逗牠，咬久就會知道力道",
+					explanation: "用手腳逗弄可能強化撲咬人的習慣。",
+					suggestion: "改用逗貓棒或其他安全玩具，把攻擊目標轉到玩具上。"
+				},
+				{
+					text: "牠半夜跑就關起來，明天自然會累",
+					explanation: "只限制活動未必處理精力與獵捕需求，也可能增加壓力。",
+					suggestion: "白天和睡前安排短段互動遊戲，並保留休息節奏。"
+				},
+				{
+					text: "讓牠自己追線或橡皮筋，反正會消耗精力",
+					explanation: "線狀物和小物可能被吞食，無人看顧時風險更高。",
+					suggestion: "使用結構安全的玩具，結束後收好。"
+				}
+			]
+		},
+		{
+			title: "想往高處探索",
+			description: "虎斑貓常想跳上窗簾、衣櫃或較高的家具。你擔心牠受傷，也擔心紗窗不夠穩。你會怎麼做？",
+			topic: "貓咪垂直空間與安全環境",
+			reportSummary: "虎斑貓需要安全垂直空間；若沒有合適高處，可能攀爬窗簾、衣櫃或其他危險位置。",
+			breedKnowledge: "垂直空間可以讓貓咪觀察、活動與保有安全感，但高處與門窗必須穩固，不能讓危險位置成為唯一選擇。",
+			correctChoiceIndex: 1,
+			correctText: "提供貓跳台、層架或安全高處，並確認門窗與紗窗穩固",
+			correctExplanation: "把可攀爬路線設計成安全、穩固且可預期，能降低牠往窗簾或危險高處探索的機會。",
+			distractors: [
+				{
+					text: "牠想爬就讓牠爬，貓咪通常很會落地",
+					explanation: "窗簾、衣櫃或未固定家具仍可能造成受傷、掉落或逃脫風險。",
+					suggestion: "先準備穩固跳台與層架，並檢查門窗安全。"
+				},
+				{
+					text: "完全禁止所有高處，牠就不會出事",
+					explanation: "完全禁止可能讓牠缺少觀察與活動出口，反而更想探索危險位置。",
+					suggestion: "提供安全高處，再移除或阻隔危險路線。"
+				},
+				{
+					text: "只在窗邊放椅子，不用確認紗窗",
+					explanation: "窗邊高處若沒有穩固紗窗與防護，仍可能有逃脫或墜落風險。",
+					suggestion: "窗邊活動區要搭配穩固防護。"
+				}
+			]
+		},
+		{
+			title: "活動量高也不能無限制吃",
+			description: "虎斑貓每天都很會玩，家人覺得牠活動量大，可以一直放滿飼料讓牠自己吃。你會怎麼安排？",
+			topic: "貓咪飲食與體重管理",
+			reportSummary: "虎斑貓活動量高仍需依年齡、體態與食量安排定時定量，並用益智漏食玩具與觀察紀錄協助管理。",
+			breedKnowledge: "活動量高不等於可以無限制任食。飲食仍要依年齡、體態、健康與食慾變化調整。",
+			correctChoiceIndex: 3,
+			correctText: "依年齡、體態與食量定時定量，收好食物與垃圾，搭配益智漏食玩具並觀察體態",
+			correctExplanation: "定時定量能掌握食慾與體態，收好食物與垃圾能避免誤食，益智漏食玩具則能讓進食和活動更安全。",
+			distractors: [
+				{
+					text: "牠很會跑，所以飼料全天放滿沒關係",
+					explanation: "活動量高仍可能吃過量，也會讓食慾變化不容易被發現。",
+					suggestion: "先建立份量與餵食時間，再依體態調整。"
+				},
+				{
+					text: "把人類食物當獎勵，牠玩得多可以吃一點",
+					explanation: "人類食物不一定適合貓咪，調味或特定食材可能造成風險。",
+					suggestion: "不確定食材安全時，查詢可靠資料或詢問獸醫。"
+				},
+				{
+					text: "只要牠不胖，就不用記錄吃多少",
+					explanation: "食量變化也是健康線索，不只是在控制體重。",
+					suggestion: "簡單記錄主食、零食與體態變化。"
+				}
+			]
+		}
+	],
 	shiba: [{
 		title: "一年四季都在掉毛",
 		description: "柴犬換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
@@ -1470,34 +2582,30 @@ function getBreedChallengeScenarios(breedId) {
 		reportSummary: question.reportSummary,
 		breedKnowledge: question.breedKnowledge,
 		artIndex: 4,
-		choices: resolvedBreedId === "shiba" && index === 1 ? [...question.distractors.map((choice, choiceIndex) => ({
-			id: `breed-challenge-${index + 1}-distractor-${choiceIndex + 1}`,
-			text: choice.text,
-			result: "incorrect",
-			...incorrect,
-			explanation: choice.explanation,
-			suggestion: choice.suggestion
-		})), {
-			id: `breed-challenge-${index + 1}-correct`,
-			text: question.correctText,
-			result: "correct",
-			...positive,
-			explanation: question.correctExplanation
-		}] : [{
-			id: `breed-challenge-${index + 1}-correct`,
-			text: question.correctText,
-			result: "correct",
-			...positive,
-			explanation: question.correctExplanation
-		}, ...question.distractors.map((choice, choiceIndex) => ({
-			id: `breed-challenge-${index + 1}-distractor-${choiceIndex + 1}`,
-			text: choice.text,
-			result: "incorrect",
-			...incorrect,
-			explanation: choice.explanation,
-			suggestion: choice.suggestion
-		}))]
+		choices: buildBreedChallengeChoices(question, index, resolvedBreedId)
 	}));
+}
+function buildBreedChallengeChoices(question, questionIndex, breedId) {
+	const correctChoice = {
+		id: `breed-challenge-${questionIndex + 1}-correct`,
+		text: question.correctText,
+		result: "correct",
+		...positive,
+		explanation: question.correctExplanation
+	};
+	const distractorChoices = question.distractors.map((choice, choiceIndex) => ({
+		id: `breed-challenge-${questionIndex + 1}-distractor-${choiceIndex + 1}`,
+		text: choice.text,
+		result: "incorrect",
+		...incorrect,
+		explanation: choice.explanation,
+		suggestion: choice.suggestion
+	}));
+	const defaultCorrectIndex = breedId === "shiba" && questionIndex === 1 ? distractorChoices.length : 0;
+	const correctIndex = Math.max(0, Math.min(question.correctChoiceIndex ?? defaultCorrectIndex, distractorChoices.length));
+	const choices = [...distractorChoices];
+	choices.splice(correctIndex, 0, correctChoice);
+	return choices;
 }
 var journeyItems = [
 	{
@@ -1547,6 +2655,91 @@ var journeyItems = [
 		scenarioId: "growing-old"
 	}
 ];
+var catJourneyItems = [
+	{
+		id: "cat-arrival",
+		type: "scenario",
+		timeLabel: "一起生活的第一天",
+		title: "第一天適應新家",
+		scenarioId: "cat-arrival-adjustment"
+	},
+	{
+		id: "cat-daily-care",
+		type: "scenario",
+		timeLabel: "日常照護",
+		title: "貓咪日常照護"
+	},
+	{
+		id: "cat-daily-inspection",
+		type: "daily-inspection",
+		timeLabel: "日常照護",
+		title: "貓砂盆救援隊"
+	},
+	{
+		id: "breed-challenge",
+		type: "breed-challenge",
+		timeLabel: "品種的考驗",
+		title: "品種的考驗"
+	},
+	{
+		id: "cat-busy-care",
+		type: "scenario",
+		timeLabel: "當生活發生變化",
+		title: "臨時晚歸，誰來接手？",
+		scenarioId: "cat-busy-care"
+	},
+	{
+		id: "cat-sick",
+		type: "scenario",
+		timeLabel: "生病與就醫",
+		title: "生病與就醫",
+		scenarioId: "cat-illness-vet"
+	},
+	{
+		id: "cat-senior",
+		type: "scenario",
+		timeLabel: "逐漸進入高齡",
+		title: "貓咪慢慢變老",
+		scenarioId: "cat-growing-old"
+	}
+];
+var catDailyBehaviorScenarioIds = [
+	"cat-night-energy-care",
+	"cat-scratching-care",
+	"cat-indoor-outdoor-care"
+];
+var catLitterRescueConfig = {
+	targetStamps: 3,
+	weeklyWashRound: 2,
+	abnormalObservationRound: 3,
+	wasteItems: [{
+		id: "urine",
+		label: "尿團",
+		x: 42,
+		y: 62,
+		size: 13
+	}, {
+		id: "poop",
+		label: "糞便",
+		x: 59,
+		y: 67,
+		size: 12
+	}],
+	bin: {
+		x: 82,
+		y: 70,
+		size: 16
+	}
+};
+function getLifeScenariosForSpecies(species) {
+	return species === "cat" ? catLifeScenarios : lifeScenarios;
+}
+function getAllScenariosForSpecies(species, breedId) {
+	return [...getLifeScenariosForSpecies(species), ...getBreedChallengeScenarios(breedId)];
+}
+function getJourneyItemsForSpecies(species) {
+	return species === "cat" ? catJourneyItems : journeyItems;
+}
 var initialLifeActivityState = {
 	bodyLanguageSignals: [],
 	arrivalMealFoodReady: false,
@@ -1556,6 +2749,7 @@ var initialLifeActivityState = {
 	walkingMinutes: 0,
 	walkingPoopCleaned: false,
 	walkingComplete: false,
+	catInspectionSteps: [],
 	sickTimePassComplete: false,
 	bodyCareParts: [],
 	seniorAdjustments: []
@@ -1662,9 +2856,9 @@ var walkingSceneLayout = {
 			size: 20
 		},
 		mobilePoop: {
-			x: 78,
+			x: 65,
 			y: 85,
-			size: 50
+			size: 40
 		}
 	},
 	3: {
@@ -1680,16 +2874,16 @@ var walkingSceneLayout = {
 			y: 60,
 			scale: 1.5
 		},
-		mobileStartX: 4,
-		mobileStartY: 65,
+		mobileStartX: 30,
+		mobileStartY: 50,
 		mobileScale: .4,
 		mobileWaypoint: {
-			x: 5,
-			y: 80,
+			x: 40,
+			y: 55,
 			scale: .7
 		},
-		mobileEndX: 45,
-		mobileEndY: 80,
+		mobileEndX: 65,
+		mobileEndY: 55,
 		mobileEndScale: .82
 	}
 };
@@ -1710,7 +2904,11 @@ var scenarioCorrectAnswerVideoIndex = {
 	"arrival-adjustment": 0,
 	"illness-vet": 1,
 	"growing-old": 0,
-	"busy-daily-care": 1
+	"busy-daily-care": 1,
+	"cat-arrival-adjustment": 0,
+	"cat-busy-care": 1,
+	"cat-illness-vet": 1,
+	"cat-growing-old": 0
 };
 var breedChallengeVideos = {
 	"一年四季都在掉毛": "/assets/pet-journey/shedding.mp4",
@@ -1739,7 +2937,8 @@ function useVideoMetadataPreload(src) {
 	}, [src]);
 }
 function withPetName(text, petName) {
-	return text.replaceAll("豆豆", petName).replaceAll("小狗", petName).replaceAll("狗狗", petName);
+	if (!petName.trim()) return text;
+	return text.replaceAll("豆豆", petName).replaceAll("小狗", petName).replaceAll("狗狗", petName).replaceAll("貓咪", petName);
 }
 var lifeStageLabels = {
 	arrival: "適應新家與安全感",
@@ -1749,6 +2948,9 @@ var lifeStageLabels = {
 function breedLabelForId(breed) {
 	return breeds.find((item) => item.id === breed)?.label ?? "這個品種";
 }
+function breedChallengeLabelForId(breed) {
+	return breedLabelForId(breed).replace(/^米克斯－/, "");
+}
 function withBreedName(text, breed) {
 	return text.replaceAll("柴犬", breedLabelForId(breed));
 }
@@ -1757,8 +2959,8 @@ function healthSuggestionForBreed(breed, shibaSuggestion) {
 	return `${breedLabelForId(breed)}也可能有需要特別留意的品種相關健康風險。健檢時請主動告知品種、來源與已知家族健康資訊，並詢問獸醫適合追蹤的項目。\n\n如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。`;
 }
 function lifeStageLabelForScenario(scenario) {
-	if (scenario.id === "arrival-adjustment") return lifeStageLabels.arrival;
-	if (scenario.id === "busy-daily-care" || scenario.id === "illness-vet" || scenario.id === "growing-old") return lifeStageLabels.change;
+	if (scenario.id === "arrival-adjustment" || scenario.id === "cat-arrival-adjustment") return lifeStageLabels.arrival;
+	if (scenario.id === "busy-daily-care" || scenario.id === "illness-vet" || scenario.id === "growing-old" || scenario.id === "cat-busy-care" || scenario.id === "cat-illness-vet" || scenario.id === "cat-growing-old") return lifeStageLabels.change;
 	return lifeStageLabels.daily;
 }
 function otherCorrectChoices(scenario, choice, petName) {
@@ -1958,7 +3160,7 @@ function VideoWithToggle({ className, src, loop = false, autoPlay = true, ariaLa
 		})
 	})] });
 }
-function ArrivalTransitionVideo({ onContinue }) {
+function ArrivalTransitionVideo({ onContinue, species = "dog" }) {
 	const videoRef = (0, import_react.useRef)(null);
 	const hasFinishedArrivalVideo = (0, import_react.useRef)(false);
 	const startTimeoutRef = (0, import_react.useRef)(null);
@@ -2027,7 +3229,7 @@ function ArrivalTransitionVideo({ onContinue }) {
 			autoPlay: true,
 			playsInline: true,
 			preload: "auto",
-			"aria-label": "小狗搭乘外出籠抵達新家的過場動畫",
+			"aria-label": `${species === "cat" ? "貓咪" : "小狗"}搭乘外出籠抵達新家的過場動畫`,
 			onPlaying: handlePlaying,
 			onEnded: handleArrivalEnded,
 			onError: () => {
@@ -2088,7 +3290,14 @@ function TimePassTransition({ onComplete }) {
 	});
 }
 function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue, onReplay, continueImmediately = false }) {
-	const requiresRetry = scenario.id === "arrival-adjustment" || scenario.id === "illness-vet" || scenario.id === "growing-old";
+	const requiresRetry = [
+		"arrival-adjustment",
+		"illness-vet",
+		"growing-old",
+		"cat-arrival-adjustment",
+		"cat-illness-vet",
+		"cat-growing-old"
+	].includes(scenario.id);
 	const [feedbackVideoFailed, setFeedbackVideoFailed] = (0, import_react.useState)(false);
 	const [, setFeedbackVideoFinished] = (0, import_react.useState)(false);
 	const labels = {
@@ -2169,7 +3378,7 @@ function ScenarioFeedback({ scenario, choice, petName, onRetry, onContinue, onRe
 					className: "primary",
 					onClick: onContinue,
 					children: [
-						scenario.id === "arrival-adjustment" ? "繼續" : labels[choice.result].button,
+						scenario.id === "arrival-adjustment" || scenario.id === "cat-arrival-adjustment" ? "繼續" : labels[choice.result].button,
 						" ",
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })
 					]
@@ -2266,7 +3475,7 @@ function VideoScenarioActivity({ scenario, answer, petName, breed, onChoose, onC
 	const [mode, setMode] = (0, import_react.useState)(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
 	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
 	const [, setVideoFinished] = (0, import_react.useState)(false);
-	const source = scenario.id === "arrival-adjustment" ? "/assets/pet-journey/first-day.mp4" : scenario.id === "growing-old" ? "/assets/pet-journey/senior-life.mp4" : "/assets/pet-journey/sick.mp4";
+	const source = scenario.id.startsWith("cat-") ? void 0 : scenario.id === "arrival-adjustment" ? "/assets/pet-journey/first-day.mp4" : scenario.id === "growing-old" ? "/assets/pet-journey/senior-life.mp4" : "/assets/pet-journey/sick.mp4";
 	useVideoMetadataPreload(source);
 	useVideoMetadataPreload(getCorrectAnswerVideo(scenario.id));
 	const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
@@ -2327,11 +3536,15 @@ function VideoScenarioActivity({ scenario, answer, petName, breed, onChoose, onC
 			className: "video-scenario-layout",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "video-scenario-visual",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(VideoWithToggle, {
+				children: [source ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VideoWithToggle, {
 					src: source,
 					loop: true,
 					ariaLabel: scenario.id === "arrival-adjustment" ? "小狗第一天適應新家的影片" : scenario.id === "growing-old" ? "小狗逐漸進入高齡的情境影片" : "柴犬常見健康問題觀察影片",
 					onError: () => setVideoFailed(true)
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "scene-video-fallback",
+					role: "status",
+					children: "貓咪情境素材製作中，請閱讀題目並完成右側選擇。"
 				}), videoFailed && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "scene-video-fallback",
 					role: "status",
@@ -2374,8 +3587,9 @@ var dailyBehaviorVideos = {
 	"behavior-chewing": "/assets/pet-journey/chewing-on-things.mp4",
 	"behavior-toileting": "/assets/pet-journey/urinate-and-defecate.mp4"
 };
-function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onContinue, resetSignal, onReplay, continueImmediately = false }) {
-	const scenarios = dailyBehaviorScenarioIds.map((id) => lifeScenarios.find((entry) => entry.id === id)).filter((entry) => Boolean(entry));
+function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onContinue, resetSignal, onReplay, continueImmediately = false, scenarioIds = dailyBehaviorScenarioIds, species = "dog" }) {
+	const scenarioSource = getLifeScenariosForSpecies(species);
+	const scenarios = scenarioIds.map((id) => scenarioSource.find((entry) => entry.id === id)).filter((entry) => Boolean(entry));
 	const firstUnfinished = scenarios.findIndex((entry) => answers[entry.id]?.finalResult !== "correct");
 	const [currentIndex, setCurrentIndex] = (0, import_react.useState)(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
 	const [mode, setMode] = (0, import_react.useState)(firstUnfinished === -1 ? "positive" : "question");
@@ -2384,7 +3598,7 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
 	const [, setVideoFinished] = (0, import_react.useState)(false);
 	const scenario = scenarios[currentIndex];
-	const behaviorVideoSource = scenario ? dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4" : "/assets/pet-journey/chewing-on-things.mp4";
+	const behaviorVideoSource = species === "cat" ? dailyBehaviorVideos[scenario?.id ?? ""] : scenario ? dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4" : "/assets/pet-journey/chewing-on-things.mp4";
 	const nextBehaviorScenario = scenarios[currentIndex + 1];
 	useVideoMetadataPreload(behaviorVideoSource);
 	useVideoMetadataPreload(nextBehaviorScenario ? dailyBehaviorVideos[nextBehaviorScenario.id] : void 0);
@@ -2404,11 +3618,14 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 	const correctSummary = scenario.correctSummary ?? scenario.choices.filter((choice) => correctChoiceIds.includes(choice.id)).map((choice) => choice.text);
 	const learningPoints = scenario.learningPoints ?? correctSummary;
 	const correctSelectedCount = selectedIds.filter((id) => correctChoiceIds.includes(id)).length;
-	const displayPetName = petName || "小狗";
+	const displayPetName = petName || (species === "cat" ? "貓咪" : "小狗");
 	const correctIntroByScenario = {
 		"behavior-barking": `你已經找到合適的做法。接著多認識一點${displayPetName}吠叫時可能想傳達的需求。`,
 		"behavior-chewing": `你已經找到合適的做法。接著看看狗狗為什麼需要啃咬，以及如何安全地引導${displayPetName}。`,
-		"behavior-toileting": `你已經找到合適的做法。如廁不只是記住一個地點，還和${displayPetName}的年齡、時機與健康狀況有關。`
+		"behavior-toileting": `你已經找到合適的做法。如廁不只是記住一個地點，還和${displayPetName}的年齡、時機與健康狀況有關。`,
+		"cat-night-energy-care": `你已經找到合適的做法。規律遊戲與安全玩具，能讓${displayPetName}的精力有合適出口。`,
+		"cat-scratching-care": `你已經找到合適的做法。提供抓板與安全高處，能讓${displayPetName}用自然方式活動。`,
+		"cat-indoor-outdoor-care": `你已經找到合適的做法。尊重${displayPetName}的壓力反應，並把日常活動安排在安全室內，會比強迫外出更穩定。`
 	};
 	function toggleChoice(choiceId) {
 		setRetryCopy(null);
@@ -2468,7 +3685,7 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 		fallbackText: "正向結果影片目前無法播放，仍可繼續生活旅程。",
 		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: withPetName(correctIntroByScenario[scenario.id] ?? "你選到了這個情境中幾個合適的照顧方式：", petName) }),
 		correctItems: learningPoints.map((item) => withPetName(item, petName)),
-		knowledgeTitle: "狗狗小知識",
+		knowledgeTitle: species === "cat" ? "貓咪小知識" : "狗狗小知識",
 		onVideoEnded: () => setVideoFinished(true),
 		onVideoError: () => {
 			setVideoFailed(true);
@@ -2494,11 +3711,15 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "daily-behavior-video",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(VideoWithToggle, {
+				children: [behaviorVideoSource ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VideoWithToggle, {
 					src: behaviorVideoSource,
 					loop: true,
-					ariaLabel: "日常行為照顧影片",
+					ariaLabel: species === "cat" ? "貓咪日常照護影片" : "日常行為照顧影片",
 					onError: () => setVideoFailed(true)
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "scene-video-fallback",
+					role: "status",
+					children: "貓咪日常照護素材製作中，請直接完成右側互動。"
 				}), videoFailed && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "scene-video-fallback",
 					role: "status",
@@ -2553,7 +3774,7 @@ function DailyBehaviorActivityMulti({ answers, petName, onChooseMultiple, onCont
 		]
 	});
 }
-function BusyCareActivity({ scenario, answer, petName, members, onMembersChange, onChoose, onContinue, resetSignal, onReplay, continueImmediately = false }) {
+function BusyCareActivity({ scenario, answer, petName, members, species = "dog", onMembersChange, onChoose, onContinue, resetSignal, onReplay, continueImmediately = false }) {
 	const [mode, setMode] = (0, import_react.useState)(answer?.finalResult === "correct" ? "positive" : "question");
 	const [familyStep, setFamilyStep] = (0, import_react.useState)("name");
 	const [helperName, setHelperName] = (0, import_react.useState)("");
@@ -2561,22 +3782,25 @@ function BusyCareActivity({ scenario, answer, petName, members, onMembersChange,
 	const [sceneVideoFailed, setSceneVideoFailed] = (0, import_react.useState)(false);
 	const [videoFailed, setVideoFailed] = (0, import_react.useState)(false);
 	const [, setVideoFinished] = (0, import_react.useState)(false);
+	const isCat = species === "cat";
+	const animalName = isCat ? "貓咪" : "小狗";
+	const displayPetName = petName || animalName;
 	const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
 	const familySupportChoice = scenario.choices.find((choice) => choice.id === "family-helper");
 	const helperQuestions = [
 		{
 			id: "knows-needs",
-			text: `${helperName || "對方"}是否了解${petName || "小狗"}平常的餵食、換水、排泄與活動需求？`,
+			text: `${helperName || "對方"}是否了解${displayPetName}平常的${isCat ? "食水、砂盆、環境巡視、陪玩與觀察" : "餵食、換水、排泄與活動"}需求？`,
 			short: "還不清楚日常照護需求"
 		},
 		{
 			id: "willing",
-			text: `${helperName || "對方"}是否願意按照你交接的方式照顧「${petName || "小狗"}」，而不是只用自己的習慣處理？`,
+			text: `${helperName || "對方"}是否願意按照你交接的方式照顧「${displayPetName}」，而不是只用自己的習慣處理？`,
 			short: "尚未確認是否願意按照交接方式照顧"
 		},
 		{
 			id: "emergency",
-			text: `如果${petName || "小狗"}出現食慾、精神異常或緊急狀況，${helperName || "對方"}是否會馬上聯絡你或獸醫？`,
+			text: `如果${displayPetName}出現食慾、精神${isCat ? "、飲水、砂盆或活動" : ""}異常或緊急狀況，${helperName || "對方"}是否會馬上聯絡你或獸醫？`,
 			short: "尚未確認遇到異常時會立即聯絡你或獸醫"
 		}
 	];
@@ -2632,10 +3856,13 @@ function BusyCareActivity({ scenario, answer, petName, members, onMembersChange,
 		videoSrc: getCorrectAnswerVideo(scenario.id),
 		videoFailed,
 		fallbackText: "正向結果影片目前無法播放，仍可繼續生活旅程。",
-		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: helperName.trim() && selectedChoice.id === "family-helper" ? `你確認了${helperName.trim()}的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓${petName || "小狗"}在你忙碌時仍獲得穩定照顧。` : withPetName(selectedChoice.explanation, petName) }),
-		otherTips: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		intro: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: helperName.trim() && selectedChoice.id === "family-helper" ? `你確認了${helperName.trim()}的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓${displayPetName}在你忙碌時仍獲得穩定照顧。` : withPetName(selectedChoice.explanation, petName) }),
+		otherTips: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "busy-care-warm-note busy-care-energy-reflection",
-			children: [
+			children: isCat ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				"aria-hidden": "true",
+				children: "💡"
+			}), "貓咪照護提醒"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [displayPetName, "看起來獨立，仍需要穩定的食水、乾淨砂盆、安全環境、適量互動與細心觀察。忙碌時先安排可信任的人協助，能讓牠的日常維持安心與規律。"] })] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "busy-care-slogan",
 					children: "在狗狗的世界裡，你就是他的全部。"
@@ -2646,17 +3873,17 @@ function BusyCareActivity({ scenario, answer, petName, members, onMembersChange,
 				}), "留給自己的一個問題"] }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
 					"忙完一天回到家時，你還有能量陪伴等了你一整天的",
-					petName || "小狗",
+					displayPetName,
 					"嗎？"
 				] })
-			]
+			] })
 		}),
 		otherTipsBeforeSuggestion: true,
-		suggestion: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
+		suggestion: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: isCat ? `交接時要說明${displayPetName}的個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。` : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 			"不管是請朋友或家人協助，都要清楚交接餵食、飲水、排泄清理、陪伴方式，以及如何和",
-			petName || "小狗",
+			displayPetName,
 			"安全互動，讓牠在你忙碌時也能被穩定照顧。"
-		] }),
+		] }) }),
 		onVideoEnded: () => setVideoFinished(true),
 		onVideoError: () => {
 			setVideoFailed(true);
@@ -2682,8 +3909,8 @@ function BusyCareActivity({ scenario, answer, petName, members, onMembersChange,
 			className: "busy-care-layout",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "busy-care-room",
-				"aria-label": "小狗在房間中等待照顧的情境",
-				children: !sceneVideoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VideoWithToggle, {
+				"aria-label": `${animalName}在房間中等待照顧的情境`,
+				children: !isCat && !sceneVideoFailed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VideoWithToggle, {
 					className: "busy-care-room-video",
 					src: "/assets/pet-journey/busy-daily-care.mp4",
 					loop: true,
@@ -2695,8 +3922,8 @@ function BusyCareActivity({ scenario, answer, petName, members, onMembersChange,
 					alt: "居家房間場景"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 					className: "busy-care-hungry-dog",
-					src: "/assets/pet-journey/shiba-hungry.png",
-					alt: `${petName}趴在房間裡等待照顧`
+					src: isCat ? "/assets/species/cat.png" : "/assets/pet-journey/shiba-hungry.png",
+					alt: `${displayPetName}在房間裡等待照顧`
 				})] })
 			}), mode === "family" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
 				className: "busy-care-members",
@@ -2836,7 +4063,7 @@ function BreedChallengeActivity({ breed, petName, answers, onChoose, onContinue,
 	const [questionVideoFailed, setQuestionVideoFailed] = (0, import_react.useState)(false);
 	const scenario = scenarios[currentIndex];
 	const selectedChoice = scenario?.choices.find((choice) => choice.id === answers[scenario.id]?.finalChoiceId);
-	const breedLabel = breedLabelForId(breed);
+	const breedLabel = breedChallengeLabelForId(breed);
 	const challengeVideoSource = scenario ? breedChallengeVideos[scenario.title] : void 0;
 	(0, import_react.useEffect)(() => {
 		if (resetSignal <= 0) return;
@@ -2937,16 +4164,58 @@ function BreedChallengeActivity({ breed, petName, answers, onChoose, onContinue,
 		})]
 	});
 }
-function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onContinue }) {
+function ArrivalMealActivity({ activity, petName, species = "dog", onChange, onAddExpense, onContinue }) {
 	const complete = activity.arrivalMealFoodReady && activity.arrivalMealWaterReady;
 	const hasRecordedMeal = (0, import_react.useRef)(false);
 	const [foodWarning, setFoodWarning] = (0, import_react.useState)(null);
 	const [unsafeFoodIds, setUnsafeFoodIds] = (0, import_react.useState)([]);
+	const isCat = species === "cat";
+	const animalName = isCat ? "貓咪" : "小狗";
+	const mealExpenseId = isCat ? "cat-monthly-food" : "monthly-food-main";
+	const unsafeFoods = isCat ? [
+		{
+			id: "seasoned-leftovers",
+			label: "調味剩菜",
+			image: "/assets/pet-journey/leftover-bones.png",
+			title: "調味剩菜不適合貓咪",
+			text: "人類剩菜可能太鹹、太油，也可能含有洋蔥、大蒜或其他不適合貓咪的成分。剛到家時請先提供合適主食與乾淨飲水。"
+		},
+		{
+			id: "chocolate-caffeine",
+			label: "巧克力",
+			image: "/assets/pet-journey/macadamia-nuts.png",
+			title: "這個不能給貓咪吃",
+			text: "巧克力可能危害貓咪健康，也不適合作為引誘進食或安撫的食物。人類食物不一定適合貓咪，不確定食材安全性時，請查詢可靠資料或詢問獸醫。"
+		},
+		{
+			id: "vegetables-fruits",
+			label: "蔬菜／水果",
+			image: "/assets/room/food.png",
+			title: "蔬菜／水果只能確認安全後少量提供",
+			text: "有些蔬菜或水果可在確認安全後少量補充，但洋蔥、青蔥、大蒜、葡萄與葡萄乾等不適合貓咪。蔬菜／水果不應取代主食；不確定食材是否適合時，請先查詢可靠資料或詢問獸醫。"
+		}
+	] : [{
+		id: "macadamia",
+		label: "夏威夷豆",
+		image: "/assets/pet-journey/macadamia-nuts.png",
+		title: "這個不能給小狗吃",
+		text: "常見的人類食物例如洋蔥、大蒜、巧克力、葡萄、堅果類（例如：夏威夷豆）、口香糖（含木糖醇）等，對犬隻而言可能會造成健康危害。另外，太鹹、太油或含有咖啡因的食物，也不適合犬隻食用。"
+	}, {
+		id: "bones",
+		label: "吃剩的骨頭",
+		image: "/assets/pet-journey/leftover-bones.png",
+		title: "吃剩的骨頭不適合當作正餐",
+		text: "許多民眾會將吃過的骨頭、便當或剩菜剩飯當作犬隻的食物來源之一，但除了必須注意犬隻的營養均衡與日食物安全適當之外，啃食骨頭或剩食中較堅硬的殘渣，可能造成犬隻口腔或消化道危害，建議避免餵食此類食物。"
+	}];
 	(0, import_react.useEffect)(() => {
 		if (!complete || hasRecordedMeal.current) return;
 		hasRecordedMeal.current = true;
-		onAddExpense("monthly-food-main");
-	}, [complete, onAddExpense]);
+		onAddExpense(mealExpenseId);
+	}, [
+		complete,
+		mealExpenseId,
+		onAddExpense
+	]);
 	function prepareFood() {
 		if (activity.arrivalMealFoodReady) return;
 		setFoodWarning(null);
@@ -2958,13 +4227,12 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 		onChange({ arrivalMealWaterReady: true });
 	}
 	function warnUnsafeFood(kind) {
+		const unsafeFood = unsafeFoods.find((item) => item.id === kind);
+		if (!unsafeFood) return;
 		setUnsafeFoodIds((current) => current.includes(kind) ? current : [...current, kind]);
-		setFoodWarning(kind === "macadamia" ? {
-			title: "這個不能給小狗吃",
-			text: "常見的人類食物例如洋蔥、大蒜、巧克力、葡萄、堅果類（例如：夏威夷豆）、口香糖（含木糖醇）等，對犬隻而言可能會造成健康危害。另外，太鹹、太油或含有咖啡因的食物，也不適合犬隻食用。"
-		} : {
-			title: "吃剩的骨頭不適合當作正餐",
-			text: "許多民眾會將吃過的骨頭、便當或剩菜剩飯當作犬隻的食物來源之一，但除了必須注意犬隻的營養均衡與日食物安全適當之外，啃食骨頭或剩食中較堅硬的殘渣，可能造成犬隻口腔或消化道危害，建議避免餵食此類食物。"
+		setFoodWarning({
+			title: unsafeFood.title,
+			text: unsafeFood.text
 		});
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
@@ -2980,13 +4248,13 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
 						"幫",
-						petName,
+						petName || animalName,
 						"準備第一餐"
 					] }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
-						petName,
+						petName || animalName,
 						"剛到新家，還有些不安。先幫",
-						petName,
+						petName || "牠",
 						"準備合適的主食與乾淨飲水，讓牠慢慢安心下來。"
 					] })
 				]
@@ -3004,8 +4272,8 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								className: "arrival-meal-supply-food",
 								src: "/assets/room/food.png",
-								alt: "飼料"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "飼料" })]
+								alt: isCat ? "貓主食" : "飼料"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: isCat ? "貓主食" : "飼料" })]
 						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							className: "arrival-meal-supply-placeholder",
 							"aria-hidden": "true"
@@ -3026,36 +4294,21 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 							"aria-hidden": "true"
 						})
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					unsafeFoods.map((food) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						type: "button",
-						className: unsafeFoodIds.includes("macadamia") ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe",
-						onClick: () => warnUnsafeFood("macadamia"),
+						className: unsafeFoodIds.includes(food.id) ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe",
+						onClick: () => warnUnsafeFood(food.id),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
 							className: "unsafe-food-visual",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								src: "/assets/pet-journey/macadamia-nuts.png",
-								alt: "夏威夷豆"
-							}), unsafeFoodIds.includes("macadamia") && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
+								src: food.image,
+								alt: food.label
+							}), unsafeFoodIds.includes(food.id) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
 								"aria-hidden": "true",
 								children: "🚫"
 							})]
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "夏威夷豆" })]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						type: "button",
-						className: unsafeFoodIds.includes("bones") ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe",
-						onClick: () => warnUnsafeFood("bones"),
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							className: "unsafe-food-visual",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								src: "/assets/pet-journey/leftover-bones.png",
-								alt: "吃剩的骨頭"
-							}), unsafeFoodIds.includes("bones") && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
-								"aria-hidden": "true",
-								children: "🚫"
-							})]
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "吃剩的骨頭" })]
-					})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: food.label })]
+					}, food.id))
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -3064,12 +4317,12 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-room arrival-meal-room--desktop",
 						src: "/assets/room/empty-room.png",
-						alt: "小狗的新家房間"
+						alt: `${animalName}的新家房間`
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-room arrival-meal-room--mobile",
 						src: "/assets/room/empty-room-mobile.png",
-						alt: "小狗的新家房間"
+						alt: `${animalName}的新家房間`
 					}),
 					foodWarning && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "arrival-meal-warning",
@@ -3089,8 +4342,8 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-dog",
 						style: arrivalMealPlacementStyle("dog"),
-						src: complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png",
-						alt: complete ? `${petName}開心地坐在房間裡` : `${petName}還在等待晚餐與飲水`
+						src: isCat ? "/assets/species/cat.png" : complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png",
+						alt: complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-water",
@@ -3102,7 +4355,7 @@ function ArrivalMealActivity({ activity, petName, onChange, onAddExpense, onCont
 						className: "arrival-meal-food",
 						style: arrivalMealPlacementStyle("food"),
 						src: activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png",
-						alt: activity.arrivalMealFoodReady ? "裝好飼料的狗碗" : "空飼料碗"
+						alt: activity.arrivalMealFoodReady ? `裝好主食的${isCat ? "食盆" : "狗碗"}` : "空食碗"
 					})
 				]
 			}),
@@ -3127,6 +4380,406 @@ var walkingPrepNotes = {
 	water: "天氣熱或散步時間較長時，幫狗狗補充飲水。"
 };
 var walkingStep = 7;
+function catInspectionToken(kind, value) {
+	return `${kind}:${value}`;
+}
+function hasCatInspectionToken(selected, kind, value) {
+	return selected.includes(catInspectionToken(kind, value));
+}
+function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }) {
+	const sceneRef = (0, import_react.useRef)(null);
+	const [dragging, setDragging] = (0, import_react.useState)(false);
+	const [dragPoint, setDragPoint] = (0, import_react.useState)(null);
+	const [carryingWaste, setCarryingWaste] = (0, import_react.useState)(null);
+	const [message, setMessage] = (0, import_react.useState)("");
+	const [eventWarning, setEventWarning] = (0, import_react.useState)("");
+	const displayPetName = petName || "貓咪";
+	const selectedTime = selected.find((item) => item.startsWith("time:"))?.replace("time:", "");
+	const stampCount = selected.filter((item) => item.startsWith("stamp:")).length;
+	const currentRound = Math.min(stampCount + 1, catLitterRescueConfig.targetStamps);
+	const roundKey = String(currentRound);
+	const complete = stampCount >= catLitterRescueConfig.targetStamps;
+	const wasteCleared = catLitterRescueConfig.wasteItems.every((item) => hasCatInspectionToken(selected, `discarded-${roundKey}`, item.id));
+	const litterFilled = hasCatInspectionToken(selected, "litter", roundKey);
+	const weeklyDue = currentRound === catLitterRescueConfig.weeklyWashRound;
+	const abnormalDue = currentRound === catLitterRescueConfig.abnormalObservationRound;
+	const weeklySteps = [
+		"backup",
+		"washed",
+		"dried",
+		"returned"
+	];
+	const weeklyStepIndex = weeklySteps.findIndex((step) => !hasCatInspectionToken(selected, "weekly", step));
+	const weeklyComplete = !weeklyDue || weeklyStepIndex === -1;
+	const abnormalComplete = !abnormalDue || hasCatInspectionToken(selected, "abnormal", "record-vet");
+	const canStampRound = selectedTime && wasteCleared && litterFilled && weeklyComplete && abnormalComplete && !hasCatInspectionToken(selected, "stamp", roundKey);
+	const addToken = (0, import_react.useCallback)((kind, value) => {
+		const token = catInspectionToken(kind, value);
+		if (selected.includes(token)) return;
+		onChange([...selected, token]);
+	}, [onChange, selected]);
+	const chooseTime = (time) => {
+		onChange([...selected.filter((item) => !item.startsWith("time:")), catInspectionToken("time", time)]);
+		setMessage(time === "morning" ? "早上巡視開始，先看看砂盆裡需要清除的地方。" : "晚上巡視開始，睡前確認砂盆乾淨，能讓牠更安心。");
+	};
+	function pointerToScenePoint(event) {
+		const rect = sceneRef.current?.getBoundingClientRect();
+		if (!rect) return null;
+		return {
+			x: (event.clientX - rect.left) / rect.width * 100,
+			y: (event.clientY - rect.top) / rect.height * 100
+		};
+	}
+	function isInsideZone(point, zone) {
+		const dx = point.x - zone.x;
+		const dy = point.y - zone.y;
+		return Math.sqrt(dx * dx + dy * dy) <= zone.size;
+	}
+	function startScoopDrag(event) {
+		if (!selectedTime || complete || wasteCleared) return;
+		event.currentTarget.setPointerCapture(event.pointerId);
+		setDragging(true);
+		setDragPoint({
+			x: event.clientX,
+			y: event.clientY
+		});
+		setMessage(carryingWaste ? "把鏟起的排泄物放進密封清潔桶。" : "拖曳貓砂鏟到尿團或糞便上，先把排泄物鏟起來。");
+	}
+	function moveScoopDrag(event) {
+		if (!dragging) return;
+		setDragPoint({
+			x: event.clientX,
+			y: event.clientY
+		});
+	}
+	function finishScoopDrag(event) {
+		if (!dragging) return;
+		const point = pointerToScenePoint(event);
+		setDragging(false);
+		setDragPoint(null);
+		if (!point) return;
+		if (carryingWaste) {
+			if (isInsideZone(point, catLitterRescueConfig.bin)) {
+				const wasteLabel = catLitterRescueConfig.wasteItems.find((item) => item.id === carryingWaste)?.label ?? "排泄物";
+				addToken(`discarded-${roundKey}`, carryingWaste);
+				setCarryingWaste(null);
+				setMessage(`${wasteLabel}已放進密封清潔桶。`);
+			} else setMessage("鏟起後要放進密封清潔桶，才算完成丟棄。");
+			return;
+		}
+		const targetWaste = catLitterRescueConfig.wasteItems.find((item) => !hasCatInspectionToken(selected, `discarded-${roundKey}`, item.id) && isInsideZone(point, item));
+		if (targetWaste) {
+			setCarryingWaste(targetWaste.id);
+			setMessage(`已鏟起${targetWaste.label}，再拖曳貓砂鏟到密封清潔桶丟棄。`);
+		} else setMessage("還沒有鏟到排泄物，可以再靠近尿團或糞便一點。");
+	}
+	function chooseLitter(action) {
+		if (action === "fresh-litter") {
+			addToken("litter", roundKey);
+			setEventWarning("");
+			setMessage("砂量剛好，牠可以自然掩埋排泄物，也較願意使用砂盆。");
+			return;
+		}
+		setEventWarning(action === "skip" ? "砂量不足時，貓咪較難掩埋排泄物，也可能降低使用意願。" : "不應只靠濃香掩蓋氣味；重點是規律清除排泄物、維持乾淨砂盆，避免氣味與刺激造成貓咪排斥。");
+	}
+	function chooseWeeklyStep(action) {
+		if (action === weeklySteps[weeklyStepIndex]) {
+			addToken("weekly", action);
+			setEventWarning("");
+			setMessage(action === "backup" ? "已先放好備用砂盆，等待清洗時牠仍有地方可以使用。" : action === "washed" ? "原本砂盆已移走並清洗。" : action === "dried" ? "砂盆已完全晾乾，可以準備放回。" : "每週清洗日完成，備用砂盆與原砂盆都安排好了。");
+			return;
+		}
+		setEventWarning(action === "washed" && !hasCatInspectionToken(selected, "weekly", "backup") ? "清洗時也要保留可使用的備用砂盆，避免牠臨時找不到地方如廁。" : action === "returned" && !hasCatInspectionToken(selected, "weekly", "dried") ? "砂盆需完全晾乾再放回，避免潮濕影響使用與清潔。" : "每週清洗日要照順序進行，先完成前一步再繼續。");
+	}
+	function chooseAbnormal(action) {
+		if (action === "record-vet") {
+			addToken("abnormal", "record-vet");
+			setEventWarning("");
+			setMessage("排泄習慣的明顯改變值得留意。先記錄情況並聯絡獸醫，能協助專業人員更快判斷下一步。");
+			return;
+		}
+		setEventWarning(action === "self-medicine" ? "明顯排泄變化應記錄並儘速聯絡獸醫，不要自行判定原因或隨意更換藥物。" : "明顯排泄變化應記錄並儘速聯絡獸醫，不要自行診斷或拖延很多天。");
+	}
+	function stampCurrentRound() {
+		if (!canStampRound) return;
+		addToken("stamp", roundKey);
+		setCarryingWaste(null);
+		setEventWarning("");
+		setMessage(currentRound >= catLitterRescueConfig.targetStamps ? "今天的貓砂盆巡視完成了。" : "做得很好，規律巡視能同時照顧環境整潔與牠的日常狀況。可以開始下一次巡視。");
+	}
+	const statusText = complete ? "今日巡視完成" : selectedTime ? `今日巡視 ${stampCount + 1} / ${catLitterRescueConfig.targetStamps}` : "選擇巡視時段";
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		className: "life-activity cat-inspection-activity cat-litter-rescue",
+		onPointerMove: moveScoopDrag,
+		onPointerUp: finishScoopDrag,
+		onPointerCancel: finishScoopDrag,
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-heading",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "life-stage-label",
+						children: "日常照護"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "貓砂盆救援隊" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+						"每天固定巡視貓砂盆，能讓",
+						displayPetName,
+						"有乾淨、安心的如廁空間，也能及早留意排泄狀況的變化。"
+					] })
+				]
+			}),
+			!selectedTime ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "cat-rescue-start",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "選擇這次巡視時段" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "早上或晚上都可以，重點是固定巡視、清除排泄物並觀察砂盆狀況。" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						type: "button",
+						className: "primary",
+						onClick: () => chooseTime("morning"),
+						children: "早上巡視"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						type: "button",
+						className: "secondary",
+						onClick: () => chooseTime("evening"),
+						children: "晚上巡視"
+					})] })
+				]
+			}) : complete ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "cat-rescue-complete",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						"aria-hidden": "true",
+						children: "✓"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "今天的貓砂盆巡視完成了" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+						"乾淨的砂盆、足夠的貓砂與日常觀察，是讓",
+						displayPetName,
+						"安心如廁的重要照顧。"
+					] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "feedback-knowledge-list",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", {
+							className: "feedback-knowledge-title",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"aria-hidden": "true",
+								children: "💡"
+							}), "貓咪小知識"]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "每日巡視並清除排泄物。" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "維持足夠且乾淨的貓砂。" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "每週清洗時需使用備用砂盆，並完全晾乾後再放回。" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "留意排泄異常，記錄後儘速聯絡獸醫。" })
+						] })]
+					})
+				]
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "cat-rescue-progress",
+				"aria-label": "貓砂盆巡視進度",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: statusText }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: selectedTime === "morning" ? "早上巡視" : "晚上巡視" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "cat-rescue-stamps",
+					"aria-label": `巡視印章 ${stampCount} / ${catLitterRescueConfig.targetStamps}`,
+					children: Array.from({ length: catLitterRescueConfig.targetStamps }, (_, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: index < stampCount ? "earned" : "",
+						children: index < stampCount ? "✓" : index + 1
+					}, index))
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "cat-rescue-layout",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "cat-rescue-scene",
+					ref: sceneRef,
+					"aria-label": "貓砂盆清潔互動場景",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "cat-rescue-background",
+							"aria-hidden": "true"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "cat-rescue-event-card",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: !wasteCleared ? "鏟除排泄物" : !litterFilled ? "檢查並補足貓砂" : weeklyDue && !weeklyComplete ? "每週清洗日" : abnormalDue && !abnormalComplete ? "排泄狀況觀察" : "巡視完成" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: !wasteCleared ? "拖曳貓砂鏟，逐一鏟除尿團與糞便，再放入密封清潔桶。" : !litterFilled ? "清理完成後，確認砂量是否足夠讓牠自然掩埋。" : weeklyDue && !weeklyComplete ? "今天是每週清洗日。清洗砂盆前，先換上備用砂盆，讓牠在等待時仍有地方可以使用。" : abnormalDue && !abnormalComplete ? "這次巡視發現排泄明顯變少、看起來有點困難。先不要自行診斷。" : "本次巡視已完成，可以領取巡視印章。" })]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "cat-rescue-litter-box",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								src: "/assets/cat/room/litter-box.png",
+								alt: "貓砂盆",
+								onError: (event) => {
+									event.currentTarget.style.display = "none";
+								}
+							})
+						}),
+						catLitterRescueConfig.wasteItems.map((item) => !hasCatInspectionToken(selected, `discarded-${roundKey}`, item.id) && carryingWaste !== item.id ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: `cat-rescue-waste cat-rescue-waste--${item.id}`,
+							style: {
+								left: `${item.x}%`,
+								top: `${item.y}%`,
+								width: `${item.size}%`,
+								height: `${item.size}%`
+							},
+							"aria-label": item.label
+						}, item.id) : null),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "cat-rescue-bin",
+							style: {
+								left: `${catLitterRescueConfig.bin.x}%`,
+								top: `${catLitterRescueConfig.bin.y}%`,
+								width: `${catLitterRescueConfig.bin.size}%`,
+								height: `${catLitterRescueConfig.bin.size}%`
+							},
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"aria-hidden": "true",
+								children: "▥"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "密封清潔桶" })]
+						})
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "cat-rescue-controls",
+					children: [!wasteCleared ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "cat-rescue-tool-card",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: carryingWaste ? "已鏟起排泄物" : "貓砂鏟" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: carryingWaste ? "拖到密封清潔桶完成丟棄。" : "把貓砂鏟拖到尿團或糞便，再拖到密封清潔桶。" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								type: "button",
+								className: "cat-rescue-scoop-tool",
+								onPointerDown: startScoopDrag,
+								"aria-label": "拖曳貓砂鏟",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: "/assets/cat/daily/litter-scoop.png",
+									alt: "",
+									onError: (event) => {
+										event.currentTarget.style.display = "none";
+									}
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"aria-hidden": "true",
+									children: "▱"
+								})]
+							})
+						]
+					}) : !litterFilled ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "cat-rescue-choice-card",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "砂量狀態：不足" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "清理後砂量偏少，請選擇合適做法。" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseLitter("perfume"),
+								children: "用濃香產品蓋住味道"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseLitter("fresh-litter"),
+								children: "補入乾淨貓砂到適量"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseLitter("skip"),
+								children: "先不補砂，等等再說"
+							})
+						]
+					}) : weeklyDue && !weeklyComplete ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "cat-rescue-choice-card",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "每週清洗日步驟" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+								"已完成 ",
+								weeklyStepIndex === -1 ? weeklySteps.length : weeklyStepIndex,
+								" / ",
+								weeklySteps.length,
+								" 步。"
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseWeeklyStep("washed"),
+								children: "直接移走原砂盆清洗"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseWeeklyStep("backup"),
+								children: "放置備用砂盆"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseWeeklyStep("dried"),
+								children: "讓原本砂盆完全晾乾"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseWeeklyStep("returned"),
+								children: "原本砂盆晾乾後放回使用"
+							})
+						]
+					}) : abnormalDue && !abnormalComplete ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "cat-rescue-choice-card",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "排泄狀況異常" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "選擇你會如何處理這次觀察到的變化。" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseAbnormal("wait"),
+								children: "再拖很多天看看，可能只是心情不好"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseAbnormal("record-vet"),
+								children: "記錄時間與狀況，並儘速聯絡獸醫"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => chooseAbnormal("self-medicine"),
+								children: "自行判斷原因，先換藥或找偏方"
+							})
+						]
+					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "cat-rescue-choice-card cat-rescue-stamp-card",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "本次巡視完成" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "清理完成，乾淨的砂盆能讓牠更願意穩定使用。" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								type: "button",
+								className: "primary",
+								disabled: !canStampRound,
+								onClick: stampCurrentRound,
+								children: "領取巡視印章"
+							})
+						]
+					}), (eventWarning || message) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: eventWarning ? "cat-rescue-message warning" : "cat-rescue-message",
+						role: "status",
+						children: eventWarning || message
+					})]
+				})]
+			})] }),
+			dragging && dragPoint && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "cat-rescue-drag-ghost",
+				style: {
+					left: dragPoint.x,
+					top: dragPoint.y
+				},
+				"aria-hidden": "true",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+					src: "/assets/cat/daily/litter-scoop.png",
+					alt: "",
+					onError: (event) => {
+						event.currentTarget.style.display = "none";
+					}
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "▱" })]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "activity-actions",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: complete ? "今日巡視已完成" : `巡視印章 ${stampCount} / ${catLitterRescueConfig.targetStamps}` }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					className: "primary",
+					disabled: !complete,
+					onClick: onContinue,
+					children: ["完成貓砂盆巡視 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+				})]
+			})
+		]
+	});
+}
 function lerp(start, end, progress) {
 	return start + (end - start) * progress;
 }
@@ -3693,17 +5346,20 @@ function WalkingActivity({ activity, petName, onChange, onAddExpense, onContinue
 		})]
 	});
 }
-function LifeJourney({ index, petName, breed, answers, activity, completedIds, expenses, backupNames, members, roomReady, onIndex, onChoose, onChooseMultiple, onMembersChange, onActivityChange, onCompleteItem, onAddExpense, onStageChange, onBack, onComplete }) {
-	const item = journeyItems[index];
-	const scenario = item.scenarioId ? lifeScenarios.find((entry) => entry.id === item.scenarioId) : void 0;
+function LifeJourney({ index, petName, breed, species = "dog", answers, activity, completedIds, expenses, backupNames, members, roomReady, onIndex, onChoose, onChooseMultiple, onMembersChange, onActivityChange, onCompleteItem, onAddExpense, onStageChange, onBack, onComplete }) {
+	const activeJourneyItems = getJourneyItemsForSpecies(species);
+	const activeLifeScenarios = getLifeScenariosForSpecies(species);
+	const item = activeJourneyItems[index] ?? activeJourneyItems[0];
+	const scenario = item.scenarioId ? activeLifeScenarios.find((entry) => entry.id === item.scenarioId) : void 0;
 	const answer = scenario ? answers[scenario.id] : void 0;
-	const isDailyBehaviorActivity = item.id === "behavior";
+	const isDailyBehaviorActivity = item.id === "behavior" || item.id === "cat-daily-care";
+	const isDailyInspectionActivity = item.type === "daily-inspection";
 	const isWalkingActivity = item.id === "walking";
 	const isBreedChallengeActivity = item.id === "breed-challenge";
-	const isBusyCareActivity = item.id === "busy-care" && scenario?.id === "busy-daily-care";
-	const isVideoFeedbackScenario = scenario?.id === "arrival-adjustment" || scenario?.id === "illness-vet" || scenario?.id === "growing-old";
+	const isBusyCareActivity = Boolean(scenario && (scenario.id === "busy-daily-care" || scenario.id === "cat-busy-care"));
+	const isVideoFeedbackScenario = scenario?.id === "arrival-adjustment" || scenario?.id === "illness-vet" || scenario?.id === "growing-old" || scenario?.id === "cat-arrival-adjustment" || scenario?.id === "cat-illness-vet" || scenario?.id === "cat-growing-old";
 	const [arrivalMealOpen, setArrivalMealOpen] = (0, import_react.useState)(false);
-	const showArrivalMeal = scenario?.id === "arrival-adjustment" && answer?.finalResult === "correct" && arrivalMealOpen;
+	const showArrivalMeal = (scenario?.id === "arrival-adjustment" || scenario?.id === "cat-arrival-adjustment") && answer?.finalResult === "correct" && arrivalMealOpen;
 	const [feedbackOpen, setFeedbackOpen] = (0, import_react.useState)(Boolean(answer));
 	const [timePassOpen, setTimePassOpen] = (0, import_react.useState)(false);
 	const [resetSignal, setResetSignal] = (0, import_react.useState)(0);
@@ -3716,7 +5372,7 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 	}, [index]);
 	completedIds.length;
 	function selectItem(next) {
-		const nextScenarioId = journeyItems[next].scenarioId;
+		const nextScenarioId = activeJourneyItems[next].scenarioId;
 		setFeedbackOpen(Boolean(nextScenarioId && answers[nextScenarioId]));
 		setReplayInProgress(false);
 		onIndex(next);
@@ -3732,7 +5388,7 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 			setTimePassOpen(true);
 			return;
 		}
-		if (index === journeyItems.length - 1) {
+		if (index === activeJourneyItems.length - 1) {
 			onComplete();
 			return;
 		}
@@ -3752,8 +5408,10 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 			walkingSceneIndex: 0,
 			walkingMinutes: 0,
 			walkingPoopCleaned: false,
-			walkingComplete: false
+			walkingComplete: false,
+			catInspectionSteps: []
 		});
+		if (isDailyInspectionActivity) onActivityChange({ catInspectionSteps: [] });
 		setReplayInProgress(true);
 		setResetItemId(item.id);
 		setResetSignal((current) => current + 1);
@@ -3786,7 +5444,14 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 				onChooseMultiple,
 				onContinue: continueJourney,
 				resetSignal: currentResetSignal,
+				scenarioIds: species === "cat" ? catDailyBehaviorScenarioIds : dailyBehaviorScenarioIds,
+				species,
 				...replayCorrectProps
+			}) : isDailyInspectionActivity ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CatDailyInspectionActivity, {
+				petName,
+				selected: activity.catInspectionSteps,
+				onChange: (catInspectionSteps) => onActivityChange({ catInspectionSteps }),
+				onContinue: continueJourney
 			}) : isWalkingActivity ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WalkingActivity, {
 				activity,
 				petName,
@@ -3807,6 +5472,7 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 				answer,
 				petName,
 				members,
+				species,
 				onMembersChange,
 				onChoose: choose,
 				onContinue: continueJourney,
@@ -3819,7 +5485,7 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 				breed,
 				onChoose: choose,
 				onCorrectComplete: () => {
-					if (scenario.id === "arrival-adjustment") {
+					if (scenario.id === "arrival-adjustment" || scenario.id === "cat-arrival-adjustment") {
 						setArrivalMealOpen(true);
 						window.requestAnimationFrame(() => window.scrollTo({
 							top: 0,
@@ -3832,6 +5498,7 @@ function LifeJourney({ index, petName, breed, answers, activity, completedIds, e
 			}) : scenario && (showArrivalMeal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrivalMealActivity, {
 				activity,
 				petName,
+				species,
 				onChange: onActivityChange,
 				onAddExpense,
 				onContinue: continueJourney
@@ -3890,7 +5557,8 @@ function NavButtons({ onBack, onNext, nextLabel = "繼續下一站", disabled = 
 		})]
 	});
 }
-function getLifeStageRanges(breed) {
+function getLifeStageRanges(breed, species = "dog") {
+	const breedLabel = breeds.find((item) => item.id === breed)?.label ?? "品種";
 	return [
 		{
 			label: "接回家",
@@ -3903,7 +5571,7 @@ function getLifeStageRanges(breed) {
 			end: 2
 		},
 		{
-			label: `${breeds.find((item) => item.id === breed)?.label ?? "品種"}的考驗`,
+			label: getSpeciesGameConfig(species).copy.lifeChallengeLabel(breedLabel),
 			start: 3,
 			end: 3
 		},
@@ -3919,8 +5587,9 @@ function statusAt(index, current, reached) {
 	if (index <= reached) return "completed";
 	return "locked";
 }
-function StageRail({ testMode, step, furthestStep, selectionPage, selectionReached, preparationTask, preparationReached, lifePhase, breed, journeyIndex, journeyCompleted, onGoTo, onSelectionPage, onPreparationTask, onLifeStage }) {
-	const lifeStageRanges = getLifeStageRanges(breed);
+function StageRail({ testMode, step, furthestStep, selectionPage, selectionReached, preparationTask, preparationReached, lifePhase, species = "dog", breed, journeyIndex, journeyCompleted, onGoTo, onSelectionPage, onPreparationTask, onLifeStage }) {
+	const lifeStageRanges = getLifeStageRanges(breed, species);
+	const activeJourneyItems = getJourneyItemsForSpecies(species);
 	const currentMain = step === 1 ? 0 : step === 2 ? 1 : step <= 6 ? 2 : step === 7 ? 3 : 4;
 	const currentLifeStage = lifePhase === "arrival-video" ? 0 : lifeStageRanges.findIndex((range) => journeyIndex >= range.start && journeyIndex <= range.end);
 	const mainTargets = [
@@ -4007,7 +5676,7 @@ function StageRail({ testMode, step, furthestStep, selectionPage, selectionReach
 			status: mainStatus(2),
 			onClick: () => testMode ? onLifeStage(0) : onGoTo(mainTargets[2]),
 			children: lifeStageRanges.map((range, index) => {
-				const completed = lifePhase === "complete" || journeyItems.slice(range.start, range.end + 1).every((item) => journeyCompleted.includes(item.id));
+				const completed = lifePhase === "complete" || activeJourneyItems.slice(range.start, range.end + 1).every((item) => journeyCompleted.includes(item.id));
 				const status = index === currentLifeStage && step >= 3 && step <= 6 ? "current" : testMode || completed ? "completed" : "locked";
 				return {
 					id: `life-${index}`,
@@ -4164,6 +5833,8 @@ function Welcome({ onStart, onTestStart }) {
 function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName, onCategory, onBreed, onPetName, hasPreviousDog, previousBreed, previousDogName, onHasPreviousDog, onPreviousBreed, onPreviousDogName, onNext }) {
 	const selectedBreed = breeds.find((item) => item.id === breed);
 	const selectedPreviousBreed = breeds.find((item) => item.id === previousBreed);
+	const speciesConfig = getSpeciesGameConfig(category);
+	const availableBreeds = breeds.filter((item) => (item.species ?? "dog") === (category || "dog"));
 	const sameBreed = Boolean(breed && previousBreed && breed === previousBreed);
 	const breedCarouselRef = (0, import_react.useRef)(null);
 	const breedScrollTimerRef = (0, import_react.useRef)(null);
@@ -4203,7 +5874,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 		className: "content-wrap partner-picker",
 		children: selectionPage === "species" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 			className: "partner-selection-page",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "你想飼養哪一種動物？" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: speciesConfig.copy.selectionTitle }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "category-grid species-page-grid",
 				children: categories.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					className: category === item.id ? "selected" : "",
@@ -4224,13 +5895,13 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 		}, "species") : selectionPage === "breed" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 			className: "partner-selection-page",
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: "選擇你想飼養的品種" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, { title: speciesConfig.copy.breedTitle }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "breed-row breed-page-grid breed-carousel",
 					ref: breedCarouselRef,
 					onScroll: handleBreedCarouselScroll,
 					"aria-label": "品種橫向滑動選擇",
-					children: breeds.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					children: availableBreeds.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						"data-breed-id": item.id,
 						className: breed === item.id ? "selected" : "",
 						onClick: () => onBreed(item.id),
@@ -4240,7 +5911,10 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 								className: "partner-card-image",
 								src: item.image,
 								alt: ""
-							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.icon }),
+							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "partner-card-placeholder",
+								children: item.icon
+							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
 							breed === item.id && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "✓" })
 						]
@@ -4258,7 +5932,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						"aria-hidden": "true",
 						children: selectedBreed?.icon ?? "🐾"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: selectedBreed ? `你選擇了：${selectedBreed.label}` : "品種飼養特性" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedBreed?.shortDescription ?? "點選一個品種，查看牠的飼養特性。" })] })]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: selectedBreed ? `你選擇了：${selectedBreed.label}` : `${speciesConfig.copy.typeLabel}飼養特性` }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedBreed?.shortDescription ?? `點選一個${speciesConfig.copy.typeLabel}，查看牠的飼養特性。` })] })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NavButtons, {
 					onBack: () => onSelectionPage("species"),
@@ -4271,7 +5945,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 			className: "partner-selection-page pet-naming-page",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-					title: "先幫牠取一個名字",
+					title: speciesConfig.copy.nameTitle,
 					body: "這個名字會陪著牠走進接下來的生活，也會出現在後面的情境演練裡。"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -4279,18 +5953,19 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 							src: "/assets/room/nameplate.png",
-							alt: "小狗名字吊牌"
+							alt: `${speciesConfig.copy.animalName}名字吊牌`
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
 							htmlFor: "new-pet-name",
 							className: "sr-only",
-							children: "小狗的名字"
+							children: [speciesConfig.copy.animalName, "的名字"]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 							id: "new-pet-name",
+							name: "pet-display-name",
 							value: petName,
 							maxLength: 12,
-							placeholder: "請輸入小狗的名字",
+							placeholder: speciesConfig.copy.namePlaceholder,
 							onChange: (event) => onPetName(event.target.value),
 							autoComplete: "off",
 							autoCorrect: "off",
@@ -4311,8 +5986,8 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 			className: "partner-selection-page previous-dog-page",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-					title: "你以前有養過狗嗎？",
-					body: "過去的經驗很珍貴，也可能讓我們自然沿用熟悉的照顧方式。先簡單告訴我們，你是否曾經和狗狗一起生活。"
+					title: speciesConfig.copy.historyTitle,
+					body: speciesConfig.copy.historyBody
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "previous-dog-choice",
@@ -4323,13 +5998,17 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 						className: hasPreviousDog === true ? "selected" : "",
 						"aria-pressed": hasPreviousDog === true,
 						onClick: () => onHasPreviousDog(true),
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "有，曾經有養過狗" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "接著填寫牠的品種與名字" })]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: speciesConfig.copy.hasPreviousLabel }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
+							"接著填寫牠的",
+							speciesConfig.copy.typeLabel,
+							"與名字"
+						] })]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						type: "button",
 						className: hasPreviousDog === false ? "selected" : "",
 						"aria-pressed": hasPreviousDog === false,
 						onClick: () => onHasPreviousDog(false),
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "沒有，這是第一次" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "直接開始這次的飼養前準備" })]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: speciesConfig.copy.noPreviousLabel }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "直接開始這次的飼養前準備" })]
 					})]
 				}),
 				hasPreviousDog === true && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -4337,20 +6016,27 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 							className: "life-stage-label",
-							children: "以前陪伴你的狗狗"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "牠是哪一個品種？" })] }),
+							children: speciesConfig.copy.previousSectionTitle
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+							"牠是哪一個",
+							speciesConfig.copy.typeLabel,
+							"？"
+						] })] }),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							className: "breed-row previous-breed-grid",
-							children: breeds.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+							children: availableBreeds.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 								type: "button",
 								className: previousBreed === item.id ? "selected" : "",
 								onClick: () => onPreviousBreed(item.id),
 								"aria-pressed": previousBreed === item.id,
 								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									item.image ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 										className: "partner-card-image",
 										src: item.image,
 										alt: ""
+									}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "partner-card-placeholder",
+										children: item.icon
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: item.label }),
 									previousBreed === item.id && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "✓" })
@@ -4387,12 +6073,16 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 							className: "experience-dog-card experience-dog-card--past",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "過去熟悉的生活" }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-									src: selectedPreviousBreed?.image,
-									alt: `${previousDogName || "以前的狗狗"}，${selectedPreviousBreed?.label ?? "犬"}`
+								selectedPreviousBreed?.image ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: selectedPreviousBreed.image,
+									alt: `${previousDogName || `以前的${speciesConfig.copy.animalName}`}，${selectedPreviousBreed?.label ?? speciesConfig.copy.animalName}`
+								}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "experience-pet-placeholder",
+									"aria-hidden": "true",
+									children: selectedPreviousBreed?.icon ?? "🐾"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: previousDogName || "以前的狗狗" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: previousDogName || `以前的${speciesConfig.copy.animalName}` }),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: selectedPreviousBreed?.label }),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedPreviousBreed?.shortDescription })
 								] })
@@ -4407,12 +6097,16 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 							className: "experience-dog-card experience-dog-card--next",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: sameBreed ? "相同品種，新的個體" : "準備迎接的新生活" }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-									src: selectedBreed?.image,
-									alt: `這次想迎接的${selectedBreed?.label ?? "狗狗"}`
+								selectedBreed?.image ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									src: selectedBreed.image,
+									alt: `這次想迎接的${selectedBreed?.label ?? speciesConfig.copy.animalName}`
+								}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "experience-pet-placeholder",
+									"aria-hidden": "true",
+									children: selectedBreed?.icon ?? "🐾"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: petName || `新的${selectedBreed?.label ?? "狗狗"}` }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: petName || `新的${selectedBreed?.label ?? speciesConfig.copy.animalName}` }),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: selectedBreed?.label }),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: selectedBreed?.shortDescription })
 								] })
@@ -4433,9 +6127,9 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 					}), sameBreed ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 						className: "experience-story-line experience-story-line--next",
 						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || "新的狗狗" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || `新的${speciesConfig.copy.animalName}` }),
 							"和",
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: previousDogName || "以前的狗狗" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: previousDogName || `以前的${speciesConfig.copy.animalName}` }),
 							"雖然都是",
 							selectedBreed?.label,
 							"，仍然是",
@@ -4455,7 +6149,7 @@ function SpeciesStep({ selectionPage, onSelectionPage, category, breed, petName,
 						]
 					})] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 						className: "experience-story-line experience-story-line--next",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || `新的${selectedBreed?.label ?? "狗狗"}` }), "是一隻不一樣的生命，可能有不同的個性、經歷、健康狀況與適應速度。"]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: petName || `新的${selectedBreed?.label ?? speciesConfig.copy.animalName}` }), "是一隻不一樣的生命，可能有不同的個性、經歷、健康狀況與適應速度。"]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 						className: "experience-story-line experience-story-line--bridge",
 						children: [
@@ -4797,22 +6491,31 @@ function roomDoorplatePlacementStyle() {
 		"--mobile-doorplate-text-font-size": `${roomDoorplatePlacement.mobileText.fontSize}px`
 	};
 }
-function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, onToggleHazard, onBack, onReplay, onNext, reviewing = false, breed }) {
+function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, onToggleHazard, onBack, onReplay, onNext, reviewing = false, breed, species = "dog" }) {
+	const speciesConfig = getSpeciesGameConfig(species);
+	const activeRoomItems = speciesConfig.roomItems;
+	const activeHazards = speciesConfig.hazards;
 	const [roomCheckMessage, setRoomCheckMessage] = (0, import_react.useState)("");
 	const [dismissingHazard, setDismissingHazard] = (0, import_react.useState)(null);
 	const [activeHazardInfo, setActiveHazardInfo] = (0, import_react.useState)(null);
 	const [exitingItems, setExitingItems] = (0, import_react.useState)([]);
 	const roomSceneRef = (0, import_react.useRef)(null);
 	const [roomSceneReady, setRoomSceneReady] = (0, import_react.useState)(false);
-	const itemsDone = roomItems.filter((item) => selectedItems.includes(item.id)).length;
+	const itemsDone = activeRoomItems.filter((item) => selectedItems.includes(item.id)).length;
 	const hazardsDone = securedHazards.length;
-	const complete = itemsDone === roomItems.length && hazardsDone === hazards.length;
-	const activeHazard = hazards.find((item) => item.id === activeHazardInfo);
-	const supplyRows = [
-		roomItems.slice(0, 2),
-		roomItems.slice(2, 4),
-		roomItems.slice(4, 6),
-		roomItems.slice(6, 7)
+	const complete = itemsDone === activeRoomItems.length && hazardsDone === activeHazards.length;
+	const activeHazard = activeHazards.find((item) => item.id === activeHazardInfo);
+	const supplyRows = species === "cat" ? [
+		activeRoomItems.slice(0, 2),
+		activeRoomItems.slice(2, 4),
+		activeRoomItems.slice(4, 6),
+		activeRoomItems.slice(6, 8),
+		activeRoomItems.slice(8)
+	].filter((row) => row.length > 0) : [
+		activeRoomItems.slice(0, 2),
+		activeRoomItems.slice(2, 4),
+		activeRoomItems.slice(4, 6),
+		activeRoomItems.slice(6, 8)
 	].filter((row) => row.length > 0);
 	(0, import_react.useEffect)(() => {
 		const scene = roomSceneRef.current;
@@ -4826,14 +6529,14 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 		return () => observer?.disconnect();
 	}, []);
 	function prepareItem(id) {
-		if (!roomItems.find((entry) => entry.id === id) || selectedItems.includes(id) || exitingItems.includes(id)) return;
+		if (!activeRoomItems.find((entry) => entry.id === id) || selectedItems.includes(id) || exitingItems.includes(id)) return;
 		setExitingItems((current) => [...current, id]);
 		onPrepare(id);
 		window.setTimeout(() => setExitingItems((current) => current.filter((itemId) => itemId !== id)), 450);
 		setRoomCheckMessage("");
 	}
 	function secureHazard(id) {
-		if (!hazards.find((item) => item.id === id) || securedHazards.includes(id) || dismissingHazard) return;
+		if (!activeHazards.find((item) => item.id === id) || securedHazards.includes(id) || dismissingHazard) return;
 		setDismissingHazard(id);
 		setRoomCheckMessage("");
 		window.setTimeout(() => {
@@ -4844,8 +6547,8 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 		window.setTimeout(() => setActiveHazardInfo((current) => current === id ? null : current), 4260);
 	}
 	function getRoomCheckMessages() {
-		const missingItems = roomItems.length - itemsDone;
-		const remainingHazards = hazards.length - hazardsDone;
+		const missingItems = activeRoomItems.length - itemsDone;
+		const remainingHazards = activeHazards.length - hazardsDone;
 		return [missingItems > 0 ? `還有 ${missingItems} 件用品還沒準備好` : "", remainingHazards > 0 ? "還有危險物品需要處理" : ""].filter(Boolean);
 	}
 	function completeRoomCheck() {
@@ -4861,8 +6564,8 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 		className: "content-wrap preparation-page",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				title: "先替牠布置安全的生活空間",
-				body: `${petName || "小狗"} 還沒到家，但牠的生活角落可以先準備起來。先把每天會用到的用品放進房間，再看看有哪些東西可能讓牠誤咬、誤食或受傷。`
+				title: speciesConfig.copy.roomTitle,
+				body: speciesConfig.copy.roomBody(petName)
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "room-preparation-layout simplified-room-layout",
@@ -4933,7 +6636,7 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 								src: "/assets/room/empty-room-mobile.png",
 								alt: "空的寵物生活房間"
 							}),
-							roomItems.filter((item) => selectedItems.includes(item.id)).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							activeRoomItems.filter((item) => selectedItems.includes(item.id)).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								className: `room-object placed-supply auto-room-object placed-room-item--${item.id}`,
 								style: roomItemPlacementStyle(item),
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
@@ -4941,7 +6644,7 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 									alt: `房間中已配置的${item.label}`
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.label })]
 							}, item.id)),
-							hazards.filter((item) => !securedHazards.includes(item.id)).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+							activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 								type: "button",
 								className: `room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`,
 								style: roomHazardPlacementStyle(item),
@@ -4998,15 +6701,17 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 		]
 	});
 }
-function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack, onReplay, onNext, reviewing = false }) {
+function CarTrunkPreparation({ selected, petName, breed, species = "dog", onSelect, onBack, onReplay, onNext, reviewing = false }) {
+	const speciesConfig = getSpeciesGameConfig(species);
+	const activeTrunkItems = speciesConfig.trunkItems;
 	const [exitingItems, setExitingItems] = (0, import_react.useState)([]);
 	const [departing, setDeparting] = (0, import_react.useState)(false);
-	const documents = departureTrunkItems.filter((item) => item.kind === "document");
-	const supplies = departureTrunkItems.filter((item) => item.kind === "supply");
+	const documents = activeTrunkItems.filter((item) => item.kind === "document");
+	const supplies = activeTrunkItems.filter((item) => item.kind === "supply");
 	const documentDone = documents.filter((item) => selected.includes(item.id)).length;
 	const supplyDone = supplies.filter((item) => selected.includes(item.id)).length;
 	const complete = documentDone === documents.length && supplyDone === supplies.length;
-	const supplyRows = Array.from({ length: Math.ceil(departureTrunkItems.length / 2) }, (_, index) => departureTrunkItems.slice(index * 2, index * 2 + 2)).filter((row) => row.length > 0);
+	const supplyRows = Array.from({ length: Math.ceil(activeTrunkItems.length / 2) }, (_, index) => activeTrunkItems.slice(index * 2, index * 2 + 2)).filter((row) => row.length > 0);
 	const [message, setMessage] = (0, import_react.useState)("");
 	trunkItems[0];
 	function selectItem(id) {
@@ -5025,8 +6730,8 @@ function CarTrunkPreparation({ selected, petName, breed, onSelect, onBack, onRep
 		className: "content-wrap preparation-page",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepHeading, {
-				title: "出發接牠回家",
-				body: `今天要去接 ${petName || "小狗"} 回家了。出門前先把需要的文件與接回用品準備好，讓牠在路上有安全的位置，也讓你能從容處理突發狀況。`
+				title: speciesConfig.copy.departureTitle,
+				body: speciesConfig.copy.departureBody(petName)
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: `departure-layout ${departing ? "departing" : ""}`,
@@ -5135,8 +6840,10 @@ var import_react_dom = /* @__PURE__ */ __toESM(require_react_dom(), 1);
 var a4PageWidthPt = 595.28;
 var a4PageHeightPt = 841.89;
 function personalizeReportText(text, petName) {
-	const name = petName.trim() || "小狗";
-	return text.replaceAll("豆豆", name).replaceAll("小狗", name).replaceAll("狗狗", name);
+	const trimmedName = petName.trim();
+	const name = trimmedName || "小狗";
+	const personalizedDogText = text.replaceAll("豆豆", name).replaceAll("小狗", name).replaceAll("狗狗", name);
+	return trimmedName ? personalizedDogText.replaceAll("貓咪", trimmedName) : personalizedDogText;
 }
 function knowledgePointsForScenario(scenario, petName) {
 	const correctChoices = scenario.choices.filter((choice) => choice.result === "correct");
@@ -5428,7 +7135,8 @@ function SelectedDot() {
 		})
 	});
 }
-function ProfileSupplementForm({ profile, petName, onChange, onBack, onReset }) {
+function ProfileSupplementForm({ profile, petName, breed, species = "dog", onChange, onBack, onReset }) {
+	const selectedTypeLabel = breeds.find((item) => item.id === breed)?.label ?? (species === "cat" ? "貓咪" : "柴犬");
 	const update = (key, value) => {
 		onChange({
 			...profile,
@@ -5795,7 +7503,11 @@ function ProfileSupplementForm({ profile, petName, onChange, onBack, onReset }) 
 							className: `supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`,
 							"aria-pressed": profile.noShibaExperience,
 							onClick: () => update("noShibaExperience", !profile.noShibaExperience),
-							children: [profile.noShibaExperience && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}), "我沒有養過柴犬"]
+							children: [
+								profile.noShibaExperience && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectedDot, {}),
+								"我沒有養過",
+								selectedTypeLabel
+							]
 						})
 					] }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("fieldset", { children: [
@@ -5842,8 +7554,9 @@ function ProfileSupplementForm({ profile, petName, onChange, onBack, onReset }) 
 		]
 	});
 }
-function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve, roomReady, hazardsReady, members, trunkSelected, trunkPassed, answers, lifeActivity, committed, onCommittedChange, onBack, onReset }) {
+function AssessmentReport({ petName, breed, species = "dog", profile, expenses, emergencyReserve, roomReady, hazardsReady, members, trunkSelected, trunkPassed, answers, lifeActivity, committed, onCommittedChange, onBack, onReset }) {
 	const [activeDiscussionId, setActiveDiscussionId] = (0, import_react.useState)("");
+	const speciesConfig = getSpeciesGameConfig(species);
 	(0, import_react.useEffect)(() => {
 		if (!activeDiscussionId) return;
 		const previousOverflow = document.body.style.overflow;
@@ -5866,25 +7579,32 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	const temporaryMedicalTotal = visibleExpenses.filter((item) => !isMonthlyExpense(item) && isTemporaryOrMedicalExpense(item)).reduce((sum, item) => sum + item.amount, 0);
 	const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
 	const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
-	Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
-	corrected.map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
-	const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
+	const reportScenarios = getAllScenariosForSpecies(species, breed);
+	Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
+	corrected.map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
+	const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean);
+	const catInspectionStampCount = lifeActivity.catInspectionSteps.filter((item) => item.startsWith("stamp:")).length;
 	const practiceItems = [{
 		label: "已完成到家第一餐",
 		complete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady
-	}];
+	}, ...species === "cat" ? [{
+		label: "已完成貓砂盆救援隊",
+		complete: catInspectionStampCount >= catLitterRescueConfig.targetStamps
+	}] : []];
 	const practiceComplete = practiceItems.filter((item) => item.complete).length;
 	members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
-	const requiredRoom = roomItems.filter((item) => item.required);
+	const requiredRoom = speciesConfig.roomItems.filter((item) => item.required);
 	const roomCompletion = Math.round(roomReady.filter((id) => requiredRoom.some((item) => item.id === id)).length / requiredRoom.length * 100);
-	const preparationStrong = roomCompletion === 100 && hazardsReady.length === hazards.length && trunkPassed;
+	const preparationStrong = roomCompletion === 100 && hazardsReady.length === speciesConfig.hazards.length && trunkPassed;
 	const rawActivitySpace = profile.activitySpace;
 	const selectedActivitySpaces = Array.isArray(rawActivitySpace) ? rawActivitySpace : rawActivitySpace ? [rawActivitySpace] : [];
 	const activitySpace = selectedActivitySpaces.length ? selectedActivitySpaces.map((space) => space === "其他" ? profile.otherActivitySpace || "其他（待補充）" : space).join("、") : "待補充";
 	const enteredHousemates = profile.housemateList.map((item) => item.trim()).filter(Boolean);
 	const legacyHousemates = [...profile.housemateTypes.filter((item) => item !== "無" && item !== "其他"), profile.housemateTypes.includes("其他") ? profile.otherHousemate || "其他（待補充）" : ""].filter(Boolean);
 	const housemateStatus = profile.hasHousemates === false ? "無同住家人" : profile.hasHousemates === true ? enteredHousemates.length ? enteredHousemates.join("、") : legacyHousemates.length ? legacyHousemates.join("、") : "有同住家人（待補充）" : "待補充";
-	profile.noShibaExperience || profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote;
+	const selectedBreed = breeds.find((item) => item.id === breed);
+	const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : "柴犬");
+	profile.noShibaExperience ? `${selectedTypeLabel}` : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote;
 	const reasonStatus = profile.reasons.length ? profile.reasons.map((item) => item === "其他" ? profile.reasonOther || "其他（待補充）" : item).join("、") : "待補充";
 	const landlordConfirmed = profile.landlordConsent === "已確認並同意" || profile.landlordConsent === "房東已同意";
 	const hasActivitySpace = selectedActivitySpaces.length > 0;
@@ -5899,7 +7619,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	].filter(Boolean).length;
 	[
 		roomCompletion === 100 && "必要用品與生活空間已完成",
-		hazardsReady.length === hazards.length && "居家危險物已完成收納與防護",
+		hazardsReady.length === speciesConfig.hazards.length && "居家危險物已完成收納與防護",
 		trunkPassed && "接送行李、文件與安全運輸已通過檢查",
 		correctFirst >= 5 && `${correctFirst} 個情境第一次就掌握照顧方向`,
 		practiceComplete === practiceItems.length && "目前的生活練習與飲水步驟皆已完成",
@@ -5908,7 +7628,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	].filter(Boolean);
 	const confirm = [
 		roomCompletion < 100 && `必要用品完成度 ${roomCompletion}%`,
-		hazardsReady.length < hazards.length && "仍有居家危險物需要防護",
+		hazardsReady.length < speciesConfig.hazards.length && "仍有居家危險物需要防護",
 		!trunkPassed && "接寵物後車廂尚未通過檢查",
 		!hasActivitySpace && "尚未填寫寵物預計活動空間",
 		!profile.reasons.length && "尚未填寫飼養原因",
@@ -5916,13 +7636,11 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	].filter(Boolean);
 	[profile.hasHousemates && profile.housematesConsent !== true && "所有同住者是否知情並同意飼養", profile.housing === "租屋" && !landlordConfirmed && "租屋規定與房東書面同意"].filter(Boolean);
 	[...confirm.slice(0, 5)];
-	const selectedBreed = breeds.find((item) => item.id === breed);
-	const reportScenarios = [...lifeScenarios, ...getBreedChallengeScenarios(breed)];
 	const discussionTopics = Object.values(answers).filter((answer) => answer.firstResult !== "correct" || answer.discussionFlags?.includes("unsuitable-family-helper")).map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId)).filter((scenario) => Boolean(scenario)).map((scenario) => ({
 		id: scenario.id,
 		title: personalizeReportText(scenario.title, petName),
 		topic: scenario.topic ?? scenario.stage,
-		summary: scenario.id === "busy-daily-care" ? "忙碌時的日常照顧：需要確認協助者是否真的有時間、能力與意願照顧寵物。" : personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
+		summary: scenario.id === "busy-daily-care" ? "忙碌時的日常照顧：需要確認協助者是否真的有時間、能力與意願照顧寵物。" : scenario.id === "cat-busy-care" ? personalizeReportText("臨時晚歸時的貓咪照顧：需要確認協助者是否真的有時間、能力與意願照顧貓咪，並清楚交接食水、砂盆、環境巡視、陪玩與狀況觀察。", petName) : personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
 		knowledgePoints: knowledgePointsForScenario(scenario, petName)
 	}));
 	const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
@@ -5965,48 +7683,8 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 	}), document.body) : null;
 	const homeSpaceImages = profile.homeSpaceImages.length ? profile.homeSpaceImages : profile.homeSpaceImage ? [profile.homeSpaceImage] : [];
 	const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : profile.homeSpaceImageName ? [profile.homeSpaceImageName] : [];
-	const checklistGroups = [
-		{
-			title: "每日照顧",
-			items: [
-				"固定餵食",
-				"提供乾淨飲水",
-				"觀察精神、食慾與排泄",
-				"安排陪伴與活動",
-				"外出散步或合適活動",
-				"清理排泄物"
-			]
-		},
-		{
-			title: "家中環境",
-			items: [
-				"睡墊",
-				"水碗與狗碗",
-				"尿墊或如廁區",
-				"寵物專用清潔用品",
-				"危險物品收好",
-				"安靜休息空間"
-			]
-		},
-		{
-			title: "外出與接回",
-			items: [
-				"身分證",
-				"領養文件",
-				"運輸籠",
-				"尿墊",
-				"牽繩",
-				"飲水與清潔用品"
-			]
-		}
-	];
-	const handlingRows = [
-		["忙碌或離家", "安排家人、朋友或合適照護者協助"],
-		["食慾、精神或排泄異常", "記錄並聯絡獸醫"],
-		["行為困擾", "調整環境、提供活動，必要時尋求專業協助"],
-		["生活改變", "重新安排照顧時間與支援"],
-		["高齡階段", "提早準備醫療與長期照顧資源"]
-	];
+	const checklistGroups = speciesConfig.report.checklistGroups;
+	const handlingRows = speciesConfig.report.handlingRows;
 	const consentText = profile.hasHousemates === true ? profile.housematesConsent === true ? "已知情並同意" : profile.housematesConsent === false ? "不同意" : "尚未確認" : "";
 	const sensitiveHousemateText = profile.hasHousemates === true && profile.hasSensitiveHouseholdMembers ? "家中有幼童、長者、孕婦" : "";
 	const pastPets = [
@@ -6041,7 +7719,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 		{
 			title: "飼養經驗與原因",
 			rows: [
-				profile.noShibaExperience && ["柴犬經驗", "我沒有養過柴犬"],
+				profile.noShibaExperience && [`${selectedTypeLabel}經驗`, `我沒有養過${selectedTypeLabel}`],
 				pastPets && ["曾經飼養", pastPets],
 				currentPets && ["目前家中有寵物", currentPets],
 				profile.experienceNote && ["其他飼養經驗分享", profile.experienceNote],
@@ -6141,7 +7819,7 @@ function AssessmentReport({ petName, breed, profile, expenses, emergencyReserve,
 									className: "care-a4-money-disclaimer-icon",
 									"aria-hidden": "true",
 									children: "💡"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。" })]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: speciesConfig.report.moneyDisclaimer })]
 							})
 						]
 					}),
@@ -6694,6 +8372,7 @@ function Home() {
 	const backupNames = (0, import_react.useMemo)(() => {
 		return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
 	}, [members]);
+	const speciesConfig = getSpeciesGameConfig(category);
 	function goTo(next) {
 		setStep(next);
 		setFurthestStep((current) => Math.max(current, next));
@@ -6775,7 +8454,7 @@ function Home() {
 	function addRoomItem(id) {
 		if (!id) return;
 		setRoomReady((current) => current.includes(id) ? current : [...current, id]);
-		const expenseId = roomItems.find((item) => item.id === id)?.expenseId;
+		const expenseId = speciesConfig.roomItems.find((item) => item.id === id)?.expenseId;
 		if (expenseId) addExpenseById(expenseId);
 	}
 	function toggleHazard(id) {
@@ -6786,11 +8465,11 @@ function Home() {
 	}
 	function selectTrunkItem(id) {
 		if (!id) return;
-		const expenseIds = departureTrunkItems.find((item) => item.id === id)?.expenseIds ?? [];
+		const expenseIds = speciesConfig.trunkItems.find((item) => item.id === id)?.expenseIds ?? [];
 		setTrunkSelected((current) => {
 			if (current.includes(id)) return current;
 			const next = [...current, id];
-			const trunkComplete = departureTrunkItems.every((item) => next.includes(item.id));
+			const trunkComplete = speciesConfig.trunkItems.every((item) => next.includes(item.id));
 			setTrunkPassed(trunkComplete);
 			if (trunkComplete) setPreparationReached((current) => Math.max(current, 1));
 			return next;
@@ -6929,6 +8608,7 @@ function Home() {
 			securedHazards: hazardsReady,
 			petName,
 			breed,
+			species: category,
 			onPrepare: addRoomItem,
 			onToggleHazard: toggleHazard,
 			reviewing: preparationReached >= 1 && preparationReplayTask !== 0,
@@ -6950,6 +8630,7 @@ function Home() {
 			selected: trunkSelected,
 			petName,
 			breed,
+			species: category,
 			onSelect: selectTrunkItem,
 			reviewing: furthestStep >= 3 && preparationReplayTask !== 1,
 			onReplay: () => {
@@ -6971,14 +8652,18 @@ function Home() {
 		});
 	}
 	function renderLifeJourney() {
-		if (lifePhase === "arrival-video") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrivalTransitionVideo, { onContinue: () => {
-			setJourneyIndex(0);
-			setLifePhase("life-journey");
-		} });
+		if (lifePhase === "arrival-video") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrivalTransitionVideo, {
+			species: category,
+			onContinue: () => {
+				setJourneyIndex(0);
+				setLifePhase("life-journey");
+			}
+		});
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LifeJourney, {
 			index: journeyIndex,
 			petName,
 			breed,
+			species: category,
 			answers: scenarioAnswers,
 			activity: lifeActivity,
 			completedIds: journeyCompleted,
@@ -7037,6 +8722,7 @@ function Home() {
 					preparationReached,
 					lifePhase,
 					breed,
+					species: category,
 					journeyIndex,
 					journeyCompleted,
 					onGoTo: goToStation,
@@ -7091,6 +8777,7 @@ function Home() {
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AssessmentReport, {
 								petName,
 								breed,
+								species: category,
 								profile,
 								expenses,
 								emergencyReserve,
@@ -7116,6 +8803,8 @@ function Home() {
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProfileSupplementForm, {
 								profile,
 								petName,
+								breed,
+								species: category,
 								onChange: setProfile,
 								onBack: () => {
 									setStep(6);

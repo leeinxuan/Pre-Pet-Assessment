@@ -74,6 +74,7 @@ export type LifeJourneyPhase =
 export type JourneyItemType =
   | "scenario"
   | "walking"
+  | "daily-inspection"
   | "breed-challenge"
   | "body-language"
   | "body-care"
@@ -96,6 +97,7 @@ export type LifeActivityState = {
   walkingMinutes: number;
   walkingPoopCleaned: boolean;
   walkingComplete: boolean;
+  catInspectionSteps: string[];
   sickTimePassComplete: boolean;
   bodyCareParts: string[];
   seniorAdjustments: string[];

@@ -1,4 +1,4 @@
-import type { JourneyItem, LifeActivityState, Scenario } from "./game-types";
+import type { JourneyItem, LifeActivityState, Scenario, ScenarioChoice } from "./game-types";
 
 const positive = {
   feedbackTitle: "做得很好！",
@@ -154,18 +154,250 @@ export const lifeScenarios: Scenario[] = [
   },
 ];
 
+export const catLifeScenarios: Scenario[] = [
+  {
+    id: "cat-arrival-adjustment",
+    stage: "一起生活的第一天",
+    timeLabel: "一起生活的第一天",
+    title: "第一次進安全房",
+    description: "貓咪剛到陌生的新家，躲在外出籠裡觀察。家人很想立刻摸摸牠、抱牠出來看看房間。",
+    topic: "貓咪適應新家與安全感",
+    reportSummary: "貓咪到家第一天應先進安靜安全的小房間，關好門窗，讓牠自行走出外出籠並用自己的速度探索。",
+    artIndex: 0,
+    choices: [
+      { id: "cat-pull-out", text: "把牠抱出籠，讓牠快點認識新家。", result: "incorrect", ...incorrect, explanation: "強迫離開外出籠可能讓貓咪更緊張，也可能引發防衛或躲藏。", suggestion: "先準備安全房，讓牠自己決定何時探索。" },
+      { id: "cat-safe-room", text: "關好門窗，放好食水與砂盆，打開外出籠讓牠自行探索。", result: "correct", ...positive, explanation: "保留退路並降低刺激，能幫助貓咪建立安全感。" },
+      { id: "cat-welcome-party", text: "請家人圍過來叫牠，讓牠知道大家都歡迎牠。", result: "incorrect", ...incorrect, explanation: "多人靠近、聲音和注視會讓剛到家的貓咪壓力更高。", suggestion: "先限制人數與聲音，等牠穩定後再慢慢增加互動。" },
+      { id: "cat-sit-nearby", text: "安靜坐在附近，不主動伸手，等牠願意出來。", result: "correct", ...positive, explanation: "穩定陪伴但不強迫互動，是剛到家時很合適的做法。" },
+    ],
+  },
+  {
+    id: "cat-night-energy-care",
+    stage: "日常照護",
+    timeLabel: "日常照護",
+    title: "晚上還很有精神",
+    description: "晚上你準備休息時，貓咪開始在家裡奔跑、叫喚，還會撲向晃動的手腳。你會怎麼安排牠的精力與互動？",
+    topic: "貓咪精力與獵捕需求",
+    reportSummary: "貓咪晚上仍很有精神、奔跑叫喚或撲咬手腳時，應安排規律獵捕式遊戲，使用安全玩具並避免用手腳直接逗弄。",
+    artIndex: 4,
+    multipleChoice: true,
+    requiredCorrectOptionIds: ["cat-night-play-routine", "cat-night-safe-toys", "cat-night-no-hands"],
+    wrongOptionIds: ["cat-night-scold"],
+    correctSummary: ["每天安排短段獵捕式互動遊戲，讓牠有機會追逐、捕捉並收尾。", "使用逗貓棒、球或益智玩具等安全玩具。", "不用手腳直接逗弄，避免讓牠把人當獵物。"],
+    learningPoints: [
+      "夜間奔跑、叫喚或撲咬常和精力、獵捕需求或生活節奏有關，先用**規律遊戲與環境豐富化**提供出口。",
+      "手腳逗弄可能讓貓咪學會撲咬人；改用安全玩具，並讓遊戲有追逐、捕捉、收尾與休息。",
+    ],
+    choices: [
+      { id: "cat-night-scold", text: "牠晚上太吵就大聲罵牠，讓牠知道不可以", result: "incorrect", ...incorrect, explanation: "責罵可能增加壓力，也沒有滿足牠真正需要的活動與獵捕出口。", suggestion: "白天與睡前安排合適遊戲，並觀察是否有食水、環境或健康變化。" },
+      { id: "cat-night-safe-toys", text: "提供安全玩具或益智漏食玩具，讓牠有合適的活動出口", result: "correct", ...positive, explanation: "安全玩具能分散精力，也能降低無聊造成的撲咬或叫喚。" },
+      { id: "cat-night-play-routine", text: "睡前安排短段逗貓棒遊戲，讓牠追逐、捕捉後慢慢收尾", result: "correct", ...positive, explanation: "規律互動能滿足獵捕與活動需求，也比較容易形成穩定的夜間節奏。" },
+      { id: "cat-night-no-hands", text: "不用手腳直接逗弄，改用玩具保持安全距離", result: "correct", ...positive, explanation: "讓牠追玩具而不是追人的手腳，能降低互動時受傷與誤會。" },
+    ],
+  },
+  {
+    id: "cat-scratching-care",
+    stage: "日常照護",
+    timeLabel: "日常照護",
+    title: "抓沙發不是故意搗蛋",
+    description: "貓咪最近比較常抓沙發、窗簾和衣櫃邊角，家人擔心家具一直被破壞。你會怎麼引導牠？",
+    topic: "貓咪抓磨需求與居家安全",
+    reportSummary: "貓咪抓沙發、窗簾或家具時，應提供穩固抓板、調整擺放位置並管理環境安全，而不是只處罰或忽略抓磨需求。",
+    artIndex: 4,
+    multipleChoice: true,
+    requiredCorrectOptionIds: ["cat-scratch-board", "cat-scratch-location", "cat-scratch-safe-space"],
+    wrongOptionIds: ["cat-scratch-punish"],
+    correctSummary: ["提供穩固抓板或抓柱，並放在牠常經過或常抓的位置。", "用替代物與環境管理引導牠抓合適物品。", "確認窗簾、衣櫃、門窗與高處安全，避免攀爬時受傷。"],
+    learningPoints: [
+      "抓磨是貓咪自然行為，和伸展、標記與放鬆有關；重點是提供**可抓、穩固、位置合適**的替代物。",
+      "抓板位置、材質與穩定度會影響使用意願；同時也要檢查窗簾、高處與門窗是否安全。",
+    ],
+    choices: [
+      { id: "cat-scratch-board", text: "準備穩固抓板或抓柱，放在牠常抓或常經過的位置", result: "correct", ...positive, explanation: "抓板能提供自然抓磨出口；放在牠真的會經過的位置，才更容易替代家具。" },
+      { id: "cat-scratch-punish", text: "牠一抓就拍牠或噴水，讓牠不要再碰家具", result: "incorrect", ...incorrect, explanation: "處罰可能讓貓咪更緊張，也沒有提供合適的抓磨出口。", suggestion: "先提供穩固抓板、調整位置，並用環境管理降低牠抓錯物品的機會。" },
+      { id: "cat-scratch-location", text: "在抓對地方時給鼓勵，並用家具保護或動線調整降低抓錯機會", result: "correct", ...positive, explanation: "用替代物加上環境管理，比只要求牠不要抓更容易讓行為穩定。" },
+      { id: "cat-scratch-safe-space", text: "整理窗簾、衣櫃與高處路線，確認門窗和紗窗穩固", result: "correct", ...positive, explanation: "有些抓磨和攀爬會牽涉安全風險，先整理環境能避免受傷或逃脫。" },
+    ],
+  },
+  {
+    id: "cat-indoor-outdoor-care",
+    stage: "日常照護",
+    timeLabel: "日常照護",
+    title: "牠不想出門",
+    description: "家人覺得貓咪也應該像散步一樣出門走走，但牠看到外出籠就緊張後退。你會怎麼安排？",
+    topic: "貓咪外出壓力與室內照護",
+    reportSummary: "貓咪不想出門或害怕外出籠時，不應強迫外出散步；日常以安全室內環境、穩定照護與外出籠減敏為主。",
+    artIndex: 2,
+    multipleChoice: true,
+    requiredCorrectOptionIds: ["cat-outdoor-respect-boundary", "cat-outdoor-indoor-enrichment", "cat-outdoor-carrier-practice"],
+    wrongOptionIds: ["cat-outdoor-force-walk"],
+    correctSummary: ["尊重牠對外出的壓力反應，不強迫牠出門散步。", "在室內提供抓板、跳台、安全玩具與穩定互動。", "需要就醫或移動時，平時先練習外出籠減敏並保留安全遮蔽。"],
+    learningPoints: [
+      "多數貓咪的日常活動可以在安全室內環境完成；外出不是必要的每日散步任務。",
+      "真正需要外出時，重點是**外出籠減敏、安全運輸與降低刺激**，而不是把牠直接抱到陌生環境。",
+    ],
+    choices: [
+      { id: "cat-outdoor-respect-boundary", text: "看見牠緊張就先停止，不強迫牠出門散步", result: "correct", ...positive, explanation: "尊重壓力訊號能減少恐懼累積，也能保留牠對外出籠和照顧者的信任。" },
+      { id: "cat-outdoor-force-walk", text: "直接抱牠出門，多去幾次就會習慣", result: "incorrect", ...incorrect, explanation: "強迫外出可能讓貓咪更害怕外出籠、門口或照顧者，也增加逃脫風險。", suggestion: "日常先維持室內安全活動；必要外出時用外出籠減敏、遮蔽與穩定運輸。" },
+      { id: "cat-outdoor-indoor-enrichment", text: "在室內安排跳台、抓板、安全玩具與陪玩時間", result: "correct", ...positive, explanation: "室內環境豐富化能滿足活動、觀察與互動需求，不需要用強迫外出取代。" },
+      { id: "cat-outdoor-carrier-practice", text: "把外出籠放在日常可接觸的位置，慢慢練習需要外出時的安全移動", result: "correct", ...positive, explanation: "平時讓外出籠變成可接受的安全物，真正就醫或移動時壓力會比較低。" },
+    ],
+  },
+  {
+    id: "cat-busy-care",
+    stage: "當生活發生變化",
+    timeLabel: "當生活發生變化",
+    title: "臨時晚歸，誰來接手？",
+    description: "今天臨時需要晚歸，貓咪仍需要食水確認、貓砂盆清理、環境巡視、適當陪玩與狀況觀察。",
+    topic: "忙碌時的貓咪日常照顧",
+    reportSummary: "臨時晚歸時，應安排可信任且了解照護需求的人協助，清楚交接食水、砂盆、環境巡視、陪玩與狀況觀察。",
+    artIndex: 5,
+    choices: [
+      { id: "cat-alone-food", text: "出門前多放一些食物和水，回家後再一起處理砂盆和陪玩", result: "incorrect", ...incorrect, explanation: "食物和水不能取代砂盆清理、環境巡視、陪玩與狀況觀察，也可能造成食物過量或變質。", suggestion: "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。" },
+      { id: "family-helper", text: "請可信任、了解照護需求的家人或朋友協助", result: "correct", ...positive, explanation: "貓咪看起來獨立，仍需要穩定的食水、乾淨砂盆、安全環境、適量互動與細心觀察。忙碌時先安排可信任的人協助，能讓牠的日常維持安心與規律。", suggestion: "交接時要說明貓咪個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。" },
+      { id: "cat-no-check", text: "貓咪本來就很獨立，晚一點回家再看就好", result: "incorrect", ...incorrect, explanation: "獨立不代表不需要日常照護與安全巡視。砂盆、飲水、食慾、活動與異常狀況仍需要有人確認。", suggestion: "至少安排可信任者確認基本需求、環境安全與是否有異常。" },
+      { id: "cat-late-meal", text: "只請人倒飼料，不用交代砂盆、陪玩或觀察狀況", result: "incorrect", ...incorrect, explanation: "只補食物會漏掉砂盆、飲水、環境安全與行為變化，也可能讓協助者不知道如何安全互動。", suggestion: "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。" },
+    ],
+  },
+  {
+    id: "cat-illness-vet",
+    stage: "生病與就醫",
+    timeLabel: "生病與就醫",
+    title: "牠突然變得不太一樣",
+    description: "貓咪今天吃得少、躲得更久，尿量和精神也和平常不太一樣。",
+    topic: "貓咪健康觀察與就醫判斷",
+    reportSummary: "貓咪食慾、飲水、尿便、活動或躲藏習慣改變時，應記錄變化並聯絡獸醫，不自行診斷或給藥。",
+    artIndex: 3,
+    choices: [
+      { id: "cat-human-meds", text: "先用家裡的人用藥試試看", result: "incorrect", ...incorrect, explanation: "人用藥可能對貓造成嚴重危害，也會干擾獸醫判斷。", suggestion: "先停止自行給藥，記錄症狀並聯絡獸醫。" },
+      { id: "cat-record-vet", text: "記錄食慾、飲水、尿便、活動與躲藏變化，並聯絡獸醫", result: "correct", ...positive, explanation: "具體紀錄能幫助獸醫判斷狀況，也能降低延誤風險。", suggestion: "請不要自行診斷或餵人用藥；若精神差、嘔吐、排尿異常或持續不吃，應儘快詢問獸醫。", expenseIds: ["sick-vet-care"] },
+      { id: "cat-wait", text: "牠只是想躲起來，等幾天再說", result: "incorrect", ...incorrect, explanation: "食慾、精神和尿便同時改變可能是健康警訊。", suggestion: "先記錄變化，依持續時間與嚴重程度詢問獸醫。" },
+    ],
+  },
+  {
+    id: "cat-growing-old",
+    stage: "逐漸進入高齡",
+    timeLabel: "逐漸進入高齡",
+    title: "貓咪慢慢變老",
+    description: "貓咪跳上跳下變少，進出砂盆比較慢，也更喜歡溫暖安靜的休息處。",
+    topic: "高齡貓環境與健康照顧",
+    reportSummary: "高齡貓需要低入口砂盆、階梯式跳台、溫暖休息處，以及體重、飲食、飲水與排泄的持續觀察。",
+    artIndex: 1,
+    choices: [
+      { id: "cat-senior-same", text: "維持原本高跳台和深砂盆，牠會自己適應", result: "incorrect", ...incorrect, explanation: "忽略行動變化可能讓牠減少使用砂盆或增加受傷風險。", suggestion: "先降低出入口、增加階梯與安全休息點。" },
+      { id: "cat-senior-supplement", text: "先買保健品，不用觀察其他變化", result: "incorrect", ...incorrect, explanation: "保健品不能取代健康觀察與獸醫評估。", suggestion: "把體重、食水、尿便與活動變化記下來，再和獸醫討論。" },
+      { id: "cat-senior-adapt", text: "調整低入口砂盆、階梯式跳台與溫暖休息處，並安排獸醫追蹤", result: "correct", ...positive, explanation: "依行動與生活需求調整環境，能讓高齡貓更安全舒適。", suggestion: "也請持續觀察體重、食慾、飲水與排泄變化，並依獸醫建議安排檢查。", expenseIds: ["cat-senior-room", "senior-checkup"] },
+    ],
+  },
+];
+
 type BreedChallengeQuestion = {
   title: string;
   description: string;
   topic: string;
   reportSummary: string;
   breedKnowledge?: string;
+  correctChoiceIndex?: number;
   correctText: string;
   correctExplanation: string;
   distractors: Array<{ text: string; explanation: string; suggestion: string }>;
 };
 
 const breedChallengeContent: Record<string, BreedChallengeQuestion[]> = {
+  "orange-cat": [
+    {
+      title: "撒嬌也需要合適的遊戲",
+      description: "橘貓很親人，常主動靠近討摸、討玩，也會在無聊時一直討食。你會怎麼安排牠的精力與互動？",
+      topic: "貓咪精力與獵捕需求",
+      reportSummary: "橘貓親人愛互動時，也需要規律遊戲與環境豐富化，避免用加餐取代活動需求。",
+      breedKnowledge: "親人與撒嬌不代表每次靠近都是餓了。規律互動遊戲、安全玩具與益智漏食玩具，可以讓貓咪用更健康的方式消耗精力。",
+      correctChoiceIndex: 1,
+      correctText: "每天安排逗貓棒等互動遊戲，不用手腳逗弄，並提供安全玩具與益智漏食玩具",
+      correctExplanation: "規律遊戲能滿足獵捕與互動需求，也避免把無聊或撒嬌都用食物回應。",
+      distractors: [
+        { text: "牠撒嬌就先餵零食，吃飽自然會安靜", explanation: "把互動需求都用食物回應，可能造成過度進食，也沒有真正滿足活動需求。", suggestion: "先用短段遊戲、撫摸界線與益智玩具回應，再依固定份量餵食。" },
+        { text: "用手腳逗牠撲咬，牠會比較有互動感", explanation: "用手腳逗弄可能讓貓咪把人的身體當成獵物。", suggestion: "改用逗貓棒或安全玩具，讓牠追逐可捕捉的物件。" },
+        { text: "買很多玩具散在地上，牠想玩就自己玩", explanation: "玩具若沒有輪替、檢查或陪玩，可能很快失去吸引力，也可能留下誤食風險。", suggestion: "安排固定陪玩時間，並在結束後收好線狀玩具。" },
+      ],
+    },
+    {
+      title: "舒服生活也需要安全高處",
+      description: "橘貓常待在沙發旁邊，也喜歡找安靜角落休息。你想讓牠不無聊，又能安全活動。你會怎麼做？",
+      topic: "貓咪垂直空間與安全環境",
+      reportSummary: "橘貓需要安全高處、休息空間與穩固門窗，避免因環境單調而長時間無聊或冒險攀爬。",
+      breedKnowledge: "貓咪需要能觀察環境的高處，也需要可安靜休息的地方。高處必須穩固，門窗與紗窗也要先確認安全。",
+      correctChoiceIndex: 3,
+      correctText: "提供穩固貓跳台或層架、安靜休息處，並確認門窗與紗窗穩固",
+      correctExplanation: "安全高處與休息空間能讓牠活動、觀察與退回，不必靠危險攀爬或長時間無聊來打發生活。",
+      distractors: [
+        { text: "只放一個軟墊就好，高處容易弄亂不用準備", explanation: "只有睡覺位置可能不足以滿足觀察、活動與安全感需求。", suggestion: "準備穩固高處與可退回的休息點，並整理危險物。" },
+        { text: "讓牠自己爬窗簾和衣櫃，貓咪很會平衡", explanation: "窗簾、衣櫃與未固定高處可能造成跌落、夾傷或逃脫風險。", suggestion: "提供可承重的跳台或層架，並確認門窗防護。" },
+        { text: "牠無聊就多餵一點，環境不用特別改", explanation: "食物不能取代活動與環境豐富化，也可能增加體重負擔。", suggestion: "用安全高處、抓板與玩具提供日常活動。" },
+      ],
+    },
+    {
+      title: "討食時也要管理體重",
+      description: "橘貓常在餐桌旁討食，甚至想翻垃圾桶。家人覺得牠可愛，想持續加餐。你會怎麼做？",
+      topic: "貓咪飲食與體重管理",
+      reportSummary: "橘貓討食或翻找食物時，應定時定量、收好食物與垃圾，搭配益智漏食玩具並觀察體態。",
+      breedKnowledge: "討食不一定代表營養不足。定時定量、家庭餵食紀錄與體態觀察，能降低過度進食與慢性病風險。",
+      correctChoiceIndex: 2,
+      correctText: "定時定量餵食，收好食物與垃圾，搭配益智漏食玩具並定期觀察體態",
+      correctExplanation: "固定份量和環境管理能降低偷吃與翻垃圾桶風險，益智漏食玩具則能讓進食變成安全活動。",
+      distractors: [
+        { text: "牠討食很可愛，每次靠近都加一點", explanation: "持續加餐會讓熱量難以掌握，增加變胖和健康風險。", suggestion: "把零食納入每日總量，並用遊戲或撫摸回應互動需求。" },
+        { text: "垃圾桶不用特別收，牠吃到就當作加菜", explanation: "垃圾桶可能有調味、尖銳包材或不適合貓咪的食物。", suggestion: "把食物和垃圾確實收好，避免誤食。" },
+        { text: "活動量看起來正常，所以可以無限制任食", explanation: "活動量高低仍需要搭配年齡、體態與食量管理，不能直接無限制餵食。", suggestion: "依體態與獸醫建議調整份量，定期記錄變化。" },
+      ],
+    },
+  ],
+  "tabby-cat": [
+    {
+      title: "半夜的獵捕開關",
+      description: "虎斑貓白天沒怎麼活動，半夜開始奔跑、飛撲，還把家人的手腳當成獵物。你會怎麼安排？",
+      topic: "貓咪精力與獵捕需求",
+      reportSummary: "虎斑貓精力未滿足時，可能夜間奔跑或撲咬手腳；應用規律互動遊戲與安全玩具提供出口。",
+      breedKnowledge: "虎斑花紋不代表固定個性，但許多貓都需要獵捕式互動。逗貓棒、球與可捕捉玩具能讓牠追逐、撲抓與收尾。",
+      correctChoiceIndex: 2,
+      correctText: "安排規律逗貓棒遊戲，不用手腳逗弄，並提供安全玩具讓牠消耗精力",
+      correctExplanation: "可捕捉的互動遊戲能滿足獵捕需求，也能避免牠把人的手腳當成玩具。",
+      distractors: [
+        { text: "用手繼續逗牠，咬久就會知道力道", explanation: "用手腳逗弄可能強化撲咬人的習慣。", suggestion: "改用逗貓棒或其他安全玩具，把攻擊目標轉到玩具上。" },
+        { text: "牠半夜跑就關起來，明天自然會累", explanation: "只限制活動未必處理精力與獵捕需求，也可能增加壓力。", suggestion: "白天和睡前安排短段互動遊戲，並保留休息節奏。" },
+        { text: "讓牠自己追線或橡皮筋，反正會消耗精力", explanation: "線狀物和小物可能被吞食，無人看顧時風險更高。", suggestion: "使用結構安全的玩具，結束後收好。" },
+      ],
+    },
+    {
+      title: "想往高處探索",
+      description: "虎斑貓常想跳上窗簾、衣櫃或較高的家具。你擔心牠受傷，也擔心紗窗不夠穩。你會怎麼做？",
+      topic: "貓咪垂直空間與安全環境",
+      reportSummary: "虎斑貓需要安全垂直空間；若沒有合適高處，可能攀爬窗簾、衣櫃或其他危險位置。",
+      breedKnowledge: "垂直空間可以讓貓咪觀察、活動與保有安全感，但高處與門窗必須穩固，不能讓危險位置成為唯一選擇。",
+      correctChoiceIndex: 1,
+      correctText: "提供貓跳台、層架或安全高處，並確認門窗與紗窗穩固",
+      correctExplanation: "把可攀爬路線設計成安全、穩固且可預期，能降低牠往窗簾或危險高處探索的機會。",
+      distractors: [
+        { text: "牠想爬就讓牠爬，貓咪通常很會落地", explanation: "窗簾、衣櫃或未固定家具仍可能造成受傷、掉落或逃脫風險。", suggestion: "先準備穩固跳台與層架，並檢查門窗安全。" },
+        { text: "完全禁止所有高處，牠就不會出事", explanation: "完全禁止可能讓牠缺少觀察與活動出口，反而更想探索危險位置。", suggestion: "提供安全高處，再移除或阻隔危險路線。" },
+        { text: "只在窗邊放椅子，不用確認紗窗", explanation: "窗邊高處若沒有穩固紗窗與防護，仍可能有逃脫或墜落風險。", suggestion: "窗邊活動區要搭配穩固防護。" },
+      ],
+    },
+    {
+      title: "活動量高也不能無限制吃",
+      description: "虎斑貓每天都很會玩，家人覺得牠活動量大，可以一直放滿飼料讓牠自己吃。你會怎麼安排？",
+      topic: "貓咪飲食與體重管理",
+      reportSummary: "虎斑貓活動量高仍需依年齡、體態與食量安排定時定量，並用益智漏食玩具與觀察紀錄協助管理。",
+      breedKnowledge: "活動量高不等於可以無限制任食。飲食仍要依年齡、體態、健康與食慾變化調整。",
+      correctChoiceIndex: 3,
+      correctText: "依年齡、體態與食量定時定量，收好食物與垃圾，搭配益智漏食玩具並觀察體態",
+      correctExplanation: "定時定量能掌握食慾與體態，收好食物與垃圾能避免誤食，益智漏食玩具則能讓進食和活動更安全。",
+      distractors: [
+        { text: "牠很會跑，所以飼料全天放滿沒關係", explanation: "活動量高仍可能吃過量，也會讓食慾變化不容易被發現。", suggestion: "先建立份量與餵食時間，再依體態調整。" },
+        { text: "把人類食物當獎勵，牠玩得多可以吃一點", explanation: "人類食物不一定適合貓咪，調味或特定食材可能造成風險。", suggestion: "不確定食材安全時，查詢可靠資料或詢問獸醫。" },
+        { text: "只要牠不胖，就不用記錄吃多少", explanation: "食量變化也是健康線索，不只是在控制體重。", suggestion: "簡單記錄主食、零食與體態變化。" },
+      ],
+    },
+  ],
   shiba: [
     {
       title: "一年四季都在掉毛",
@@ -323,42 +555,32 @@ export function getBreedChallengeScenarios(breedId: string): Scenario[] {
     reportSummary: question.reportSummary,
     breedKnowledge: question.breedKnowledge,
     artIndex: 4,
-    choices: resolvedBreedId === "shiba" && index === 1
-      ? [
-        ...question.distractors.map((choice, choiceIndex) => ({
-          id: `breed-challenge-${index + 1}-distractor-${choiceIndex + 1}`,
-          text: choice.text,
-          result: "incorrect" as const,
-          ...incorrect,
-          explanation: choice.explanation,
-          suggestion: choice.suggestion,
-        })),
-        {
-          id: `breed-challenge-${index + 1}-correct`,
-          text: question.correctText,
-          result: "correct" as const,
-          ...positive,
-          explanation: question.correctExplanation,
-        },
-      ]
-      : [
-        {
-          id: `breed-challenge-${index + 1}-correct`,
-          text: question.correctText,
-          result: "correct" as const,
-          ...positive,
-          explanation: question.correctExplanation,
-        },
-        ...question.distractors.map((choice, choiceIndex) => ({
-          id: `breed-challenge-${index + 1}-distractor-${choiceIndex + 1}`,
-          text: choice.text,
-          result: "incorrect" as const,
-          ...incorrect,
-          explanation: choice.explanation,
-          suggestion: choice.suggestion,
-        })),
-      ],
+    choices: buildBreedChallengeChoices(question, index, resolvedBreedId),
   }));
+}
+
+function buildBreedChallengeChoices(question: BreedChallengeQuestion, questionIndex: number, breedId: string): ScenarioChoice[] {
+  const correctChoice: ScenarioChoice = {
+    id: `breed-challenge-${questionIndex + 1}-correct`,
+    text: question.correctText,
+    result: "correct",
+    ...positive,
+    explanation: question.correctExplanation,
+  };
+  const distractorChoices: ScenarioChoice[] = question.distractors.map((choice, choiceIndex) => ({
+    id: `breed-challenge-${questionIndex + 1}-distractor-${choiceIndex + 1}`,
+    text: choice.text,
+    result: "incorrect",
+    ...incorrect,
+    explanation: choice.explanation,
+    suggestion: choice.suggestion,
+  }));
+
+  const defaultCorrectIndex = breedId === "shiba" && questionIndex === 1 ? distractorChoices.length : 0;
+  const correctIndex = Math.max(0, Math.min(question.correctChoiceIndex ?? defaultCorrectIndex, distractorChoices.length));
+  const choices = [...distractorChoices];
+  choices.splice(correctIndex, 0, correctChoice);
+  return choices;
 }
 
 export const journeyItems: JourneyItem[] = [
@@ -371,6 +593,43 @@ export const journeyItems: JourneyItem[] = [
   { id: "senior", type: "scenario", timeLabel: "逐漸進入高齡", title: "小狗逐漸老去", scenarioId: "growing-old" },
 ];
 
+export const catJourneyItems: JourneyItem[] = [
+  { id: "cat-arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "cat-arrival-adjustment" },
+  { id: "cat-daily-care", type: "scenario", timeLabel: "日常照護", title: "貓咪日常照護" },
+  { id: "cat-daily-inspection", type: "daily-inspection", timeLabel: "日常照護", title: "貓砂盆救援隊" },
+  { id: "breed-challenge", type: "breed-challenge", timeLabel: "品種的考驗", title: "品種的考驗" },
+  { id: "cat-busy-care", type: "scenario", timeLabel: "當生活發生變化", title: "臨時晚歸，誰來接手？", scenarioId: "cat-busy-care" },
+  { id: "cat-sick", type: "scenario", timeLabel: "生病與就醫", title: "生病與就醫", scenarioId: "cat-illness-vet" },
+  { id: "cat-senior", type: "scenario", timeLabel: "逐漸進入高齡", title: "貓咪慢慢變老", scenarioId: "cat-growing-old" },
+];
+
+export const catDailyBehaviorScenarioIds = ["cat-night-energy-care", "cat-scratching-care", "cat-indoor-outdoor-care"] as const;
+
+// 貓咪專屬互動遊戲設定：貓砂盆救援隊
+// targetStamps / 事件輪次 / 場景命中區都集中在這裡，未來要改成 2 次或調整拖曳位置不用進 UI 元件裡找。
+export const catLitterRescueConfig = {
+  targetStamps: 3,
+  weeklyWashRound: 2,
+  abnormalObservationRound: 3,
+  wasteItems: [
+    { id: "urine", label: "尿團", x: 42, y: 62, size: 13 },
+    { id: "poop", label: "糞便", x: 59, y: 67, size: 12 },
+  ],
+  bin: { x: 82, y: 70, size: 16 },
+} as const;
+
+export function getLifeScenariosForSpecies(species: string): Scenario[] {
+  return species === "cat" ? catLifeScenarios : lifeScenarios;
+}
+
+export function getAllScenariosForSpecies(species: string, breedId: string): Scenario[] {
+  return [...getLifeScenariosForSpecies(species), ...getBreedChallengeScenarios(breedId)];
+}
+
+export function getJourneyItemsForSpecies(species: string): JourneyItem[] {
+  return species === "cat" ? catJourneyItems : journeyItems;
+}
+
 export const initialLifeActivityState: LifeActivityState = {
   bodyLanguageSignals: [],
   arrivalMealFoodReady: false,
@@ -380,6 +639,7 @@ export const initialLifeActivityState: LifeActivityState = {
   walkingMinutes: 0,
   walkingPoopCleaned: false,
   walkingComplete: false,
+  catInspectionSteps: [],
   sickTimePassComplete: false,
   bodyCareParts: [],
   seniorAdjustments: [],

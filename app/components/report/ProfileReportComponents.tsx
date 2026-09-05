@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { breeds, hazards, money, roomItems } from "../../game-data";
-import { getBreedChallengeScenarios, lifeScenarios } from "../../life-data";
+import { breeds, money } from "../../game-data";
+import { catLitterRescueConfig, getAllScenariosForSpecies } from "../../life-data";
+import { getSpeciesGameConfig } from "../../data/speciesGameConfig";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, ScenarioAnswer } from "../../game-types";
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
@@ -19,8 +20,10 @@ const a4PageWidthPt = 595.28;
 const a4PageHeightPt = 841.89;
 
 function personalizeReportText(text: string, petName: string) {
-  const name = petName.trim() || "小狗";
-  return text.replaceAll("豆豆", name).replaceAll("小狗", name).replaceAll("狗狗", name);
+  const trimmedName = petName.trim();
+  const name = trimmedName || "小狗";
+  const personalizedDogText = text.replaceAll("豆豆", name).replaceAll("小狗", name).replaceAll("狗狗", name);
+  return trimmedName ? personalizedDogText.replaceAll("貓咪", trimmedName) : personalizedDogText;
 }
 
 function knowledgePointsForScenario(scenario: Scenario, petName: string) {
@@ -455,16 +458,22 @@ export function ProfileForm({
 export function ProfileSupplementForm({
   profile,
   petName,
+  breed,
+  species = "dog",
   onChange,
   onBack,
   onReset,
 }: {
   profile: Profile;
   petName: string;
+  breed: string;
+  species?: string;
   onChange: (profile: Profile) => void;
   onBack: () => void;
   onReset: () => void;
 }) {
+  const selectedBreed = breeds.find((item) => item.id === breed);
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : "柴犬");
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     onChange({ ...profile, [key]: value });
   };
@@ -598,7 +607,7 @@ export function ProfileSupplementForm({
             </div>
           )}
         </div></fieldset>
-        <fieldset><legend>飼養經驗</legend><div className="pet-experience-block"><b>曾經飼養：</b><div className="pet-experience-row">{experienceInputs("past")}</div><b>目前家中有寵物：</b><div className="pet-experience-row">{experienceInputs("current")}</div><label className="experience-note">其他飼養經驗分享：<textarea placeholder="請分享你的照顧經驗" value={profile.experienceNote} onChange={(event) => update("experienceNote", event.target.value)} /></label></div><button type="button" className={`supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`} aria-pressed={profile.noShibaExperience} onClick={() => update("noShibaExperience", !profile.noShibaExperience)}>{profile.noShibaExperience && <SelectedDot />}我沒有養過柴犬</button></fieldset>
+        <fieldset><legend>飼養經驗</legend><div className="pet-experience-block"><b>曾經飼養：</b><div className="pet-experience-row">{experienceInputs("past")}</div><b>目前家中有寵物：</b><div className="pet-experience-row">{experienceInputs("current")}</div><label className="experience-note">其他飼養經驗分享：<textarea placeholder="請分享你的照顧經驗" value={profile.experienceNote} onChange={(event) => update("experienceNote", event.target.value)} /></label></div><button type="button" className={`supplement-choice shiba-experience ${profile.noShibaExperience ? "selected" : ""}`} aria-pressed={profile.noShibaExperience} onClick={() => update("noShibaExperience", !profile.noShibaExperience)}>{profile.noShibaExperience && <SelectedDot />}我沒有養過{selectedTypeLabel}</button></fieldset>
         <fieldset><legend>飼養原因 <small>可複選</small></legend><div className="supplement-choice-grid reasons">{["陪伴與情緒支持", "喜愛動物", "單純想養", "看家守衛", "他人推薦", "其他"].map((reason) => {
           const selected = profile.reasons.includes(reason);
           return <button type="button" key={reason} className={`supplement-choice ${selected ? "selected" : ""}`} aria-pressed={selected} onClick={() => toggle("reasons", reason)}>{selected && <SelectedDot />}{reason}</button>;
@@ -614,6 +623,7 @@ export function ProfileSupplementForm({
 export function AssessmentReport({
   petName,
   breed,
+  species = "dog",
   profile,
   expenses,
   emergencyReserve,
@@ -631,6 +641,7 @@ export function AssessmentReport({
 }: {
   petName: string;
   breed: string;
+  species?: string;
   profile: Profile;
   expenses: ExpenseRecord[];
   emergencyReserve: number;
@@ -647,6 +658,7 @@ export function AssessmentReport({
   onReset: () => void;
 }) {
   const [activeDiscussionId, setActiveDiscussionId] = useState("");
+  const speciesConfig = getSpeciesGameConfig(species);
   useEffect(() => {
     if (!activeDiscussionId) return;
     const previousOverflow = document.body.style.overflow;
@@ -669,17 +681,20 @@ export function AssessmentReport({
   const temporaryMedicalTotal = visibleExpenses.filter((item) => !isMonthlyExpense(item) && isTemporaryOrMedicalExpense(item)).reduce((sum, item) => sum + item.amount, 0);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
-  const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
-  const correctedTopics = corrected.map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
-  const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => lifeScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
+  const reportScenarios = getAllScenariosForSpecies(species, breed);
+  const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
+  const correctedTopics = corrected.map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
+  const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
+  const catInspectionStampCount = lifeActivity.catInspectionSteps.filter((item) => item.startsWith("stamp:")).length;
   const practiceItems = [
     { label: "已完成到家第一餐", complete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady },
+    ...(species === "cat" ? [{ label: "已完成貓砂盆救援隊", complete: catInspectionStampCount >= catLitterRescueConfig.targetStamps }] : []),
   ];
   const practiceComplete = practiceItems.filter((item) => item.complete).length;
   const backupNames = members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
-  const requiredRoom = roomItems.filter((item) => item.required);
+  const requiredRoom = speciesConfig.roomItems.filter((item) => item.required);
   const roomCompletion = Math.round((roomReady.filter((id) => requiredRoom.some((item) => item.id === id)).length / requiredRoom.length) * 100);
-  const preparationStrong = roomCompletion === 100 && hazardsReady.length === hazards.length && trunkPassed;
+  const preparationStrong = roomCompletion === 100 && hazardsReady.length === speciesConfig.hazards.length && trunkPassed;
   const rawActivitySpace = profile.activitySpace as string[] | string;
   const selectedActivitySpaces = Array.isArray(rawActivitySpace)
     ? rawActivitySpace
@@ -699,7 +714,9 @@ export function AssessmentReport({
     : profile.hasHousemates === true
       ? (enteredHousemates.length ? enteredHousemates.join("、") : legacyHousemates.length ? legacyHousemates.join("、") : "有同住家人（待補充）")
       : "待補充";
-  const experienceStatus = profile.noShibaExperience ? "沒有柴犬經驗" : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote ? "已補充飼養經驗" : "待補充";
+  const selectedBreed = breeds.find((item) => item.id === breed);
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : "柴犬");
+  const experienceStatus = profile.noShibaExperience ? `沒有${selectedTypeLabel}經驗` : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote ? "已補充飼養經驗" : "待補充";
   const reasonStatus = profile.reasons.length ? profile.reasons.map((item) => item === "其他" ? profile.reasonOther || "其他（待補充）" : item).join("、") : "待補充";
   const landlordConfirmed = profile.landlordConsent === "已確認並同意" || profile.landlordConsent === "房東已同意";
   const hasActivitySpace = selectedActivitySpaces.length > 0;
@@ -708,7 +725,7 @@ export function AssessmentReport({
 
   const prepared = [
     roomCompletion === 100 && "必要用品與生活空間已完成",
-    hazardsReady.length === hazards.length && "居家危險物已完成收納與防護",
+    hazardsReady.length === speciesConfig.hazards.length && "居家危險物已完成收納與防護",
     trunkPassed && "接送行李、文件與安全運輸已通過檢查",
     correctFirst >= 5 && `${correctFirst} 個情境第一次就掌握照顧方向`,
     practiceComplete === practiceItems.length && "目前的生活練習與飲水步驟皆已完成",
@@ -717,7 +734,7 @@ export function AssessmentReport({
   ].filter(Boolean) as string[];
   const confirm = [
     roomCompletion < 100 && `必要用品完成度 ${roomCompletion}%`,
-    hazardsReady.length < hazards.length && "仍有居家危險物需要防護",
+    hazardsReady.length < speciesConfig.hazards.length && "仍有居家危險物需要防護",
     !trunkPassed && "接寵物後車廂尚未通過檢查",
     !hasActivitySpace && "尚未填寫寵物預計活動空間",
     !profile.reasons.length && "尚未填寫飼養原因",
@@ -732,8 +749,6 @@ export function AssessmentReport({
     "帶著品種需求與醫療紀錄問題詢問獸醫或領養單位",
     "和同住家人討論活動空間與日常照顧安排",
   ];
-  const selectedBreed = breeds.find((item) => item.id === breed);
-  const reportScenarios = [...lifeScenarios, ...getBreedChallengeScenarios(breed)];
   const discussionTopics: SharedDiscussionTopic[] = Object.values(answers)
     .filter((answer) => answer.firstResult !== "correct" || answer.discussionFlags?.includes("unsuitable-family-helper"))
     .map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId))
@@ -744,6 +759,8 @@ export function AssessmentReport({
       topic: scenario.topic ?? scenario.stage,
       summary: scenario.id === "busy-daily-care"
         ? "忙碌時的日常照顧：需要確認協助者是否真的有時間、能力與意願照顧寵物。"
+        : scenario.id === "cat-busy-care"
+          ? personalizeReportText("臨時晚歸時的貓咪照顧：需要確認協助者是否真的有時間、能力與意願照顧貓咪，並清楚交接食水、砂盆、環境巡視、陪玩與狀況觀察。", petName)
         : personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
       knowledgePoints: knowledgePointsForScenario(scenario, petName),
     }));
@@ -766,18 +783,8 @@ export function AssessmentReport({
   const homeSpaceImages = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
   const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
 
-  const checklistGroups = [
-    { title: "每日照顧", items: ["固定餵食", "提供乾淨飲水", "觀察精神、食慾與排泄", "安排陪伴與活動", "外出散步或合適活動", "清理排泄物"] },
-    { title: "家中環境", items: ["睡墊", "水碗與狗碗", "尿墊或如廁區", "寵物專用清潔用品", "危險物品收好", "安靜休息空間"] },
-    { title: "外出與接回", items: ["身分證", "領養文件", "運輸籠", "尿墊", "牽繩", "飲水與清潔用品"] },
-  ];
-  const handlingRows = [
-    ["忙碌或離家", "安排家人、朋友或合適照護者協助"],
-    ["食慾、精神或排泄異常", "記錄並聯絡獸醫"],
-    ["行為困擾", "調整環境、提供活動，必要時尋求專業協助"],
-    ["生活改變", "重新安排照顧時間與支援"],
-    ["高齡階段", "提早準備醫療與長期照顧資源"],
-  ];
+  const checklistGroups = speciesConfig.report.checklistGroups;
+  const handlingRows = speciesConfig.report.handlingRows;
   const consentText = profile.hasHousemates === true
     ? profile.housematesConsent === true ? "已知情並同意" : profile.housematesConsent === false ? "不同意" : "尚未確認"
     : "";
@@ -814,7 +821,7 @@ export function AssessmentReport({
     {
       title: "飼養經驗與原因",
       rows: [
-        profile.noShibaExperience && ["柴犬經驗", "我沒有養過柴犬"],
+        profile.noShibaExperience && [`${selectedTypeLabel}經驗`, `我沒有養過${selectedTypeLabel}`],
         pastPets && ["曾經飼養", pastPets],
         currentPets && ["目前家中有寵物", currentPets],
         profile.experienceNote && ["其他飼養經驗分享", profile.experienceNote],
@@ -878,7 +885,7 @@ export function AssessmentReport({
               <div className="care-a4-money-total"><dt>最低應準備金額</dt><dd>NT$ {money.format(suggestedPreparedTotal)}</dd></div>
             </dl>
           </div>
-          <p className="care-a4-money-disclaimer"><span className="care-a4-money-disclaimer-icon" aria-hidden="true">💡</span><span>這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。</span></p>
+          <p className="care-a4-money-disclaimer"><span className="care-a4-money-disclaimer-icon" aria-hidden="true">💡</span><span>{speciesConfig.report.moneyDisclaimer}</span></p>
         </section>
 
         {discussionTopics.length === 0 && (

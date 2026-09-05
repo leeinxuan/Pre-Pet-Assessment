@@ -71,7 +71,7 @@ export const intros = [
 
 export const categories = [
   { id: "dog", label: "犬", icon: "🐕", image: "/assets/species/dog.png", active: true },
-  { id: "cat", label: "貓", icon: "🐈", image: "/assets/species/cat.png", active: false },
+  { id: "cat", label: "貓", icon: "🐈", image: "/assets/species/cat.png", active: true },
   { id: "rabbit", label: "兔", icon: "🐇", image: "/assets/species/rabbit.png", active: false },
   { id: "bird", label: "鳥", icon: "🦜", image: "/assets/species/bird.png", active: false },
   { id: "reptile", label: "爬蟲", icon: "🦎", image: "/assets/species/reptile.png", active: false },
@@ -79,14 +79,16 @@ export const categories = [
 ];
 
 export const breeds = [
-  { id: "chihuahua", label: "吉娃娃", icon: "🐕", image: "/assets/species/dog/chihuahua.png", size: "small", shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。" },
-  { id: "poodle", label: "貴賓犬", icon: "🐩", image: "/assets/species/dog/poodle.png", size: "small", shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。" },
-  { id: "shiba", label: "柴犬", icon: "🐕", image: "/assets/species/dog/shiba.png", size: "medium", shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。" },
-  { id: "border", label: "邊境牧羊犬", icon: "🐕‍🦺", image: "/assets/species/dog/border-collie.png", size: "medium", shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。" },
-  { id: "labrador", label: "拉布拉多", icon: "🦮", image: "/assets/species/dog/labrador.png", size: "large", shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。" },
-  { id: "doberman", label: "杜賓犬", icon: "🐕", image: "/assets/species/dog/doberman.png", size: "large", shortDescription: "警覺、聰明且活動量高，需要穩定訓練、規律運動與清楚界線。適合能投入陪伴、社會化與安全管理的家庭。" },
-  { id: "old-english-sheepdog", label: "英國古代牧羊犬", icon: "🐕", image: "/assets/species/dog/old-english-sheepdog.png", size: "large", shortDescription: "溫和親人、體型較大且毛量豐厚，需要規律梳理、充足活動與舒適的生活空間。適合願意投入日常照護與毛髮整理的家庭。" },
-  { id: "mixed", label: "米克斯", icon: "🐕", image: "/assets/species/dog/mixed-breed.png", size: "medium", shortDescription: "個性與體型差異較大，適合先了解牠的實際年齡、體態與生活習慣。準備時可保留彈性，依牠到家後的反應慢慢調整。" },
+  { id: "chihuahua", species: "dog", label: "吉娃娃", icon: "🐕", image: "/assets/species/dog/chihuahua.png", size: "small", shortDescription: "體型嬌小、警覺性高，適合室內陪伴生活。雖然活動空間需求較小，仍需要規律散步與溫和社會化。" },
+  { id: "poodle", species: "dog", label: "貴賓犬", icon: "🐩", image: "/assets/species/dog/poodle.png", size: "small", shortDescription: "聰明、親人且學習力強，需要足夠互動、益智活動與定期美容整理。適合願意投入陪伴與訓練時間的家庭。" },
+  { id: "shiba", species: "dog", label: "柴犬", icon: "🐕", image: "/assets/species/dog/shiba.png", size: "medium", shortDescription: "個性獨立、精力充沛，也可能較有主見。需要穩定訓練、充足散步與安全的外出牽繩管理。" },
+  { id: "border", species: "dog", label: "邊境牧羊犬", icon: "🐕‍🦺", image: "/assets/species/dog/border-collie.png", size: "medium", shortDescription: "學習力與精力都非常高，需要大量運動、訓練和腦力刺激。較適合生活步調活躍、能長時間陪伴互動的飼主。" },
+  { id: "labrador", species: "dog", label: "拉布拉多", icon: "🦮", image: "/assets/species/dog/labrador.png", size: "large", shortDescription: "親人、友善且活潑，通常喜歡互動與戶外活動。需要足夠運動、體重管理及基本服從訓練。" },
+  { id: "doberman", species: "dog", label: "杜賓犬", icon: "🐕", image: "/assets/species/dog/doberman.png", size: "large", shortDescription: "警覺、聰明且活動量高，需要穩定訓練、規律運動與清楚界線。適合能投入陪伴、社會化與安全管理的家庭。" },
+  { id: "old-english-sheepdog", species: "dog", label: "英國古代牧羊犬", icon: "🐕", image: "/assets/species/dog/old-english-sheepdog.png", size: "large", shortDescription: "溫和親人、體型較大且毛量豐厚，需要規律梳理、充足活動與舒適的生活空間。適合願意投入日常照護與毛髮整理的家庭。" },
+  { id: "mixed", species: "dog", label: "米克斯", icon: "🐕", image: "/assets/species/dog/mixed-breed.png", size: "medium", shortDescription: "個性與體型差異較大，適合先了解牠的實際年齡、體態與生活習慣。準備時可保留彈性，依牠到家後的反應慢慢調整。" },
+  { id: "orange-cat", species: "cat", label: "米克斯－橘貓", icon: "🐈", image: "", size: "medium", shortDescription: "多數親人、表達需求明顯，常喜歡主動互動與撒嬌。牠也較需要注意體重管理，建議採定時定量餵食，搭配益智漏食玩具與日常活動，避免因過度進食而變胖。" },
+  { id: "tabby-cat", species: "cat", label: "米克斯－虎斑貓", icon: "🐈‍⬛", image: "", size: "medium", shortDescription: "聰明、互動性高，也常保有旺盛的獵捕本能。牠喜歡和人玩耍，適合每天安排逗貓棒等獵捕遊戲，並提供貓跳台或安全的垂直空間，幫助牠消耗精力。" },
 ];
 
 export type PetSize = "small" | "medium" | "large";
@@ -147,6 +149,17 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   "senior-checkup": { id: "senior-checkup", name: "高齡健康檢查", amount: 3200, category: "醫療", stage: "逐漸進入高齡", recurring: false, fromEmergency: true },
   "senior-slipmat": { id: "senior-slipmat", name: "高齡犬防滑墊", amount: 1200, category: "高齡用品", stage: "調整高齡生活空間", recurring: false },
   "senior-access-bed": { id: "senior-access-bed", name: "低入口高齡睡墊", amount: 1800, category: "高齡用品", stage: "調整高齡生活空間", recurring: false },
+  "cat-hide-box": { id: "cat-hide-box", name: "躲藏紙箱", amount: 120, category: "用品", stage: "飼養前準備", recurring: false },
+  "cat-safe-window": { id: "cat-safe-window", name: "門窗與紗窗安全防護", amount: 900, category: "用品", stage: "飼養前準備", recurring: false },
+  "cat-rest-bed": { id: "cat-rest-bed", name: "貓咪休息空間", amount: 900, category: "用品", stage: "飼養前準備", recurring: false },
+  "cat-litter-box": { id: "cat-litter-box", name: "貓砂盆", amount: 700, category: "清潔", stage: "飼養前準備", recurring: false },
+  "cat-litter": { id: "cat-litter", name: "貓砂", amount: 500, category: "每月基本支出", stage: "日常照護", recurring: true },
+  "cat-scratcher": { id: "cat-scratcher", name: "抓板", amount: 350, category: "用品", stage: "飼養前準備", recurring: false },
+  "cat-tree": { id: "cat-tree", name: "跳台", amount: 1800, category: "用品", stage: "飼養前準備", recurring: false },
+  "cat-safe-toy": { id: "cat-safe-toy", name: "安全玩具", amount: 300, category: "用品", stage: "飼養前準備", recurring: false },
+  "cat-monthly-food": { id: "cat-monthly-food", name: "每月貓主食費", amount: 1300, category: "每月基本支出", stage: "日常照護", recurring: true },
+  "cat-carrier": { id: "cat-carrier", name: "貓用外出籠", amount: 1200, category: "用品", stage: "飼養前準備", recurring: false },
+  "cat-senior-room": { id: "cat-senior-room", name: "高齡貓環境調整用品", amount: 1600, category: "高齡用品", stage: "逐漸進入高齡", recurring: false },
 };
 
 export const roomItems: RoomItem[] = [
