@@ -1494,7 +1494,8 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .daily-behavior-video video, .daily-behavior-positive-video video { display: block; width: 100%; height: 100%; min-height: 330px; object-fit: cover; }
 .daily-behavior-video .scene-video-fallback { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); }
 .daily-behavior-choices { margin: 0; align-self: stretch; padding: 23px; border: 1px solid var(--line); border-radius: 25px; background: white; box-shadow: var(--shadow); }
-.daily-behavior-choices h2 { margin: 0 0 22px; line-height: 1.4; }
+.daily-behavior-question-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 22px; }
+.daily-behavior-choices h2 { margin: 0; line-height: 1.4; }
 .daily-behavior-choices .choice-grid { grid-template-columns: 1fr; gap: 17px; }
 .daily-behavior-choices .choice-grid button { position: relative; }
 .daily-behavior-choices .choice-grid button.selected { border-color: var(--gold); background: #fffaf0; box-shadow: 0 0 0 4px rgba(217, 170, 79, .22), inset 0 0 0 1px rgba(217, 170, 79, .28); }
@@ -1503,7 +1504,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .daily-behavior-submit:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 .daily-behavior-live-hint { min-height: 42px; margin: 10px 0 14px; padding: 10px 14px; border-radius: 14px; background: #fff4dc; color: #7b4b12; font-size: 14px; font-weight: 850; line-height: 1.5; opacity: 0; visibility: hidden; transition: opacity .18s ease; }
 .daily-behavior-live-hint.visible { opacity: 1; visibility: visible; }
-.daily-behavior-progress-hint { display: inline-flex; width: fit-content; min-height: 0; margin: 20px 0 2px; background: #f7ead2; color: #7b4b12; }
+.daily-behavior-progress-hint { display: inline-flex; flex: 0 0 auto; width: fit-content; min-height: 0; margin: 0; background: #f7ead2; color: #7b4b12; white-space: nowrap; }
 .daily-behavior-retry { align-self: stretch; padding: 26px; border: 2px solid var(--orange); border-radius: 25px; background: var(--orange-soft); }
 .daily-behavior-retry h2 { margin: 0 0 13px; font-size: 24px; }
 .daily-behavior-retry p { margin: 0 0 14px; color: #733817; line-height: 1.7; }
@@ -1966,7 +1967,8 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .cat-rescue-background {
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(255, 253, 247, .16), rgba(255, 253, 247, .22)), url("/assets/cat/daily/daily-inspection.png");
+  /* 目前使用既有房間素材作 fallback；正式貓咪巡視背景補齊後可換成 /assets/cat/daily/daily-inspection.png。 */
+  background-image: linear-gradient(rgba(255, 253, 247, .16), rgba(255, 253, 247, .22)), url("/assets/room/empty-room.png");
   background-size: cover;
   background-position: center center;
 }
@@ -2025,6 +2027,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   border-radius: 22px;
   background: radial-gradient(circle at 30% 45%, rgba(139, 101, 55, .16), transparent 17%), radial-gradient(circle at 68% 58%, rgba(139, 101, 55, .14), transparent 16%), #f8e8bf;
 }
+.cat-rescue-litter-box.is-filled::before {
+  background: radial-gradient(circle at 30% 45%, rgba(139, 101, 55, .26), transparent 17%), radial-gradient(circle at 68% 58%, rgba(139, 101, 55, .24), transparent 16%), #dec28c;
+  box-shadow: inset 0 0 0 5px rgba(115, 83, 39, .16);
+}
 .cat-rescue-litter-box img {
   position: relative;
   z-index: 2;
@@ -2037,8 +2043,11 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   z-index: 4;
   display: block;
   transform: translate(-50%, -50%);
+  padding: 0;
+  border: 0;
   border-radius: 50%;
   box-shadow: 0 5px 10px rgba(70, 45, 20, .18);
+  cursor: pointer;
 }
 .cat-rescue-waste--urine { background: radial-gradient(circle, #d7bd72 0 42%, #bd9f4f 43% 100%); opacity: .9; }
 .cat-rescue-waste--poop {
@@ -2058,7 +2067,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   color: #fff8e7;
   text-align: center;
   box-shadow: 0 14px 26px rgba(52, 36, 18, .18);
+  cursor: pointer;
 }
+.cat-rescue-waste:focus-visible,
+.cat-rescue-bin:focus-visible { outline: 3px solid #fff3b6; outline-offset: 3px; }
 .cat-rescue-bin span { font-size: 25px; line-height: 1; }
 .cat-rescue-bin b { font-size: 11px; color: #fff8e7; }
 .cat-rescue-controls { display: grid; gap: 12px; }
@@ -3388,6 +3400,8 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   .daily-behavior-activity, .daily-behavior-positive, .correct-feedback-layout { grid-template-columns: 1fr; min-height: auto; }
   .daily-behavior-video, .daily-behavior-video video, .daily-behavior-positive-video, .daily-behavior-positive-video video, .correct-feedback-media, .correct-feedback-media video { min-height: 250px; }
   .daily-behavior-choices { padding: 26px 20px 24px; }
+  .daily-behavior-question-row { flex-wrap: wrap; align-items: flex-start; gap: 8px 12px; }
+  .daily-behavior-progress-hint { white-space: normal; }
   .daily-behavior-retry { padding: 20px; }
   .daily-behavior-positive-copy, .correct-feedback-copy { min-height: auto; padding: 22px 20px 24px; justify-content: flex-start; }
   .correct-feedback-copy h2 { margin-bottom: 14px; font-size: clamp(30px, 10vw, 42px); }

@@ -77,12 +77,15 @@ function useVideoMetadataPreload(src?: string) {
 }
 
 function withPetName(text: string, petName: string) {
-  if (!petName.trim()) return text;
-  return text
-    .replaceAll("豆豆", petName)
-    .replaceAll("小狗", petName)
-    .replaceAll("狗狗", petName)
-    .replaceAll("貓咪", petName);
+  const displayName = petName.trim() || "牠";
+  const withPlaceholders = text
+    .replaceAll("`{petName}`", displayName)
+    .replaceAll("{petName}", displayName);
+  if (!petName.trim()) return withPlaceholders;
+  return withPlaceholders
+    .replaceAll("豆豆", displayName)
+    .replaceAll("小狗", displayName)
+    .replaceAll("狗狗", displayName);
 }
 
 const lifeStageLabels = {
@@ -1034,7 +1037,10 @@ function DailyBehaviorActivityMulti({
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{withPetName(correctIntroByScenario[scenario.id] ?? "你選到了這個情境中幾個合適的照顧方式：", petName)}</p>}
-        correctItems={learningPoints.map((item) => withPetName(item, petName))}
+        // 貓咪小知識中的「貓咪」是泛稱，不能被玩家名稱取代；只有明確的 {petName} 佔位符才套用名字。
+        correctItems={learningPoints.map((item) => species === "cat"
+          ? item.replaceAll("{petName}", petName || "貓咪")
+          : withPetName(item, petName))}
         knowledgeTitle={species === "cat" ? "貓咪小知識" : "狗狗小知識"}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
@@ -1074,7 +1080,12 @@ function DailyBehaviorActivityMulti({
         </section>
       ) : (
                                 <section className="reflection daily-behavior-choices">
-          <h2>此刻需要完成哪些事？（複選）</h2>
+          <div className="daily-behavior-question-row">
+            <h2>此刻需要完成哪些事？（複選）</h2>
+            <p className="daily-behavior-live-hint visible daily-behavior-progress-hint" role="status">
+              已找到 {correctSelectedCount} / {correctChoiceIds.length} 個合適做法
+            </p>
+          </div>
           <div className="choice-grid">
             {scenario.choices.map((choice) => {
               const selected = selectedIds.includes(choice.id);
@@ -1085,9 +1096,6 @@ function DailyBehaviorActivityMulti({
               );
             })}
           </div>
-          <p className="daily-behavior-live-hint visible daily-behavior-progress-hint" role="status">
-            已找到 {correctSelectedCount} / {correctChoiceIds.length} 個合適做法
-          </p>
         </section>
       )}
     </section>
@@ -1715,6 +1723,13 @@ const walkingPrepNotes: Record<string, string> = {
 
 const walkingStep = 7;
 
+// 貓砂盆救援隊暫用已存在的共用素材，避免缺少 /assets/cat/... 圖檔時讓 Vite/RSC 請求失敗。
+// 正式貓咪素材補齊後，只需在此替換為對應的 /assets/cat/... 路徑即可。
+const catLitterRescueAssets = {
+  litterBox: "/assets/room/pee-pad.png",
+  scoop: "/assets/room/cleaner.png",
+} as const;
+
 function catInspectionToken(kind: string, value: string) {
   return `${kind}:${value}`;
 }
@@ -1748,8 +1763,8 @@ function CatDailyInspectionActivity({
   const complete = stampCount >= catLitterRescueConfig.targetStamps;
   const wasteCleared = catLitterRescueConfig.wasteItems.every((item) => hasCatInspectionToken(selected, `discarded-${roundKey}`, item.id));
   const litterFilled = hasCatInspectionToken(selected, "litter", roundKey);
-  const weeklyDue = currentRound === catLitterRescueConfig.weeklyWashRound;
-  const abnormalDue = currentRound === catLitterRescueConfig.abnormalObservationRound;
+  const weeklyDue = catLitterRescueConfig.enableWeeklyWash && currentRound === catLitterRescueConfig.weeklyWashRound;
+  const abnormalDue = catLitterRescueConfig.enableAbnormalObservation && currentRound === catLitterRescueConfig.abnormalObservationRound;
   const weeklySteps = ["backup", "washed", "dried", "returned"] as const;
   const weeklyStepIndex = weeklySteps.findIndex((step) => !hasCatInspectionToken(selected, "weekly", step));
   const weeklyComplete = !weeklyDue || weeklyStepIndex === -1;
@@ -1822,6 +1837,25 @@ function CatDailyInspectionActivity({
     } else {
       setMessage("還沒有鏟到排泄物，可以再靠近尿團或糞便一點。");
     }
+  }
+
+  // 拖曳是主要操作；保留點擊作為觸控與輔助操作 fallback，避免裝置未完整派送 pointer move 時卡關。
+  function pickWaste(wasteId: string) {
+    if (wasteCleared || carryingWaste || hasCatInspectionToken(selected, `discarded-${roundKey}`, wasteId)) return;
+    const wasteLabel = catLitterRescueConfig.wasteItems.find((item) => item.id === wasteId)?.label ?? "排泄物";
+    setCarryingWaste(wasteId);
+    setMessage(`已鏟起${wasteLabel}，再拖曳貓砂鏟到密封清潔桶丟棄。`);
+  }
+
+  function discardCarriedWaste() {
+    if (!carryingWaste) {
+      setMessage("先把尿團或糞便鏟起，再放入密封清潔桶。");
+      return;
+    }
+    const wasteLabel = catLitterRescueConfig.wasteItems.find((item) => item.id === carryingWaste)?.label ?? "排泄物";
+    addToken(`discarded-${roundKey}`, carryingWaste);
+    setCarryingWaste(null);
+    setMessage(`${wasteLabel}已放進密封清潔桶。`);
   }
 
   function chooseLitter(action: "fresh-litter" | "skip" | "perfume") {
@@ -1939,16 +1973,16 @@ function CatDailyInspectionActivity({
                         ? "這次巡視發現排泄明顯變少、看起來有點困難。先不要自行診斷。"
                         : "本次巡視已完成，可以領取巡視印章。"}</p>
               </div>
-              <div className="cat-rescue-litter-box">
-                <img src="/assets/cat/room/litter-box.png" alt="貓砂盆" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+              <div className={`cat-rescue-litter-box${litterFilled ? " is-filled" : ""}`}>
+                <img src={catLitterRescueAssets.litterBox} alt="貓砂盆" />
               </div>
               {catLitterRescueConfig.wasteItems.map((item) => !hasCatInspectionToken(selected, `discarded-${roundKey}`, item.id) && carryingWaste !== item.id ? (
-                <span key={item.id} className={`cat-rescue-waste cat-rescue-waste--${item.id}`} style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%`, height: `${item.size}%` }} aria-label={item.label} />
+                <button key={item.id} type="button" className={`cat-rescue-waste cat-rescue-waste--${item.id}`} style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%`, height: `${item.size}%` }} aria-label={`鏟起${item.label}`} onClick={() => pickWaste(item.id)} />
               ) : null)}
-              <div className="cat-rescue-bin" style={{ left: `${catLitterRescueConfig.bin.x}%`, top: `${catLitterRescueConfig.bin.y}%`, width: `${catLitterRescueConfig.bin.size}%`, height: `${catLitterRescueConfig.bin.size}%` }}>
+              <button type="button" className="cat-rescue-bin" style={{ left: `${catLitterRescueConfig.bin.x}%`, top: `${catLitterRescueConfig.bin.y}%`, width: `${catLitterRescueConfig.bin.size}%`, height: `${catLitterRescueConfig.bin.size}%` }} onClick={discardCarriedWaste} aria-label="放入密封清潔桶">
                 <span aria-hidden="true">▥</span>
                 <b>密封清潔桶</b>
-              </div>
+              </button>
             </div>
             <div className="cat-rescue-controls">
               {!wasteCleared ? (
@@ -1956,7 +1990,7 @@ function CatDailyInspectionActivity({
                   <b>{carryingWaste ? "已鏟起排泄物" : "貓砂鏟"}</b>
                   <p>{carryingWaste ? "拖到密封清潔桶完成丟棄。" : "把貓砂鏟拖到尿團或糞便，再拖到密封清潔桶。"}</p>
                   <button type="button" className="cat-rescue-scoop-tool" onPointerDown={startScoopDrag} aria-label="拖曳貓砂鏟">
-                    <img src="/assets/cat/daily/litter-scoop.png" alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+                    <img src={catLitterRescueAssets.scoop} alt="" />
                     <span aria-hidden="true">▱</span>
                   </button>
                 </div>
@@ -1998,7 +2032,7 @@ function CatDailyInspectionActivity({
         </>
       )}
       {dragging && dragPoint && <div className="cat-rescue-drag-ghost" style={{ left: dragPoint.x, top: dragPoint.y }} aria-hidden="true">
-        <img src="/assets/cat/daily/litter-scoop.png" alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+        <img src={catLitterRescueAssets.scoop} alt="" />
         <span>▱</span>
       </div>}
       <div className="activity-actions">

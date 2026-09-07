@@ -334,7 +334,8 @@ export default function Home() {
     setTestMode(true);
     setCategory("dog");
     setBreed("shiba");
-    setPetName("小狗");
+    // 測試模式不依物種帶入犬隻名稱，統一使用中性的預設名稱。
+    setPetName("小咪");
     setHasPreviousDog(true);
     setPreviousBreed("poodle");
     setPreviousDogName("豆豆");
@@ -420,7 +421,7 @@ export default function Home() {
           />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} breed={breed} />}
-            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={setCategory} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={() => goTo(2)} />}
+            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>
