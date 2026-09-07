@@ -1,6 +1,56 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-F9Mgcds8.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-D2X0bRJE.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
+/**
+* 貓咪流程唯一的素材路徑映射。
+* 新增或替換貓咪素材時，請優先在這裡調整，避免路徑散落在元件內。
+*/
+var catAssets = {
+	selection: {
+		orangeCat: "/assets/cat/selection/orange-cat.png",
+		tabbyCat: "/assets/cat/selection/tabby-cat.png"
+	},
+	room: {
+		safeRoom: "/assets/cat/room/cat-safe-room.png",
+		safeRoomSecured: "/assets/cat/room/cat-safe-room-secured.png",
+		windowSafetyNet: "/assets/cat/room/window-safety-net.png",
+		hideaway: "/assets/cat/room/cat-hideaway.png",
+		restSpace: "/assets/cat/room/cat-rest-space.png",
+		litterBox: "/assets/cat/room/cat-litter-box.png",
+		litter: "/assets/cat/room/cat-litter.png",
+		foodBowl: "/assets/cat/feeding/cat-food-bowl.png",
+		waterBowl: "/assets/cat/feeding/cat-water-bowl.png",
+		scratchingBoard: "/assets/cat/room/cat-scratching-board.png",
+		tree: "/assets/cat/room/cat-tree.png",
+		lilyPlant: "/assets/cat/room/lily-plant.png",
+		humanMedicine: "/assets/cat/room/human-medicine.png",
+		yarn: "/assets/cat/room/yarn.png",
+		fragrance: "/assets/cat/room/fragrance.png",
+		coolingMat: "/assets/cat/room/cooling-mat.png"
+	},
+	feeding: {
+		food: "/assets/cat/feeding/cat-food.png",
+		foodBowl: "/assets/cat/feeding/cat-food-bowl.png",
+		waterBowl: "/assets/cat/feeding/cat-water-bowl.png",
+		seasonedLeftovers: "/assets/cat/feeding/seasoned-leftovers.png",
+		vegetablesFruit: "/assets/cat/feeding/vegetables-fruit.png",
+		leftoverFishBones: "/assets/cat/feeding/leftover-fish-bones.png"
+	},
+	daily: {
+		inspectionBackground: "/assets/cat/room/cat-safe-room-secured.png",
+		litterBox: "/assets/cat/room/cat-litter-box.png",
+		litterScoop: "/assets/room/cleaner.png"
+	},
+	preparation: {
+		carrier: "/assets/car/carrier.png",
+		documents: "/assets/car/adoption-documents.png"
+	},
+	life: {
+		safeRoom: "/assets/cat/room/cat-safe-room.png",
+		orangeCat: "/assets/cat/selection/orange-cat.png",
+		tabbyCat: "/assets/cat/selection/tabby-cat.png"
+	}
+};
 var money = new Intl.NumberFormat("zh-TW");
 var intros = [
 	{
@@ -174,7 +224,7 @@ var breeds = [
 		species: "cat",
 		label: "米克斯－橘貓",
 		icon: "🐈",
-		image: "",
+		image: catAssets.selection.orangeCat,
 		size: "medium",
 		shortDescription: "多數親人、表達需求明顯，常喜歡主動互動與撒嬌。牠也較需要注意體重管理，建議採定時定量餵食，搭配益智漏食玩具與日常活動，避免因過度進食而變胖。"
 	},
@@ -183,7 +233,7 @@ var breeds = [
 		species: "cat",
 		label: "米克斯－虎斑貓",
 		icon: "🐈‍⬛",
-		image: "",
+		image: catAssets.selection.tabbyCat,
 		size: "medium",
 		shortDescription: "聰明、互動性高，也常保有旺盛的獵捕本能。牠喜歡和人玩耍，適合每天安排逗貓棒等獵捕遊戲，並提供貓跳台或安全的垂直空間，幫助牠消耗精力。"
 	}
@@ -981,9 +1031,9 @@ var initialProfile = {
 var catRoomItems = [
 	{
 		id: "cat-safe-window",
-		label: "穩固的門窗與紗窗",
+		label: "窗戶防護網",
 		icon: "□",
-		image: "/assets/room/small-items.png",
+		image: catAssets.room.windowSafetyNet,
 		placement: {
 			x: 88,
 			y: 44,
@@ -1004,7 +1054,7 @@ var catRoomItems = [
 		id: "cat-hide-box",
 		label: "可退避的安全躲藏空間",
 		icon: "▣",
-		image: "/assets/car/carrier.png",
+		image: catAssets.room.hideaway,
 		placement: {
 			x: 66,
 			y: 73,
@@ -1025,7 +1075,7 @@ var catRoomItems = [
 		id: "cat-rest-space",
 		label: "休息空間",
 		icon: "🛏️",
-		image: "/assets/room/pet-bed.png",
+		image: catAssets.room.restSpace,
 		placement: {
 			x: 72,
 			y: 84,
@@ -1046,7 +1096,7 @@ var catRoomItems = [
 		id: "cat-litter-box",
 		label: "貓砂盆",
 		icon: "▤",
-		image: "/assets/room/pee-pad.png",
+		image: catAssets.room.litterBox,
 		placement: {
 			x: 16,
 			y: 84,
@@ -1067,7 +1117,7 @@ var catRoomItems = [
 		id: "cat-litter",
 		label: "貓砂",
 		icon: "◌",
-		image: "/assets/room/cleaner.png",
+		image: catAssets.room.litter,
 		placement: {
 			x: 25,
 			y: 84,
@@ -1088,7 +1138,7 @@ var catRoomItems = [
 		id: "cat-food-bowl",
 		label: "食盆",
 		icon: "🥣",
-		image: "/assets/room/food-bowl.png",
+		image: catAssets.room.foodBowl,
 		placement: {
 			x: 42,
 			y: 89,
@@ -1109,7 +1159,7 @@ var catRoomItems = [
 		id: "cat-water-bowl",
 		label: "水碗",
 		icon: "💧",
-		image: "/assets/room/water-bowl.png",
+		image: catAssets.room.waterBowl,
 		placement: {
 			x: 32,
 			y: 89,
@@ -1130,7 +1180,7 @@ var catRoomItems = [
 		id: "cat-scratcher",
 		label: "抓板",
 		icon: "▥",
-		image: "/assets/room/toy.png",
+		image: catAssets.room.scratchingBoard,
 		placement: {
 			x: 75,
 			y: 82,
@@ -1151,7 +1201,7 @@ var catRoomItems = [
 		id: "cat-tree",
 		label: "跳台",
 		icon: "▧",
-		image: "/assets/room/pet-bed.png",
+		image: catAssets.room.tree,
 		placement: {
 			x: 83,
 			y: 66,
@@ -1172,7 +1222,7 @@ var catRoomItems = [
 		id: "cat-safe-toy",
 		label: "安全玩具",
 		icon: "✦",
-		image: "/assets/room/toy.png",
+		image: catAssets.room.scratchingBoard,
 		placement: {
 			x: 54,
 			y: 84,
@@ -1195,7 +1245,7 @@ var catHazards = [
 		id: "cat-toxic-plants",
 		label: "百合／有毒植物",
 		icon: "✿",
-		image: "/assets/room/small-items.png",
+		image: catAssets.room.lilyPlant,
 		placement: {
 			x: 31,
 			y: 48,
@@ -1214,7 +1264,7 @@ var catHazards = [
 		id: "cat-human-medicine",
 		label: "人類藥品",
 		icon: "▣",
-		image: "/assets/room/chocolate.png",
+		image: catAssets.room.humanMedicine,
 		placement: {
 			x: 84,
 			y: 76,
@@ -1233,7 +1283,7 @@ var catHazards = [
 		id: "cat-string",
 		label: "線狀異物",
 		icon: "⌁",
-		image: "/assets/room/wire.png",
+		image: catAssets.room.yarn,
 		placement: {
 			x: 12,
 			y: 79,
@@ -1252,7 +1302,7 @@ var catHazards = [
 		id: "cat-essential-oil",
 		label: "精油／薰香",
 		icon: "◍",
-		image: "/assets/room/detergent.png",
+		image: catAssets.room.fragrance,
 		placement: {
 			x: 61,
 			y: 63,
@@ -1290,7 +1340,7 @@ var catHazards = [
 		id: "cat-cooling-product",
 		label: "涼感產品",
 		icon: "❄",
-		image: "/assets/room/small-items.png",
+		image: catAssets.room.coolingMat,
 		placement: {
 			x: 88,
 			y: 44,
@@ -3943,11 +3993,11 @@ function BusyCareActivity({ scenario, answer, petName, members, species = "dog",
 					onError: () => setSceneVideoFailed(true)
 				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 					className: "busy-care-room-background",
-					src: "/assets/room/empty-room.png",
+					src: isCat ? catAssets.life.safeRoom : "/assets/room/empty-room.png",
 					alt: "居家房間場景"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 					className: "busy-care-hungry-dog",
-					src: isCat ? "/assets/species/cat.png" : "/assets/pet-journey/shiba-hungry.png",
+					src: isCat ? catAssets.life.orangeCat : "/assets/pet-journey/shiba-hungry.png",
 					alt: `${displayPetName}在房間裡等待照顧`
 				})] })
 			}), mode === "family" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
@@ -4154,7 +4204,15 @@ function BreedChallengeActivity({ breed, petName, answers, onChoose, onContinue,
 					loop: true,
 					ariaLabel: `${scenario.title}情境影片`,
 					onError: () => setQuestionVideoFailed(true)
-				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+				}) : isCatBreedChallenge ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						className: "breed-challenge-cat-art",
+						src: breed === "tabby-cat" ? catAssets.life.tabbyCat : catAssets.life.orangeCat,
+						alt: `${breedLabel}情境插圖`
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: scenario.title }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "請依情境想想最適合牠的照顧安排。" })
+				] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "影片製作中" }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: scenario.title }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "情境影片將於後續補上。" })
@@ -4202,21 +4260,21 @@ function ArrivalMealActivity({ activity, petName, species = "dog", onChange, onA
 		{
 			id: "seasoned-leftovers",
 			label: "調味剩菜",
-			image: "/assets/pet-journey/leftover-bones.png",
+			image: catAssets.feeding.seasonedLeftovers,
 			title: "調味剩菜不適合貓咪",
 			text: "人類剩菜可能太鹹、太油，也可能含有洋蔥、大蒜或其他不適合貓咪的成分。剛到家時請先提供合適主食與乾淨飲水。"
 		},
 		{
 			id: "chocolate-caffeine",
 			label: "巧克力",
-			image: "/assets/pet-journey/macadamia-nuts.png",
+			image: catAssets.feeding.leftoverFishBones,
 			title: "這個不能給貓咪吃",
 			text: "巧克力可能危害貓咪健康，也不適合作為引誘進食或安撫的食物。人類食物不一定適合貓咪，不確定食材安全性時，請查詢可靠資料或詢問獸醫。"
 		},
 		{
 			id: "vegetables-fruits",
 			label: "蔬菜／水果",
-			image: "/assets/room/food.png",
+			image: catAssets.feeding.vegetablesFruit,
 			title: "蔬菜／水果只能確認安全後少量提供",
 			text: "有些蔬菜或水果可在確認安全後少量補充，但洋蔥、青蔥、大蒜、葡萄與葡萄乾等不適合貓咪。蔬菜／水果不應取代主食；不確定食材是否適合時，請先查詢可靠資料或詢問獸醫。"
 		}
@@ -4297,7 +4355,7 @@ function ArrivalMealActivity({ activity, petName, species = "dog", onChange, onA
 							onClick: prepareFood,
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								className: "arrival-meal-supply-food",
-								src: "/assets/room/food.png",
+								src: isCat ? catAssets.feeding.food : "/assets/room/food.png",
 								alt: isCat ? "貓主食" : "飼料"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: isCat ? "貓主食" : "飼料" })]
 						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -4312,7 +4370,7 @@ function ArrivalMealActivity({ activity, petName, species = "dog", onChange, onA
 							onClick: prepareWater,
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								className: "arrival-meal-supply-water",
-								src: "/assets/pet-journey/waterbottle.png",
+								src: isCat ? catAssets.feeding.waterBowl : "/assets/pet-journey/waterbottle.png",
 								alt: "水瓶"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "水" })]
 						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -4342,13 +4400,13 @@ function ArrivalMealActivity({ activity, petName, species = "dog", onChange, onA
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-room arrival-meal-room--desktop",
-						src: "/assets/room/empty-room.png",
+						src: isCat ? catAssets.life.safeRoom : "/assets/room/empty-room.png",
 						alt: `${animalName}的新家房間`
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-room arrival-meal-room--mobile",
-						src: "/assets/room/empty-room-mobile.png",
-						alt: `${animalName}的新家房間`
+						src: isCat ? catAssets.life.safeRoom : "/assets/room/empty-room-mobile.png",
+						alt: ""
 					}),
 					foodWarning && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "arrival-meal-warning",
@@ -4368,19 +4426,19 @@ function ArrivalMealActivity({ activity, petName, species = "dog", onChange, onA
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-dog",
 						style: arrivalMealPlacementStyle("dog"),
-						src: isCat ? "/assets/species/cat.png" : complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png",
+						src: isCat ? catAssets.life.orangeCat : complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png",
 						alt: complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-water",
 						style: arrivalMealPlacementStyle("water"),
-						src: activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png",
+						src: isCat ? catAssets.feeding.waterBowl : activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png",
 						alt: activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						className: "arrival-meal-food",
 						style: arrivalMealPlacementStyle("food"),
-						src: activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png",
+						src: isCat ? catAssets.feeding.foodBowl : activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png",
 						alt: activity.arrivalMealFoodReady ? `裝好主食的${isCat ? "食盆" : "狗碗"}` : "空食碗"
 					})
 				]
@@ -4407,8 +4465,8 @@ var walkingPrepNotes = {
 };
 var walkingStep = 7;
 var catLitterRescueAssets = {
-	litterBox: "/assets/room/pee-pad.png",
-	scoop: "/assets/room/cleaner.png"
+	litterBox: catAssets.daily.litterBox,
+	scoop: catAssets.daily.litterScoop
 };
 function catInspectionToken(kind, value) {
 	return `${kind}:${value}`;
@@ -6547,6 +6605,7 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 	const hazardsDone = securedHazards.length;
 	const complete = itemsDone === activeRoomItems.length && hazardsDone === activeHazards.length;
 	const activeHazard = activeHazards.find((item) => item.id === activeHazardInfo);
+	const isWindowSecured = species === "cat" && selectedItems.includes("cat-safe-window");
 	const supplyRows = species === "cat" ? [
 		activeRoomItems.slice(0, 2),
 		activeRoomItems.slice(2, 4),
@@ -6670,15 +6729,15 @@ function RoomPreparation({ selectedItems, securedHazards, petName, onPrepare, on
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								className: "room-scene-background room-scene-background--desktop",
-								src: "/assets/room/empty-room.png",
-								alt: "空的寵物生活房間"
+								src: species === "cat" ? isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom : "/assets/room/empty-room.png",
+								alt: species === "cat" ? "貓咪安全房" : "空的寵物生活房間"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								className: "room-scene-background room-scene-background--mobile",
-								src: "/assets/room/empty-room-mobile.png",
-								alt: "空的寵物生活房間"
+								src: species === "cat" ? isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom : "/assets/room/empty-room-mobile.png",
+								alt: ""
 							}),
-							activeRoomItems.filter((item) => selectedItems.includes(item.id)).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							activeRoomItems.filter((item) => selectedItems.includes(item.id) && !(species === "cat" && item.id === "cat-safe-window")).map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								className: `room-object placed-supply auto-room-object placed-room-item--${item.id}`,
 								style: roomItemPlacementStyle(item),
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {

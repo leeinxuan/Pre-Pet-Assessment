@@ -13,6 +13,7 @@ import {
   lifeScenarios,
 } from "../../life-data";
 import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/walkingScenes";
+import { catAssets } from "../../data/catAssets";
 import type {
   CareMember,
   ExpenseRecord,
@@ -1226,8 +1227,8 @@ function BusyCareActivity({
             <VideoWithToggle className="busy-care-room-video" src="/assets/pet-journey/busy-daily-care.mp4" loop ariaLabel="疲憊忙碌的日子情境影片" onError={() => setSceneVideoFailed(true)} />
           ) : (
             <>
-              <img className="busy-care-room-background" src="/assets/room/empty-room.png" alt="居家房間場景" />
-              <img className="busy-care-hungry-dog" src={isCat ? "/assets/species/cat.png" : "/assets/pet-journey/shiba-hungry.png"} alt={`${displayPetName}在房間裡等待照顧`} />
+              <img className="busy-care-room-background" src={isCat ? catAssets.life.safeRoom : "/assets/room/empty-room.png"} alt="居家房間場景" />
+              <img className="busy-care-hungry-dog" src={isCat ? catAssets.life.orangeCat : "/assets/pet-journey/shiba-hungry.png"} alt={`${displayPetName}在房間裡等待照顧`} />
             </>
           )}
         </div>
@@ -1367,6 +1368,11 @@ function BreedChallengeActivity({
         <div className={challengeVideoSource && !questionVideoFailed ? "breed-challenge-video-placeholder breed-challenge-video-frame" : "breed-challenge-video-placeholder"}>
           {challengeVideoSource && !questionVideoFailed ? (
             <VideoWithToggle className="breed-challenge-video" src={challengeVideoSource} loop ariaLabel={`${scenario.title}情境影片`} onError={() => setQuestionVideoFailed(true)} />
+          ) : isCatBreedChallenge ? (
+            <>
+              <img className="breed-challenge-cat-art" src={breed === "tabby-cat" ? catAssets.life.tabbyCat : catAssets.life.orangeCat} alt={`${breedLabel}情境插圖`} />
+              <b>{scenario.title}</b><p>請依情境想想最適合牠的照顧安排。</p>
+            </>
           ) : (
             <><span>影片製作中</span><b>{scenario.title}</b><p>情境影片將於後續補上。</p></>
           )}
@@ -1541,21 +1547,21 @@ function ArrivalMealActivity({
       {
         id: "seasoned-leftovers",
         label: "調味剩菜",
-        image: "/assets/pet-journey/leftover-bones.png",
+        image: catAssets.feeding.seasonedLeftovers,
         title: "調味剩菜不適合貓咪",
         text: "人類剩菜可能太鹹、太油，也可能含有洋蔥、大蒜或其他不適合貓咪的成分。剛到家時請先提供合適主食與乾淨飲水。",
       },
       {
         id: "chocolate-caffeine",
         label: "巧克力",
-        image: "/assets/pet-journey/macadamia-nuts.png",
+        image: catAssets.feeding.leftoverFishBones,
         title: "這個不能給貓咪吃",
         text: "巧克力可能危害貓咪健康，也不適合作為引誘進食或安撫的食物。人類食物不一定適合貓咪，不確定食材安全性時，請查詢可靠資料或詢問獸醫。",
       },
       {
         id: "vegetables-fruits",
         label: "蔬菜／水果",
-        image: "/assets/room/food.png",
+        image: catAssets.feeding.vegetablesFruit,
         title: "蔬菜／水果只能確認安全後少量提供",
         text: "有些蔬菜或水果可在確認安全後少量補充，但洋蔥、青蔥、大蒜、葡萄與葡萄乾等不適合貓咪。蔬菜／水果不應取代主食；不確定食材是否適合時，請先查詢可靠資料或詢問獸醫。",
       },
@@ -1607,14 +1613,14 @@ function ArrivalMealActivity({
       <aside className={`arrival-meal-supplies ${activity.arrivalMealFoodReady && activity.arrivalMealWaterReady ? "mobile-condensed" : ""}`} aria-label="晚餐用品">
         <div className="arrival-meal-supply-slot">
           {!activity.arrivalMealFoodReady ? (
-            <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src="/assets/room/food.png" alt={isCat ? "貓主食" : "飼料"} /><span>{isCat ? "貓主食" : "飼料"}</span></button>
+            <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src={isCat ? catAssets.feeding.food : "/assets/room/food.png"} alt={isCat ? "貓主食" : "飼料"} /><span>{isCat ? "貓主食" : "飼料"}</span></button>
           ) : (
             <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
           )}
         </div>
         <div className="arrival-meal-supply-slot">
           {!activity.arrivalMealWaterReady ? (
-            <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src="/assets/pet-journey/waterbottle.png" alt="水瓶" /><span>水</span></button>
+            <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isCat ? catAssets.feeding.waterBowl : "/assets/pet-journey/waterbottle.png"} alt="水瓶" /><span>水</span></button>
           ) : (
             <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
           )}
@@ -1624,16 +1630,16 @@ function ArrivalMealActivity({
         ))}
       </aside>
       <div className="arrival-meal-scene">
-        <img className="arrival-meal-room arrival-meal-room--desktop" src="/assets/room/empty-room.png" alt={`${animalName}的新家房間`} />
-        <img className="arrival-meal-room arrival-meal-room--mobile" src="/assets/room/empty-room-mobile.png" alt={`${animalName}的新家房間`} />
+        <img className="arrival-meal-room arrival-meal-room--desktop" src={isCat ? catAssets.life.safeRoom : "/assets/room/empty-room.png"} alt={`${animalName}的新家房間`} />
+        <img className="arrival-meal-room arrival-meal-room--mobile" src={isCat ? catAssets.life.safeRoom : "/assets/room/empty-room-mobile.png"} alt="" />
         {foodWarning && <div className="arrival-meal-warning" role="alert">
           <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
           <b>{foodWarning.title}</b>
           <p>{foodWarning.text}</p>
         </div>}
-        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? "/assets/species/cat.png" : complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png"} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
-        <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png"} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
-        <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png"} alt={activity.arrivalMealFoodReady ? `裝好主食的${isCat ? "食盆" : "狗碗"}` : "空食碗"} />
+        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? catAssets.life.orangeCat : complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png"} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
+        <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={isCat ? catAssets.feeding.waterBowl : activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png"} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
+        <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={isCat ? catAssets.feeding.foodBowl : activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png"} alt={activity.arrivalMealFoodReady ? `裝好主食的${isCat ? "食盆" : "狗碗"}` : "空食碗"} />
       </div>
       <div className="arrival-meal-footer">
         {complete && <p role="status">晚餐準備好了！合適的主食與乾淨飲水，是每天照顧的重要部分。</p>}
@@ -1726,8 +1732,8 @@ const walkingStep = 7;
 // 貓砂盆救援隊暫用已存在的共用素材，避免缺少 /assets/cat/... 圖檔時讓 Vite/RSC 請求失敗。
 // 正式貓咪素材補齊後，只需在此替換為對應的 /assets/cat/... 路徑即可。
 const catLitterRescueAssets = {
-  litterBox: "/assets/room/pee-pad.png",
-  scoop: "/assets/room/cleaner.png",
+  litterBox: catAssets.daily.litterBox,
+  scoop: catAssets.daily.litterScoop,
 } as const;
 
 function catInspectionToken(kind: string, value: string) {

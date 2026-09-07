@@ -1651,6 +1651,7 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .breed-challenge-video-placeholder > span { padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,.8); color: #85714f; font-size: 12px; font-weight: 900; }
 .breed-challenge-video-placeholder b { color: var(--ink); font-size: clamp(24px, 3vw, 34px); }
 .breed-challenge-video-placeholder p { max-width: 300px; margin: 0; line-height: 1.7; }
+.breed-challenge-cat-art { display: block; width: min(72%, 300px); max-height: 230px; margin: 0 auto 14px; object-fit: contain; }
 .breed-challenge-options, .breed-challenge-retry { padding: 26px; border: 1px solid var(--line); border-radius: 26px; background: #fff; box-shadow: var(--shadow); }
 .breed-challenge-options h2, .breed-challenge-retry h2 { margin: 0 0 8px; font-size: 25px; }
 .breed-challenge-options > p, .breed-challenge-retry > p { margin: 0 0 18px; color: var(--muted); line-height: 1.75; }
@@ -1967,8 +1968,8 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .cat-rescue-background {
   position: absolute;
   inset: 0;
-  /* 目前使用既有房間素材作 fallback；正式貓咪巡視背景補齊後可換成 /assets/cat/daily/daily-inspection.png。 */
-  background-image: linear-gradient(rgba(255, 253, 247, .16), rgba(255, 253, 247, .22)), url("/assets/room/empty-room.png");
+  /* TODO(cat-assets): 每日巡視專用背景補齊後可替換，目前使用貓咪安全房 fallback。 */
+  background-image: linear-gradient(rgba(255, 253, 247, .16), rgba(255, 253, 247, .22)), url("/assets/cat/room/cat-safe-room-secured.png");
   background-size: cover;
   background-position: center center;
 }

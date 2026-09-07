@@ -7,6 +7,7 @@ import type {
   Scenario,
   TrunkItem,
 } from "./game-types";
+import { catAssets } from "./data/catAssets";
 
 export const money = new Intl.NumberFormat("zh-TW");
 
@@ -87,8 +88,8 @@ export const breeds = [
   { id: "doberman", species: "dog", label: "杜賓犬", icon: "🐕", image: "/assets/species/dog/doberman.png", size: "large", shortDescription: "警覺、聰明且活動量高，需要穩定訓練、規律運動與清楚界線。適合能投入陪伴、社會化與安全管理的家庭。" },
   { id: "old-english-sheepdog", species: "dog", label: "英國古代牧羊犬", icon: "🐕", image: "/assets/species/dog/old-english-sheepdog.png", size: "large", shortDescription: "溫和親人、體型較大且毛量豐厚，需要規律梳理、充足活動與舒適的生活空間。適合願意投入日常照護與毛髮整理的家庭。" },
   { id: "mixed", species: "dog", label: "米克斯", icon: "🐕", image: "/assets/species/dog/mixed-breed.png", size: "medium", shortDescription: "個性與體型差異較大，適合先了解牠的實際年齡、體態與生活習慣。準備時可保留彈性，依牠到家後的反應慢慢調整。" },
-  { id: "orange-cat", species: "cat", label: "米克斯－橘貓", icon: "🐈", image: "", size: "medium", shortDescription: "多數親人、表達需求明顯，常喜歡主動互動與撒嬌。牠也較需要注意體重管理，建議採定時定量餵食，搭配益智漏食玩具與日常活動，避免因過度進食而變胖。" },
-  { id: "tabby-cat", species: "cat", label: "米克斯－虎斑貓", icon: "🐈‍⬛", image: "", size: "medium", shortDescription: "聰明、互動性高，也常保有旺盛的獵捕本能。牠喜歡和人玩耍，適合每天安排逗貓棒等獵捕遊戲，並提供貓跳台或安全的垂直空間，幫助牠消耗精力。" },
+  { id: "orange-cat", species: "cat", label: "米克斯－橘貓", icon: "🐈", image: catAssets.selection.orangeCat, size: "medium", shortDescription: "多數親人、表達需求明顯，常喜歡主動互動與撒嬌。牠也較需要注意體重管理，建議採定時定量餵食，搭配益智漏食玩具與日常活動，避免因過度進食而變胖。" },
+  { id: "tabby-cat", species: "cat", label: "米克斯－虎斑貓", icon: "🐈‍⬛", image: catAssets.selection.tabbyCat, size: "medium", shortDescription: "聰明、互動性高，也常保有旺盛的獵捕本能。牠喜歡和人玩耍，適合每天安排逗貓棒等獵捕遊戲，並提供貓跳台或安全的垂直空間，幫助牠消耗精力。" },
 ];
 
 export type PetSize = "small" | "medium" | "large";

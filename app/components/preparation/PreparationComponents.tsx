@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { applySizeBasedExpenseAmount, departureTrunkItems, expenseCatalog, getPetSizeForBreed, hazards, money, roomDoorplatePlacement, roomItems, trunkItems } from "../../game-data";
 import { getSpeciesGameConfig } from "../../data/speciesGameConfig";
+import { catAssets } from "../../data/catAssets";
 import type { CareMember, ExpenseRecord, HazardItem, RoomItem, TrunkItem } from "../../game-types";
 import { NavButtons, StepHeading } from "../shared/SharedComponents";
 
@@ -113,6 +114,8 @@ export function RoomPreparation({
   const hazardsDone = securedHazards.length;
   const complete = itemsDone === activeRoomItems.length && hazardsDone === activeHazards.length;
   const activeHazard = activeHazards.find((item) => item.id === activeHazardInfo);
+  // 防護網的完成紀錄已存在 selectedItems，故回到此頁或重整後仍會正確保留安全房背景。
+  const isWindowSecured = species === "cat" && selectedItems.includes("cat-safe-window");
   const supplyRows = species === "cat"
     ? [
       activeRoomItems.slice(0, 2),
@@ -208,9 +211,9 @@ export function RoomPreparation({
 
         <div className="room-interaction-column">
           <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomSceneReady ? "room-scene-ready" : ""}`} role="group" aria-label="寵物生活空間">
-            <img className="room-scene-background room-scene-background--desktop" src="/assets/room/empty-room.png" alt="空的寵物生活房間" />
-            <img className="room-scene-background room-scene-background--mobile" src="/assets/room/empty-room-mobile.png" alt="空的寵物生活房間" />
-            {activeRoomItems.filter((item) => selectedItems.includes(item.id)).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><img src={item.image} alt={`房間中已配置的${item.label}`} /><span>{item.label}</span></div>)}
+            <img className="room-scene-background room-scene-background--desktop" src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : "/assets/room/empty-room.png"} alt={species === "cat" ? "貓咪安全房" : "空的寵物生活房間"} />
+            <img className="room-scene-background room-scene-background--mobile" src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : "/assets/room/empty-room-mobile.png"} alt="" />
+            {activeRoomItems.filter((item) => selectedItems.includes(item.id) && !(species === "cat" && item.id === "cat-safe-window")).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><img src={item.image} alt={`房間中已配置的${item.label}`} /><span>{item.label}</span></div>)}
             {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
             <div className="pet-doorplate" style={roomDoorplatePlacementStyle()}>
               <img src="/assets/room/nameplate.png" alt="小狗名字門牌" />

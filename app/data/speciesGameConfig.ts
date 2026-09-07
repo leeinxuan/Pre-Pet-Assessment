@@ -1,5 +1,6 @@
 import type { HazardItem, RoomItem, TrunkItem } from "../game-types";
 import { departureTrunkItems, hazards, roomItems } from "../game-data";
+import { catAssets } from "./catAssets";
 
 export type SpeciesId = "dog" | "cat";
 
@@ -41,27 +42,29 @@ export type SpeciesGameConfig = {
 export const catRoomItems: RoomItem[] = [
   // Cat mobile room item positions:
   // 在這裡調整「貓」手機版布置房間物品座標；x / y / width 以 1:1 房間容器百分比為基準。
-  { id: "cat-safe-window", label: "穩固的門窗與紗窗", icon: "□", image: "/assets/room/small-items.png", placement: { x: 88, y: 44, width: 11, layer: 5 }, mobilePlacement: { x: 86, y: 45, width: 17 }, required: true, need: "安全", expenseId: "cat-safe-window", purpose: "先確認門窗、紗窗與陽台防護穩固，避免貓咪逃脫或墜落。" },
-  { id: "cat-hide-box", label: "可退避的安全躲藏空間", icon: "▣", image: "/assets/car/carrier.png", placement: { x: 66, y: 73, width: 22, layer: 3 }, mobilePlacement: { x: 58, y: 74, width: 32 }, required: true, need: "安全", expenseId: "cat-hide-box", purpose: "準備緊張時可躲避的隱蔽空間，讓貓咪能用自己的速度觀察與適應。" },
-  { id: "cat-rest-space", label: "休息空間", icon: "🛏️", image: "/assets/room/pet-bed.png", placement: { x: 72, y: 84, width: 18, layer: 2 }, mobilePlacement: { x: 70, y: 84, width: 28 }, required: true, need: "休息", expenseId: "cat-rest-bed", purpose: "日常睡眠與舒適休息的位置要安靜、穩定，避免一直被打擾。" },
-  { id: "cat-litter-box", label: "貓砂盆", icon: "▤", image: "/assets/room/pee-pad.png", placement: { x: 16, y: 84, width: 20, layer: 2 }, mobilePlacement: { x: 15, y: 78, width: 30 }, required: true, need: "排泄", expenseId: "cat-litter-box", purpose: "貓砂盆應放在安靜、容易到達且與食水分開的位置。" },
-  { id: "cat-litter", label: "貓砂", icon: "◌", image: "/assets/room/cleaner.png", placement: { x: 25, y: 84, width: 12, layer: 3 }, mobilePlacement: { x: 28, y: 78, width: 22 }, required: true, need: "清潔", expenseId: "cat-litter", purpose: "維持足夠砂量並每天清理，才能觀察排泄與降低壓力。" },
-  { id: "cat-food-bowl", label: "食盆", icon: "🥣", image: "/assets/room/food-bowl.png", placement: { x: 42, y: 89, width: 10, layer: 3 }, mobilePlacement: { x: 37, y: 87, width: 17 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定食盆位置，避免和砂盆太接近，讓進食更安心。" },
-  { id: "cat-water-bowl", label: "水碗", icon: "💧", image: "/assets/room/water-bowl.png", placement: { x: 32, y: 89, width: 12, layer: 3 }, mobilePlacement: { x: 22, y: 88, width: 18 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "水碗可與食盆稍微分開，並每天更換乾淨飲水。" },
-  { id: "cat-scratcher", label: "抓板", icon: "▥", image: "/assets/room/toy.png", placement: { x: 75, y: 82, width: 12, layer: 4 }, mobilePlacement: { x: 68, y: 83, width: 20 }, required: true, need: "活動", expenseId: "cat-scratcher", purpose: "抓板能提供自然抓磨出口，降低家具被抓的機會。" },
-  { id: "cat-tree", label: "跳台", icon: "▧", image: "/assets/room/pet-bed.png", placement: { x: 83, y: 66, width: 18, layer: 2 }, mobilePlacement: { x: 78, y: 66, width: 27 }, required: true, need: "活動", expenseId: "cat-tree", purpose: "垂直空間能讓貓咪觀察環境、活動與保有安全距離。" },
-  { id: "cat-safe-toy", label: "安全玩具", icon: "✦", image: "/assets/room/toy.png", placement: { x: 54, y: 84, width: 10, layer: 4 }, mobilePlacement: { x: 49, y: 83, width: 17 }, required: true, need: "活動", expenseId: "cat-safe-toy", purpose: "選擇不易吞食、可收納的安全玩具，互動後也要整理。" },
+  // 防護網是背景狀態的觸發物品；完成後由 RoomPreparation 切換成 safeRoomSecured，不能個別放進房間。
+  { id: "cat-safe-window", label: "窗戶防護網", icon: "□", image: catAssets.room.windowSafetyNet, placement: { x: 88, y: 44, width: 11, layer: 5 }, mobilePlacement: { x: 86, y: 45, width: 17 }, required: true, need: "安全", expenseId: "cat-safe-window", purpose: "先確認門窗、紗窗與陽台防護穩固，避免貓咪逃脫或墜落。" },
+  { id: "cat-hide-box", label: "可退避的安全躲藏空間", icon: "▣", image: catAssets.room.hideaway, placement: { x: 66, y: 73, width: 22, layer: 3 }, mobilePlacement: { x: 58, y: 74, width: 32 }, required: true, need: "安全", expenseId: "cat-hide-box", purpose: "準備緊張時可躲避的隱蔽空間，讓貓咪能用自己的速度觀察與適應。" },
+  { id: "cat-rest-space", label: "休息空間", icon: "🛏️", image: catAssets.room.restSpace, placement: { x: 72, y: 84, width: 18, layer: 2 }, mobilePlacement: { x: 70, y: 84, width: 28 }, required: true, need: "休息", expenseId: "cat-rest-bed", purpose: "日常睡眠與舒適休息的位置要安靜、穩定，避免一直被打擾。" },
+  { id: "cat-litter-box", label: "貓砂盆", icon: "▤", image: catAssets.room.litterBox, placement: { x: 16, y: 84, width: 20, layer: 2 }, mobilePlacement: { x: 15, y: 78, width: 30 }, required: true, need: "排泄", expenseId: "cat-litter-box", purpose: "貓砂盆應放在安靜、容易到達且與食水分開的位置。" },
+  { id: "cat-litter", label: "貓砂", icon: "◌", image: catAssets.room.litter, placement: { x: 25, y: 84, width: 12, layer: 3 }, mobilePlacement: { x: 28, y: 78, width: 22 }, required: true, need: "清潔", expenseId: "cat-litter", purpose: "維持足夠砂量並每天清理，才能觀察排泄與降低壓力。" },
+  { id: "cat-food-bowl", label: "食盆", icon: "🥣", image: catAssets.room.foodBowl, placement: { x: 42, y: 89, width: 10, layer: 3 }, mobilePlacement: { x: 37, y: 87, width: 17 }, required: true, need: "飲食", expenseId: "food-bowl", purpose: "固定食盆位置，避免和砂盆太接近，讓進食更安心。" },
+  { id: "cat-water-bowl", label: "水碗", icon: "💧", image: catAssets.room.waterBowl, placement: { x: 32, y: 89, width: 12, layer: 3 }, mobilePlacement: { x: 22, y: 88, width: 18 }, required: true, need: "飲食", expenseId: "water-bowl", purpose: "水碗可與食盆稍微分開，並每天更換乾淨飲水。" },
+  { id: "cat-scratcher", label: "抓板", icon: "▥", image: catAssets.room.scratchingBoard, placement: { x: 75, y: 82, width: 12, layer: 4 }, mobilePlacement: { x: 68, y: 83, width: 20 }, required: true, need: "活動", expenseId: "cat-scratcher", purpose: "抓板能提供自然抓磨出口，降低家具被抓的機會。" },
+  { id: "cat-tree", label: "跳台", icon: "▧", image: catAssets.room.tree, placement: { x: 83, y: 66, width: 18, layer: 2 }, mobilePlacement: { x: 78, y: 66, width: 27 }, required: true, need: "活動", expenseId: "cat-tree", purpose: "垂直空間能讓貓咪觀察環境、活動與保有安全距離。" },
+  // TODO(cat-assets): 尚無獨立安全玩具素材，暫沿用抓板圖示以維持安全的貓咪專屬畫面。
+  { id: "cat-safe-toy", label: "安全玩具", icon: "✦", image: catAssets.room.scratchingBoard, placement: { x: 54, y: 84, width: 10, layer: 4 }, mobilePlacement: { x: 49, y: 83, width: 17 }, required: true, need: "活動", expenseId: "cat-safe-toy", purpose: "選擇不易吞食、可收納的安全玩具，互動後也要整理。" },
 ];
 
 export const catHazards: HazardItem[] = [
   // Cat mobile hazard positions:
   // 在這裡調整「貓」手機版危險物品座標；不影響狗版 hazards。
-  { id: "cat-toxic-plants", label: "百合／有毒植物", icon: "✿", image: "/assets/room/small-items.png", placement: { x: 31, y: 48, width: 11, layer: 5 }, mobilePlacement: { x: 28, y: 52, width: 17 }, danger: "百合等植物可能對貓造成嚴重危害，即使少量接觸也應避免。", handling: "移出貓咪能到達的空間，並確認家中植物是否安全。" },
-  { id: "cat-human-medicine", label: "人類藥品", icon: "▣", image: "/assets/room/chocolate.png", placement: { x: 84, y: 76, width: 9, layer: 5 }, mobilePlacement: { x: 83, y: 76, width: 15 }, danger: "人用藥品不應自行給貓使用，誤食也可能造成中毒。", handling: "收到有門的櫃內，並避免把藥放在桌面或包包外層。" },
-  { id: "cat-string", label: "線狀異物", icon: "⌁", image: "/assets/room/wire.png", placement: { x: 12, y: 79, width: 18, layer: 5 }, mobilePlacement: { x: 13, y: 80, width: 24 }, danger: "線、繩、橡皮筋等可能被吞食，造成腸胃阻塞或傷害。", handling: "收進抽屜或盒內，玩具使用後也要收好。" },
-  { id: "cat-essential-oil", label: "精油／薰香", icon: "◍", image: "/assets/room/detergent.png", placement: { x: 61, y: 63, width: 9, layer: 5 }, mobilePlacement: { x: 58, y: 66, width: 15 }, danger: "部分精油與薰香對貓不適合，密閉空間中風險更高。", handling: "避免在貓咪活動區使用，並保持通風與安全距離。" },
+  { id: "cat-toxic-plants", label: "百合／有毒植物", icon: "✿", image: catAssets.room.lilyPlant, placement: { x: 31, y: 48, width: 11, layer: 5 }, mobilePlacement: { x: 28, y: 52, width: 17 }, danger: "百合等植物可能對貓造成嚴重危害，即使少量接觸也應避免。", handling: "移出貓咪能到達的空間，並確認家中植物是否安全。" },
+  { id: "cat-human-medicine", label: "人類藥品", icon: "▣", image: catAssets.room.humanMedicine, placement: { x: 84, y: 76, width: 9, layer: 5 }, mobilePlacement: { x: 83, y: 76, width: 15 }, danger: "人用藥品不應自行給貓使用，誤食也可能造成中毒。", handling: "收到有門的櫃內，並避免把藥放在桌面或包包外層。" },
+  { id: "cat-string", label: "線狀異物", icon: "⌁", image: catAssets.room.yarn, placement: { x: 12, y: 79, width: 18, layer: 5 }, mobilePlacement: { x: 13, y: 80, width: 24 }, danger: "線、繩、橡皮筋等可能被吞食，造成腸胃阻塞或傷害。", handling: "收進抽屜或盒內，玩具使用後也要收好。" },
+  { id: "cat-essential-oil", label: "精油／薰香", icon: "◍", image: catAssets.room.fragrance, placement: { x: 61, y: 63, width: 9, layer: 5 }, mobilePlacement: { x: 58, y: 66, width: 15 }, danger: "部分精油與薰香對貓不適合，密閉空間中風險更高。", handling: "避免在貓咪活動區使用，並保持通風與安全距離。" },
   { id: "cat-cleaner", label: "清潔劑", icon: "🧴", image: "/assets/room/detergent.png", placement: { x: 69, y: 71, width: 9, layer: 5 }, mobilePlacement: { x: 70, y: 70, width: 15 }, danger: "清潔劑可能刺激皮膚、呼吸道或被舔入體內。", handling: "使用後確實收納，地面乾燥前避免貓咪進入。" },
-  { id: "cat-cooling-product", label: "涼感產品", icon: "❄", image: "/assets/room/small-items.png", placement: { x: 88, y: 44, width: 11, layer: 5 }, mobilePlacement: { x: 86, y: 45, width: 17 }, danger: "部分涼感墊、冰包或凝膠產品若被咬破，可能造成誤食、滑倒或受傷風險。", handling: "改用通風陰涼處、乾淨飲水與可清洗墊材；任何降溫用品都要確認材質安全並避免貓咪啃咬。" },
+  { id: "cat-cooling-product", label: "涼感產品", icon: "❄", image: catAssets.room.coolingMat, placement: { x: 88, y: 44, width: 11, layer: 5 }, mobilePlacement: { x: 86, y: 45, width: 17 }, danger: "部分涼感墊、冰包或凝膠產品若被咬破，可能造成誤食、滑倒或受傷風險。", handling: "改用通風陰涼處、乾淨飲水與可清洗墊材；任何降溫用品都要確認材質安全並避免貓咪啃咬。" },
 ];
 
 export const catTrunkItems: TrunkItem[] = departureTrunkItems
