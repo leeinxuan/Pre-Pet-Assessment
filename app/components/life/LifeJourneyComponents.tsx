@@ -963,6 +963,8 @@ function DailyBehaviorActivityMulti({
     "cat-night-energy-care": `你已經找到合適的做法。規律遊戲與安全玩具，能讓${displayPetName}的精力有合適出口。`,
     "cat-scratching-care": `你已經找到合適的做法。提供抓板與安全高處，能讓${displayPetName}用自然方式活動。`,
     "cat-indoor-outdoor-care": `你已經找到合適的做法。尊重${displayPetName}的壓力反應，並把日常活動安排在安全室內，會比強迫外出更穩定。`,
+    "cat-illness-vet": `你已經先完成觀察、紀錄、聯繫與就醫準備。這些資訊能幫助獸醫判斷，但不取代急症處置。`,
+    "cat-growing-old": `你已經把高齡照護拆成環境、休息與健康追蹤三部分，讓${displayPetName}的生活能隨身體狀況調整。`,
   };
 
   function toggleChoice(choiceId: string) {
@@ -1046,7 +1048,7 @@ function DailyBehaviorActivityMulti({
   return (
     <section className="daily-behavior-activity">
       <div className="daily-behavior-head">
-        <p className="life-stage-label">{lifeStageLabels.daily}</p>
+        <p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p>
         <h1>{withPetName(scenario.title, petName)}</h1>
         <p>{withPetName(scenario.description, petName)}</p>
       </div>
@@ -1072,7 +1074,7 @@ function DailyBehaviorActivityMulti({
         </section>
       ) : (
                                 <section className="reflection daily-behavior-choices">
-          <h2>你會怎麼處理？（複選）</h2>
+          <h2>此刻需要完成哪些事？（複選）</h2>
           <div className="choice-grid">
             {scenario.choices.map((choice) => {
               const selected = selectedIds.includes(choice.id);
@@ -1129,7 +1131,10 @@ function BusyCareActivity({
   const displayPetName = petName || animalName;
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const familySupportChoice = scenario.choices.find((choice) => choice.id === "family-helper");
+  // 貓咪版交接固定確認四項：時間、意願、食水／砂盆／環境巡視，以及緊急聯絡。
+  // 犬隻仍沿用原本的三項確認，不改變既有流程。
   const helperQuestions = [
+    ...(isCat ? [{ id: "available", text: `${helperName || "對方"}是否確定有時間，可以在約定時段完成照護？`, short: "尚未確認是否有時間協助" }] : []),
     { id: "knows-needs", text: `${helperName || "對方"}是否了解${displayPetName}平常的${isCat ? "食水、砂盆、環境巡視、陪玩與觀察" : "餵食、換水、排泄與活動"}需求？`, short: "還不清楚日常照護需求" },
     { id: "willing", text: `${helperName || "對方"}是否願意按照你交接的方式照顧「${displayPetName}」，而不是只用自己的習慣處理？`, short: "尚未確認是否願意按照交接方式照顧" },
     { id: "emergency", text: `如果${displayPetName}出現食慾、精神${isCat ? "、飲水、砂盆或活動" : ""}異常或緊急狀況，${helperName || "對方"}是否會馬上聯絡你或獸醫？`, short: "尚未確認遇到異常時會立即聯絡你或獸醫" },
@@ -1192,7 +1197,7 @@ function BusyCareActivity({
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{helperName.trim() && selectedChoice.id === "family-helper" ? `你確認了${helperName.trim()}的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓${displayPetName}在你忙碌時仍獲得穩定照顧。` : withPetName(selectedChoice.explanation, petName)}</p>}
-        otherTips={<div className="busy-care-warm-note busy-care-energy-reflection">{isCat ? <><b><span aria-hidden="true">💡</span>貓咪照護提醒</b><p>{displayPetName}看起來獨立，仍需要穩定的食水、乾淨砂盆、安全環境、適量互動與細心觀察。忙碌時先安排可信任的人協助，能讓牠的日常維持安心與規律。</p></> : <><p className="busy-care-slogan">在狗狗的世界裡，你就是他的全部。</p><b><span aria-hidden="true">💡</span>留給自己的一個問題</b><p>忙完一天回到家時，你還有能量陪伴等了你一整天的{displayPetName}嗎？</p></>}</div>}
+        otherTips={<div className="busy-care-warm-note busy-care-energy-reflection">{isCat ? <><b><span aria-hidden="true">💡</span>貓咪小知識</b><p>{displayPetName}看起來獨立，仍需要穩定的食物、飲水、乾淨砂盆與安全環境。忙碌時先安排可信任的人協助，能讓牠的日常維持安心與規律。</p></> : <><p className="busy-care-slogan">在狗狗的世界裡，你就是他的全部。</p><b><span aria-hidden="true">💡</span>留給自己的一個問題</b><p>忙完一天回到家時，你還有能量陪伴等了你一整天的{displayPetName}嗎？</p></>}</div>}
         otherTipsBeforeSuggestion
         suggestion={<small>{isCat ? `交接時要說明${displayPetName}的個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。` : <>不管是請朋友或家人協助，都要清楚交接餵食、飲水、排泄清理、陪伴方式，以及如何和{displayPetName}安全互動，讓牠在你忙碌時也能被穩定照顧。</>}</small>}
         onVideoEnded={() => setVideoFinished(true)}
@@ -1290,6 +1295,7 @@ function BreedChallengeActivity({
   const scenario = scenarios[currentIndex];
   const selectedChoice = scenario?.choices.find((choice) => choice.id === answers[scenario.id]?.finalChoiceId);
   const breedLabel = breedChallengeLabelForId(breed);
+  const isCatBreedChallenge = breed === "orange-cat" || breed === "tabby-cat";
   const challengeVideoSource = scenario ? breedChallengeVideos[scenario.title] : undefined;
 
   useEffect(() => {
@@ -1334,7 +1340,7 @@ function BreedChallengeActivity({
         videoFailed={feedbackVideoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續。"
         intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
-        breedHighlight={<BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={`${breedLabel}小知識`} />}
+        breedHighlight={<BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={isCatBreedChallenge ? "貓咪小知識" : `${breedLabel}小知識`} />}
         onVideoError={() => setFeedbackVideoFailed(true)}
         onReplay={onReplay}
         onContinue={moveToNext}
