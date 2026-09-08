@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { applySizeBasedExpenseAmount, breeds, categories, expenseCatalog, getPetSizeForBreed, money } from "../../game-data";
-import { getJourneyItemsForSpecies } from "../../life-data";
-import { getSpeciesGameConfig } from "../../data/speciesGameConfig";
+import { categories } from "../../data/shared/app-flow";
+import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, money } from "../../data/shared/expenses";
+import { getJourneyItemsForSpecies } from "../../data/species/journey";
+import { getSpeciesConfig } from "../../data/species/index";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
 
 export function StepHeading({ title, body }: { title: string; body?: string }) {
@@ -48,8 +49,8 @@ type MainNavigation = {
 };
 
 function getLifeStageRanges(breed: string, species = "dog") {
-  const breedLabel = breeds.find((item) => item.id === breed)?.label ?? "品種";
-  const config = getSpeciesGameConfig(species);
+  const config = getSpeciesConfig(species);
+  const breedLabel = config.breeds.find((item) => item.id === breed)?.label ?? "品種";
   return [
     { label: "接回家", start: 0, end: 0 },
     { label: "日常照護", start: 1, end: 2 },
@@ -291,10 +292,10 @@ export function SpeciesStep({
   onPreviousDogName: (value: string) => void;
   onNext: () => void;
 }) {
-  const selectedBreed = breeds.find((item) => item.id === breed);
-  const selectedPreviousBreed = breeds.find((item) => item.id === previousBreed);
-  const speciesConfig = getSpeciesGameConfig(category);
-  const availableBreeds = breeds.filter((item) => (item.species ?? "dog") === (category || "dog"));
+  const speciesConfig = getSpeciesConfig(category);
+  const selectedBreed = speciesConfig.breeds.find((item) => item.id === breed);
+  const selectedPreviousBreed = speciesConfig.breeds.find((item) => item.id === previousBreed);
+  const availableBreeds = speciesConfig.breeds;
   const sameBreed = Boolean(breed && previousBreed && breed === previousBreed);
   const breedCarouselRef = useRef<HTMLDivElement>(null);
   const breedScrollTimerRef = useRef<number | null>(null);

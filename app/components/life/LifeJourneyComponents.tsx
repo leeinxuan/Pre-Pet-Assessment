@@ -2,18 +2,17 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
-import { arrivalMealMobilePlacements, breeds, expenseCatalog, money, roomItems } from "../../game-data";
+import { breeds, expenseCatalog, money, roomItems } from "../../game-data";
+import { arrivalMealMobilePlacements } from "../../data/species/dog/layout";
 import {
-  catDailyBehaviorScenarioIds,
-  catLitterRescueConfig,
   getBreedChallengeScenarios,
   getJourneyItemsForSpecies,
   getLifeScenariosForSpecies,
-  journeyItems,
-  lifeScenarios,
-} from "../../life-data";
-import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/walkingScenes";
-import { catAssets } from "../../data/catAssets";
+  dogLifeScenarios as lifeScenarios,
+} from "../../data/species/journey";
+import { catDailyBehaviorScenarioIds, catLitterRescueConfig } from "../../data/species/cat/journey";
+import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/species/dog/walking";
+import { catAssets } from "../../data/species/cat/assets";
 import type {
   CareMember,
   ExpenseRecord,

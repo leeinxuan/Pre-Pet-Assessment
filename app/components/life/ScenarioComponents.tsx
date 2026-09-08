@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { scenarios } from "../../game-data";
+import { scenarios } from "../../data/shared/legacy-scenarios";
 import type { Scenario, ScenarioAnswer, ScenarioChoice } from "../../game-types";
 
 export function ScenarioFeedback({

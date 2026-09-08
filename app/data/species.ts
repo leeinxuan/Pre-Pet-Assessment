@@ -1,1 +1,2 @@
-export { breeds, categories } from "../game-data";
+export { breeds } from "../game-data";
+export { categories } from "./shared/app-flow";

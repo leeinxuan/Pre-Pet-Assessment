@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { breeds, money } from "../../game-data";
-import { catLitterRescueConfig, getAllScenariosForSpecies } from "../../life-data";
-import { getSpeciesGameConfig } from "../../data/speciesGameConfig";
+import { money } from "../../data/shared/expenses";
+import { catLitterRescueConfig } from "../../data/species/cat/journey";
+import { getAllScenariosForSpecies } from "../../data/species/journey";
+import { getSpeciesConfig } from "../../data/species/index";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, ScenarioAnswer } from "../../game-types";
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
@@ -476,7 +477,7 @@ export function ProfileSupplementForm({
   onBack: () => void;
   onReset: () => void;
 }) {
-  const selectedBreed = breeds.find((item) => item.id === breed);
+  const selectedBreed = getSpeciesConfig(species).breeds.find((item) => item.id === breed);
   const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : "柴犬");
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     onChange({ ...profile, [key]: value });
@@ -663,7 +664,7 @@ export function AssessmentReport({
 }) {
   const [activeDiscussionId, setActiveDiscussionId] = useState("");
   const [expenseDetailsOpen, setExpenseDetailsOpen] = useState(false);
-  const speciesConfig = getSpeciesGameConfig(species);
+  const speciesConfig = getSpeciesConfig(species);
   useEffect(() => {
     if (!activeDiscussionId) return;
     const previousOverflow = document.body.style.overflow;
@@ -719,7 +720,7 @@ export function AssessmentReport({
     : profile.hasHousemates === true
       ? (enteredHousemates.length ? enteredHousemates.join("、") : legacyHousemates.length ? legacyHousemates.join("、") : "有同住家人（待補充）")
       : "待補充";
-  const selectedBreed = breeds.find((item) => item.id === breed);
+  const selectedBreed = speciesConfig.breeds.find((item) => item.id === breed);
   const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : "柴犬");
   const experienceStatus = profile.noShibaExperience ? `沒有${selectedTypeLabel}經驗` : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote ? "已補充飼養經驗" : "待補充";
   const reasonStatus = profile.reasons.length ? profile.reasons.map((item) => item === "其他" ? profile.reasonOther || "其他（待補充）" : item).join("、") : "待補充";

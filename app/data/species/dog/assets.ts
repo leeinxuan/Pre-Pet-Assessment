@@ -1,0 +1,1 @@
+export { dogAssets } from "../dog";

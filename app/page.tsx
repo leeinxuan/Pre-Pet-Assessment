@@ -1,16 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  applySizeBasedExpenseAmount,
-  expenseCatalog,
-  getPetSizeForBreed,
-  initialMembers,
-  initialProfile,
-  intros,
-} from "./game-data";
-import { getSpeciesGameConfig } from "./data/speciesGameConfig";
-import { initialLifeActivityState } from "./life-data";
+import { initialMembers, initialProfile, intros } from "./data/shared/app-flow";
+import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed } from "./data/shared/expenses";
+import { getSpeciesConfig } from "./data/species/index";
+import { initialLifeActivityState } from "./data/shared/life-activity";
 import type {
   CareMember,
   ExpenseRecord,
@@ -139,7 +133,7 @@ export default function Home() {
   const backupNames = useMemo(() => {
     return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
   }, [members]);
-  const speciesConfig = getSpeciesGameConfig(category);
+  const speciesConfig = getSpeciesConfig(category);
 
   function goTo(next: number) {
     setStep(next);

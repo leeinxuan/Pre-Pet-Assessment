@@ -1,0 +1,1 @@
+export { catAssets } from "../cat";

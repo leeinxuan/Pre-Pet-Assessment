@@ -2,9 +2,16 @@
 
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
-import { applySizeBasedExpenseAmount, departureTrunkItems, expenseCatalog, getPetSizeForBreed, hazards, money, roomDoorplatePlacement, roomItems, trunkItems } from "../../game-data";
-import { getSpeciesGameConfig } from "../../data/speciesGameConfig";
-import { catAssets } from "../../data/catAssets";
+import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, money } from "../../data/shared/expenses";
+import { roomDoorplatePlacement } from "../../data/species/dog/layout";
+import {
+  dogDepartureTrunkItems as departureTrunkItems,
+  dogHazards as hazards,
+  dogRoomItems as roomItems,
+  dogTrunkItems as trunkItems,
+} from "../../data/species/dog/preparation";
+import { getSpeciesConfig } from "../../data/species/index";
+import { catAssets } from "../../data/species/cat/assets";
 import type { CareMember, ExpenseRecord, HazardItem, RoomItem, TrunkItem } from "../../game-types";
 import { NavButtons, StepHeading } from "../shared/SharedComponents";
 
@@ -101,7 +108,7 @@ export function RoomPreparation({
   breed: string;
   species?: string;
 }) {
-  const speciesConfig = getSpeciesGameConfig(species);
+  const speciesConfig = getSpeciesConfig(species);
   const activeRoomItems = speciesConfig.roomItems;
   const activeHazards = speciesConfig.hazards;
   const [roomCheckMessage, setRoomCheckMessage] = useState("");
@@ -260,7 +267,7 @@ export function CareMemberSetup({ members, onChange, onBack, onNext }: { members
 }
 
 export function CarTrunkPreparation({ selected, petName, breed, species = "dog", onSelect, onBack, onReplay, onNext, reviewing = false }: { selected: string[]; petName: string; breed: string; species?: string; onSelect: (id: string) => void; onBack: () => void; onReplay: () => void; onNext: () => void; reviewing?: boolean }) {
-  const speciesConfig = getSpeciesGameConfig(species);
+  const speciesConfig = getSpeciesConfig(species);
   const activeTrunkItems = speciesConfig.trunkItems;
   const [exitingItems, setExitingItems] = useState<string[]>([]);
   const [departing, setDeparting] = useState(false);

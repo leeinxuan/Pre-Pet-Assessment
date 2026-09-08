@@ -1,0 +1,359 @@
+/* Preparation styles migrate here. Keep desktop and mobile rules together. */
+
+/* 房間布置、後車廂接回與準備物品互動。 */
+/* Simplified adoption preparation */
+.simplified-room-layout { grid-template-columns: 320px minmax(0, 1fr); }
+.room-supply-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: -17px -17px 12px; padding: 15px 17px; border-bottom: 1px solid rgba(111, 91, 58, .14); }
+.room-supply-header h2 { margin: 0; font-size: 15px; }
+.room-supply-header span { color: var(--muted); font-size: 11px; font-weight: 800; text-align: right; }
+.room-supply-rows { display: flex; flex-direction: column; gap: 8px; min-height: 394px; }
+.room-supply-row { display: flex; flex: 0 0 auto; min-height: 126px; justify-content: flex-start; align-items: stretch; gap: 8px; }
+.room-supply-row--2 { width: 100%; align-self: stretch; gap: 8px; }
+.supply-slot { min-height: 126px; display: flex; align-items: center; justify-content: center; }
+.supply-slot-note { width: 100%; min-height: inherit; display: grid; align-content: center; gap: 5px; padding: 10px 9px; border: 1px solid rgba(194, 166, 116, .36); border-radius: 14px; background: rgba(255, 250, 239, .82); color: var(--ink); text-align: center; animation: supplyNoteIn .36s cubic-bezier(.16,1,.3,1) both; }
+.supply-slot-note b { color: var(--gold-dark); font-size: 15px; line-height: 1.3; }
+.supply-slot-note small { color: var(--muted); font-size: 10.5px; font-weight: 800; line-height: 1.45; }
+.supply-slot-price { display: block; margin-top: 3px; padding-top: 6px; border-top: 1px solid rgba(168, 101, 9, .18); color: #7f5b1a; font-size: 11px; font-weight: 950; line-height: 1.2; }
+@keyframes supplyNoteIn { from { opacity: 0; transform: translateY(5px) scale(.97); } }
+.room-supply-row .supply-slot { flex: 0 0 calc((100% - 8px) / 2); width: calc((100% - 8px) / 2); min-width: 0; }
+.room-supply-row--1 .supply-slot,
+.room-supply-row--2 .supply-slot { flex: 0 0 calc((100% - 8px) / 2); width: calc((100% - 8px) / 2); }
+.room-supply-row button { appearance: none; width: 100%; min-width: 0; min-height: 126px; padding: 8px 5px; border: 0; border-radius: 0; background: transparent; box-shadow: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; color: inherit; cursor: pointer; transition: opacity .2s ease, transform .2s ease; }
+.room-supply-row.compact-grid { justify-content: flex-start; gap: 8px; }
+.room-supply-row.compact-grid button { flex: 0 0 calc((100% - 8px) / 2); width: calc((100% - 8px) / 2); }
+.room-supply-row button:hover { opacity: .78; transform: scale(1.04); }
+.room-supply-row button:focus-visible { outline: 2px dashed #76591c; outline-offset: 2px; }
+.room-supply-row button.departing { pointer-events: none; opacity: 0; transform: scale(.84); }
+.room-supply-visual { position: relative; display: grid; place-items: center; width: 100%; height: 88px; }
+.room-supply-row img { width: 78px; height: 82px; object-fit: contain; }
+.room-supply-row img.room-item-image--food { transform: scale(1.5); }
+.room-supply-row img.room-item-image--bed {transform: scale(2.2); /* 睡墊 */}
+.room-supply-row img.room-item-image--toilet {transform: scale(1.5); /* 尿墊 */}
+.room-supply-row img.room-item-image--cleaner {transform: scale(1.5); /* 清潔用品 */}
+.room-supply-row img.room-item-image--water-bowl {transform: scale(1.5); /* 水碗*/}
+.room-supply-row img.room-item-image--food-bowl {transform: scale(1.3); /* 狗碗*/}
+.room-supply-row b { display: block; font-size: 12px; line-height: 1.35; text-align: center; }
+.prepared-item-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; min-height: 394px; margin: 0; padding: 4px 0 0; list-style: none; align-content: start; }
+.prepared-item-list li { display: grid; gap: 5px; min-width: 0; padding: 11px 12px; border: 1px solid rgba(111, 91, 58, .14); border-radius: 13px; background: rgba(255, 250, 240, .72); }
+.prepared-item-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+.prepared-item-list b { color: var(--ink); font-size: 13px; }
+.prepared-item-list span { color: var(--muted); font-size: 11px; line-height: 1.55; }
+.prepared-item-price { flex: 0 0 auto; margin-left: auto; color: #8a7358; font-size: 11px; font-weight: 900; text-align: right; white-space: nowrap; }
+.departure-prepared-list { min-height: 370px; }
+.simplified-room-scene { isolation: isolate; }
+.pet-nameplate { position: absolute; z-index: 7; left: 56%; top: 51%; max-width: 180px; padding: 7px 13px; border: 2px solid #9b7442; border-radius: 8px; background: #f4dfb6; color: #5f4528; font-size: 12px; font-weight: 900; text-align: center; transform: translateX(-50%) rotate(-2deg); box-shadow: 0 4px 10px rgba(70,53,26,.16); }
+.pet-nameplate.named { background: #fff2cc; }
+.pet-name-inline { margin-top: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: white; }
+.pet-name-inline h2 { margin: 0 0 10px; font-size: 15px; }
+.pet-name-inline > div { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+.pet-name-inline label { grid-column: 1 / -1; font-size: 12px; font-weight: 900; }
+.pet-name-inline input { min-width: 0; }
+.pet-name-inline .field-error { margin: 7px 0 0; }
+.pet-name-overlay { position: absolute; z-index: 7; top: 12px; right: 12px; width: min(350px, 47%); margin: 0; padding: 12px; background: rgba(255,253,247,.96); box-shadow: 0 8px 24px rgba(70,53,26,.13); }
+.pet-name-overlay.named { width: min(300px, 43%); }
+.pet-name-overlay h2 { margin-bottom: 7px; font-size: 13px; }
+.pet-name-overlay > div { gap: 6px; }
+.pet-name-overlay input { min-height: 38px; padding: 8px 10px; }
+.pet-name-overlay button { min-height: 38px; padding: 8px 11px; }
+.pet-doorplate { position: absolute; z-index: 7; left: 47%; top: 16%; width: 28%; min-width: 120px; transform: translateX(-50%); }
+.pet-doorplate > img { display: block; width: 100%; height: auto; }
+.pet-doorplate > button { position: absolute; inset: 63% 15% 24%; width: 70%; padding: 2px 4px; border: 0; background: transparent; font: inherit; font-size: clamp(10px, 1.5vw, 16px); font-weight: 900; line-height: 1.2; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pet-doorplate > button.placeholder { color: #9d9a92; font-size: clamp(7px, 1.1vw, 14px); font-weight: 700; }
+.pet-doorplate-name { position: absolute; inset: 63% 15% 24%; width: 70%; display: grid; place-items: center; padding: 2px 4px; color: #5f4528; font-size: clamp(10px, 1.5vw, 16px); font-weight: 950; line-height: 1.2; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pet-doorplate > button:focus-visible { outline: 3px solid rgba(212,154,36,.55); outline-offset: 3px; border-radius: 6px; }
+.pet-doorplate-editor { position: absolute; inset: 64% 15% 24%; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+.pet-doorplate-editor label { color: #5f4528; font-size: clamp(10px, .9vw, 15px); font-weight: 900; }
+.pet-doorplate-editor input { width: 100%; min-width: 0; padding: 2px 4px; border: 0; outline: 0; box-shadow: none; background: transparent; color: #5f4528; font: inherit; font-size: clamp(10px, 1.5vw, 16px); font-weight: 900; line-height: 1.2; text-align: center; }
+.pet-doorplate-editor input::placeholder { color: #9d9a92; font-size: clamp(7px, 1.1vw, 14px) !important; font-weight: 700; opacity: 1; }
+.pet-doorplate-editor input:focus { border: 0; outline: 0; box-shadow: none; }
+.pet-doorplate-editor .field-error { margin: 0; color: #8d321c; font-size: 8px; line-height: 1.1; }
+.hazard-info-panel { margin-top: 12px; padding: 15px 17px; border: 1px solid #e5bd67; border-radius: 15px; background: #fff7dc; animation: roomDropPop .28s ease both; }
+.hazard-info-panel h2 { margin: 0 0 10px; font-size: 16px; }
+.hazard-info-panel dl { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; }
+.hazard-info-panel dl > div { padding: 10px 12px; border-radius: 11px; background: rgba(255,255,255,.72); }
+.hazard-info-panel dt { color: var(--gold-dark); font-size: 10px; font-weight: 900; }
+.hazard-info-panel dd { margin: 4px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.car-preparation-layout { display: grid; grid-template-columns: minmax(300px, .82fr) minmax(460px, 1.18fr); gap: 22px; align-items: start; transition: transform .55s, opacity .55s; }
+.car-preparation-layout.departing { transform: translateX(40px) scale(.98); opacity: 0; }
+.car-preparation-panel { display: grid; gap: 14px; }
+.car-preparation-group { padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: white; box-shadow: 0 10px 30px rgba(70,53,26,.05); }
+.car-preparation-group-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.car-preparation-group-head h2 { margin: 0; font-size: 17px; }
+.car-preparation-group-head b { color: var(--gold-dark); }
+.car-preparation-group > p { margin: 7px 0 13px; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.car-preparation-items { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.car-preparation-items button { min-width: 0; min-height: 130px; padding: 10px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 10px; text-align: left; cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+.car-preparation-items button:hover, .car-preparation-items button:focus-visible, .car-preparation-items button.active { border-color: var(--gold); background: #fff6d9; transform: translateY(-1px); }
+.car-preparation-items button.prepared { background: var(--mint-soft); border-color: #91b193; }
+.car-preparation-items button.prepared.active { box-shadow: 0 0 0 3px rgba(145,177,147,.2); }
+.car-preparation-items img { width: 90px; height: 90px; object-fit: contain; }
+.car-preparation-items span { min-width: 0; }
+.car-preparation-items b, .car-preparation-items small, .car-preparation-items em { display: block; }
+.car-preparation-items b { font-size: 12px; }
+.car-preparation-items small { margin-top: 3px; color: var(--muted); font-size: 9px; }
+.car-preparation-items em { margin-top: 5px; color: var(--gold-dark); font-size: 9px; font-style: normal; text-decoration: underline; }
+.car-group-complete { margin: 11px 0 0 !important; padding: 9px 10px; border-radius: 10px; background: var(--mint-soft); color: #4f7051 !important; font-weight: 800; }
+.car-trunk-scene { position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--sand); border-radius: 24px; background: linear-gradient(180deg,#fffdf8,#f4efe4); box-shadow: var(--shadow); isolation: isolate; }
+.car-trunk-background { display: block; width: 100%; height: auto; object-fit: contain; }
+.car-document-folder { position: absolute; left: 10%; top: 32%; z-index: 3; width: 23%; transform: translate(-50%,-50%); opacity: .68; transition: opacity .25s, transform .4s; }
+.car-document-folder.complete { opacity: 1; transform: translate(-50%,-50%) scale(1.03); }
+.car-document-folder img { display: block; width: 100%; height: auto; }
+.car-document-folder span { position: absolute; left: 50%; bottom: -10px; width: max-content; max-width: 150px; padding: 4px 8px; border-radius: 999px; background: rgba(255,253,247,.94); font-size: 9px; font-weight: 900; transform: translateX(-50%); }
+.placed-car-item { position: absolute; height: auto; object-fit: contain; transform: translate(-50%,-50%); filter: drop-shadow(0 7px 6px rgba(44,53,54,.2)); animation: carItemArrive .48s cubic-bezier(.16,1.2,.3,1) both; }
+.placed-car-id { left: 0%; top: 34%; z-index: 4; width: 12%; transform: translate(-50%,-50%) rotate(-4deg); }
+.placed-car-carrier-kit { height: 32%; }
+.placed-car-carrier-kit .carrier-image { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: contain; animation: carrierArrive .45s .12s both; }
+.placed-car-carrier-kit .carrier-pad { position: absolute; left: 14%; bottom: 8%; z-index: 3; width: 43%; height: auto; object-fit: contain; animation: padArrive .35s both; }
+.departure-item-information { margin-top: 18px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 20px; background: white; box-shadow: 0 8px 24px rgba(70,53,26,.05); }
+.departure-item-information h2 { margin: 0; font-size: 22px; }
+.departure-item-information .eyebrow { margin-bottom: 4px; }
+.departure-item-information dl { display: grid; grid-template-columns: 1.15fr .9fr .95fr; gap: 14px; margin: 16px 0 0; }
+.departure-item-information dl > div { padding: 12px; border-radius: 13px; background: var(--paper); }
+.departure-item-information dt { margin-bottom: 5px; color: var(--gold-dark); font-size: 11px; font-weight: 900; }
+.departure-item-information dd { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+.departure-source { margin: 13px 0 0; color: var(--muted); font-size: 10px; }
+.departure-source a { margin-left: 10px; color: var(--gold-dark); font-weight: 900; }
+.departure-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.departure-actions > div { display: flex; gap: 10px; }
+.departure-layout { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; transition: transform .55s, opacity .55s; }
+.departure-layout.departing { transform: translateX(40px) scale(.98); opacity: 0; }
+.departure-supply-shelf { min-height: 390px; padding: 17px; border: 1px solid var(--line); border-radius: 20px; background: white; }
+.departure-supply-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: -17px -17px 12px; padding: 15px 17px; border-bottom: 1px solid rgba(111,91,58,.14); }
+.departure-supply-header h2 { margin: 0; font-size: 15px; }
+.departure-supply-header span { color: var(--muted); font-size: 11px; font-weight: 800; text-align: right; }
+.departure-supply-rows { display: flex; flex-direction: column; gap: 10px; min-height: 370px; }
+.departure-supply-row { display: flex; flex: 0 0 auto; min-height: 142px; align-items: stretch; justify-content: center; gap: 8px; }
+.departure-supply-row--1 { justify-content: flex-start; }
+.departure-supply-row--3 { gap: 7px; }
+.departure-supply-row .supply-slot { flex: 0 1 calc((100% - 8px) / 2); min-width: 104px; min-height: 142px; }
+.departure-supply-row--1 .supply-slot { flex-basis: 45%; }
+.departure-supply-row button { appearance: none; width: 100%; min-height: 142px; padding: 8px 4px; border: 0; border-radius: 0; background: transparent; box-shadow: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; color: inherit; cursor: pointer; transition: opacity .2s ease, transform .2s ease; }
+.departure-supply-row button:hover { opacity: .78; transform: scale(1.04); }
+.departure-supply-row button:focus-visible { outline: 2px dashed #76591c; outline-offset: 2px; }
+.departure-supply-row button.departing { pointer-events: none; opacity: 0; transform: scale(.84); }
+.departure-supply-visual { display: grid; place-items: center; width: 90px; height: 90px; }
+.departure-supply-row img { width: 90px !important; height: 90px !important; max-width: none; object-fit: contain; }
+.departure-supply-row img.departure-item-image--id,
+.departure-supply-row img.departure-item-image--documents { transform: scale(1.35); }
+.departure-supply-row img.departure-item-image--carrier { transform: scale(1.8); }
+.departure-supply-row img.departure-item-image--pee-pad { transform: scale(1.22); }
+.departure-supply-row img.departure-item-image--water-kit { transform: scale(2); }
+.departure-supply-row img.departure-item-image--leash { transform: scale(1.28); }
+.departure-supply-row img.departure-item-image--cleaner { transform: scale(1.5); }
+.departure-supply-row b { display: block; font-size: 12px; line-height: 1.35; text-align: center; }
+.departure-car { position: relative; justify-self: end; width: min(100%, 760px); min-width: 0; isolation: isolate; }
+.departure-car .car-trunk-background { display: block; width: 100%; height: auto; object-fit: contain; }
+@keyframes carItemArrive { from { opacity: 0; transform: translate(-65%,-55%) scale(.82); } to { opacity: 1; } }
+@keyframes padArrive { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+@keyframes carrierArrive { from { opacity: 0; transform: translateX(-18px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes zonePulse { 50% { box-shadow: 0 0 0 4px rgba(216,151,22,.14); } }
+
+@media (max-width: 1000px) {
+  .simplified-room-layout, .departure-layout { grid-template-columns: 1fr; }
+  .departure-car { justify-self: center; width: min(100%, 650px); }
+}
+
+@media (max-width: 720px) {
+  .room-supply-rows { min-height: 370px; }
+  .room-supply-row { flex-basis: 118px; }
+  .room-supply-row button { min-height: 118px; padding-inline: 4px; }
+  .room-supply-visual { height: 80px; }
+  .room-supply-row img { width: 74px; height: 75px; }
+  .pet-name-inline > div { grid-template-columns: 1fr; }
+  .pet-name-inline label { grid-column: auto; }
+  .pet-name-inline button { width: 100%; }
+  .pet-nameplate { top: 51%; max-width: 125px; padding: 5px 8px; font-size: 9px; }
+  .pet-name-overlay, .pet-name-overlay.named { top: 6px; right: 6px; width: 47%; padding: 8px; }
+  .pet-name-overlay h2 { font-size: 10px; }
+  .pet-name-overlay label { font-size: 9px; }
+  .pet-name-overlay input { min-height: 32px; padding: 5px 7px; font-size: 10px; }
+  .pet-name-overlay button { min-height: 32px; padding: 5px 7px; font-size: 9px; }
+.pet-name-overlay .field-error { font-size: 8px; }
+  .hazard-info-panel dl { grid-template-columns: 1fr; }
+  .departure-supply-shelf { min-height: 370px; }
+  .departure-supply-row { flex-basis: 120px; min-height: 120px; }
+  .departure-supply-row button { min-height: 120px; }
+  .departure-item-information dl { grid-template-columns: 1fr; }
+  .departure-actions { align-items: stretch; }
+  .departure-actions, .departure-actions > div { flex-direction: column; }
+  .departure-actions button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placed-car-item, .placed-car-carrier-kit .carrier-image, .placed-car-carrier-kit .carrier-pad, .departure-layout { animation: none; transition: none; }
+}
+
+/* 手機版準備互動：房間、後車廂與第一餐的版面、固定 slot 與位置變數。 */
+@media (max-width: 720px) {
+  .room-preparation-layout.simplified-room-layout { display: grid; grid-template-columns: 1fr; }
+  .room-interaction-column { order: 1; }
+  .room-supply-shelf { order: 2; }
+  .departure-car, .car-trunk-scene { order: 1; justify-self: center; width: 100%; }
+  .departure-supply-shelf, .car-preparation-panel { order: 2; }
+  .departure-supply-rows { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; min-height: 0; }
+  .departure-supply-row { display: contents; }
+  .departure-supply-row .supply-slot,
+  .departure-supply-row--1 .supply-slot,
+  .departure-supply-row--2 .supply-slot,
+  .departure-supply-row--3 .supply-slot { width: auto; min-width: 0; min-height: 118px; flex: initial; }
+  .departure-supply-row button { min-height: 118px; }
+
+  .room-scene-background--desktop, .arrival-meal-room--desktop { display: none; }
+  .room-scene-background--mobile, .arrival-meal-room--mobile { display: block; object-fit: cover; object-position: right center; }
+  .room-scene { aspect-ratio: 1 / 1; }
+  /* 手機版房間物品位置：由 layout.ts 的 mobile placement CSS 變數提供。 */
+  .room-scene .placed-supply { left: var(--mobile-room-item-x) !important; top: var(--mobile-room-item-y) !important; width: var(--mobile-room-item-width) !important; }
+  .room-scene .room-hazard { left: var(--mobile-room-hazard-x) !important; top: var(--mobile-room-hazard-y) !important; width: var(--mobile-room-hazard-width) !important; }
+  .room-scene .pet-doorplate { left: var(--mobile-doorplate-x) !important; top: var(--mobile-doorplate-y) !important; width: var(--mobile-doorplate-width) !important; min-width: 0; }
+  .room-scene .pet-doorplate-name,
+  .room-scene .pet-doorplate > button,
+  .room-scene .pet-doorplate-editor {
+    inset: auto !important;
+    left: var(--mobile-doorplate-text-left) !important;
+    top: var(--mobile-doorplate-text-top) !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: var(--mobile-doorplate-text-width) !important;
+    height: var(--mobile-doorplate-text-height) !important;
+    font-size: var(--mobile-doorplate-text-font-size) !important;
+  }
+  .room-scene .pet-doorplate-editor input { font-size: var(--mobile-doorplate-text-font-size) !important; }
+
+  .room-supply-rows { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; min-height: 0; }
+  .room-supply-row { display: contents; }
+  .room-supply-row .supply-slot,
+  .room-supply-row--1 .supply-slot,
+  .room-supply-row--2 .supply-slot { width: auto; min-width: 0; min-height: 118px; flex: initial; }
+  .room-supply-row button { min-height: 118px; }
+  .supply-slot-note { min-height: 118px; padding: 10px 8px; }
+
+  .arrival-meal-activity { grid-template-columns: 1fr; }
+  .arrival-meal-heading { order: 0; }
+  .arrival-meal-scene { order: 1; width: 100%; aspect-ratio: 1 / 1; }
+  /* 手機版第一餐的狗／貓、飲水與食物位置：由 layout.ts 的 mobile placement CSS 變數提供。 */
+  .arrival-meal-dog,
+  .arrival-meal-water,
+  .arrival-meal-food {
+    left: var(--mobile-arrival-meal-left) !important;
+    bottom: var(--mobile-arrival-meal-bottom) !important;
+    width: var(--mobile-arrival-meal-width) !important;
+    max-height: var(--mobile-arrival-meal-max-height) !important;
+  }
+  .arrival-meal-supplies { order: 2; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 16px; }
+  .arrival-meal-supply-slot { min-height: 104px; }
+  .arrival-meal-supplies.mobile-condensed { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .arrival-meal-supplies.mobile-condensed .arrival-meal-supply-slot { display: none; }
+  .arrival-meal-supplies button,
+  .arrival-meal-supplies .arrival-meal-supply-food-button { max-width: none; min-height: 104px; }
+  .arrival-meal-supplies img.arrival-meal-supply-water { width: 130px !important; height: 130px !important; max-width: none; }
+  .arrival-meal-footer { order: 3; }
+}
+
+@media (max-width: 430px) {
+  .arrival-meal-supplies { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+
+
+/* 房間舞台、危險物品與後車廂場景。 */
+.preparation-page { max-width: 1200px; }
+.prep-board.expanded { grid-template-columns: 330px minmax(0, 1fr); }
+.room-preparation { min-height: 540px; }
+.room-preparation-layout { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 18px; align-items: start; }
+.room-supply-shelf { min-height: 470px; overflow: hidden; padding: 17px; border: 1px solid var(--line); border-radius: 20px; background: white; }
+.room-interaction-column { min-width: 0; }
+.room-scene { position: relative; width: 100%; aspect-ratio: 2558 / 1444; overflow: hidden; border: 1px solid #d8bd8c; border-radius: 20px; background: #dbc7a4; box-shadow: 0 12px 35px rgba(70, 53, 26, .1); }
+.room-scene:not(.room-scene-ready) .room-object { visibility: hidden; }
+.room-scene:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.room-scene-background { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
+.room-object { position: absolute; z-index: 2; height: auto; padding: 0; border: 0; background: transparent; cursor: pointer; transform: translate(-50%, -50%); filter: drop-shadow(0 5px 5px rgba(65, 45, 21, .2)); }
+.room-object img { display: block; width: 100%; height: auto; max-height: 100%; object-fit: contain; }
+.room-object span { position: absolute; left: 50%; bottom: -17px; max-width: 120px; padding: 2px 6px; border-radius: 999px; background: rgba(255, 253, 247, .92); color: var(--ink); font-size: 9px; font-weight: 900; white-space: nowrap; transform: translateX(-50%); opacity: 0; transition: opacity .2s; }
+.room-object:hover span, .room-object:focus-visible span { opacity: 1; }
+.room-object:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 8px; }
+.placed-supply { animation: roomDropPop .45s cubic-bezier(.16,1.5,.3,1) both; }
+.auto-room-object { pointer-events: none; }
+.placed-room-item--food img { transform: scale(1.55); }
+.room-hazard { position: absolute; inset: auto; z-index: 3; cursor: pointer; }
+.room-hazard span { top: -19px; bottom: auto; opacity: 1; transform: translateX(-50%); }
+.room-hazard img { transform-origin: center; animation: hazardPulse 2.4s ease-in-out infinite; }
+.room-hazard.dismissing { pointer-events: none; animation: hazardDismiss .26s ease forwards; }
+.room-hazard-alert { position: absolute; left: 2%; top: 3%; z-index: 20; width: min(300px, 42%); max-height: calc(100% - 2rem); overflow: auto; padding: 11px 13px; border: 1px solid #e5bd67; border-radius: 13px; background: rgba(255, 247, 220, .96); color: var(--ink); box-shadow: 0 8px 20px rgba(70,53,26,.16); pointer-events: none; }
+.room-hazard-alert h2 { margin: 0 0 6px; font-size: 13px; }
+.room-hazard-alert p { margin: 4px 0 0; font-size: 10px; line-height: 1.45; }
+.room-hazard-alert b { color: var(--gold-dark); }
+@keyframes hazardPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes hazardDismiss { to { opacity: 0; transform: translate(-50%, -60%) scale(.72); } }
+@keyframes roomDropPop { 0% { opacity: 0; transform: translate(-50%, -75%) scale(.72); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+.room-hazard-alert { animation: roomAlertIn .22s ease both; }
+@keyframes roomAlertIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.task-message { margin-top: 16px; padding: 14px 17px; border-radius: 13px; background: #fff1c9; color: #76591c; line-height: 1.6; font-weight: 800; font-size: 13px; }
+.task-message.success { background: var(--mint-soft); color: #4f7051; }
+.room-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+.room-actions-right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-width: 0; }
+.room-actions button { min-height: 44px; }
+.room-check-message { max-width: 260px; margin: 0; color: #9c5b12; font-size: 12px; font-weight: 800; line-height: 1.4; }
+
+.trunk-layout { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 18px; align-items: stretch; transition: transform .6s, opacity .6s; }
+.trunk-layout.departing { transform: translateX(45px) scale(.97); opacity: 0; }
+.trunk-shelf { padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: white; max-height: 590px; overflow: auto; }
+.trunk-shelf h2 { margin: 0 0 14px; font-size: 16px; }
+.trunk-shelf > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.trunk-shelf button { min-height: 105px; padding: 9px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; cursor: grab; }
+.trunk-shelf button > span { font-size: 27px; }
+.trunk-shelf button b { font-size: 11px; text-align: center; }
+.trunk-shelf button small { color: var(--muted); font-size: 9px; }
+.car-trunk { min-height: 590px; position: relative; padding: 75px 8% 45px; overflow: hidden; border-radius: 34px 34px 22px 22px; background: linear-gradient(90deg, #6a635b, #aaa299 12%, #777068 50%, #aaa299 88%, #6a635b); box-shadow: inset 0 0 0 7px #4a4540, var(--shadow); }
+.trunk-lid { position: absolute; left: 12%; right: 12%; top: 0; height: 100px; border: 9px solid #4b4743; border-radius: 18px 18px 50% 50%; background: linear-gradient(180deg, #a8c0c2, #405157); box-shadow: inset 0 0 0 7px #85817c; }
+.trunk-lid span { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); color: white; font-size: 11px; }
+.trunk-body { height: 100%; min-height: 460px; padding: 28px; border-radius: 34px 34px 14px 14px; background: linear-gradient(145deg, #292725, #494641); color: white; box-shadow: inset 0 15px 25px rgba(0,0,0,.35); }
+.trunk-body > p { margin: 0 0 22px; color: #ddd7cc; text-align: center; font-weight: 900; }
+.trunk-body > div { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; align-content: start; }
+.trunk-body button { min-height: 90px; padding: 8px; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; background: rgba(255,255,255,.1); color: white; cursor: pointer; }
+.trunk-body button span { display: block; font-size: 28px; }
+.trunk-body button b { display: block; font-size: 10px; }
+.trunk-body > small { display: block; margin-top: 140px; text-align: center; color: #c8c1b7; }
+.trunk-check { display: flex; justify-content: center; margin: 20px 0; }
+.trunk-feedback { padding: 20px; border-radius: 18px; border: 1px solid var(--line); }
+.trunk-feedback.success { background: var(--mint-soft); color: #4f7051; }
+.trunk-feedback.warning { background: #fff4d5; }
+.trunk-feedback h2 { margin: 0 0 8px; }
+.trunk-feedback ul { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; list-style: none; padding: 0; }
+.trunk-feedback li { display: flex; gap: 10px; padding: 12px; border-radius: 12px; background: white; }
+.trunk-feedback li > span { font-size: 27px; }
+.trunk-feedback li p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.trunk-feedback li b { display: block; color: var(--ink); }
+
+/* 房間與後車廂場景的 RWD 規則。 */
+@media (max-width: 1100px) {
+  .hazard-grid { grid-template-columns: repeat(3, 1fr); }
+  .trunk-body > div { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 1000px) {
+  .prep-board.expanded,
+  .hazard-panel,
+  .trunk-layout,
+  .room-preparation-layout { grid-template-columns: 1fr; }
+  .trunk-shelf { max-height: none; }
+  .trunk-shelf > div { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .room-preparation { min-height: 430px; }
+  .room-preparation .room-supply-shelf { min-height: 445px; }
+  .room-actions,
+  .room-actions-right { flex-direction: column; align-items: stretch; }
+  .room-actions-right button { width: 100%; }
+  .room-check-message { max-width: none; }
+  .room-object span { display: none; }
+  .room-hazard span { display: block; top: -15px; font-size: 8px; }
+  .hazard-grid { grid-template-columns: 1fr 1fr; }
+  .hazard-grid button { min-height: 115px; }
+  .trunk-shelf > div { grid-template-columns: repeat(2, 1fr); }
+  .car-trunk { min-height: 510px; padding: 70px 6% 35px; }
+  .trunk-body { min-height: 390px; padding: 20px 14px; }
+  .trunk-body > div { grid-template-columns: repeat(3, 1fr); }
+  .trunk-feedback ul { grid-template-columns: 1fr; }
+}
+
