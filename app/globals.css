@@ -3540,6 +3540,65 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
   color: var(--ink);
   page-break-inside: avoid;
 }
+
+/* 網頁版：體驗結束後的飼養觀念回顧（正式 checklist 僅保留於下載指南）。 */
+.care-review-page { display: grid; gap: 22px; max-width: 1000px; margin: 0 auto; }
+.care-review-hero { display: flex; justify-content: space-between; gap: 28px; align-items: center; padding: clamp(25px, 4vw, 42px); border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(135deg, #fffdf7, #f8f1e3); box-shadow: var(--shadow); }
+.care-review-hero > div { min-width: 0; }
+.care-review-hero h1 { margin: 7px 0 12px; font-size: clamp(32px, 4vw, 48px); line-height: 1.14; }
+.care-review-hero p:not(.life-stage-label) { max-width: 650px; margin: 0; color: var(--muted); font-weight: 800; line-height: 1.75; }
+.care-review-pet { display: flex; flex: 0 0 auto; align-items: center; gap: 14px; min-width: 175px; padding: 12px 14px; border-radius: 20px; background: rgba(255,255,255,.7); }
+.care-review-pet div { display: grid; gap: 5px; text-align: right; }
+.care-review-pet b { color: var(--ink); }
+.care-review-pet span { color: var(--muted); font-size: 15px; font-weight: 900; }
+.care-review-pet img { width: 76px; height: 76px; object-fit: contain; }
+.care-review-section { padding: clamp(21px, 3vw, 30px); border: 1px solid var(--line); border-radius: 24px; background: #fff; box-shadow: 0 14px 34px rgba(91,70,35,.06); }
+.care-review-section > header { display: flex; align-items: flex-start; gap: 13px; }
+.care-review-section > header > span { display: grid; flex: 0 0 auto; width: 38px; height: 38px; place-items: center; border-radius: 50%; font-size: 19px; font-weight: 950; }
+.care-review-mastered > header > span { background: #dcefe0; color: #3c7446; }
+.care-review-followup { border-color: #e6c675; background: linear-gradient(145deg, #fffdf7, #fff7df); }
+.care-review-followup > header > span { background: #f5d98f; color: #855b0b; }
+.care-review-section h2 { margin: 0; color: var(--ink); font-size: clamp(23px, 3vw, 30px); }
+.care-review-section header p { margin: 6px 0 0; color: var(--muted); font-weight: 750; line-height: 1.65; }
+.care-review-topic-grid { display: grid; gap: 11px; margin-top: 19px; }
+.care-review-topic-grid article { display: flex; align-items: center; gap: 12px; padding: 15px; border: 1px solid rgba(94,116,86,.2); border-radius: 16px; background: #fbfdf9; }
+.care-review-followup .care-review-topic-grid article { border-color: rgba(180,128,23,.25); background: rgba(255,255,255,.76); }
+.care-review-topic-grid article > span { display: grid; flex: 0 0 auto; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #dcefe0; color: #3c7446; font-weight: 950; }
+.care-review-followup .care-review-topic-grid article > span { background: #fff0bb; color: #936510; }
+.care-review-topic-grid article > div { display: grid; flex: 1; min-width: 0; gap: 4px; }
+.care-review-topic-grid b { color: #433926; }
+.care-review-topic-grid p { margin: 0; color: #70644e; font-size: 14px; font-weight: 750; line-height: 1.55; }
+.care-review-empty { margin: 18px 0 0; color: var(--muted); font-weight: 800; }
+.care-review-all-clear { display: flex; gap: 12px; align-items: flex-start; margin-top: 18px; padding: 16px; border-radius: 16px; background: #f3faf3; color: #426246; }
+.care-review-all-clear > span { font-weight: 950; }
+.care-review-all-clear p { margin: 0; font-weight: 800; line-height: 1.6; }
+.care-resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+.care-resource-grid > article { display: flex; gap: 14px; padding: 20px; border: 1px solid #dfd1b6; border-radius: 18px; background: #fffaf0; }
+.care-resource-grid > article > span { display: grid; flex: 0 0 auto; width: 38px; height: 38px; place-items: center; border-radius: 13px; background: #e7d19b; color: #76500d; font-weight: 950; }
+.care-resource-grid h3 { margin: 0; color: #5c4828; font-size: 17px; }
+.care-resource-grid b { display: block; margin-top: 9px; color: var(--ink); font-size: 22px; }
+.care-resource-grid p { margin: 8px 0 0; color: var(--muted); font-size: 13px; font-weight: 750; line-height: 1.6; }
+.care-expense-button { margin-top: 13px; min-height: 38px; padding: 8px 13px; font-size: 13px; }
+.care-guide-download { display: flex; justify-content: space-between; gap: 28px; align-items: center; padding: clamp(24px, 4vw, 36px); border: 1px solid #cdb47a; border-radius: 25px; background: linear-gradient(135deg, #fff5d9, #fffdf7); box-shadow: 0 18px 40px rgba(117,83,17,.1); }
+.care-guide-download > div { position: relative; padding-left: 51px; }
+.care-guide-download > div > span { position: absolute; left: 0; top: 1px; display: grid; width: 36px; height: 36px; place-items: center; border-radius: 11px; background: #5c4b31; color: #fff; font-size: 21px; font-weight: 950; }
+.care-guide-download h2 { margin: 0; color: var(--ink); font-size: 26px; }
+.care-guide-download p { margin: 7px 0; color: #655943; font-weight: 800; line-height: 1.6; }
+.care-guide-download small { display: block; color: #826c43; font-weight: 750; line-height: 1.5; }
+.care-guide-download .report-download-control { justify-items: stretch; min-width: 220px; }
+.care-guide-download .pdf-download-button { width: 100%; justify-content: center; }
+
+@media (max-width: 720px) {
+  .care-review-hero, .care-guide-download { align-items: flex-start; flex-direction: column; }
+  .care-review-pet { width: 100%; justify-content: space-between; }
+  .care-resource-grid { grid-template-columns: 1fr; }
+  .care-review-topic-grid article { align-items: flex-start; flex-wrap: wrap; }
+  .care-review-topic-grid .discussion-info-button { margin-left: 40px; }
+  .care-guide-download { gap: 20px; }
+  .care-guide-download .report-download-control { width: 100%; }
+}
+/* 正式 A4 照護指南只作為 PDF／PNG 匯出來源；網頁版改由 .care-review-page 呈現學習回顧。 */
+.assessment-report > .care-a4-sheet { display: none; }
 .care-a4-header { display: flex; justify-content: space-between; gap: 14mm; align-items: flex-start; padding-bottom: 8mm; border-bottom: 2px solid #e7d9bd; }
 .care-a4-header > div { flex: 1 1 auto; min-width: 0; }
 .care-a4-header p { margin: 0 0 4mm; color: var(--gold-dark); font-size: 11px; font-weight: 900; letter-spacing: .1em; }
@@ -3588,6 +3647,10 @@ input:disabled, textarea:disabled { background: #efefef; color: #999; cursor: no
 .care-a4-commitment { display: grid; grid-template-columns: 7mm 1fr; gap: 3mm; align-items: start; margin-top: 8mm; padding: 5mm; border: 2px solid #d8c49d; border-radius: 14px; background: #fff7df; }
 .care-a4-commitment span { font-size: 18px; font-weight: 900; line-height: 1; }
 .care-a4-commitment p { margin: 0; font-size: 13px; font-weight: 900; line-height: 1.55; }
+.care-a4-daily-time { margin-top: 8mm; padding: 4mm; border: 1px solid #cddbd2; border-radius: 12px; background: #f4faf4; }
+.care-a4-daily-time h2 { margin: 0 0 2mm; color: #526c55; font-size: 15px; }
+.care-a4-daily-time b { color: var(--ink); font-size: 14px; }
+.care-a4-daily-time p { margin: 2mm 0 0; color: #536258; font-size: 11px; font-weight: 800; line-height: 1.55; }
 
 /* Unified life journey */
 .stage-layout:has(.arrival-video-screen) { height: 100svh; min-height: 0; overflow: hidden; }

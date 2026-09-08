@@ -8,6 +8,7 @@ import { getSpeciesGameConfig } from "../../data/speciesGameConfig";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, ScenarioAnswer } from "../../game-types";
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
+  ExpenseDetails,
   isMonthlyExpense,
   isOneTimePreparationExpense,
   isRequiredAfterArrivalExpense,
@@ -283,6 +284,7 @@ async function downloadAssessmentImage(petName: string, kind: ReportPdfKind) {
 
 function PdfDownloadButton({ petName, kind = "overview", label }: { petName: string; kind?: ReportPdfKind; label?: string }) {
   const [generating, setGenerating] = useState(false);
+  const [completed, setCompleted] = useState(false);
   const [error, setError] = useState("");
   const mobileDownload = useMobileDownloadMode();
   const defaultLabel = mobileDownload
@@ -302,10 +304,12 @@ function PdfDownloadButton({ petName, kind = "overview", label }: { petName: str
         onClick={async () => {
           if (generating) return;
           setGenerating(true);
+          setCompleted(false);
           setError("");
           try {
             if (mobileDownload) await downloadAssessmentImage(petName, kind);
             else await downloadAssessmentPdf(petName, kind);
+            setCompleted(true);
           } catch {
             setError(`${exportKindLabel}下載失敗，請再試一次。`);
           } finally {
@@ -324,7 +328,7 @@ function PdfDownloadButton({ petName, kind = "overview", label }: { petName: str
             <path d="M5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
           </svg>
         )}
-        <span>{generating ? `正在整理${exportKindLabel}…` : buttonLabel}</span>
+        <span>{generating ? (kind === "overview" ? "正在整理你的照護指南…" : "正在整理你的個人資料…") : completed ? (kind === "overview" ? "照護指南已下載" : "個人資料已下載") : buttonLabel}</span>
       </button>
     </div>
   );
@@ -658,6 +662,7 @@ export function AssessmentReport({
   onReset: () => void;
 }) {
   const [activeDiscussionId, setActiveDiscussionId] = useState("");
+  const [expenseDetailsOpen, setExpenseDetailsOpen] = useState(false);
   const speciesConfig = getSpeciesGameConfig(species);
   useEffect(() => {
     if (!activeDiscussionId) return;
@@ -765,6 +770,16 @@ export function AssessmentReport({
       knowledgePoints: knowledgePointsForScenario(scenario, petName),
     }));
   const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
+  const masteredTopics = Object.values(answers)
+    .filter((answer) => answer.finalResult === "correct")
+    .map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId))
+    .filter((scenario): scenario is Scenario => Boolean(scenario))
+    .filter((scenario, index, items) => items.findIndex((item) => item.topic === scenario.topic) === index)
+    .map((scenario) => ({
+      id: scenario.id,
+      title: personalizeReportText(scenario.topic ?? scenario.stage, petName),
+      summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
+    }));
   const knowledgeModal = activeDiscussion && typeof document !== "undefined"
     ? createPortal(
       <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
@@ -860,7 +875,7 @@ export function AssessmentReport({
         </section>
 
         <section className="care-a4-table-section" aria-labelledby="care-a4-table-title">
-          <h2 id="care-a4-table-title">需要特別處理的狀況</h2>
+          <h2 id="care-a4-table-title">日常照護提醒</h2>
           <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
         </section>
 
@@ -888,6 +903,12 @@ export function AssessmentReport({
           <p className="care-a4-money-disclaimer"><span className="care-a4-money-disclaimer-icon" aria-hidden="true">💡</span><span>{speciesConfig.report.moneyDisclaimer}</span></p>
         </section>
 
+        <section className="care-a4-daily-time" aria-label="每日投入時間">
+          <h2>每日投入時間</h2>
+          <b>{speciesConfig.report.dailyCareTime}</b>
+          <p>{speciesConfig.report.dailyCareTimeNote}</p>
+        </section>
+
         {discussionTopics.length === 0 && (
           <footer className="care-a4-commitment">
             <span aria-hidden="true">{committed ? "☑" : "□"}</span>
@@ -901,8 +922,8 @@ export function AssessmentReport({
           <header className="care-a4-header care-a4-header--compact">
             <div>
               <p>伴日子新手村</p>
-              <h1>知識點複習摘要</h1>
-              <span>把還可以再討論的題目，整理成清楚的回顧重點</span>
+              <h1>需要特別注意的照顧重點</h1>
+              <span>把曾出現不同選擇的情境，整理成可再次確認的照顧觀念</span>
             </div>
           </header>
           <section className="care-a4-discussion care-a4-discussion--cards" aria-label="知識點複習摘要">
@@ -924,27 +945,45 @@ export function AssessmentReport({
         </article>
       )}
 
-      {discussionTopics.length > 0 ? (
-        <section className="overview-discussion" aria-labelledby="overview-discussion-title">
-          <header className="overview-discussion-heading"><span aria-hidden="true">△</span><div><h2 id="overview-discussion-title">建議再深入討論的題目</h2><p>這些題目可以特別再複習一次相關的知識點。</p></div></header>
-          <div className="overview-discussion-list">
-            {discussionTopics.map((topic) => (
-              <article key={topic.id} className="overview-discussion-card">
-                <span aria-hidden="true">△</span>
-                <div><b>{topic.title}</b><small>{topic.summary ?? topic.topic}</small></div>
-                <button type="button" className="discussion-info-button" onClick={() => setActiveDiscussionId(topic.id)} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button>
-              </article>
-            ))}
+      <section className="care-review-page" aria-label="你的飼養觀念回顧">
+        <header className="care-review-hero">
+          <div>
+            <p className="life-stage-label">飼養生活回顧</p>
+            <h1>你的飼養觀念回顧</h1>
+            <p>回顧這次體驗中你已掌握的照顧重點，也看看哪些地方值得在真正迎接牠之前再多了解一些。</p>
+          </div>
+          <aside className="care-review-pet">
+            <div><b>{selectedBreed?.label ?? selectedTypeLabel}</b>{petName.trim() && <span>{petName}</span>}</div>
+            {selectedBreed?.image && <img src={selectedBreed.image} alt={selectedBreed.label} />}
+          </aside>
+        </header>
+
+        <section className="care-review-section care-review-mastered" aria-labelledby="mastered-care-title">
+          <header><span aria-hidden="true">✓</span><div><h2 id="mastered-care-title">你已掌握的照顧重點</h2><p>這些是你在情境中選擇合適做法後，已經建立的照顧觀念。</p></div></header>
+          {masteredTopics.length ? <div className="care-review-topic-grid">
+            {masteredTopics.map((topic) => <article key={topic.id}><span aria-hidden="true">✓</span><div><b>{topic.title}</b><p>{topic.summary}</p></div></article>)}
+          </div> : <p className="care-review-empty">完成情境題後，這裡會整理你已建立的照顧觀念。</p>}
+        </section>
+
+        <section className="care-review-section care-review-followup" aria-labelledby="followup-care-title">
+          <header><span aria-hidden="true">✦</span><div><h2 id="followup-care-title">還想再確認的照顧重點</h2><p>以下主題在體驗中曾出現不同選擇，建議在真正飼養前，再多花一些時間了解。</p></div></header>
+          {discussionTopics.length ? <div className="care-review-topic-grid">
+            {discussionTopics.map((topic) => <article key={topic.id}><span aria-hidden="true">✦</span><div><b>{topic.title}</b><p>{topic.summary ?? topic.topic}</p></div><button type="button" className="discussion-info-button" onClick={() => setActiveDiscussionId(topic.id)} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button></article>)}
+          </div> : <div className="care-review-all-clear"><span aria-hidden="true">✓</span><p>你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。</p></div>}
+        </section>
+
+        <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
+          <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
+          <div className="care-resource-grid">
+            <article><span aria-hidden="true">$</span><div><h3>預估支出</h3><b>NT$ {money.format(total)}</b><p>這是遊戲中目前累積的模擬支出；完整分類會在明細中呈現。</p><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用明細</button></div></article>
+            <article><span aria-hidden="true">◷</span><div><h3>每天需要投入的時間</h3><b>{speciesConfig.report.dailyCareTime}</b><p>{speciesConfig.report.dailyCareTimeNote}</p></div></article>
           </div>
         </section>
-      ) : <section className="overview-discussion-clear"><span aria-hidden="true">✓</span><div><h2>目前沒有需要特別標示的題目</h2><p>仍建議帶著總覽和家人討論實際分工與生活安排。</p></div></section>}
 
-      <section className="care-commitment overview-commitment" aria-labelledby="overview-care-commitment-title">
-        <h2 id="overview-care-commitment-title">照顧承諾</h2>
-        <label>
-          <input type="checkbox" checked={committed} onChange={(event) => onCommittedChange(event.target.checked)} />
-          <span>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</span>
-        </label>
+        <section className="care-guide-download" aria-labelledby="care-guide-download-title">
+          <div><span aria-hidden="true">↓</span><h2 id="care-guide-download-title">帶走你的照護指南</h2><p>將這次體驗整理成可保存的照護指南，之後準備迎接牠時也能再次查看。</p><small>內容包含：照顧準備清單、需要留意的照顧重點、預估支出、每日時間投入與照顧承諾</small></div>
+          <PdfDownloadButton petName={petName} label="下載我的照護指南" />
+        </section>
       </section>
 
       <article className="care-print-profile" aria-label="使用者填寫的個人資料">
@@ -981,9 +1020,7 @@ export function AssessmentReport({
           ) : <p>尚未上傳居家空間照片</p>}
         </section>
       </article>
-      <div className="report-download-footer">
-        <PdfDownloadButton petName={petName} />
-      </div>
+      {expenseDetailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} onClose={() => setExpenseDetailsOpen(false)} />}
       {knowledgeModal}
     </div>
     </>

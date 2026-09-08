@@ -1,5 +1,5 @@
 import { T as __toESM, n as require_jsx_runtime, t as require_react_dom, x as require_react } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/page-D2X0bRJE.js
+//#region node_modules/.nitro/vite/services/ssr/assets/page-Dxy9PhMD.js
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 /**
 * 貓咪流程唯一的素材路徑映射。
@@ -1056,9 +1056,9 @@ var catRoomItems = [
 		icon: "▣",
 		image: catAssets.room.hideaway,
 		placement: {
-			x: 66,
-			y: 73,
-			width: 22,
+			x: 25,
+			y: 60,
+			width: 15,
 			layer: 3
 		},
 		mobilePlacement: {
@@ -1077,8 +1077,8 @@ var catRoomItems = [
 		icon: "🛏️",
 		image: catAssets.room.restSpace,
 		placement: {
-			x: 72,
-			y: 84,
+			x: 43,
+			y: 65,
 			width: 18,
 			layer: 2
 		},
@@ -1098,7 +1098,7 @@ var catRoomItems = [
 		icon: "▤",
 		image: catAssets.room.litterBox,
 		placement: {
-			x: 16,
+			x: 14,
 			y: 84,
 			width: 20,
 			layer: 2
@@ -1119,7 +1119,7 @@ var catRoomItems = [
 		icon: "◌",
 		image: catAssets.room.litter,
 		placement: {
-			x: 25,
+			x: 30,
 			y: 84,
 			width: 12,
 			layer: 3
@@ -1140,7 +1140,7 @@ var catRoomItems = [
 		icon: "🥣",
 		image: catAssets.room.foodBowl,
 		placement: {
-			x: 42,
+			x: 52,
 			y: 89,
 			width: 10,
 			layer: 3
@@ -1161,9 +1161,9 @@ var catRoomItems = [
 		icon: "💧",
 		image: catAssets.room.waterBowl,
 		placement: {
-			x: 32,
+			x: 42,
 			y: 89,
-			width: 12,
+			width: 10,
 			layer: 3
 		},
 		mobilePlacement: {
@@ -1182,8 +1182,8 @@ var catRoomItems = [
 		icon: "▥",
 		image: catAssets.room.scratchingBoard,
 		placement: {
-			x: 75,
-			y: 82,
+			x: 70,
+			y: 85,
 			width: 12,
 			layer: 4
 		},
@@ -1203,9 +1203,9 @@ var catRoomItems = [
 		icon: "▧",
 		image: catAssets.room.tree,
 		placement: {
-			x: 83,
-			y: 66,
-			width: 18,
+			x: 85,
+			y: 75,
+			width: 20,
 			layer: 2
 		},
 		mobilePlacement: {
@@ -1224,8 +1224,8 @@ var catRoomItems = [
 		icon: "✦",
 		image: catAssets.room.scratchingBoard,
 		placement: {
-			x: 54,
-			y: 84,
+			x: 56,
+			y: 65,
 			width: 10,
 			layer: 4
 		},
@@ -1248,7 +1248,7 @@ var catHazards = [
 		image: catAssets.room.lilyPlant,
 		placement: {
 			x: 31,
-			y: 48,
+			y: 35,
 			width: 11,
 			layer: 5
 		},
@@ -1287,7 +1287,7 @@ var catHazards = [
 		placement: {
 			x: 12,
 			y: 79,
-			width: 18,
+			width: 12,
 			layer: 5
 		},
 		mobilePlacement: {
@@ -1304,8 +1304,8 @@ var catHazards = [
 		icon: "◍",
 		image: catAssets.room.fragrance,
 		placement: {
-			x: 61,
-			y: 63,
+			x: 93,
+			y: 48,
 			width: 9,
 			layer: 5
 		},
@@ -1342,9 +1342,9 @@ var catHazards = [
 		icon: "❄",
 		image: catAssets.room.coolingMat,
 		placement: {
-			x: 88,
-			y: 44,
-			width: 11,
+			x: 45,
+			y: 80,
+			width: 14,
 			layer: 5
 		},
 		mobilePlacement: {
@@ -1456,7 +1456,9 @@ var speciesGameConfig = {
 				["生活改變", "重新安排照顧時間與支援"],
 				["高齡階段", "提早準備醫療與長期照顧資源"]
 			],
-			moneyDisclaimer: "這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。"
+			moneyDisclaimer: "這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。",
+			dailyCareTime: "每日約需安排 60 分鐘以上",
+			dailyCareTimeNote: "包含餵食與換水、環境清潔、互動陪伴、外出活動，以及觀察食慾與排泄狀況。"
 		}
 	},
 	cat: {
@@ -1529,7 +1531,9 @@ var speciesGameConfig = {
 				["居家安全", "收好線狀物、有毒植物、人用藥與清潔劑"],
 				["高齡階段", "調整低入口砂盆、階梯式跳台與溫暖休息處"]
 			],
-			moneyDisclaimer: "這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是貓咪一生的醫療費。"
+			moneyDisclaimer: "這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是貓咪一生的醫療費。",
+			dailyCareTime: "每日約需安排 45 分鐘以上",
+			dailyCareTimeNote: "包含餵食與換水、貓砂盆與環境清潔、互動陪伴，以及觀察食慾、飲水與排泄狀況。"
 		}
 	}
 };
@@ -7160,6 +7164,7 @@ async function downloadAssessmentImage(petName, kind) {
 }
 function PdfDownloadButton({ petName, kind = "overview", label }) {
 	const [generating, setGenerating] = (0, import_react.useState)(false);
+	const [completed, setCompleted] = (0, import_react.useState)(false);
 	const [error, setError] = (0, import_react.useState)("");
 	const mobileDownload = useMobileDownloadMode();
 	const buttonLabel = mobileDownload ? kind === "profile" ? "儲存個人資料" : "儲存照護總覽" : label ?? (mobileDownload ? kind === "profile" ? "儲存個人資料" : "儲存照護總覽" : kind === "profile" ? "下載個人資料" : "下載照顧準備總覽");
@@ -7176,10 +7181,12 @@ function PdfDownloadButton({ petName, kind = "overview", label }) {
 			onClick: async () => {
 				if (generating) return;
 				setGenerating(true);
+				setCompleted(false);
 				setError("");
 				try {
 					if (mobileDownload) await downloadAssessmentImage(petName, kind);
 					else await downloadAssessmentPdf(petName, kind);
+					setCompleted(true);
 				} catch {
 					setError(`${exportKindLabel}下載失敗，請再試一次。`);
 				} finally {
@@ -7197,7 +7204,7 @@ function PdfDownloadButton({ petName, kind = "overview", label }) {
 				"aria-hidden": "true",
 				focusable: "false",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M12 3a1 1 0 0 1 1 1v9.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 0 1 1.4-1.4l3.3 3.3V4a1 1 0 0 1 1-1Z" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" })]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: generating ? `正在整理${exportKindLabel}…` : buttonLabel })]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: generating ? kind === "overview" ? "正在整理你的照護指南…" : "正在整理你的個人資料…" : completed ? kind === "overview" ? "照護指南已下載" : "個人資料已下載" : buttonLabel })]
 		})]
 	});
 }
@@ -7657,6 +7664,7 @@ function ProfileSupplementForm({ profile, petName, breed, species = "dog", onCha
 }
 function AssessmentReport({ petName, breed, species = "dog", profile, expenses, emergencyReserve, roomReady, hazardsReady, members, trunkSelected, trunkPassed, answers, lifeActivity, committed, onCommittedChange, onBack, onReset }) {
 	const [activeDiscussionId, setActiveDiscussionId] = (0, import_react.useState)("");
+	const [expenseDetailsOpen, setExpenseDetailsOpen] = (0, import_react.useState)(false);
 	const speciesConfig = getSpeciesGameConfig(species);
 	(0, import_react.useEffect)(() => {
 		if (!activeDiscussionId) return;
@@ -7745,6 +7753,11 @@ function AssessmentReport({ petName, breed, species = "dog", profile, expenses, 
 		knowledgePoints: knowledgePointsForScenario(scenario, petName)
 	}));
 	const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
+	const masteredTopics = Object.values(answers).filter((answer) => answer.finalResult === "correct").map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId)).filter((scenario) => Boolean(scenario)).filter((scenario, index, items) => items.findIndex((item) => item.topic === scenario.topic) === index).map((scenario) => ({
+		id: scenario.id,
+		title: personalizeReportText(scenario.topic ?? scenario.stage, petName),
+		summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName)
+	}));
 	const knowledgeModal = activeDiscussion && typeof document !== "undefined" ? (0, import_react_dom.createPortal)(/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "knowledge-modal-backdrop",
 		onMouseDown: (event) => {
@@ -7874,7 +7887,7 @@ function AssessmentReport({ petName, breed, species = "dog", profile, expenses, 
 						"aria-labelledby": "care-a4-table-title",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
 							id: "care-a4-table-title",
-							children: "需要特別處理的狀況"
+							children: "日常照護提醒"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							className: "care-a4-table",
 							children: handlingRows.map(([situation, advice]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: situation }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: advice })] }, situation))
@@ -7924,6 +7937,15 @@ function AssessmentReport({ petName, breed, species = "dog", profile, expenses, 
 							})
 						]
 					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						className: "care-a4-daily-time",
+						"aria-label": "每日投入時間",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "每日投入時間" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: speciesConfig.report.dailyCareTime }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: speciesConfig.report.dailyCareTimeNote })
+						]
+					}),
 					discussionTopics.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("footer", {
 						className: "care-a4-commitment",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
@@ -7941,8 +7963,8 @@ function AssessmentReport({ petName, breed, species = "dog", profile, expenses, 
 						className: "care-a4-header care-a4-header--compact",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "伴日子新手村" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "知識點複習摘要" }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "把還可以再討論的題目，整理成清楚的回顧重點" })
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "需要特別注意的照顧重點" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "把曾出現不同選擇的情境，整理成可再次確認的照顧觀念" })
 						] })
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
@@ -7966,59 +7988,134 @@ function AssessmentReport({ petName, breed, species = "dog", profile, expenses, 
 					})
 				]
 			}),
-			discussionTopics.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				className: "overview-discussion",
-				"aria-labelledby": "overview-discussion-title",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
-					className: "overview-discussion-heading",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"aria-hidden": "true",
-						children: "△"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-						id: "overview-discussion-title",
-						children: "建議再深入討論的題目"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "這些題目可以特別再複習一次相關的知識點。" })] })]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "overview-discussion-list",
-					children: discussionTopics.map((topic) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-						className: "overview-discussion-card",
-						children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+				className: "care-review-page",
+				"aria-label": "你的飼養觀念回顧",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
+						className: "care-review-hero",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "life-stage-label",
+								children: "飼養生活回顧"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "你的飼養觀念回顧" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "回顧這次體驗中你已掌握的照顧重點，也看看哪些地方值得在真正迎接牠之前再多了解一些。" })
+						] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
+							className: "care-review-pet",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: selectedBreed?.label ?? selectedTypeLabel }), petName.trim() && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: petName })] }), selectedBreed?.image && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								src: selectedBreed.image,
+								alt: selectedBreed.label
+							})]
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						className: "care-review-section care-review-mastered",
+						"aria-labelledby": "mastered-care-title",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"aria-hidden": "true",
+							children: "✓"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+							id: "mastered-care-title",
+							children: "你已掌握的照顧重點"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "這些是你在情境中選擇合適做法後，已經建立的照顧觀念。" })] })] }), masteredTopics.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "care-review-topic-grid",
+							children: masteredTopics.map((topic) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"aria-hidden": "true",
+								children: "✓"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: topic.title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: topic.summary })] })] }, topic.id))
+						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "care-review-empty",
+							children: "完成情境題後，這裡會整理你已建立的照顧觀念。"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						className: "care-review-section care-review-followup",
+						"aria-labelledby": "followup-care-title",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"aria-hidden": "true",
+							children: "✦"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+							id: "followup-care-title",
+							children: "還想再確認的照顧重點"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "以下主題在體驗中曾出現不同選擇，建議在真正飼養前，再多花一些時間了解。" })] })] }), discussionTopics.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "care-review-topic-grid",
+							children: discussionTopics.map((topic) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"aria-hidden": "true",
+									children: "✦"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: topic.title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: topic.summary ?? topic.topic })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+									type: "button",
+									className: "discussion-info-button",
+									onClick: () => setActiveDiscussionId(topic.id),
+									"aria-label": `查看「${topic.title}」的知識點`,
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
+										"aria-hidden": "true",
+										children: "i"
+									}), " 查看知識點"]
+								})
+							] }, topic.id))
+						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "care-review-all-clear",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"aria-hidden": "true",
+								children: "✓"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。" })]
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						className: "care-review-section care-review-resources",
+						"aria-labelledby": "care-resource-title",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+							id: "care-resource-title",
+							children: "預估支出與每日投入時間"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "飼養不只有金錢支出，也需要穩定安排每天的照顧時間。" })] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "care-resource-grid",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"aria-hidden": "true",
+								children: "$"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "預估支出" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("b", { children: ["NT$ ", money.format(total)] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "這是遊戲中目前累積的模擬支出；完整分類會在明細中呈現。" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									type: "button",
+									className: "secondary care-expense-button",
+									onClick: () => setExpenseDetailsOpen(true),
+									children: "查看費用明細"
+								})
+							] })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"aria-hidden": "true",
+								children: "◷"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "每天需要投入的時間" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: speciesConfig.report.dailyCareTime }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: speciesConfig.report.dailyCareTimeNote })
+							] })] })]
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						className: "care-guide-download",
+						"aria-labelledby": "care-guide-download-title",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								"aria-hidden": "true",
-								children: "△"
+								children: "↓"
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: topic.title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: topic.summary ?? topic.topic })] }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-								type: "button",
-								className: "discussion-info-button",
-								onClick: () => setActiveDiscussionId(topic.id),
-								"aria-label": `查看「${topic.title}」的知識點`,
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
-									"aria-hidden": "true",
-									children: "i"
-								}), " 查看知識點"]
-							})
-						]
-					}, topic.id))
-				})]
-			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				className: "overview-discussion-clear",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-					"aria-hidden": "true",
-					children: "✓"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "目前沒有需要特別標示的題目" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "仍建議帶著總覽和家人討論實際分工與生活安排。" })] })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				className: "care-commitment overview-commitment",
-				"aria-labelledby": "overview-care-commitment-title",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-					id: "overview-care-commitment-title",
-					children: "照顧承諾"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-					type: "checkbox",
-					checked: committed,
-					onChange: (event) => onCommittedChange(event.target.checked)
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。" })] })]
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+								id: "care-guide-download-title",
+								children: "帶走你的照護指南"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "將這次體驗整理成可保存的照護指南，之後準備迎接牠時也能再次查看。" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "內容包含：照顧準備清單、需要留意的照顧重點、預估支出、每日時間投入與照顧承諾" })
+						] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PdfDownloadButton, {
+							petName,
+							label: "下載我的照護指南"
+						})]
+					})
+				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
 				className: "care-print-profile",
@@ -8052,9 +8149,11 @@ function AssessmentReport({ petName, breed, species = "dog", profile, expenses, 
 					})
 				]
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "report-download-footer",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PdfDownloadButton, { petName })
+			expenseDetailsOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ExpenseDetails, {
+				expenses,
+				emergencyReserve,
+				breed,
+				onClose: () => setExpenseDetailsOpen(false)
 			}),
 			knowledgeModal
 		]
