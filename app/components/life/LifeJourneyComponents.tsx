@@ -1502,7 +1502,7 @@ function WarningSignalsActivity({
       </div>
       <div className="warning-signal-layout">
         <div className="warning-signal-video-wrap">
-          {!videoFailed && <video ref={videoRef} className="warning-signal-video" src="/assets/pet-journey/dog-body-language.mp4" playsInline preload="metadata" aria-label="小狗警告訊號教學影片" onTimeUpdate={syncSegment} onEnded={finishVideo} onError={() => { setVideoFailed(true); finishVideo(); }} />}
+          {!videoFailed && <video ref={videoRef} className="warning-signal-video" src="/assets/dog/pet-journey/dog-body-language.mp4" playsInline preload="metadata" aria-label="小狗警告訊號教學影片" onTimeUpdate={syncSegment} onEnded={finishVideo} onError={() => { setVideoFailed(true); finishVideo(); }} />}
           {!started && !videoFailed && <button type="button" className="warning-signal-start" onClick={startVideo} aria-label="開始播放小狗警告訊號教學影片"><span>▶</span>開始觀看</button>}
           {videoFailed && <div className="warning-signal-fallback" role="status">影片目前無法播放，仍可閱讀右側警告訊號說明。</div>}
           <span className="warning-signal-video-tag">Video</span>

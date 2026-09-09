@@ -27,7 +27,7 @@ export const catHazards: HazardItem[] = [
   { id: "cat-human-medicine", label: "人類藥品", icon: "▣", image: catAssets.room.humanMedicine, ...catHazardPlacements["cat-human-medicine"], danger: "人用藥品不應自行給貓使用，誤食也可能造成中毒。", handling: "收到有門的櫃內，並避免把藥放在桌面或包包外層。" },
   { id: "cat-string", label: "線狀異物", icon: "⌁", image: catAssets.room.yarn, ...catHazardPlacements["cat-string"], danger: "線、繩、橡皮筋等可能被吞食，造成腸胃阻塞或傷害。", handling: "收進抽屜或盒內，玩具使用後也要收好。" },
   { id: "cat-essential-oil", label: "精油／薰香", icon: "◍", image: catAssets.room.fragrance, ...catHazardPlacements["cat-essential-oil"], danger: "部分精油與薰香對貓不適合，密閉空間中風險更高。", handling: "避免在貓咪活動區使用，並保持通風與安全距離。" },
-  { id: "cat-cleaner", label: "清潔劑", icon: "🧴", image: "/assets/room/detergent.png", ...catHazardPlacements["cat-cleaner"], danger: "清潔劑可能刺激皮膚、呼吸道或被舔入體內。", handling: "使用後確實收納，地面乾燥前避免貓咪進入。" },
+  { id: "cat-cleaner", label: "清潔劑", icon: "🧴", image: "/assets/dog/room/detergent.png", ...catHazardPlacements["cat-cleaner"], danger: "清潔劑可能刺激皮膚、呼吸道或被舔入體內。", handling: "使用後確實收納，地面乾燥前避免貓咪進入。" },
   { id: "cat-cooling-product", label: "涼感產品", icon: "❄", image: catAssets.room.coolingMat, ...catHazardPlacements["cat-cooling-product"], danger: "部分涼感墊、冰包或凝膠產品若被咬破，可能造成誤食、滑倒或受傷風險。", handling: "改用通風陰涼處、乾淨飲水與可清洗墊材；任何降溫用品都要確認材質安全並避免貓咪啃咬。" },
 ];
 

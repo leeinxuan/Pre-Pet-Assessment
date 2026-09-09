@@ -33,10 +33,13 @@ yarn-error.log*
 
 # vercel
 .vercel
+/.vercel/output/
 
 # typescript
 next-env.d.ts
+*.tsbuildinfo
 /dist/
+/.output/
 /.wrangler/
 /outputs/
 /work/

@@ -27,12 +27,12 @@ export const dogAssets = {
     food: "/assets/dog/room/food.png",
     waterBowl: "/assets/dog/room/water-bowl.png",
     foodBowl: "/assets/dog/room/food-bowl.png",
-    emptyWaterBowl: "/assets/dog/life/empty-water-bowl.png",
-    emptyFoodBowl: "/assets/dog/life/empty-food-bowl.png",
-    waterBottle: "/assets/dog/life/waterbottle.png",
+    emptyWaterBowl: "/assets/dog/pet-journey/empty-water-bowl.png",
+    emptyFoodBowl: "/assets/dog/pet-journey/empty-food-bowl.png",
+    waterBottle: "/assets/dog/pet-journey/waterbottle.png",
   },
-  life: { root: "/assets/dog/life" },
-  daily: { root: "/assets/dog/daily" },
+  life: { root: "/assets/dog/pet-journey" },
+  daily: { root: "/assets/dog/walking" },
 } as const;
 
 /** 犬隻專屬資料集合；共用 UI 透過 species-config 取得。 */

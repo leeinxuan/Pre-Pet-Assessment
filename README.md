@@ -195,10 +195,10 @@ docs/
 
 - `public/assets/welcome/`：首頁與歡迎視覺
 - `public/assets/species/`：物種與品種圖片
-- `public/assets/room/`：房間背景與房間用品
+- `public/assets/dog/room/`：狗狗房間背景與房間用品
 - `public/assets/car/`：後車廂與接回家用品
-- `public/assets/pet-journey/`：飼養生活影片與小狗狀態圖片
-- `public/assets/walking/`：散步互動遊戲素材
+- `public/assets/dog/pet-journey/`：狗狗飼養生活影片與小狗狀態圖片
+- `public/assets/dog/walking/`：狗狗散步互動遊戲素材
 
 請避免在新素材檔名中使用中文、空格或特殊符號。
 
@@ -212,4 +212,4 @@ docs/
 
 ## 已知事項
 
-原先曾有警告訊號教學影片路徑 `/assets/pet-journey/dog-body-language.mp4`，但目前工作區尚未包含此影片檔。若未來恢復該互動頁，請補上對應素材。
+原先曾有警告訊號教學影片路徑 `/assets/dog/pet-journey/dog-body-language.mp4`，但目前工作區尚未包含此影片檔。若未來恢復該互動頁，請補上對應素材。

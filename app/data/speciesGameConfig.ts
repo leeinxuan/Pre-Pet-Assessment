@@ -44,48 +44,6 @@ export type SpeciesGameConfig = {
   report: SpeciesReportConfig;
 };
 
-/*export const catTrunkItems: TrunkItem[] = departureTrunkItems
-  .filter((item) => item.id !== "leash")
-  .map((item) => {
-    if (item.id === "carrier") {
-      return {
-        ...item,
-        label: "外出籠",
-        description: "外出籠可降低行車途中貓咪在車內移動或逃脫的風險。",
-        reason: "提供平穩、可固定且降低刺激的安全運輸空間。",
-        caution: "外出籠尺寸需合適並固定在平坦位置；抵達前不要抱著貓咪直接上下車。",
-        feedback: "外出籠已放入後車廂。",
-      };
-    }
-    if (item.id === "pee-pad") {
-      return {
-        ...item,
-        description: "尿墊可協助處理移動途中可能發生的排泄、嘔吐或髒污。",
-        reason: "讓外出籠與運輸區域保持乾淨。",
-        caution: "平整鋪在外出籠預定位置下方，並確認不會滑動或被貓咪抓成一團。",
-        feedback: "尿墊已放入後車廂底部。",
-      };
-    }
-    if (item.id === "water-kit") {
-      return {
-        ...item,
-        description: "途中應準備飲水及可使用的水碗，視貓咪狀況與路程在安全停靠處補充。",
-        reason: "途中可在安全停靠時補充飲水，避免長時間等待造成不適。",
-        caution: "行車中避免開籠餵水，也不要放置裝滿水且容易打翻的開放水碗。",
-        feedback: "水碗與飲水已收妥。",
-      };
-    }
-    if (item.id === "cleaner") {
-      return {
-        ...item,
-        description: "貓咪在陌生環境或移動途中可能因緊張而排泄或嘔吐，可準備清潔袋、擦拭用品及安全的清潔工具。",
-        reason: "途中若發生排泄或髒污，可以盡快整理並維持運輸空間舒適。",
-        caution: "包裝需密封，與飲水分開收納，也不要放進外出籠或讓貓咪直接咬到。",
-        feedback: "清潔用品已收妥，可以處理途中可能發生的髒污。",
-      };
-    }
-    return item;
-  });*/
 /** @deprecated 請改至 data/species/cat/preparation.ts 調整。 */
 export const catTrunkItems = catDepartureTrunkItems;
 

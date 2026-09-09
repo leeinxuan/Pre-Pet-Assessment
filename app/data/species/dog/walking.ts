@@ -4,15 +4,15 @@
  */
 export const walkingPrepItems = [
   { id: "leash", label: "牽繩／胸背帶", image: "/assets/dog/preparation/leash.png" },
-  { id: "bag", label: "撿便袋", image: "/assets/dog/daily/poop-bag-1.png" },
-  { id: "water", label: "水", image: "/assets/dog/life/waterbottle.png" },
+  { id: "bag", label: "撿便袋", image: "/assets/dog/walking/poop-bag-1.png" },
+  { id: "water", label: "水", image: "/assets/dog/pet-journey/waterbottle.png" },
 ] as const;
 
 export const walkingScenes = [
-  { title: "家門口往人行道", image: "/assets/dog/daily/door-to-sidewalk.jpg", mobileImage: "/assets/dog/daily/door-to-sidewalk-mobile.jpg", poopEvent: false },
-  { title: "公園", image: "/assets/dog/daily/park.png", mobileImage: "/assets/dog/daily/park-mobile.jpg", poopEvent: false },
-  { title: "公園 2", image: "/assets/dog/daily/park-poop-event.png", mobileImage: "/assets/dog/daily/park-poop-event-mobile.jpg", poopEvent: true },
-  { title: "人行道往家門口", image: "/assets/dog/daily/sidewalk-to-home.jpg", mobileImage: "/assets/dog/daily/sidewalk-to-home-mobile.jpg", poopEvent: false },
+  { title: "家門口往人行道", image: "/assets/dog/walking/door-to-sidewalk.jpg", mobileImage: "/assets/dog/walking/door-to-sidewalk-mobile.jpg", poopEvent: false },
+  { title: "公園", image: "/assets/dog/walking/park.png", mobileImage: "/assets/dog/walking/park-mobile.jpg", poopEvent: false },
+  { title: "公園 2", image: "/assets/dog/walking/park-poop-event.png", mobileImage: "/assets/dog/walking/park-poop-event-mobile.jpg", poopEvent: true },
+  { title: "人行道往家門口", image: "/assets/dog/walking/sidewalk-to-home.jpg", mobileImage: "/assets/dog/walking/sidewalk-to-home-mobile.jpg", poopEvent: false },
 ] as const;
 
 type WalkingSceneLayoutPoint = { x: number; y: number; scale: number };
@@ -59,9 +59,9 @@ export const walkingPreloadImages = [
   ...walkingScenes.map((scene) => scene.image),
   ...walkingScenes.map((scene) => scene.mobileImage),
   ...walkingPrepItems.map((item) => item.image),
-  "/assets/dog/daily/walker-and-dog.png",
-  "/assets/dog/daily/walker-and-dog-poop.png",
-  "/assets/dog/daily/walker-dog-bag.png",
-  "/assets/dog/daily/poop-bag-1.png",
-  "/assets/dog/daily/poop.png",
+  "/assets/dog/walking/walker-and-dog.png",
+  "/assets/dog/walking/walker-and-dog-poop.png",
+  "/assets/dog/walking/walker-dog-bag.png",
+  "/assets/dog/walking/poop-bag-1.png",
+  "/assets/dog/walking/poop.png",
 ] as const;

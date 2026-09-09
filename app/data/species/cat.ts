@@ -45,7 +45,8 @@ export const catAssets = {
     // TODO(cat-assets): 補入專用巡視背景與貓砂鏟後，僅需在此替換路徑。
     inspectionBackground: "/assets/cat/room/cat-safe-room-secured.png",
     litterBox: "/assets/cat/room/cat-litter-box.png",
-    litterScoop: "/assets/room/cleaner.png",
+    // 暫用狗狗房間的中性清潔工具素材，待貓咪專用貓砂鏟素材補齊後替換。
+    litterScoop: "/assets/dog/room/cleaner.png",
   },
   preparation: {
     // TODO(cat-assets): 尚未提供專用外出籠、文件素材，暫用安全中性 fallback。

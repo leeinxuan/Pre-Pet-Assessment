@@ -10,4 +10,4 @@
 
 舊的 `app/*-components.tsx` 檔案目前保留為 re-export 相容層，讓既有 import 不會立即失效。
 
-純資料逐步集中到 `app/data/`。目前散步遊戲場景、用品與預載清單已移到 `app/data/walkingScenes.ts`。
+純資料逐步集中到 `app/data/`。散步遊戲的場景、用品與預載清單位於 `app/data/species/dog/walking.ts`。

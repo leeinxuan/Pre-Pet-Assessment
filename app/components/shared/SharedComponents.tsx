@@ -357,12 +357,12 @@ export function SpeciesStep({
           <div className="breed-row breed-page-grid breed-carousel" ref={breedCarouselRef} onScroll={handleBreedCarouselScroll} aria-label="品種橫向滑動選擇">
             {availableBreeds.map((item) => (
               <button key={item.id} data-breed-id={item.id} className={breed === item.id ? "selected" : ""} onClick={() => onBreed(item.id)} aria-pressed={breed === item.id}>
-                {item.image ? <img className="partner-card-image" src={item.image} alt="" /> : <span className="partner-card-placeholder">{item.icon}</span>}<b>{item.label}</b>{breed === item.id && <i>✓</i>}
+                <img className="partner-card-image" src={item.image} alt="" /><b>{item.label}</b>{breed === item.id && <i>✓</i>}
               </button>
             ))}
           </div>
           <div className={`selection-note breed-description ${selectedBreed ? "selected" : "empty"}`} role="status" aria-live="polite" aria-atomic="true">
-            {selectedBreed?.image ? <img className="selection-note-image" src={selectedBreed.image} alt="" /> : <span aria-hidden="true">{selectedBreed?.icon ?? "🐾"}</span>}
+            {selectedBreed ? <img className="selection-note-image" src={selectedBreed.image} alt="" /> : <span aria-hidden="true">🐾</span>}
             <div><b>{selectedBreed ? `你選擇了：${selectedBreed.label}` : `${speciesConfig.copy.typeLabel}飼養特性`}</b><p>{selectedBreed?.shortDescription ?? `點選一個${speciesConfig.copy.typeLabel}，查看牠的飼養特性。`}</p></div>
           </div>
           <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("name")} disabled={!breed} nextLabel="下一步" />
@@ -371,7 +371,7 @@ export function SpeciesStep({
         <section className="partner-selection-page pet-naming-page" key="name">
           <StepHeading title={speciesConfig.copy.nameTitle} body="這個名字會陪著牠走進接下來的生活，也會出現在後面的情境演練裡。" />
           <div className="pet-naming-stage">
-            <img src="/assets/room/nameplate.png" alt={`${speciesConfig.copy.animalName}名字吊牌`} />
+            <img src="/assets/dog/room/nameplate.png" alt={`${speciesConfig.copy.animalName}名字吊牌`} />
             <label htmlFor="new-pet-name" className="sr-only">{speciesConfig.copy.animalName}的名字</label>
             <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} autoFocus />
           </div>
@@ -390,7 +390,7 @@ export function SpeciesStep({
               <div className="breed-row previous-breed-grid">
                 {availableBreeds.map((item) => (
                   <button type="button" key={item.id} className={previousBreed === item.id ? "selected" : ""} onClick={() => onPreviousBreed(item.id)} aria-pressed={previousBreed === item.id}>
-                    {item.image ? <img className="partner-card-image" src={item.image} alt="" /> : <span className="partner-card-placeholder">{item.icon}</span>}<b>{item.label}</b>{previousBreed === item.id && <i>✓</i>}
+                    <img className="partner-card-image" src={item.image} alt="" /><b>{item.label}</b>{previousBreed === item.id && <i>✓</i>}
                   </button>
                 ))}
               </div>
@@ -409,13 +409,13 @@ export function SpeciesStep({
           <div className="experience-dogs" aria-label="從過去的陪伴經驗走向新的生命">
             <article className="experience-dog-card experience-dog-card--past">
               <span>過去熟悉的生活</span>
-              {selectedPreviousBreed?.image ? <img src={selectedPreviousBreed.image} alt={`${previousDogName || `以前的${speciesConfig.copy.animalName}`}，${selectedPreviousBreed?.label ?? speciesConfig.copy.animalName}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">{selectedPreviousBreed?.icon ?? "🐾"}</span>}
+              {selectedPreviousBreed ? <img src={selectedPreviousBreed.image} alt={`${previousDogName || `以前的${speciesConfig.copy.animalName}`}，${selectedPreviousBreed.label}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">🐾</span>}
               <div><h2>{previousDogName || `以前的${speciesConfig.copy.animalName}`}</h2><b>{selectedPreviousBreed?.label}</b><p>{selectedPreviousBreed?.shortDescription}</p></div>
             </article>
             <div className="experience-arrow" aria-hidden="true"><i>→</i></div>
             <article className="experience-dog-card experience-dog-card--next">
               <span>{sameBreed ? "相同品種，新的個體" : "準備迎接的新生活"}</span>
-              {selectedBreed?.image ? <img src={selectedBreed.image} alt={`這次想迎接的${selectedBreed?.label ?? speciesConfig.copy.animalName}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">{selectedBreed?.icon ?? "🐾"}</span>}
+              {selectedBreed ? <img src={selectedBreed.image} alt={`這次想迎接的${selectedBreed.label}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">🐾</span>}
               <div><h2>{petName || `新的${selectedBreed?.label ?? speciesConfig.copy.animalName}`}</h2><b>{selectedBreed?.label}</b><p>{selectedBreed?.shortDescription}</p></div>
             </article>
           </div>

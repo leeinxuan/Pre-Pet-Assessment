@@ -278,12 +278,12 @@ type SpeciesActivityState = {
 | 用途 | 現有路徑 | 可否直接用於貓版 | 使用規則 |
 |---|---|---:|---|
 | 物種卡基礎圖 | `public/assets/species/cat.png` | 是 | 可作貓物種入口；不可充當橘貓／虎斑貓選擇卡。 |
-| 房間背景 | `public/assets/room/empty-room.png`、`empty-room-mobile.png` | 暫時可 | 先作共用空房，之後換成貓安全房背景。 |
+| 房間背景 | `public/assets/dog/room/empty-room.png`、`empty-room-mobile.png` | 暫時可 | 先作共用空房，之後換成貓安全房背景。 |
 | 外出籠 | `public/assets/car/carrier.png` | 暫時可 | 先沿用外出籠物件；正式版換成貓用比例與構圖。 |
 | 接回車景 | `public/assets/car/car-trunk.png` | 暫時可 | 可沿用後車廂背景，物件與說明改成貓版。 |
-| 名牌 | `public/assets/room/nameplate.png` | 是 | 可以延用為貓名牌。 |
-| 食水空碗／容器 | `public/assets/room/food-bowl.png`、`water-bowl.png`、`public/assets/pet-journey/empty-food-bowl.png`、`empty-water-bowl.png` | 僅暫時 | 功能可先共用，正式版需換為貓食器素材。 |
-| 通用 UI／回饋影片 | `public/assets/pet-journey/correct-answer.mp4`、`correct-answer2.mp4` | 暫時可 | 僅作正確回饋，不能顯示犬隻內容。若畫面含犬，改文字佔位。 |
+| 名牌 | `public/assets/dog/room/nameplate.png` | 是 | 可以延用為貓名牌。 |
+| 食水空碗／容器 | `public/assets/dog/room/food-bowl.png`、`water-bowl.png`、`public/assets/dog/pet-journey/empty-food-bowl.png`、`empty-water-bowl.png` | 僅暫時 | 功能可先共用，正式版需換為貓食器素材。 |
+| 通用 UI／回饋影片 | `public/assets/dog/pet-journey/correct-answer.mp4`、`correct-answer2.mp4` | 暫時可 | 僅作正確回饋，不能顯示犬隻內容。若畫面含犬，改文字佔位。 |
 
 ### 12.2 貓版缺少的正式素材
 
