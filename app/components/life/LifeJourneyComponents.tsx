@@ -1114,6 +1114,7 @@ function BusyCareActivity({
   species = "dog",
   onMembersChange,
   onChoose,
+  onHelperUncertainty,
   onContinue,
   resetSignal,
   onReplay,
@@ -1126,6 +1127,7 @@ function BusyCareActivity({
   species?: string;
   onMembersChange: (members: CareMember[]) => void;
   onChoose: (choice: ScenarioChoice) => void;
+  onHelperUncertainty?: (scenario: Scenario) => void;
   onContinue: () => void;
   resetSignal: number;
   onReplay?: () => void;
@@ -1134,7 +1136,7 @@ function BusyCareActivity({
   const [mode, setMode] = useState<"question" | "family" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : "question");
   const [familyStep, setFamilyStep] = useState<"name" | "check">("name");
   const [helperName, setHelperName] = useState("");
-  const [helperChecks, setHelperChecks] = useState<Record<string, "yes" | "no" | "">>({});
+  const [helperChecks, setHelperChecks] = useState<Record<string, "yes" | "unsure" | "">>({});
   const [sceneVideoFailed, setSceneVideoFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
@@ -1144,16 +1146,19 @@ function BusyCareActivity({
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const familySupportChoice = scenario.choices.find((choice) => choice.id === "family-helper");
   // 貓咪版交接固定確認四項：時間、意願、食水／砂盆／環境巡視，以及緊急聯絡。
-  // 犬隻仍沿用原本的三項確認，不改變既有流程。
+  // 「還不確定」不是一律答錯：緊急聯絡尚待確認時可以繼續，但會保留溫和提醒到總覽。
   const helperQuestions = [
-    ...(isCat ? [{ id: "available", text: `${helperName || "對方"}是否確定有時間，可以在約定時段完成照護？`, short: "尚未確認是否有時間協助" }] : []),
-    { id: "knows-needs", text: `${helperName || "對方"}是否了解${displayPetName}平常的${isCat ? "食水、砂盆、環境巡視、陪玩與觀察" : "餵食、換水、排泄與活動"}需求？`, short: "還不清楚日常照護需求" },
-    { id: "willing", text: `${helperName || "對方"}是否願意按照你交接的方式照顧「${displayPetName}」，而不是只用自己的習慣處理？`, short: "尚未確認是否願意按照交接方式照顧" },
-    { id: "emergency", text: `如果${displayPetName}出現食慾、精神${isCat ? "、飲水、砂盆或活動" : ""}異常或緊急狀況，${helperName || "對方"}是否會馬上聯絡你或獸醫？`, short: "尚未確認遇到異常時會立即聯絡你或獸醫" },
+    ...(isCat ? [{ id: "available", text: `${helperName || "對方"}在約定時段是否有時間完成照護？`, short: "尚未確認是否有時間協助", yesLabel: "有時間", unsureLabel: "還不確定", accepted: ["yes"] }] : []),
+    { id: "knows-needs", text: `${helperName || "對方"}是否了解${displayPetName}平常的${isCat ? "食水、砂盆、環境巡視、陪玩與觀察" : "餵食、換水、排泄與活動"}需求？`, short: "還不清楚日常照護需求", yesLabel: "了解", unsureLabel: "還不確定", accepted: ["yes"] },
+    { id: "willing", text: `${helperName || "對方"}是否可以依照你的交接方式照顧「${displayPetName}」？`, short: "尚未確認是否願意按照交接方式照顧", yesLabel: "可以", unsureLabel: "還不確定", accepted: ["yes"] },
+    { id: "emergency", text: `若${displayPetName}出現食慾、精神${isCat ? "、飲水、砂盆或活動" : ""}異常或緊急狀況，緊急聯絡方式是否已經先說明？`, short: "緊急聯絡方式還需要補充確認", yesLabel: "已說明", unsureLabel: "還不確定", accepted: ["yes", "unsure"], followUpWhenUnsure: true },
   ];
   const allHelperChecksAnswered = helperQuestions.every((question) => Boolean(helperChecks[question.id]));
-  const unsuitableHelperReasons = helperQuestions.filter((question) => helperChecks[question.id] === "no").map((question) => question.short);
+  const unsuitableHelperReasons = helperQuestions
+    .filter((question) => helperChecks[question.id] && !question.accepted.includes(helperChecks[question.id] as "yes" | "unsure"))
+    .map((question) => question.short);
   const hasUncertainHelperCheck = unsuitableHelperReasons.length > 0;
+  const hasHelperFollowUp = helperQuestions.some((question) => question.followUpWhenUnsure && helperChecks[question.id] === "unsure");
   const shouldShowHelperUncertainty = allHelperChecksAnswered && hasUncertainHelperCheck;
 
   useEffect(() => {
@@ -1195,6 +1200,7 @@ function BusyCareActivity({
       onMembersChange([...members, { id: `busy-helper-${Date.now()}`, name: trimmedName, age: null, isPlayer: false }]);
     }
     onChoose(familySupportChoice);
+    if (hasHelperFollowUp) onHelperUncertainty?.(scenario);
     setVideoFailed(false);
     setVideoFinished(false);
     setMode("positive");
@@ -1208,7 +1214,7 @@ function BusyCareActivity({
         videoSrc={getCorrectAnswerVideo(scenario.id)}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={<p>{helperName.trim() && selectedChoice.id === "family-helper" ? `你確認了${helperName.trim()}的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓${displayPetName}在你忙碌時仍獲得穩定照顧。` : withPetName(selectedChoice.explanation, petName)}</p>}
+        intro={<p>{helperName.trim() && selectedChoice.id === "family-helper" ? `${hasHelperFollowUp ? `你已安排${helperName.trim()}協助；緊急聯絡方式還需要在交接前補充確認。` : `你確認了${helperName.trim()}的時間、意願、照護知識與緊急聯絡方式。`} 這樣的交接才能讓${displayPetName}在你忙碌時仍獲得穩定照顧。` : withPetName(selectedChoice.explanation, petName)}</p>}
         otherTips={<div className="busy-care-warm-note busy-care-energy-reflection">{isCat ? <><b><span aria-hidden="true">💡</span>貓咪小知識</b><p>{displayPetName}看起來獨立，仍需要穩定的食物、飲水、乾淨砂盆與安全環境。忙碌時先安排可信任的人協助，能讓牠的日常維持安心與規律。</p></> : <><p className="busy-care-slogan">在狗狗的世界裡，你就是他的全部。</p><b><span aria-hidden="true">💡</span>留給自己的一個問題</b><p>忙完一天回到家時，你還有能量陪伴等了你一整天的{displayPetName}嗎？</p></>}</div>}
         otherTipsBeforeSuggestion
         suggestion={<small>{isCat ? `交接時要說明${displayPetName}的個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。` : <>不管是請朋友或家人協助，都要清楚交接餵食、飲水、排泄清理、陪伴方式，以及如何和{displayPetName}安全互動，讓牠在你忙碌時也能被穩定照顧。</>}</small>}
@@ -1251,8 +1257,8 @@ function BusyCareActivity({
                     <div className="busy-helper-question" role="group" aria-label={question.text} key={question.id}>
                       <p><span>{questionIndex + 1}</span><span className="busy-helper-question-text">{question.text}</span></p>
                       <div>
-                        <button type="button" className={helperChecks[question.id] === "yes" ? "is-selected" : ""} aria-pressed={helperChecks[question.id] === "yes"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "yes" }))}>是</button>
-                        <button type="button" className={helperChecks[question.id] === "no" ? "is-selected is-no" : ""} aria-pressed={helperChecks[question.id] === "no"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "no" }))}>還不確定</button>
+                        <button type="button" className={helperChecks[question.id] === "yes" ? "is-selected" : ""} aria-pressed={helperChecks[question.id] === "yes"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "yes" }))}>{question.yesLabel}</button>
+                        <button type="button" className={helperChecks[question.id] === "unsure" ? "is-selected is-no" : ""} aria-pressed={helperChecks[question.id] === "unsure"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "unsure" }))}>{question.unsureLabel}</button>
                       </div>
                     </div>
                   ))}
@@ -1730,7 +1736,9 @@ const walkingPrepNotes: Record<string, string> = {
   water: "天氣熱或散步時間較長時，幫狗狗補充飲水。",
 };
 
+// 點一下按鈕前進一小步；長按則以每秒固定百分比平滑前進，避免不同螢幕更新頻率造成跳動。
 const walkingStep = 7;
+const walkingHoldSpeed = 40;
 
 // 貓砂盆救援隊暫用已存在的共用素材，避免缺少 /assets/cat/... 圖檔時讓 Vite/RSC 請求失敗。
 // 正式貓咪素材補齊後，只需在此替換為對應的 /assets/cat/... 路徑即可。
@@ -2150,8 +2158,8 @@ function WalkingActivity({
   const [moving, setMoving] = useState(false);
   const [message, setMessage] = useState("");
   const completingSceneRef = useRef<number | null>(null);
-  const movingTimerRef = useRef<number | null>(null);
-  const forwardIntervalRef = useRef<number | null>(null);
+  const forwardAnimationFrameRef = useRef<number | null>(null);
+  const forwardLastFrameRef = useRef<number | null>(null);
   const sceneRef = useRef<HTMLDivElement | null>(null);
   const poopTargetRef = useRef<HTMLDivElement | null>(null);
   const draggingBagRef = useRef(false);
@@ -2210,10 +2218,10 @@ function WalkingActivity({
   useEffect(() => {
     setPosition(0);
     setMoving(false);
-    if (forwardIntervalRef.current !== null) {
-      window.clearInterval(forwardIntervalRef.current);
-      forwardIntervalRef.current = null;
-    }
+    if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
+    forwardAnimationFrameRef.current = null;
+    forwardLastFrameRef.current = null;
+    forwardHeldRef.current = false;
     draggingBagRef.current = false;
     setDraggedBag(null);
     completingSceneRef.current = null;
@@ -2224,8 +2232,7 @@ function WalkingActivity({
   }, [needsCleanup, activity.walkingComplete]);
 
   useEffect(() => () => {
-    if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
-    if (forwardIntervalRef.current !== null) window.clearInterval(forwardIntervalRef.current);
+    if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
   }, []);
 
   function prepare(id: string) {
@@ -2262,7 +2269,7 @@ function WalkingActivity({
     setMessage(complete ? "散步時間達到 20 分鐘！" : `完成「${walkingScenes[completedIndex].title}」，散步時間 +5 分鐘。`);
   }
 
-  const advanceWalk = useCallback(() => {
+  const advanceWalk = useCallback((distance: number) => {
     if (!started || activity.walkingComplete) return;
     if (needsCleanup) {
       setMessage("先把排泄物清理乾淨，再繼續散步。");
@@ -2271,14 +2278,12 @@ function WalkingActivity({
     }
     const completionPosition = getWalkingCompletionPosition(sceneIndex);
     setMoving(true);
-    if (movingTimerRef.current !== null) window.clearTimeout(movingTimerRef.current);
-    movingTimerRef.current = window.setTimeout(() => setMoving(false), 180);
     setPosition((current) => {
       if (scene.poopEvent && current >= 50 && !activity.walkingPoopCleaned) {
-        setMoving(false);
+        stopForward();
         return 50;
       }
-      const next = Math.min(completionPosition, current + walkingStep);
+      const next = Math.min(completionPosition, current + distance);
       if (next >= completionPosition && current < completionPosition && completingSceneRef.current !== sceneIndex) {
         completeWalkingScene(sceneIndex);
       }
@@ -2288,10 +2293,9 @@ function WalkingActivity({
 
   function stopForward(releaseHold = true) {
     if (releaseHold) forwardHeldRef.current = false;
-    if (forwardIntervalRef.current !== null) {
-      window.clearInterval(forwardIntervalRef.current);
-      forwardIntervalRef.current = null;
-    }
+    if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
+    forwardAnimationFrameRef.current = null;
+    forwardLastFrameRef.current = null;
     setMoving(false);
   }
 
@@ -2300,16 +2304,21 @@ function WalkingActivity({
       if (needsCleanup) setMessage("先把排泄物清理乾淨，再繼續散步。");
       return;
     }
+    if (forwardHeldRef.current) return;
     forwardHeldRef.current = true;
-    advanceWalk();
-    if (forwardIntervalRef.current !== null) window.clearInterval(forwardIntervalRef.current);
-    forwardIntervalRef.current = window.setInterval(advanceWalk, 170);
+    // 保留短按前進一步的既有互動；之後才依 rAF 持續前進。
+    advanceWalk(walkingStep);
+    const moveFrame = (timestamp: number) => {
+      if (!forwardHeldRef.current) return;
+      const previousTimestamp = forwardLastFrameRef.current ?? timestamp;
+      const deltaSeconds = Math.min(0.05, Math.max(0, timestamp - previousTimestamp) / 1000);
+      forwardLastFrameRef.current = timestamp;
+      if (deltaSeconds > 0) advanceWalk(walkingHoldSpeed * deltaSeconds);
+      if (forwardHeldRef.current) forwardAnimationFrameRef.current = window.requestAnimationFrame(moveFrame);
+    };
+    forwardLastFrameRef.current = null;
+    forwardAnimationFrameRef.current = window.requestAnimationFrame(moveFrame);
   }
-
-  useEffect(() => {
-    if (!forwardHeldRef.current || !started || needsCleanup || activity.walkingComplete) return;
-    startForward();
-  }, [activity.walkingSceneIndex]);
 
   const draggedBagSize = 74;
 
@@ -2593,6 +2602,7 @@ export function LifeJourney({
   roomReady,
   onIndex,
   onChoose,
+  onMarkScenarioForReview,
   onChooseMultiple,
   onMembersChange,
   onActivityChange,
@@ -2615,6 +2625,7 @@ export function LifeJourney({
   roomReady: string[];
   onIndex: (index: number) => void;
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
+  onMarkScenarioForReview: (scenario: Scenario, flag: string) => void;
   onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
   onMembersChange: (members: CareMember[]) => void;
   onActivityChange: (patch: Partial<LifeActivityState>) => void;
@@ -2766,6 +2777,7 @@ export function LifeJourney({
           species={species}
           onMembersChange={onMembersChange}
           onChoose={choose}
+          onHelperUncertainty={(busyScenario) => onMarkScenarioForReview(busyScenario, "helper-details-to-confirm")}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
           {...replayCorrectProps}

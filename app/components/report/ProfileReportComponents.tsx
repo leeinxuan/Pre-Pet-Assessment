@@ -756,7 +756,7 @@ export function AssessmentReport({
     "和同住家人討論活動空間與日常照顧安排",
   ];
   const discussionTopics: SharedDiscussionTopic[] = Object.values(answers)
-    .filter((answer) => answer.firstResult !== "correct" || answer.discussionFlags?.includes("unsuitable-family-helper"))
+    .filter((answer) => answer.firstResult !== "correct" || Boolean(answer.discussionFlags?.length))
     .map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId))
     .filter((scenario): scenario is Scenario => Boolean(scenario))
     .map((scenario) => ({
@@ -764,9 +764,13 @@ export function AssessmentReport({
       title: personalizeReportText(scenario.title, petName),
       topic: scenario.topic ?? scenario.stage,
       summary: scenario.id === "busy-daily-care"
-        ? "忙碌時的日常照顧：需要確認協助者是否真的有時間、能力與意願照顧寵物。"
+        ? answers[scenario.id]?.discussionFlags?.includes("helper-details-to-confirm")
+          ? "忙碌時的日常照顧：協助者已安排，但緊急聯絡方式仍值得在交接前再確認。"
+          : "忙碌時的日常照顧：需要確認協助者是否真的有時間、能力與意願照顧寵物。"
         : scenario.id === "cat-busy-care"
-          ? personalizeReportText("臨時晚歸時的貓咪照顧：需要確認協助者是否真的有時間、能力與意願照顧貓咪，並清楚交接食水、砂盆、環境巡視、陪玩與狀況觀察。", petName)
+          ? answers[scenario.id]?.discussionFlags?.includes("helper-details-to-confirm")
+            ? personalizeReportText("臨時晚歸時的貓咪照顧：協助者已安排，但緊急聯絡方式仍值得在交接前再確認。", petName)
+            : personalizeReportText("臨時晚歸時的貓咪照顧：需要確認協助者是否真的有時間、能力與意願照顧貓咪，並清楚交接食水、砂盆、環境巡視、陪玩與狀況觀察。", petName)
         : personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
       knowledgePoints: knowledgePointsForScenario(scenario, petName),
     }));

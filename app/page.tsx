@@ -189,7 +189,7 @@ export default function Home() {
       costToastTimerRef.current = window.setTimeout(() => {
         setLatestExpense((active) => active?.id === id ? null : active);
         costToastTimerRef.current = null;
-      }, 2600);
+      }, 1900);
       return [...current, sizedExpense];
     });
   }
@@ -246,6 +246,20 @@ export default function Home() {
       };
     });
     choice.expenseIds?.forEach(addExpenseById);
+  }
+
+  function markScenarioForReview(scenario: Scenario, flag: string) {
+    setScenarioAnswers((current) => {
+      const previous = current[scenario.id];
+      if (!previous) return current;
+      return {
+        ...current,
+        [scenario.id]: {
+          ...previous,
+          discussionFlags: Array.from(new Set([...(previous.discussionFlags ?? []), flag])),
+        },
+      };
+    });
   }
 
   function answerScenarioMultiple(scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) {
@@ -371,6 +385,7 @@ export default function Home() {
         roomReady={roomReady}
         onIndex={setJourneyIndex}
         onChoose={answerScenario}
+        onMarkScenarioForReview={markScenarioForReview}
         onChooseMultiple={answerScenarioMultiple}
         onMembersChange={updateMembers}
         onActivityChange={(patch) => setLifeActivity((current) => ({ ...current, ...patch }))}
@@ -433,7 +448,7 @@ export default function Home() {
       {step > 0 && introOpen && (
         <section className="intro-screen">
           <div className="intro-orbit" aria-hidden="true"><IntroIcon step={step} /></div>
-          <h1>{intros[step - 1].title}</h1>
+          <h1 className={step === 1 || step === 2 ? "intro-screen-title--light" : undefined}>{intros[step - 1].title}</h1>
           <p className="intro-body">{intros[step - 1].body}</p>
           <button className="primary large" onClick={() => setIntroOpen(false)}>開始 <span>→</span></button>
         </section>

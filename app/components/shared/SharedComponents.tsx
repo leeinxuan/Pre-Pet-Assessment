@@ -573,42 +573,11 @@ export function CostBar({
   breed: string;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [flashExpense, setFlashExpense] = useState<ExpenseRecord | null>(null);
-  const toastTimerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (toastTimerRef.current !== null) {
-        window.clearTimeout(toastTimerRef.current);
-        toastTimerRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!latestExpense) {
-      setFlashExpense(null);
-      return;
-    }
-    if (toastTimerRef.current !== null) {
-      window.clearTimeout(toastTimerRef.current);
-      toastTimerRef.current = null;
-    }
-    setFlashExpense(latestExpense);
-    toastTimerRef.current = window.setTimeout(() => {
-      setFlashExpense(null);
-      toastTimerRef.current = null;
-    }, 2400);
-  }, [latestExpense]);
 
   return (
     <>
+      <ExpenseAdditionNotice expense={latestExpense} />
       <div className="cost-bar cost-bar-compact" aria-label={expenseLabels.currentCostStatus}>
-        {flashExpense && (
-          <p className="cost-toast" role="status">
-            新增「{flashExpense.name}」NT$ {money.format(flashExpense.amount)}{isMonthlyExpense(flashExpense) ? expenseLabels.monthlySuffix : ""}
-          </p>
-        )}
         <button type="button" className="bill-trigger" onClick={() => setDetailsOpen(true)} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
           <span className="bill-trigger-icon" aria-hidden="true">＄</span>
           <em>{expenseLabels.viewDetails}</em>
@@ -616,5 +585,17 @@ export function CostBar({
       </div>
       {detailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} onClose={() => setDetailsOpen(false)} />}
     </>
+  );
+}
+
+/** 共用的新增費用提示；由頁面的唯一費用狀態管理顯示與自動關閉。 */
+export function ExpenseAdditionNotice({ expense }: { expense: ExpenseRecord | null }) {
+  if (!expense) return null;
+
+  return (
+    <div className="cost-toast" role="status" aria-live="polite" key={`${expense.id}-${expense.amount}`}>
+      <span className="cost-toast-icon" aria-hidden="true">🧾</span>
+      <span>新增「{expense.name}」NT$ {money.format(expense.amount)}{isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}</span>
+    </div>
   );
 }
