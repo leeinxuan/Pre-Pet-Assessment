@@ -12,6 +12,7 @@ import {
 } from "../../data/species/dog/preparation";
 import { getSpeciesConfig } from "../../data/species/index";
 import { catAssets } from "../../data/species/cat/assets";
+import { dogAssets } from "../../data/species/dog/assets";
 import type { CareMember, ExpenseRecord, HazardItem, RoomItem, TrunkItem } from "../../game-types";
 import { NavButtons, StepHeading } from "../shared/SharedComponents";
 
@@ -218,12 +219,23 @@ export function RoomPreparation({
 
         <div className="room-interaction-column">
           <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomSceneReady ? "room-scene-ready" : ""}`} role="group" aria-label="寵物生活空間">
-            <img className="room-scene-background room-scene-background--desktop" src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : "/assets/room/empty-room.png"} alt={species === "cat" ? "貓咪安全房" : "空的寵物生活房間"} />
-            <img className="room-scene-background room-scene-background--mobile" src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : "/assets/room/empty-room-mobile.png"} alt="" />
+            <img
+              className={`room-scene-background room-scene-background--desktop ${species === "dog" ? "room-scene-background--dog" : "room-scene-background--cat"}`}
+              src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : dogAssets.room.background}
+              alt={species === "cat" ? "貓咪安全房" : "空的寵物生活房間"}
+              style={species === "dog" ? { objectFit: "contain", objectPosition: "center center" } : undefined}
+            />
+            <img
+              className={`room-scene-background room-scene-background--mobile ${species === "dog" ? "room-scene-background--dog-mobile" : ""}`}
+              // 犬隻手機版也直接使用原始房間圖；完整顯示，不裁切、不額外放大。
+              src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : dogAssets.room.background}
+              alt=""
+              style={species === "dog" ? { objectFit: "contain", objectPosition: "center center" } : undefined}
+            />
             {activeRoomItems.filter((item) => selectedItems.includes(item.id) && !(species === "cat" && item.id === "cat-safe-window")).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><img src={item.image} alt={`房間中已配置的${item.label}`} /><span>{item.label}</span></div>)}
             {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
             <div className="pet-doorplate" style={roomDoorplatePlacementStyle()}>
-              <img src="/assets/room/nameplate.png" alt="小狗名字門牌" />
+              <img src={dogAssets.room.doorplate} alt="小狗名字門牌" />
               <span className="pet-doorplate-name">{petName}</span>
             </div>
             {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已收起</h2><p><b>為什麼危險：</b>{activeHazard.danger}</p><p><b>建議如何處理：</b>{activeHazard.handling}</p></section>}
@@ -332,12 +344,12 @@ export function CarTrunkPreparation({ selected, petName, breed, species = "dog",
       </aside>
 
       <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">
-        <img className="car-trunk-background" src="/assets/car/car-trunk.png" alt="打開的汽車後車廂" />
-        {selected.includes("documents") && <div className="car-document-folder complete"><img src="/assets/car/adoption-documents.png" alt="飼養文件夾" /></div>}
-        {selected.includes("id") && <img className="placed-car-item placed-car-id" src="/assets/car/id-card.png" alt="放入文件夾的身分證" />}
+        <img className="car-trunk-background" src={dogAssets.preparation.trunk} alt="打開的汽車後車廂" />
+        {selected.includes("documents") && <div className="car-document-folder complete"><img src={dogAssets.preparation.documents} alt="飼養文件夾" /></div>}
+        {selected.includes("id") && <img className="placed-car-item placed-car-id" src={dogAssets.preparation.idCard} alt="放入文件夾的身分證" />}
         {supplies.filter((item) => selected.includes(item.id)).map((item) => false ? (
           <div key={item.id} className="placed-car-item placed-car-carrier-kit" style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }}>
-            <img className="carrier-pad" src="/assets/car/pee-pad.png" alt="鋪在運輸籠內的尿墊" /><img className="carrier-image" src={item.image} alt="放在後車廂的安全運輸籠" />
+            <img className="carrier-pad" src={dogAssets.preparation.peePad} alt="鋪在運輸籠內的尿墊" /><img className="carrier-image" src={item.image} alt="放在後車廂的安全運輸籠" />
           </div>
         ) : <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`後車廂內的${item.label}`} />)}
       </section>

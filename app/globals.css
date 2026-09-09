@@ -4,6 +4,7 @@
 
 /* The functional styles are progressively separated below; import order preserves existing rendering. */
 @import "./styles/base.css";
+@import "./styles/layout.css";
 @import "./styles/selection.css";
 @import "./styles/preparation.css";
 @import "./styles/life.css";

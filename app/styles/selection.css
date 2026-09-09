@@ -1,1 +1,162 @@
 /* Selection styles migrate here. Keep desktop and mobile rules together. */
+
+/* 物種、品種、命名與飼養經驗選擇流程。 */
+.partner-selection-page { animation: stageIn .42s cubic-bezier(.16,1,.3,1) both; }
+.partner-selection-page .step-heading { margin-bottom: 35px; }
+.field-title { font-size: 15px; margin: 34px 0 15px; display: flex; align-items: center; gap: 9px; }
+.field-title span { width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: white; display: grid; place-items: center; font-size: 13px; }
+.category-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 11px; }
+.category-grid button, .breed-row button { min-height: 122px; border: 1px solid var(--line); border-radius: 18px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; cursor: pointer; position: relative; transition: .2s ease; }
+.category-grid button:hover:not(:disabled), .breed-row button:hover { transform: translateY(-3px); border-color: var(--gold); }
+.category-grid button.selected, .breed-row button.selected { border: 2px solid var(--gold); background: #fff7dc; box-shadow: 0 8px 24px rgba(212,154,36,.16); }
+.category-grid button:disabled { cursor: not-allowed; opacity: .45; }
+.category-grid button > span, .breed-row button > span { font-size: 37px; }
+.partner-card-image { display: block; width: 72px; height: 72px; object-fit: contain; }
+.partner-card-placeholder,
+.experience-pet-placeholder {
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  border-radius: 28px;
+  background: linear-gradient(145deg, #fff7df, #eaf4e7);
+  color: #a96f0d;
+  font-size: 54px;
+  box-shadow: inset 0 0 0 1px rgba(217, 169, 60, .32);
+}
+.species-page-grid .partner-card-image { width: 144px; height: 144px; }
+.breed-page-grid .partner-card-image { width: 112px; height: 112px; }
+.selection-note-image { width: 46px; height: 46px; object-fit: contain; }
+.category-grid small { font-size: 12px; color: var(--muted); }
+.category-grid .available-hint { color: var(--gold-dark); opacity: 0; transform: translateY(3px); transition: .2s ease; }
+.category-grid button:hover .available-hint, .category-grid button:focus-visible .available-hint { opacity: 1; transform: translateY(0); }
+.species-page-grid { grid-template-columns: repeat(3, minmax(150px, 1fr)); max-width: 820px; gap: 16px; }
+.species-page-grid button { min-height: 220px; }
+.click-hint { margin: 20px 0 0; color: var(--muted); font-size: 13px; }
+.breed-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 11px; }
+.breed-row button { min-height: 145px; }
+.breed-page-grid { gap: 14px; }
+.breed-page-grid button { min-height: 190px; }
+.breed-row i { position: absolute; right: 9px; top: 9px; width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; background: var(--gold); color: white; font-style: normal; font-size: 13px; animation: checkPop .35s cubic-bezier(.2,1.6,.4,1); }
+.selection-note { display: flex; align-items: center; gap: 14px; padding: 16px 19px; background: var(--cream); border-radius: 16px; margin-top: 18px; }
+.selection-note > span { font-size: 32px; }
+.selection-note p { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
+.previous-dog-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.previous-dog-choice button { min-height: 120px; display: grid; align-content: center; gap: 8px; padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: white; color: var(--ink); font: inherit; text-align: left; cursor: pointer; transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+.previous-dog-choice button:hover, .previous-dog-choice button:focus-visible { transform: translateY(-2px); border-color: var(--gold); }
+.previous-dog-choice button.selected { border: 2px solid var(--gold); background: #fff7dc; box-shadow: 0 10px 26px rgba(212,154,36,.15); }
+.previous-dog-choice b { font-size: 18px; }
+.previous-dog-choice small { color: var(--muted); font-weight: 750; }
+.previous-dog-details { display: grid; gap: 18px; margin-top: 22px; padding: clamp(20px, 3vw, 30px); border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.82); box-shadow: 0 14px 38px rgba(70,53,26,.07); animation: stageIn .35s ease both; }
+.previous-dog-details h2 { margin: 4px 0 0; font-size: 24px; }
+.previous-breed-grid button { min-height: 150px; }
+.previous-breed-grid .partner-card-image { width: 86px; height: 86px; object-fit: contain; }
+.previous-dog-name { max-width: 440px; display: grid; gap: 8px; color: var(--ink); font-weight: 900; }
+.previous-dog-name input { min-height: 50px; }
+.pet-naming-page { min-height: min(720px, calc(100svh - 130px)); display: flex; flex-direction: column; justify-content: center; }
+.pet-naming-stage { position: relative; width: min(680px, 100%); margin: clamp(16px, 4vw, 42px) auto; filter: drop-shadow(0 24px 28px rgba(83,59,31,.14)); }
+.pet-naming-stage > img { display: block; width: 100%; height: auto; }
+.pet-naming-stage > input { position: absolute; inset: 60% 24% 22%; width: auto; min-height: 0; padding: 0 12px; border: 0; border-radius: 10px; outline: 0; box-shadow: none; background: transparent; color: #5f4528; font: inherit; font-size: clamp(21px, 4vw, 40px); font-weight: 950; line-height: 1; text-align: center; }
+.pet-naming-stage > input::placeholder { color: #a29d91; font-size: clamp(16px, 3vw, 30px) !important; opacity: 1; }
+.pet-naming-stage > input:focus { border: 0; outline: 3px solid rgba(212,154,36,.38); outline-offset: -5px; box-shadow: none; }
+
+.experience-transition-page { min-height: min(760px, calc(100svh - 120px)); display: flex; flex-direction: column; justify-content: center; gap: clamp(26px, 4vw, 46px); padding: clamp(22px, 4vw, 46px); overflow: hidden; border: 1px solid rgba(203,185,150,.7); border-radius: 30px; background: radial-gradient(circle at 18% 18%, rgba(255,235,177,.5), transparent 29%), radial-gradient(circle at 82% 18%, rgba(190,221,194,.46), transparent 29%), linear-gradient(145deg,#fffdf8,#f5f0e6); box-shadow: var(--shadow); }
+.experience-dogs { display: grid; grid-template-columns: minmax(0,1fr) 90px minmax(0,1fr); align-items: stretch; gap: clamp(12px, 2vw, 24px); }
+.experience-dog-card { min-width: 0; display: grid; grid-template-columns: minmax(110px, .72fr) minmax(0, 1.28fr); align-items: center; gap: clamp(12px, 2.4vw, 24px); padding: clamp(16px, 2.5vw, 26px); border: 1px solid rgba(128,105,67,.18); border-radius: 24px; background: rgba(255,255,255,.76); opacity: .7; transition: opacity .4s ease, transform .4s ease, box-shadow .4s ease; }
+.experience-dog-card > span { grid-column: 1 / -1; color: var(--muted); font-size: 12px; font-weight: 900; letter-spacing: .08em; }
+.experience-dog-card img { width: 100%; max-height: 190px; object-fit: contain; filter: drop-shadow(0 12px 15px rgba(65,48,25,.12)); }
+.experience-dog-card h2 { margin: 0 0 5px; color: var(--gold-dark); font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(24px, 3vw, 38px); }
+.experience-dog-card b { color: var(--gold-dark); font-size: 13px; }
+.experience-dog-card p { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.experience-dog-card--past { animation: experiencePastGlow 10.2s ease both; }
+.experience-dog-card--next { animation: experienceNextGlow 10.2s ease both; }
+.experience-arrow { display: grid; grid-template-columns: 1fr; place-content: center; justify-items: center; gap: 6px; color: #9a845e; }
+.experience-arrow i { color: var(--gold-dark); font-size: 38px; font-style: normal; animation: experienceArrowMove 1.8s 2.3s ease-in-out 2; }
+.experience-story { max-width: 910px; display: grid; gap: 13px; margin: 0 auto; text-align: center; }
+.experience-story-line { margin: 0; color: #655c4f; font-size: clamp(16px, 2vw, 21px); font-weight: 750; line-height: 1.8; opacity: 0; transform: translateY(10px); animation: experienceLineIn .75s cubic-bezier(.16,1,.3,1) forwards; }
+.experience-story-line strong { color: var(--gold-dark); font-weight: 950; }
+.experience-story-line--past { animation-delay: .9s; }
+.experience-story-line--next { animation-delay: 3.9s; }
+.experience-story-line--bridge { animation-delay: 6.9s; }
+.experience-transition-actions { display: flex; justify-content: space-between; gap: 12px; opacity: 0; animation: experienceLineIn .6s 9.6s ease forwards; }
+@keyframes experienceLineIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes experiencePastGlow { 0% { opacity: .58; transform: translateY(5px); } 12%,42% { opacity: 1; transform: translateY(0); box-shadow: 0 0 0 4px rgba(212,154,36,.22), 0 18px 38px rgba(133,92,22,.13); } 70%,100% { opacity: .82; transform: translateY(0); } }
+@keyframes experienceNextGlow { 0%,32% { opacity: .54; transform: translateY(5px); } 52%,100% { opacity: 1; transform: translateY(0); box-shadow: 0 0 0 4px rgba(117,166,123,.22), 0 18px 38px rgba(67,112,75,.14); } }
+@keyframes experienceArrowMove { 50% { transform: translateX(5px); } }
+
+@media (max-width: 760px) {
+  .previous-dog-choice { grid-template-columns: 1fr; }
+  .previous-dog-choice button { min-height: 98px; }
+  .pet-naming-page { min-height: auto; }
+  .pet-naming-stage { margin: 18px auto 10px; }
+  .pet-naming-stage > input { font-size: clamp(18px, 6vw, 28px); }
+  .experience-transition-page { min-height: auto; padding: 20px 15px; border-radius: 22px; }
+  .experience-dogs { grid-template-columns: minmax(0,1fr) 38px minmax(0,1fr); gap: 7px; }
+  .experience-dog-card { grid-template-columns: 1fr; align-content: start; gap: 9px; padding: 13px 10px; text-align: center; }
+  .experience-dog-card > span { font-size: 9px; letter-spacing: .03em; }
+  .experience-dog-card img { height: 105px; }
+  .experience-dog-card h2 { font-size: clamp(19px, 5.8vw, 25px); }
+  .experience-dog-card b { font-size: 10px; }
+  .experience-dog-card p { font-size: 10px; line-height: 1.55; }
+  .experience-arrow i { font-size: 24px; }
+  .experience-story { gap: 10px; }
+  .experience-story-line { font-size: 15px; line-height: 1.72; }
+  .experience-transition-actions { flex-direction: column-reverse; }
+  .experience-transition-actions button { width: 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience-dog-card,
+  .experience-story-line,
+  .experience-transition-actions,
+  .experience-arrow i { opacity: 1; transform: none; animation: none; }
+}
+.breed-description { min-height: 86px; }
+.breed-description > div { min-width: 0; }
+.breed-description p { line-height: 1.7; overflow-wrap: anywhere; white-space: normal; }
+.breed-description.empty { border: 1px dashed var(--line); background: transparent; }
+
+@media (max-width: 1000px) {
+  .category-grid { grid-template-columns: repeat(3, 1fr); }
+  .breed-row { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
+  .breed-row { grid-template-columns: repeat(2, 1fr); }
+  .partner-selection-page:has(.breed-carousel) {
+    overflow: visible;
+  }
+
+  .breed-carousel {
+    display: flex;
+    grid-template-columns: none;
+    width: 100%;
+    margin-inline: 0;
+    padding-inline: max(18px, 12vw);
+    padding-block: 6px 10px;
+    scroll-padding-inline: max(18px, 12vw);
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .breed-carousel button {
+    flex: 0 0 min(72vw, 280px);
+    flex-basis: min(72vw, 280px);
+    min-height: 180px;
+    scroll-snap-align: center;
+  }
+
+  .breed-carousel button.selected {
+    transform: translateY(-3px) scale(1.03);
+  }
+
+  .breed-description {
+    min-height: auto;
+    margin-top: 12px;
+  }
+}

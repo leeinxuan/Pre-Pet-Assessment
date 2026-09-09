@@ -12,6 +12,7 @@ import {
 } from "../../data/species/journey";
 import { catDailyBehaviorScenarioIds, catLitterRescueConfig } from "../../data/species/cat/journey";
 import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/species/dog/walking";
+import { dogAssets } from "../../data/species/dog/assets";
 import { catAssets } from "../../data/species/cat/assets";
 import type {
   CareMember,
@@ -23,10 +24,13 @@ import type {
   ScenarioResult,
 } from "../../game-types";
 
-const arrivalVideoSource = "/assets/pet-journey/arrival-transition.mp4";
+const dogLifeAsset = (fileName: string) => `${dogAssets.life.root}/${fileName}`;
+const dogDailyAsset = (fileName: string) => `${dogAssets.daily.root}/${fileName}`;
+
+const arrivalVideoSource = dogLifeAsset("arrival-transition.mp4");
 const correctAnswerVideos = [
-  "/assets/pet-journey/correct-answer.mp4",
-  "/assets/pet-journey/correct-answer2.mp4",
+  dogLifeAsset("correct-answer.mp4"),
+  dogLifeAsset("correct-answer2.mp4"),
 ] as const;
 
 const scenarioCorrectAnswerVideoIndex: Record<string, number> = {
@@ -41,8 +45,8 @@ const scenarioCorrectAnswerVideoIndex: Record<string, number> = {
 };
 
 const breedChallengeVideos: Record<string, string> = {
-  "一年四季都在掉毛": "/assets/pet-journey/shedding.mp4",
-  "颳風下雨也要出門上廁所": "/assets/pet-journey/rainy-day-walk.mp4",
+  "一年四季都在掉毛": dogLifeAsset("shedding.mp4"),
+  "颳風下雨也要出門上廁所": dogLifeAsset("rainy-day-walk.mp4"),
 };
 
 function arrivalMealPlacementStyle(kind: keyof typeof arrivalMealMobilePlacements): CSSProperties {
@@ -61,9 +65,9 @@ function getCorrectAnswerVideo(key: number | string) {
 }
 
 function posterForVideo(src: string) {
-  if (src.includes("sick") || src.includes("first-day")) return "/assets/pet-journey/shiba-sad.png";
-  if (src.includes("time-passes") || src.includes("senior")) return "/assets/pet-journey/shiba-dog.png";
-  return "/assets/pet-journey/shiba-dog.png";
+  if (src.includes("sick") || src.includes("first-day")) return dogLifeAsset("shiba-sad.png");
+  if (src.includes("time-passes") || src.includes("senior")) return dogLifeAsset("shiba-dog.png");
+  return dogLifeAsset("shiba-dog.png");
 }
 
 function useVideoMetadataPreload(src?: string) {
@@ -489,7 +493,7 @@ function TimePassTransition({ onComplete }: { onComplete: () => void }) {
 
   return (
     <section className="time-pass-transition" aria-label="時間流逝過場動畫">
-      <video ref={videoRef} src="/assets/pet-journey/time-passes-aging.mp4" autoPlay playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      <video ref={videoRef} src={dogLifeAsset("time-passes-aging.mp4")} autoPlay playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
       {needsManualPlay && <button type="button" className="time-pass-play" onClick={playManually}>播放影片</button>}
     </section>
   );
@@ -592,9 +596,9 @@ function ScenarioCard({
 }) {
   const [sceneVideoFailed, setSceneVideoFailed] = useState(false);
   const scenarioVideo = scenario.id === "arrival-adjustment"
-    ? { src: "/assets/pet-journey/first-day.mp4", label: "小狗第一天適應新家的影片" }
+    ? { src: dogLifeAsset("first-day.mp4"), label: "小狗第一天適應新家的影片" }
     : scenario.id === "illness-vet"
-      ? { src: "/assets/pet-journey/sick.mp4", label: "小狗生病與就醫情境影片" }
+      ? { src: dogLifeAsset("sick.mp4"), label: "小狗生病與就醫情境影片" }
       : null;
   useVideoMetadataPreload(scenarioVideo?.src);
   useEffect(() => setSceneVideoFailed(false), [scenario.id]);
@@ -678,10 +682,10 @@ function VideoScenarioActivity({
   const source = isCatScenario
     ? undefined
     : scenario.id === "arrival-adjustment"
-    ? "/assets/pet-journey/first-day.mp4"
+    ? dogLifeAsset("first-day.mp4")
     : scenario.id === "growing-old"
-      ? "/assets/pet-journey/senior-life.mp4"
-      : "/assets/pet-journey/sick.mp4";
+      ? dogLifeAsset("senior-life.mp4")
+      : dogLifeAsset("sick.mp4");
   useVideoMetadataPreload(source);
   useVideoMetadataPreload(getCorrectAnswerVideo(scenario.id));
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
@@ -763,9 +767,9 @@ function VideoScenarioActivity({
 
 const dailyBehaviorScenarioIds = ["behavior-barking", "behavior-chewing", "behavior-toileting"] as const;
 const dailyBehaviorVideos: Record<string, string> = {
-  "behavior-barking": "/assets/pet-journey/barking.mp4",
-  "behavior-chewing": "/assets/pet-journey/chewing-on-things.mp4",
-  "behavior-toileting": "/assets/pet-journey/urinate-and-defecate.mp4",
+  "behavior-barking": dogLifeAsset("barking.mp4"),
+  "behavior-chewing": dogLifeAsset("chewing-on-things.mp4"),
+  "behavior-toileting": dogLifeAsset("urinate-and-defecate.mp4"),
 };
 
 function DailyBehaviorActivity({
@@ -866,7 +870,7 @@ function DailyBehaviorActivity({
       </div>
       <div className="daily-behavior-video">
         <VideoWithToggle
-          src={dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4"}
+          src={dailyBehaviorVideos[scenario.id] ?? dogLifeAsset("chewing-on-things.mp4")}
           loop
           ariaLabel="小狗日常行為問題情境影片"
           onError={() => setVideoFailed(true)}
@@ -932,8 +936,8 @@ function DailyBehaviorActivityMulti({
   const behaviorVideoSource = species === "cat"
     ? dailyBehaviorVideos[scenario?.id ?? ""]
     : scenario
-      ? dailyBehaviorVideos[scenario.id] ?? "/assets/pet-journey/chewing-on-things.mp4"
-      : "/assets/pet-journey/chewing-on-things.mp4";
+      ? dailyBehaviorVideos[scenario.id] ?? dogLifeAsset("chewing-on-things.mp4")
+      : dogLifeAsset("chewing-on-things.mp4");
   const nextBehaviorScenario = scenarios[currentIndex + 1];
   useVideoMetadataPreload(behaviorVideoSource);
   useVideoMetadataPreload(nextBehaviorScenario ? dailyBehaviorVideos[nextBehaviorScenario.id] : undefined);
@@ -1223,11 +1227,11 @@ function BusyCareActivity({
       <div className="busy-care-layout">
         <div className="busy-care-room" aria-label={`${animalName}在房間中等待照顧的情境`}>
           {!isCat && !sceneVideoFailed ? (
-            <VideoWithToggle className="busy-care-room-video" src="/assets/pet-journey/busy-daily-care.mp4" loop ariaLabel="疲憊忙碌的日子情境影片" onError={() => setSceneVideoFailed(true)} />
+            <VideoWithToggle className="busy-care-room-video" src={dogLifeAsset("busy-daily-care.mp4")} loop ariaLabel="疲憊忙碌的日子情境影片" onError={() => setSceneVideoFailed(true)} />
           ) : (
             <>
-              <img className="busy-care-room-background" src={isCat ? catAssets.life.safeRoom : "/assets/room/empty-room.png"} alt="居家房間場景" />
-              <img className="busy-care-hungry-dog" src={isCat ? catAssets.life.orangeCat : "/assets/pet-journey/shiba-hungry.png"} alt={`${displayPetName}在房間裡等待照顧`} />
+              <img className="busy-care-room-background" src={isCat ? catAssets.life.safeRoom : dogAssets.feeding.room} alt="居家房間場景" />
+              <img className="busy-care-hungry-dog" src={isCat ? catAssets.life.orangeCat : dogLifeAsset("shiba-hungry.png")} alt={`${displayPetName}在房間裡等待照顧`} />
             </>
           )}
         </div>
@@ -1569,14 +1573,14 @@ function ArrivalMealActivity({
       {
         id: "macadamia",
         label: "夏威夷豆",
-        image: "/assets/pet-journey/macadamia-nuts.png",
+        image: dogLifeAsset("macadamia-nuts.png"),
         title: "這個不能給小狗吃",
         text: "常見的人類食物例如洋蔥、大蒜、巧克力、葡萄、堅果類（例如：夏威夷豆）、口香糖（含木糖醇）等，對犬隻而言可能會造成健康危害。另外，太鹹、太油或含有咖啡因的食物，也不適合犬隻食用。",
       },
       {
         id: "bones",
         label: "吃剩的骨頭",
-        image: "/assets/pet-journey/leftover-bones.png",
+        image: dogLifeAsset("leftover-bones.png"),
         title: "吃剩的骨頭不適合當作正餐",
         text: "許多民眾會將吃過的骨頭、便當或剩菜剩飯當作犬隻的食物來源之一，但除了必須注意犬隻的營養均衡與日食物安全適當之外，啃食骨頭或剩食中較堅硬的殘渣，可能造成犬隻口腔或消化道危害，建議避免餵食此類食物。",
       },
@@ -1612,14 +1616,14 @@ function ArrivalMealActivity({
       <aside className={`arrival-meal-supplies ${activity.arrivalMealFoodReady && activity.arrivalMealWaterReady ? "mobile-condensed" : ""}`} aria-label="晚餐用品">
         <div className="arrival-meal-supply-slot">
           {!activity.arrivalMealFoodReady ? (
-            <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src={isCat ? catAssets.feeding.food : "/assets/room/food.png"} alt={isCat ? "貓主食" : "飼料"} /><span>{isCat ? "貓主食" : "飼料"}</span></button>
+            <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src={isCat ? catAssets.feeding.food : dogAssets.feeding.food} alt={isCat ? "貓主食" : "飼料"} /><span>{isCat ? "貓主食" : "飼料"}</span></button>
           ) : (
             <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
           )}
         </div>
         <div className="arrival-meal-supply-slot">
           {!activity.arrivalMealWaterReady ? (
-            <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isCat ? catAssets.feeding.waterBowl : "/assets/pet-journey/waterbottle.png"} alt="水瓶" /><span>水</span></button>
+            <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isCat ? catAssets.feeding.waterBowl : dogAssets.feeding.waterBottle} alt="水瓶" /><span>水</span></button>
           ) : (
             <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
           )}
@@ -1629,16 +1633,16 @@ function ArrivalMealActivity({
         ))}
       </aside>
       <div className="arrival-meal-scene">
-        <img className="arrival-meal-room arrival-meal-room--desktop" src={isCat ? catAssets.life.safeRoom : "/assets/room/empty-room.png"} alt={`${animalName}的新家房間`} />
-        <img className="arrival-meal-room arrival-meal-room--mobile" src={isCat ? catAssets.life.safeRoom : "/assets/room/empty-room-mobile.png"} alt="" />
+        <img className="arrival-meal-room arrival-meal-room--desktop" src={isCat ? catAssets.life.safeRoom : dogAssets.feeding.room} alt={`${animalName}的新家房間`} />
+        <img className="arrival-meal-room arrival-meal-room--mobile" src={isCat ? catAssets.life.safeRoom : dogAssets.feeding.mobileRoom} alt="" />
         {foodWarning && <div className="arrival-meal-warning" role="alert">
           <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
           <b>{foodWarning.title}</b>
           <p>{foodWarning.text}</p>
         </div>}
-        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? catAssets.life.orangeCat : complete ? "/assets/pet-journey/shiba-dog.png" : "/assets/pet-journey/shiba-sad.png"} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
-        <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={isCat ? catAssets.feeding.waterBowl : activity.arrivalMealWaterReady ? "/assets/room/water-bowl.png" : "/assets/pet-journey/empty-water-bowl.png"} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
-        <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={isCat ? catAssets.feeding.foodBowl : activity.arrivalMealFoodReady ? "/assets/room/food-bowl.png" : "/assets/pet-journey/empty-food-bowl.png"} alt={activity.arrivalMealFoodReady ? `裝好主食的${isCat ? "食盆" : "狗碗"}` : "空食碗"} />
+        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? catAssets.life.orangeCat : complete ? dogLifeAsset("shiba-dog.png") : dogLifeAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
+        <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={isCat ? catAssets.feeding.waterBowl : activity.arrivalMealWaterReady ? dogAssets.feeding.waterBowl : dogAssets.feeding.emptyWaterBowl} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
+        <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={isCat ? catAssets.feeding.foodBowl : activity.arrivalMealFoodReady ? dogAssets.feeding.foodBowl : dogAssets.feeding.emptyFoodBowl} alt={activity.arrivalMealFoodReady ? `裝好主食的${isCat ? "食盆" : "狗碗"}` : "空食碗"} />
       </div>
       <div className="arrival-meal-footer">
         {complete && <p role="status">晚餐準備好了！合適的主食與乾淨飲水，是每天照顧的重要部分。</p>}
@@ -2404,7 +2408,7 @@ function WalkingActivity({
             onPointerCancel={cancelDraggingBag}
             aria-label="拖曳撿便袋清理排泄物"
           >
-            <img src="/assets/walking/poop-bag-1.png" alt="" />
+            <img src={dogDailyAsset("poop-bag-1.png")} alt="" />
           </button>
           <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
         </div>
@@ -2443,11 +2447,11 @@ function WalkingActivity({
             <h2 id="walking-safety-title">你會用哪一種方式陪牠散步？</h2>
             <div className="walking-safety-grid">
               <button type="button" onClick={() => setSafetyStep("correct")}>
-                <img src="/assets/walking/leash-choice.png" alt="飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境" />
+                <img src={dogDailyAsset("leash-choice.png")} alt="飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境" />
                 <span><b>繫好牽繩，保持鬆弛</b><small>讓狗狗在可控距離內嗅聞、探索環境。</small></span>
               </button>
               <button type="button" onClick={() => setSafetyStep("law")}>
-                <img src="/assets/walking/off-leash-choice.png" alt="沒有牽繩的柴犬離飼主一段距離自行探索" />
+                <img src={dogDailyAsset("off-leash-choice.png")} alt="沒有牽繩的柴犬離飼主一段距離自行探索" />
                 <span><b>不繫牽繩，讓牠自己走</b><small>讓狗狗自由自在探索，飼主在後方跟著。</small></span>
               </button>
             </div>
@@ -2517,7 +2521,7 @@ function WalkingActivity({
             {draggedBag && (
               <img
                 className="walking-drag-bag-ghost"
-                src="/assets/walking/poop-bag-1.png"
+                src={dogDailyAsset("poop-bag-1.png")}
                 alt=""
                 aria-hidden="true"
                 style={{ left: draggedBag.x, top: draggedBag.y }}
@@ -2525,7 +2529,7 @@ function WalkingActivity({
             )}
             <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position, isMobileWalkingLayout)}>
               <img
-                src={activity.walkingPoopCleaned ? "/assets/walking/walker-dog-bag.png" : needsCleanup ? "/assets/walking/walker-and-dog-poop.png" : "/assets/walking/walker-and-dog.png"}
+                src={activity.walkingPoopCleaned ? dogDailyAsset("walker-dog-bag.png") : needsCleanup ? dogDailyAsset("walker-and-dog-poop.png") : dogDailyAsset("walker-and-dog.png")}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
             </div>
@@ -2536,7 +2540,7 @@ function WalkingActivity({
                 style={isMobileWalkingLayout ? mobilePoopStyle : desktopPoopStyle}
                 aria-hidden="true"
               >
-                <img src="/assets/walking/poop.png" alt="" />
+                <img src={dogDailyAsset("poop.png")} alt="" />
               </div>
             )}
             {renderWalkingEventCard("walking-event-card--desktop")}
@@ -2806,7 +2810,6 @@ export function LifeJourney({
         />
       ))}
       {canResetCurrent && <div className="scenario-bottom-nav life-bottom-nav"><button className="secondary" onClick={handleReplay}>↻ 再玩一次</button></div>}
-      <span className="visually-hidden">目前共登記 {expenses.length} 筆費用，所有費用以唯一識別碼避免重複。</span>
     </div>
   );
 }

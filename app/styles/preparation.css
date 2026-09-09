@@ -200,6 +200,8 @@
 
   .room-scene-background--desktop, .arrival-meal-room--desktop { display: none; }
   .room-scene-background--mobile, .arrival-meal-room--mobile { display: block; object-fit: cover; object-position: right center; }
+  /* 犬隻房間：固定使用原始 empty-room.png，完整呈現且不以 cover 裁切放大。 */
+  .room-scene-background--dog-mobile { object-fit: contain !important; object-position: center center !important; background: #dbc7a4; }
   .room-scene { aspect-ratio: 1 / 1; }
   /* 手機版房間物品位置：由 layout.ts 的 mobile placement CSS 變數提供。 */
   .room-scene .placed-supply { left: var(--mobile-room-item-x) !important; top: var(--mobile-room-item-y) !important; width: var(--mobile-room-item-width) !important; }
@@ -265,7 +267,9 @@
 .room-scene { position: relative; width: 100%; aspect-ratio: 2558 / 1444; overflow: hidden; border: 1px solid #d8bd8c; border-radius: 20px; background: #dbc7a4; box-shadow: 0 12px 35px rgba(70, 53, 26, .1); }
 .room-scene:not(.room-scene-ready) .room-object { visibility: hidden; }
 .room-scene:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
-.room-scene-background { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
+.room-scene-background { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center; }
+/* 犬隻原圖與桌機舞台同為 2558:1444；保留完整畫面，不額外放大裁切。 */
+.room-scene-background--dog { object-fit: contain; object-position: center center; background: #dbc7a4; }
 .room-object { position: absolute; z-index: 2; height: auto; padding: 0; border: 0; background: transparent; cursor: pointer; transform: translate(-50%, -50%); filter: drop-shadow(0 5px 5px rgba(65, 45, 21, .2)); }
 .room-object img { display: block; width: 100%; height: auto; max-height: 100%; object-fit: contain; }
 .room-object span { position: absolute; left: 50%; bottom: -17px; max-width: 120px; padding: 2px 6px; border-radius: 999px; background: rgba(255, 253, 247, .92); color: var(--ink); font-size: 9px; font-weight: 900; white-space: nowrap; transform: translateX(-50%); opacity: 0; transition: opacity .2s; }
@@ -355,5 +359,102 @@
   .trunk-body { min-height: 390px; padding: 20px 14px; }
   .trunk-body > div { grid-template-columns: repeat(3, 1fr); }
   .trunk-feedback ul { grid-template-columns: 1fr; }
+}
+
+
+
+/* 準備第一餐與餵食互動。 */
+.arrival-meal-activity { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: stretch; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: white; box-shadow: var(--shadow); }
+.arrival-meal-heading { grid-column: 1 / -1; padding: 24px 28px 18px; border-bottom: 1px solid var(--line); background: #fffdf7; }
+.arrival-meal-heading h1 { margin: 0 0 8px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(28px, 4vw, 42px); }
+.arrival-meal-heading p { max-width: 760px; margin: 0; color: var(--muted); line-height: 1.75; }
+.arrival-meal-supplies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: center; align-items: center; justify-items: center; gap: 28px 18px; padding: 32px 18px; background: var(--paper); }
+.arrival-meal-supplies button { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; padding: 0; border: 0; background: transparent; color: var(--ink); font: inherit; font-weight: 900; cursor: pointer; }
+.arrival-meal-supplies .arrival-meal-supply-food-button { max-width: none; }
+.arrival-meal-supplies button:hover img, .arrival-meal-supplies button:focus-visible img { transform: translateY(-4px) scale(1.04); }
+.arrival-meal-supplies button:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; border-radius: 9px; }
+.arrival-meal-supplies img { width: 92px; height: 108px; object-fit: contain; transition: transform .2s ease; }
+.arrival-meal-supplies img.arrival-meal-supply-food { width: 125px !important; height: 125px !important; max-width: none; }
+.arrival-meal-supplies p { grid-column: 1 / -1; margin: 0; color: var(--mint); font-size: 13px; font-weight: 900; text-align: center; }
+.arrival-meal-supplies .arrival-meal-unsafe.warning img { animation: chocolateNudge .38s ease-in-out 2; }
+.unsafe-food-visual { position: relative; display: grid; place-items: center; }
+.unsafe-food-visual i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(164, 42, 24, .13);
+  color: #b52d1d;
+  font-style: normal;
+  font-size: 34px;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(109, 31, 18, .2));
+  transform: translate(-50%, -50%);
+}
+.arrival-meal-warning { position: absolute; left: 16px; top: 16px; z-index: 6; width: min(390px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 13px 46px 13px 15px; border: 1px solid #e08942; border-radius: 15px; background: rgba(255, 248, 233, .94); color: #70421c; line-height: 1.55; box-shadow: 0 10px 28px rgba(71, 43, 18, .14); backdrop-filter: blur(3px); }
+.arrival-meal-warning b { display: block; }
+.arrival-meal-warning p { margin: 6px 0 0; color: inherit; font-size: 12px; }
+.arrival-meal-warning-close { position: absolute; top: 9px; right: 9px; display: grid; place-items: center; width: 29px; height: 29px; border: 1px solid rgba(112, 66, 28, .16); border-radius: 50%; background: rgba(255, 253, 247, .84); color: #70421c; font: inherit; font-size: 18px; font-weight: 900; line-height: 1; cursor: pointer; transition: background .18s ease, transform .18s ease; }
+.arrival-meal-warning-close:hover, .arrival-meal-warning-close:focus-visible { background: #fff; transform: scale(1.06); }
+@keyframes chocolateNudge { 0%, 100% { transform: translateX(0); } 35% { transform: translateX(-5px) rotate(-3deg); } 70% { transform: translateX(5px) rotate(3deg); } }
+.arrival-meal-scene { position: relative; aspect-ratio: 16 / 9; min-height: 0; overflow: hidden; background: #dbc28d; }
+.arrival-meal-room { display: block; width: 100%; height: 100%; object-fit: cover; }
+.arrival-meal-dog, .arrival-meal-water, .arrival-meal-food { position: absolute; height: auto; object-fit: contain; }
+.arrival-meal-dog { width: 33%; max-height: 67%; left: 47%; bottom: 11%; z-index: 2; }
+.arrival-meal-water { width: 15%; left: 25%; bottom: 10%; z-index: 3; }
+.arrival-meal-food { width: 15%; left: 39%; bottom: 8%; z-index: 3; }
+.arrival-meal-footer { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 18px; min-height: 76px; padding: 14px 24px; border-top: 1px solid var(--line); }
+.arrival-meal-footer p { flex: 1; margin: 0; color: #3e6848; line-height: 1.6; }
+
+.feeding-steps { display: grid; grid-template-columns: 1.15fr .9fr .75fr; gap: 14px; }
+.feeding-steps > article { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+.feeding-steps > article > span { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 50%; background: var(--gold); color: white; font-weight: 900; }
+.feeding-steps h2 { margin: 12px 0; font-size: 18px; }
+.food-options { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.food-options button { min-height: 88px; border: 1px solid var(--line); border-radius: 11px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; }
+.food-options button.selected { border: 2px solid var(--mint); background: var(--mint-soft); }
+.food-options i { font-size: 25px; font-style: normal; }
+.food-options b { font-size: 10px; text-align: center; }
+.water-sequence { display: grid; gap: 7px; }
+.water-sequence button { padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: white; display: flex; align-items: center; gap: 8px; text-align: left; font-size: 11px; cursor: pointer; }
+.water-sequence button:disabled { opacity: .45; cursor: not-allowed; }
+.water-sequence button.done { border-color: var(--mint); background: var(--mint-soft); }
+.water-sequence i { min-width: 23px; height: 23px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-style: normal; }
+.dinner-scene { min-height: 190px; display: flex; align-items: flex-end; justify-content: center; gap: 2px; border-radius: 14px; background: var(--cream); overflow: hidden; }
+.dinner-scene i { font-style: normal; font-size: 92px; }
+.dinner-scene b, .dinner-scene em { font-style: normal; font-size: 35px; }
+.feeding-activity.served .dinner-scene i { animation: dinnerHappy .7s ease-in-out infinite alternate; }
+.serve-dinner > button { width: 100%; margin-top: 10px; }
+
+/* 餵食頁面的桌機／手機欄位切換。 */
+@media (max-width: 1000px) {
+  .arrival-meal-activity { grid-template-columns: 190px minmax(0, 1fr); }
+  .feeding-steps { grid-template-columns: 1fr 1fr; }
+  .serve-dinner { grid-column: 1 / -1; }
+}
+
+@media (max-width: 720px) {
+  .feeding-steps { grid-template-columns: 1fr; }
+  .arrival-meal-activity { grid-template-columns: 1fr; }
+  .arrival-meal-supplies { grid-template-columns: repeat(4, minmax(0, 1fr)); min-height: 0; gap: 12px; padding: 16px; }
+  .arrival-meal-supplies button { max-width: none; min-height: 104px; justify-self: center; }
+  .arrival-meal-supplies .arrival-meal-supply-food-button { max-width: none; }
+  .arrival-meal-supplies img { width: 72px; height: 78px; }
+  .arrival-meal-supplies img.arrival-meal-supply-food { width: 150px !important; height: 150px !important; max-width: none; }
+  .arrival-meal-supplies .arrival-meal-supply-food-button { min-height: 104px; }
+  .arrival-meal-supplies img.arrival-meal-supply-water { width: 130px !important; height: 130px !important; max-width: none; }
+  .arrival-meal-scene { aspect-ratio: 1 / 1; }
+  .arrival-meal-footer { flex-direction: column; align-items: stretch; padding: 16px; }
+  .arrival-meal-footer .primary { width: 100%; }
+  .serve-dinner { grid-column: auto; }
+  .food-options { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 430px) {
+  .arrival-meal-supplies { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
