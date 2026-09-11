@@ -24,7 +24,7 @@ import {
   CarTrunkPreparation,
   RoomPreparation,
 } from "./components/preparation/PreparationComponents";
-import { AssessmentReport, ProfileSupplementForm } from "./components/report/ProfileReportComponents";
+import { AssessmentReport } from "./components/report/ProfileReportComponents";
 import { PetAcquisitionPage } from "./components/acquisition/PetAcquisitionPage";
 import {
   CostBar,
@@ -435,12 +435,12 @@ export default function Home() {
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>
               <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} emergencyReserve={emergencyReserve} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
-              <ProfileSupplementForm profile={profile} petName={petName} breed={breed} species={category} onChange={setProfile} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <div className="report-next-step-actions">
+                <p>準備好進一步了解合法、透明的取得方式了嗎？</p>
                 <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "auto" }); }}>取得寵物 <span>→</span></button>
               </div>
             </>}
-            {step === 8 && <PetAcquisitionPage onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
+            {step === 8 && <PetAcquisitionPage profile={profile} petName={petName} breed={breed} species={category} onProfileChange={setProfile} onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
           </section>
         </div>
       )}

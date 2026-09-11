@@ -14,7 +14,7 @@ export function getLifeScenariosForSpecies(species: string): Scenario[] {
 }
 
 export function getBreedChallengeScenarios(breedId: string): Scenario[] {
-  return breedId === "orange-cat" || breedId === "tabby-cat"
+  return breedId === "mixed-cat" || breedId === "british-shorthair"
     ? getCatBreedChallengeScenarios(breedId)
     : getDogBreedChallengeScenarios(breedId);
 }

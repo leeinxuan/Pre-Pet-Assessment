@@ -12,8 +12,9 @@ import { catLifeScenarios } from "./cat/scenarios";
  */
 export const catAssets = {
   selection: {
-    orangeCat: "/assets/cat/selection/orange-cat.png",
-    tabbyCat: "/assets/cat/selection/tabby-cat.png",
+    mixedCat: "/assets/cat/selection/mixed-cat.png",
+    // TODO(cat-assets): 請補入英國短毛貓專用插圖；目前以既有中性短毛貓插圖作為安全 fallback。
+    britishShorthair: "/assets/cat/selection/british-shorthair.png",
   },
   room: {
     safeRoom: "/assets/cat/room/cat-safe-room.png",
@@ -40,6 +41,8 @@ export const catAssets = {
     seasonedLeftovers: "/assets/cat/feeding/seasoned-leftovers.png",
     vegetablesFruit: "/assets/cat/feeding/vegetables-fruit.png",
     leftoverFishBones: "/assets/cat/feeding/leftover-fish-bones.png",
+    waterBottle: "/assets/shared/waterbottle.png",
+    chocolate: "/assets/shared/chocolate.png",
   },
   daily: {
     // TODO(cat-assets): 補入專用巡視背景與貓砂鏟後，僅需在此替換路徑。
@@ -55,8 +58,8 @@ export const catAssets = {
   },
   life: {
     safeRoom: "/assets/cat/room/cat-safe-room.png",
-    orangeCat: "/assets/cat/selection/orange-cat.png",
-    tabbyCat: "/assets/cat/selection/tabby-cat.png",
+    mixedCat: "/assets/cat/selection/mixed-cat.png",
+    britishShorthair: "/assets/cat/selection/british-shorthair.png",
   },
 } as const;
 

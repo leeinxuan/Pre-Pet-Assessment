@@ -16,7 +16,7 @@ export const dogRoomItems: RoomItem[] = [
 
 export const dogHazards: HazardItem[] = [
   { id: "small-parts", label: "小物品", icon: "●", image: "/assets/dog/room/small-items.png", placement: { x: 40, y: 75, width: 12, layer: 5 }, mobilePlacement: { x: 80, y: 55, width: 16 }, danger: "容易被誤吞，可能造成噎住或腸胃阻塞。", handling: "收進小狗無法取得的抽屜或收納盒。" },
-  { id: "chocolate", label: "巧克力", icon: "🍫", image: "/assets/dog/room/chocolate.png", placement: { x: 89, y: 78, width: 10, layer: 5 }, mobilePlacement: { x: 89, y: 78, width: 16 }, danger: "含有不適合狗狗的成分，可能危害健康。", handling: "放進有門的高處櫃子。" },
+  { id: "chocolate", label: "巧克力", icon: "🍫", image: "/assets/shared/chocolate.png", placement: { x: 89, y: 78, width: 10, layer: 5 }, mobilePlacement: { x: 89, y: 78, width: 16 }, danger: "含有不適合狗狗的成分，可能危害健康。", handling: "放進有門的高處櫃子。" },
   { id: "chemicals", label: "一般清潔劑", icon: "🧴", image: "/assets/dog/room/detergent.png", placement: { x: 62, y: 64, width: 10, layer: 5 }, mobilePlacement: { x: 55, y: 65, width: 15 }, danger: "一般清潔劑可能含有刺激性或不適合寵物接觸的成分。", handling: "應收在牠碰不到的地方；日常清潔請選擇寵物專用清潔用品。" },
   { id: "cables", label: "電線", icon: "🔌", image: "/assets/dog/room/wire.png", placement: { x: 12, y: 78, width: 20, layer: 5 }, mobilePlacement: { x: 15, y: 78, width: 25 }, danger: "可能被啃咬，造成受傷或觸電。", handling: "整理固定或加裝電線保護套。" },
 ];

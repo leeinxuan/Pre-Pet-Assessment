@@ -29,7 +29,7 @@ export const dogAssets = {
     foodBowl: "/assets/dog/room/food-bowl.png",
     emptyWaterBowl: "/assets/dog/pet-journey/empty-water-bowl.png",
     emptyFoodBowl: "/assets/dog/pet-journey/empty-food-bowl.png",
-    waterBottle: "/assets/dog/pet-journey/waterbottle.png",
+    waterBottle: "/assets/shared/waterbottle.png",
   },
   life: { root: "/assets/dog/pet-journey" },
   daily: { root: "/assets/dog/walking" },

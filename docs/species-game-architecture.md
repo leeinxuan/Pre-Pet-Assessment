@@ -291,8 +291,8 @@ type SpeciesActivityState = {
 
 | ID | 建議正式路徑 | 類型 | 用在何處 | 文字佔位標題 |
 |---|---|---|---|---|
-| `cat-orange-card` | `/assets/cat/selection/orange-cat.png` | 圖片 | 橘貓選擇卡 | `［待補素材：橘貓選擇卡］` |
-| `cat-tabby-card` | `/assets/cat/selection/tabby-cat.png` | 圖片 | 虎斑貓選擇卡 | `［待補素材：虎斑貓選擇卡］` |
+| `cat-mixed-card` | `/assets/cat/selection/mixed-cat.png` | 圖片 | 米克斯貓選擇卡 | `［待補素材：米克斯貓選擇卡］` |
+| `cat-british-shorthair-card` | `/assets/cat/selection/british-shorthair.png` | 圖片 | 英國短毛貓選擇卡 | `［待補素材：英國短毛貓選擇卡］` |
 | `cat-safe-room` | `/assets/cat/room/safe-room.png` | 圖片 | 布置安全房、第一餐、每日巡視背景 | `［待補素材：貓咪安全房］` |
 | `cat-safe-room-mobile` | `/assets/cat/room/safe-room-mobile.png` | 圖片 | 手機版安全房 | `［待補素材：手機版貓咪安全房］` |
 | `cat-litter-box` | `/assets/cat/room/litter-box.png` | 圖片 | 房間用品、砂盆巡視 | `［待補素材：貓砂盆］` |

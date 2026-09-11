@@ -28,7 +28,7 @@
 | `/room/飼料.png` | `/assets/dog/room/food.png` | 房間用品：飼料 | 房間布置、餵食 |
 | `/room/門牌.png` | `/assets/dog/room/nameplate.png` | 門牌命名 | 房間布置 |
 | `/room/電線.png` | `/assets/dog/room/wire.png` | 危險物品：電線 | 房間布置 |
-| `/room/巧克力.png` | `/assets/dog/room/chocolate.png` | 危險物品：巧克力 | 房間布置 |
+| `/room/巧克力.png` | `/assets/shared/chocolate.png` | 共用危險物品：巧克力 | 房間布置／貓咪餵食 |
 | `/room/清潔劑.png` | `/assets/dog/room/detergent.png` | 危險物品：清潔劑 | 房間布置 |
 | `/room/小物品.png` | `/assets/dog/room/small-items.png` | 危險物品：小物品 | 房間布置 |
 | `/room/牽繩.png` | `/assets/dog/room/leash.png` | 房間版牽繩素材，目前未引用 | 保留備用 |

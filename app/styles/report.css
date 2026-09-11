@@ -12,7 +12,8 @@
 .profile-panel legend small { color: var(--muted); font-size: 13px; font-weight: 700; }
 .profile-supplement { max-width: 1160px; padding-top: 28px; padding-bottom: 72px; }
 .profile-supplement .profile-panel { min-height: 0; margin-top: 22px; }
-.report-next-step-actions { max-width: 1160px; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; margin: -28px auto 72px; padding: 0 clamp(20px,4vw,36px); }
+.report-next-step-actions { max-width: 1000px; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 16px 24px; margin: 28px auto 72px; padding: 24px clamp(20px,4vw,36px) 0; border-top: 1px solid var(--line); }
+.report-next-step-actions p { flex: 1 1 360px; margin: 0; color: var(--muted); font-weight: 800; line-height: 1.65; }
 .profile-time-grid, .supplement-choice-grid, .housing-options, .pet-experience-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
 .profile-time-grid > label, .supplement-inline-input, .experience-note { display: grid; gap: 8px; color: var(--ink); font-weight: 850; }
 .profile-time-grid > label > span { color: var(--muted); font-weight: 700; }
@@ -33,6 +34,17 @@
 @media (max-width: 720px) { .profile-wizard-head { align-items: flex-start; }.profile-wizard-head h1 { font-size: 35px; }.profile-panel { min-height: 0; padding: 22px 18px; border-radius: 20px; }.profile-time-grid, .supplement-choice-grid, .housing-options, .pet-experience-row { grid-template-columns: 1fr; }.home-space-gallery figure, .home-space-add-photo { width: min(100%,190px); }.legal-acquisition-page { padding: 24px 16px 62px; }.legal-search > div { grid-template-columns: 1fr; }.legal-search button { width: 100%; }.legal-acquisition-tabs { display: flex; align-items: center; gap: 22px; margin: 28px 0 14px; border-bottom: 1px solid rgba(216,199,170,.72); }.legal-acquisition-tabs button { position: relative; padding: 0 2px 10px; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 22px; font-weight: 900; cursor: pointer; }.legal-acquisition-tabs button::after { content: ""; position: absolute; right: 0; bottom: -1px; left: 0; height: 3px; border-radius: 999px; background: transparent; }.legal-acquisition-tabs button.active { color: var(--ink); }.legal-acquisition-tabs button.active::after { background: var(--gold-dark); }.legal-acquisition-sections { margin-top: 0; }.legal-section { display: none; }.legal-section.is-mobile-active { display: block; }.legal-section-head h2 { display: none; }.legal-option-grid { grid-template-columns: 1fr; }.legal-final-actions, .legal-acquisition-footer-actions { align-items: stretch; flex-direction: column; }.legal-final-actions { width: 100%; }.legal-final-actions button, .legal-acquisition-footer-actions > button { width: 100%; } }
 
 /* 下載照護指南與固定匯出版面。 */
+.legal-profile-entry { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-top:28px; padding:20px 22px; border:1px solid rgba(216,199,170,.8); border-radius:22px; background:#fffdf8; }.legal-profile-entry h2{margin:0 0 7px;font-size:20px}.legal-profile-entry p{max-width:720px;margin:0;color:var(--muted);font-size:14px;font-weight:750;line-height:1.7}.legal-profile-entry .secondary{flex:0 0 auto;white-space:nowrap}.legal-profile-form{margin-top:14px;padding:24px;border:1px solid var(--line);border-radius:24px;background:rgba(255,253,247,.74)}.profile-supplement--embedded{max-width:none;padding:0}.profile-supplement--embedded .profile-wizard-head{margin-bottom:18px}.profile-supplement--embedded .profile-wizard-head h1{font-size:clamp(28px,3vw,38px)}.legal-profile-complete{margin:18px 0 0;padding:12px 14px;border-radius:14px;background:var(--mint-soft);color:#496b50;font-size:14px;font-weight:850}
+.legal-acquisition-tabs{display:none;align-items:center;gap:22px;margin:28px 0 14px;border-bottom:1px solid rgba(216,199,170,.72)}.legal-acquisition-tabs button{position:relative;padding:0 2px 10px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:22px;font-weight:900;cursor:pointer}.legal-acquisition-tabs button::after{content:"";position:absolute;right:0;bottom:-1px;left:0;height:3px;border-radius:999px;background:transparent}.legal-acquisition-tabs button.active{color:var(--ink)}.legal-acquisition-tabs button.active::after{background:var(--gold-dark)}
+
+/* 生活條件表單由取得寵物頁開啟；背景頁不捲動，表單本身獨立捲動。 */
+.profile-modal-backdrop { position: fixed; z-index: 160; inset: 0; display: grid; place-items: center; padding: 28px; overflow: hidden; background: rgba(42, 32, 20, .48); backdrop-filter: blur(3px); }
+.profile-modal { position: relative; width: min(1120px, 100%); max-height: min(90dvh, 920px); overflow: auto; padding: 30px; border: 1px solid rgba(226, 205, 169, .9); border-radius: 28px; background: #fffdf8; box-shadow: 0 28px 72px rgba(38, 27, 12, .28); overscroll-behavior: contain; }
+.profile-modal .profile-supplement { width: 100%; }
+.profile-modal-close { position: sticky; z-index: 3; top: 0; float: right; display: grid; width: 40px; height: 40px; margin: -8px -8px 8px 16px; place-items: center; border: 1px solid rgba(117, 91, 52, .24); border-radius: 50%; background: rgba(255, 253, 248, .95); color: var(--ink); font-size: 28px; line-height: 1; cursor: pointer; box-shadow: 0 3px 10px rgba(70, 53, 26, .1); }
+.profile-modal-close:hover { border-color: var(--gold-dark); color: var(--gold-dark); }
+.legal-option-card{grid-template-rows:1fr auto auto;padding:0;font:inherit;text-align:left}.acquisition-dialog-backdrop{position:fixed;inset:0;z-index:150;display:grid;place-items:center;padding:22px;background:rgba(48,41,31,.5)}.acquisition-dialog{position:relative;width:min(560px,100%);max-height:min(780px,90dvh);overflow:auto;padding:28px;border-radius:26px;background:var(--paper);box-shadow:0 28px 80px rgba(33,25,16,.35)}.acquisition-dialog-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);font-size:24px;cursor:pointer}.acquisition-dialog-visual{height:180px;display:grid;place-items:center;overflow:hidden;margin:-28px -28px 22px;border-radius:26px 26px 0 0;background:#f5ead1;font-size:72px}.acquisition-dialog-visual img{width:100%;height:100%;object-fit:cover}.acquisition-dialog h2{margin:3px 0 6px;font-size:30px}.acquisition-dialog-meta{margin:0 0 14px;color:var(--gold-dark);font-size:13px;font-weight:900}.acquisition-dialog>p{line-height:1.75}.acquisition-dialog-details{margin:16px 0;padding:14px;border-radius:16px;background:#fff7e4}.acquisition-dialog-details p{margin:6px 0 0;color:var(--muted);line-height:1.65}.acquisition-dialog-audience{display:grid;gap:4px;margin:14px 0;color:var(--muted);font-size:14px;line-height:1.65}.acquisition-dialog-audience b{color:var(--ink)}.acquisition-dialog-reminder{color:#5f735f;font-size:14px;font-weight:800}.acquisition-dialog-source{display:inline-block;margin:4px 0 16px;color:var(--gold-dark);font-size:12px;font-weight:850}.acquisition-dialog-notice{color:var(--gold-dark);font-weight:900}
+@media (max-width:720px){.legal-profile-entry{display:grid;gap:16px;padding:18px}.legal-profile-entry .secondary{width:100%}.legal-profile-form{padding:18px 0 0;border:0;background:transparent}.acquisition-dialog-backdrop{align-items:end;padding:0}.acquisition-dialog{width:100%;max-height:88dvh;padding:22px;border-radius:24px 24px 0 0}.acquisition-dialog-visual{height:150px;margin:-22px -22px 18px;border-radius:24px 24px 0 0}}
 .compact-assessment .a4-toolbar {
   height: 0;
   max-width: none;
@@ -104,9 +116,13 @@
 .profile-pdf-actions {
   width: min(100%, 1000px);
   display: flex;
+  align-items: center;
+  gap: 18px;
   justify-content: flex-start;
   margin: 20px auto 0;
 }
+.profile-pdf-actions > p { max-width: 510px; margin: 0; color: var(--muted); font-size: 13px; font-weight: 750; line-height: 1.65; }
+.profile-pdf-actions .pdf-download-button { flex: 0 0 auto; }
 
 .pdf-export-stage {
   position: fixed;
@@ -303,6 +319,7 @@
 
 /* 總覽與下載指南的手機版覆寫，與桌機規則放在同一處以維持優先順序。 */
 @media (max-width: 720px) {
+  .profile-pdf-actions { align-items: stretch; flex-direction: column; gap: 10px; }.profile-pdf-actions > p { max-width: none; }
   .report-download-footer { padding-bottom: env(safe-area-inset-bottom); }
   .pdf-download-button { width: 100%; }
   .profile-pdf-actions .report-download-control,
@@ -413,6 +430,7 @@
   font-weight: 800;
 }
 
+.care-a4-sheet--details,
 .care-a4-sheet--followup {
   display: none;
   margin-top: 22px;
@@ -702,6 +720,11 @@
 .knowledge-modal h2 { margin: 6px 40px 18px 0; color: #3d362b; }
 .knowledge-modal ul { display: grid; gap: 10px; margin: 0; padding-left: 1.2em; color: #5d5547; line-height: 1.65; }
 .knowledge-modal li::marker { color: #a77b27; }
+.daily-care-modal { width: min(600px, calc(100vw - 40px)); }
+.daily-care-modal-intro { margin: 0 0 18px; color: var(--muted); line-height: 1.7; }
+.daily-care-modal-list { display: grid; gap: 9px; margin: 0 !important; padding: 0 !important; list-style: none; }
+.daily-care-modal-list li { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid rgba(216, 174, 94, .45); border-radius: 15px; background: #fffaf0; }
+.daily-care-modal-list li b { color: var(--ink); font-size: 16px; }.daily-care-modal-list li span { color: #755d35; font-size: 15px; font-weight: 750; line-height: 1.6; }
 
 .knowledge-modal-close {
   position: absolute;
@@ -968,11 +991,16 @@
 
 /* 與上方總覽規則配對的 RWD 覆寫，避免匯入順序改變手機版版面。 */
 @media (max-width: 720px) {
+  .daily-care-modal { top: auto; bottom: 0; width: 100%; max-height: 92dvh; padding: 24px 20px 28px; border-radius: 24px 24px 0 0; transform: translateX(-50%); }
   .report-next-step-actions {
+    align-items: stretch;
     justify-content: stretch;
-    margin-top: -12px;
-    padding: 0 16px 56px;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 22px;
+    padding: 22px 16px 56px;
   }
+  .report-next-step-actions p { flex: 0 1 auto; }
   .report-next-step-actions .primary { width: 100%; justify-content: center; }
   .report-level { grid-template-columns: 1fr; }
   .report-level span { grid-row: auto; }
@@ -1009,5 +1037,5 @@
 .profile-supplement .pet-experience-row label { min-height: 70px; display: grid; grid-template-columns: auto max-content minmax(0,1fr); align-items: center; gap: 9px; padding: 10px 12px; border: 1px solid #ded8cf; border-radius: 14px; background: #fff; font-weight: 850; }
 .profile-supplement .pet-experience-row input[type="checkbox"] { width: 20px; min-height: 20px; margin: 0; accent-color: var(--gold-dark); }.profile-supplement .pet-experience-row input:not([type="checkbox"]) { min-width: 0; min-height: 44px; padding: 8px; background: #f4f3f1; }.profile-supplement .shiba-experience { width: min(310px,100%); margin-top: 18px; }
 .profile-supplement .experience-note textarea { min-height: 112px; }.profile-supplement .profile-pdf-actions { width: 100%; margin-top: 26px; }.profile-supplement .pdf-download-button { min-width: 236px; }
-@media (max-width: 720px) { .profile-supplement .profile-panel { padding: 24px 18px; }.profile-supplement .profile-panel legend { font-size: 20px; }.profile-supplement .profile-time-grid, .profile-supplement .housing-options, .profile-supplement .supplement-choice-grid, .profile-supplement .supplement-choice-grid.compact, .profile-supplement .pet-experience-row { grid-template-columns: 1fr; }.profile-supplement .profile-time-grid > label { min-height: 84px; padding: 16px; }.profile-supplement .housemate-presence-choice { grid-template-columns: 1fr 1fr; }.profile-supplement .supplement-choice, .profile-supplement .housing-options button { min-height: 60px; }.profile-supplement .pet-experience-block { padding: 17px; }.profile-supplement .pet-experience-row label { grid-template-columns: auto max-content minmax(0,1fr); }.profile-supplement .pdf-download-button { width: 100%; } }
+@media (max-width: 720px) { .legal-acquisition-tabs { display: flex; }.profile-modal-backdrop { align-items: end; padding: 14px 0 0; }.profile-modal { width: 100%; max-height: 94dvh; padding: 22px 16px 28px; border-radius: 24px 24px 0 0; }.profile-modal-close { width: 44px; height: 44px; margin: -4px 0 8px 12px; }.profile-supplement .profile-panel { padding: 24px 18px; }.profile-supplement .profile-panel legend { font-size: 20px; }.profile-supplement .profile-time-grid, .profile-supplement .housing-options, .profile-supplement .supplement-choice-grid, .profile-supplement .supplement-choice-grid.compact, .profile-supplement .pet-experience-row { grid-template-columns: 1fr; }.profile-supplement .profile-time-grid > label { min-height: 84px; padding: 16px; }.profile-supplement .housemate-presence-choice { grid-template-columns: 1fr 1fr; }.profile-supplement .supplement-choice, .profile-supplement .housing-options button { min-height: 60px; }.profile-supplement .pet-experience-block { padding: 17px; }.profile-supplement .pet-experience-row label { grid-template-columns: auto max-content minmax(0,1fr); }.profile-supplement .pdf-download-button { width: 100%; } }
 

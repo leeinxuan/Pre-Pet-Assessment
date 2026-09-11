@@ -11,8 +11,10 @@ import {
   dogLifeScenarios as lifeScenarios,
 } from "../../data/species/journey";
 import { catDailyBehaviorScenarioIds, catLitterRescueConfig } from "../../data/species/cat/journey";
+import { catScenarioCorrectFeedback } from "../../data/species/cat/scenarios";
 import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/species/dog/walking";
 import { dogAssets } from "../../data/species/dog/assets";
+import { dogReport } from "../../data/species/dog/report";
 import { catAssets } from "../../data/species/cat/assets";
 import type {
   CareMember,
@@ -185,6 +187,19 @@ function renderKnowledgeText(text: string) {
   ));
 }
 
+/** 一般回饋維持自然內文；只有知識卡片才解析必要的重點標示。 */
+function plainFeedbackText(text: string) {
+  return text.replace(/\*{1,2}([^*]+)\*{1,2}/g, "$1");
+}
+
+/** 犬貓回饋頁共用知識卡；情境差異由 title、icon 與內容帶入。 */
+function KnowledgeCard({ title, children, className = "", icon = "💡" }: { title: string; children: ReactNode; className?: string; icon?: string }) {
+  return <section className={`knowledge-card feedback-knowledge-card ${className}`.trim()}>
+    <b className="feedback-knowledge-title"><span aria-hidden="true">{icon}</span>{title}</b>
+    {children}
+  </section>;
+}
+
 function IncorrectExplanation({ text }: { text: string }) {
   const firstSentenceEnd = text.search(/[。！？]/);
   const keyPoint = firstSentenceEnd >= 0 ? text.slice(0, firstSentenceEnd + 1) : text;
@@ -248,12 +263,11 @@ function CorrectFeedbackLayout({
         <div className="correct-feedback-intro">{intro}</div>
         {breedHighlight}
         {correctItems && correctItems.length > 0 && (
-          <div className="feedback-knowledge-card">
-            <b className="feedback-knowledge-title"><span aria-hidden="true">💡</span>{knowledgeTitle}</b>
+          <KnowledgeCard title={knowledgeTitle}>
             <ul className="daily-behavior-correct-list">
               {correctItems.map((item) => <li key={item}>{renderKnowledgeText(item)}</li>)}
             </ul>
-          </div>
+          </KnowledgeCard>
         )}
         {otherTipsBeforeSuggestion && otherTips}
         {suggestion && <div className="correct-feedback-suggestion">{suggestion}</div>}
@@ -269,11 +283,14 @@ function CorrectFeedbackLayout({
 
 function BreedKnowledgeHighlight({ text, label = "品種小知識" }: { text: string; label?: string }) {
   const lines = text.split(/\n+/);
+  // 沒有原始分段的品種知識，以分號切成短段落，避免長篇內容擠成一整塊。
+  const paragraphs = lines.length > 1
+    ? lines
+    : text.split("；").map((paragraph, index, all) => `${paragraph}${index < all.length - 1 ? "；" : ""}`);
   return (
-    <div className="walking-reflection-note breed-care-reflection">
-      <div className="breed-knowledge-heading"><span aria-hidden="true">💡</span><b>{label}</b></div>
-      {lines.map((line, index) => line.trim() && <p key={`${line}-${index}`}>{renderKnowledgeText(line.trim())}</p>)}
-    </div>
+    <KnowledgeCard title={label} className="breed-care-reflection">
+      {paragraphs.map((paragraph, index) => paragraph.trim() && <p key={`${paragraph}-${index}`}>{renderKnowledgeText(paragraph.trim())}</p>)}
+    </KnowledgeCard>
   );
 }
 
@@ -539,8 +556,8 @@ function ScenarioFeedback({
         videoSrc={getCorrectAnswerVideo(scenario.id)}
         videoFailed={feedbackVideoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={<p>{withPetName(choice.explanation, petName)}</p>}
-        suggestion={choice.suggestion ? <p>{withPetName(choice.suggestion, petName)}</p> : null}
+        intro={<p>{plainFeedbackText(withPetName(choice.explanation, petName))}</p>}
+        suggestion={choice.suggestion ? <p>{plainFeedbackText(withPetName(choice.suggestion, petName))}</p> : null}
         otherTips={<OtherCorrectTips scenario={scenario} choice={choice} petName={petName} />}
         onVideoEnded={() => setFeedbackVideoFinished(true)}
         onVideoError={() => { setFeedbackVideoFailed(true); setFeedbackVideoFinished(true); }}
@@ -647,10 +664,9 @@ function ScenarioCard({
 
 function SeniorMedicalKnowledge() {
   return (
-    <section className="senior-medical-knowledge" aria-labelledby="senior-medical-knowledge-title">
-      <div className="senior-medical-knowledge-heading"><span aria-hidden="true">💡</span><h3 id="senior-medical-knowledge-title">高齡後的長期醫療</h3></div>
+    <KnowledgeCard title="高齡後的長期醫療" className="senior-medical-knowledge">
       <p>高齡後，醫療不一定只是一次突發支出。健康檢查、慢性病追蹤、用藥、牙科、影像檢查與行動照護，都可能成為反覆出現的費用。</p>
-    </section>
+    </KnowledgeCard>
   );
 }
 
@@ -705,6 +721,9 @@ function VideoScenarioActivity({
   }
 
   if (mode === "positive" && selectedChoice) {
+    const catFeedback = isCatScenario
+      ? catScenarioCorrectFeedback[scenario.id as keyof typeof catScenarioCorrectFeedback]
+      : undefined;
     const breedSpecificSuggestion = scenario.id === "illness-vet" && selectedChoice.suggestion
       ? healthSuggestionForBreed(breed, selectedChoice.suggestion)
       : "";
@@ -716,14 +735,21 @@ function VideoScenarioActivity({
         videoSrc={getCorrectAnswerVideo(scenario.id)}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
+        intro={catFeedback ? <>
+          <p>{withPetName(catFeedback.encouragement, petName)}</p>
+          <p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>
+        </> : <p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
         breedHighlight={breedKnowledge ? <BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={`${breedLabelForId(breed)}小知識`} /> : null}
-        suggestion={followupSuggestion ? (
-          <p>{withPetName(followupSuggestion, petName)}</p>
+        correctItems={catFeedback ? catFeedback.knowledgePoints.map((point) => withPetName(point, petName)) : undefined}
+        knowledgeTitle={catFeedback?.knowledgeTitle}
+        suggestion={catFeedback ? (
+          <p>{plainFeedbackText(withPetName(catFeedback.reminder, petName))}</p>
+        ) : followupSuggestion ? (
+          <p>{plainFeedbackText(withPetName(followupSuggestion, petName))}</p>
         ) : selectedChoice.suggestion ? (
-          <p>{withPetName(withBreedName(selectedChoice.suggestion, breed), petName)}</p>
+          <p>{plainFeedbackText(withPetName(withBreedName(selectedChoice.suggestion, breed), petName))}</p>
         ) : null}
-        otherTips={isSeniorScenario ? <SeniorMedicalKnowledge /> : <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />}
+        otherTips={catFeedback ? null : isSeniorScenario ? <SeniorMedicalKnowledge /> : <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
         onReplay={onReplay}
@@ -849,12 +875,11 @@ function DailyBehaviorActivity({
         <div className="daily-behavior-positive-copy">
           <h2>做得很好！</h2>
           <p>{withPetName(correctIntroByScenario[scenario.id] ?? "你選到了這個情境中幾個合適的照顧方式：", petName)}</p>
-          <div className="feedback-knowledge-card">
-            <b className="feedback-knowledge-title"><span aria-hidden="true">💡</span>狗狗小知識</b>
+          <KnowledgeCard title="狗狗小知識">
             <ul className="daily-behavior-correct-list">
               {learningPoints.map((item) => <li key={item}>{renderKnowledgeText(withPetName(item, petName))}</li>)}
             </ul>
-          </div>
+          </KnowledgeCard>
           <button type="button" className="primary" onClick={moveToNext}>繼續 <span>→</span></button>
         </div>
       </section>
@@ -1114,7 +1139,6 @@ function BusyCareActivity({
   species = "dog",
   onMembersChange,
   onChoose,
-  onHelperUncertainty,
   onContinue,
   resetSignal,
   onReplay,
@@ -1127,7 +1151,6 @@ function BusyCareActivity({
   species?: string;
   onMembersChange: (members: CareMember[]) => void;
   onChoose: (choice: ScenarioChoice) => void;
-  onHelperUncertainty?: (scenario: Scenario) => void;
   onContinue: () => void;
   resetSignal: number;
   onReplay?: () => void;
@@ -1136,7 +1159,7 @@ function BusyCareActivity({
   const [mode, setMode] = useState<"question" | "family" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : "question");
   const [familyStep, setFamilyStep] = useState<"name" | "check">("name");
   const [helperName, setHelperName] = useState("");
-  const [helperChecks, setHelperChecks] = useState<Record<string, "yes" | "unsure" | "">>({});
+  const [helperChecks, setHelperChecks] = useState<Record<string, "yes" | "no" | "">>({});
   const [sceneVideoFailed, setSceneVideoFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
@@ -1145,20 +1168,26 @@ function BusyCareActivity({
   const displayPetName = petName || animalName;
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const familySupportChoice = scenario.choices.find((choice) => choice.id === "family-helper");
-  // 貓咪版交接固定確認四項：時間、意願、食水／砂盆／環境巡視，以及緊急聯絡。
-  // 「還不確定」不是一律答錯：緊急聯絡尚待確認時可以繼續，但會保留溫和提醒到總覽。
-  const helperQuestions = [
-    ...(isCat ? [{ id: "available", text: `${helperName || "對方"}在約定時段是否有時間完成照護？`, short: "尚未確認是否有時間協助", yesLabel: "有時間", unsureLabel: "還不確定", accepted: ["yes"] }] : []),
-    { id: "knows-needs", text: `${helperName || "對方"}是否了解${displayPetName}平常的${isCat ? "食水、砂盆、環境巡視、陪玩與觀察" : "餵食、換水、排泄與活動"}需求？`, short: "還不清楚日常照護需求", yesLabel: "了解", unsureLabel: "還不確定", accepted: ["yes"] },
-    { id: "willing", text: `${helperName || "對方"}是否可以依照你的交接方式照顧「${displayPetName}」？`, short: "尚未確認是否願意按照交接方式照顧", yesLabel: "可以", unsureLabel: "還不確定", accepted: ["yes"] },
-    { id: "emergency", text: `若${displayPetName}出現食慾、精神${isCat ? "、飲水、砂盆或活動" : ""}異常或緊急狀況，緊急聯絡方式是否已經先說明？`, short: "緊急聯絡方式還需要補充確認", yesLabel: "已說明", unsureLabel: "還不確定", accepted: ["yes", "unsure"], followUpWhenUnsure: true },
-  ];
+  // 忙碌照護日常的確認題固定使用「是／否」；反向敘述用「否」才是合適答案。
+  // 貓咪四題對應照護文件：日常交接、24 小時不進食警訊、緊急聯絡、動物醫院資訊。
+  const helperQuestions = isCat
+    ? [
+      { id: "daily-care", text: `你已經向${helperName || "協助者"}說明每天需補充食水、清潔貓砂盆、巡視環境並安排短段陪玩了嗎？`, short: "每日食水、砂盆、環境巡視與陪玩還需要先交接", accepted: ["yes"] },
+      { id: "food-alert", text: `我還沒有特別跟${helperName || "協助者"}說明：${displayPetName}超過 24 小時完全不進食，要立刻通知我。`, short: "24 小時完全不進食的警訊還需要先說明", accepted: ["no"] },
+      { id: "emergency-contact", text: `${helperName || "協助者"}知道緊急時怎麼聯絡到你嗎？`, short: "緊急聯絡方式還需要補充確認", accepted: ["yes"] },
+      { id: "vet-information", text: `你已把${displayPetName}平常就診的動物醫院聯絡方式和地址給${helperName || "協助者"}了嗎？`, short: "動物醫院的聯絡方式與地址還需要先提供", accepted: ["yes"] },
+    ]
+    : [
+      { id: "daily-care", text: `你已經向${helperName || "協助者"}說明${displayPetName}每天的餵食、換水、排泄清理、活動與陪伴安排了嗎？`, short: "每日餵食、換水、排泄與活動安排還需要先交接", accepted: ["yes"] },
+      { id: "support-confirmed", text: `我還沒有確認${helperName || "協助者"}在你忙碌時，是否真的有時間協助照顧${displayPetName}。`, short: "協助者的時間還需要先確認", accepted: ["no"] },
+      { id: "care-willing", text: `${helperName || "協助者"}願意依照你的交接方式照顧${displayPetName}嗎？`, short: "協助者的意願還需要先確認", accepted: ["yes"] },
+      { id: "emergency-contact", text: `${helperName || "協助者"}知道${displayPetName}出現異常或緊急狀況時怎麼聯絡你嗎？`, short: "緊急聯絡方式還需要補充確認", accepted: ["yes"] },
+    ];
   const allHelperChecksAnswered = helperQuestions.every((question) => Boolean(helperChecks[question.id]));
   const unsuitableHelperReasons = helperQuestions
-    .filter((question) => helperChecks[question.id] && !question.accepted.includes(helperChecks[question.id] as "yes" | "unsure"))
+    .filter((question) => helperChecks[question.id] && !question.accepted.includes(helperChecks[question.id] as "yes" | "no"))
     .map((question) => question.short);
   const hasUncertainHelperCheck = unsuitableHelperReasons.length > 0;
-  const hasHelperFollowUp = helperQuestions.some((question) => question.followUpWhenUnsure && helperChecks[question.id] === "unsure");
   const shouldShowHelperUncertainty = allHelperChecksAnswered && hasUncertainHelperCheck;
 
   useEffect(() => {
@@ -1200,7 +1229,6 @@ function BusyCareActivity({
       onMembersChange([...members, { id: `busy-helper-${Date.now()}`, name: trimmedName, age: null, isPlayer: false }]);
     }
     onChoose(familySupportChoice);
-    if (hasHelperFollowUp) onHelperUncertainty?.(scenario);
     setVideoFailed(false);
     setVideoFinished(false);
     setMode("positive");
@@ -1214,7 +1242,7 @@ function BusyCareActivity({
         videoSrc={getCorrectAnswerVideo(scenario.id)}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={<p>{helperName.trim() && selectedChoice.id === "family-helper" ? `${hasHelperFollowUp ? `你已安排${helperName.trim()}協助；緊急聯絡方式還需要在交接前補充確認。` : `你確認了${helperName.trim()}的時間、意願、照護知識與緊急聯絡方式。`} 這樣的交接才能讓${displayPetName}在你忙碌時仍獲得穩定照顧。` : withPetName(selectedChoice.explanation, petName)}</p>}
+        intro={<p>{helperName.trim() && selectedChoice.id === "family-helper" ? `你確認了${helperName.trim()}的交接內容與緊急聯絡方式。這樣的交接才能讓${displayPetName}在你忙碌時仍獲得穩定照顧。` : plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
         otherTips={<div className="busy-care-warm-note busy-care-energy-reflection">{isCat ? <><b><span aria-hidden="true">💡</span>貓咪小知識</b><p>{displayPetName}看起來獨立，仍需要穩定的食物、飲水、乾淨砂盆與安全環境。忙碌時先安排可信任的人協助，能讓牠的日常維持安心與規律。</p></> : <><p className="busy-care-slogan">在狗狗的世界裡，你就是他的全部。</p><b><span aria-hidden="true">💡</span>留給自己的一個問題</b><p>忙完一天回到家時，你還有能量陪伴等了你一整天的{displayPetName}嗎？</p></>}</div>}
         otherTipsBeforeSuggestion
         suggestion={<small>{isCat ? `交接時要說明${displayPetName}的個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。` : <>不管是請朋友或家人協助，都要清楚交接餵食、飲水、排泄清理、陪伴方式，以及如何和{displayPetName}安全互動，讓牠在你忙碌時也能被穩定照顧。</>}</small>}
@@ -1237,7 +1265,7 @@ function BusyCareActivity({
           ) : (
             <>
               <img className="busy-care-room-background" src={isCat ? catAssets.life.safeRoom : dogAssets.feeding.room} alt="居家房間場景" />
-              <img className="busy-care-hungry-dog" src={isCat ? catAssets.life.orangeCat : dogLifeAsset("shiba-hungry.png")} alt={`${displayPetName}在房間裡等待照顧`} />
+              <img className="busy-care-hungry-dog" src={isCat ? catAssets.life.mixedCat : dogLifeAsset("shiba-hungry.png")} alt={`${displayPetName}在房間裡等待照顧`} />
             </>
           )}
         </div>
@@ -1257,8 +1285,8 @@ function BusyCareActivity({
                     <div className="busy-helper-question" role="group" aria-label={question.text} key={question.id}>
                       <p><span>{questionIndex + 1}</span><span className="busy-helper-question-text">{question.text}</span></p>
                       <div>
-                        <button type="button" className={helperChecks[question.id] === "yes" ? "is-selected" : ""} aria-pressed={helperChecks[question.id] === "yes"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "yes" }))}>{question.yesLabel}</button>
-                        <button type="button" className={helperChecks[question.id] === "unsure" ? "is-selected is-no" : ""} aria-pressed={helperChecks[question.id] === "unsure"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "unsure" }))}>{question.unsureLabel}</button>
+                        <button type="button" className={helperChecks[question.id] === "yes" ? "is-selected" : ""} aria-pressed={helperChecks[question.id] === "yes"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "yes" }))}>是</button>
+                        <button type="button" className={helperChecks[question.id] === "no" ? "is-selected is-no" : ""} aria-pressed={helperChecks[question.id] === "no"} onClick={() => setHelperChecks((current) => ({ ...current, [question.id]: "no" }))}>否</button>
                       </div>
                     </div>
                   ))}
@@ -1313,7 +1341,7 @@ function BreedChallengeActivity({
   const scenario = scenarios[currentIndex];
   const selectedChoice = scenario?.choices.find((choice) => choice.id === answers[scenario.id]?.finalChoiceId);
   const breedLabel = breedChallengeLabelForId(breed);
-  const isCatBreedChallenge = breed === "orange-cat" || breed === "tabby-cat";
+  const isCatBreedChallenge = breed === "mixed-cat" || breed === "british-shorthair";
   const challengeVideoSource = scenario ? breedChallengeVideos[scenario.title] : undefined;
 
   useEffect(() => {
@@ -1357,8 +1385,8 @@ function BreedChallengeActivity({
         videoSrc={getCorrectAnswerVideo(scenario.id)}
         videoFailed={feedbackVideoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續。"
-        intro={<p>{withPetName(selectedChoice.explanation, petName)}</p>}
-        breedHighlight={<BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={isCatBreedChallenge ? "貓咪小知識" : `${breedLabel}小知識`} />}
+        intro={<p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
+        breedHighlight={<BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={`${breedLabel}小知識`} />}
         onVideoError={() => setFeedbackVideoFailed(true)}
         onReplay={onReplay}
         onContinue={moveToNext}
@@ -1370,8 +1398,10 @@ function BreedChallengeActivity({
   return (
     <section className="breed-challenge-activity">
       <header className="breed-challenge-heading">
-        <h1>{breedLabel}的考驗</h1>
-        <p>先把最容易被可愛外表蓋過去的生活份量，放進你的真實日常裡想一遍。</p>
+        <p className="life-stage-label">{breedLabel}的考驗</p>
+        <small>先把最容易被可愛外表蓋過去的生活份量，放進你的真實日常裡想一遍。</small>
+        <h1>{scenario.title}</h1>
+        <div className="breed-challenge-description">{withPetName(scenario.description, petName).split(/\n{2,}/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
       </header>
       <div className="breed-challenge-layout">
         <div className={challengeVideoSource && !questionVideoFailed ? "breed-challenge-video-placeholder breed-challenge-video-frame" : "breed-challenge-video-placeholder"}>
@@ -1379,7 +1409,7 @@ function BreedChallengeActivity({
             <VideoWithToggle className="breed-challenge-video" src={challengeVideoSource} loop ariaLabel={`${scenario.title}情境影片`} onError={() => setQuestionVideoFailed(true)} />
           ) : isCatBreedChallenge ? (
             <>
-              <img className="breed-challenge-cat-art" src={breed === "tabby-cat" ? catAssets.life.tabbyCat : catAssets.life.orangeCat} alt={`${breedLabel}情境插圖`} />
+              <img className="breed-challenge-cat-art" src={breed === "british-shorthair" ? catAssets.life.britishShorthair : catAssets.life.mixedCat} alt={`${breedLabel}情境插圖`} />
               <b>{scenario.title}</b><p>請依情境想想最適合牠的照顧安排。</p>
             </>
           ) : (
@@ -1395,8 +1425,7 @@ function BreedChallengeActivity({
           </section>
         ) : (
           <section className="breed-challenge-options">
-            <h2>{scenario.title}</h2>
-            <p>{withPetName(scenario.description, petName)}</p>
+            <h2>你會怎麼做？</h2>
             <div>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</div>
           </section>
         )}
@@ -1563,7 +1592,7 @@ function ArrivalMealActivity({
       {
         id: "chocolate-caffeine",
         label: "巧克力",
-        image: catAssets.feeding.leftoverFishBones,
+        image: catAssets.feeding.chocolate,
         title: "這個不能給貓咪吃",
         text: "巧克力可能危害貓咪健康，也不適合作為引誘進食或安撫的食物。人類食物不一定適合貓咪，不確定食材安全性時，請查詢可靠資料或詢問獸醫。",
       },
@@ -1629,7 +1658,7 @@ function ArrivalMealActivity({
         </div>
         <div className="arrival-meal-supply-slot">
           {!activity.arrivalMealWaterReady ? (
-            <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isCat ? catAssets.feeding.waterBowl : dogAssets.feeding.waterBottle} alt="水瓶" /><span>水</span></button>
+            <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isCat ? catAssets.feeding.waterBottle : dogAssets.feeding.waterBottle} alt="水瓶" /><span>水</span></button>
           ) : (
             <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
           )}
@@ -1646,7 +1675,7 @@ function ArrivalMealActivity({
           <b>{foodWarning.title}</b>
           <p>{foodWarning.text}</p>
         </div>}
-        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? catAssets.life.orangeCat : complete ? dogLifeAsset("shiba-dog.png") : dogLifeAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
+        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? catAssets.life.mixedCat : complete ? dogLifeAsset("shiba-dog.png") : dogLifeAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
         <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={isCat ? catAssets.feeding.waterBowl : activity.arrivalMealWaterReady ? dogAssets.feeding.waterBowl : dogAssets.feeding.emptyWaterBowl} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
         <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={isCat ? catAssets.feeding.foodBowl : activity.arrivalMealFoodReady ? dogAssets.feeding.foodBowl : dogAssets.feeding.emptyFoodBowl} alt={activity.arrivalMealFoodReady ? `裝好主食的${isCat ? "食盆" : "狗碗"}` : "空食碗"} />
       </div>
@@ -1957,15 +1986,14 @@ function CatDailyInspectionActivity({
           <span aria-hidden="true">✓</span>
           <h2>今天的貓砂盆巡視完成了</h2>
           <p>乾淨的砂盆、足夠的貓砂與日常觀察，是讓{displayPetName}安心如廁的重要照顧。</p>
-          <div className="feedback-knowledge-list">
-            <b className="feedback-knowledge-title"><span aria-hidden="true">💡</span>貓咪小知識</b>
+          <KnowledgeCard title="貓咪小知識" className="feedback-knowledge-list">
             <ul>
               <li>每日巡視並清除排泄物。</li>
               <li>維持足夠且乾淨的貓砂。</li>
               <li>每週清洗時需使用備用砂盆，並完全晾乾後再放回。</li>
               <li>留意排泄異常，記錄後儘速聯絡獸醫。</li>
             </ul>
-          </div>
+          </KnowledgeCard>
         </div>
       ) : (
         <>
@@ -2159,6 +2187,7 @@ function WalkingActivity({
   const [message, setMessage] = useState("");
   const completingSceneRef = useRef<number | null>(null);
   const forwardAnimationFrameRef = useRef<number | null>(null);
+  const forwardHoldTimerRef = useRef<number | null>(null);
   const forwardLastFrameRef = useRef<number | null>(null);
   const sceneRef = useRef<HTMLDivElement | null>(null);
   const poopTargetRef = useRef<HTMLDivElement | null>(null);
@@ -2212,6 +2241,10 @@ function WalkingActivity({
     setDraggedBag(null);
     draggingBagRef.current = false;
     forwardHeldRef.current = false;
+    if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
+    forwardHoldTimerRef.current = null;
+    if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
+    forwardAnimationFrameRef.current = null;
     completingSceneRef.current = null;
   }, [resetSignal]);
 
@@ -2220,6 +2253,8 @@ function WalkingActivity({
     setMoving(false);
     if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
     forwardAnimationFrameRef.current = null;
+    if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
+    forwardHoldTimerRef.current = null;
     forwardLastFrameRef.current = null;
     forwardHeldRef.current = false;
     draggingBagRef.current = false;
@@ -2233,6 +2268,7 @@ function WalkingActivity({
 
   useEffect(() => () => {
     if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
+    if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
   }, []);
 
   function prepare(id: string) {
@@ -2293,6 +2329,8 @@ function WalkingActivity({
 
   function stopForward(releaseHold = true) {
     if (releaseHold) forwardHeldRef.current = false;
+    if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
+    forwardHoldTimerRef.current = null;
     if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
     forwardAnimationFrameRef.current = null;
     forwardLastFrameRef.current = null;
@@ -2304,9 +2342,8 @@ function WalkingActivity({
       if (needsCleanup) setMessage("先把排泄物清理乾淨，再繼續散步。");
       return;
     }
-    if (forwardHeldRef.current) return;
-    forwardHeldRef.current = true;
-    // 保留短按前進一步的既有互動；之後才依 rAF 持續前進。
+    if (forwardHeldRef.current || forwardHoldTimerRef.current !== null) return;
+    // 短按只前進一步；超過門檻才啟動唯一的 rAF 連續移動迴圈。
     advanceWalk(walkingStep);
     const moveFrame = (timestamp: number) => {
       if (!forwardHeldRef.current) return;
@@ -2316,8 +2353,12 @@ function WalkingActivity({
       if (deltaSeconds > 0) advanceWalk(walkingHoldSpeed * deltaSeconds);
       if (forwardHeldRef.current) forwardAnimationFrameRef.current = window.requestAnimationFrame(moveFrame);
     };
-    forwardLastFrameRef.current = null;
-    forwardAnimationFrameRef.current = window.requestAnimationFrame(moveFrame);
+    forwardHoldTimerRef.current = window.setTimeout(() => {
+      forwardHoldTimerRef.current = null;
+      forwardHeldRef.current = true;
+      forwardLastFrameRef.current = null;
+      forwardAnimationFrameRef.current = window.requestAnimationFrame(moveFrame);
+    }, 220);
   }
 
   const draggedBagSize = 74;
@@ -2429,10 +2470,16 @@ function WalkingActivity({
     return (
       <section className="walking-activity walking-complete">
         <div className="walking-complete-card">
-          <h1>今天的散步完成了！</h1>
-          <p>你陪{petName}完成了至少 20 分鐘的活動，也記得清理排泄物。</p>
-          <p>規律散步能讓狗狗有機會探索環境、消耗體力，也有助於維持生理與心理健康。</p>
-          <div className="walking-reflection-note"><b>把一次散步，想成十多年的日常</b><p>遛狗不是今天完成就結束的任務。晴天、下雨、疲累或工作忙碌時，排泄、嗅聞、活動與安全仍會每天回來。請想一想：你願意為這段反覆出現的時間，長期保留多少生活空間？</p></div>
+          <h1>每天，都要一起走出去</h1>
+          <p>你陪{petName}完成了今天的散步，也記得為牠清理排泄物。</p>
+          <p>規律散步讓牠能探索環境、嗅聞、活動身體，也有助於維持生理與心理健康。</p>
+          <div className="walking-reflection-note"><b>把每天的照顧，想成長長的日常</b><p>散步只是照顧牠的一部分。餵食、換水、清潔、互動、觀察狀況與安靜陪伴，都會反覆出現在每一天裡。晴天、下雨、疲累或工作忙碌時，牠仍需要你留下一段穩定的時間。請想一想：你願意怎麼安排自己的生活，長期陪牠好好長大、變老？</p></div>
+          <section className="walking-time-summary" aria-label="養狗每日基本照護時間估計">
+            <p>每天留給牠的照護時間</p>
+            <div className="walking-time-commitment">
+              {dogReport.dailyCareBreakdown.map((item) => <div key={item.title}><b>{item.title}</b><span>{item.detail}</span></div>)}
+            </div>
+          </section>
           <DelayedContinueButton label="繼續生活旅程" onContinue={onContinue} />
         </div>
       </section>
@@ -2567,6 +2614,8 @@ function WalkingActivity({
                 stopForward();
               }}
               onPointerCancel={() => stopForward()}
+              onPointerLeave={() => stopForward()}
+              onLostPointerCapture={() => stopForward()}
               aria-label="往前走"
             >
               <span className="walking-forward-orb" aria-hidden="true">
@@ -2714,12 +2763,8 @@ export function LifeJourney({
   const canResetCurrent = isReviewingCompletedItem && !replayInProgress;
   const currentResetSignal = resetItemId === item.id ? resetSignal : 0;
   const replayCorrectProps = isReviewingCompletedItem
-    ? { ...(replayInProgress ? { onReplay: resetCurrentQuestion } : {}), continueImmediately: true }
+    ? { onReplay: resetCurrentQuestion, continueImmediately: true }
     : {};
-
-  function handleReplay() {
-    if (canResetCurrent) resetCurrentQuestion();
-  }
 
   if (timePassOpen && item.scenarioId === "illness-vet") {
     return <TimePassTransition onComplete={() => {
@@ -2777,7 +2822,6 @@ export function LifeJourney({
           species={species}
           onMembersChange={onMembersChange}
           onChoose={choose}
-          onHelperUncertainty={(busyScenario) => onMarkScenarioForReview(busyScenario, "helper-details-to-confirm")}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
           {...replayCorrectProps}
@@ -2821,7 +2865,6 @@ export function LifeJourney({
           {...replayCorrectProps}
         />
       ))}
-      {canResetCurrent && <div className="scenario-bottom-nav life-bottom-nav"><button className="secondary" onClick={handleReplay}>↻ 再玩一次</button></div>}
     </div>
   );
 }

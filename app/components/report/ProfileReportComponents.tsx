@@ -10,6 +10,7 @@ import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, S
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
   ExpenseDetails,
+  getAccumulatedOneTimeExpenseTotal,
   isMonthlyExpense,
   isOneTimePreparationExpense,
   isRequiredAfterArrivalExpense,
@@ -468,6 +469,7 @@ export function ProfileSupplementForm({
   onChange,
   onBack,
   onReset,
+  embedded = false,
 }: {
   profile: Profile;
   petName: string;
@@ -476,6 +478,7 @@ export function ProfileSupplementForm({
   onChange: (profile: Profile) => void;
   onBack: () => void;
   onReset: () => void;
+  embedded?: boolean;
 }) {
   const selectedBreed = getSpeciesConfig(species).breeds.find((item) => item.id === breed);
   const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : "柴犬");
@@ -574,7 +577,7 @@ export function ProfileSupplementForm({
   const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
 
   return (
-    <section className="content-wrap profile-supplement" aria-labelledby="profile-supplement-title">
+    <section className={`${embedded ? "profile-supplement profile-supplement--embedded" : "content-wrap profile-supplement"}`} aria-labelledby="profile-supplement-title">
       <div className="profile-wizard-head"><div><h1 id="profile-supplement-title">補充真實生活條件</h1><p>這些資料可協助收容所、寵物店家或照護人員了解你的居住環境、同住者狀況與飼養經驗，作為後續溝通與照顧建議的參考。</p></div></div>
       <section className="profile-panel">
         <fieldset><legend>每天的時間</legend><div className="profile-time-grid"><label>每天離家時間<span>每日 <input type="number" min="0" max="24" value={profile.hoursAway} onChange={(event) => update("hoursAway", clamp(event.target.value, 24))} /> 小時</span></label><label>每天可投入照顧時間<span>每日 <input type="number" min="0" max="24" value={profile.careHours} onChange={(event) => update("careHours", clamp(event.target.value, 24))} /> 小時</span></label></div></fieldset>
@@ -620,6 +623,7 @@ export function ProfileSupplementForm({
       </section>
       <div className="profile-pdf-actions">
         <PdfDownloadButton petName={petName} kind="profile" label="下載個人資料" />
+        <p>下載後可提供給收容所、認養平台或合法寵物業者參考，協助他們了解你的居住環境與照顧安排。</p>
       </div>
     </section>
   );
@@ -664,26 +668,30 @@ export function AssessmentReport({
 }) {
   const [activeDiscussionId, setActiveDiscussionId] = useState("");
   const [expenseDetailsOpen, setExpenseDetailsOpen] = useState(false);
+  const [dailyCareDetailsOpen, setDailyCareDetailsOpen] = useState(false);
   const speciesConfig = getSpeciesConfig(species);
   useEffect(() => {
-    if (!activeDiscussionId) return;
+    if (!activeDiscussionId && !dailyCareDetailsOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setActiveDiscussionId("");
+      if (event.key === "Escape") {
+        setActiveDiscussionId("");
+        setDailyCareDetailsOpen(false);
+      }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", closeOnEscape);
     };
-  }, [activeDiscussionId]);
+  }, [activeDiscussionId, dailyCareDetailsOpen]);
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
-  const total = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
-  const suggestedPreparedTotal = total + emergencyReserve;
   const requiredAfterArrivalTotal = visibleExpenses.filter(isRequiredAfterArrivalExpense).reduce((sum, item) => sum + item.amount, 0);
   const oneTimePreparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
   const monthlyBasicTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
+  // 與費用明細的「累積支出」共用所有非每月費用來源。
+  const initialPreparationTotal = getAccumulatedOneTimeExpenseTotal(visibleExpenses);
   const temporaryMedicalTotal = visibleExpenses.filter((item) => !isMonthlyExpense(item) && isTemporaryOrMedicalExpense(item)).reduce((sum, item) => sum + item.amount, 0);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
@@ -775,26 +783,121 @@ export function AssessmentReport({
       knowledgePoints: knowledgePointsForScenario(scenario, petName),
     }));
   const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
-  const masteredTopics = Object.values(answers)
-    .filter((answer) => answer.finalResult === "correct")
+  const discussionTopicIds = new Set(discussionTopics.map((topic) => topic.id));
+  const masteredDetails: SharedDiscussionTopic[] = Object.values(answers)
+    // 曾答錯、選擇「還不確定」或需補充確認的題目只保留在下方補強區，不重複列在已建立觀念。
+    .filter((answer) => answer.finalResult === "correct" && !discussionTopicIds.has(answer.scenarioId))
     .map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId))
     .filter((scenario): scenario is Scenario => Boolean(scenario))
-    .filter((scenario, index, items) => items.findIndex((item) => item.topic === scenario.topic) === index)
     .map((scenario) => ({
       id: scenario.id,
-      title: personalizeReportText(scenario.topic ?? scenario.stage, petName),
+      title: personalizeReportText(scenario.title, petName),
+      topic: personalizeReportText(scenario.topic ?? scenario.stage, petName),
       summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
+      knowledgePoints: knowledgePointsForScenario(scenario, petName),
     }));
-  const knowledgeModal = activeDiscussion && typeof document !== "undefined"
+  const activeKnowledge = activeDiscussion;
+  // 僅彙整使用者第一次即掌握的題目，讓此區維持快速掃讀的主題摘要。
+  const masteredThemes = (species === "cat" ? [
+    {
+      id: "cat-safe-home",
+      icon: "⌂",
+      title: "安全生活空間",
+      summary: "讓牠能在熟悉、可退回的環境裡，按照自己的節奏安心生活。",
+      scenarioIds: ["cat-arrival-adjustment", "cat-indoor-outdoor-care"],
+    },
+    {
+      id: "cat-daily-care",
+      icon: "✦",
+      title: "日常照護",
+      summary: "把互動、抓磨與環境清潔安排成每天可持續的照顧節奏。",
+      scenarioIds: ["cat-night-energy-care", "cat-scratching-care"],
+    },
+    {
+      id: "cat-breed-care",
+      icon: "◌",
+      title: "品種與日常習慣",
+      summary: "依牠的個性、活動量、飲食與健康需求，安排合適的日常照顧。",
+      scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"],
+    },
+    {
+      id: "cat-life-arrangement",
+      icon: "♡",
+      title: "生活安排",
+      summary: "生活忙碌時，也先替牠安排穩定、可信任的照顧支持。",
+      scenarioIds: ["cat-busy-care"],
+    },
+    {
+      id: "cat-health-senior",
+      icon: "☀",
+      title: "健康與高齡照護",
+      summary: "持續觀察日常變化，並隨年齡調整牠容易活動與休息的環境。",
+      scenarioIds: ["cat-illness-vet", "cat-growing-old"],
+    },
+  ] : [
+    {
+      id: "dog-safe-home",
+      icon: "⌂",
+      title: "安全生活空間",
+      summary: "知道先整理安全、穩定的環境，讓牠能安心適應與活動。",
+      scenarioIds: ["arrival-adjustment", "behavior-chewing", "behavior-toileting"],
+    },
+    {
+      id: "dog-daily-care",
+      icon: "✦",
+      title: "每日照護安排",
+      summary: "了解餵食、清潔、互動與規律如廁，都需要每天穩定投入。",
+      scenarioIds: ["behavior-barking", "behavior-chewing", "behavior-toileting"],
+    },
+    {
+      id: "dog-breed-care",
+      icon: "◌",
+      title: "品種與日常習慣",
+      summary: "能把品種特性放進日常安排，提前準備合適的照顧方式。",
+      scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"],
+    },
+    {
+      id: "dog-life-arrangement",
+      icon: "♡",
+      title: "生活變化與協助安排",
+      summary: "知道忙碌時應先安排可信任的人，並清楚交接照顧需求。",
+      scenarioIds: ["busy-daily-care"],
+    },
+    {
+      id: "dog-health-senior",
+      icon: "☀",
+      title: "健康與高齡照護",
+      summary: "知道狀況改變時要記錄並尋求協助，也會為高齡生活提早準備。",
+      scenarioIds: ["illness-vet", "growing-old"],
+    },
+  ]).map((theme) => ({
+    ...theme,
+    matchedCount: masteredDetails.filter((detail) => theme.scenarioIds.includes(detail.id)).length,
+  })).filter((theme) => theme.matchedCount > 0);
+  const knowledgeModal = activeKnowledge && typeof document !== "undefined"
     ? createPortal(
       <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
         <section className="knowledge-modal" role="dialog" aria-modal="true" aria-labelledby="knowledge-modal-title">
           <button type="button" className="knowledge-modal-close" onClick={() => setActiveDiscussionId("")} aria-label="關閉知識點">×</button>
-          <p className="life-stage-label">{activeDiscussion.topic}</p>
-          <h2 id="knowledge-modal-title">{activeDiscussion.title}</h2>
+          <p className="life-stage-label">{activeKnowledge.topic}</p>
+          <h2 id="knowledge-modal-title">{activeKnowledge.title}</h2>
           <p>回顧這一題較合適的照護知識點：</p>
-          <ul>{activeDiscussion.knowledgePoints.map((point) => <li key={point}>{point}</li>)}</ul>
+          <ul>{activeKnowledge.knowledgePoints.map((point) => <li key={point}>{point}</li>)}</ul>
           <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveDiscussionId("")}>我知道了</button>
+        </section>
+      </div>,
+      document.body,
+    )
+    : null;
+  const dailyCareModal = dailyCareDetailsOpen && typeof document !== "undefined"
+    ? createPortal(
+      <div className="knowledge-modal-backdrop daily-care-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setDailyCareDetailsOpen(false); }}>
+        <section className="knowledge-modal daily-care-modal" role="dialog" aria-modal="true" aria-labelledby="daily-care-modal-title">
+          <button type="button" className="knowledge-modal-close" onClick={() => setDailyCareDetailsOpen(false)} aria-label="關閉每日照護細項">×</button>
+          <h2 id="daily-care-modal-title">每天留給牠的照護時間</h2>
+          <p className="daily-care-modal-intro">{speciesConfig.report.dailyCareTimeNote}</p>
+          <ul className="daily-care-modal-list">{speciesConfig.report.dailyCareBreakdown.map((item) => <li key={item.title}><b>{item.title}</b><span>{item.detail}</span></li>)}</ul>
+          <button type="button" className="knowledge-modal-confirm" onClick={() => setDailyCareDetailsOpen(false)}>我知道了</button>
         </section>
       </div>,
       document.body,
@@ -884,6 +987,16 @@ export function AssessmentReport({
           <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
         </section>
 
+      </article>
+
+      <article className="care-a4-sheet care-a4-sheet--details" aria-label="伴日子照顧準備總覽：支出與每日投入">
+        <header className="care-a4-header care-a4-header--compact">
+          <div>
+            <p>伴日子新手村</p>
+            <h1>照顧安排與支出</h1>
+            <span>把迎接牠前需要留意的時間與花費，整理成一份可帶走的指南</span>
+          </div>
+        </header>
         <section className="care-a4-money" aria-label="預估支出">
           <h2>預估支出</h2>
           <div className="care-a4-money-types">
@@ -900,9 +1013,9 @@ export function AssessmentReport({
           <div className="care-a4-money-summary">
             <h3>金額摘要</h3>
             <dl>
-              <div><dt>目前模擬支出</dt><dd>NT$ {money.format(total)}</dd></div>
+              <div><dt>累積一次性準備支出</dt><dd>NT$ {money.format(initialPreparationTotal)}</dd></div>
               <div><dt>初始醫療應急金</dt><dd>NT$ {money.format(emergencyReserve)}</dd></div>
-              <div className="care-a4-money-total"><dt>最低應準備金額</dt><dd>NT$ {money.format(suggestedPreparedTotal)}</dd></div>
+              <div className="care-a4-money-total"><dt>最低應準備金額</dt><dd>NT$ {money.format(initialPreparationTotal + emergencyReserve)}</dd></div>
             </dl>
           </div>
           <p className="care-a4-money-disclaimer"><span className="care-a4-money-disclaimer-icon" aria-hidden="true">💡</span><span>{speciesConfig.report.moneyDisclaimer}</span></p>
@@ -912,14 +1025,13 @@ export function AssessmentReport({
           <h2>每日投入時間</h2>
           <b>{speciesConfig.report.dailyCareTime}</b>
           <p>{speciesConfig.report.dailyCareTimeNote}</p>
+          <ul>{speciesConfig.report.dailyCareBreakdown.map((item) => <li key={item.title}><span>{item.title}</span><b>{item.detail}</b></li>)}</ul>
         </section>
 
-        {discussionTopics.length === 0 && (
-          <footer className="care-a4-commitment">
-            <span aria-hidden="true">{committed ? "☑" : "□"}</span>
-            <p>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</p>
-          </footer>
-        )}
+        <footer className="care-a4-commitment">
+          <span aria-hidden="true">{committed ? "☑" : "□"}</span>
+          <p>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</p>
+        </footer>
       </article>
 
       {discussionTopics.length > 0 && (
@@ -943,10 +1055,6 @@ export function AssessmentReport({
               </article>
             ))}
           </section>
-          <footer className="care-a4-commitment">
-            <span aria-hidden="true">{committed ? "☑" : "□"}</span>
-            <p>我已閱讀以上提醒，並承諾會善盡照顧責任，持續提供合適的飲食、乾淨飲水、安全環境、日常陪伴與必要醫療，好好照顧我的寵物。</p>
-          </footer>
         </article>
       )}
 
@@ -964,14 +1072,17 @@ export function AssessmentReport({
         </header>
 
         <section className="care-review-section care-review-mastered" aria-labelledby="mastered-care-title">
-          <header><span aria-hidden="true">✓</span><div><h2 id="mastered-care-title">你已掌握的照顧重點</h2><p>這些是你在情境中選擇合適做法後，已經建立的照顧觀念。</p></div></header>
-          {masteredTopics.length ? <div className="care-review-topic-grid">
-            {masteredTopics.map((topic) => <article key={topic.id}><span aria-hidden="true">✓</span><div><b>{topic.title}</b><p>{topic.summary}</p></div></article>)}
-          </div> : <p className="care-review-empty">完成情境題後，這裡會整理你已建立的照顧觀念。</p>}
+          <header><span aria-hidden="true">✓</span><div><h2 id="mastered-care-title">你已建立的照顧觀念</h2><p>這些是你在情境中已經掌握、可以帶進真實生活的照顧方向。</p></div></header>
+          {masteredThemes.length ? <div className="care-review-mastered-theme-grid">
+            {masteredThemes.map((theme) => <article key={theme.id}>
+              <span aria-hidden="true">✓</span>
+              <div><b>{theme.title}</b><p>{theme.summary}</p></div>
+            </article>)}
+          </div> : <p className="care-review-empty">完成並答對情境題後，這裡會整理你已建立的照顧觀念。</p>}
         </section>
 
         <section className="care-review-section care-review-followup" aria-labelledby="followup-care-title">
-          <header><span aria-hidden="true">✦</span><div><h2 id="followup-care-title">還想再確認的照顧重點</h2><p>以下主題在體驗中曾出現不同選擇，建議在真正飼養前，再多花一些時間了解。</p></div></header>
+          <header><span aria-hidden="true">✦</span><div><h2 id="followup-care-title">建議再留意的觀念</h2><p>以下主題在體驗中曾出現不同選擇，建議在真正飼養前，再多花一些時間了解。</p></div></header>
           {discussionTopics.length ? <div className="care-review-topic-grid">
             {discussionTopics.map((topic) => <article key={topic.id}><span aria-hidden="true">✦</span><div><b>{topic.title}</b><p>{topic.summary ?? topic.topic}</p></div><button type="button" className="discussion-info-button" onClick={() => setActiveDiscussionId(topic.id)} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button></article>)}
           </div> : <div className="care-review-all-clear"><span aria-hidden="true">✓</span><p>你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。</p></div>}
@@ -980,8 +1091,8 @@ export function AssessmentReport({
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
           <div className="care-resource-grid">
-            <article><span aria-hidden="true">$</span><div><h3>預估支出</h3><b>NT$ {money.format(total)}</b><p>這是遊戲中目前累積的模擬支出；完整分類會在明細中呈現。</p><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用明細</button></div></article>
-            <article><span aria-hidden="true">◷</span><div><h3>每天需要投入的時間</h3><b>{speciesConfig.report.dailyCareTime}</b><p>{speciesConfig.report.dailyCareTimeNote}</p></div></article>
+            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><p><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></p><p><small>飼養前建議先準備</small><b>NT$ {money.format(initialPreparationTotal)}</b></p></div><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
+            <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><b>{speciesConfig.report.dailyCareTime}</b><p>{speciesConfig.report.dailyCareTimeNote}</p><button type="button" className="secondary care-expense-button" onClick={() => setDailyCareDetailsOpen(true)}>查看每日照護細項</button></div></article>
           </div>
         </section>
 
@@ -1027,6 +1138,7 @@ export function AssessmentReport({
       </article>
       {expenseDetailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} onClose={() => setExpenseDetailsOpen(false)} />}
       {knowledgeModal}
+      {dailyCareModal}
     </div>
     </>
   );

@@ -33,6 +33,8 @@ export type SpeciesReportConfig = {
   /** 供網頁回顧與正式照護指南共同使用；不要在元件內硬寫物種時間。 */
   dailyCareTime: string;
   dailyCareTimeNote: string;
+  /** 網頁回顧與物種專屬完成頁共用的日常照護節奏。 */
+  dailyCareBreakdown: Array<{ title: string; detail: string }>;
 };
 
 export type SpeciesGameConfig = {

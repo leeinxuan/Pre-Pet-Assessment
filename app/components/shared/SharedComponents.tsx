@@ -167,7 +167,7 @@ export function StageRail({
     {
       id: "assessment",
       number: "04",
-      label: "照顧準備總覽",
+      label: "飼養觀念回顧",
       status: mainStatus(3),
       onClick: () => onGoTo(7),
     },
@@ -493,6 +493,13 @@ export function isOneTimePreparationExpense(item: ExpenseRecord) {
   return !isMonthlyExpense(item) && !isRequiredAfterArrivalExpense(item) && !isTemporaryOrMedicalExpense(item);
 }
 
+/** 累積支出與飼養前建議先準備共用所有非每月費用。 */
+export function getAccumulatedOneTimeExpenseTotal(expenses: ExpenseRecord[]) {
+  return expenses
+    .filter((item) => !isMonthlyExpense(item))
+    .reduce((sum, item) => sum + item.amount, 0);
+}
+
 export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string) {
   const petSize = getPetSizeForBreed(breed);
   const existingIds = new Set(expenses.map((item) => item.id));
@@ -522,7 +529,8 @@ export function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }: {
   const preparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
   const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
   const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
-  const accumulatedTotal = visibleExpenses.reduce((sum, item) => sum + item.amount, 0);
+  // 與總覽的「飼養前建議先準備」共用所有非每月費用來源。
+  const accumulatedTotal = getAccumulatedOneTimeExpenseTotal(visibleExpenses);
   const grouped = expenseDetailGroupOrder.map((group) => ({
     group,
     items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group),
@@ -594,8 +602,8 @@ export function ExpenseAdditionNotice({ expense }: { expense: ExpenseRecord | nu
 
   return (
     <div className="cost-toast" role="status" aria-live="polite" key={`${expense.id}-${expense.amount}`}>
-      <span className="cost-toast-icon" aria-hidden="true">🧾</span>
-      <span>新增「{expense.name}」NT$ {money.format(expense.amount)}{isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}</span>
+      <span className="cost-toast-icon" aria-hidden="true">＋</span>
+      <span className="cost-toast-copy"><b>已加入準備清單</b><span>{expense.name}<em>NT$ {money.format(expense.amount)}{isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}</em></span></span>
     </div>
   );
 }

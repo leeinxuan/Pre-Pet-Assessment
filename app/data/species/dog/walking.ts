@@ -5,7 +5,7 @@
 export const walkingPrepItems = [
   { id: "leash", label: "牽繩／胸背帶", image: "/assets/dog/preparation/leash.png" },
   { id: "bag", label: "撿便袋", image: "/assets/dog/walking/poop-bag-1.png" },
-  { id: "water", label: "水", image: "/assets/dog/pet-journey/waterbottle.png" },
+  { id: "water", label: "水", image: "/assets/shared/waterbottle.png" },
 ] as const;
 
 export const walkingScenes = [
