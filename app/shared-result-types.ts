@@ -20,7 +20,6 @@ export type SharedAssessmentResult = {
   };
   costs: {
     simulatedTotal: number;
-    emergencyReserve: number;
     suggestedTotal: number;
   };
   preparedItems: string[];

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { money } from "../../data/shared/expenses";
+import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text";
 import { catLitterRescueConfig } from "../../data/species/cat/journey";
 import { getAllScenariosForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
@@ -10,7 +11,7 @@ import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, S
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
   ExpenseDetails,
-  getAccumulatedOneTimeExpenseTotal,
+  getAccumulatedExpenseTotal,
   getOneTimePreparationExpenseTotal,
   isMonthlyExpense,
   isRequiredAfterArrivalExpense,
@@ -22,19 +23,16 @@ import {
 const a4PageWidthPt = 595.28;
 const a4PageHeightPt = 841.89;
 
-function personalizeReportText(text: string, petName: string) {
-  const trimmedName = petName.trim();
-  const name = trimmedName || "小狗";
-  const personalizedDogText = text.replaceAll("豆豆", name).replaceAll("小狗", name).replaceAll("狗狗", name);
-  return trimmedName ? personalizedDogText.replaceAll("貓咪", trimmedName) : personalizedDogText;
+function personalizeReportText(text: string, petName: string, species?: string) {
+  return interpolatePetName(text, petName, species);
 }
 
-function knowledgePointsForScenario(scenario: Scenario, petName: string) {
+function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {
   const correctChoices = scenario.choices.filter((choice) => choice.result === "correct");
   const rawPoints = scenario.correctSummary?.length
     ? scenario.correctSummary
     : correctChoices.flatMap((choice) => [choice.text, choice.explanation, choice.suggestion ?? ""]);
-  return Array.from(new Set(rawPoints.flatMap((point) => point.split("\n")).map((point) => personalizeReportText(point.trim(), petName)).filter(Boolean))).slice(0, 6);
+  return Array.from(new Set(rawPoints.flatMap((point) => point.split("\n")).map((point) => personalizeReportText(point.trim(), petName, species)).filter(Boolean))).slice(0, 6);
 }
 
 function sanitizePdfFileName(value: string) {
@@ -635,7 +633,6 @@ export function AssessmentReport({
   species = "dog",
   profile,
   expenses,
-  emergencyReserve,
   roomReady,
   hazardsReady,
   members,
@@ -653,7 +650,6 @@ export function AssessmentReport({
   species?: string;
   profile: Profile;
   expenses: ExpenseRecord[];
-  emergencyReserve: number;
   roomReady: string[];
   hazardsReady: string[];
   members: CareMember[];
@@ -690,9 +686,8 @@ export function AssessmentReport({
   const requiredAfterArrivalTotal = visibleExpenses.filter(isRequiredAfterArrivalExpense).reduce((sum, item) => sum + item.amount, 0);
   const oneTimePreparationTotal = getOneTimePreparationExpenseTotal(visibleExpenses);
   const monthlyBasicTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
-  // 兔子的飼養前準備不包含後續情境才加入的臨時／醫療支出。
-  const initialPreparationTotal = species === "rabbit" ? oneTimePreparationTotal : getAccumulatedOneTimeExpenseTotal(visibleExpenses);
-  const accumulatedExpenseTotal = getAccumulatedOneTimeExpenseTotal(visibleExpenses);
+  const accumulatedExpenseTotal = getAccumulatedExpenseTotal(visibleExpenses);
+  const initialPreparationTotal = accumulatedExpenseTotal;
   const temporaryMedicalTotal = visibleExpenses.filter((item) => !isMonthlyExpense(item) && isTemporaryOrMedicalExpense(item)).reduce((sum, item) => sum + item.amount, 0);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
@@ -730,7 +725,7 @@ export function AssessmentReport({
       ? (enteredHousemates.length ? enteredHousemates.join("、") : legacyHousemates.length ? legacyHousemates.join("、") : "有同住家人（待補充）")
       : "待補充";
   const selectedBreed = speciesConfig.breeds.find((item) => item.id === breed);
-  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : "柴犬");
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : "柴犬");
   const experienceStatus = profile.noShibaExperience ? `沒有${selectedTypeLabel}經驗` : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote ? "已補充飼養經驗" : "待補充";
   const reasonStatus = profile.reasons.length ? profile.reasons.map((item) => item === "其他" ? profile.reasonOther || "其他（待補充）" : item).join("、") : "待補充";
   const landlordConfirmed = profile.landlordConsent === "已確認並同意" || profile.landlordConsent === "房東已同意";
@@ -770,8 +765,8 @@ export function AssessmentReport({
     .filter((scenario): scenario is Scenario => Boolean(scenario))
     .map((scenario) => ({
       id: scenario.id,
-      title: personalizeReportText(scenario.title, petName),
-      topic: scenario.topic ?? scenario.stage,
+      title: personalizeReportText(scenario.title, petName, species),
+      topic: personalizeReportText(scenario.topic ?? scenario.stage, petName, species),
       summary: scenario.id === "busy-daily-care"
         ? answers[scenario.id]?.discussionFlags?.includes("helper-details-to-confirm")
           ? "忙碌時的日常照顧：協助者已安排，但緊急聯絡方式仍值得在交接前再確認。"
@@ -780,8 +775,8 @@ export function AssessmentReport({
           ? answers[scenario.id]?.discussionFlags?.includes("helper-details-to-confirm")
             ? personalizeReportText("臨時晚歸時的貓咪照顧：協助者已安排，但緊急聯絡方式仍值得在交接前再確認。", petName)
             : personalizeReportText("臨時晚歸時的貓咪照顧：需要確認協助者是否真的有時間、能力與意願照顧貓咪，並清楚交接食水、砂盆、環境巡視、陪玩與狀況觀察。", petName)
-        : personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
-      knowledgePoints: knowledgePointsForScenario(scenario, petName),
+        : personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName, species),
+      knowledgePoints: knowledgePointsForScenario(scenario, petName, species),
     }));
   const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
   const discussionTopicIds = new Set(discussionTopics.map((topic) => topic.id));
@@ -792,10 +787,10 @@ export function AssessmentReport({
     .filter((scenario): scenario is Scenario => Boolean(scenario))
     .map((scenario) => ({
       id: scenario.id,
-      title: personalizeReportText(scenario.title, petName),
-      topic: personalizeReportText(scenario.topic ?? scenario.stage, petName),
-      summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName),
-      knowledgePoints: knowledgePointsForScenario(scenario, petName),
+      title: personalizeReportText(scenario.title, petName, species),
+      topic: personalizeReportText(scenario.topic ?? scenario.stage, petName, species),
+      summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName, species),
+      knowledgePoints: knowledgePointsForScenario(scenario, petName, species),
     }));
   const activeKnowledge = activeDiscussion;
   // 僅彙整使用者第一次即掌握的題目，讓此區維持快速掃讀的主題摘要。
@@ -820,7 +815,7 @@ export function AssessmentReport({
       icon: "✦",
       title: "飲食與日常照護",
       summary: "了解牧草、乾淨飲水、環境巡視與日常觀察都需要穩定安排。",
-      scenarioIds: ["rabbit-stomp", "rabbit-heatstroke-prevention", "rabbit-heatstroke-emergency", "rabbit-shedding"],
+      scenarioIds: ["rabbit-carry-sort", "rabbit-daily-check", "rabbit-stomp", "rabbit-heatstroke-prevention", "rabbit-heatstroke-emergency", "rabbit-shedding"],
       practiceComplete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady,
     },
     {
@@ -1006,7 +1001,7 @@ export function AssessmentReport({
           </div>
           <aside className="care-breed-card">
             <span className="care-breed-copy">
-              <b>{selectedBreed?.label ?? (petName || "小狗")}</b>
+              <b>{selectedBreed?.label ?? (petName || petNameFallback(species))}</b>
               {petName.trim() && <small>{petName}</small>}
             </span>
             {selectedBreed?.image && <img src={selectedBreed.image} alt={selectedBreed.label} />}
@@ -1048,15 +1043,13 @@ export function AssessmentReport({
               <li><span>一次性準備費</span><b>NT$ {money.format(oneTimePreparationTotal)}</b></li>
               <li><span>每月基本支出</span><b>NT$ {money.format(monthlyBasicTotal)}／月</b></li>
               <li><span>臨時／醫療支出</span><b>NT$ {money.format(temporaryMedicalTotal)}</b></li>
-              <li><span>初始醫療應急金</span><b>NT$ {money.format(emergencyReserve)}</b></li>
             </ul>
           </div>
           <div className="care-a4-money-summary">
             <h3>金額摘要</h3>
             <dl>
-              <div><dt>累積支出</dt><dd>NT$ {money.format(accumulatedExpenseTotal)}</dd></div>
-              <div><dt>初始醫療應急金</dt><dd>NT$ {money.format(emergencyReserve)}</dd></div>
-              <div className="care-a4-money-total"><dt>最低應準備金額</dt><dd>NT$ {money.format(initialPreparationTotal + emergencyReserve)}</dd></div>
+              <div><dt>每月預估支出</dt><dd>NT$ {money.format(monthlyBasicTotal)}</dd></div>
+              <div className="care-a4-money-total"><dt>最低應準備金額</dt><dd>NT$ {money.format(accumulatedExpenseTotal)}</dd></div>
             </dl>
           </div>
           <p className="care-a4-money-disclaimer"><span className="care-a4-money-disclaimer-icon" aria-hidden="true">💡</span><span>{speciesConfig.report.moneyDisclaimer}</span></p>
@@ -1132,7 +1125,7 @@ export function AssessmentReport({
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
           <div className="care-resource-grid">
-            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><p><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></p><p><small>飼養前建議先準備</small><b>NT$ {money.format(initialPreparationTotal)}</b></p></div><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
+            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><p><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></p><p><small>最低應準備金額</small><b>NT$ {money.format(accumulatedExpenseTotal)}</b></p></div><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
             <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><b>{speciesConfig.report.dailyCareTime}</b><p>{speciesConfig.report.dailyCareTimeNote}</p><button type="button" className="secondary care-expense-button" onClick={() => setDailyCareDetailsOpen(true)}>查看每日照護細項</button></div></article>
           </div>
         </section>
@@ -1151,8 +1144,8 @@ export function AssessmentReport({
             <span>僅列出你已填寫或勾選的內容</span>
           </div>
           <aside>
-            <b>{petName || "小狗"}</b>
-            <small>{selectedBreed?.label ?? "柴犬"}</small>
+            <b>{petName || petNameFallback(species)}</b>
+            <small>{selectedBreed?.label ?? selectedTypeLabel}</small>
           </aside>
         </header>
         <div className="print-profile-grid">
@@ -1177,7 +1170,7 @@ export function AssessmentReport({
           ) : <p>尚未上傳居家空間照片</p>}
         </section>
       </article>
-      {expenseDetailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} species={species} onClose={() => setExpenseDetailsOpen(false)} />}
+      {expenseDetailsOpen && <ExpenseDetails expenses={expenses} breed={breed} species={species} onClose={() => setExpenseDetailsOpen(false)} />}
       {knowledgeModal}
       {dailyCareModal}
     </div>

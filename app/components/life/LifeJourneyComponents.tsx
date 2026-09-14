@@ -12,12 +12,14 @@ import {
 } from "../../data/species/journey";
 import { catDailyBehaviorScenarioIds, catLitterRescueConfig } from "../../data/species/cat/journey";
 import { rabbitDailyBehaviorScenarioIds } from "../../data/species/rabbit/journey";
+import { rabbitActivityScenarios } from "../../data/species/rabbit/scenarios";
 import { catScenarioCorrectFeedback } from "../../data/species/cat/scenarios";
 import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/species/dog/walking";
 import { dogAssets } from "../../data/species/dog/assets";
 import { dogReport } from "../../data/species/dog/report";
 import { catAssets } from "../../data/species/cat/assets";
 import { rabbitAssets } from "../../data/species/rabbit/assets";
+import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text";
 import type {
   CareMember,
   ExpenseRecord,
@@ -86,9 +88,7 @@ function useVideoMetadataPreload(src?: string) {
 
 function withPetName(text: string, petName: string) {
   const displayName = petName.trim() || "牠";
-  const withPlaceholders = text
-    .replaceAll("`{petName}`", displayName)
-    .replaceAll("{petName}", displayName);
+  const withPlaceholders = interpolatePetName(text, displayName);
   if (!petName.trim()) return withPlaceholders;
   return withPlaceholders
     .replaceAll("豆豆", displayName)
@@ -476,7 +476,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
     showFinalFrame();
   }
 
-  const animalLabel = species === "cat" ? "貓咪" : "小狗";
+  const animalLabel = species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : "小狗";
 
   return (
     <section className="arrival-video-screen" aria-label="接回家影片過場">
@@ -847,7 +847,7 @@ function DailyBehaviorActivity({
   if (!scenario) return null;
   const correctSummary = scenario.correctSummary ?? scenario.choices.filter((choice) => choice.result === "correct").map((choice) => choice.text);
   const learningPoints = scenario.learningPoints ?? correctSummary;
-  const displayPetName = petName || "小狗";
+  const displayPetName = petName || petNameFallback(species);
   const correctIntroByScenario: Record<string, string> = {
     "behavior-barking": `面對${displayPetName}吠叫時，先理解原因再協助牠穩定下來。`,
     "behavior-chewing": `${displayPetName}亂咬常和探索、無聊、換牙或壓力有關。`,
@@ -1299,7 +1299,7 @@ function BusyCareActivity({
 
   return (
     <section className="busy-care-activity">
-      <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{scenario.title}</h1><p>{withPetName(scenario.description, petName)}</p></div>
+      <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(scenario.title, petName)}</h1><p>{withPetName(scenario.description, petName)}</p></div>
       <div className="busy-care-layout">
         <div className="busy-care-room" aria-label={`${animalName}在房間中等待照顧的情境`}>
           {isRabbit ? (
@@ -2691,6 +2691,82 @@ function WalkingActivity({
   );
 }
 
+const rabbitCarrySteps = [
+  "緩慢靠近，不發出大聲音，蹲低到與 {petName} 視線同高",
+  "伸出手背讓 {petName} 嗅聞，等牠不緊張",
+  "輕輕摸頭頂，確認 {petName} 沒有蹲低或後退",
+  "一手托住胸口，另一手同時托住臀部",
+  "讓 {petName} 靠著你的身體，前肢有支撐",
+] as const;
+
+const rabbitCheckSteps = [
+  { id: "hay", title: "牧草架只剩一半了", prompt: "現在要怎麼做？", correct: "立刻補充新鮮牧草", incorrect: "等等再補，牠剩的還夠", feedback: "牧草是兔子的主食和腸道蠕動的動力，不能等到完全空了才補。" },
+  { id: "water", title: "水碗裡的水看起來混濁", prompt: "現在要怎麼做？", correct: "倒掉舊水，清洗碗後換新鮮飲水", incorrect: "直接再加滿就好", feedback: "舊水可能累積髒污與細菌；換水時也能留意牠昨天的飲水量。" },
+  { id: "litter", title: "便盆裡有糞便和使用過的墊料", prompt: "現在要怎麼做？", correct: "清除糞便，更換新鮮墊料", incorrect: "看起來還好，明天再清", feedback: "便盆要每天清潔，才能維持乾淨環境並觀察排便。" },
+] as const;
+
+function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { scenario: Scenario; petName: string; onReplay?: () => void; onContinue: () => void }) {
+  return <CorrectFeedbackLayout
+    variant="single"
+    videoSrc=""
+    videoFailed
+    fallbackText="兔子日常照護完成"
+    mediaPlaceholder={<div className="scene-media-placeholder"><span>兔子日常照護</span><strong>{withPetName(scenario.title, petName)}</strong><small>每一個穩定的日常，都是牠的安全感。</small></div>}
+    intro={<p>{scenario.id === "rabbit-daily-check" ? `你完成了今天的日常巡視！牧草、飲水、便盆、糞便——這四件事，是${petName || "牠"}健康的底線。` : `你用循序、穩定的方式試著抱起${petName || "牠"}，也把牠的安全感放在前面。`}</p>}
+    knowledgeTitle={scenario.knowledgeTitle ?? "兔子小知識"}
+    correctItems={scenario.learningPoints}
+    onReplay={onReplay}
+    onVideoError={() => undefined}
+    onContinue={onContinue}
+    continueImmediately
+  />;
+}
+
+function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onContinue, onReplay }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void; onReplay?: () => void }) {
+  const scenario = rabbitActivityScenarios["rabbit-carry-sort"];
+  const order = activity.rabbitCarryOrder.length ? activity.rabbitCarryOrder : ["2", "0", "4", "1", "3"];
+  const [message, setMessage] = useState("");
+  const complete = activity.rabbitCarryComplete;
+  const move = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= order.length) return;
+    const next = [...order];
+    [next[index], next[target]] = [next[target], next[index]];
+    onChange({ rabbitCarryOrder: next });
+  };
+  const check = () => {
+    const incorrectIndex = order.findIndex((value, index) => value !== String(index));
+    if (incorrectIndex !== -1) {
+      onChoose(scenario, scenario.choices[0]);
+      setMessage(`第 ${incorrectIndex + 1} 步還需要重新想一想：先建立安全感，再以雙手穩定支撐牠。`);
+      return;
+    }
+    onChange({ rabbitCarryComplete: true });
+    onChoose(scenario, scenario.choices[1]);
+  };
+  if (complete) return <RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} />;
+  return <section className="rabbit-activity" aria-labelledby="rabbit-carry-title"><header><p>日常照護</p><h1 id="rabbit-carry-title">{withPetName(scenario.title, petName)}</h1><span>用上下箭頭調整順序，從接近到安全支撐，一步一步完成。</span></header><div className="rabbit-activity-grid"><div className="rabbit-activity-media"><span>安全抱兔練習</span><strong>先讓牠感到安心</strong><small>不要從耳朵拎起，也不要讓牠腹部朝上。</small></div><div className="rabbit-activity-panel"><h2>請排出安全順序</h2><ol className="rabbit-sort-list">{order.map((value, index) => <li key={`${value}-${index}`}><span>{index + 1}</span><p>{withPetName(rabbitCarrySteps[Number(value)], petName)}</p><div><button type="button" aria-label="往上移動" disabled={index === 0} onClick={() => move(index, -1)}>↑</button><button type="button" aria-label="往下移動" disabled={index === order.length - 1} onClick={() => move(index, 1)}>↓</button></div></li>)}</ol><aside className="rabbit-unsafe-list"><b>不要排序、也不要這樣抱</b><span>從耳朵拎起：耳朵是重要散熱器官，可能造成傷害。</span><span>讓牠腹部朝上：容易引發強烈壓力與掙扎。</span></aside>{message && <p className="rabbit-activity-message">{message}</p>}<button type="button" className="primary" onClick={check}>確認順序 <span>→</span></button></div></div></section>;
+}
+
+function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue, onReplay }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void; onReplay?: () => void }) {
+  const scenario = rabbitActivityScenarios["rabbit-daily-check"];
+  const selected = activity.rabbitDailyCheckSteps;
+  const stepIndex = rabbitCheckSteps.findIndex((step) => !selected.includes(step.id));
+  const [message, setMessage] = useState("");
+  const variant = selected.find((item) => item.startsWith("poop:"))?.slice(5) ?? "normal";
+  const complete = stepIndex === -1 && selected.includes(`poop:${variant}`);
+  const markWrong = (feedback: string) => { onChoose(scenario, scenario.choices[0]); setMessage(feedback); };
+  const choose = (isCorrect: boolean, token: string, feedback: string) => {
+    if (!isCorrect) return markWrong(feedback);
+    onChange({ rabbitDailyCheckSteps: [...selected, token] }); setMessage("這一項完成了，繼續下一項巡視。");
+  };
+  if (complete) return <RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} />;
+  const current = rabbitCheckSteps[stepIndex];
+  const poopOptions = ["數量正常、圓形飽滿", "數量明顯減少，形狀偏小偏乾", "出現大量未食入的葡萄串狀柔軟糞便（盲腸便）"];
+  const poopCorrect = poopOptions[{ normal: 0, reduced: 1, "cecotrope-uneaten": 2 }[variant] ?? 0];
+  return <section className="rabbit-activity" aria-labelledby="rabbit-check-title"><header><p>日常照護</p><h1 id="rabbit-check-title">{withPetName(scenario.title, petName)}</h1><span>依序完成今天的四項巡視，已完成的項目會保留進度。</span></header><div className="rabbit-activity-grid"><div className="rabbit-activity-media"><span>今日巡視 {selected.filter((item) => !item.startsWith("poop:")).length + (selected.some((item) => item.startsWith("poop:")) ? 1 : 0)} / 4</span><strong>牧草、飲水、便盆、糞便</strong><small>每天固定檢查，才能及早發現日常變化。</small></div><div className="rabbit-activity-panel">{current ? <><h2>{current.title}</h2><p>{current.prompt}</p><div className="scenario-option-list"><ScenarioOptionCard type="single" onClick={() => choose(true, current.id, "")}>{current.correct}</ScenarioOptionCard><ScenarioOptionCard type="single" onClick={() => choose(false, current.id, current.feedback)}>{current.incorrect}</ScenarioOptionCard></div></> : <><h2>看看今天的糞便狀況</h2><p>選出你在便盆中觀察到的情況。</p><div className="scenario-option-list">{poopOptions.map((option) => <ScenarioOptionCard key={option} type="single" onClick={() => option === poopCorrect ? (onChange({ rabbitDailyCheckSteps: [...selected, `poop:${variant}`] }), onChoose(scenario, scenario.choices[1]), setMessage("你完成了所有巡視項目。")) : markWrong("請再仔細比對今天觀察到的糞便狀況。")}>{option}</ScenarioOptionCard>)}</div></>}{message && <p className="rabbit-activity-message">{message}</p>}</div></div></section>;
+}
+
 export function LifeJourney({
   index,
   petName,
@@ -2745,12 +2821,16 @@ export function LifeJourney({
   const answer = scenario ? answers[scenario.id] : undefined;
   const isDailyBehaviorActivity = item.id === "behavior" || item.id === "cat-daily-care" || item.id === "rabbit-daily-care";
   const isDailyInspectionActivity = item.type === "daily-inspection";
+  const isRabbitCarrySortActivity = item.type === "rabbit-carry-sort";
+  const isRabbitDailyCheckActivity = item.type === "rabbit-daily-check";
+  const isArrivalMealActivity = item.type === "arrival-meal";
   const isWalkingActivity = item.id === "walking";
   const isBreedChallengeActivity = item.id === "breed-challenge";
   const isBusyCareActivity = Boolean(scenario && (scenario.id === "busy-daily-care" || scenario.id === "cat-busy-care" || scenario.id === "rabbit-busy-care"));
   const isVideoFeedbackScenario = scenario?.id === "arrival-adjustment" || scenario?.id === "illness-vet" || scenario?.id === "growing-old" || scenario?.id === "cat-arrival-adjustment" || scenario?.id === "cat-illness-vet" || scenario?.id === "cat-growing-old" || scenario?.id === "rabbit-arrival-adjustment" || scenario?.id === "rabbit-health-emergency" || scenario?.id === "rabbit-senior-care";
   const [arrivalMealOpen, setArrivalMealOpen] = useState(false);
-  const showArrivalMeal = (scenario?.id === "arrival-adjustment" || scenario?.id === "cat-arrival-adjustment" || scenario?.id === "rabbit-arrival-adjustment") && answer?.finalResult === "correct" && arrivalMealOpen;
+  // 兔子的第一餐是明確的 journey item；犬貓則沿用既有的到家後直接開啟方式。
+  const showArrivalMeal = (scenario?.id === "arrival-adjustment" || scenario?.id === "cat-arrival-adjustment") && answer?.finalResult === "correct" && arrivalMealOpen;
   const [feedbackOpen, setFeedbackOpen] = useState(Boolean(answer));
   const [timePassOpen, setTimePassOpen] = useState(false);
   const [resetSignal, setResetSignal] = useState(0);
@@ -2807,6 +2887,8 @@ export function LifeJourney({
       });
     }
     if (isDailyInspectionActivity) onActivityChange({ catInspectionSteps: [] });
+    if (isRabbitCarrySortActivity) onActivityChange({ rabbitCarryOrder: [], rabbitCarryComplete: false });
+    if (isRabbitDailyCheckActivity) onActivityChange({ rabbitDailyCheckSteps: [] });
     setReplayInProgress(true);
     setResetItemId(item.id);
     setResetSignal((current) => current + 1);
@@ -2830,7 +2912,25 @@ export function LifeJourney({
 
   return (
     <div className={`content-wrap life-journey-page ${canResetCurrent ? "is-reviewing" : ""}`}>
-      {isDailyBehaviorActivity ? (
+      {isRabbitCarrySortActivity ? (
+        <RabbitCarrySortActivity
+          activity={activity}
+          petName={petName}
+          onChange={onActivityChange}
+          onChoose={onChoose}
+          onContinue={continueJourney}
+          {...replayCorrectProps}
+        />
+      ) : isRabbitDailyCheckActivity ? (
+        <RabbitDailyCheckActivity
+          activity={activity}
+          petName={petName}
+          onChange={onActivityChange}
+          onChoose={onChoose}
+          onContinue={continueJourney}
+          {...replayCorrectProps}
+        />
+      ) : isDailyBehaviorActivity ? (
         <DailyBehaviorActivityMulti
           answers={answers}
           petName={petName}
@@ -2856,6 +2956,15 @@ export function LifeJourney({
           onAddExpense={onAddExpense}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
+        />
+      ) : isArrivalMealActivity ? (
+        <ArrivalMealActivity
+          activity={activity}
+          petName={petName}
+          species={species}
+          onChange={onActivityChange}
+          onAddExpense={onAddExpense}
+          onContinue={continueJourney}
         />
       ) : isBreedChallengeActivity ? (
         <BreedChallengeActivity
@@ -2889,7 +2998,7 @@ export function LifeJourney({
           breed={breed}
           onChoose={choose}
           onCorrectComplete={() => {
-            if (scenario.id === "arrival-adjustment" || scenario.id === "cat-arrival-adjustment" || scenario.id === "rabbit-arrival-adjustment") {
+            if (scenario.id === "arrival-adjustment" || scenario.id === "cat-arrival-adjustment") {
               setArrivalMealOpen(true);
               window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
             }

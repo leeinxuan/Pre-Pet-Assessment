@@ -7,7 +7,7 @@ import { getDogBreedChallengeScenarios } from "./dog/breed-challenges";
 import { dogLifeScenarios } from "./dog/scenarios";
 import { rabbitJourneyItems } from "./rabbit/journey";
 import { getRabbitBreedChallengeScenarios } from "./rabbit/breed-challenges";
-import { rabbitLifeScenarios } from "./rabbit/scenarios";
+import { rabbitActivityScenarios, rabbitLifeScenarios } from "./rabbit/scenarios";
 
 export { catJourneyItems, catLifeScenarios, dogJourneyItems, dogLifeScenarios, rabbitJourneyItems, rabbitLifeScenarios };
 
@@ -26,6 +26,7 @@ export function getBreedChallengeScenarios(breedId: string): Scenario[] {
 }
 
 export function getAllScenariosForSpecies(species: string, breedId: string): Scenario[] {
+  if (species === "rabbit") return [...rabbitLifeScenarios, ...Object.values(rabbitActivityScenarios), ...getRabbitBreedChallengeScenarios("rabbit")];
   return [...getLifeScenariosForSpecies(species), ...getBreedChallengeScenarios(breedId)];
 }
 

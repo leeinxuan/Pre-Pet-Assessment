@@ -110,3 +110,25 @@ export const rabbitLifeScenarios: Scenario[] = [
     ],
   },
 ];
+
+/** 兔子專屬互動也以 Scenario 紀錄結果，讓共用回顧與下載摘要可直接讀取。 */
+export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily-check", Scenario> = {
+  "rabbit-carry-sort": {
+    id: "rabbit-carry-sort", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護",
+    title: "試著抱起 {petName}", description: "依序安排安全抱起兔子的步驟。", topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
+    knowledgeTitle: "兔子小知識", learningPoints: ["<mark>緩慢靠近、先讓牠嗅聞</mark>，再確認牠沒有緊張或後退。", "抱起時要<mark>同時托住胸口與臀部，讓牠靠著身體</mark>；不可拎耳朵或讓腹部朝上。"],
+    choices: [
+      { id: "rabbit-carry-incorrect", text: "需要重新思考順序", result: "incorrect", ...incorrect, explanation: "安全抱兔需要循序降低緊張感，確認每一步都完成後再往下。" },
+      { id: "rabbit-carry-complete", text: "完成安全抱兔步驟", result: "correct", ...positive, explanation: "你用循序、穩定的方式照顧牠的安全感。" },
+    ],
+  },
+  "rabbit-daily-check": {
+    id: "rabbit-daily-check", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護",
+    title: "早安，{petName}！開始今天的日常巡視", description: "依序巡視牧草、飲水、便盆與糞便，及早留意日常變化。", topic: "兔兔日常巡視", reportSummary: "每天補牧草、換新鮮水、清便盆並觀察糞便，是兔子健康照護的基礎。", artIndex: 0,
+    knowledgeTitle: "兔子小知識", learningPoints: ["<mark>牧草、飲水、便盆、糞便</mark>是每天都要巡視的四個重點。", "固定巡視能及早發現食慾、飲水或排便的明顯變化，並安排合適協助。"],
+    choices: [
+      { id: "rabbit-daily-check-incorrect", text: "需要重新確認", result: "incorrect", ...incorrect, explanation: "這一項還沒完成。請依兔子的日常需求重新處理。" },
+      { id: "rabbit-daily-check-complete", text: "完成日常巡視", result: "correct", ...positive, explanation: "你完成了今天的日常巡視，為牠的健康守住了日常底線。" },
+    ],
+  },
+};

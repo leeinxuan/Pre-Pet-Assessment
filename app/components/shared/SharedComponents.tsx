@@ -468,8 +468,6 @@ const expenseLabels = {
   oneTimePrep: "\u4e00\u6b21\u6027\u6e96\u5099\u8cbb",
   monthlyBasic: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa",
   temporaryMedical: "\u81e8\u6642\uff0f\u91ab\u7642\u652f\u51fa",
-  suggestedReserve: "\u73fe\u5728\u80fd\u7acb\u5373\u52d5\u7528\u7684\u91ab\u7642\u7de9\u885d",
-  emergencyReserveTitle: "\u521d\u59cb\u91ab\u7642\u61c9\u6025\u91d1",
   detailEyebrow: "\u82b1\u8cbb\u660e\u7d30",
   detailTitle: "\u76ee\u524d\u5df2\u767b\u8a18\u7684\u652f\u51fa",
   closeDetails: "\u95dc\u9589\u660e\u7d30",
@@ -489,7 +487,6 @@ const defaultVisibleExpenseIds = ["microchip-registration", "rabies-vaccine", "b
 const defaultVisibleExpenses = defaultVisibleExpenseIds
   .map((id) => expenseCatalog[id])
   .filter((item): item is ExpenseRecord => Boolean(item));
-const oneTimePreparationExpenseIds = new Set(["food-bowl", "water-bowl", "bed", "carrier", "leash", "toy", "toilet", "cleaner", "starter-food"]);
 const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-routine-checkup", "rabbit-senior-room"]);
 
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
@@ -519,11 +516,9 @@ export function getOneTimePreparationExpenseTotal(expenses: ExpenseRecord[]) {
   return expenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
 }
 
-/** 累積支出與飼養前建議先準備共用所有非每月費用。 */
-export function getAccumulatedOneTimeExpenseTotal(expenses: ExpenseRecord[]) {
-  return expenses
-    .filter((item) => !isMonthlyExpense(item))
-    .reduce((sum, item) => sum + item.amount, 0);
+/** 全物種共用累積支出：已登記的所有分類都只加總一次。 */
+export function getAccumulatedExpenseTotal(expenses: ExpenseRecord[]) {
+  return expenses.reduce((sum, item) => sum + item.amount, 0);
 }
 
 export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string, species?: string) {
@@ -552,12 +547,12 @@ function expenseTypeLabel(item: ExpenseRecord) {
   return expenseLabels.oneTimeType;
 }
 
-export function ExpenseDetails({ expenses, emergencyReserve, breed, species, onClose }: { expenses: ExpenseRecord[]; emergencyReserve: number; breed: string; species?: string; onClose: () => void }) {
+export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses: ExpenseRecord[]; breed: string; species?: string; onClose: () => void }) {
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const preparationTotal = getOneTimePreparationExpenseTotal(visibleExpenses);
   const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
   const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
-  const accumulatedTotal = getAccumulatedOneTimeExpenseTotal(visibleExpenses);
+  const accumulatedTotal = getAccumulatedExpenseTotal(visibleExpenses);
   const grouped = expenseDetailGroupOrder.map((group) => ({
     group,
     items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group),
@@ -584,11 +579,6 @@ export function ExpenseDetails({ expenses, emergencyReserve, breed, species, onC
               )}
             </div>
           ))}
-          <div className="expense-reserve-note">
-            <h3>{expenseLabels.suggestedReserve}</h3>
-            <b>{expenseLabels.emergencyReserveTitle}: NT$ {money.format(emergencyReserve)}</b>
-            <p>這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是狗狗一生的醫療費。</p>
-          </div>
         </div>
         <button className="primary" onClick={onClose}>{expenseLabels.closeDetails}</button>
       </section>
@@ -598,13 +588,11 @@ export function ExpenseDetails({ expenses, emergencyReserve, breed, species, onC
 
 export function CostBar({
   expenses,
-  emergencyReserve,
   latestExpense,
   breed,
   species,
 }: {
   expenses: ExpenseRecord[];
-  emergencyReserve: number;
   latestExpense: ExpenseRecord | null;
   breed: string;
   species?: string;
@@ -620,7 +608,7 @@ export function CostBar({
           <em>{expenseLabels.viewDetails}</em>
         </button>
       </div>
-      {detailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} species={species} onClose={() => setDetailsOpen(false)} />}
+      {detailsOpen && <ExpenseDetails expenses={expenses} breed={breed} species={species} onClose={() => setDetailsOpen(false)} />}
     </>
   );
 }

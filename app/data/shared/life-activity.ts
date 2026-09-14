@@ -14,4 +14,7 @@ export const initialLifeActivityState: LifeActivityState = {
   sickTimePassComplete: false,
   bodyCareParts: [],
   seniorAdjustments: [],
+  rabbitCarryOrder: [],
+  rabbitCarryComplete: false,
+  rabbitDailyCheckSteps: [],
 };

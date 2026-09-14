@@ -83,7 +83,7 @@ export type JourneyItemType =
   | "walking"
   | "daily-inspection"
   | "arrival-meal"
-  // TODO(rabbit-activity): 對應兔版專屬互動元件尚待實作。
+  // 兔子專屬活動仍沿用共用旅程的完成、回顧與下載資料格式。
   | "rabbit-carry-sort"
   | "rabbit-daily-check"
   | "breed-challenge"
@@ -114,6 +114,9 @@ export type LifeActivityState = {
   sickTimePassComplete: boolean;
   bodyCareParts: string[];
   seniorAdjustments: string[];
+  rabbitCarryOrder: string[];
+  rabbitCarryComplete: boolean;
+  rabbitDailyCheckSteps: string[];
 };
 
 export type Profile = {

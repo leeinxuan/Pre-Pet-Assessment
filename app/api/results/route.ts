@@ -25,7 +25,6 @@ function isSharedResult(value: unknown): value is SharedAssessmentResult {
     && typeof result.preparation.hazardsComplete === "boolean"
     && typeof result.preparation.transportComplete === "boolean"
     && typeof result.costs?.simulatedTotal === "number"
-    && typeof result.costs.emergencyReserve === "number"
     && typeof result.costs.suggestedTotal === "number"
     && isTextList(result.preparedItems)
     && isTextList(result.itemsToConfirm)

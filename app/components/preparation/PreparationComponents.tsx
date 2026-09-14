@@ -350,8 +350,8 @@ export function CarTrunkPreparation({ selected, petName, breed, species = "dog",
 
       <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">
         <img className="car-trunk-background" src={dogAssets.preparation.trunk} alt="打開的汽車後車廂" />
-        {selected.includes("documents") && <div className="car-document-folder complete"><img src={dogAssets.preparation.documents} alt="飼養文件夾" /></div>}
-        {selected.includes("id") && <img className="placed-car-item placed-car-id" src={dogAssets.preparation.idCard} alt="放入文件夾的身分證" />}
+        {documents.some((item) => selected.includes(item.id)) && <div className="car-document-folder complete"><img src={dogAssets.preparation.documents} alt="飼養文件夾" /></div>}
+        {documents.filter((item) => selected.includes(item.id) && (item.id === "id" || item.id === "id-card")).map((item) => <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`已放入文件夾的${item.label}`} />)}
         {supplies.filter((item) => selected.includes(item.id)).map((item) => false ? (
           <div key={item.id} className="placed-car-item placed-car-carrier-kit" style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }}>
             <img className="carrier-pad" src={dogAssets.preparation.peePad} alt="鋪在運輸籠內的尿墊" /><img className="carrier-image" src={item.image} alt="放在後車廂的安全運輸籠" />
