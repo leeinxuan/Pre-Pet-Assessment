@@ -10,6 +10,8 @@ export type BreedChallengeQuestion = {
   correctChoiceIndex?: number;
   correctText: string;
   correctExplanation: string;
+  /** 答對此品種考驗後，使用共用 expense store 加入的費用。 */
+  correctExpenseIds?: string[];
   distractors: Array<{ text: string; explanation: string; suggestion: string }>;
 };
 
@@ -24,6 +26,7 @@ export function buildBreedChallengeScenarios(
       result: "correct",
       ...positive,
       explanation: question.correctExplanation,
+      expenseIds: question.correctExpenseIds,
     };
     const distractorChoices: ScenarioChoice[] = question.distractors.map((choice, choiceIndex) => ({
       id: `breed-challenge-${questionIndex + 1}-distractor-${choiceIndex + 1}`,

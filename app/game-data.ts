@@ -1,5 +1,6 @@
 import { dogBreeds } from "./data/species/dog/selection";
 import { catBreeds } from "./data/species/cat/selection";
+import { rabbitSelection } from "./data/species/rabbit";
 import { arrivalMealMobilePlacements as dogArrivalMealMobilePlacements, roomDoorplatePlacement as dogRoomDoorplatePlacement } from "./data/species/dog/layout";
 import { dogDepartureTrunkItems, dogHazards, dogRoomItems, dogTrunkItems } from "./data/species/dog/preparation";
 /** @deprecated 請改從 data/shared/app-flow.ts 匯入。 */
@@ -12,7 +13,7 @@ export {
   stations,
 } from "./data/shared/app-flow";
 /** @deprecated 相容舊引用；實際品種資料位於 data/species/{dog,cat}/selection.ts。 */
-export const breeds = [...dogBreeds, ...catBreeds];
+export const breeds = [...dogBreeds, ...catBreeds, ...rabbitSelection.breeds];
 
 /** @deprecated 請改從 data/shared/expenses.ts 匯入。 */
 export {

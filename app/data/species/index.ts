@@ -1,5 +1,6 @@
 import { dogConfig } from "./dog/index";
 import { catConfig } from "./cat/index";
+import { rabbitConfig } from "./rabbit/index";
 import type { SpeciesId } from "../shared/types";
 import { speciesGameConfig } from "../speciesGameConfig";
 
@@ -27,20 +28,32 @@ export const speciesConfigs = {
     hazards: catConfig.preparation.hazards,
     trunkItems: catConfig.preparation.trunkItems,
   },
+  rabbit: {
+    ...rabbitConfig,
+    copy: speciesGameConfig.rabbit.copy,
+    breeds: rabbitConfig.selection.breeds,
+    roomItems: rabbitConfig.preparation.roomItems,
+    hazards: rabbitConfig.preparation.hazards,
+    trunkItems: rabbitConfig.preparation.trunkItems,
+  },
 } as const;
 export type SpeciesConfig = (typeof speciesConfigs)[SpeciesId];
 
 export function getSpeciesConfig(species: string | undefined): SpeciesConfig {
-  return species === "cat" ? speciesConfigs.cat : speciesConfigs.dog;
+  if (species === "cat") return speciesConfigs.cat;
+  if (species === "rabbit") return speciesConfigs.rabbit;
+  return speciesConfigs.dog;
 }
 
 /** 舊共用文案在完全搬移前的相容入口。 */
 export function getSpeciesCopy(species: string | undefined) {
-  return species === "cat" ? speciesGameConfig.cat.copy : speciesGameConfig.dog.copy;
+  if (species === "cat") return speciesGameConfig.cat.copy;
+  if (species === "rabbit") return speciesGameConfig.rabbit.copy;
+  return speciesGameConfig.dog.copy;
 }
 
 export function getBreedForSpecies(species: string | undefined, breedId: string | undefined) {
   return getSpeciesConfig(species).selection.breeds.find((breed) => breed.id === breedId);
 }
 
-export { dogConfig, catConfig };
+export { dogConfig, catConfig, rabbitConfig };

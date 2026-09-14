@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { initialMembers, initialProfile, intros } from "./data/shared/app-flow";
 import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed } from "./data/shared/expenses";
 import { getSpeciesConfig } from "./data/species/index";
+import { getJourneyItemsForSpecies } from "./data/species/journey";
 import { initialLifeActivityState } from "./data/shared/life-activity";
 import type {
   CareMember,
@@ -149,6 +150,20 @@ export default function Home() {
   }
 
   function goToLifeStage(stageIndex: number) {
+    if (category === "rabbit") {
+      const stageStarts = getJourneyItemsForSpecies("rabbit").reduce<number[]>((starts, item, index, all) => {
+        if (index === 0 || item.stageId !== all[index - 1].stageId) starts.push(index);
+        return starts;
+      }, []);
+      const journeyStart = stageStarts[stageIndex] ?? 0;
+      setLifePhase("life-journey");
+      setJourneyIndex(journeyStart);
+      // 階段編號僅供既有總流程解鎖使用；兔子題目分段由 stageId 判定。
+      setStep(stageIndex === 0 ? 3 : stageIndex >= 4 ? 6 : 4);
+      setIntroOpen(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     const firstJourneyItem = [0, 1, 3, 4];
     const underlyingStep = [3, 4, 4, 6];
     if (lifePhase === "arrival-video" && stageIndex === 0) {
@@ -197,8 +212,9 @@ export default function Home() {
   function addRoomItem(id: string) {
     if (!id) return;
     setRoomReady((current) => current.includes(id) ? current : [...current, id]);
-    const expenseId = speciesConfig.roomItems.find((item) => item.id === id)?.expenseId;
-    if (expenseId) addExpenseById(expenseId);
+    const item = speciesConfig.roomItems.find((entry) => entry.id === id);
+    const expenseIds = [...(item?.expenseIds ?? []), ...(item?.expenseId ? [item.expenseId] : [])];
+    Array.from(new Set(expenseIds)).forEach(addExpenseById);
   }
 
   function toggleHazard(id: string) {
@@ -251,7 +267,20 @@ export default function Home() {
   function markScenarioForReview(scenario: Scenario, flag: string) {
     setScenarioAnswers((current) => {
       const previous = current[scenario.id];
-      if (!previous) return current;
+      if (!previous) {
+        return {
+          ...current,
+          [scenario.id]: {
+            scenarioId: scenario.id,
+            firstChoiceId: "",
+            finalChoiceId: "",
+            firstResult: "incorrect",
+            finalResult: "incorrect",
+            attempts: 0,
+            discussionFlags: [flag],
+          },
+        };
+      }
       return {
         ...current,
         [scenario.id]: {
@@ -429,7 +458,7 @@ export default function Home() {
             onLifeStage={goToLifeStage}
           />
           <section className="stage" aria-live="polite">
-            {step >= 2 && step <= 8 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} breed={breed} />}
+            {step >= 2 && step <= 8 && <CostBar expenses={expenses} emergencyReserve={emergencyReserve} latestExpense={latestExpense} breed={breed} species={category} />}
             {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}

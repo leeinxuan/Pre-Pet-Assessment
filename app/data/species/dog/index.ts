@@ -9,7 +9,7 @@ import { dogSelection } from "./selection";
 
 export const dogConfig = {
   id: "dog" as const,
-  selection: dogSelection,
+  selection: { ...dogSelection, skipBreedPage: false },
   preparation: dogPreparation,
   journey: dogJourney,
   scenarios: dogLifeScenarios,

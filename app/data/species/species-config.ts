@@ -2,8 +2,9 @@ import { breeds } from "../../game-data";
 import { speciesGameConfig as legacySpeciesGameConfig } from "../speciesGameConfig";
 import { catSpeciesData } from "./cat";
 import { dogSpeciesData } from "./dog";
+import { rabbitConfig } from "./rabbit";
 
-export type SpeciesId = "dog" | "cat";
+export type SpeciesId = "dog" | "cat" | "rabbit";
 
 /**
  * 共用畫面的唯一物種設定入口。
@@ -31,12 +32,25 @@ export const speciesConfig = {
     litterInspection: catSpeciesData.litterInspection,
     dailyActivity: "litter-inspection" as const,
   },
+  rabbit: {
+    ...legacySpeciesGameConfig.rabbit,
+    breeds: rabbitConfig.selection.breeds,
+    assets: rabbitConfig.assets,
+    lifeScenarios: rabbitConfig.scenarios,
+    journeyItems: rabbitConfig.journey.items,
+    breedChallenges: rabbitConfig.breedChallenges,
+    dailyBehaviorScenarioIds: rabbitConfig.journey.dailyBehaviorScenarioIds,
+    dailyCheck: rabbitConfig.journey.dailyCheck,
+    dailyActivity: "rabbit-daily-check" as const,
+  },
 } as const;
 
 export type SpeciesConfig = (typeof speciesConfig)[SpeciesId];
 
 export function getSpeciesConfig(species: string | undefined): SpeciesConfig {
-  return species === "cat" ? speciesConfig.cat : speciesConfig.dog;
+  if (species === "cat") return speciesConfig.cat;
+  if (species === "rabbit") return speciesConfig.rabbit;
+  return speciesConfig.dog;
 }
 
 export function getBreedForSpecies(species: string | undefined, breedId: string | undefined) {

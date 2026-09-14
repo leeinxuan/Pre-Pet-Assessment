@@ -11,8 +11,8 @@ import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
   ExpenseDetails,
   getAccumulatedOneTimeExpenseTotal,
+  getOneTimePreparationExpenseTotal,
   isMonthlyExpense,
-  isOneTimePreparationExpense,
   isRequiredAfterArrivalExpense,
   isTemporaryOrMedicalExpense,
   mergeDefaultVisibleExpenses,
@@ -481,7 +481,7 @@ export function ProfileSupplementForm({
   embedded?: boolean;
 }) {
   const selectedBreed = getSpeciesConfig(species).breeds.find((item) => item.id === breed);
-  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : "柴犬");
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : "柴犬");
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     onChange({ ...profile, [key]: value });
   };
@@ -686,12 +686,13 @@ export function AssessmentReport({
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [activeDiscussionId, dailyCareDetailsOpen]);
-  const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
+  const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const requiredAfterArrivalTotal = visibleExpenses.filter(isRequiredAfterArrivalExpense).reduce((sum, item) => sum + item.amount, 0);
-  const oneTimePreparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+  const oneTimePreparationTotal = getOneTimePreparationExpenseTotal(visibleExpenses);
   const monthlyBasicTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
-  // 與費用明細的「累積支出」共用所有非每月費用來源。
-  const initialPreparationTotal = getAccumulatedOneTimeExpenseTotal(visibleExpenses);
+  // 兔子的飼養前準備不包含後續情境才加入的臨時／醫療支出。
+  const initialPreparationTotal = species === "rabbit" ? oneTimePreparationTotal : getAccumulatedOneTimeExpenseTotal(visibleExpenses);
+  const accumulatedExpenseTotal = getAccumulatedOneTimeExpenseTotal(visibleExpenses);
   const temporaryMedicalTotal = visibleExpenses.filter((item) => !isMonthlyExpense(item) && isTemporaryOrMedicalExpense(item)).reduce((sum, item) => sum + item.amount, 0);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
@@ -798,7 +799,45 @@ export function AssessmentReport({
     }));
   const activeKnowledge = activeDiscussion;
   // 僅彙整使用者第一次即掌握的題目，讓此區維持快速掃讀的主題摘要。
-  const masteredThemes = (species === "cat" ? [
+  const masteredThemes = (species === "rabbit" ? [
+    {
+      id: "rabbit-safe-home",
+      icon: "⌂",
+      title: "安全生活空間",
+      summary: "知道要準備防滑、可躲藏且避開危險物的安全活動環境。",
+      scenarioIds: [],
+      preparationComplete: roomCompletion === 100 && hazardsReady.length === speciesConfig.hazards.length,
+    },
+    {
+      id: "rabbit-arrival",
+      icon: "♡",
+      title: "接回與適應",
+      summary: "理解兔子剛到家時需要安靜、可退避的空間，依自己的節奏探索。",
+      scenarioIds: ["rabbit-arrival-adjustment"],
+    },
+    {
+      id: "rabbit-food-daily",
+      icon: "✦",
+      title: "飲食與日常照護",
+      summary: "了解牧草、乾淨飲水、環境巡視與日常觀察都需要穩定安排。",
+      scenarioIds: ["rabbit-stomp", "rabbit-heatstroke-prevention", "rabbit-heatstroke-emergency", "rabbit-shedding"],
+      practiceComplete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady,
+    },
+    {
+      id: "rabbit-breed-care",
+      icon: "◌",
+      title: "兔子的生理與習慣",
+      summary: "能分辨正常生理行為，並把繁殖、清潔與日常照護放進長期安排。",
+      scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"],
+    },
+    {
+      id: "rabbit-life-change",
+      icon: "✚",
+      title: "生活變化",
+      summary: "知道忙碌時的交接、排泄與食慾異常，以及高齡後的環境調整都需要提早安排。",
+      scenarioIds: ["rabbit-busy-care", "rabbit-health-emergency", "rabbit-senior-care"],
+    },
+  ] : species === "cat" ? [
     {
       id: "cat-safe-home",
       icon: "⌂",
@@ -872,7 +911,9 @@ export function AssessmentReport({
     },
   ]).map((theme) => ({
     ...theme,
-    matchedCount: masteredDetails.filter((detail) => theme.scenarioIds.includes(detail.id)).length,
+    matchedCount: masteredDetails.filter((detail) => (theme.scenarioIds as readonly string[]).includes(detail.id)).length
+      + ("preparationComplete" in theme && theme.preparationComplete ? 1 : 0)
+      + ("practiceComplete" in theme && theme.practiceComplete ? 1 : 0),
   })).filter((theme) => theme.matchedCount > 0);
   const knowledgeModal = activeKnowledge && typeof document !== "undefined"
     ? createPortal(
@@ -1003,7 +1044,7 @@ export function AssessmentReport({
             <h3>支出包含</h3>
             <ul>
               <li><span>到家後必要支出</span><b>NT$ {money.format(requiredAfterArrivalTotal)}</b></li>
-              <li className="care-a4-money-note">（晶片與寵物登記、狂犬病疫苗、基礎疫苗與初期健康檢查）</li>
+              <li className="care-a4-money-note">{species === "rabbit" ? "（到家後首次健康檢查與絕育評估）" : "（晶片與寵物登記、狂犬病疫苗、基礎疫苗與初期健康檢查）"}</li>
               <li><span>一次性準備費</span><b>NT$ {money.format(oneTimePreparationTotal)}</b></li>
               <li><span>每月基本支出</span><b>NT$ {money.format(monthlyBasicTotal)}／月</b></li>
               <li><span>臨時／醫療支出</span><b>NT$ {money.format(temporaryMedicalTotal)}</b></li>
@@ -1013,7 +1054,7 @@ export function AssessmentReport({
           <div className="care-a4-money-summary">
             <h3>金額摘要</h3>
             <dl>
-              <div><dt>累積一次性準備支出</dt><dd>NT$ {money.format(initialPreparationTotal)}</dd></div>
+              <div><dt>累積支出</dt><dd>NT$ {money.format(accumulatedExpenseTotal)}</dd></div>
               <div><dt>初始醫療應急金</dt><dd>NT$ {money.format(emergencyReserve)}</dd></div>
               <div className="care-a4-money-total"><dt>最低應準備金額</dt><dd>NT$ {money.format(initialPreparationTotal + emergencyReserve)}</dd></div>
             </dl>
@@ -1136,7 +1177,7 @@ export function AssessmentReport({
           ) : <p>尚未上傳居家空間照片</p>}
         </section>
       </article>
-      {expenseDetailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} onClose={() => setExpenseDetailsOpen(false)} />}
+      {expenseDetailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} species={species} onClose={() => setExpenseDetailsOpen(false)} />}
       {knowledgeModal}
       {dailyCareModal}
     </div>

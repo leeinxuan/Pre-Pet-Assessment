@@ -49,6 +49,18 @@ type MainNavigation = {
 };
 
 function getLifeStageRanges(breed: string, species = "dog") {
+  if (species === "rabbit") {
+    const items = getJourneyItemsForSpecies(species);
+    return items.reduce<Array<{ label: string; start: number; end: number }>>((groups, item, index) => {
+      const last = groups.at(-1);
+      if (last && item.stageId && last.label === item.stageLabel) {
+        last.end = index;
+      } else {
+        groups.push({ label: item.stageLabel ?? item.timeLabel, start: index, end: index });
+      }
+      return groups;
+    }, []);
+  }
   const config = getSpeciesConfig(species);
   const breedLabel = config.breeds.find((item) => item.id === breed)?.label ?? "品種";
   return [
@@ -115,6 +127,10 @@ export function StageRail({
     if (mainUnlockSteps[index] <= furthestStep) return "completed";
     return "locked";
   };
+  // 兔子沒有品種細選；側欄也不顯示一個無法操作的空白步驟。
+  const selectionNavigationPages = species === "rabbit"
+    ? [{ id: "species", label: "選擇物種", progress: 0 }, { id: "name", label: "替牠取名", progress: 2 }, { id: "history", label: "過往經驗", progress: 3 }, { id: "transition", label: "新的開始", progress: 4 }]
+    : [{ id: "species", label: "選擇物種", progress: 0 }, { id: "breed", label: "選擇品種", progress: 1 }, { id: "name", label: "替牠取名", progress: 2 }, { id: "history", label: "過往經驗", progress: 3 }, { id: "transition", label: "新的開始", progress: 4 }];
 
   const navigation: MainNavigation[] = [
     {
@@ -123,13 +139,13 @@ export function StageRail({
       label: "選擇寵物",
       status: mainStatus(0),
       onClick: () => onGoTo(1),
-      children: ["選擇物種", "選擇品種", "替牠取名", "過往經驗", "新的開始"].map((label, index) => ({
-        id: ["species", "breed", "name", "history", "transition"][index],
+      children: selectionNavigationPages.map(({ id, label, progress }) => ({
+        id,
         label,
         status: testMode
-          ? (index === ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[selectionPage] && step === 1 ? "current" : "completed")
-          : step > 1 && index <= selectionReached ? "completed" : statusAt(index, ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[selectionPage], selectionReached),
-        onClick: () => onSelectionPage((["species", "breed", "name", "history", "transition"] as const)[index]),
+          ? (id === selectionPage && step === 1 ? "current" : "completed")
+          : step > 1 && progress <= selectionReached ? "completed" : statusAt(progress, ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[selectionPage], selectionReached),
+        onClick: () => onSelectionPage(id as "species" | "breed" | "name" | "history" | "transition"),
       })),
     },
     {
@@ -306,8 +322,14 @@ export function SpeciesStep({
 
   function chooseCategory(id: string) {
     onCategory(id);
-    onBreed("");
-    onSelectionPage("breed");
+    const nextConfig = getSpeciesConfig(id);
+    if (nextConfig.selection.skipBreedPage) {
+      onBreed(nextConfig.breeds[0]?.id ?? "");
+      onSelectionPage("name");
+    } else {
+      onBreed("");
+      onSelectionPage("breed");
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -375,12 +397,12 @@ export function SpeciesStep({
             <label htmlFor="new-pet-name" className="sr-only">{speciesConfig.copy.animalName}的名字</label>
             <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} autoFocus />
           </div>
-          <NavButtons onBack={() => onSelectionPage("breed")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
+          <NavButtons onBack={() => onSelectionPage(speciesConfig.selection.skipBreedPage ? "species" : "breed")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
         </section>
       ) : selectionPage === "history" ? (
         <section className="partner-selection-page previous-dog-page" key="history">
           <StepHeading title={speciesConfig.copy.historyTitle} body={speciesConfig.copy.historyBody} />
-          <div className="previous-dog-choice" role="group" aria-label="是否曾經養過狗">
+          <div className="previous-dog-choice" role="group" aria-label={`是否曾經養過${speciesConfig.copy.animalName}`}>
             <button type="button" className={hasPreviousDog === true ? "selected" : ""} aria-pressed={hasPreviousDog === true} onClick={() => onHasPreviousDog(true)}><b>{speciesConfig.copy.hasPreviousLabel}</b><small>接著填寫牠的{speciesConfig.copy.typeLabel}與名字</small></button>
             <button type="button" className={hasPreviousDog === false ? "selected" : ""} aria-pressed={hasPreviousDog === false} onClick={() => onHasPreviousDog(false)}><b>{speciesConfig.copy.noPreviousLabel}</b><small>直接開始這次的飼養前準備</small></button>
           </div>
@@ -462,13 +484,13 @@ const expenseLabels = {
   addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
-const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup"]);
+const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "rabbit-arrival-checkup", "rabbit-sterilization"]);
 const defaultVisibleExpenseIds = ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "monthly-preventive-medicine"];
 const defaultVisibleExpenses = defaultVisibleExpenseIds
   .map((id) => expenseCatalog[id])
   .filter((item): item is ExpenseRecord => Boolean(item));
 const oneTimePreparationExpenseIds = new Set(["food-bowl", "water-bowl", "bed", "carrier", "leash", "toy", "toilet", "cleaner", "starter-food"]);
-const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed"]);
+const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-routine-checkup", "rabbit-senior-room"]);
 
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
   expenseLabels.requiredAfterArrival,
@@ -493,6 +515,10 @@ export function isOneTimePreparationExpense(item: ExpenseRecord) {
   return !isMonthlyExpense(item) && !isRequiredAfterArrivalExpense(item) && !isTemporaryOrMedicalExpense(item);
 }
 
+export function getOneTimePreparationExpenseTotal(expenses: ExpenseRecord[]) {
+  return expenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+}
+
 /** 累積支出與飼養前建議先準備共用所有非每月費用。 */
 export function getAccumulatedOneTimeExpenseTotal(expenses: ExpenseRecord[]) {
   return expenses
@@ -500,12 +526,14 @@ export function getAccumulatedOneTimeExpenseTotal(expenses: ExpenseRecord[]) {
     .reduce((sum, item) => sum + item.amount, 0);
 }
 
-export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string) {
+export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string, species?: string) {
+  // 兔子的費用只在完成對應互動後加入；其餘物種維持既有預估項目。
+  const speciesDefaultExpenses = species === "rabbit" ? [] : defaultVisibleExpenses;
   const petSize = getPetSizeForBreed(breed);
   const existingIds = new Set(expenses.map((item) => item.id));
   return [
     ...expenses,
-    ...defaultVisibleExpenses
+    ...speciesDefaultExpenses
       .filter((item) => !existingIds.has(item.id))
       .map((item) => applySizeBasedExpenseAmount(item, petSize)),
   ];
@@ -524,12 +552,11 @@ function expenseTypeLabel(item: ExpenseRecord) {
   return expenseLabels.oneTimeType;
 }
 
-export function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }: { expenses: ExpenseRecord[]; emergencyReserve: number; breed: string; onClose: () => void }) {
-  const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed);
-  const preparationTotal = visibleExpenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+export function ExpenseDetails({ expenses, emergencyReserve, breed, species, onClose }: { expenses: ExpenseRecord[]; emergencyReserve: number; breed: string; species?: string; onClose: () => void }) {
+  const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
+  const preparationTotal = getOneTimePreparationExpenseTotal(visibleExpenses);
   const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
   const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
-  // 與總覽的「飼養前建議先準備」共用所有非每月費用來源。
   const accumulatedTotal = getAccumulatedOneTimeExpenseTotal(visibleExpenses);
   const grouped = expenseDetailGroupOrder.map((group) => ({
     group,
@@ -549,9 +576,9 @@ export function ExpenseDetails({ expenses, emergencyReserve, breed, onClose }: {
         <div className="expense-groups">
           {grouped.map(({ group, items }) => (
             <div key={group}>
-              <h3>{group}</h3>
+              <h3>{group}<span>NT$ {money.format(items.reduce((sum, item) => sum + item.amount, 0))}{items.some(isMonthlyExpense) ? expenseLabels.monthlySuffix : ""}</span></h3>
               {items.length ? (
-                <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.stage} / {expenseTypeLabel(item)}</small></span><strong>NT$ {money.format(item.amount)}{isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}</strong></li>)}</ul>
+                <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.description ?? `${item.stage} / ${expenseTypeLabel(item)}`}</small></span><strong>NT$ {money.format(item.amount)}{isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}</strong></li>)}</ul>
               ) : (
                 <p>{expenseLabels.noGroupExpenses}</p>
               )}
@@ -574,11 +601,13 @@ export function CostBar({
   emergencyReserve,
   latestExpense,
   breed,
+  species,
 }: {
   expenses: ExpenseRecord[];
   emergencyReserve: number;
   latestExpense: ExpenseRecord | null;
   breed: string;
+  species?: string;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -591,7 +620,7 @@ export function CostBar({
           <em>{expenseLabels.viewDetails}</em>
         </button>
       </div>
-      {detailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} onClose={() => setDetailsOpen(false)} />}
+      {detailsOpen && <ExpenseDetails expenses={expenses} emergencyReserve={emergencyReserve} breed={breed} species={species} onClose={() => setDetailsOpen(false)} />}
     </>
   );
 }

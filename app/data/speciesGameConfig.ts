@@ -3,8 +3,10 @@ import { departureTrunkItems, hazards, roomItems } from "../game-data";
 import { catHazards, catRoomItems, catTrunkItems as catDepartureTrunkItems } from "./species/cat/preparation";
 import { dogReport } from "./species/dog/report";
 import { catReport } from "./species/cat/report";
+import { rabbitPreparation } from "./species/rabbit/preparation";
+import { rabbitReport } from "./species/rabbit/report";
 
-export type SpeciesId = "dog" | "cat";
+export type SpeciesId = "dog" | "cat" | "rabbit";
 
 export type SpeciesCopy = {
   animalName: string;
@@ -102,9 +104,37 @@ export const speciesGameConfig: Record<SpeciesId, SpeciesGameConfig> = {
     trunkItems: catTrunkItems,
     report: catReport,
   },
+  rabbit: {
+    id: "rabbit",
+    copy: {
+      animalName: "兔子",
+      animalNameFallback: "小白",
+      typeLabel: "物種",
+      selectionTitle: "你想飼養哪一種動物？",
+      breedTitle: "認識你的新家人——兔子",
+      nameTitle: "先幫牠取一個名字",
+      namePlaceholder: "請輸入兔子的名字",
+      historyTitle: "你養過兔子嗎？",
+      historyBody: "過去的陪伴經驗很珍貴，但兔子會隱藏不適，也需要每天穩定的照顧與觀察。",
+      hasPreviousLabel: "有，以前養過兔子",
+      noPreviousLabel: "沒有，這是第一次",
+      previousSectionTitle: "以前陪伴你的兔子",
+      roomTitle: "先替牠布置安全的生活空間",
+      roomBody: (petName) => `${petName || "小白"} 還沒到家，先準備牧草、飲水、便盆、躲藏處與防滑地面，並收好可能被啃咬的危險物。`,
+      departureTitle: "出發接牠回家",
+      departureBody: (petName) => `今天要去接 ${petName || "小白"} 回家了。先整理安全外出籠、籠內防滑墊、牧草與夏季降溫措施。`,
+      lifeChallengeLabel: () => "兔子的考驗",
+    },
+    roomItems: rabbitPreparation.roomItems,
+    hazards: rabbitPreparation.hazards,
+    trunkItems: rabbitPreparation.trunkItems,
+    report: rabbitReport,
+  },
 };
 
 export function getSpeciesGameConfig(species: string): SpeciesGameConfig {
-  return species === "cat" ? speciesGameConfig.cat : speciesGameConfig.dog;
+  if (species === "cat") return speciesGameConfig.cat;
+  if (species === "rabbit") return speciesGameConfig.rabbit;
+  return speciesGameConfig.dog;
 }
 

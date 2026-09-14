@@ -378,23 +378,17 @@
 .arrival-meal-supplies p { grid-column: 1 / -1; margin: 0; color: var(--mint); font-size: 13px; font-weight: 900; text-align: center; }
 .arrival-meal-supplies .arrival-meal-unsafe.warning img { animation: chocolateNudge .38s ease-in-out 2; }
 .unsafe-food-visual { position: relative; display: grid; place-items: center; }
-.unsafe-food-visual i {
+.unsafe-food-warning-icon {
   position: absolute;
   left: 50%;
   top: 50%;
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  background: rgba(164, 42, 24, .13);
-  color: #b52d1d;
-  font-style: normal;
-  font-size: 34px;
+  width: 48px;
+  height: 44px;
   pointer-events: none;
-  filter: drop-shadow(0 4px 10px rgba(109, 31, 18, .2));
+  filter: drop-shadow(0 4px 9px rgba(71, 43, 18, .25));
   transform: translate(-50%, -50%);
 }
+.unsafe-food-prohibition-icon { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 54px; height: 54px; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(164, 42, 24, .13); color: #b52d1d; font-style: normal; font-size: 34px; line-height: 1; }
 .arrival-meal-warning { position: absolute; left: 16px; top: 16px; z-index: 6; width: min(390px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 13px 46px 13px 15px; border: 1px solid #e08942; border-radius: 15px; background: rgba(255, 248, 233, .94); color: #70421c; line-height: 1.55; box-shadow: 0 10px 28px rgba(71, 43, 18, .14); backdrop-filter: blur(3px); }
 .arrival-meal-warning b { display: block; }
 .arrival-meal-warning p { margin: 6px 0 0; color: inherit; font-size: 12px; }

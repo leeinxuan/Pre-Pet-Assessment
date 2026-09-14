@@ -8,6 +8,8 @@ export type ExpenseRecord = {
   stage: string;
   recurring: boolean;
   fromEmergency?: boolean;
+  /** 供共用費用明細、摘要與匯出使用的簡短用途說明。 */
+  description?: string;
 };
 
 export type CareMember = {
@@ -37,6 +39,10 @@ export type ScenarioChoice = {
 export type Scenario = {
   id: string;
   stage: string;
+  /** 顯示於共用情境頁的階段小標；未設定時沿用 stage。 */
+  stageTitle?: string;
+  /** 共用旅程側欄的明確分段識別，避免以題目索引推斷歸屬。 */
+  stageId?: string;
   timeLabel: string;
   title: string;
   description: string;
@@ -52,6 +58,7 @@ export type Scenario = {
   wrongOptionIds?: string[];
   correctSummary?: string[];
   learningPoints?: string[];
+  knowledgeTitle?: string;
 };
 
 export type ScenarioAnswer = {
@@ -75,6 +82,10 @@ export type JourneyItemType =
   | "scenario"
   | "walking"
   | "daily-inspection"
+  | "arrival-meal"
+  // TODO(rabbit-activity): 對應兔版專屬互動元件尚待實作。
+  | "rabbit-carry-sort"
+  | "rabbit-daily-check"
   | "breed-challenge"
   | "body-language"
   | "body-care"
@@ -86,6 +97,8 @@ export type JourneyItem = {
   timeLabel: string;
   title: string;
   scenarioId?: string;
+  stageId?: string;
+  stageLabel?: string;
 };
 
 export type LifeActivityState = {
@@ -153,6 +166,8 @@ export type RoomItem = {
   required: boolean;
   need: "飲食" | "休息" | "排泄" | "安全" | "活動" | "清潔";
   expenseId?: string;
+  /** 同一個實際互動可同時帶入用品與每月耗材等共用費用。 */
+  expenseIds?: string[];
   purpose: string;
 };
 
