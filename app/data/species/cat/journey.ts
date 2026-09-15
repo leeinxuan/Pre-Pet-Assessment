@@ -26,8 +26,10 @@ export const catLitterRescueConfig = {
   weeklyWashRound: 2,
   abnormalObservationRound: 3,
   wasteItems: [
-    { id: "urine", label: "尿團", x: 42, y: 62, size: 13 },
-    { id: "poop", label: "糞便", x: 59, y: 67, size: 12 },
+    { id: "urine-1", kind: "urine", label: "第 1 個尿團", x: 39, y: 57, size: 12 },
+    { id: "urine-2", kind: "urine", label: "第 2 個尿團", x: 60, y: 56, size: 12 },
+    { id: "poop-1", kind: "poop", label: "第 1 個便便", x: 43, y: 71, size: 11 },
+    { id: "poop-2", kind: "poop", label: "第 2 個便便", x: 65, y: 70, size: 11 },
   ],
   bin: { x: 82, y: 70, size: 16 },
 } as const;

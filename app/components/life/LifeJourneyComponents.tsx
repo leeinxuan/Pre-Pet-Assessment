@@ -1270,7 +1270,6 @@ function BusyCareActivity({
     ? [
       { id: "daily-care", text: `你已經向${helperName || "協助者"}說明${displayPetName}每天需要補牧草、換水、清便盆與觀察糞便了嗎？`, short: "牧草、飲水、便盆與糞便觀察還需要先交接", accepted: ["yes"] },
       { id: "food-alert", text: `我還沒有特別跟${helperName || "協助者"}說明：${displayPetName}超過 12 小時沒吃東西，要立刻通知我。`, short: "12 小時完全無進食的警訊還需要先說明", accepted: ["no"] },
-      { id: "emergency-contact", text: `${helperName || "協助者"}知道緊急時怎麼聯絡到你嗎？`, short: "緊急聯絡方式還需要先確認", accepted: ["yes"] },
       { id: "vet-information", text: `你已把${displayPetName}平常就診的兔科獸醫聯絡方式和地址給${helperName || "協助者"}了嗎？`, short: "兔科獸醫的聯絡方式與地址還需要先提供", accepted: ["yes"] },
     ]
     : isCat
@@ -2231,17 +2230,18 @@ function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }:
   const binRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
   const draggingRef = useRef(false);
-  const activeDragRef = useRef<"scoop" | "urine" | "poop" | null>(null);
+  const activeDragRef = useRef<string | null>(null);
   const scoopHasLeftBoxRef = useRef(true);
   const [dragPoint, setDragPoint] = useState<{ x: number; y: number } | null>(null);
   const [revealedWaste, setRevealedWaste] = useState<string[]>([]);
   const [carryingWaste, setCarryingWaste] = useState<string | null>(null);
   const [litterFilled, setLitterFilled] = useState(false);
   const [backupInstalled, setBackupInstalled] = useState(false);
+  const completionCommittedRef = useRef(false);
   const scoopCountRef = useRef(0);
   const [scoopCount, setScoopCount] = useState(0);
   const [message, setMessage] = useState("拖曳貓砂鏟到貓砂盆裡，開始清理。");
-  const [wastePositions] = useState(() => catLitterRescueConfig.wasteItems.map((item) => ({ ...item, x: 38 + Math.random() * 25, y: 56 + Math.random() * 16 })));
+  const [wastePositions] = useState(() => catLitterRescueConfig.wasteItems.map((item) => ({ ...item })));
   const complete = selected.includes("litter-complete");
   const displayPetName = petName || "貓咪";
   const wasteItems = wastePositions;
@@ -2253,7 +2253,7 @@ function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }:
       ? carryingWaste ? "把髒污拖進垃圾桶。" : "拖曳尿團和便便到垃圾桶。"
       : stageIndex === 2
         ? "點擊貓砂，補上新的砂。"
-        : "點擊圖示，更換新的砂盆。";
+        : backupInstalled ? "新的貓砂盆已就位，點擊完成清潔。" : "點擊備用貓砂盆圖示，更換新的貓砂盆。";
 
   function isPointInsideRect(clientX: number, clientY: number, element: HTMLElement | null, tolerance = 0) {
     const rect = element?.getBoundingClientRect();
@@ -2268,7 +2268,7 @@ function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }:
   function isOverTrashBin(clientX: number, clientY: number) {
     return isPointInsideRect(clientX, clientY, binRef.current, 12);
   }
-  function beginPointerDrag(event: ReactPointerEvent<HTMLElement>, kind: "scoop" | "urine" | "poop") {
+  function beginPointerDrag(event: ReactPointerEvent<HTMLElement>, kind: string) {
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     activeDragRef.current = kind;
@@ -2282,11 +2282,12 @@ function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }:
     // therefore confirms the required "move out, then drag in again" transition.
     if (scoopCountRef.current > 0) scoopHasLeftBoxRef.current = true;
     beginPointerDrag(event, "scoop");
-    setMessage(scoopCountRef.current ? "再拖進貓砂盆一次，找出便便。" : "把貓砂鏟拖到貓砂盆裡後放開。");
+    const nextLabel = wasteItems[scoopCountRef.current]?.label;
+    setMessage(nextLabel ? `再拖進貓砂盆一次，找出${nextLabel}。` : "把貓砂鏟拖到貓砂盆裡後放開。");
   }
   function startWasteDrag(event: ReactPointerEvent<HTMLImageElement>, wasteId: string) {
     if (revealedWaste.length < wasteItems.length || selected.includes(`litter-waste:${wasteId}`)) return;
-    beginPointerDrag(event, wasteId as "urine" | "poop");
+    beginPointerDrag(event, wasteId);
     setCarryingWaste(wasteId);
     setMessage("拖到垃圾桶上方後放開。");
   }
@@ -2302,9 +2303,10 @@ function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }:
     activeDragRef.current = null;
     setDragging(false); setDragPoint(null);
     if (event.currentTarget.hasPointerCapture?.(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-    if (dragKind === "urine" || dragKind === "poop") {
+    if (dragKind && dragKind !== "scoop") {
       if (isOverTrashBin(event.clientX, event.clientY)) {
-        onChange([...selected, `litter-waste:${dragKind}`]); setCarryingWaste(null); setMessage(`已將${dragKind === "urine" ? "尿團" : "便便"}丟進垃圾桶。`);
+        const waste = wasteItems.find((item) => item.id === dragKind);
+        onChange([...selected, `litter-waste:${dragKind}`]); setCarryingWaste(null); setMessage(`已將${waste?.label ?? "髒污"}丟進垃圾桶。`);
       } else setMessage("請把鏟起的排泄物拖到垃圾桶上方後放開。");
       return;
     }
@@ -2314,12 +2316,13 @@ function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }:
       return;
     }
     if (scoopCountRef.current >= wasteItems.length || !scoopHasLeftBoxRef.current) return;
-    const nextWaste = scoopCountRef.current === 0 ? "urine" : "poop";
+    const nextWaste = wasteItems[scoopCountRef.current];
+    if (!nextWaste) return;
     scoopCountRef.current += 1;
     scoopHasLeftBoxRef.current = false;
     setScoopCount(scoopCountRef.current);
-    setRevealedWaste((current) => current.includes(nextWaste) ? current : [...current, nextWaste]);
-    setMessage(nextWaste === "urine" ? "發現尿團！把鏟子移出砂盆後，再拖入一次找出便便。" : "發現便便！現在把尿團和便便分別拖進垃圾桶。");
+    setRevealedWaste((current) => current.includes(nextWaste.id) ? current : [...current, nextWaste.id]);
+    setMessage(`發現${nextWaste.label}！已鏟出 ${scoopCountRef.current}／${wasteItems.length} 處髒污。${scoopCountRef.current < wasteItems.length ? "把鏟子移出砂盆後，再拖入一次繼續清理。" : "現在把四個髒污分別拖進垃圾桶。"}`);
   }
   function cancelDrag(event: ReactPointerEvent<HTMLElement>) {
     if (!draggingRef.current) return;
@@ -2332,7 +2335,12 @@ function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }:
   }
   function installBackup() {
     if (!litterFilled || backupInstalled) return;
-    setBackupInstalled(true); setMessage("備用盆已換上；原本砂盆正在清洗並完全晾乾。");
+    setBackupInstalled(true);
+    setMessage("新的貓砂盆已換上。確認完成後，再點擊完成清潔。 ");
+  }
+  function finishCleaning() {
+    if (!backupInstalled || completionCommittedRef.current || complete) return;
+    completionCommittedRef.current = true;
     onChange([...selected, "litter-complete"]);
   }
   function refillLitter() {
@@ -2348,17 +2356,17 @@ function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }:
     </ol>
     <div className="cat-rescue-layout">
       <div className="cat-rescue-scene" aria-label="貓砂盆清潔互動場景">
-        <div className="cat-rescue-event-card"><b>目前步驟</b><p>{stageInstruction}</p></div>
+        <div className="cat-rescue-event-card"><b>目前步驟</b><p>{stageInstruction}</p>{stageIndex === 3 && !backupInstalled && <small>貓砂盆使用一段時間後，容易累積異味和髒污；換上乾淨的備用貓砂盆，才能讓貓咪有舒服、衛生的如廁空間。</small>}</div>
         <div ref={litterBoxRef} className={`cat-rescue-litter-box${litterFilled ? " is-filled" : ""}${backupInstalled ? " is-backup" : ""}${stageIndex === 0 ? " is-scoop-target" : ""}`}><img draggable={false} src={backupInstalled ? catAssets.daily.replacementLitterBox : litterFilled ? catAssets.daily.cleanLitterBox : catAssets.daily.dirtyLitterBox} alt={backupInstalled ? "更換完成的貓砂盆" : litterFilled ? "乾淨的貓砂盆" : "髒的貓砂盆"} /></div>
-        {wasteItems.map((item) => revealedWaste.includes(item.id) && !selected.includes(`litter-waste:${item.id}`) && carryingWaste !== item.id ? <img key={item.id} draggable={false} className="cat-rescue-waste" style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }} src={item.id === "poop" ? catAssets.daily.catPoop : catAssets.daily.urineClump} alt={`拖曳${item.label}到垃圾桶`} onPointerDown={(event) => startWasteDrag(event, item.id)} /> : null)}
+        {wasteItems.map((item) => revealedWaste.includes(item.id) && !selected.includes(`litter-waste:${item.id}`) && carryingWaste !== item.id ? <img key={item.id} draggable={false} className="cat-rescue-waste" style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }} src={item.kind === "poop" ? catAssets.daily.catPoop : catAssets.daily.urineClump} alt={`拖曳${item.label}到垃圾桶`} onPointerDown={(event) => startWasteDrag(event, item.id)} /> : null)}
         <div ref={binRef} className={`cat-rescue-bin${carryingWaste ? " is-drop-target" : ""}`} style={{ left: `${catLitterRescueConfig.bin.x}%`, top: `${catLitterRescueConfig.bin.y}%`, width: `${catLitterRescueConfig.bin.size}%`, height: `${catLitterRescueConfig.bin.size}%` }} aria-label="垃圾桶"><img src={catAssets.daily.trashBin} alt="垃圾桶" /></div>
         <div className="cat-rescue-controls">
-          {!allWasteCleared ? <div className="cat-rescue-tool-card"><b>貓砂鏟</b><button type="button" className={`cat-rescue-scoop-tool${dragging && !carryingWaste ? " is-dragging" : ""}${stageIndex === 0 ? " is-prompt" : ""}`} onPointerDown={startDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} aria-label="拖曳貓砂鏟到貓砂盆"><img draggable={false} src={catAssets.daily.litterScoop} alt="貓砂鏟" /></button></div> : !litterFilled ? <div className="cat-rescue-tool-card"><b>補充新貓砂</b><button type="button" className="cat-rescue-action-icon" onClick={refillLitter}><img draggable={false} src={catAssets.room.litter} alt="補充新的貓砂" /></button></div> : <div className="cat-rescue-choice-card"><b>換上新砂盆</b><button type="button" className="cat-rescue-action-icon" onClick={installBackup} disabled={backupInstalled}><img draggable={false} src={catAssets.daily.replacementLitterBoxIcon} alt="更換新的貓砂盆" /></button></div>}
+          {!allWasteCleared ? revealedWaste.length < wasteItems.length ? <div className="cat-rescue-tool-card"><b>貓砂鏟</b><button type="button" className={`cat-rescue-scoop-tool${dragging && !carryingWaste ? " is-dragging" : ""}${stageIndex === 0 ? " is-prompt" : ""}`} onPointerDown={startDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} aria-label="拖曳貓砂鏟到貓砂盆"><img draggable={false} src={catAssets.daily.litterScoop} alt="貓砂鏟" /></button></div> : <div className="cat-rescue-tool-card"><b>把髒污拖進垃圾桶</b><p>尿團和便便都清理完，才能補上新貓砂。</p></div> : !litterFilled ? <div className="cat-rescue-tool-card"><b>補充新貓砂</b><button type="button" className="cat-rescue-action-icon" onClick={refillLitter}><img draggable={false} src={catAssets.room.litter} alt="補充新的貓砂" /></button></div> : !backupInstalled ? <div className="cat-rescue-choice-card"><b>換上新砂盆</b><button type="button" className="cat-rescue-action-icon" onClick={installBackup}><img draggable={false} src={catAssets.daily.replacementLitterBoxIcon} alt="更換新的貓砂盆" /></button></div> : <div className="cat-rescue-choice-card cat-rescue-finish-card"><b>新砂盆已就位</b><p>確認貓咪有乾淨、舒服的如廁空間。</p><button type="button" className="primary" onClick={finishCleaning}>完成清潔 <span>→</span></button></div>}
         </div>
       </div>
     </div>
-    <p className="cat-rescue-message" role="status">{message}{scoopCount > 0 && scoopCount < wasteItems.length ? `（已鏟 ${scoopCount} / ${wasteItems.length} 次）` : ""}</p>
-    {dragging && dragPoint && <div className="cat-rescue-drag-ghost" style={{ left: dragPoint.x, top: dragPoint.y }} aria-hidden="true"><img src={carryingWaste === "poop" ? catAssets.daily.catPoop : carryingWaste === "urine" ? catAssets.daily.urineClump : catAssets.daily.litterScoop} alt="" /></div>}
+    <p className="cat-rescue-message" role="status">{message}{scoopCount > 0 && scoopCount < wasteItems.length ? `（已鏟 ${scoopCount}／${wasteItems.length} 處髒污）` : ""}</p>
+    {dragging && dragPoint && <div className="cat-rescue-drag-ghost" style={{ left: dragPoint.x, top: dragPoint.y }} aria-hidden="true"><img src={carryingWaste ? wasteItems.find((item) => item.id === carryingWaste)?.kind === "poop" ? catAssets.daily.catPoop : catAssets.daily.urineClump : catAssets.daily.litterScoop} alt="" /></div>}
   </section>;
 }
 
