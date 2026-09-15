@@ -34,6 +34,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .hidden-test-entry { position: absolute; z-index: 5; right: 11px; bottom: 9px; width: 12px; height: 12px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: rgba(76,68,55,.08); color: rgba(76,68,55,.13); font: inherit; font-size: 9px; line-height: 1; cursor: default; opacity: .28; transition: opacity .2s ease, background .2s ease; }
 .hidden-test-entry:hover { opacity: .62; background: rgba(76,68,55,.16); }
 .hidden-test-entry:focus-visible { width: 18px; height: 18px; outline: 2px solid rgba(168,101,9,.45); outline-offset: 2px; opacity: .9; }
+.test-skip-button { position: fixed; z-index: 70; right: max(14px, env(safe-area-inset-right)); bottom: max(14px, calc(env(safe-area-inset-bottom) + 14px)); width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(168,101,9,.22); border-radius: 50%; background: rgba(255,248,229,.72); color: rgba(148,96,26,.65); cursor: pointer; transition: opacity .15s, background .15s, color .15s; }
+.test-skip-button:hover { background: rgba(255,244,215,.95); color: #94601a; border-color: rgba(168,101,9,.45); }
+.test-skip-button:focus-visible { outline: 2px solid rgba(168,101,9,.55); outline-offset: 2px; }
+.test-skip-button:active { transform: scale(.93); }
 .test-mode-badge { margin: 0 0 12px; padding: 7px 9px; border: 1px dashed rgba(168,101,9,.3); border-radius: 9px; background: rgba(255,248,229,.65); color: #94601a; font-size: 10px; font-weight: 900; letter-spacing: .04em; text-align: center; }
 .welcome-nav { max-width: 1440px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
 .prototype-tag { border: 1px solid var(--line); padding: 10px 16px; border-radius: 999px; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: .08em; }
@@ -1755,5 +1759,4 @@ html, body { overflow-x: clip; }
   .room-preparation-layout.simplified-room-layout { grid-template-columns: 1fr; }
   .prepared-item-list { grid-template-columns: 1fr; }
 }
-
 

@@ -12,6 +12,7 @@ import {
 } from "../../data/species/dog/preparation";
 import { getSpeciesConfig } from "../../data/species/index";
 import { catAssets } from "../../data/species/cat/assets";
+import { birdAssets } from "../../data/species/bird/assets";
 import { rabbitAssets } from "../../data/species/rabbit/assets";
 import { dogAssets } from "../../data/species/dog/assets";
 import type { CareMember, ExpenseRecord, HazardItem, RoomItem, TrunkItem } from "../../game-types";
@@ -85,6 +86,11 @@ function roomDoorplatePlacementStyle(): CSSProperties {
   } as CSSProperties;
 }
 
+function RoomItemVisual({ item, scene = false }: { item: RoomItem; scene?: boolean }) {
+  if (item.image) return <img className={scene ? "" : `room-item-image room-item-image--${item.id}`} src={item.image} alt={scene ? `房間中已配置的${item.label}` : ""} />;
+  return <span className={`preparation-asset-placeholder ${scene ? "preparation-asset-placeholder--scene" : ""}`} role="img" aria-label={`${item.label}素材待補`}>素材待補</span>;
+}
+
 export function RoomPreparation({
   selectedItems,
   securedHazards,
@@ -128,20 +134,11 @@ export function RoomPreparation({
   const activeHazard = activeHazards.find((item) => item.id === activeHazardInfo);
   // 防護網的完成紀錄已存在 selectedItems，故回到此頁或重整後仍會正確保留安全房背景。
   const isWindowSecured = species === "cat" && selectedItems.includes("cat-safe-window");
-  const supplyRows = species === "cat"
-    ? [
-      activeRoomItems.slice(0, 2),
-      activeRoomItems.slice(2, 4),
-      activeRoomItems.slice(4, 6),
-      activeRoomItems.slice(6, 8),
-      activeRoomItems.slice(8),
-    ].filter((row) => row.length > 0)
-    : [
-      activeRoomItems.slice(0, 2),
-      activeRoomItems.slice(2, 4),
-      activeRoomItems.slice(4, 6),
-      activeRoomItems.slice(6, 8),
-    ].filter((row) => row.length > 0);
+  // 依目前物種資料切列，不能假設每種動物只有八件用品；否則第九件起會存在資料卻無法操作。
+  const supplyRows = Array.from(
+    { length: Math.ceil(activeRoomItems.length / 2) },
+    (_, index) => activeRoomItems.slice(index * 2, index * 2 + 2),
+  ).filter((row) => row.length > 0);
 
   useEffect(() => {
     const scene = roomSceneRef.current;
@@ -212,7 +209,7 @@ export function RoomPreparation({
                 const price = item.expenseId ? expensePriceText([item.expenseId], breed) : "";
                 return <div key={item.id} className="supply-slot">
                   {!selected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} aria-label={`${item.label}，可加入`} disabled={exitingItems.includes(item.id)} onClick={() => prepareItem(item.id)}>
-                    <span className="room-supply-visual"><img className={`room-item-image room-item-image--${item.id}`} src={item.image} alt="" /></span>
+                    <span className="room-supply-visual"><RoomItemVisual item={item} /></span>
                     <b>{item.label}</b>
                   </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{price && <span className="supply-slot-price">{price}</span>}</div>}
                 </div>;
@@ -225,18 +222,18 @@ export function RoomPreparation({
           <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomSceneReady ? "room-scene-ready" : ""}`} role="group" aria-label="寵物生活空間">
             <img
               className={`room-scene-background room-scene-background--desktop ${species === "dog" ? "room-scene-background--dog" : "room-scene-background--cat"}`}
-              src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : species === "rabbit" ? rabbitAssets.room.background : dogAssets.room.background}
-              alt={species === "cat" ? "貓咪安全房" : species === "rabbit" ? "兔子生活空間" : "空的寵物生活房間"}
+              src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : species === "rabbit" ? rabbitAssets.room.background : species === "bird" ? birdAssets.room.background : dogAssets.room.background}
+              alt={species === "cat" ? "貓咪安全房" : species === "rabbit" ? "兔子生活空間" : species === "bird" ? "鳥兒生活空間" : "空的寵物生活房間"}
               style={species === "dog" ? { objectFit: "contain", objectPosition: "center center" } : undefined}
             />
             <img
               className={`room-scene-background room-scene-background--mobile ${species === "dog" ? "room-scene-background--dog-mobile" : ""}`}
               // 犬隻手機版也直接使用原始房間圖；完整顯示，不裁切、不額外放大。
-              src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : species === "rabbit" ? rabbitAssets.room.mobileBackground : dogAssets.room.background}
+              src={species === "cat" ? (isWindowSecured ? catAssets.room.safeRoomSecured : catAssets.room.safeRoom) : species === "rabbit" ? rabbitAssets.room.mobileBackground : species === "bird" ? birdAssets.room.mobileBackground : dogAssets.room.background}
               alt=""
               style={species === "dog" ? { objectFit: "contain", objectPosition: "center center" } : undefined}
             />
-            {activeRoomItems.filter((item) => selectedItems.includes(item.id) && !(species === "cat" && item.id === "cat-safe-window")).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><img src={item.image} alt={`房間中已配置的${item.label}`} /><span>{item.label}</span></div>)}
+            {activeRoomItems.filter((item) => selectedItems.includes(item.id) && !(species === "cat" && item.id === "cat-safe-window")).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
             {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
             <div className="pet-doorplate" style={roomDoorplatePlacementStyle()}>
               <img src={dogAssets.room.doorplate} alt="小狗名字門牌" />

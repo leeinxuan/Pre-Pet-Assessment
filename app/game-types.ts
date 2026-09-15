@@ -166,7 +166,8 @@ export type RoomItem = {
   id: string;
   label: string;
   icon: string;
-  image: string;
+  /** 未提供正式素材時保留為 undefined，由共用準備介面顯示中性預留位置。 */
+  image?: string;
   placement: { x: number; y: number; width: number; layer: number };
   mobilePlacement?: { x: number; y: number; width: number };
   required: boolean;

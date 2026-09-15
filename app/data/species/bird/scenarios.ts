@@ -6,7 +6,7 @@ const knowledge = {
   puff: ["澎毛要和<mark>食慾、呼吸、站棲</mark>等狀態一起判斷。", "鳥常隱藏病徵；異常持續或惡化時，應聯繫<mark>熟悉鳥類的獸醫師</mark>。"],
   molt: ["正常換羽通常是<mark>連續且對稱</mark>的；不對稱裸皮區需提高警覺。", "新生羽毛可能有血管，看到血管毛時<mark>不要拉扯</mark>。"],
   health: ["鳥很會<mark>隱藏病徵</mark>；看起來還好，不代表沒有問題。", "建立每日觀察與<mark>鳥類獸醫年度健檢</mark>，才能提早發現變化。"],
-  senior: ["高齡照護重點是<mark>安全、舒適與密切觀察</mark>。", "降低跌落風險、提高健檢頻率、維持穩定溫度並諮詢飲食調整，能維持生活品質。"],
+  senior: ["高齡鳥的照護重點是「安全 + 舒適 + 密切觀察」。降低跌落風險、提高健檢頻率、維持穩定溫度、諮詢飲食調整——這些都是讓 {petName} 在老年期維持生活品質的方法。每隻鳥的老化速度不同，鳥類獸醫師的定期評估是最可靠的依據。如果 {petName} 正經歷無法復原的痛苦，安樂死也是由獸醫師專業評估的醫療選項，這是照護責任的一部分。"],
 };
 
 export const birdLifeScenarios: Scenario[] = [
@@ -41,12 +41,11 @@ export const birdLifeScenarios: Scenario[] = [
     { id: "bird-health-weight", text: "鸚鵡的體重不需要定期秤，憑外觀就能判斷", result: "incorrect", ...incorrect, explanation: "羽毛覆蓋讓鳥的體型難以用肉眼評估；定期秤體重與觸摸胸骨才能準確監測體態。", suggestion: "建立固定的體重與日常狀態紀錄。" },
     { id: "bird-health-cost", text: "鳥一年要健檢一次，是浪費錢的行為", result: "incorrect", ...incorrect, explanation: "鳥隱藏病徵能力強、病程發展快；年度健檢能提前發現潛在問題。", suggestion: "把健檢列入長期照護預算。" },
   ] },
-  { id: "bird-senior-care", stage: "生活變化", stageId: "life-change", stageTitle: "高齡照護", timeLabel: "逐漸進入高齡", title: "{petName} 慢慢變老了", description: "{petName} 跟你生活了很多年，牠的活動量慢慢減少，有時候站在低一點的棲木上，有時候理羽的時間更長了。你知道牠開始進入老年期了。以下哪些是高齡鳥需要的照護調整？", topic: "高齡鳥照護", reportSummary: "高齡鳥需降低跌落風險、提高健檢頻率、維持穩定溫度並與獸醫討論飲食調整。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-senior-perch", "bird-senior-checkup", "bird-senior-temp", "bird-senior-diet"], wrongOptionIds: ["bird-senior-remove"], correctSummary: ["將棲木調低，降低跌落風險。", "提高健檢頻率，從一年一次改為更頻繁。", "確保環境溫度更穩定。", "調整飲食，諮詢獸醫是否需要補充特定營養素。"], learningPoints: knowledge.senior, knowledgeTitle: "高齡鳥照護小知識", choices: [
+  { id: "bird-senior-care", stage: "生活變化", stageId: "life-change", stageTitle: "高齡照護", timeLabel: "逐漸進入高齡", title: "{petName} 慢慢變老了", description: "{petName} 跟你生活了很多年，牠的活動量慢慢減少，有時候站在低一點的棲木上，有時候理羽的時間更長了。你知道牠開始進入老年期了。", topic: "高齡鳥照護", reportSummary: "高齡鳥需降低跌落風險並提高健檢頻率，維持安全、舒適與密切觀察。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-senior-perch", "bird-senior-checkup"], wrongOptionIds: ["bird-senior-remove", "bird-senior-reduce-interaction"], correctSummary: ["將棲木調低，降低跌落風險。", "提高健檢頻率，從一年一次改為更頻繁。"], learningPoints: knowledge.senior, knowledgeTitle: "鳥類小知識", choices: [
     { id: "bird-senior-perch", text: "將棲木調低，降低跌落風險", result: "correct", ...positive, explanation: "可保留一根較高棲木，讓牠自行選擇。", expenseIds: ["bird-senior-room"] },
     { id: "bird-senior-checkup", text: "提高健檢頻率，從一年一次改為更頻繁", result: "correct", ...positive, explanation: "能及早發現老年常見的代謝與心血管問題。", expenseIds: ["bird-senior-checkup"] },
-    { id: "bird-senior-temp", text: "確保環境溫度更穩定，注意老年個體體溫調節能力下降", result: "correct", ...positive, explanation: "年老個體體溫調節能力下降，對溫度變化耐受力更低。" },
     { id: "bird-senior-remove", text: "高齡鳥不再需要豐富化設施，讓牠安靜休息就好", result: "incorrect", ...incorrect, explanation: "即使活動力下降，適合老年鳥的簡單啃咬玩具與低難度益智設施仍有助於心理健康，不應完全撤除所有刺激。", suggestion: "依活動能力調整豐富化，而非完全撤除。" },
-    { id: "bird-senior-diet", text: "調整飲食，諮詢獸醫是否需要補充特定營養素", result: "correct", ...positive, explanation: "高齡鳥的活動量、代謝和營養吸收能力都在改變，與熟悉鳥類的獸醫師討論最安全。" },
+    { id: "bird-senior-reduce-interaction", text: "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息", result: "incorrect", ...incorrect, explanation: "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。", suggestion: "依個體狀況調整互動方式，而非直接縮短時間。" },
   ] },
 ];
 

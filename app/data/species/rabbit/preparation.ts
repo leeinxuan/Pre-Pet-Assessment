@@ -11,7 +11,7 @@ export const rabbitRoomItems: RoomItem[] = [
   { id: "cooling-mat", label: "陶板涼感墊", icon: "❄", image: rabbitAssets.room.coolingMat, placement: { x: 62, y: 83, width: 18, layer: 3 }, mobilePlacement: { x: 58, y: 80, width: 25 }, required: false, need: "休息", expenseId: "rabbit-cooling-mat", purpose: "兔子沒有汗腺，高溫時可用陶板涼感墊協助牠自行選擇降溫位置。" },
   { id: "chew-toy", label: "咀嚼玩具（木製）", icon: "✦", image: rabbitAssets.room.chewToy, placement: { x: 33, y: 82, width: 12, layer: 4 }, mobilePlacement: { x: 32, y: 78, width: 18 }, required: false, need: "活動", expenseId: "rabbit-chew-toy", purpose: "兔齒終生生長，安全的木製咀嚼玩具可提供磨牙與啃咬出口。" },
   { id: "dig-box", label: "挖掘箱", icon: "▤", image: rabbitAssets.room.hidingBox, placement: { x: 18, y: 84, width: 17, layer: 2 }, mobilePlacement: { x: 18, y: 82, width: 23 }, required: false, need: "活動", expenseId: "rabbit-dig-box", purpose: "挖掘是兔子的天性；挖掘箱能提供安全的行為出口。" },
-  { id: "fence-pen", label: "圍片／柵欄", icon: "▥", image: rabbitAssets.room.highPlatform, placement: { x: 88, y: 72, width: 14, layer: 1 }, mobilePlacement: { x: 87, y: 70, width: 20 }, required: false, need: "安全", expenseId: "rabbit-fence-pen", purpose: "以穩固圍片隔出安全活動範圍，保護兔子與家具。" },
+  { id: "fence-pen", label: "圍片／柵欄", icon: "▥", placement: { x: 88, y: 72, width: 14, layer: 1 }, mobilePlacement: { x: 87, y: 70, width: 20 }, required: true, need: "安全", expenseId: "rabbit-fence-pen", purpose: "以穩固圍片隔出安全活動範圍，保護兔子與家具。" },
 ];
 
 export const rabbitHazards: HazardItem[] = [

@@ -275,6 +275,18 @@ export function Welcome({ onStart, onTestStart }: { onStart: () => void; onTestS
   );
 }
 
+/** 僅由頂層流程在測試模式掛載，避免任何正式關卡取得跳題入口。 */
+export function TestSkipButton({ onSkip }: { onSkip: () => void; label?: string }) {
+  return (
+    <button type="button" className="test-skip-button" onClick={onSkip} aria-label="下一子題目">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M6 3.5L10.5 8 6 12.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <line x1="12" y1="3.5" x2="12" y2="12.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    </button>
+  );
+}
+
 export function SpeciesStep({
   selectionPage,
   onSelectionPage,

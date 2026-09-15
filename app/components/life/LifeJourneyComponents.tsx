@@ -865,11 +865,13 @@ function DailyBehaviorActivity({
   petName,
   onChoose,
   onContinue,
+  testNextSignal = 0,
 }: {
   answers: Record<string, ScenarioAnswer>;
   petName: string;
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
   onContinue: () => void;
+  testNextSignal?: number;
 }) {
   const scenarios = dailyBehaviorScenarioIds
     .map((id) => lifeScenarios.find((entry) => entry.id === id))
@@ -915,6 +917,10 @@ function DailyBehaviorActivity({
     setVideoFailed(false);
     setVideoFinished(false);
   }
+
+  useEffect(() => {
+    if (testNextSignal > 0) moveToNext();
+  }, [testNextSignal]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (mode === "positive" && selectedChoice) {
     return (
@@ -995,7 +1001,7 @@ function DailyBehaviorActivityMulti({
   continueImmediately = false,
   scenarioIds = dailyBehaviorScenarioIds,
   species = "dog",
-  requireConfirmation = false,
+  testNextSignal = 0,
 }: {
   answers: Record<string, ScenarioAnswer>;
   petName: string;
@@ -1006,7 +1012,7 @@ function DailyBehaviorActivityMulti({
   continueImmediately?: boolean;
   scenarioIds?: readonly string[];
   species?: string;
-  requireConfirmation?: boolean;
+  testNextSignal?: number;
 }) {
   const scenarioSource = getLifeScenariosForSpecies(species);
   const scenarios = scenarioIds
@@ -1063,6 +1069,7 @@ function DailyBehaviorActivityMulti({
     "cat-indoor-outdoor-care": `你已經找到合適的做法。尊重${displayPetName}的壓力反應，並把日常活動安排在安全室內，會比強迫外出更穩定。`,
     "cat-illness-vet": `你已經先完成觀察、紀錄、聯繫與就醫準備。這些資訊能幫助獸醫判斷，但不取代急症處置。`,
     "cat-growing-old": `你已經把高齡照護拆成環境、休息與健康追蹤三部分，讓${displayPetName}的生活能隨身體狀況調整。`,
+    "bird-senior-care": "你知道高齡照護不只是「讓牠安靜休息」，而是需要主動調整環境和加強醫療觀察，做得很好！",
     "rabbit-stomp": `你已經找到合適的回應方式。降低刺激並保留熟悉氣味，能讓${displayPetName}用自己的節奏重新建立安全感。`,
     "rabbit-heatstroke-prevention": `你已經把降溫安排放進日常環境。維持涼爽室內與提供陶板涼感墊，能讓${displayPetName}自己選擇舒服的位置。`,
     "rabbit-shedding": "梳毛是兔子的日常護理核心；局部處理即可，避免全身弄濕與吹風造成壓力。",
@@ -1073,7 +1080,7 @@ function DailyBehaviorActivityMulti({
     const choice = scenario.choices.find((item) => item.id === choiceId);
     if (!choice) return;
 
-    if (!requireConfirmation && (wrongChoiceIds.includes(choiceId) || choice.result === "incorrect")) {
+    if (wrongChoiceIds.includes(choiceId) || choice.result === "incorrect") {
       const selectedChoices = scenario.choices.filter((item) => selectedIds.includes(item.id) || item.id === choice.id);
       onChooseMultiple(scenario, selectedChoices, "incorrect");
       setRetryCopy({
@@ -1088,21 +1095,8 @@ function DailyBehaviorActivityMulti({
     const nextIds = selectedIds.includes(choiceId) ? selectedIds.filter((id) => id !== choiceId) : [...selectedIds, choiceId];
     setSelectedIds(nextIds);
     const selectedChoices = scenario.choices.filter((item) => nextIds.includes(item.id));
-    if (requireConfirmation) return;
-    const wrongChoice = selectedChoices.find((choice) => wrongChoiceIds.includes(choice.id) || choice.result === "incorrect");
-    if (wrongChoice) {
-      onChooseMultiple(scenario, selectedChoices, "incorrect");
-      setRetryCopy({
-        title: "這個做法可能不太適合",
-        explanation: wrongChoice.explanation,
-        suggestion: wrongChoice.suggestion,
-      });
-      setMode("incorrect");
-      return;
-    }
-
     const hasEveryCorrectChoice = correctChoiceIds.every((id) => nextIds.includes(id));
-    if (hasEveryCorrectChoice) {
+    if (hasEveryCorrectChoice && nextIds.length === correctChoiceIds.length) {
       onChooseMultiple(scenario, selectedChoices, "correct");
       setVideoFailed(false);
       setVideoFinished(false);
@@ -1110,22 +1104,9 @@ function DailyBehaviorActivityMulti({
     }
   }
 
-  function submitChoices() {
-    const selectedChoices = scenario.choices.filter((choice) => selectedIds.includes(choice.id));
-    const wrongChoice = selectedChoices.find((choice) => wrongChoiceIds.includes(choice.id) || choice.result === "incorrect");
-    const hasEveryCorrectChoice = correctChoiceIds.every((id) => selectedIds.includes(id));
-    if (wrongChoice || !hasEveryCorrectChoice || selectedIds.length !== correctChoiceIds.length) {
-      onChooseMultiple(scenario, selectedChoices, "incorrect");
-      setRetryCopy({ title: "這個做法可能不太適合", explanation: wrongChoice?.explanation ?? "還有合適的照護調整尚未選到，請重新核對所有選項。", suggestion: wrongChoice?.suggestion });
-      setMode("incorrect");
-      return;
-    }
-    onChooseMultiple(scenario, selectedChoices, "correct");
-    setVideoFailed(false); setVideoFinished(false); setMode("positive");
-  }
-
   function retry() {
     setRetryCopy(null);
+    setSelectedIds([]);
     setMode("question");
   }
 
@@ -1141,6 +1122,10 @@ function DailyBehaviorActivityMulti({
     setVideoFailed(false);
     setVideoFinished(false);
   }
+
+  useEffect(() => {
+    if (testNextSignal > 0) moveToNext();
+  }, [testNextSignal]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (mode === "positive") {
     return (
@@ -1209,7 +1194,6 @@ function DailyBehaviorActivityMulti({
               );
             })}
           </div>
-          {requireConfirmation && <button type="button" className="primary" disabled={selectedIds.length === 0} onClick={submitChoices}>確認答案 <span>→</span></button>}
         </section>
       )}
     </section>
@@ -1431,6 +1415,7 @@ function BreedChallengeActivity({
   resetSignal,
   onReplay,
   continueImmediately = false,
+  testNextSignal = 0,
 }: {
   breed: string;
   petName: string;
@@ -1440,6 +1425,7 @@ function BreedChallengeActivity({
   resetSignal: number;
   onReplay?: () => void;
   continueImmediately?: boolean;
+  testNextSignal?: number;
 }) {
   const scenarios = getBreedChallengeScenarios(breed);
   const firstUnfinished = scenarios.findIndex((scenario) => answers[scenario.id]?.finalResult !== "correct");
@@ -1484,6 +1470,10 @@ function BreedChallengeActivity({
     setQuestionVideoFailed(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  useEffect(() => {
+    if (testNextSignal > 0) moveToNext();
+  }, [testNextSignal]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (mode === "positive" && selectedChoice) {
     const breedKnowledge = scenario.breedKnowledge ?? `${scenario.description} ${selectedChoice.explanation}`;
@@ -3128,6 +3118,8 @@ export function LifeJourney({
   backupNames,
   members,
   roomReady,
+  testSkipSignal = 0,
+  testNextSignal = 0,
   onIndex,
   onChoose,
   onMarkScenarioForReview,
@@ -3151,6 +3143,8 @@ export function LifeJourney({
   backupNames: string[];
   members: CareMember[];
   roomReady: string[];
+  testSkipSignal?: number;
+  testNextSignal?: number;
   onIndex: (index: number) => void;
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
   onMarkScenarioForReview: (scenario: Scenario, flag: string) => void;
@@ -3176,6 +3170,16 @@ export function LifeJourney({
   const isArrivalMealActivity = item.type === "arrival-meal";
   const isWalkingActivity = item.id === "walking";
   const isBreedChallengeActivity = item.id === "breed-challenge" || item.type === "bird-challenge";
+  const isActivityWithSubQuestions = isDailyBehaviorActivity || isBreedChallengeActivity;
+  const [activityNextSignal, setActivityNextSignal] = useState(0);
+  useEffect(() => {
+    if (testNextSignal <= 0) return;
+    if (isActivityWithSubQuestions) {
+      setActivityNextSignal((n) => n + 1);
+    } else {
+      continueJourney();
+    }
+  }, [testNextSignal]); // eslint-disable-line react-hooks/exhaustive-deps
   const isBusyCareActivity = Boolean(scenario && (scenario.id === "busy-daily-care" || scenario.id === "cat-busy-care" || scenario.id === "rabbit-busy-care" || scenario.id === "bird-busy-care"));
   // 保留各物種原本的影片／情境題版型；鳥類只接入同一個元件，不改寫犬、貓、兔的既有分流。
   const isVideoFeedbackScenario = scenario?.id === "arrival-adjustment" || scenario?.id === "illness-vet" || scenario?.id === "growing-old"
@@ -3196,6 +3200,16 @@ export function LifeJourney({
     setArrivalMealOpen(false);
     setReplayInProgress(false);
   }, [index]);
+
+  // 測試模式由頂層切換 index；這裡只清除元件內暫存畫面，不能寫入任何答題或完成資料。
+  useEffect(() => {
+    if (testSkipSignal === 0) return;
+    setFeedbackOpen(false);
+    setTimePassOpen(false);
+    setArrivalMealOpen(false);
+    setBusyCareTransitionIndex(null);
+    setReplayInProgress(false);
+  }, [testSkipSignal]);
 
   const completedCount = completedIds.length;
 
@@ -3316,6 +3330,7 @@ export function LifeJourney({
           resetSignal={currentResetSignal}
           scenarioIds={dailyBehaviorScenarioIdsBySpecies[species as keyof typeof dailyBehaviorScenarioIdsBySpecies] ?? dailyBehaviorScenarioIds}
           species={species}
+          testNextSignal={activityNextSignal}
           {...replayCorrectProps}
         />
       ) : isDailyInspectionActivity ? (
@@ -3351,6 +3366,7 @@ export function LifeJourney({
           onChoose={onChoose}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
+          testNextSignal={activityNextSignal}
           {...replayCorrectProps}
         />
       ) : isBusyCareActivity && scenario ? (
@@ -3376,7 +3392,7 @@ export function LifeJourney({
           resetSignal={currentResetSignal}
           scenarioIds={[scenario.id]}
           species="bird"
-          requireConfirmation
+          testNextSignal={activityNextSignal}
           {...replayCorrectProps}
         />
       ) : isVideoFeedbackScenario && scenario && !showArrivalMeal ? (

@@ -26,6 +26,8 @@
 .room-supply-row button.departing { pointer-events: none; opacity: 0; transform: scale(.84); }
 .room-supply-visual { position: relative; display: grid; place-items: center; width: 100%; height: 88px; }
 .room-supply-row img { width: 78px; height: 82px; object-fit: contain; }
+.preparation-asset-placeholder { display: grid; place-items: center; width: 72px; height: 72px; border: 1px dashed #b9a98e; border-radius: 12px; background: #f7f3ea; color: #83745e; font-size: 11px; font-weight: 800; letter-spacing: .04em; }
+.preparation-asset-placeholder--scene { width: 100%; height: 100%; min-width: 60px; min-height: 48px; background: rgba(247, 243, 234, .92); font-size: clamp(8px, 1.2vw, 12px); }
 .room-supply-row img.room-item-image--food { transform: scale(1.5); }
 .room-supply-row img.room-item-image--bed {transform: scale(2.2); /* 睡墊 */}
 .room-supply-row img.room-item-image--toilet {transform: scale(1.5); /* 尿墊 */}

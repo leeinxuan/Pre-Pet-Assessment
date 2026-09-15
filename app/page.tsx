@@ -31,6 +31,7 @@ import {
   CostBar,
   SpeciesStep,
   StageRail,
+  TestSkipButton,
   Welcome,
 } from "./components/shared/SharedComponents";
 
@@ -118,6 +119,8 @@ export default function Home() {
   const [scenarioAnswers, setScenarioAnswers] = useState<Record<string, ScenarioAnswer>>({});
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const [careCommitted, setCareCommitted] = useState(false);
+  const [testSkipSignal, setTestSkipSignal] = useState(0);
+  const [testNextSignal, setTestNextSignal] = useState(0);
   const costToastTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -186,6 +189,43 @@ export default function Home() {
     setPreparationTask(task);
     setPreparationReplayTask(null);
     setPreparationReached((current) => Math.max(current, task));
+  }
+
+  function skipCurrentJourneyItemForTest() {
+    if (!testMode) return;
+
+    // 飼養前準備共有兩項；跳題只切換流程，不補寫用品、費用或完成紀錄。
+    if (step === 2) {
+      setPreparationReplayTask(null);
+      if (preparationTask === 0) {
+        changePreparationTask(1);
+      } else {
+        setPreparationReached((current) => Math.max(current, 1));
+        setStep(3);
+        setFurthestStep((current) => Math.max(current, 3));
+        setIntroOpen(false);
+      }
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
+
+    if (step < 3 || step > 6) return;
+    setLatestExpense(null);
+    setLifeActivity(initialLifeActivityState);
+
+    // 到家影片不是 journey item，略過時直接進入第一個正式關卡。
+    if (lifePhase === "arrival-video") {
+      setTestSkipSignal((current) => current + 1);
+      setLifePhase("life-journey");
+      setJourneyIndex(0);
+      setStep(3);
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
+
+    // 一般關卡：只觸發子題目前進，由 LifeJourneyMap 決定是否推進到下一大關。
+    setTestNextSignal((current) => current + 1);
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   function addExpenseById(id: string) {
@@ -410,6 +450,8 @@ export default function Home() {
         backupNames={backupNames}
         members={members}
         roomReady={roomReady}
+        testSkipSignal={testSkipSignal}
+        testNextSignal={testNextSignal}
         onIndex={setJourneyIndex}
         onChoose={answerScenario}
         onMarkScenarioForReview={markScenarioForReview}
@@ -471,6 +513,8 @@ export default function Home() {
           </section>
         </div>
       )}
+
+      {testMode && !introOpen && (step === 2 || (step >= 3 && step <= 6)) && <TestSkipButton onSkip={skipCurrentJourneyItemForTest} />}
 
       {step > 0 && introOpen && (
         <section className="intro-screen">
