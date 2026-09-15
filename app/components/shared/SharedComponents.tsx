@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { categories } from "../../data/shared/app-flow";
 import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, money } from "../../data/shared/expenses";
 import { getJourneyItemsForSpecies } from "../../data/species/journey";
@@ -49,7 +49,7 @@ type MainNavigation = {
 };
 
 function getLifeStageRanges(breed: string, species = "dog") {
-  if (species === "rabbit") {
+  if (species === "rabbit" || species === "bird") {
     const items = getJourneyItemsForSpecies(species);
     return items.reduce<Array<{ label: string; start: number; end: number }>>((groups, item, index) => {
       const last = groups.at(-1);
@@ -128,7 +128,7 @@ export function StageRail({
     return "locked";
   };
   // 兔子沒有品種細選；側欄也不顯示一個無法操作的空白步驟。
-  const selectionNavigationPages = species === "rabbit"
+  const selectionNavigationPages = species === "rabbit" || species === "bird"
     ? [{ id: "species", label: "選擇物種", progress: 0 }, { id: "name", label: "替牠取名", progress: 2 }, { id: "history", label: "過往經驗", progress: 3 }, { id: "transition", label: "新的開始", progress: 4 }]
     : [{ id: "species", label: "選擇物種", progress: 0 }, { id: "breed", label: "選擇品種", progress: 1 }, { id: "name", label: "替牠取名", progress: 2 }, { id: "history", label: "過往經驗", progress: 3 }, { id: "transition", label: "新的開始", progress: 4 }];
 
@@ -482,12 +482,12 @@ const expenseLabels = {
   addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
-const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "rabbit-arrival-checkup", "rabbit-sterilization"]);
+const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
 const defaultVisibleExpenseIds = ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "monthly-preventive-medicine"];
 const defaultVisibleExpenses = defaultVisibleExpenseIds
   .map((id) => expenseCatalog[id])
   .filter((item): item is ExpenseRecord => Boolean(item));
-const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-routine-checkup", "rabbit-senior-room"]);
+const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-routine-checkup", "rabbit-senior-room", "bird-emergency-vet", "bird-senior-checkup", "bird-senior-room"]);
 
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
   expenseLabels.requiredAfterArrival,
@@ -523,7 +523,7 @@ export function getAccumulatedExpenseTotal(expenses: ExpenseRecord[]) {
 
 export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string, species?: string) {
   // 兔子的費用只在完成對應互動後加入；其餘物種維持既有預估項目。
-  const speciesDefaultExpenses = species === "rabbit" ? [] : defaultVisibleExpenses;
+  const speciesDefaultExpenses = species === "rabbit" || species === "bird" ? [] : defaultVisibleExpenses;
   const petSize = getPetSizeForBreed(breed);
   const existingIds = new Set(expenses.map((item) => item.id));
   return [
@@ -586,6 +586,126 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
   );
 }
 
+/** 金幣飛入動畫：新費用加入時，金幣從畫面中央飛向「查看明細」按鈕。 */
+function CoinFlightAnimation({
+  expense,
+  triggerRef,
+}: {
+  expense: ExpenseRecord | null;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
+}) {
+  const lastKey = useRef("");
+
+  useEffect(() => {
+    if (!expense) return;
+    const key = `${expense.id}-${expense.amount}`;
+    if (lastKey.current === key) return;
+    lastKey.current = key;
+
+    const btn = triggerRef.current;
+    if (!btn) return;
+
+    // Create toast card
+    const toast = document.createElement("div");
+    toast.className = "coin-toast-overlay";
+    toast.innerHTML = `
+      <div class="coin-toast-card" role="status" aria-live="polite">
+        <span class="coin-toast-emoji" aria-hidden="true">🪙</span>
+        <div class="coin-toast-body">
+          <b>已加入準備清單</b>
+          <span>${expense.name}</span>
+          <em>+NT$ ${money.format(expense.amount)}${isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}</em>
+        </div>
+      </div>`;
+    document.body.appendChild(toast);
+
+    // Coins
+    const COIN_COUNT = 7;
+    const createdCoins: HTMLDivElement[] = [];
+
+    for (let i = 0; i < COIN_COUNT; i++) {
+      const coin = document.createElement("div");
+      coin.className = "coin-particle";
+      coin.textContent = "🪙";
+
+      const angle = (i / COIN_COUNT) * Math.PI * 2;
+      const r = 18 + Math.random() * 28;
+      const startX = window.innerWidth / 2 + Math.cos(angle) * r;
+      const startY = window.innerHeight * 0.47 + Math.sin(angle) * r;
+      coin.style.left = startX + "px";
+      coin.style.top = startY + "px";
+      document.body.appendChild(coin);
+      createdCoins.push(coin);
+
+      // Phase 1: bloom out
+      coin.animate(
+        [
+          { transform: "translate(-50%,-50%) scale(0)", opacity: 0 },
+          { transform: "translate(-50%,-50%) scale(1.4)", opacity: 1 },
+          { transform: "translate(-50%,-50%) scale(1.1)", opacity: 1 },
+        ],
+        { duration: 320, delay: i * 50, easing: "cubic-bezier(.34,1.6,.64,1)", fill: "forwards" }
+      );
+
+      // Phase 2: fly to button after delay
+      const flyDelay = i * 50 + 420;
+      setTimeout(() => {
+        const btnRect = btn.getBoundingClientRect();
+        const targetX = btnRect.left + btnRect.width / 2;
+        const targetY = btnRect.top + btnRect.height / 2;
+        const dx = targetX - startX;
+        const dy = targetY - startY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const perpSign = i % 2 === 0 ? 1 : -1;
+        const perpScale = 0.28 + Math.random() * 0.18;
+        const midDx = dx / 2 + (-dy / dist) * dist * perpScale * perpSign;
+        const midDy = dy / 2 + (dx / dist) * dist * perpScale * perpSign;
+
+        coin.animate(
+          [
+            { transform: "translate(-50%,-50%) scale(1.1)", opacity: 1, offset: 0 },
+            {
+              transform: `translate(calc(-50% + ${midDx}px), calc(-50% + ${midDy}px)) scale(0.9)`,
+              opacity: 0.85,
+              offset: 0.55,
+            },
+            {
+              transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.05)`,
+              opacity: 0,
+              offset: 1,
+            },
+          ],
+          { duration: 680, easing: "cubic-bezier(.4,0,.65,1)", fill: "forwards" }
+        );
+        setTimeout(() => coin.remove(), 750);
+      }, flyDelay);
+    }
+
+    // Button pulse when last coin lands
+    const pulsAt = (COIN_COUNT - 1) * 50 + 420 + 650;
+    const pulseTimer = setTimeout(() => {
+      btn.classList.add("bill-trigger--coin-pulse");
+      setTimeout(() => btn.classList.remove("bill-trigger--coin-pulse"), 700);
+    }, pulsAt);
+
+    // Dismiss toast
+    const toastTimer = setTimeout(() => {
+      toast.classList.add("coin-toast-overlay--exit");
+      setTimeout(() => { try { toast.remove(); } catch { /* noop */ } }, 380);
+    }, 2100);
+
+    return () => {
+      clearTimeout(pulseTimer);
+      clearTimeout(toastTimer);
+      createdCoins.forEach((c) => { try { c.remove(); } catch { /* noop */ } });
+      try { toast.remove(); } catch { /* noop */ }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expense?.id, expense?.amount]);
+
+  return null;
+}
+
 export function CostBar({
   expenses,
   latestExpense,
@@ -598,12 +718,13 @@ export function CostBar({
   species?: string;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <ExpenseAdditionNotice expense={latestExpense} />
+      <CoinFlightAnimation expense={latestExpense} triggerRef={triggerRef} />
       <div className="cost-bar cost-bar-compact" aria-label={expenseLabels.currentCostStatus}>
-        <button type="button" className="bill-trigger" onClick={() => setDetailsOpen(true)} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
+        <button ref={triggerRef} type="button" className="bill-trigger" onClick={() => setDetailsOpen(true)} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
           <span className="bill-trigger-icon" aria-hidden="true">＄</span>
           <em>{expenseLabels.viewDetails}</em>
         </button>
@@ -613,14 +734,7 @@ export function CostBar({
   );
 }
 
-/** 共用的新增費用提示；由頁面的唯一費用狀態管理顯示與自動關閉。 */
+/** @deprecated 已由 CoinFlightAnimation 取代，保留以避免 import 錯誤。 */
 export function ExpenseAdditionNotice({ expense }: { expense: ExpenseRecord | null }) {
-  if (!expense) return null;
-
-  return (
-    <div className="cost-toast" role="status" aria-live="polite" key={`${expense.id}-${expense.amount}`}>
-      <span className="cost-toast-icon" aria-hidden="true">＋</span>
-      <span className="cost-toast-copy"><b>已加入準備清單</b><span>{expense.name}<em>NT$ {money.format(expense.amount)}{isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}</em></span></span>
-    </div>
-  );
+  return null;
 }

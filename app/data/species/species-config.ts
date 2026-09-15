@@ -3,8 +3,9 @@ import { speciesGameConfig as legacySpeciesGameConfig } from "../speciesGameConf
 import { catSpeciesData } from "./cat";
 import { dogSpeciesData } from "./dog";
 import { rabbitConfig } from "./rabbit";
+import { birdConfig } from "./bird";
 
-export type SpeciesId = "dog" | "cat" | "rabbit";
+export type SpeciesId = "dog" | "cat" | "rabbit" | "bird";
 
 /**
  * 共用畫面的唯一物種設定入口。
@@ -43,6 +44,17 @@ export const speciesConfig = {
     dailyCheck: rabbitConfig.journey.dailyCheck,
     dailyActivity: "rabbit-daily-check" as const,
   },
+  bird: {
+    ...legacySpeciesGameConfig.bird,
+    breeds: birdConfig.selection.breeds,
+    assets: birdConfig.assets,
+    lifeScenarios: birdConfig.scenarios,
+    journeyItems: birdConfig.journey.items,
+    breedChallenges: birdConfig.breedChallenges,
+    dailyBehaviorScenarioIds: birdConfig.journey.dailyBehaviorScenarioIds,
+    birdCageInspection: birdConfig.journey.cageInspection,
+    dailyActivity: "bird-cage-inspection" as const,
+  },
 } as const;
 
 export type SpeciesConfig = (typeof speciesConfig)[SpeciesId];
@@ -50,6 +62,7 @@ export type SpeciesConfig = (typeof speciesConfig)[SpeciesId];
 export function getSpeciesConfig(species: string | undefined): SpeciesConfig {
   if (species === "cat") return speciesConfig.cat;
   if (species === "rabbit") return speciesConfig.rabbit;
+  if (species === "bird") return speciesConfig.bird;
   return speciesConfig.dog;
 }
 

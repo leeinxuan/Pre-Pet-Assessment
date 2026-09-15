@@ -16,8 +16,7 @@ export const catRoomItems: RoomItem[] = [
   { id: "cat-water-bowl", label: "水碗", icon: "💧", image: catAssets.room.waterBowl, ...catRoomPlacements["cat-water-bowl"], required: true, need: "飲食", expenseId: "water-bowl", purpose: "水碗可與食盆稍微分開，並每天更換乾淨飲水。" },
   { id: "cat-scratcher", label: "抓板", icon: "▥", image: catAssets.room.scratchingBoard, ...catRoomPlacements["cat-scratcher"], required: true, need: "活動", expenseId: "cat-scratcher", purpose: "抓板能提供自然抓磨出口，降低家具被抓的機會。" },
   { id: "cat-tree", label: "跳台", icon: "▧", image: catAssets.room.tree, ...catRoomPlacements["cat-tree"], required: true, need: "活動", expenseId: "cat-tree", purpose: "垂直空間能讓貓咪觀察環境、活動與保有安全距離。" },
-  // TODO(cat-assets): 尚無獨立安全玩具素材，暫沿用抓板圖示以維持安全的貓咪專屬畫面。
-  { id: "cat-safe-toy", label: "安全玩具", icon: "✦", image: catAssets.room.scratchingBoard, ...catRoomPlacements["cat-safe-toy"], required: true, need: "活動", expenseId: "cat-safe-toy", purpose: "選擇不易吞食、可收納的安全玩具，互動後也要整理。" },
+  { id: "cat-safe-toy", label: "安全玩具", icon: "✦", image: catAssets.room.teaserWand, ...catRoomPlacements["cat-safe-toy"], required: true, need: "活動", expenseId: "cat-safe-toy", purpose: "選擇不易吞食、可收納的安全玩具，互動後也要整理。" },
 ];
 
 export const catHazards: HazardItem[] = [
@@ -46,4 +45,3 @@ export const catTrunkItems: TrunkItem[] = dogDepartureTrunkItems
   });
 
 export const catPreparation = { trunkItems: catTrunkItems } as const;
-

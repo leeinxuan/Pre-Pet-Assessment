@@ -31,7 +31,10 @@ export const dogAssets = {
     emptyFoodBowl: "/assets/dog/pet-journey/empty-food-bowl.png",
     waterBottle: "/assets/shared/waterbottle.png",
   },
-  life: { root: "/assets/dog/pet-journey" },
+  life: {
+    root: "/assets/dog/pet-journey",
+    busyCareTransition: "/assets/dog/pet-journey/busy-day-transition.mp4",
+  },
   daily: { root: "/assets/dog/walking" },
 } as const;
 

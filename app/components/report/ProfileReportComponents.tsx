@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { money } from "../../data/shared/expenses";
 import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text";
-import { catLitterRescueConfig } from "../../data/species/cat/journey";
 import { getAllScenariosForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
 import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, ScenarioAnswer } from "../../game-types";
@@ -63,6 +62,7 @@ function concatBytes(chunks: Uint8Array[]) {
 }
 
 function createPdfBlobFromCanvases(canvases: HTMLCanvasElement[]) {
+  if (!canvases.length) throw new Error("PDF has no renderable pages");
   const chunks: Uint8Array[] = [];
   const offsets: number[] = [0];
   let byteLength = 0;
@@ -115,6 +115,11 @@ function createPdfBlobFromCanvases(canvases: HTMLCanvasElement[]) {
   return new Blob([concatBytes(chunks)], { type: "application/pdf" });
 }
 
+function createTextOnlyPdfBlob(pages: HTMLElement[]) {
+  const canvases = pages.map(elementTextToCanvas);
+  return createPdfBlobFromCanvases(canvases);
+}
+
 async function imageToDataUrl(src: string) {
   if (src.startsWith("data:")) return src;
   const response = await fetch(src);
@@ -140,6 +145,23 @@ async function replaceImagesWithDataUrls(root: HTMLElement) {
   }));
 }
 
+function preserveFormValues(source: HTMLElement, clone: HTMLElement) {
+  const sourceControls = Array.from(source.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input, textarea, select"));
+  const cloneControls = Array.from(clone.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input, textarea, select"));
+  sourceControls.forEach((control, index) => {
+    const clonedControl = cloneControls[index];
+    if (!clonedControl) return;
+    if (control instanceof HTMLInputElement && clonedControl instanceof HTMLInputElement) {
+      clonedControl.checked = control.checked;
+      if (control.checked) clonedControl.setAttribute("checked", "checked");
+      else clonedControl.removeAttribute("checked");
+    }
+    clonedControl.value = control.value;
+    clonedControl.setAttribute("value", control.value);
+    if (control instanceof HTMLTextAreaElement && clonedControl instanceof HTMLTextAreaElement) clonedControl.textContent = control.value;
+  });
+}
+
 function inlineComputedStyles(source: Element, clone: Element) {
   const styles = window.getComputedStyle(source);
   Array.from(styles).forEach((property) => {
@@ -154,6 +176,7 @@ function inlineComputedStyles(source: Element, clone: Element) {
 async function elementToCanvas(source: HTMLElement) {
   const width = source.offsetWidth;
   const height = source.offsetHeight;
+  if (!width || !height) throw new Error("PDF source page has no layout size");
   const clone = source.cloneNode(true) as HTMLElement;
   clone.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
   await replaceImagesWithDataUrls(clone);
@@ -183,7 +206,270 @@ async function elementToCanvas(source: HTMLElement) {
   return canvas;
 }
 
+/** A no-image fallback for browsers that cannot rasterize SVG foreignObject. */
+function elementTextToCanvas(source: HTMLElement) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1191;
+  canvas.height = 1684;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Canvas is not available");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = "#4a4033";
+  context.font = '700 30px "Noto Sans TC", "PingFang TC", sans-serif';
+  const lines = source.innerText.replace(/\n{3,}/g, "\n\n").split("\n").flatMap((line) => {
+    const trimmed = line.trim();
+    if (!trimmed) return [""];
+    const chunks: string[] = [];
+    let current = "";
+    for (const character of trimmed) {
+      if (context.measureText(`${current}${character}`).width > 1030 && current) { chunks.push(current); current = character; }
+      else current += character;
+    }
+    if (current) chunks.push(current);
+    return chunks;
+  });
+  let y = 90;
+  for (const line of lines) {
+    if (y > canvas.height - 75) break;
+    context.fillText(line, 80, y);
+    y += line ? 48 : 26;
+  }
+  return canvas;
+}
+
 type ReportPdfKind = "overview" | "profile";
+
+type ProfilePdfRow = {
+  label: string;
+  value: string | string[];
+};
+
+type ProfilePdfSection = {
+  title: string;
+  rows: ProfilePdfRow[];
+};
+
+const profilePdfPage = { width: 1240, height: 1754, margin: 92, footer: 92 };
+
+function profilePetSummary(profile: Profile, type: "past" | "current") {
+  const types = type === "past" ? profile.pastPetTypes : profile.currentPetTypes;
+  const dogCount = type === "past" ? profile.pastDogCount : profile.currentDogCount;
+  const catCount = type === "past" ? profile.pastCatCount : profile.currentCatCount;
+  const other = type === "past" ? profile.pastOther : profile.currentOther;
+  const values = [
+    types.includes("狗") && `狗${dogCount ? ` ${dogCount} 隻` : ""}`,
+    types.includes("貓") && `貓${catCount ? ` ${catCount} 隻` : ""}`,
+    types.includes("其他") && (other || "其他"),
+  ].filter(Boolean) as string[];
+  return values;
+}
+
+function profilePdfSections(profile: Profile, selectedTypeLabel: string): ProfilePdfSection[] {
+  const housemateText = profile.hasHousemates === true
+    ? (profile.housemateList.filter(Boolean).join("、") || "有同住者")
+    : profile.hasHousemates === false ? "無" : "尚未填寫";
+  const consentText = profile.hasHousemates === true
+    ? profile.housematesConsent === true ? "已知情並同意" : profile.housematesConsent === false ? "不同意" : "尚未確認"
+    : "不適用";
+  const activitySpaces = Array.isArray(profile.activitySpace) ? profile.activitySpace : profile.activitySpace ? [profile.activitySpace] : [];
+  const activityText = activitySpaces.map((space) => space === "其他" && profile.otherActivitySpace ? `其他：${profile.otherActivitySpace}` : space);
+  const reasons = profile.reasons.map((reason) => reason === "其他" && profile.reasonOther ? `其他：${profile.reasonOther}` : reason);
+  const photoCount = profile.homeSpaceImages.length || (profile.homeSpaceImage ? 1 : 0);
+  const role = profile.role === "其他" && profile.roleOther ? `其他：${profile.roleOther}` : profile.role;
+
+  return [
+    {
+      title: "基本資料",
+      rows: [
+        { label: "年齡", value: profile.age ? `${profile.age} 歲` : "尚未填寫" },
+        { label: "身分類型", value: role || "尚未填寫" },
+      ],
+    },
+    {
+      title: "時間與居住環境",
+      rows: [
+        { label: "每天離家時間", value: profile.hoursAway !== "" ? `每日 ${profile.hoursAway} 小時` : "尚未填寫" },
+        { label: "每天可投入照顧時間", value: profile.careHours !== "" ? `每日 ${profile.careHours} 小時` : "尚未填寫" },
+        { label: "居住類型", value: profile.housing || "尚未填寫" },
+        ...(profile.housing === "租屋" ? [{ label: "房東／租約同意", value: profile.landlordConsent || "尚未確認" }] : []),
+      ],
+    },
+    {
+      title: "同住與活動空間",
+      rows: [
+        { label: "同住家人", value: housemateText },
+        ...(profile.hasHousemates === true ? [{ label: "同住者是否同意", value: consentText }] : []),
+        ...(profile.hasSensitiveHouseholdMembers ? [{ label: "需要特別留意", value: "家中有幼童、長者、孕婦" }] : []),
+        { label: "寵物預計活動空間", value: activityText.length ? activityText : "尚未填寫" },
+        { label: "居家空間照片", value: photoCount ? `已提供 ${photoCount} 張照片` : "尚未提供" },
+      ],
+    },
+    {
+      title: "飼養經驗",
+      rows: [
+        ...(profile.noShibaExperience ? [{ label: `${selectedTypeLabel}經驗`, value: `我沒有養過${selectedTypeLabel}` }] : []),
+        { label: "曾經飼養", value: profilePetSummary(profile, "past").length ? profilePetSummary(profile, "past") : "尚未填寫" },
+        { label: "目前家中有寵物", value: profilePetSummary(profile, "current").length ? profilePetSummary(profile, "current") : "尚未填寫" },
+        ...(profile.experienceNote ? [{ label: "其他飼養經驗分享", value: profile.experienceNote }] : []),
+      ],
+    },
+    {
+      title: "飼養原因與照顧安排",
+      rows: [
+        { label: "飼養原因", value: reasons.length ? reasons : "尚未填寫" },
+        { label: "每月可負擔預算", value: profile.monthlyBudget ? `NT$ ${Number(profile.monthlyBudget).toLocaleString("zh-TW")}` : "尚未填寫" },
+        { label: "緊急預備金", value: profile.emergencyFund === true ? "有" : profile.emergencyFund === false ? "目前沒有" : "尚未填寫" },
+        { label: "忙碌時的照顧支援", value: profile.backupSupport === true ? "有可靠支援" : profile.backupSupport === false ? "目前沒有" : "尚未填寫" },
+      ],
+    },
+  ];
+}
+
+function wrapPdfText(context: CanvasRenderingContext2D, text: string, maxWidth: number) {
+  const lines: string[] = [];
+  let line = "";
+  for (const character of text) {
+    if (context.measureText(`${line}${character}`).width > maxWidth && line) {
+      lines.push(line);
+      line = character;
+    } else line += character;
+  }
+  if (line) lines.push(line);
+  return lines.length ? lines : [""];
+}
+
+/** Draws the profile as true A4-sized pages. Sections move as units instead of scaling a long form into one canvas. */
+function createProfilePdfCanvases(profile: Profile, petName: string, selectedTypeLabel: string) {
+  const pages: Array<{ canvas: HTMLCanvasElement; context: CanvasRenderingContext2D; y: number }> = [];
+  const contentWidth = profilePdfPage.width - profilePdfPage.margin * 2;
+  const bottom = profilePdfPage.height - profilePdfPage.footer;
+
+  const startPage = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = profilePdfPage.width;
+    canvas.height = profilePdfPage.height;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Canvas is not available for profile PDF");
+    context.fillStyle = "#fffdf8";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#6d5e48";
+    context.font = '600 24px "Noto Sans TC", "PingFang TC", sans-serif';
+    context.fillText("伴日子新手村", profilePdfPage.margin, 76);
+    context.fillStyle = "#3f3528";
+    context.font = '700 48px "Noto Sans TC", "PingFang TC", sans-serif';
+    context.fillText("個人資料", profilePdfPage.margin, 138);
+    context.fillStyle = "#887761";
+    context.font = '400 24px "Noto Sans TC", "PingFang TC", sans-serif';
+    context.fillText(petName ? `為 ${petName} 整理的照顧條件摘要` : `為 ${selectedTypeLabel} 整理的照顧條件摘要`, profilePdfPage.margin, 180);
+    context.strokeStyle = "#e1d5c3";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.moveTo(profilePdfPage.margin, 210);
+    context.lineTo(profilePdfPage.width - profilePdfPage.margin, 210);
+    context.stroke();
+    const page = { canvas, context, y: 258 };
+    pages.push(page);
+    return page;
+  };
+
+  const measureRow = (context: CanvasRenderingContext2D, row: ProfilePdfRow) => {
+    const valueWidth = contentWidth - 292;
+    context.font = '400 26px "Noto Sans TC", "PingFang TC", sans-serif';
+    const values = Array.isArray(row.value) ? row.value : [row.value];
+    const lines = values.flatMap((value) => wrapPdfText(context, value, valueWidth));
+    return { lines, height: Math.max(62, lines.length * 40 + 22), isList: Array.isArray(row.value) };
+  };
+
+  const sectionGap = 44;
+  let page = startPage();
+  for (const section of profilePdfSections(profile, selectedTypeLabel)) {
+    const rowLayouts = section.rows.map((row) => measureRow(page.context, row));
+    const sectionHeight = 72 + rowLayouts.reduce((total, layout) => total + layout.height, 0) + 26;
+    if (page.y + sectionHeight > bottom) page = startPage();
+    const pending = section.rows.map((row, index) => ({ ...row, ...rowLayouts[index] }));
+    while (pending.length) {
+      const available = bottom - page.y;
+      const chunkRows: Array<ProfilePdfRow & { lines: string[]; height: number; isList: boolean }> = [];
+      let chunkHeight = 98;
+      while (pending.length) {
+        const row = pending[0];
+        if (chunkHeight + row.height <= available || !chunkRows.length) {
+          if (chunkHeight + row.height <= available) {
+            chunkRows.push(pending.shift()!);
+            chunkHeight += row.height;
+            continue;
+          }
+          // A very long free-text answer may span pages. Split only between text lines,
+          // repeat its label on the continuation page, and never scale the type down.
+          const linesThatFit = Math.max(1, Math.floor((available - chunkHeight - 22) / 40));
+          const lines = row.lines.splice(0, linesThatFit);
+          const partialHeight = Math.max(62, lines.length * 40 + 22);
+          chunkRows.push({ ...row, lines, height: partialHeight });
+          // A split value repeats its ordinary field label on the next page;
+          // the PDF deliberately avoids adding a visual "continuation" marker.
+          row.height = Math.max(62, row.lines.length * 40 + 22);
+          chunkHeight += partialHeight;
+          break;
+        }
+        break;
+      }
+      if (!chunkRows.length) { page = startPage(); continue; }
+
+      const startY = page.y;
+      page.context.fillStyle = "#f7f1e6";
+      page.context.strokeStyle = "#dfd0bb";
+      page.context.lineWidth = 2;
+      page.context.beginPath();
+      page.context.roundRect(profilePdfPage.margin, startY, contentWidth, chunkHeight, 20);
+      page.context.fill();
+      page.context.stroke();
+      page.context.fillStyle = "#8b5b2d";
+      page.context.font = '700 30px "Noto Sans TC", "PingFang TC", sans-serif';
+      page.context.fillText(section.title, profilePdfPage.margin + 30, startY + 46);
+      page.y += 72;
+
+      chunkRows.forEach((row, index) => {
+        const rowY = page.y;
+        if (index > 0) {
+          page.context.strokeStyle = "#e6d9c8";
+          page.context.lineWidth = 1;
+          page.context.beginPath();
+          page.context.moveTo(profilePdfPage.margin + 30, rowY);
+          page.context.lineTo(profilePdfPage.width - profilePdfPage.margin - 30, rowY);
+          page.context.stroke();
+        }
+        page.context.fillStyle = "#705f4a";
+        page.context.font = '600 25px "Noto Sans TC", "PingFang TC", sans-serif';
+        page.context.fillText(row.label, profilePdfPage.margin + 30, rowY + 40);
+        page.context.fillStyle = "#3f3528";
+        page.context.font = '400 26px "Noto Sans TC", "PingFang TC", sans-serif';
+        row.lines.forEach((line, lineIndex) => {
+          const prefix = row.isList && lineIndex === 0 ? "• " : "";
+          page.context.fillText(`${prefix}${line}`, profilePdfPage.margin + 292, rowY + 40 + lineIndex * 40);
+        });
+        page.y += row.height;
+      });
+      page.y += sectionGap;
+      if (pending.length) page = startPage();
+    }
+  }
+
+  pages.forEach((entry, index) => {
+    entry.context.strokeStyle = "#e1d5c3";
+    entry.context.lineWidth = 2;
+    entry.context.beginPath();
+    entry.context.moveTo(profilePdfPage.margin, profilePdfPage.height - 68);
+    entry.context.lineTo(profilePdfPage.width - profilePdfPage.margin, profilePdfPage.height - 68);
+    entry.context.stroke();
+    entry.context.fillStyle = "#887761";
+    entry.context.font = '400 21px "Noto Sans TC", "PingFang TC", sans-serif';
+    entry.context.textAlign = "right";
+    entry.context.fillText(`${index + 1} / ${pages.length}`, profilePdfPage.width - profilePdfPage.margin, profilePdfPage.height - 34);
+    entry.context.textAlign = "left";
+  });
+  return pages.map((entry) => entry.canvas);
+}
 
 function useMobileDownloadMode() {
   const [mobile, setMobile] = useState(false);
@@ -200,14 +486,40 @@ function useMobileDownloadMode() {
   return mobile;
 }
 
-async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind) {
+async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
+  if (typeof window === "undefined" || typeof document === "undefined") throw new Error("PDF export requires a browser environment");
+  if (kind === "profile" && profile) {
+    const canvases = createProfilePdfCanvases(profile, petName, selectedTypeLabel || "寵物");
+    const blob = createPdfBlobFromCanvases(canvases);
+    if (!blob.size || blob.type !== "application/pdf") throw new Error("Generated profile PDF blob is invalid");
+    const safePetName = sanitizePdfFileName(petName);
+    const fileName = safePetName
+      ? `伴日子新手村_個人資料_${safePetName}.pdf`
+      : "伴日子新手村_個人資料.pdf";
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    return;
+  }
   const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
   const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
+  // The profile form can be opened directly from the acquisition page, where
+  // the report-only .care-print-profile node is intentionally absent.
+  if (!sourcePages.length && kind === "profile") sourcePages.push(...document.querySelectorAll<HTMLElement>(".profile-supplement"));
   if (!sourcePages.length) throw new Error("PDF source pages not found");
 
   const stage = document.createElement("div");
   stage.className = "pdf-export-stage";
-  sourcePages.forEach((page) => stage.appendChild(page.cloneNode(true)));
+  sourcePages.forEach((page) => {
+    const clone = page.cloneNode(true) as HTMLElement;
+    preserveFormValues(page, clone);
+    stage.appendChild(clone);
+  });
   document.body.appendChild(stage);
 
   try {
@@ -215,8 +527,27 @@ async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind) {
     await replaceImagesWithDataUrls(stage);
     const pages = Array.from(stage.children) as HTMLElement[];
     const canvases = [];
-    for (const page of pages) canvases.push(await elementToCanvas(page));
-    const blob = createPdfBlobFromCanvases(canvases);
+    for (const page of pages) {
+      try {
+        canvases.push(await elementToCanvas(page));
+      } catch (error) {
+        // Some browser builds cannot draw a foreignObject SVG or a user photo.
+        // Preserve all entered text in a valid PDF instead of failing the download.
+        console.warn("Falling back to text-only PDF page export.", error);
+        canvases.push(elementTextToCanvas(page));
+      }
+    }
+    let blob: Blob;
+    try {
+      blob = createPdfBlobFromCanvases(canvases);
+    } catch (error) {
+      // A canvas can become tainted after a late-loading remote/user image even
+      // when SVG rasterization itself succeeded. Rebuild every page without
+      // images so this non-essential asset cannot prevent the PDF download.
+      console.warn("PDF image encoding failed; rebuilding a text-only PDF.", error);
+      blob = createTextOnlyPdfBlob(pages);
+    }
+    if (!blob.size || blob.type !== "application/pdf") throw new Error("Generated PDF blob is invalid");
     const safePetName = sanitizePdfFileName(petName);
     const fileName = safePetName
       ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照顧準備總覽"}_${safePetName}.pdf`
@@ -228,7 +559,7 @@ async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind) {
     document.body.appendChild(link);
     link.click();
     link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    window.setTimeout(() => URL.revokeObjectURL(url), 30_000);
   } finally {
     stage.remove();
   }
@@ -282,7 +613,7 @@ async function downloadAssessmentImage(petName: string, kind: ReportPdfKind) {
   }
 }
 
-function PdfDownloadButton({ petName, kind = "overview", label }: { petName: string; kind?: ReportPdfKind; label?: string }) {
+function PdfDownloadButton({ petName, kind = "overview", label, profile, selectedTypeLabel }: { petName: string; kind?: ReportPdfKind; label?: string; profile?: Profile; selectedTypeLabel?: string }) {
   const [generating, setGenerating] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [error, setError] = useState("");
@@ -308,9 +639,10 @@ function PdfDownloadButton({ petName, kind = "overview", label }: { petName: str
           setError("");
           try {
             if (mobileDownload) await downloadAssessmentImage(petName, kind);
-            else await downloadAssessmentPdf(petName, kind);
+            else await downloadAssessmentPdf(petName, kind, profile, selectedTypeLabel);
             setCompleted(true);
-          } catch {
+          } catch (error) {
+            console.error("Assessment export failed.", error);
             setError(`${exportKindLabel}下載失敗，請再試一次。`);
           } finally {
             setGenerating(false);
@@ -479,7 +811,7 @@ export function ProfileSupplementForm({
   embedded?: boolean;
 }) {
   const selectedBreed = getSpeciesConfig(species).breeds.find((item) => item.id === breed);
-  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : "柴犬");
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : species === "bird" ? "鳥兒" : "柴犬");
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     onChange({ ...profile, [key]: value });
   };
@@ -620,7 +952,7 @@ export function ProfileSupplementForm({
         })}</div>{profile.reasons.includes("其他") && <label className="supplement-inline-input">其他飼養原因<input placeholder="請說明" value={profile.reasonOther} onChange={(event) => update("reasonOther", event.target.value)} /></label>}</fieldset>
       </section>
       <div className="profile-pdf-actions">
-        <PdfDownloadButton petName={petName} kind="profile" label="下載個人資料" />
+        <PdfDownloadButton petName={petName} kind="profile" label="下載個人資料" profile={profile} selectedTypeLabel={selectedTypeLabel} />
         <p>下載後可提供給收容所、認養平台或合法寵物業者參考，協助他們了解你的居住環境與照顧安排。</p>
       </div>
     </section>
@@ -695,10 +1027,9 @@ export function AssessmentReport({
   const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const correctedTopics = corrected.map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
-  const catInspectionStampCount = lifeActivity.catInspectionSteps.filter((item) => item.startsWith("stamp:")).length;
   const practiceItems = [
     { label: "已完成到家第一餐", complete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady },
-    ...(species === "cat" ? [{ label: "已完成貓砂盆救援隊", complete: catInspectionStampCount >= catLitterRescueConfig.targetStamps }] : []),
+    ...(species === "cat" ? [{ label: "已完成貓砂盆救援隊", complete: lifeActivity.catInspectionSteps.includes("litter-complete") }] : []),
   ];
   const practiceComplete = practiceItems.filter((item) => item.complete).length;
   const backupNames = members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
@@ -725,7 +1056,7 @@ export function AssessmentReport({
       ? (enteredHousemates.length ? enteredHousemates.join("、") : legacyHousemates.length ? legacyHousemates.join("、") : "有同住家人（待補充）")
       : "待補充";
   const selectedBreed = speciesConfig.breeds.find((item) => item.id === breed);
-  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : "柴犬");
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : species === "bird" ? "鳥兒" : "柴犬");
   const experienceStatus = profile.noShibaExperience ? `沒有${selectedTypeLabel}經驗` : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote ? "已補充飼養經驗" : "待補充";
   const reasonStatus = profile.reasons.length ? profile.reasons.map((item) => item === "其他" ? profile.reasonOther || "其他（待補充）" : item).join("、") : "待補充";
   const landlordConfirmed = profile.landlordConsent === "已確認並同意" || profile.landlordConsent === "房東已同意";
@@ -832,6 +1163,12 @@ export function AssessmentReport({
       summary: "知道忙碌時的交接、排泄與食慾異常，以及高齡後的環境調整都需要提早安排。",
       scenarioIds: ["rabbit-busy-care", "rabbit-health-emergency", "rabbit-senior-care"],
     },
+  ] : species === "bird" ? [
+    { id: "bird-safe-home", icon: "⌂", title: "安全生活空間", summary: "知道鳥籠、棲木、食水容器與空氣安全都必須在到家前準備好。", scenarioIds: [], preparationComplete: roomCompletion === 100 && hazardsReady.length === speciesConfig.hazards.length },
+    { id: "bird-arrival", icon: "♡", title: "接回與適應", summary: "理解剛到家的鳥需要安靜、遮光感與循序適應。", scenarioIds: ["bird-arrival-adjustment"] },
+    { id: "bird-daily-care", icon: "✦", title: "飲食與日常照護", summary: "能分辨安全食物，並把托盤清潔、健康觀察與陪伴安排成每天的節奏。", scenarioIds: ["bird-cage-inspection", "bird-puffing-feathers", "bird-molting-care"], practiceComplete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady },
+    { id: "bird-reality", icon: "◌", title: "鳥的長期責任", summary: "理解空氣安全、健康監測、叫聲與社交需求都是飼養前必須接受的現實。", scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"] },
+    { id: "bird-life-change", icon: "✚", title: "生活變化", summary: "知道忙碌交接、急症就醫與高齡環境調整都要提早安排。", scenarioIds: ["bird-busy-care", "bird-health-emergency", "bird-senior-care"] },
   ] : species === "cat" ? [
     {
       id: "cat-safe-home",

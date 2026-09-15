@@ -124,11 +124,11 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
   },
   "rabbit-daily-check": {
     id: "rabbit-daily-check", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護",
-    title: "早安，{petName}！開始今天的日常巡視", description: "依序巡視牧草、飲水、便盆與糞便，及早留意日常變化。", topic: "兔兔日常巡視", reportSummary: "每天補牧草、換新鮮水、清便盆並觀察糞便，是兔子健康照護的基礎。", artIndex: 0,
-    knowledgeTitle: "兔子小知識", learningPoints: ["<mark>牧草、飲水、便盆、糞便</mark>是每天都要巡視的四個重點。", "固定巡視能及早發現食慾、飲水或排便的明顯變化，並安排合適協助。"],
+    title: "早安，{petName}！開始今天的日常巡視", description: "清理便盆、換上新底材，再順手檢查門齒與指甲。牧草補充與飲水更換已由餵食頁面涵蓋。", topic: "兔兔日常巡視", reportSummary: "每天清便盆並每週順手檢查門齒與指甲，是兔子健康照護的基礎。", artIndex: 0,
+    knowledgeTitle: "兔子小知識", learningPoints: ["<mark>便盆每天清</mark>，糞粒的量和形狀變化是腸道健康最直接的日常指標。", "<mark>門齒和指甲每週順手看一眼</mark>，早發現早處理。"],
     choices: [
       { id: "rabbit-daily-check-incorrect", text: "需要重新確認", result: "incorrect", ...incorrect, explanation: "這一項還沒完成。請依兔子的日常需求重新處理。" },
-      { id: "rabbit-daily-check-complete", text: "完成日常巡視", result: "correct", ...positive, explanation: "你完成了今天的日常巡視，為牠的健康守住了日常底線。" },
+      { id: "rabbit-daily-check-complete", text: "完成日常巡視", result: "correct", ...positive, explanation: "你完成了今天的日常巡視——清便盆、順手週檢門齒指甲。" },
     ],
   },
 };

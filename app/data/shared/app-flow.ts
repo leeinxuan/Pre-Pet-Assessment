@@ -63,7 +63,7 @@ export const categories = [
   { id: "dog", label: "犬", icon: "🐕", image: "/assets/species/dog.png", active: true },
   { id: "cat", label: "貓", icon: "🐈", image: "/assets/species/cat.png", active: true },
   { id: "rabbit", label: "兔", icon: "🐇", image: "/assets/species/rabbit.png", active: true },
-  { id: "bird", label: "鳥", icon: "🦜", image: "/assets/species/bird.png", active: false },
+  { id: "bird", label: "鳥", icon: "🦜", image: "/assets/species/bird.png", active: true },
   { id: "reptile", label: "爬蟲", icon: "🦎", image: "/assets/species/reptile.png", active: false },
   { id: "small", label: "小型哺乳", icon: "🐹", image: "/assets/species/small-mammal.png", active: false },
 ];
@@ -118,7 +118,6 @@ export const initialProfile: Profile = {
   emergencyFund: null,
   backupSupport: null,
 };
-
 
 
 

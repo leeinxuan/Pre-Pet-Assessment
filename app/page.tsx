@@ -148,8 +148,8 @@ export default function Home() {
   }
 
   function goToLifeStage(stageIndex: number) {
-    if (category === "rabbit") {
-      const stageStarts = getJourneyItemsForSpecies("rabbit").reduce<number[]>((starts, item, index, all) => {
+    if (category === "rabbit" || category === "bird") {
+      const stageStarts = getJourneyItemsForSpecies(category).reduce<number[]>((starts, item, index, all) => {
         if (index === 0 || item.stageId !== all[index - 1].stageId) starts.push(index);
         return starts;
       }, []);

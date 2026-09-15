@@ -48,6 +48,12 @@
 | `/assets/dog/pet-journey/吃剩的骨頭.png` | `/assets/dog/pet-journey/leftover-bones.png` | 錯誤食物 | 餵食互動 |
 | `/assets/dog/pet-journey/空水碗.png` | `/assets/dog/pet-journey/empty-water-bowl.png` | 空水碗 | 餵食互動 |
 | `/assets/dog/pet-journey/空飼料碗.png` | `/assets/dog/pet-journey/empty-food-bowl.png` | 空飼料碗 | 餵食互動 |
+| `/assets/cat/feeding/空水碗.png` | `/assets/cat/feeding/empty-water-bowl.png` | 貓咪空水碗 | 貓咪餵食互動 |
+| `/assets/cat/feeding/空飼料碗.png` | `/assets/cat/feeding/empty-food-bowl.png` | 貓咪空飼料碗 | 貓咪餵食互動 |
+| `/assets/cat/feeding/橘貓＿肚子餓_害怕.png` | `/assets/cat/feeding/orange-cat-hungry-scared.png` | 貓咪等待餵食狀態 | 貓咪餵食互動 |
+| `/assets/cat/feeding/橘貓＿開心.png` | `/assets/cat/feeding/orange-cat-happy.png` | 貓咪完成餵食狀態 | 貓咪餵食互動 |
+| `/assets/cat/room/逗貓棒.png` | `/assets/cat/room/cat-teaser-wand.png` | 貓咪安全玩具 | 貓咪準備房間 |
+| `/assets/dog/pet-journey/忙碌日常過場動畫1.mp4` | `/assets/dog/pet-journey/busy-day-transition.mp4` | 忙碌照顧過場 | 柴犬飼養生活 |
 | `/walking-the-dog/home-to-sidewalk.jpg` | `/assets/dog/walking/door-to-sidewalk.jpg` | 散步場景 1 | 散步互動 |
 | `/walking-the-dog/park.png` | `/assets/dog/walking/park.png` | 散步場景 2 | 散步互動 |
 | `/walking-the-dog/park-2.png` | `/assets/dog/walking/park-poop-event.png` | 散步場景 3／便便事件 | 散步互動 |

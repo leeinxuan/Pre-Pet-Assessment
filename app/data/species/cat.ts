@@ -27,6 +27,7 @@ export const catAssets = {
     foodBowl: "/assets/cat/feeding/cat-food-bowl.png",
     waterBowl: "/assets/cat/feeding/cat-water-bowl.png",
     scratchingBoard: "/assets/cat/room/cat-scratching-board.png",
+    teaserWand: "/assets/cat/room/cat-teaser-wand.png",
     tree: "/assets/cat/room/cat-tree.png",
     lilyPlant: "/assets/cat/room/lily-plant.png",
     humanMedicine: "/assets/cat/room/human-medicine.png",
@@ -38,6 +39,10 @@ export const catAssets = {
     food: "/assets/cat/feeding/cat-food.png",
     foodBowl: "/assets/cat/feeding/cat-food-bowl.png",
     waterBowl: "/assets/cat/feeding/cat-water-bowl.png",
+    emptyFoodBowl: "/assets/cat/feeding/empty-food-bowl.png",
+    emptyWaterBowl: "/assets/cat/feeding/empty-water-bowl.png",
+    hungryScaredCat: "/assets/cat/feeding/orange-cat-hungry-scared.png",
+    happyCat: "/assets/cat/feeding/orange-cat-happy.png",
     seasonedLeftovers: "/assets/cat/feeding/seasoned-leftovers.png",
     vegetablesFruit: "/assets/cat/feeding/vegetables-fruit.png",
     leftoverFishBones: "/assets/cat/feeding/leftover-fish-bones.png",
@@ -45,11 +50,17 @@ export const catAssets = {
     chocolate: "/assets/shared/chocolate.png",
   },
   daily: {
-    // TODO(cat-assets): 補入專用巡視背景與貓砂鏟後，僅需在此替換路徑。
     inspectionBackground: "/assets/cat/room/cat-safe-room-secured.png",
-    litterBox: "/assets/cat/room/cat-litter-box.png",
-    // 暫用狗狗房間的中性清潔工具素材，待貓咪專用貓砂鏟素材補齊後替換。
-    litterScoop: "/assets/dog/room/cleaner.png",
+    // 相容尚未移除的舊版元件；現行互動使用下方的狀態素材。
+    litterBox: "/assets/cat/cleaning/dirty-litter-box.png",
+    dirtyLitterBox: "/assets/cat/cleaning/dirty-litter-box.png",
+    cleanLitterBox: "/assets/cat/cleaning/clean-litter-box.png",
+    replacementLitterBox: "/assets/cat/cleaning/replacement-litter-box.png",
+    replacementLitterBoxIcon: "/assets/cat/cleaning/replacement-litter-box-icon.png",
+    litterScoop: "/assets/cat/cleaning/litter-scoop.png",
+    catPoop: "/assets/cat/cleaning/cat-poop.png",
+    urineClump: "/assets/cat/cleaning/urine-clump.png",
+    trashBin: "/assets/cat/cleaning/trash-bin.png",
   },
   preparation: {
     // TODO(cat-assets): 尚未提供專用外出籠、文件素材，暫用安全中性 fallback。

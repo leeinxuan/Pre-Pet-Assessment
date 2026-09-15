@@ -86,6 +86,8 @@ export type JourneyItemType =
   // 兔子專屬活動仍沿用共用旅程的完成、回顧與下載資料格式。
   | "rabbit-carry-sort"
   | "rabbit-daily-check"
+  | "bird-cage-inspection"
+  | "bird-challenge"
   | "breed-challenge"
   | "body-language"
   | "body-care"
@@ -117,6 +119,7 @@ export type LifeActivityState = {
   rabbitCarryOrder: string[];
   rabbitCarryComplete: boolean;
   rabbitDailyCheckSteps: string[];
+  birdCageInspectionSteps: string[];
 };
 
 export type Profile = {

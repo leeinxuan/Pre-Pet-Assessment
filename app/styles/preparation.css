@@ -451,4 +451,3 @@
 @media (max-width: 430px) {
   .arrival-meal-supplies { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
