@@ -24,7 +24,7 @@ export const sizeBasedCosts: Record<PetSize, {
 };
 
 export function getPetSizeForBreed(breedId: string): PetSize {
-  const size = breeds.find((item) => item.id === breedId)?.size;
+  const size = breeds.find((item) => item.id === breedId)?.size as PetSize | undefined;
   return size === "small" || size === "large" ? size : "medium";
 }
 
@@ -61,7 +61,11 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   "rabies-vaccine": { id: "rabies-vaccine", name: "\u72c2\u72ac\u75c5\u75ab\u82d7", amount: 400, category: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa", stage: "\u5bf5\u7269\u5230\u5bb6\u5f8c", recurring: false },
   "basic-vaccine-checkup": { id: "basic-vaccine-checkup", name: "\u57fa\u790e\u75ab\u82d7\u8207\u521d\u671f\u5065\u5eb7\u6aa2\u67e5", amount: 3500, category: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa", stage: "\u5bf5\u7269\u5230\u5bb6\u5f8c", recurring: false },
   "sick-vet-care": { id: "sick-vet-care", name: "生病就醫與檢查", amount: 4200, category: "醫療", stage: "生病與就醫", recurring: false, fromEmergency: true },
+  "dog-arrival-checkup": { id: "dog-arrival-checkup", name: "到家後首次健康檢查", amount: 1500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, description: "安排健康檢查與寄生蟲評估，確認疫苗與晶片狀態。" },
+  "cat-arrival-checkup": { id: "cat-arrival-checkup", name: "到家後首次健康檢查", amount: 1500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, description: "盡快確認疫苗、晶片與驅蟲狀態；米克斯貓另確認 FeLV／FIV 篩檢。" },
   "journey-care-service": { id: "journey-care-service", name: "短期照顧服務", amount: 2400, category: "照顧服務", stage: "飼主生活發生改變", recurring: false },
+  "dog-senior-room": { id: "dog-senior-room", name: "高齡環境調整用品", amount: 1500, category: "高齡用品", stage: "逐漸進入高齡", recurring: false, description: "降低障礙物高度、提供防滑地墊並增加保暖設備。" },
+  "dog-senior-checkup": { id: "dog-senior-checkup", name: "高齡定期健康檢查", amount: 2500, category: "醫療", stage: "逐漸進入高齡", recurring: false, fromEmergency: false, description: "高齡犬提高健檢頻率，定期評估體重、食慾、排泄、活動量與精神。" },
   "senior-checkup": { id: "senior-checkup", name: "高齡健康檢查", amount: 3200, category: "醫療", stage: "逐漸進入高齡", recurring: false, fromEmergency: true },
   "senior-slipmat": { id: "senior-slipmat", name: "高齡犬防滑墊", amount: 1200, category: "高齡用品", stage: "調整高齡生活空間", recurring: false },
   "senior-access-bed": { id: "senior-access-bed", name: "低入口高齡睡墊", amount: 1800, category: "高齡用品", stage: "調整高齡生活空間", recurring: false },

@@ -5,6 +5,7 @@ import {
 import { getCatBreedChallengeScenarios } from "./cat/breed-challenges";
 import { catJourneyItems } from "./cat/journey";
 import { catLifeScenarios } from "./cat/scenarios";
+import { catBreeds } from "./cat/selection";
 
 /**
  * 貓咪流程唯一的素材路徑映射。
@@ -77,6 +78,8 @@ export const catAssets = {
 /** 貓咪專屬資料集合的素材部分；互動題庫仍由既有 cat 設定漸進遷入。 */
 export const catSpeciesData = {
   id: "cat" as const,
+  breeds: catBreeds,
+  previousBreeds: catBreeds,
   assets: catAssets,
   lifeScenarios: catLifeScenarios,
   journeyItems: catJourneyItems,

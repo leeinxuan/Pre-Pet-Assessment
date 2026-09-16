@@ -1,4 +1,3 @@
-import { breeds } from "../../game-data";
 import { speciesGameConfig as legacySpeciesGameConfig } from "../speciesGameConfig";
 import { catSpeciesData } from "./cat";
 import { dogSpeciesData } from "./dog";
@@ -16,6 +15,7 @@ export const speciesConfig = {
   dog: {
     ...legacySpeciesGameConfig.dog,
     breeds: dogSpeciesData.breeds,
+    previousBreeds: dogSpeciesData.previousBreeds,
     assets: dogSpeciesData.assets,
     lifeScenarios: dogSpeciesData.lifeScenarios,
     journeyItems: dogSpeciesData.journeyItems,
@@ -24,7 +24,8 @@ export const speciesConfig = {
   },
   cat: {
     ...legacySpeciesGameConfig.cat,
-    breeds: breeds.filter((breed) => breed.species === "cat"),
+    breeds: catSpeciesData.breeds,
+    previousBreeds: catSpeciesData.previousBreeds,
     assets: catSpeciesData.assets,
     lifeScenarios: catSpeciesData.lifeScenarios,
     journeyItems: catSpeciesData.journeyItems,

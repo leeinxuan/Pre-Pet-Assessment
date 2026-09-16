@@ -321,9 +321,11 @@ export function SpeciesStep({
   onNext: () => void;
 }) {
   const speciesConfig = getSpeciesConfig(category);
-  const selectedBreed = speciesConfig.breeds.find((item) => item.id === breed);
-  const selectedPreviousBreed = speciesConfig.breeds.find((item) => item.id === previousBreed);
-  const availableBreeds = speciesConfig.breeds;
+  type BreedOption = { id: string; image: string; label: string; shortDescription: string };
+  const availableBreeds: readonly BreedOption[] = speciesConfig.breeds;
+  const selectedBreed = availableBreeds.find((item) => item.id === breed);
+  const previousBreeds = (speciesConfig as { previousBreeds?: readonly BreedOption[] }).previousBreeds ?? availableBreeds;
+  const selectedPreviousBreed = previousBreeds.find((item) => item.id === previousBreed);
   const sameBreed = Boolean(breed && previousBreed && breed === previousBreed);
   const breedCarouselRef = useRef<HTMLDivElement>(null);
   const breedScrollTimerRef = useRef<number | null>(null);
@@ -422,7 +424,7 @@ export function SpeciesStep({
             <div className="previous-dog-details">
               <div><p className="life-stage-label">{speciesConfig.copy.previousSectionTitle}</p><h2>牠是哪一個{speciesConfig.copy.typeLabel}？</h2></div>
               <div className="breed-row previous-breed-grid">
-                {availableBreeds.map((item) => (
+                {previousBreeds.map((item) => (
                   <button type="button" key={item.id} className={previousBreed === item.id ? "selected" : ""} onClick={() => onPreviousBreed(item.id)} aria-pressed={previousBreed === item.id}>
                     <img className="partner-card-image" src={item.image} alt="" /><b>{item.label}</b>{previousBreed === item.id && <i>✓</i>}
                   </button>
@@ -476,17 +478,16 @@ export function SpeciesStep({
 
 type ExpenseDetailGroup = string;
 const expenseLabels = {
+  initialPreparation: "\u521d\u671f\u6e96\u5099\u91d1",
   requiredAfterArrival: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa",
   oneTimePrep: "\u4e00\u6b21\u6027\u6e96\u5099\u8cbb",
   monthlyBasic: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa",
-  temporaryMedical: "\u81e8\u6642\uff0f\u91ab\u7642\u652f\u51fa",
+  temporaryMedical: "\u81e8\u6642\u6027\u652f\u51fa",
   detailEyebrow: "\u82b1\u8cbb\u660e\u7d30",
   detailTitle: "\u76ee\u524d\u5df2\u767b\u8a18\u7684\u652f\u51fa",
   closeDetails: "\u95dc\u9589\u660e\u7d30",
   noGroupExpenses: "\u76ee\u524d\u5c1a\u672a\u767b\u8a18\u6b64\u985e\u652f\u51fa\u3002",
   currentCostStatus: "\u76ee\u524d\u8cbb\u7528\u72c0\u6cc1",
-  accumulatedTotal: "\u7d2f\u7a4d\u652f\u51fa",
-  accumulatedHelp: "\u542b\u76ee\u524d\u6d41\u7a0b\u5df2\u767b\u8a18\u7684\u4e00\u6b21\u6027\u3001\u7576\u6708\u652f\u51fa\u8207\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa",
   viewDetails: "\u67e5\u770b\u660e\u7d30",
   monthlySuffix: "\uff0f\u6708",
   monthlyType: "\u6bcf\u6708\u652f\u51fa",
@@ -494,12 +495,12 @@ const expenseLabels = {
   addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
-const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
+const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "dog-arrival-checkup", "cat-arrival-checkup", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
 const defaultVisibleExpenseIds = ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "monthly-preventive-medicine"];
 const defaultVisibleExpenses = defaultVisibleExpenseIds
   .map((id) => expenseCatalog[id])
   .filter((item): item is ExpenseRecord => Boolean(item));
-const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-routine-checkup", "rabbit-senior-room", "bird-emergency-vet", "bird-senior-checkup", "bird-senior-room"]);
+const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "dog-senior-room", "dog-senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-routine-checkup", "rabbit-senior-room", "bird-emergency-vet", "bird-senior-checkup", "bird-senior-room"]);
 
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
   expenseLabels.requiredAfterArrival,
@@ -509,7 +510,7 @@ const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
 ];
 
 export function isRequiredAfterArrivalExpense(item: ExpenseRecord) {
-  return requiredAfterArrivalExpenseIds.has(item.id);
+  return requiredAfterArrivalExpenseIds.has(item.id) || item.category === "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa";
 }
 
 export function isMonthlyExpense(item: ExpenseRecord) {
@@ -526,6 +527,25 @@ export function isOneTimePreparationExpense(item: ExpenseRecord) {
 
 export function getOneTimePreparationExpenseTotal(expenses: ExpenseRecord[]) {
   return expenses.filter(isOneTimePreparationExpense).reduce((sum, item) => sum + item.amount, 0);
+}
+
+/** 所有花費畫面與輸出共用的三大分類；原始 category、stage 與 expenseId 仍保留供追蹤。 */
+export function getExpenseSummaryCategory(item: ExpenseRecord): ExpenseDetailGroup {
+  if (isMonthlyExpense(item)) return expenseLabels.monthlyBasic;
+  if (isTemporaryOrMedicalExpense(item)) return expenseLabels.temporaryMedical;
+  return expenseLabels.initialPreparation;
+}
+
+export function getInitialPreparationTotal(expenses: ExpenseRecord[]) {
+  return expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.initialPreparation).reduce((sum, item) => sum + item.amount, 0);
+}
+
+export function getMonthlyBasicTotal(expenses: ExpenseRecord[]) {
+  return expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.monthlyBasic).reduce((sum, item) => sum + item.amount, 0);
+}
+
+export function getTemporaryExpenseTotal(expenses: ExpenseRecord[]) {
+  return expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.temporaryMedical).reduce((sum, item) => sum + item.amount, 0);
 }
 
 /** 全物種共用累積支出：已登記的所有分類都只加總一次。 */
@@ -550,8 +570,7 @@ function detailGroupForExpense(item: ExpenseRecord): ExpenseDetailGroup {
   if (isRequiredAfterArrivalExpense(item)) return expenseLabels.requiredAfterArrival;
   if (isMonthlyExpense(item)) return expenseLabels.monthlyBasic;
   if (isTemporaryOrMedicalExpense(item)) return expenseLabels.temporaryMedical;
-  if (isOneTimePreparationExpense(item)) return expenseLabels.oneTimePrep;
-  return expenseLabels.temporaryMedical;
+  return expenseLabels.oneTimePrep;
 }
 
 function expenseTypeLabel(item: ExpenseRecord) {
@@ -561,10 +580,9 @@ function expenseTypeLabel(item: ExpenseRecord) {
 
 export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses: ExpenseRecord[]; breed: string; species?: string; onClose: () => void }) {
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
-  const preparationTotal = getOneTimePreparationExpenseTotal(visibleExpenses);
-  const monthlyTotal = visibleExpenses.filter(isMonthlyExpense).reduce((sum, item) => sum + item.amount, 0);
-  const temporaryMedicalTotal = visibleExpenses.filter(isTemporaryOrMedicalExpense).reduce((sum, item) => sum + item.amount, 0);
-  const accumulatedTotal = getAccumulatedExpenseTotal(visibleExpenses);
+  const preparationTotal = getInitialPreparationTotal(visibleExpenses);
+  const monthlyTotal = getMonthlyBasicTotal(visibleExpenses);
+  const temporaryMedicalTotal = getTemporaryExpenseTotal(visibleExpenses);
   const grouped = expenseDetailGroupOrder.map((group) => ({
     group,
     items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group),
@@ -575,10 +593,9 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
       <section className="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-title" onMouseDown={(event) => event.stopPropagation()}>
         <div className="expense-modal-head"><div><p className="eyebrow">{expenseLabels.detailEyebrow}</p><h2 id="expense-title">{expenseLabels.detailTitle}</h2></div><button onClick={onClose} aria-label={expenseLabels.closeDetails}>x</button></div>
         <div className="expense-modal-summary" aria-label="費用摘要">
-          <div><small>{expenseLabels.oneTimePrep}</small><b>NT$ {money.format(preparationTotal)}</b></div>
-          <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
-          <div><small>{expenseLabels.temporaryMedical}</small><b>NT$ {money.format(temporaryMedicalTotal)}</b></div>
-          <div><small title={expenseLabels.accumulatedHelp}>{expenseLabels.accumulatedTotal}</small><b>NT$ {money.format(accumulatedTotal)}</b></div>
+          <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}</b><small>第一次需要準備的總金額</small></div>
+          <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b><small>每月預估金額</small></div>
+          <div><small>{expenseLabels.temporaryMedical}</small><b>NT$ {money.format(temporaryMedicalTotal)}</b><small>非固定、視情況發生的支出</small></div>
         </div>
         <div className="expense-groups">
           {grouped.map(({ group, items }) => (
@@ -622,7 +639,7 @@ function CoinFlightAnimation({
     toast.className = "coin-toast-overlay";
     toast.innerHTML = `
       <div class="coin-toast-card" role="status" aria-live="polite">
-        <span class="coin-toast-emoji" aria-hidden="true">🪙</span>
+        <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(120,80,0,0.09)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#f6e87a"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.22)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#c8a018" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#c8a018" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(200,160,20,0.18)" stroke="#c8a018" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#7a5208">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#a07818">100</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="7" font-weight="700" text-anchor="end" fill="#a07818">100</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#c8a018" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#c8a018" opacity="0.7">&#10022;</text></svg>
         <div class="coin-toast-body">
           <b>已加入準備清單</b>
           <span>${expense.name}</span>
@@ -638,7 +655,7 @@ function CoinFlightAnimation({
     for (let i = 0; i < COIN_COUNT; i++) {
       const coin = document.createElement("div");
       coin.className = "coin-particle";
-      coin.textContent = "🪙";
+      // styled as mini bill via CSS
 
       const angle = (i / COIN_COUNT) * Math.PI * 2;
       const r = 18 + Math.random() * 28;

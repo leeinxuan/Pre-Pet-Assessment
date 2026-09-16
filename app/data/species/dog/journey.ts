@@ -3,7 +3,7 @@ export { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScen
 
 /** 犬隻旅程順序；WalkingActivity 是唯一專屬玩法元件。 */
 export const dogJourneyItems: JourneyItem[] = [
-  { id: "arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
+  { id: "arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "arrival-adjustment", stageId: "arrival", stageLabel: "接回家", expenseIds: ["dog-arrival-checkup"] },
   { id: "behavior", type: "scenario", timeLabel: "日常行為照顧", title: "日常行為照顧", stageId: "daily", stageLabel: "日常照護" },
   { id: "walking", type: "walking", timeLabel: "日常照護", title: "今天也要出門散步", stageId: "daily", stageLabel: "日常照護" },
   { id: "breed-challenge", type: "breed-challenge", timeLabel: "品種的考驗", title: "品種的考驗", stageId: "breed", stageLabel: "品種的考驗" },

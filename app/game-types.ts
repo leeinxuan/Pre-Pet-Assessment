@@ -59,6 +59,11 @@ export type Scenario = {
   correctSummary?: string[];
   learningPoints?: string[];
   knowledgeTitle?: string;
+  /** 題庫資料識別欄位：供旅程、摘要與除錯使用，UI 不以畫面位置推斷。 */
+  speciesId?: string;
+  breedId?: string;
+  order?: number;
+  summaryCategory?: string;
 };
 
 export type ScenarioAnswer = {
@@ -101,6 +106,8 @@ export type JourneyItem = {
   scenarioId?: string;
   stageId?: string;
   stageLabel?: string;
+  /** 完成此 journey item 的既有正確回饋後才登錄的共用費用。 */
+  expenseIds?: string[];
 };
 
 export type LifeActivityState = {

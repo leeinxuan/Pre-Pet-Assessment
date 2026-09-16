@@ -136,6 +136,9 @@ export default function Home() {
     return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
   }, [members]);
   const speciesConfig = getSpeciesConfig(category);
+  // 舊存檔或舊網址帶入已移除犬種時，render 直接安全回選擇頁；
+  // 不在 effect 中補寫狀態，避免把舊資料帶進 journey 或產生級聯 render。
+  const hasUnsupportedDogBreed = category === "dog" && Boolean(breed) && !speciesConfig.breeds.some((item) => item.id === breed);
 
   function goTo(next: number) {
     setStep(next);
@@ -299,7 +302,11 @@ export default function Home() {
           },
       };
     });
-    choice.expenseIds?.forEach(addExpenseById);
+    // 到家後首次健康檢查要和正確回饋頁的費用動畫同步；由共用 LifeJourney 在切換到該頁時登錄。
+    const deferredArrivalExpenseIds = scenario.stageId === "arrival" && choice.result === "correct"
+      ? new Set(["dog-arrival-checkup", "cat-arrival-checkup", "rabbit-arrival-checkup", "bird-arrival-checkup"])
+      : new Set<string>();
+    choice.expenseIds?.filter((id) => !deferredArrivalExpenseIds.has(id)).forEach(addExpenseById);
   }
 
   function markScenarioForReview(scenario: Scenario, flag: string) {
@@ -499,7 +506,7 @@ export default function Home() {
           />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} latestExpense={latestExpense} breed={breed} species={category} />}
-            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={() => goTo(2)} />}
+            {step === 1 && <SpeciesStep selectionPage={hasUnsupportedDogBreed ? "breed" : selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={hasUnsupportedDogBreed ? "" : breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={() => goTo(2)} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>

@@ -18,6 +18,7 @@ export type BreedChallengeQuestion = {
 export function buildBreedChallengeScenarios(
   questions: BreedChallengeQuestion[],
   breedId: string,
+  speciesId = "dog",
 ): Scenario[] {
   return questions.map((question, questionIndex) => {
     const correctChoice: ScenarioChoice = {
@@ -43,6 +44,11 @@ export function buildBreedChallengeScenarios(
     return {
       id: `breed-challenge-${questionIndex + 1}`,
       stage: "品種的考驗",
+      stageId: "breed",
+      speciesId,
+      breedId,
+      order: questionIndex + 1,
+      summaryCategory: "breed-challenge",
       timeLabel: "日常照護",
       title: question.title,
       description: question.description,

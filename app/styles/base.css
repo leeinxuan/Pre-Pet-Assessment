@@ -246,13 +246,17 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .coin-particle {
   position: fixed;
   z-index: 9999;
-  font-size: 26px;
-  line-height: 1;
+  width: 26px;
+  height: 14px;
   pointer-events: none;
   user-select: none;
   will-change: transform, opacity;
-  transform: translate(-50%, -50%) scale(0);
+  transform: translate(-50%, -50%) scale(0) rotate(0deg);
   opacity: 0;
+  background: linear-gradient(130deg, #f9ef9a 0%, #e8c83a 55%, #d0a818 100%);
+  border-radius: 3px;
+  border: 1.5px solid rgba(168, 120, 10, 0.55);
+  box-shadow: 0 1px 4px rgba(100,65,0,0.18);
 }
 
 /* Toast overlay (pointer-events none so it never blocks clicks) */
@@ -274,28 +278,29 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 18px 24px 16px;
+  gap: 10px;
+  padding: 52px 68px 48px;
   border: none;
   border-radius: 0;
-  background: rgba(255, 247, 210, .92);
+  /* background IS the gradient — no solid rect, no mask, no hard edges */
+  background: radial-gradient(ellipse 68% 62% at 50% 50%,
+    rgba(255, 253, 228, 0.98) 0%,
+    rgba(255, 250, 218, 0.95) 22%,
+    rgba(255, 247, 210, 0.80) 42%,
+    rgba(255, 247, 210, 0.38) 60%,
+    rgba(255, 247, 210, 0.08) 74%,
+    transparent 86%);
   color: #4a3210;
   box-shadow: none;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  padding: 32px 44px 28px;
-  mask-image: radial-gradient(ellipse 88% 82% at 50% 50%, black 30%, rgba(0,0,0,.7) 50%, transparent 72%);
-  -webkit-mask-image: radial-gradient(ellipse 88% 82% at 50% 50%, black 30%, rgba(0,0,0,.7) 50%, transparent 72%);
   animation: coinToastIn .52s cubic-bezier(.34,1.56,.64,1) both;
   will-change: transform, opacity;
   text-align: center;
 }
 .coin-toast-emoji {
-  font-size: 40px;
-  line-height: 1;
   flex: 0 0 auto;
-  animation: coinSpin 1.4s cubic-bezier(.34,1.2,.64,1) both;
   display: block;
+  filter: drop-shadow(0 3px 8px rgba(160,100,10,0.22));
+  animation: billFloat 0.72s cubic-bezier(.34,1.15,.64,1) both;
 }
 .coin-toast-body {
   display: flex;
@@ -344,10 +349,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   0%   { opacity: 1; transform: scale(1); }
   100% { opacity: 0; transform: scale(.88); }
 }
-@keyframes coinSpin {
-  0%   { transform: rotateY(0deg) scale(.6); opacity: 0; }
-  30%  { opacity: 1; }
-  100% { transform: rotateY(720deg) scale(1); opacity: 1; }
+@keyframes billFloat {
+  0%   { transform: rotate(-14deg) scale(0.35) translateY(10px); opacity: 0; }
+  52%  { transform: rotate(5deg)   scale(1.10) translateY(-4px); opacity: 1; }
+  74%  { transform: rotate(-2deg)  scale(0.97) translateY(1px);  opacity: 1; }
+  100% { transform: rotate(0deg)   scale(1)    translateY(0);     opacity: 1; }
 }
 @keyframes coinPulse {
   0%   { transform: scale(1);    box-shadow: 0 12px 28px rgba(70,53,26,.18); }
@@ -360,7 +366,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .expense-modal-head { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
 .expense-modal-head h2 { margin: 0; font-size: 28px; }
 .expense-modal-head > button { width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 50%; background: white; font-size: 25px; cursor: pointer; }
-.expense-modal-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0 2px; }
+.expense-modal-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0 2px; }
 .expense-modal-summary > div { padding: 13px 14px; border: 1px solid var(--line); border-radius: 14px; background: white; }
 .expense-modal-summary small { display: block; color: var(--muted); font-size: 10px; font-weight: 900; }
 .expense-modal-summary b { display: block; margin-top: 5px; color: var(--ink); font-size: 15px; }
@@ -468,8 +474,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   .cost-bar { top: 56px; right: 12px; padding: 0; }
   .bill-trigger { width: 46px; height: 46px; justify-content: center; padding: 0; border-radius: 50%; }
   .bill-trigger em { display: none; }
-  .coin-toast-card { max-width: calc(100vw - 40px); padding: 14px 18px 12px; gap: 6px; }
-  .coin-toast-emoji { font-size: 32px; }
+  .coin-toast-card { max-width: calc(100vw - 32px); padding: 40px 44px 36px; gap: 8px; }
+  .coin-toast-emoji svg { width: 64px; height: 34px; }
   .coin-toast-body em { font-size: 18px; }
   .coin-toast-body span { max-width: 180px; font-size: 12px; }
   .expense-modal-backdrop { align-items: end; padding: 0; }
@@ -1759,4 +1765,3 @@ html, body { overflow-x: clip; }
   .room-preparation-layout.simplified-room-layout { grid-template-columns: 1fr; }
   .prepared-item-list { grid-template-columns: 1fr; }
 }
-

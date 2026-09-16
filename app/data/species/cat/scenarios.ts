@@ -38,6 +38,7 @@ export const catLifeScenarios: Scenario[] = [
   {
     id: "cat-arrival-adjustment",
     stage: "一起生活的第一天",
+    stageId: "arrival",
     timeLabel: "一起生活的第一天",
     title: "第一次來到新家",
     description: "`{petName}` 剛到陌生的新家，躲在外出籠裡觀察。家人很想立刻摸摸牠、抱牠出來看看房間。",
@@ -169,3 +170,25 @@ export const catLifeScenarios: Scenario[] = [
     ],
   },
 ];
+
+const catIllnessByBreed = {
+  "british-shorthair": {
+    description: "最近你發現 {petName} 比平常更不想動，有時呼吸看起來稍微吃力，叫聲也少了。原本愛晒太陽的牠，最近更多時候只是靜靜坐著，連爬上平常最愛的貓跳台都提不起勁。",
+    reportSummary: "英短出現活動意願下降、呼吸改變等異常時，應記錄食慾、精神與症狀並聯絡獸醫；不要自行判斷或給藥。",
+    knowledge: "英國短毛貓較容易出現的健康問題需要定期留意。最需要關注的是**肥厚性心肌病（HCM）**——這是英短最常見的遺傳性心臟病，心肌增厚會影響心臟泵血功能，可能表現為活動意願下降、呼吸費力或變慢；定期心臟聽診與超音波是最有效的早期偵測方式。此外，英短因體型豐滿容易**過重**，應控制飲食份量並維持活動量，避免肥胖加重心臟與關節負擔。如果牠的行為或狀態有任何改變，記錄下來並聯絡獸醫。",
+  },
+  "mixed-cat": {
+    description: "最近你發現 {petName} 吃東西時有些遲疑，靠近時嘴巴有異味，牙齦看起來比以前紅；你也注意到牠的精神比平常差，叫聲少了，偶爾躲在角落不願出來。",
+    reportSummary: "米克斯貓出現口腔異味、進食遲疑或精神食慾改變時，應記錄症狀並聯絡獸醫；不要自行給藥。",
+    knowledge: "米克斯貓同樣需要定期留意健康狀況，尤其有收容所或街頭生活背景的貓咪更需要注意。常見需要觀察的問題包括：**牙周病（齒垢堆積、牙齦炎）**——口臭、進食遲疑或抓嘴可能是早期徵兆，定期口腔檢查是最有效的預防；**貓傳染病暴露風險**——貓白血病（FeLV）、貓愛滋（FIV）、貓泛白血球減少症（貓瘟）、貓卡里西病毒、貓鼻支氣管炎等，有收容所背景的貓咪應在初次就診時確認篩檢與疫苗狀態；以及**食慾或精神突然改變**——記錄變化並聯繫獸醫。",
+  },
+} as const;
+
+export function getCatLifeScenarios(breedId: string): Scenario[] {
+  const supportedBreedId = breedId === "british-shorthair" ? "british-shorthair" : "mixed-cat";
+  const illness = catIllnessByBreed[supportedBreedId];
+  return catLifeScenarios.map((scenario) => scenario.id !== "cat-illness-vet" ? scenario : {
+    ...scenario, speciesId: "cat", breedId: supportedBreedId, stageId: "life-change", order: 2, summaryCategory: "illness-vet",
+    description: illness.description, reportSummary: illness.reportSummary, breedKnowledge: illness.knowledge,
+  });
+}

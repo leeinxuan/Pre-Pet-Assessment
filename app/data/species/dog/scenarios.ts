@@ -5,6 +5,7 @@ export const dogLifeScenarios: Scenario[] = [
   {
     id: "arrival-adjustment",
     stage: "一起生活的第一天",
+    stageId: "arrival",
     timeLabel: "一起生活的第一天",
     title: "第一天適應新家",
     description: "豆豆剛走進陌生的新家，躲在外出籠旁觀察，家人都很想立刻和牠打招呼。",
@@ -132,7 +133,7 @@ export const dogLifeScenarios: Scenario[] = [
     reportSummary: "狗狗進入高齡後，可能出現行動退化、排泄照護與醫療需求；應提早準備時間、環境調整和醫療基金。",
     artIndex: 1,
     choices: [
-      { id: "senior-plan-ahead", text: "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫", result: "correct", ...positive, explanation: "提前準備能幫助飼主在高齡階段更穩定地照顧小狗，也能及早安排健康觀察、醫療需求與長期照顧。" },
+      { id: "senior-plan-ahead", text: "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫", result: "correct", ...positive, explanation: "提前準備能幫助飼主在高齡階段更穩定地照顧小狗，也能及早安排健康觀察、醫療需求與長期照顧。", expenseIds: ["sick-vet-care", "dog-senior-room", "dog-senior-checkup"] },
       { id: "senior-wait", text: "等到牠真的很嚴重再處理，平常不用特別準備", result: "incorrect", ...incorrect, explanation: "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓小狗承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。" },
       { id: "senior-human-medicine", text: "自行判斷並使用人用藥物或網路偏方", result: "incorrect", ...incorrect, explanation: "人用藥物或網路偏方可能對小狗造成危險。高齡階段若有健康疑慮，應諮詢獸醫並依專業建議處理。", suggestion: "不要自行給藥；記錄觀察到的變化，再與獸醫討論適合的照顧方式。" },
       { id: "senior-supplements-first", text: "先買大家推薦的保健食品補一補，等下次有空再安排檢查", result: "incorrect", ...incorrect, explanation: "想提早保養是好意，但保健食品不能取代健康檢查，也未必適合牠當下的身體狀況。", suggestion: "先把活動、食慾與排泄變化記下來，和獸醫討論檢查及適合的日常調整。" },
@@ -140,3 +141,27 @@ export const dogLifeScenarios: Scenario[] = [
   },
 ];
 
+const dogIllnessByBreed = {
+  shiba: {
+    title: "柴犬常見健康問題觀察",
+    description: "最近你發現 {petName} 常常舔腳、抓癢，走路時偶爾不太想跳上跳下，眼睛也有些紅紅的。",
+    reportSummary: "出現搔癢、活動力下降或眼睛紅等變化時，應記錄食慾、精神與症狀並詢問獸醫，不要自行餵人用藥。",
+    knowledge: "柴犬較常見需要留意的健康問題包括：**皮膚過敏或搔癢**、掉毛、紅腫；**關節不適**、跛行或活動力下降；**眼睛分泌物增加、紅眼或視力異常**。如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。",
+  },
+  mixed: {
+    title: "米克斯常見健康問題觀察",
+    description: "最近你發現 {petName} 吃東西的動作有些遲疑，嘴巴靠近時有異味，牙齦看起來比以前紅；你也注意到牠偶爾在身上抓個不停，撥開毛看到一些小黑點。",
+    reportSummary: "米克斯犬出現口腔異味、進食遲疑、外寄生蟲或精神食慾改變時，應記錄症狀並聯絡獸醫，不要自行給藥。",
+    knowledge: "米克斯犬同樣需要定期留意健康狀況。常見需要觀察的問題包括：**牙周病（齒垢堆積、牙齦炎）**——口臭、進食遲疑或抓嘴都可能是早期徵兆；**外寄生蟲（跳蚤、蜱蟲）**——尤其曾在戶外活動或收容所的米克斯，應定期確認並進行防治；以及**食慾或精神突然改變**——可能來自消化、感染或其他問題，記錄變化並聯繫獸醫。",
+  },
+} as const;
+
+export function getDogLifeScenarios(breedId: string): Scenario[] {
+  const supportedBreedId = breedId === "mixed" ? "mixed" : "shiba";
+  const illness = dogIllnessByBreed[supportedBreedId];
+  return dogLifeScenarios.map((scenario) => scenario.id !== "illness-vet" ? scenario : {
+    ...scenario, speciesId: "dog", breedId: supportedBreedId, stageId: "life-change", order: 2, summaryCategory: "illness-vet",
+    title: illness.title, description: illness.description, reportSummary: illness.reportSummary, breedKnowledge: illness.knowledge,
+    choices: scenario.choices.map((choice) => choice.id === "record-and-vet" ? { ...choice, suggestion: illness.knowledge } : choice),
+  });
+}

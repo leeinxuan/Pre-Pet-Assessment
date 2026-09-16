@@ -733,6 +733,7 @@ function VideoScenarioActivity({
   breed,
   onChoose,
   onCorrectComplete,
+  onCorrectFeedbackShown,
   resetSignal,
   onReplay,
   continueImmediately = false,
@@ -743,6 +744,7 @@ function VideoScenarioActivity({
   breed: string;
   onChoose: (choice: ScenarioChoice) => void;
   onCorrectComplete: () => void;
+  onCorrectFeedbackShown?: (scenario: Scenario, choice: ScenarioChoice) => void;
   resetSignal: number;
   onReplay?: () => void;
   continueImmediately?: boolean;
@@ -773,18 +775,17 @@ function VideoScenarioActivity({
 
   function choose(choice: ScenarioChoice) {
     onChoose(choice);
+    if (choice.result === "correct" && scenario.stageId === "arrival") onCorrectFeedbackShown?.(scenario, choice);
     setVideoFailed(false);
     setVideoFinished(false);
     setMode(choice.result === "correct" ? "positive" : "incorrect");
   }
 
   if (mode === "positive" && selectedChoice) {
-    const catFeedback = isCatScenario
+    const catFeedback = isCatScenario && !(scenario.id === "cat-illness-vet" && scenario.breedKnowledge)
       ? catScenarioCorrectFeedback[scenario.id as keyof typeof catScenarioCorrectFeedback]
       : undefined;
-    const breedSpecificSuggestion = scenario.id === "illness-vet" && selectedChoice.suggestion
-      ? healthSuggestionForBreed(breed, selectedChoice.suggestion)
-      : "";
+    const breedSpecificSuggestion = scenario.breedKnowledge ?? (scenario.id === "illness-vet" && selectedChoice.suggestion ? selectedChoice.suggestion : "");
     const [breedKnowledge = "", followupSuggestion = ""] = breedSpecificSuggestion.split("\n\n");
     const isSeniorScenario = scenario.id === "growing-old";
     return (
@@ -804,7 +805,7 @@ function VideoScenarioActivity({
           <p>{plainFeedbackText(withPetName(catFeedback.reminder, petName))}</p>
         ) : followupSuggestion ? (
           <p>{plainFeedbackText(withPetName(followupSuggestion, petName))}</p>
-        ) : selectedChoice.suggestion ? (
+        ) : !breedKnowledge && selectedChoice.suggestion ? (
           <p>{plainFeedbackText(withPetName(withBreedName(selectedChoice.suggestion, breed), petName))}</p>
         ) : null}
         otherTips={catFeedback ? null : isSeniorScenario ? <SeniorMedicalKnowledge /> : <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />}
@@ -889,7 +890,7 @@ function DailyBehaviorActivity({
   if (!scenario) return null;
   const correctSummary = scenario.correctSummary ?? scenario.choices.filter((choice) => choice.result === "correct").map((choice) => choice.text);
   const learningPoints = scenario.learningPoints ?? correctSummary;
-  const displayPetName = petName || petNameFallback(species);
+  const displayPetName = petName || petNameFallback("dog");
   const correctIntroByScenario: Record<string, string> = {
     "behavior-barking": `面對${displayPetName}吠叫時，先理解原因再協助牠穩定下來。`,
     "behavior-chewing": `${displayPetName}亂咬常和探索、無聊、換牙或壓力有關。`,
@@ -1436,7 +1437,6 @@ function BreedChallengeActivity({
   const scenario = scenarios[currentIndex];
   const selectedChoice = scenario?.choices.find((choice) => choice.id === answers[scenario.id]?.finalChoiceId);
   const breedLabel = breedChallengeLabelForId(breed);
-  const isCatBreedChallenge = breed === "mixed-cat" || breed === "british-shorthair";
   const challengeVideoSource = scenario ? breedChallengeVideos[scenario.title] : undefined;
 
   useEffect(() => {
@@ -1506,11 +1506,6 @@ function BreedChallengeActivity({
         <div className={challengeVideoSource && !questionVideoFailed ? "breed-challenge-video-placeholder breed-challenge-video-frame" : "breed-challenge-video-placeholder"}>
           {challengeVideoSource && !questionVideoFailed ? (
             <VideoWithToggle className="breed-challenge-video" src={challengeVideoSource} loop ariaLabel={`${scenario.title}情境影片`} onError={() => setQuestionVideoFailed(true)} />
-          ) : isCatBreedChallenge ? (
-            <>
-              <img className="breed-challenge-cat-art" src={breed === "british-shorthair" ? catAssets.life.britishShorthair : catAssets.life.mixedCat} alt={`${breedLabel}情境插圖`} />
-              <b>{scenario.title}</b><p>請依情境想想最適合牠的照顧安排。</p>
-            </>
           ) : (
             <><span>影片製作中</span><b>{scenario.title}</b><p>情境影片將於後續補上。</p></>
           )}
@@ -3158,7 +3153,7 @@ export function LifeJourney({
   onComplete: () => void;
 }) {
   const activeJourneyItems = getJourneyItemsForSpecies(species);
-  const activeLifeScenarios = getLifeScenariosForSpecies(species);
+  const activeLifeScenarios = getLifeScenariosForSpecies(species, breed);
   const item = activeJourneyItems[index] ?? activeJourneyItems[0];
   const scenario = item.scenarioId ? activeLifeScenarios.find((entry) => entry.id === item.scenarioId) : undefined;
   const answer = scenario ? answers[scenario.id] : undefined;
@@ -3403,6 +3398,7 @@ export function LifeJourney({
           breed={breed}
           onChoose={choose}
           onCorrectComplete={continueScenario}
+          onCorrectFeedbackShown={(_scenario, choice) => choice.expenseIds?.forEach(onAddExpense)}
           resetSignal={currentResetSignal}
           {...replayCorrectProps}
         />
