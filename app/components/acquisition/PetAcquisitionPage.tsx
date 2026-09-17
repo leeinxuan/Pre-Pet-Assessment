@@ -49,7 +49,7 @@ function AcquisitionInfoDialog({ card, onClose }: { card: PetSource; onClose: ()
       <p className="acquisition-dialog-positioning">{card.oneLinePositioning}</p>
       <section className="acquisition-dialog-section"><h3>適合你如果⋯⋯</h3><ul>{card.suitableFor.map((item) => <li key={item}>{item}</li>)}</ul></section>
       <section className="acquisition-dialog-section"><h3>去之前要確認的事</h3><ul>{card.checksBeforeVisit.map((item) => <li key={item}>{item}</li>)}</ul></section>
-      {card.url && <a className="primary acquisition-dialog-source" href={card.url} target="_blank" rel="noopener noreferrer">前往網站 <span>↗</span></a>}
+      {card.url && <a className="primary acquisition-dialog-source" href={card.url} target="_blank" rel="noopener noreferrer">{card.linkLabel ?? "前往網站"} <span>↗</span></a>}
     </section>
   </div>;
 }

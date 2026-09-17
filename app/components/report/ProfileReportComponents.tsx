@@ -1453,7 +1453,7 @@ export function AssessmentReport({
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
           <div className="care-resource-grid">
-            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><p><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></p><p><small>初期準備金<br />第一次需要準備的總金額</small><b>NT$ {money.format(initialPreparationTotal)}</b></p></div><p>臨時性支出會依健康與高齡照護狀況發生，建議另外預留備用金。</p><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
+            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><p><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></p><p><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}</b></p></div><p>臨時性支出會依健康與高齡照護狀況發生，建議另外預留備用金。</p><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
             <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><b>{speciesConfig.report.dailyCareTime}</b><p>{speciesConfig.report.dailyCareTimeNote}</p><button type="button" className="secondary care-expense-button" onClick={() => setDailyCareDetailsOpen(true)}>查看每日照護細項</button></div></article>
           </div>
         </section>

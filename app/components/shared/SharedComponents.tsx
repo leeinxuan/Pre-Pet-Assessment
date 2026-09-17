@@ -490,8 +490,6 @@ const expenseLabels = {
   currentCostStatus: "\u76ee\u524d\u8cbb\u7528\u72c0\u6cc1",
   viewDetails: "\u67e5\u770b\u660e\u7d30",
   monthlySuffix: "\uff0f\u6708",
-  monthlyType: "\u6bcf\u6708\u652f\u51fa",
-  oneTimeType: "\u4e00\u6b21\u6027\u652f\u51fa",
   addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
@@ -573,41 +571,40 @@ function detailGroupForExpense(item: ExpenseRecord): ExpenseDetailGroup {
   return expenseLabels.oneTimePrep;
 }
 
-function expenseTypeLabel(item: ExpenseRecord) {
-  if (isMonthlyExpense(item)) return expenseLabels.monthlyType;
-  return expenseLabels.oneTimeType;
-}
-
 export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses: ExpenseRecord[]; breed: string; species?: string; onClose: () => void }) {
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const preparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyTotal = getMonthlyBasicTotal(visibleExpenses);
   const temporaryMedicalTotal = getTemporaryExpenseTotal(visibleExpenses);
-  const grouped = expenseDetailGroupOrder.map((group) => ({
-    group,
-    items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group),
-  }));
+  const grouped = expenseDetailGroupOrder.map((group) => ({ group, items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group) }));
+  const oneTimePreparation = grouped.find((entry) => entry.group === expenseLabels.oneTimePrep)?.items ?? [];
+  const requiredAfterArrival = grouped.find((entry) => entry.group === expenseLabels.requiredAfterArrival)?.items ?? [];
+  const monthlyExpenses = grouped.find((entry) => entry.group === expenseLabels.monthlyBasic)?.items ?? [];
+  const temporaryExpenses = grouped.find((entry) => entry.group === expenseLabels.temporaryMedical)?.items ?? [];
+  const totalFor = (items: ExpenseRecord[]) => items.reduce((sum, item) => sum + item.amount, 0);
+  const renderItems = (items: ExpenseRecord[]) => items.length ? (
+    <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.description ?? item.stage}</small></span><strong>NT$ {money.format(item.amount)}{isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}</strong></li>)}</ul>
+  ) : <p>{expenseLabels.noGroupExpenses}</p>;
 
   return (
     <div className="expense-modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section className="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-title" onMouseDown={(event) => event.stopPropagation()}>
         <div className="expense-modal-head"><div><p className="eyebrow">{expenseLabels.detailEyebrow}</p><h2 id="expense-title">{expenseLabels.detailTitle}</h2></div><button onClick={onClose} aria-label={expenseLabels.closeDetails}>x</button></div>
         <div className="expense-modal-summary" aria-label="費用摘要">
-          <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}</b><small>第一次需要準備的總金額</small></div>
-          <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b><small>每月預估金額</small></div>
-          <div><small>{expenseLabels.temporaryMedical}</small><b>NT$ {money.format(temporaryMedicalTotal)}</b><small>非固定、視情況發生的支出</small></div>
+          <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}</b></div>
+          <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
+          <div><small>{expenseLabels.temporaryMedical}</small><b>NT$ {money.format(temporaryMedicalTotal)}</b></div>
         </div>
         <div className="expense-groups">
-          {grouped.map(({ group, items }) => (
-            <div key={group}>
-              <h3>{group}<span>NT$ {money.format(items.reduce((sum, item) => sum + item.amount, 0))}{items.some(isMonthlyExpense) ? expenseLabels.monthlySuffix : ""}</span></h3>
-              {items.length ? (
-                <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.description ?? `${item.stage} / ${expenseTypeLabel(item)}`}</small></span><strong>NT$ {money.format(item.amount)}{isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}</strong></li>)}</ul>
-              ) : (
-                <p>{expenseLabels.noGroupExpenses}</p>
-              )}
+          <section className="expense-group expense-group--initial">
+            <h3>{expenseLabels.initialPreparation}<span>NT$ {money.format(preparationTotal)}</span></h3>
+            <div className="expense-initial-subgroups">
+              <section className="expense-initial-subgroup"><h4>{expenseLabels.oneTimePrep}<span>NT$ {money.format(totalFor(oneTimePreparation))}</span></h4>{renderItems(oneTimePreparation)}</section>
+              <section className="expense-initial-subgroup"><h4>{expenseLabels.requiredAfterArrival}<span>NT$ {money.format(totalFor(requiredAfterArrival))}</span></h4>{renderItems(requiredAfterArrival)}</section>
             </div>
-          ))}
+          </section>
+          <section className="expense-group"><h3>{expenseLabels.monthlyBasic}<span>NT$ {money.format(totalFor(monthlyExpenses))}{expenseLabels.monthlySuffix}</span></h3>{renderItems(monthlyExpenses)}</section>
+          <section className="expense-group"><h3>{expenseLabels.temporaryMedical}<span>NT$ {money.format(totalFor(temporaryExpenses))}</span></h3>{renderItems(temporaryExpenses)}</section>
         </div>
         <button className="primary" onClick={onClose}>{expenseLabels.closeDetails}</button>
       </section>

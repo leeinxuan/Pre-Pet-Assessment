@@ -371,8 +371,13 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .expense-modal-summary small { display: block; color: var(--muted); font-size: 10px; font-weight: 900; }
 .expense-modal-summary b { display: block; margin-top: 5px; color: var(--ink); font-size: 15px; }
 .expense-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
-.expense-groups > div { padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: white; }
-.expense-groups h3 { margin: 0 0 12px; }
+.expense-group { padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: white; }
+.expense-group--initial { grid-column: 1 / -1; padding: 20px; border-color: #cdb47a; background: #fffdf7; }
+.expense-groups h3, .expense-initial-subgroup h4 { display: flex; justify-content: space-between; gap: 12px; margin: 0 0 12px; color: var(--ink); }
+.expense-groups h3 span, .expense-initial-subgroup h4 span { white-space: nowrap; color: var(--gold-dark); font-size: 14px; }
+.expense-initial-subgroups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.expense-initial-subgroup { min-width: 0; padding: 16px; border: 1px solid #e7ddca; border-radius: 13px; background: rgba(255,255,255,.72); }
+.expense-initial-subgroup h4 { margin-bottom: 10px; font-size: 14px; }
 .expense-groups ul { list-style: none; padding: 0; margin: 0; }
 .expense-groups li { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid #eee8dc; }
 .expense-groups li:last-child { border-bottom: 0; }
@@ -482,6 +487,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   .expense-modal { width: 100%; max-height: 86vh; padding: 20px; border-radius: 24px 24px 0 0; }
   .expense-modal-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .expense-groups { grid-template-columns: 1fr; }
+  .expense-initial-subgroups { grid-template-columns: 1fr; }
   .expense-modal-summary > div { min-width: 0; padding: 12px 10px; }
   .expense-modal-summary small { font-size: 9.5px; line-height: 1.35; }
   .expense-modal-summary b { font-size: 14px; }
@@ -772,7 +778,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-resource-grid b { display: block; margin-top: 9px; color: var(--ink); font-size: 22px; }
 .care-resource-grid p { margin: 8px 0 0; color: var(--muted); font-size: 13px; font-weight: 750; line-height: 1.6; }
 .care-cost-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
-.care-cost-summary p { margin: 0; padding: 12px; border-left: 3px solid #d6af58; background: rgba(255,255,255,.64); }
+.care-cost-summary p { display: flex; min-height: 84px; flex-direction: column; justify-content: space-between; margin: 0; padding: 12px; border-left: 3px solid #d6af58; background: rgba(255,255,255,.64); }
 .care-cost-summary small { display: block; color: var(--muted); font-size: 12px; font-weight: 800; }.care-cost-summary b { margin-top: 3px; font-size: 19px; }.care-cost-summary em { color: var(--gold-dark); font-size: 12px; font-style: normal; }
 .care-expense-button { margin-top: 13px; min-height: 38px; padding: 8px 13px; font-size: 13px; }
 .care-daily-detail-list { display: grid; gap: 0; margin: 14px 0 0; padding: 0; list-style: none; border-top: 1px solid rgba(117, 80, 13, .18); }
