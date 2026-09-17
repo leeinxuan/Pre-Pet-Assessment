@@ -10,8 +10,12 @@ import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, S
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
   ExpenseDetails,
+  getExpenseItemSummary,
+  getInitialPreparationBreakdown,
   getInitialPreparationTotal,
   getMonthlyBasicTotal,
+  getTemporaryExpenseTotal,
+  isTemporaryOrMedicalExpense,
   mergeDefaultVisibleExpenses,
   NavButtons,
 } from "../shared/SharedComponents";
@@ -21,6 +25,11 @@ const a4PageHeightPt = 841.89;
 
 function personalizeReportText(text: string, petName: string, species?: string) {
   return interpolatePetName(text, petName, species);
+}
+
+/** 各物種資料保留完整句子；回顧卡只呈現可掃讀的實際時間值。 */
+function dailyCareDurationLabel(value: string) {
+  return value.replace(/^每日約需安排\s*/, "");
 }
 
 function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {
@@ -1014,6 +1023,10 @@ export function AssessmentReport({
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const initialPreparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyBasicTotal = getMonthlyBasicTotal(visibleExpenses);
+  const temporaryExpenseTotal = getTemporaryExpenseTotal(visibleExpenses);
+  const initialPreparationBreakdown = getInitialPreparationBreakdown(visibleExpenses);
+  const monthlyExpenses = visibleExpenses.filter((item) => item.recurring);
+  const temporaryExpenses = visibleExpenses.filter((item) => !item.recurring && isTemporaryOrMedicalExpense(item));
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
   const reportScenarios = getAllScenariosForSpecies(species, breed);
@@ -1168,14 +1181,14 @@ export function AssessmentReport({
       icon: "⌂",
       title: "安全生活空間",
       summary: "讓牠能在熟悉、可退回的環境裡，按照自己的節奏安心生活。",
-      scenarioIds: ["cat-arrival-adjustment", "cat-indoor-outdoor-care"],
+      scenarioIds: ["cat-arrival-adjustment"],
     },
     {
       id: "cat-daily-care",
       icon: "✦",
       title: "日常照護",
       summary: "把互動、抓磨與環境清潔安排成每天可持續的照顧節奏。",
-      scenarioIds: ["cat-night-energy-care", "cat-scratching-care"],
+      scenarioIds: ["cat-night-energy-care", "cat-scratching-care", "cat-climbing-care"],
     },
     {
       id: "cat-breed-care",
@@ -1365,22 +1378,20 @@ export function AssessmentReport({
         </header>
         <section className="care-a4-money" aria-label="預估支出">
           <h2>預估支出</h2>
-          <div className="care-a4-money-types">
-            <h3>支出包含</h3>
-            <ul>
-              <li><span>初期準備金</span><b>NT$ {money.format(initialPreparationTotal)}</b></li>
-              <li className="care-a4-money-note">（第一次需要準備的總金額，包含領養前環境佈置、出發前準備與到家後必要支出）</li>
-              <li><span>每月預估支出</span><b>NT$ {money.format(monthlyBasicTotal)}／月</b></li>
-            </ul>
+          <div className="care-a4-expense-cards">
+            <section className="care-a4-expense-card">
+              <h3>初期準備金</h3><strong>NT$ {money.format(initialPreparationTotal)}</strong>
+              <div><p>第一次需要準備的總金額，包含：</p><dl>{[initialPreparationBreakdown.afterArrival, initialPreparationBreakdown.environment, initialPreparationBreakdown.departure].map((source) => <div key={source.label}><dt>{source.label}</dt><dd>NT$ {money.format(source.total)}</dd></div>)}</dl></div>
+            </section>
+            <section className="care-a4-expense-card">
+              <h3>每月預估支出</h3><strong>NT$ {money.format(monthlyBasicTotal)}／月</strong>
+              <div><p>{getExpenseItemSummary(monthlyExpenses)}</p></div>
+            </section>
+            <section className="care-a4-expense-card">
+              <h3>臨時性支出</h3><strong>NT$ {money.format(temporaryExpenseTotal)}</strong>
+              <div><p>{getExpenseItemSummary(temporaryExpenses)}</p></div>
+            </section>
           </div>
-          <div className="care-a4-money-summary">
-            <h3>金額摘要</h3>
-            <dl>
-              <div><dt>每月預估支出</dt><dd>NT$ {money.format(monthlyBasicTotal)}</dd></div>
-              <div className="care-a4-money-total"><dt>初期準備金</dt><dd>NT$ {money.format(initialPreparationTotal)}</dd></div>
-            </dl>
-          </div>
-          <p className="care-a4-money-disclaimer"><span className="care-a4-money-disclaimer-icon" aria-hidden="true">💡</span><span>{speciesConfig.report.moneyDisclaimer}</span></p>
         </section>
 
         <section className="care-a4-daily-time" aria-label="每日投入時間">
@@ -1453,8 +1464,8 @@ export function AssessmentReport({
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
           <div className="care-resource-grid">
-            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><p><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></p><p><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}</b></p></div><p>臨時性支出會依健康與高齡照護狀況發生，建議另外預留備用金。</p><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
-            <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><b>{speciesConfig.report.dailyCareTime}</b><p>{speciesConfig.report.dailyCareTimeNote}</p><button type="button" className="secondary care-expense-button" onClick={() => setDailyCareDetailsOpen(true)}>查看每日照護細項</button></div></article>
+            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><section><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></section><section><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}</b></section></div><p>臨時性支出會依健康與高齡照護狀況發生，建議另外預留備用金。</p><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
+            <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><section className="care-time-summary"><small>每日約需安排</small><b>{dailyCareDurationLabel(speciesConfig.report.dailyCareTime)}</b></section><p>{speciesConfig.report.dailyCareTimeNote}</p><button type="button" className="secondary care-expense-button" onClick={() => setDailyCareDetailsOpen(true)}>查看每日照護細項</button></div></article>
           </div>
         </section>
 

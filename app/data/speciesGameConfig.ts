@@ -33,7 +33,6 @@ export type SpeciesCopy = {
 export type SpeciesReportConfig = {
   checklistGroups: Array<{ title: string; items: string[] }>;
   handlingRows: Array<[string, string]>;
-  moneyDisclaimer: string;
   /** 供網頁回顧與正式照護指南共同使用；不要在元件內硬寫物種時間。 */
   dailyCareTime: string;
   dailyCareTimeNote: string;

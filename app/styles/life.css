@@ -492,7 +492,7 @@
 .cat-litter-stage-rail li.is-active span { border-color: var(--gold); background: var(--gold); color: white; box-shadow: 0 4px 12px rgba(212, 154, 36, .24); }
 .cat-litter-stage-rail li.is-complete { color: #4d8055; opacity: .82; }
 .cat-litter-stage-rail li.is-complete span { border-color: var(--mint); background: var(--mint); color: white; }
-.cat-rescue-layout { display: block; }
+.cat-rescue-layout { display: flex; flex-direction: column; align-items: stretch; }
 .cat-litter-rescue .cat-rescue-scene {
   min-height: clamp(460px, 55vw, 580px);
   overflow: hidden;
@@ -532,6 +532,13 @@
 .cat-litter-rescue .cat-rescue-event-card b { display: none; }
 .cat-litter-rescue .cat-rescue-event-card p { margin: 0; color: var(--ink); font-size: 13px; font-weight: 900; line-height: 1.45; }
 .cat-litter-rescue .cat-rescue-event-card small { display: block; max-width: 520px; margin: 7px auto 0; color: var(--muted); font-size: 11px; font-weight: 800; line-height: 1.5; }
+.cat-litter-rescue .cat-rescue-event-card.is-helper-only small {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.45;
+}
 .cat-litter-rescue .cat-rescue-litter-box {
   left: 50%;
   top: 53%;
@@ -586,6 +593,19 @@
   background: transparent;
   box-shadow: none;
 }
+.cat-litter-rescue .cat-rescue-choice-card .cat-rescue-action-icon {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.cat-litter-rescue .cat-rescue-choice-card .cat-rescue-action-icon:hover,
+.cat-litter-rescue .cat-rescue-choice-card .cat-rescue-action-icon:focus-visible {
+  border: 0;
+  background: transparent;
+}
 .cat-litter-rescue .cat-rescue-tool-card b,
 .cat-litter-rescue .cat-rescue-choice-card b {
   color: var(--ink);
@@ -615,7 +635,8 @@
 .cat-litter-rescue .cat-rescue-action-icon:hover,
 .cat-litter-rescue .cat-rescue-action-icon:focus-visible { border: 0; background: transparent; filter: drop-shadow(0 12px 12px rgba(168, 101, 9, .24)); transform: translateY(-5px) rotate(-3deg); }
 .cat-litter-rescue .cat-rescue-drag-ghost { animation: catLitterGrab .24s ease-out both; }
-.cat-litter-rescue .cat-rescue-finish-card .primary { min-height: 48px; margin-top: 5px; }
+.cat-litter-rescue .cat-rescue-finish-action { display: flex; justify-content: flex-end; padding: 14px 2px 0; }
+.cat-litter-rescue .cat-rescue-finish-action .primary { min-height: 48px; }
 .bird-cage-activity { display: grid; gap: 16px; }
 .bird-cage-scene { position: relative; min-height: 480px; overflow: hidden; border-radius: 28px; background: linear-gradient(145deg, #fbf4e5, #e7f0e6); }
 .bird-cage-image { position: absolute; left: 50%; top: 50%; width: min(53%, 420px); height: 76%; object-fit: contain; transform: translate(-50%, -50%); }
@@ -810,6 +831,7 @@
     width: min(25%, 112px) !important;
   }
   .cat-litter-rescue .cat-rescue-controls { left: 7%; bottom: 8%; }
+  .cat-litter-rescue .cat-rescue-finish-action { padding: 14px 2px calc(12px + env(safe-area-inset-bottom)); }
   .cat-litter-rescue .cat-rescue-scoop-tool,
   .cat-litter-rescue .cat-rescue-action-icon { width: 84px; height: 84px; }
   .cat-litter-rescue .cat-rescue-tool-card b,

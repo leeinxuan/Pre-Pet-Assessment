@@ -12,7 +12,7 @@ export const catJourneyItems: JourneyItem[] = [
 ];
 
 /** 貓咪日常照護三題的固定識別碼；重做時選項與答題紀錄保持一致。 */
-export const catDailyBehaviorScenarioIds = ["cat-night-energy-care", "cat-scratching-care", "cat-indoor-outdoor-care"] as const;
+export const catDailyBehaviorScenarioIds = ["cat-night-energy-care", "cat-scratching-care", "cat-climbing-care"] as const;
 
 /**
  * 貓咪專屬玩法：貓砂盆救援隊。

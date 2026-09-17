@@ -546,6 +546,28 @@ export function getTemporaryExpenseTotal(expenses: ExpenseRecord[]) {
   return expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.temporaryMedical).reduce((sum, item) => sum + item.amount, 0);
 }
 
+/** 初期準備金的來源分組，供回顧、明細與輸出共用；不改變原始費用分類或加總。 */
+export function getInitialPreparationBreakdown(expenses: ExpenseRecord[]) {
+  const initialExpenses = expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.initialPreparation);
+  const afterArrival = initialExpenses.filter(isRequiredAfterArrivalExpense);
+  const departure = initialExpenses.filter((item) => !isRequiredAfterArrivalExpense(item) && item.stage === "出發前準備");
+  const environment = initialExpenses.filter((item) => !afterArrival.includes(item) && !departure.includes(item));
+  const totalFor = (items: ExpenseRecord[]) => items.reduce((sum, item) => sum + item.amount, 0);
+
+  return {
+    afterArrival: { label: "到家後必要支出", items: afterArrival, total: totalFor(afterArrival) },
+    environment: { label: "領養前環境佈置", items: environment, total: totalFor(environment) },
+    departure: { label: "出發前準備", items: departure, total: totalFor(departure) },
+  };
+}
+
+/** 以已登記項目產生短摘要，避免不同物種共用硬寫的費用文案。 */
+export function getExpenseItemSummary(items: ExpenseRecord[]) {
+  if (!items.length) return "目前尚未登記項目";
+  const names = Array.from(new Set(items.map((item) => item.name)));
+  return `包含${names.slice(0, 3).join("、")}${names.length > 3 ? "等項目" : ""}`;
+}
+
 /** 全物種共用累積支出：已登記的所有分類都只加總一次。 */
 export function getAccumulatedExpenseTotal(expenses: ExpenseRecord[]) {
   return expenses.reduce((sum, item) => sum + item.amount, 0);

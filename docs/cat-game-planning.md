@@ -195,7 +195,7 @@
 
 #### 5.3.1 行為情境題組（DailyCareScenarios）
 
-貓版日常照護共 3 題情境，`catDailyBehaviorScenarioIds` = `["cat-night-energy-care", "cat-scratching-care", "cat-indoor-outdoor-care"]`
+貓版日常照護共 3 題情境，`catDailyBehaviorScenarioIds` = `["cat-night-energy-care", "cat-scratching-care", "cat-climbing-care"]`
 
 ---
 
@@ -263,35 +263,35 @@
 
 ---
 
-##### 情境 D-3：牠不想出門（cat-indoor-outdoor-care）
+##### 情境 D-3：牠把東西推下來了（cat-climbing-care）
 
 **場景標題（timeLabel）**：日常照護
 
-**情境**：家人覺得貓咪也應該像散步一樣出門走走，但牠看到外出籠就緊張後退。你會怎麼安排？
+**情境**：牠最近愛爬到書架和冰箱上面，桌上的杯子也被推下來摔碎了。你會怎麼處理？
 
-**topic**：貓咪外出壓力與室內照護
+**topic**：貓咪攀爬本能與居家安全管理
 
 **問題**：你應該怎麼做？（請選出所有正確選項）
 
 | 選項 id | 選項文字 | 正確性 | explanation | suggestion |
 |---|---|---|---|---|
-| `cat-outdoor-respect-boundary` | 看見牠緊張就先停止，不強迫牠出門散步 | ✅ 正確 | 尊重壓力訊號能減少焦慮累積。 | — |
-| `cat-outdoor-indoor-enrichment` | 在室內安排跳台、抓板、安全玩具與陪玩時間 | ✅ 正確 | 室內豐富化能滿足活動與互動需求。 | — |
-| `cat-outdoor-carrier` | 把外出籠放在日常可接觸的位置，慢慢練習需要外出時的安全移動 | ✅ 正確 | 平時讓外出籠變成可接受的物品，有助就醫或移動。 | — |
-| `cat-outdoor-force-walk` | 直接抱牠出門，多去幾次就會習慣 | ❌ 錯誤 | 強迫外出可能增加焦慮與逃脫風險。 | 先尊重牠留在室內的需求，並提供安全的室內活動。 |
+| `cat-climb-provide-tree` | 設置貓跳台或貓抓柱，提供安全的垂直活動空間 | ✅ 正確 | 貓咪偏好上下跳躍，提供合適的攀爬設施能滿足天性，也減少牠往危險地方爬的機會。 | — |
+| `cat-climb-secure-items` | 將貴重或易碎物品收好或固定，避免被推落打翻 | ✅ 正確 | 貓咪習性喜歡待在高處，也容易因好奇而有突如其來的危險舉動，應注意居家環境中的貴重或危險物品。 | — |
+| `cat-climb-window-guard` | 確認門窗、紗窗穩固，避免牠因好奇而發生墜落意外 | ✅ 正確 | 高樓層飼主應特別注意門窗、紗窗必須穩固，慎防貓咪因好奇而不慎發生墜樓意外。 | — |
+| `cat-climb-spray-water` | 每次爬上去就用噴水瓶噴牠，讓牠知道那裡不能去 | ❌ 錯誤 | 噴水等懲罰方式可能讓貓咪感到壓力與焦慮，且無法滿足牠攀爬的天性需求，問題行為通常只是轉移而非改善。 | 提供合適的垂直空間，並做好環境安全防護，才能從根本減少衝突。 |
 
-**requiredCorrectOptionIds**：`["cat-outdoor-respect-boundary", "cat-outdoor-indoor-enrichment", "cat-outdoor-carrier"]`
+**requiredCorrectOptionIds**：`["cat-climb-provide-tree", "cat-climb-secure-items", "cat-climb-window-guard"]`
 
 **全部正確時顯示（做得很好）**
 
 **正確摘要（correctSummary）**：
-- 尊重牠的壓力訊號，不強迫外出。
-- 在室內安排跳台、抓板、安全玩具與陪玩時間。
-- 平時讓外出籠成為可接受的物品，練習安全移動。
+- 設置貓跳台或貓抓柱，提供安全的垂直活動空間。
+- 將貴重或易碎物品收好或固定，避免被推落打翻。
+- 確認門窗、紗窗穩固，避免牠因好奇而發生墜落意外。
 
-**貓咪小知識（learningPoints）**：多數貓咪**不需每天外出**，室內豐富化已能滿足日常需求；平時讓**外出籠**成為可接受的物品，就醫時壓力更小。
+**貓咪小知識（learningPoints）**：貓咪喜歡爬高是天性，設置**貓跳台**等垂直活動設施，能同時滿足牠的活動需求；高樓層飼主也要特別注意**門窗與紗窗**的穩固度，慎防**墜樓意外**。
 
-**reportSummary**：多數貓咪不需要每天外出活動；當牠不想接近外出用品時，應尊重牠留在室內的需求，提供抓板、跳台與安全玩具等環境豐富化。
+**reportSummary**：貓咪偏好高處是天性；設置貓跳台提供安全的垂直活動空間，同時將易碎物品收好、確認門窗紗窗穩固，是居家照護的基本安全措施。
 
 ---
 
@@ -383,6 +383,8 @@
 
 ##### 考驗 3：那一身豐厚的毛
 
+> ⚠️ **【暫不使用】** 網站品種的考驗調整為只放兩題，英短保留考驗 1（體重管理）與考驗 2（HCM 心臟篩檢）。本題梳毛照護主題相對通用，故暫時移除。前端不需實作此題。
+
 **挑戰標題**：那一身豐厚的毛
 
 **情境**：英國短毛貓雖是短毛，但被毛密度很高；換毛季節的掉毛量更多。你打算怎麼照顧？
@@ -421,6 +423,8 @@
 ---
 
 ##### 考驗 1：牠來自哪裡，決定了牠需要多少時間
+
+> ⚠️ **【暫不使用】** 本題情境（貓躲床底 + 家人建議抱出來）與主流程 5.2.1「接回家第一天」高度重疊，建議替換為其他米克斯貓特有主題。前端暫不實作此題，等待新題目設計確認後更新。
 
 **挑戰標題**：到家的第一週，{petName} 躲著不出來
 
@@ -694,7 +698,7 @@
 export const catDailyBehaviorScenarioIds = [
   "cat-night-energy-care",   // D-1 晚上還很有精神
   "cat-scratching-care",     // D-2 抓沙發
-  "cat-indoor-outdoor-care", // D-3 牠不想出門
+  "cat-climbing-care", // D-3 牠把東西推下來了
 ] as const;
 ```
 
@@ -727,8 +731,8 @@ export const catLitterRescueConfig = {
 |---|---|---|---|
 | british-shorthair | 英短的貪食本性 | 0（定時定量＋漏食玩具） | 活動量低、食慾旺盛，避免自由任食 |
 | british-shorthair | 英短的心臟要定期檢查 | 2（定期例行健檢含心臟聽診） | HCM早期無症狀，需定期聽診 |
-| british-shorthair | 那一身豐厚的毛 | 3（每週梳毛＋換毛季加強） | 被毛密集，春秋換毛季掉毛量增加 |
-| mixed-cat | 牠來自哪裡（收容所適應） | 1（讓牠躲著，準備安全藏身空間） | 個體差異大，躲藏是正常適應行為 |
+| british-shorthair | ~~那一身豐厚的毛~~ | ~~3（每週梳毛＋換毛季加強）~~ | ⚠️ 暫不使用，英短只保留考驗 1 & 2 |
+| mixed-cat | ~~牠來自哪裡（收容所適應）~~ | ~~1（讓牠躲著，準備安全藏身空間）~~ | ⚠️ 暫不使用，與主流程接回家第一天重疊，待新題目設計 |
 | mixed-cat | 這隻幼貓，長大會是什麼毛？ | 1（毛型看不準，可能短毛半長毛長毛） | 成貓毛型無法從幼貓外觀準確預測 |
 | mixed-cat | 雜種優勢……是真的嗎？ | 1（仍需定期健檢與疫苗） | 基因多樣不等於免疫所有疾病 |
 
@@ -837,7 +841,7 @@ export const catLitterRescueConfig = {
 
 2. **catScenarioCorrectFeedback**：單選情境的做得很好頁面使用 `catScenarioCorrectFeedback` 物件（`cat-arrival-adjustment`、`cat-illness-vet`、`cat-growing-old`）；`cat-busy-care` 無獨立 feedback 條目，做得很好頁面直接顯示正確選項的 explanation 與 suggestion。
 
-3. **多選情境結構**：複選情境（`cat-night-energy-care`、`cat-scratching-care`、`cat-indoor-outdoor-care`）使用 `correctSummary`（條列正確做法）與 `learningPoints`（小知識）顯示做得很好頁面。
+3. **多選情境結構**：複選情境（`cat-night-energy-care`、`cat-scratching-care`、`cat-climbing-care`）使用 `correctSummary`（條列正確做法）與 `learningPoints`（小知識）顯示做得很好頁面。
 
 4. **品種考驗 fallback**：`getCatBreedChallengeScenarios()` 在 `breedId` 不存在時自動回傳 `"mixed-cat"` 題目，mixed-cat 設計應具普遍代表性。
 

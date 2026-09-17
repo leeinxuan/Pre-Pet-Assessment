@@ -15,7 +15,6 @@ export const rabbitReport: SpeciesReportConfig = {
     ["居家安全", "收好電線、塑膠與有毒植物，提供防滑地面與安全躲藏處。"],
     ["高齡階段（6 歲以上）", "提高健檢頻率，降低出入高度並增加軟質墊料。"],
   ],
-  moneyDisclaimer: "這筆金額用來模擬一次突發就醫時的現金緩衝，不代表能支付完整治療，也不是兔子一生的醫療費。",
   dailyCareTime: "每日約需安排 1～2 小時",
   dailyCareTimeNote: "時間會分散在牧草補充、飲水更換、便盆清潔、蔬菜備製、放風陪伴、梳毛與糞便觀察；依兔子年齡、健康狀況與換毛期而有所變動。",
   dailyCareBreakdown: [

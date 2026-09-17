@@ -62,6 +62,7 @@ export const catAssets = {
     catPoop: "/assets/cat/cleaning/cat-poop.png",
     urineClump: "/assets/cat/cleaning/urine-clump.png",
     trashBin: "/assets/cat/cleaning/trash-bin.png",
+    trashBinOpen: "/assets/cat/cleaning/trash-bin-open.png",
   },
   preparation: {
     // TODO(cat-assets): 尚未提供專用外出籠、文件素材，暫用安全中性 fallback。

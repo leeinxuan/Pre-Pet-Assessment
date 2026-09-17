@@ -46,6 +46,8 @@ export type Scenario = {
   timeLabel: string;
   title: string;
   description: string;
+  /** 題目資料指定時，供共用選項元件顯示的提問文字。 */
+  questionText?: string;
   topic?: string;
   reportSummary?: string;
   breedKnowledge?: string;
@@ -63,6 +65,8 @@ export type Scenario = {
   speciesId?: string;
   breedId?: string;
   order?: number;
+  /** 規劃文件中的原始題號；品種題目不可依陣列位置推斷。 */
+  sourceQuestionNumber?: number;
   summaryCategory?: string;
 };
 
