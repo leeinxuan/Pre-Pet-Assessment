@@ -57,7 +57,7 @@
 .pet-name-overlay > div { gap: 6px; }
 .pet-name-overlay input { min-height: 38px; padding: 8px 10px; }
 .pet-name-overlay button { min-height: 38px; padding: 8px 11px; }
-.pet-doorplate { position: absolute; z-index: 7; left: 47%; top: 16%; width: 28%; min-width: 120px; transform: translateX(-50%); }
+.pet-doorplate { position: absolute; z-index: 7; left: 87% ; top: 16%; width: 28%; min-width: 120px; transform: translateX(-50%); }
 .pet-doorplate > img { display: block; width: 100%; height: auto; }
 .pet-doorplate > button { position: absolute; inset: 63% 15% 24%; width: 70%; padding: 2px 4px; border: 0; background: transparent; font: inherit; font-size: clamp(10px, 1.5vw, 16px); font-weight: 900; line-height: 1.2; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pet-doorplate > button.placeholder { color: #9d9a92; font-size: clamp(7px, 1.1vw, 14px); font-weight: 700; }

@@ -493,8 +493,8 @@ const expenseLabels = {
   addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
-const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "dog-arrival-checkup", "cat-arrival-checkup", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
-const defaultVisibleExpenseIds = ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "monthly-preventive-medicine"];
+const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
+const defaultVisibleExpenseIds = ["monthly-preventive-medicine"];
 const defaultVisibleExpenses = defaultVisibleExpenseIds
   .map((id) => expenseCatalog[id])
   .filter((item): item is ExpenseRecord => Boolean(item));
@@ -539,11 +539,21 @@ export function getInitialPreparationTotal(expenses: ExpenseRecord[]) {
 }
 
 export function getMonthlyBasicTotal(expenses: ExpenseRecord[]) {
-  return expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.monthlyBasic).reduce((sum, item) => sum + item.amount, 0);
+  return getMonthlyBasicExpenses(expenses).reduce((sum, item) => sum + item.amount, 0);
 }
 
 export function getTemporaryExpenseTotal(expenses: ExpenseRecord[]) {
-  return expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.temporaryMedical).reduce((sum, item) => sum + item.amount, 0);
+  return getTemporaryExpenses(expenses).reduce((sum, item) => sum + item.amount, 0);
+}
+
+/** 回顧、明細與輸出共用：每月基本支出的實際細項。 */
+export function getMonthlyBasicExpenses(expenses: ExpenseRecord[]) {
+  return expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.monthlyBasic);
+}
+
+/** 回顧、明細與輸出共用：臨時性支出的實際細項。 */
+export function getTemporaryExpenses(expenses: ExpenseRecord[]) {
+  return expenses.filter((item) => getExpenseSummaryCategory(item) === expenseLabels.temporaryMedical);
 }
 
 /** 初期準備金的來源分組，供回顧、明細與輸出共用；不改變原始費用分類或加總。 */
@@ -574,7 +584,7 @@ export function getAccumulatedExpenseTotal(expenses: ExpenseRecord[]) {
 }
 
 export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string, species?: string) {
-  // 兔子的費用只在完成對應互動後加入；其餘物種維持既有預估項目。
+  // 到家後必要支出必須在完成第一題後才寫入 expense store，不能在明細預先顯示。
   const speciesDefaultExpenses = species === "rabbit" || species === "bird" ? [] : defaultVisibleExpenses;
   const petSize = getPetSizeForBreed(breed);
   const existingIds = new Set(expenses.map((item) => item.id));
@@ -658,7 +668,7 @@ function CoinFlightAnimation({
     toast.className = "coin-toast-overlay";
     toast.innerHTML = `
       <div class="coin-toast-card" role="status" aria-live="polite">
-        <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(120,80,0,0.09)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#f6e87a"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.22)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#c8a018" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#c8a018" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(200,160,20,0.18)" stroke="#c8a018" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#7a5208">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#a07818">100</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="7" font-weight="700" text-anchor="end" fill="#a07818">100</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#c8a018" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#c8a018" opacity="0.7">&#10022;</text></svg>
+        <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(20,80,30,0.10)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#7ec87a"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.25)"/><rect x="1" y="20" width="90" height="4" fill="rgba(30,100,40,0.08)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#3a8a48" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#3a8a48" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(30,120,50,0.18)" stroke="#3a8a48" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#1a4a22">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#1e5a28">100</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="7" font-weight="700" text-anchor="end" fill="#1e5a28">100</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#3a8a48" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#3a8a48" opacity="0.7">&#10022;</text></svg>
         <div class="coin-toast-body">
           <b>已加入準備清單</b>
           <span>${expense.name}</span>

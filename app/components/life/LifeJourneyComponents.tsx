@@ -29,6 +29,7 @@ import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text"
 import type {
   CareMember,
   ExpenseRecord,
+  ExpenseTriggerMeta,
   LifeActivityState,
   Scenario,
   ScenarioAnswer,
@@ -734,6 +735,7 @@ function VideoScenarioActivity({
   onChoose,
   onCorrectComplete,
   onCorrectFeedbackShown,
+  deferArrivalExpenseUntilFeedback = false,
   resetSignal,
   onReplay,
   continueImmediately = false,
@@ -745,6 +747,8 @@ function VideoScenarioActivity({
   onChoose: (choice: ScenarioChoice) => void;
   onCorrectComplete: () => void;
   onCorrectFeedbackShown?: (scenario: Scenario, choice: ScenarioChoice) => void;
+  /** 指定的到家第一題要在「做得很好」畫面呈現後才登錄費用。 */
+  deferArrivalExpenseUntilFeedback?: boolean;
   resetSignal: number;
   onReplay?: () => void;
   continueImmediately?: boolean;
@@ -765,6 +769,7 @@ function VideoScenarioActivity({
   useVideoMetadataPreload(source);
   useVideoMetadataPreload(getCorrectAnswerVideo(scenario.id));
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
+  const feedbackExpenseShownFor = useRef("");
 
   useEffect(() => {
     if (resetSignal <= 0) return;
@@ -775,11 +780,22 @@ function VideoScenarioActivity({
 
   function choose(choice: ScenarioChoice) {
     onChoose(choice);
-    if (choice.result === "correct" && scenario.stageId === "arrival") onCorrectFeedbackShown?.(scenario, choice);
+    if (choice.result === "correct" && scenario.stageId === "arrival" && !deferArrivalExpenseUntilFeedback) {
+      onCorrectFeedbackShown?.(scenario, choice);
+    }
     setVideoFailed(false);
     setVideoFinished(false);
     setMode(choice.result === "correct" ? "positive" : "incorrect");
   }
+
+  // Effect 在正確回饋畫面提交後才執行，避免費用動畫早於「做得很好」。
+  useEffect(() => {
+    if (!deferArrivalExpenseUntilFeedback || mode !== "positive" || selectedChoice?.result !== "correct") return;
+    const key = `${scenario.id}:${selectedChoice.id}`;
+    if (feedbackExpenseShownFor.current === key) return;
+    feedbackExpenseShownFor.current = key;
+    onCorrectFeedbackShown?.(scenario, selectedChoice);
+  }, [deferArrivalExpenseUntilFeedback, mode, onCorrectFeedbackShown, scenario, selectedChoice]);
 
   if (mode === "positive" && selectedChoice) {
     const catFeedback = isCatScenario && !(scenario.id === "cat-illness-vet" && scenario.breedKnowledge)
@@ -1201,6 +1217,32 @@ function DailyBehaviorActivityMulti({
   );
 }
 
+type BusyCareChecklistItem = {
+  id: string;
+  order: 1 | 2 | 3 | 4;
+  prompt: string;
+  correctAnswer: "yes" | "no";
+  petName: string;
+  helperName?: string;
+};
+
+const busyCareChecklistTemplate = [
+  { id: "daily-care", order: 1, prompt: "你已經向{helperName}說明{petName}每天的餵食、換水、排泄清理、活動與陪伴安排了嗎？", correctAnswer: "yes" },
+  { id: "support-confirmed", order: 2, prompt: "我還沒有確認{helperName}在你忙碌時，是否真的有時間協助照顧{petName}。", correctAnswer: "no" },
+  { id: "care-willing", order: 3, prompt: "{helperName}願意依照你的交接方式照顧{petName}嗎？", correctAnswer: "yes" },
+  { id: "emergency-contact", order: 4, prompt: "{helperName}知道{petName}出現異常或緊急狀況時怎麼聯絡你嗎？", correctAnswer: "yes" },
+] as const;
+
+function getBusyCareChecklist(petName: string, helperName: string): BusyCareChecklistItem[] {
+  const resolvedHelperName = helperName || "協助者";
+  return busyCareChecklistTemplate.map((item) => ({
+    ...item,
+    petName,
+    helperName: resolvedHelperName,
+    prompt: item.prompt.replaceAll("{petName}", petName).replaceAll("{helperName}", resolvedHelperName),
+  }));
+}
+
 function BusyCareActivity({
   scenario,
   answer,
@@ -1242,34 +1284,18 @@ function BusyCareActivity({
   const displayPetName = petName || animalName;
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const familySupportChoice = scenario.choices.find((choice) => choice.id === "family-helper" || choice.id === "rabbit-busy-helper" || choice.id === "bird-busy-helper");
-  // 忙碌照護日常的確認題固定使用「是／否」；反向敘述用「否」才是合適答案。
-  // 貓咪四題對應照護文件：日常交接、24 小時不進食警訊、緊急聯絡、動物醫院資訊。
-  const helperQuestions = isBird
-    ? [
-      { id: "health-observation", text: `你有告訴${helperName || "協助者"}每天需要觀察哪些狀況，以及就醫警訊是什麼嗎？`, short: "健康觀察與就醫警訊還需要先交接", accepted: ["yes"] },
-      { id: "emergency-vet", text: "我還沒有確認住家附近是否有熟悉鳥類的獸醫診所——這是出發前需要補上的一步。", short: "附近熟悉鳥類的獸醫診所還需要先確認", accepted: ["no"] },
-      { id: "daily-care", text: `你有交接${displayPetName}的飼料種類、份量、補充方式和清潔節奏嗎？`, short: "飼料、補充方式與清潔節奏還需要先交接", accepted: ["yes"] },
-      { id: "air-safety", text: `你有提醒${helperName || "協助者"}家中哪些物品對鳥有危害嗎？`, short: "空氣安全與危險物品還需要先交接", accepted: ["yes"] },
-    ]
-    : isRabbit
-    ? [
-      { id: "daily-care", text: `你已經向${helperName || "協助者"}說明${displayPetName}每天需要補牧草、換水、清便盆與觀察糞便了嗎？`, short: "牧草、飲水、便盆與糞便觀察還需要先交接", accepted: ["yes"] },
-      { id: "food-alert", text: `我還沒有特別跟${helperName || "協助者"}說明：${displayPetName}超過 12 小時沒吃東西，要立刻通知我。`, short: "12 小時完全無進食的警訊還需要先說明", accepted: ["no"] },
-      { id: "vet-information", text: `你已把${displayPetName}平常就診的兔科獸醫聯絡方式和地址給${helperName || "協助者"}了嗎？`, short: "兔科獸醫的聯絡方式與地址還需要先提供", accepted: ["yes"] },
-    ]
-    : isCat
-    ? [
-      { id: "daily-care", text: `你已經向${helperName || "協助者"}說明每天需補充食水、清潔貓砂盆、巡視環境並安排短段陪玩了嗎？`, short: "每日食水、砂盆、環境巡視與陪玩還需要先交接", accepted: ["yes"] },
-      { id: "food-alert", text: `我還沒有特別跟${helperName || "協助者"}說明：${displayPetName}超過 24 小時完全不進食，要立刻通知我。`, short: "24 小時完全不進食的警訊還需要先說明", accepted: ["no"] },
-      { id: "emergency-contact", text: `${helperName || "協助者"}知道緊急時怎麼聯絡到你嗎？`, short: "緊急聯絡方式還需要補充確認", accepted: ["yes"] },
-      { id: "vet-information", text: `你已把${displayPetName}平常就診的動物醫院聯絡方式和地址給${helperName || "協助者"}了嗎？`, short: "動物醫院的聯絡方式與地址還需要先提供", accepted: ["yes"] },
-    ]
-    : [
-      { id: "daily-care", text: `你已經向${helperName || "協助者"}說明${displayPetName}每天的餵食、換水、排泄清理、活動與陪伴安排了嗎？`, short: "每日餵食、換水、排泄與活動安排還需要先交接", accepted: ["yes"] },
-      { id: "support-confirmed", text: `我還沒有確認${helperName || "協助者"}在你忙碌時，是否真的有時間協助照顧${displayPetName}。`, short: "協助者的時間還需要先確認", accepted: ["no"] },
-      { id: "care-willing", text: `${helperName || "協助者"}願意依照你的交接方式照顧${displayPetName}嗎？`, short: "協助者的意願還需要先確認", accepted: ["yes"] },
-      { id: "emergency-contact", text: `${helperName || "協助者"}知道${displayPetName}出現異常或緊急狀況時怎麼聯絡你嗎？`, short: "緊急聯絡方式還需要補充確認", accepted: ["yes"] },
-    ];
+  // 所有物種共用犬類既有的四題「是／否」交接確認流程；名稱只由當前資料帶入。
+  const helperQuestions = getBusyCareChecklist(displayPetName, helperName).map((item) => ({
+    ...item,
+    text: item.prompt,
+    short: {
+      "daily-care": "每日餵食、換水、排泄與活動安排還需要先交接",
+      "support-confirmed": "協助者的時間還需要先確認",
+      "care-willing": "協助者的意願還需要先確認",
+      "emergency-contact": "緊急聯絡方式還需要補充確認",
+    }[item.id] ?? "交接內容還需要先確認",
+    accepted: [item.correctAnswer],
+  }));
   const allHelperChecksAnswered = helperQuestions.every((question) => Boolean(helperChecks[question.id]));
   const unsuitableHelperReasons = helperQuestions
     .filter((question) => helperChecks[question.id] && !question.accepted.includes(helperChecks[question.id] as "yes" | "no"))
@@ -1733,7 +1759,7 @@ function ArrivalMealActivity({
   useEffect(() => {
     if (!complete || hasRecordedMeal.current) return;
     hasRecordedMeal.current = true;
-    (isCat ? ["cat-monthly-food"] : isRabbit ? ["rabbit-hay-monthly", "rabbit-pellet-monthly", "rabbit-veggies-monthly"] : isBird ? ["bird-food-monthly", "bird-cleaning-monthly"] : ["monthly-food-main"]).forEach(onAddExpense);
+    (isCat ? ["cat-monthly-food"] : isRabbit ? ["rabbit-hay-monthly", "rabbit-pellet-monthly", "rabbit-veggies-monthly"] : isBird ? ["bird-food-monthly", "bird-cleaning-monthly"] : ["monthly-food-main"]).forEach((expenseId) => onAddExpense(expenseId));
   }, [complete, isBird, isCat, isRabbit, onAddExpense]);
   useEffect(() => {
     if (!isCat || !complete) return;
@@ -3142,6 +3168,7 @@ export function LifeJourney({
   onActivityChange,
   onCompleteItem,
   onAddExpense,
+  onAddExpenseGroup,
   onStageChange,
   onBack,
   onComplete,
@@ -3166,7 +3193,8 @@ export function LifeJourney({
   onMembersChange: (members: CareMember[]) => void;
   onActivityChange: (patch: Partial<LifeActivityState>) => void;
   onCompleteItem: (id: string) => void;
-  onAddExpense: (id: string) => void;
+  onAddExpense: (id: string, triggerMeta?: ExpenseTriggerMeta) => void;
+  onAddExpenseGroup: (ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) => void;
   onStageChange: (step: number) => void;
   onBack: () => void;
   onComplete: () => void;
@@ -3417,7 +3445,24 @@ export function LifeJourney({
           breed={breed}
           onChoose={choose}
           onCorrectComplete={continueScenario}
-          onCorrectFeedbackShown={(_scenario, choice) => choice.expenseIds?.forEach(onAddExpense)}
+          onCorrectFeedbackShown={(correctScenario, choice) => {
+            const isDogArrival = species === "dog" && item.id === "arrival" && correctScenario.id === "arrival-adjustment";
+            const isCatArrival = species === "cat" && item.id === "cat-arrival" && correctScenario.id === "cat-arrival-adjustment";
+            const isDeferredDogOrCatArrival = isDogArrival || isCatArrival;
+            const expenseIds = isDeferredDogOrCatArrival ? item.expenseIds : choice.expenseIds;
+            const triggerMeta = isDeferredDogOrCatArrival
+              ? { speciesId: species, stageId: item.stageId ?? correctScenario.stageId, sourceScenarioId: correctScenario.id }
+              : undefined;
+            if (isDeferredDogOrCatArrival && expenseIds?.length) {
+              onAddExpenseGroup(expenseIds, triggerMeta);
+            } else {
+              expenseIds?.forEach((expenseId) => onAddExpense(expenseId, triggerMeta));
+            }
+          }}
+          deferArrivalExpenseUntilFeedback={
+            (species === "dog" && item.id === "arrival" && scenario.id === "arrival-adjustment")
+            || (species === "cat" && item.id === "cat-arrival" && scenario.id === "cat-arrival-adjustment")
+          }
           resetSignal={currentResetSignal}
           {...replayCorrectProps}
         />

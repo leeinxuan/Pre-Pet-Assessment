@@ -1,8 +1,9 @@
 import type { JourneyItem } from "../../../game-types";
+import { arrivalRequiredExpenseIdsBySpecies } from "../../shared/expenses";
 
 /** 貓咪旅程順序；LitterInspectionActivity 是唯一專屬玩法元件。 */
 export const catJourneyItems: JourneyItem[] = [
-  { id: "cat-arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "cat-arrival-adjustment", stageId: "arrival", stageLabel: "接回家", expenseIds: ["cat-arrival-checkup"] },
+  { id: "cat-arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "cat-arrival-adjustment", stageId: "arrival", stageLabel: "接回家", expenseIds: [...arrivalRequiredExpenseIdsBySpecies.cat] },
   { id: "cat-daily-care", type: "scenario", timeLabel: "日常照護", title: "貓咪日常照護", stageId: "daily", stageLabel: "日常照護" },
   { id: "cat-daily-inspection", type: "daily-inspection", timeLabel: "日常照護", title: "貓砂盆救援隊", stageId: "daily", stageLabel: "日常照護" },
   { id: "breed-challenge", type: "breed-challenge", timeLabel: "品種的考驗", title: "品種的考驗", stageId: "breed", stageLabel: "品種的考驗" },

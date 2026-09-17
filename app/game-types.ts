@@ -10,7 +10,13 @@ export type ExpenseRecord = {
   fromEmergency?: boolean;
   /** 供共用費用明細、摘要與匯出使用的簡短用途說明。 */
   description?: string;
+  /** 由 journey 觸發時保留來源，供共用明細、摘要與匯出追溯。 */
+  speciesId?: string;
+  stageId?: string;
+  sourceScenarioId?: string;
 };
+
+export type ExpenseTriggerMeta = Pick<ExpenseRecord, "speciesId" | "stageId" | "sourceScenarioId">;
 
 export type CareMember = {
   id: string;

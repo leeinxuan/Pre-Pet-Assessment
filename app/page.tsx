@@ -9,6 +9,7 @@ import { initialLifeActivityState } from "./data/shared/life-activity";
 import type {
   CareMember,
   ExpenseRecord,
+  ExpenseTriggerMeta,
   LifeActivityState,
   LifeJourneyPhase,
   Profile,
@@ -231,10 +232,13 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
-  function addExpenseById(id: string) {
+  function addExpenseById(id: string, triggerMeta?: ExpenseTriggerMeta) {
     const expense = expenseCatalog[id];
     if (!expense) return;
-    const sizedExpense = applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed));
+    const sizedExpense = {
+      ...applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed)),
+      ...triggerMeta,
+    };
     setExpenses((current) => {
       if (current.some((item) => item.id === id)) return current;
       if (costToastTimerRef.current !== null) {
@@ -250,12 +254,43 @@ export default function Home() {
     });
   }
 
+  /** 同一個旅程節點新增一組既有費用，明細仍以原本 expenseId 個別去重。 */
+  function addExpenseGroupByIds(ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) {
+    const catalogExpenses = ids
+      .map((id) => expenseCatalog[id])
+      .filter((expense): expense is ExpenseRecord => Boolean(expense))
+      .map((expense) => ({ ...applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed)), ...triggerMeta }));
+
+    if (!catalogExpenses.length) return;
+
+    setExpenses((current) => {
+      const additions = catalogExpenses.filter((expense) => !current.some((item) => item.id === expense.id));
+      if (!additions.length) return current;
+
+      if (costToastTimerRef.current !== null) window.clearTimeout(costToastTimerRef.current);
+      const groupExpense: ExpenseRecord = {
+        id: `arrival-expense-group:${additions.map((item) => item.id).join("+")}`,
+        name: "到家後必要支出",
+        amount: additions.reduce((sum, item) => sum + item.amount, 0),
+        category: "到家後必要支出",
+        stage: "寵物到家後",
+        recurring: false,
+      };
+      setLatestExpense(groupExpense);
+      costToastTimerRef.current = window.setTimeout(() => {
+        setLatestExpense((active) => active?.id === groupExpense.id ? null : active);
+        costToastTimerRef.current = null;
+      }, 1900);
+      return [...current, ...additions];
+    });
+  }
+
   function addRoomItem(id: string) {
     if (!id) return;
     setRoomReady((current) => current.includes(id) ? current : [...current, id]);
     const item = speciesConfig.roomItems.find((entry) => entry.id === id);
     const expenseIds = [...(item?.expenseIds ?? []), ...(item?.expenseId ? [item.expenseId] : [])];
-    Array.from(new Set(expenseIds)).forEach(addExpenseById);
+    Array.from(new Set(expenseIds)).forEach((expenseId) => addExpenseById(expenseId));
   }
 
   function toggleHazard(id: string) {
@@ -277,7 +312,7 @@ export default function Home() {
       if (trunkComplete) setPreparationReached((current) => Math.max(current, 1));
       return next;
     });
-    expenseIds.forEach(addExpenseById);
+    expenseIds.forEach((expenseId) => addExpenseById(expenseId));
   }
 
   function answerScenario(scenario: Scenario, choice: ScenarioChoice) {
@@ -302,11 +337,11 @@ export default function Home() {
           },
       };
     });
-    // 到家後首次健康檢查要和正確回饋頁的費用動畫同步；由共用 LifeJourney 在切換到該頁時登錄。
+    // 兔、鳥的既有到家後費用仍和正確回饋頁同步；犬、貓由 LifeJourney 以三筆群組統一登錄。
     const deferredArrivalExpenseIds = scenario.stageId === "arrival" && choice.result === "correct"
-      ? new Set(["dog-arrival-checkup", "cat-arrival-checkup", "rabbit-arrival-checkup", "bird-arrival-checkup"])
+      ? new Set(["rabbit-arrival-checkup", "bird-arrival-checkup"])
       : new Set<string>();
-    choice.expenseIds?.filter((id) => !deferredArrivalExpenseIds.has(id)).forEach(addExpenseById);
+    choice.expenseIds?.filter((id) => !deferredArrivalExpenseIds.has(id)).forEach((expenseId) => addExpenseById(expenseId));
   }
 
   function markScenarioForReview(scenario: Scenario, flag: string) {
@@ -358,7 +393,7 @@ export default function Home() {
       };
     });
     if (result === "correct") {
-      choices.flatMap((choice) => choice.expenseIds ?? []).forEach(addExpenseById);
+      choices.flatMap((choice) => choice.expenseIds ?? []).forEach((expenseId) => addExpenseById(expenseId));
     }
   }
 
@@ -467,6 +502,7 @@ export default function Home() {
         onActivityChange={(patch) => setLifeActivity((current) => ({ ...current, ...patch }))}
         onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}
         onAddExpense={addExpenseById}
+        onAddExpenseGroup={addExpenseGroupByIds}
         onStageChange={(nextStep) => { setStep(nextStep); setFurthestStep((current) => Math.max(current, nextStep)); setIntroOpen(false); }}
         onBack={() => { setStep(2); setPreparationTask(1); setIntroOpen(false); }}
         onComplete={() => {

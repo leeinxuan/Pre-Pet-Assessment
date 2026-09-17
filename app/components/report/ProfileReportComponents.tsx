@@ -10,12 +10,12 @@ import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, S
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
   ExpenseDetails,
-  getExpenseItemSummary,
   getInitialPreparationBreakdown,
   getInitialPreparationTotal,
   getMonthlyBasicTotal,
+  getMonthlyBasicExpenses,
   getTemporaryExpenseTotal,
-  isTemporaryOrMedicalExpense,
+  getTemporaryExpenses,
   mergeDefaultVisibleExpenses,
   NavButtons,
 } from "../shared/SharedComponents";
@@ -282,16 +282,7 @@ function profilePdfSections(profile: Profile, selectedTypeLabel: string): Profil
   const activityText = activitySpaces.map((space) => space === "其他" && profile.otherActivitySpace ? `其他：${profile.otherActivitySpace}` : space);
   const reasons = profile.reasons.map((reason) => reason === "其他" && profile.reasonOther ? `其他：${profile.reasonOther}` : reason);
   const photoCount = profile.homeSpaceImages.length || (profile.homeSpaceImage ? 1 : 0);
-  const role = profile.role === "其他" && profile.roleOther ? `其他：${profile.roleOther}` : profile.role;
-
   return [
-    {
-      title: "基本資料",
-      rows: [
-        { label: "年齡", value: profile.age ? `${profile.age} 歲` : "尚未填寫" },
-        { label: "身分類型", value: role || "尚未填寫" },
-      ],
-    },
     {
       title: "時間與居住環境",
       rows: [
@@ -321,12 +312,9 @@ function profilePdfSections(profile: Profile, selectedTypeLabel: string): Profil
       ],
     },
     {
-      title: "飼養原因與照顧安排",
+      title: "飼養原因",
       rows: [
         { label: "飼養原因", value: reasons.length ? reasons : "尚未填寫" },
-        { label: "每月可負擔預算", value: profile.monthlyBudget ? `NT$ ${Number(profile.monthlyBudget).toLocaleString("zh-TW")}` : "尚未填寫" },
-        { label: "緊急預備金", value: profile.emergencyFund === true ? "有" : profile.emergencyFund === false ? "目前沒有" : "尚未填寫" },
-        { label: "忙碌時的照顧支援", value: profile.backupSupport === true ? "有可靠支援" : profile.backupSupport === false ? "目前沒有" : "尚未填寫" },
       ],
     },
   ];
@@ -345,11 +333,50 @@ function wrapPdfText(context: CanvasRenderingContext2D, text: string, maxWidth: 
   return lines.length ? lines : [""];
 }
 
+async function loadProfilePhoto(source: string | undefined) {
+  if (!source) return null;
+  try {
+    const image = new Image();
+    image.decoding = "async";
+    image.src = await imageToDataUrl(source);
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error("Profile photo could not be loaded"));
+    });
+    return image;
+  } catch (error) {
+    console.warn("Skipping unreadable profile photo in PDF export.", error);
+    return null;
+  }
+}
+
+function drawProfilePhoto(context: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number) {
+  const sourceRatio = image.naturalWidth / image.naturalHeight;
+  const targetRatio = width / height;
+  const sourceWidth = sourceRatio > targetRatio ? image.naturalHeight * targetRatio : image.naturalWidth;
+  const sourceHeight = sourceRatio > targetRatio ? image.naturalHeight : image.naturalWidth / targetRatio;
+  const sourceX = Math.max(0, (image.naturalWidth - sourceWidth) / 2);
+  const sourceY = Math.max(0, (image.naturalHeight - sourceHeight) / 2);
+  context.save();
+  context.beginPath();
+  context.roundRect(x, y, width, height, 18);
+  context.clip();
+  context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);
+  context.restore();
+  context.strokeStyle = "#dfd0bb";
+  context.lineWidth = 2;
+  context.beginPath();
+  context.roundRect(x, y, width, height, 18);
+  context.stroke();
+}
+
 /** Draws the profile as true A4-sized pages. Sections move as units instead of scaling a long form into one canvas. */
-function createProfilePdfCanvases(profile: Profile, petName: string, selectedTypeLabel: string) {
+async function createProfilePdfCanvases(profile: Profile, petName: string, selectedTypeLabel: string) {
   const pages: Array<{ canvas: HTMLCanvasElement; context: CanvasRenderingContext2D; y: number }> = [];
   const contentWidth = profilePdfPage.width - profilePdfPage.margin * 2;
   const bottom = profilePdfPage.height - profilePdfPage.footer;
+  const photoSources = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
+  const photos = (await Promise.all(photoSources.map(loadProfilePhoto))).filter((image): image is HTMLImageElement => Boolean(image));
 
   const startPage = () => {
     const canvas = document.createElement("canvas");
@@ -461,6 +488,30 @@ function createProfilePdfCanvases(profile: Profile, petName: string, selectedTyp
     }
   }
 
+  if (photos.length) {
+    const photoGap = 24;
+    let photoIndex = 0;
+
+    while (photoIndex < photos.length) {
+      const photosOnRow = Math.min(2, photos.length - photoIndex);
+      const photoWidth = photosOnRow === 1 ? contentWidth : (contentWidth - photoGap) / 2;
+      const photoHeight = photosOnRow === 1 ? 500 : 350;
+      const requiredHeight = 58 + photoHeight;
+      if (page.y + requiredHeight > bottom) page = startPage();
+
+      page.context.fillStyle = "#8b5b2d";
+      page.context.font = '700 30px "Noto Sans TC", "PingFang TC", sans-serif';
+      page.context.fillText("居家空間照片", profilePdfPage.margin, page.y + 34);
+      const photoY = page.y + 58;
+      for (let column = 0; column < photosOnRow; column += 1) {
+        const x = profilePdfPage.margin + column * (photoWidth + photoGap);
+        drawProfilePhoto(page.context, photos[photoIndex + column], x, photoY, photoWidth, photoHeight);
+      }
+      photoIndex += photosOnRow;
+      page.y = photoY + photoHeight + 38;
+    }
+  }
+
   pages.forEach((entry, index) => {
     entry.context.strokeStyle = "#e1d5c3";
     entry.context.lineWidth = 2;
@@ -495,7 +546,7 @@ function useMobileDownloadMode() {
 async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
   if (typeof window === "undefined" || typeof document === "undefined") throw new Error("PDF export requires a browser environment");
   if (kind === "profile" && profile) {
-    const canvases = createProfilePdfCanvases(profile, petName, selectedTypeLabel || "寵物");
+    const canvases = await createProfilePdfCanvases(profile, petName, selectedTypeLabel || "寵物");
     const blob = createPdfBlobFromCanvases(canvases);
     if (!blob.size || blob.type !== "application/pdf") throw new Error("Generated profile PDF blob is invalid");
     const safePetName = sanitizePdfFileName(petName);
@@ -582,7 +633,20 @@ function downloadBlob(blob: Blob, fileName: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-async function downloadAssessmentImage(petName: string, kind: ReportPdfKind) {
+async function downloadAssessmentImage(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
+  if (kind === "profile" && profile) {
+    const canvases = await createProfilePdfCanvases(profile, petName, selectedTypeLabel || "寵物");
+    const safePetName = sanitizePdfFileName(petName);
+    const baseFileName = safePetName ? `伴日子新手村_個人資料_${safePetName}` : "伴日子新手村_個人資料";
+    for (let index = 0; index < canvases.length; index += 1) {
+      const canvas = canvases[index];
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((nextBlob) => nextBlob ? resolve(nextBlob) : reject(new Error("PNG export failed")), "image/png");
+      });
+      downloadBlob(blob, canvases.length > 1 ? `${baseFileName}_${index + 1}.png` : `${baseFileName}.png`);
+    }
+    return;
+  }
   const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
   const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
   if (!sourcePages.length) throw new Error("Image source pages not found");
@@ -644,7 +708,7 @@ function PdfDownloadButton({ petName, kind = "overview", label, profile, selecte
           setCompleted(false);
           setError("");
           try {
-            if (mobileDownload) await downloadAssessmentImage(petName, kind);
+            if (mobileDownload) await downloadAssessmentImage(petName, kind, profile, selectedTypeLabel);
             else await downloadAssessmentPdf(petName, kind, profile, selectedTypeLabel);
             setCompleted(true);
           } catch (error) {
@@ -1025,8 +1089,8 @@ export function AssessmentReport({
   const monthlyBasicTotal = getMonthlyBasicTotal(visibleExpenses);
   const temporaryExpenseTotal = getTemporaryExpenseTotal(visibleExpenses);
   const initialPreparationBreakdown = getInitialPreparationBreakdown(visibleExpenses);
-  const monthlyExpenses = visibleExpenses.filter((item) => item.recurring);
-  const temporaryExpenses = visibleExpenses.filter((item) => !item.recurring && isTemporaryOrMedicalExpense(item));
+  const monthlyExpenses = getMonthlyBasicExpenses(visibleExpenses);
+  const temporaryExpenses = getTemporaryExpenses(visibleExpenses);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
   const corrected = Object.values(answers).filter((item) => item.firstResult !== "correct" && item.finalResult === "correct");
   const reportScenarios = getAllScenariosForSpecies(species, breed);
@@ -1385,11 +1449,11 @@ export function AssessmentReport({
             </section>
             <section className="care-a4-expense-card">
               <h3>每月預估支出</h3><strong>NT$ {money.format(monthlyBasicTotal)}／月</strong>
-              <div><p>{getExpenseItemSummary(monthlyExpenses)}</p></div>
+              <div>{monthlyExpenses.length ? <dl className="care-a4-expense-lines">{monthlyExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}／月</dd></div>)}</dl> : <p>目前尚未登記項目</p>}</div>
             </section>
             <section className="care-a4-expense-card">
               <h3>臨時性支出</h3><strong>NT$ {money.format(temporaryExpenseTotal)}</strong>
-              <div><p>{getExpenseItemSummary(temporaryExpenses)}</p></div>
+              <div>{temporaryExpenses.length ? <dl className="care-a4-expense-lines">{temporaryExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}</dd></div>)}</dl> : <p>目前尚未登記項目</p>}</div>
             </section>
           </div>
         </section>

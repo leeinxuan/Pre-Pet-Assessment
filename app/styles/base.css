@@ -253,10 +253,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   will-change: transform, opacity;
   transform: translate(-50%, -50%) scale(0) rotate(0deg);
   opacity: 0;
-  background: linear-gradient(130deg, #f9ef9a 0%, #e8c83a 55%, #d0a818 100%);
+  background: linear-gradient(130deg, #c8f0b0 0%, #5abf6a 55%, #38a050 100%);
   border-radius: 3px;
-  border: 1.5px solid rgba(168, 120, 10, 0.55);
-  box-shadow: 0 1px 4px rgba(100,65,0,0.18);
+  border: 1.5px solid rgba(30, 110, 50, 0.45);
+  box-shadow: 0 1px 4px rgba(20,80,30,0.18);
 }
 
 /* Toast overlay (pointer-events none so it never blocks clicks) */
@@ -860,6 +860,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-a4-expense-card dl div { display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 2mm; padding: 0; border: 0; }
 .care-a4-expense-card dt { color: #537057; font-size: 9.8px; font-weight: 850; line-height: 1.35; }
 .care-a4-expense-card dd { color: #3f5a44; font-size: 9.8px; font-weight: 900; line-height: 1.35; white-space: nowrap; }
+.care-a4-expense-card .care-a4-expense-lines { gap: 2.4mm; }
+.care-a4-expense-card .care-a4-expense-lines div { padding-bottom: 0; border-bottom: 0; }
+.care-a4-expense-card .care-a4-expense-lines div + div { padding-top: 2.4mm; border-top: 1px solid rgba(79, 110, 84, .2); }
 .care-a4-money-types,
 .care-a4-money-summary { padding: 4mm; border-radius: 12px; background: var(--mint-soft); }
 .care-a4-money h3 { margin: 0 0 3mm; color: #5f735f; font-size: 11px; font-weight: 900; }
@@ -1710,6 +1713,14 @@ html, body { overflow-x: clip; }
   .care-a4-expense-card p { margin: 0 !important; font-size: 9.5px !important; }
   .care-a4-expense-card dl { gap: 1.4mm !important; margin-top: 1.8mm !important; }
   .care-a4-expense-card dl div { gap: 1.5mm !important; padding: 0 !important; }
+  .care-a4-expense-card .care-a4-expense-lines div + div {
+    padding-top: 1.8mm !important;
+    border-top: 1px solid rgba(79, 110, 84, .2) !important;
+  }
+  .care-a4-expense-card .care-a4-expense-lines div {
+    padding-bottom: 0 !important;
+    border-bottom: 0 !important;
+  }
   .care-a4-expense-card dt,
   .care-a4-expense-card dd { font-size: 9.2px !important; }
   .care-a4-money ul { gap: 1.5mm !important; font-size: 11px !important; }
