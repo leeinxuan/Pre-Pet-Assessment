@@ -6,7 +6,11 @@ const rabbitKnowledge = {
   stomp: ["**跺腳**通常代表緊張或感受到威脅；先降低刺激，不要強迫抱起。", "熟悉的墊料或毛巾能幫助牠在環境改變時建立**安全感**。"],
   heat: ["兔子最適環境約為 **15～25℃**；超過 **28℃** 就要積極留意高溫風險。", "冷氣與可自由選擇的**陶板涼感墊**，是安全的夏日降溫安排。"],
   shedding: ["換毛期要**規律梳毛並觀察排便**；食入太多毛髮可能影響腸胃。", "兔子**不適合洗澡**，日常清潔以梳毛與局部微濕擦拭為主。"],
-  health: ["**排便量驟減 ＋ 食慾下降**是重要的**危急警訊**，需要立刻就醫。", "**12 小時完全無進食**就是非常危急的情形，請立刻聯繫**兔科獸醫**。"],
+  health: [
+    "兔子較常見需要留意的健康問題包括：**排便量減少或無排便**、**食慾下降**、**活動力降低**。",
+    "也要留意**流口水**（嘴巴至頸部濕）、**眼周濕潤**或有分泌物；**大量脫毛**、**走路不穩**或身體僵硬；**呼吸急促**或腹部腫脹。",
+    "發現精神、食量、排泄或行為和平常不同，請記錄並立即尋求**兔科獸醫**建議。**12 小時完全無進食，就是非常危急的情形。**",
+  ],
   senior: ["**定期健康檢查**至少**半年一次**，並用降低出入高度、增加**軟質墊料**打造友善關節的環境。", "任何飲食或醫療調整，都先諮詢**兔科獸醫**。"],
 };
 
@@ -86,15 +90,16 @@ export const rabbitLifeScenarios: Scenario[] = [
     ],
   },
   {
-    id: "rabbit-health-emergency", stage: "當生活發生變化", stageId: "life-change", stageTitle: "健康狀況變化", timeLabel: "當生活發生變化", title: "糞便突然變少了",
-    description: "自從學會每天日常巡視，你對 `{petName}` 的狀態很敏感。今天，便盆裡的糞便比昨天少很多、形狀也偏小；牧草架幾乎沒動過。\n\n牠縮在躲藏箱角落，沒有像往常一樣出來迎接你。", topic: "生活變化：排泄與食慾觀察",
+    id: "rabbit-health-emergency", stage: "當生活發生變化", stageId: "life-change", stageTitle: "健康狀況變化", timeLabel: "當生活發生變化", title: "排便量突然減少",
+    description: "最近這兩天，你注意到 `{petName}` 活動力明顯下降，長時間蹲坐在角落不太移動，牧草架幾乎沒被碰過，便盆裡的糞粒也比平常少很多，而且嘴巴周圍有些濕濕的。", topic: "生活變化：排泄與食慾觀察",
+    questionText: "根據這些觀察，你應該？",
     reportSummary: "排便量驟減與食慾下降是兔子重要危急警訊，應立刻聯繫兔科獸醫。", artIndex: 4,
     learningPoints: rabbitKnowledge.health, knowledgeTitle: "兔子小知識",
     choices: [
-      { id: "rabbit-health-wait", text: "這是正常波動，明天再看看", result: "incorrect", ...incorrect, explanation: "排便量突然減少加上食慾下降是重要危急警訊，不能等待。", suggestion: "立刻聯繫兔科獸醫。" },
-      { id: "rabbit-health-vet", text: "立刻聯繫兔科獸醫，帶去看診", result: "correct", ...positive, explanation: "12 小時完全無進食就是危急情形；應立刻尋求兔科獸醫協助。", expenseIds: ["rabbit-emergency-reserve"] },
-      { id: "rabbit-health-vegetable", text: "換成牠喜歡的蔬菜，刺激食慾", result: "incorrect", ...incorrect, explanation: "突然改變食物可能加重消化問題。", suggestion: "先就醫，不要自行調整飲食處理危急警訊。" },
-      { id: "rabbit-health-next-week", text: "記錄下來，下週例行健康檢查時告訴獸醫", result: "incorrect", ...incorrect, explanation: "不能等到下週，延後可能造成嚴重後果。", suggestion: "立刻聯繫兔科獸醫。" },
+      { id: "rabbit-health-wait", text: "這是正常波動，明天再看看", result: "incorrect", ...incorrect, explanation: "排便量突然減少＋食慾下降是兔子最重要的危急警訊，不能等待。", suggestion: "立刻聯繫兔科獸醫，帶去看診。" },
+      { id: "rabbit-health-vet", text: "立刻聯繫兔科獸醫，帶去看診", result: "correct", ...positive, explanation: "兔子突然排便量變少、食慾變差，應立刻尋求獸醫師協助。12 小時完全無進食就是非常危急的情形。", expenseIds: ["rabbit-emergency-reserve"] },
+      { id: "rabbit-health-vegetable", text: "換成 {petName} 喜歡的蔬菜，刺激食慾", result: "incorrect", ...incorrect, explanation: "突然改變食物種類可能加重消化問題。", suggestion: "此時應立刻就醫，而不是嘗試調整飲食。" },
+      { id: "rabbit-health-next-week", text: "記錄下來，下週例行健康檢查時告訴獸醫", result: "incorrect", ...incorrect, explanation: "排便量驟減＋食慾下降需要立刻處置，等一週可能已造成嚴重腸阻塞。", suggestion: "立刻聯繫兔科獸醫，帶去看診。" },
     ],
   },
   {
@@ -111,12 +116,28 @@ export const rabbitLifeScenarios: Scenario[] = [
   },
 ];
 
+/** 規劃文件 D-1：順序即為正解；操作元件只讀取動作與對應提示。 */
+export const rabbitCarrySortSteps = [
+  { text: "緩慢靠近，不發出大聲音，蹲低到與 {petName} 視線同高", hint: "突然靠近或蹲太快都會嚇到兔子，牠可能逃跑或警戒。" },
+  { text: "伸出手背讓 {petName} 嗅聞，等牠不緊張", hint: "讓兔子先認識你的氣味，才能進行下一步。不要急著摸牠。" },
+  { text: "輕輕摸頭頂，確認 {petName} 沒有蹲低或後退", hint: "摸頭是確認兔子放鬆的重要步驟，耳朵貼後、蹲低代表牠還不安心。" },
+  { text: "一手托住胸口，另一手同時托住臀部", hint: "兩手必須同時支撐，單手抓會讓兔子掙扎，增加骨折風險。" },
+  { text: "讓 {petName} 靠著你的身體，前肢有支撐", hint: "兔子靠著身體才有安全感，懸空抱容易引發恐慌和掙扎。" },
+] as const;
+
 /** 兔子專屬互動也以 Scenario 紀錄結果，讓共用回顧與下載摘要可直接讀取。 */
 export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily-check", Scenario> = {
   "rabbit-carry-sort": {
     id: "rabbit-carry-sort", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護",
-    title: "試著抱起 {petName}", description: "依序安排安全抱起兔子的步驟。", topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
-    knowledgeTitle: "兔子小知識", learningPoints: ["<mark>緩慢靠近、先讓牠嗅聞</mark>，再確認牠沒有緊張或後退。", "抱起時要<mark>同時托住胸口與臀部，讓牠靠著身體</mark>；不可拎耳朵或讓腹部朝上。"],
+    title: "和 {petName} 成為好朋友吧！", description: "{petName} 已經到家一段時間了，今天你想試著把牠抱起來。", topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
+    questionText: "請把這 5 個動作拖曳到正確的順序，安全地抱起 {petName}。",
+    knowledgeTitle: "兔子小知識", learningPoints: [
+      "正確順序：**緩慢靠近** → **手背嗅聞** → **輕摸頭確認放鬆** → **雙手同時托胸和臀** → **靠著身體保持穩定**",
+      "**請不要這樣抱兔兔**",
+      "**從耳朵拎起**：耳朵是兔子的散熱器官，從耳朵拎起會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。",
+      "**讓牠腹部朝上**：腹部朝上對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不安全。",
+      "**從耳朵拎起**或**腹部朝上**都可能造成嚴重傷害，永遠不要這樣做",
+    ],
     choices: [
       { id: "rabbit-carry-incorrect", text: "需要重新思考順序", result: "incorrect", ...incorrect, explanation: "安全抱兔需要循序降低緊張感，確認每一步都完成後再往下。" },
       { id: "rabbit-carry-complete", text: "完成安全抱兔步驟", result: "correct", ...positive, explanation: "你用循序、穩定的方式照顧牠的安全感。" },
@@ -124,11 +145,11 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
   },
   "rabbit-daily-check": {
     id: "rabbit-daily-check", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護",
-    title: "早安，{petName}！開始今天的日常巡視", description: "清理便盆、換上新底材，再順手檢查門齒與指甲。牧草補充與飲水更換已由餵食頁面涵蓋。", topic: "兔兔日常巡視", reportSummary: "每天清便盆並每週順手檢查門齒與指甲，是兔子健康照護的基礎。", artIndex: 0,
-    knowledgeTitle: "兔子小知識", learningPoints: ["<mark>便盆每天清</mark>，糞粒的量和形狀變化是腸道健康最直接的日常指標。", "<mark>門齒和指甲每週順手看一眼</mark>，早發現早處理。"],
+    title: "{petName} 的美容時間到了！", description: "完成梳毛、足底確認、門齒與指甲檢查，讓每週保養成為健康觀察的機會。", topic: "兔兔美容保養", reportSummary: "每週梳理後肢及尾根、確認足底、門齒與指甲，能及早發現健康變化。", artIndex: 0,
+    knowledgeTitle: "保養不只是好看，更是健康觀察的機會", learningPoints: ["每週幫 {petName} 梳毛時，可以觀察皮膚異常、脫毛區塊、足底紅腫或換毛量是否超乎尋常。", "門齒與指甲至少一週檢查一次；門齒過長不可自行剪牙，指甲偏長建議由獸醫或專業人員協助修剪。", "後肢及尾根周圍容易藏污和結毛，是最需要仔細梳理的區域。", "建議頻率：短毛兔每週梳毛 2–3 次、換毛期每日；長毛兔每日梳毛；每次梳毛時檢查足底。"],
     choices: [
       { id: "rabbit-daily-check-incorrect", text: "需要重新確認", result: "incorrect", ...incorrect, explanation: "這一項還沒完成。請依兔子的日常需求重新處理。" },
-      { id: "rabbit-daily-check-complete", text: "完成日常巡視", result: "correct", ...positive, explanation: "你完成了今天的日常巡視——清便盆、順手週檢門齒指甲。" },
+      { id: "rabbit-daily-check-complete", text: "完成美容保養", result: "correct", ...positive, explanation: "你完成了今天的保養——梳毛、足底確認、門齒與指甲檢查。" },
     ],
   },
 };

@@ -135,6 +135,10 @@ export type LifeActivityState = {
   seniorAdjustments: string[];
   rabbitCarryOrder: string[];
   rabbitCarryComplete: boolean;
+  rabbitCarryAttempts: number;
+  rabbitCarryAnswerRevealed: boolean;
+  /** 已看完三次錯誤後的正解；僅用來切換共用回饋頁，不算自行答對。 */
+  rabbitCarryFeedbackShown: boolean;
   rabbitDailyCheckSteps: string[];
   birdCageInspectionSteps: string[];
 };

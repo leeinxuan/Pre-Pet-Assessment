@@ -13,7 +13,7 @@ import {
 import { catDailyBehaviorScenarioIds, catLitterRescueConfig } from "../../data/species/cat/journey";
 import { rabbitDailyBehaviorScenarioIds } from "../../data/species/rabbit/journey";
 import { birdDailyBehaviorScenarioIds } from "../../data/species/bird/journey";
-import { rabbitActivityScenarios } from "../../data/species/rabbit/scenarios";
+import { rabbitActivityScenarios, rabbitCarrySortSteps } from "../../data/species/rabbit/scenarios";
 import { catScenarioCorrectFeedback } from "../../data/species/cat/scenarios";
 import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/species/dog/walking";
 import { dogAssets } from "../../data/species/dog/assets";
@@ -328,12 +328,14 @@ function BreedKnowledgeHighlight({ text, label = "品種小知識" }: { text: st
 function ScenarioOptionCard({
   type = "single",
   selected = false,
+  incorrect = false,
   disabled = false,
   children,
   onClick,
 }: {
   type?: "single" | "multiple";
   selected?: boolean;
+  incorrect?: boolean;
   disabled?: boolean;
   children: ReactNode;
   onClick: () => void;
@@ -341,7 +343,7 @@ function ScenarioOptionCard({
   return (
     <button
       type="button"
-      className={`scenario-option-card scenario-option-card--${type} ${selected ? "selected" : ""}`}
+      className={`scenario-option-card scenario-option-card--${type} ${selected ? "selected" : ""} ${incorrect ? "incorrect" : ""}`}
       aria-pressed={type === "multiple" ? selected : undefined}
       disabled={disabled}
       onClick={onClick}
@@ -1041,6 +1043,7 @@ function DailyBehaviorActivityMulti({
     firstUnfinished === -1 ? "positive" : "question",
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [incorrectOptionId, setIncorrectOptionId] = useState<string | null>(null);
   const [retryCopy, setRetryCopy] = useState<{ title: string; explanation: string; suggestion?: string } | null>(null);
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
@@ -1062,6 +1065,7 @@ function DailyBehaviorActivityMulti({
     setCurrentIndex(0);
     setMode("question");
     setSelectedIds([]);
+    setIncorrectOptionId(null);
     setRetryCopy(null);
     setVideoFailed(false);
     setVideoFinished(false);
@@ -1093,13 +1097,13 @@ function DailyBehaviorActivityMulti({
   };
 
   function toggleChoice(choiceId: string) {
-    setRetryCopy(null);
+    if (mode !== "question") return;
     const choice = scenario.choices.find((item) => item.id === choiceId);
     if (!choice) return;
 
     if (wrongChoiceIds.includes(choiceId) || choice.result === "incorrect") {
-      const selectedChoices = scenario.choices.filter((item) => selectedIds.includes(item.id) || item.id === choice.id);
-      onChooseMultiple(scenario, selectedChoices, "incorrect");
+      setIncorrectOptionId(choiceId);
+      onChooseMultiple(scenario, scenario.choices.filter((item) => selectedIds.includes(item.id) || item.id === choiceId), "incorrect");
       setRetryCopy({
         title: "這個做法可能不太適合",
         explanation: choice.explanation,
@@ -1111,6 +1115,7 @@ function DailyBehaviorActivityMulti({
 
     const nextIds = selectedIds.includes(choiceId) ? selectedIds.filter((id) => id !== choiceId) : [...selectedIds, choiceId];
     setSelectedIds(nextIds);
+    setRetryCopy(null);
     const selectedChoices = scenario.choices.filter((item) => nextIds.includes(item.id));
     const hasEveryCorrectChoice = correctChoiceIds.every((id) => nextIds.includes(id));
     if (hasEveryCorrectChoice && nextIds.length === correctChoiceIds.length) {
@@ -1123,7 +1128,7 @@ function DailyBehaviorActivityMulti({
 
   function retry() {
     setRetryCopy(null);
-    setSelectedIds([]);
+    setIncorrectOptionId(null);
     setMode("question");
   }
 
@@ -1134,6 +1139,7 @@ function DailyBehaviorActivityMulti({
     }
     setCurrentIndex((value) => value + 1);
     setSelectedIds([]);
+    setIncorrectOptionId(null);
     setRetryCopy(null);
     setMode("question");
     setVideoFailed(false);
@@ -1186,15 +1192,14 @@ function DailyBehaviorActivityMulti({
         )}
         {videoFailed && <div className="scene-video-fallback" role="status">影片暫時無法播放，請直接完成右側互動。</div>}
       </div>
-      {mode === "incorrect" && retryCopy ? (
+      {mode === "incorrect" && incorrectOptionId && retryCopy ? (
         <section className="daily-behavior-retry" aria-live="polite">
           <h2>{retryCopy.title}</h2>
           <IncorrectExplanation text={withPetName(retryCopy.explanation, petName)} />
           {retryCopy.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(retryCopy.suggestion, petName)}</p></div>}
           <button type="button" className="secondary" onClick={retry}>重新想一次</button>
         </section>
-      ) : (
-                                <section className="reflection daily-behavior-choices">
+      ) : <section className="reflection daily-behavior-choices">
           <div className="daily-behavior-question-row">
             <h2>{scenario.questionText ?? "此刻需要完成哪些事？（複選）"}</h2>
             <p className="daily-behavior-live-hint visible daily-behavior-progress-hint" role="status">
@@ -1211,8 +1216,7 @@ function DailyBehaviorActivityMulti({
               );
             })}
           </div>
-        </section>
-      )}
+        </section>}
     </section>
   );
 }
@@ -2973,14 +2977,6 @@ function WalkingActivity({
   );
 }
 
-const rabbitCarrySteps = [
-  "緩慢靠近，不發出大聲音，蹲低到與 {petName} 視線同高",
-  "伸出手背讓 {petName} 嗅聞，等牠不緊張",
-  "輕輕摸頭頂，確認 {petName} 沒有蹲低或後退",
-  "一手托住胸口，另一手同時托住臀部",
-  "讓 {petName} 靠著你的身體，前肢有支撐",
-] as const;
-
 const rabbitCheckSteps = [
   { id: "hay", title: "牧草架只剩一半了", prompt: "現在要怎麼做？", correct: "立刻補充新鮮牧草", incorrect: "等等再補，牠剩的還夠", feedback: "牧草是兔子的主食和腸道蠕動的動力，不能等到完全空了才補。" },
   { id: "water", title: "水碗裡的水看起來混濁", prompt: "現在要怎麼做？", correct: "倒掉舊水，清洗碗後換新鮮飲水", incorrect: "直接再加滿就好", feedback: "舊水可能累積髒污與細菌；換水時也能留意牠昨天的飲水量。" },
@@ -2994,9 +2990,9 @@ function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { s
     videoFailed
     fallbackText="兔子日常照護完成"
     mediaPlaceholder={<div className="scene-media-placeholder"><span>兔子日常照護</span><strong>{withPetName(scenario.title, petName)}</strong><small>每一個穩定的日常，都是牠的安全感。</small></div>}
-    intro={<p>{scenario.id === "rabbit-daily-check" ? `你完成了今天的日常巡視！牧草、飲水、便盆、糞便——這四件事，是${petName || "牠"}健康的底線。` : `你用循序、穩定的方式試著抱起${petName || "牠"}，也把牠的安全感放在前面。`}</p>}
+    intro={<p>{scenario.id === "rabbit-daily-check" ? `你完成了今天的保養——梳毛、足底確認、門齒與指甲檢查。定期梳毛，尤其是後肢及尾根周圍，能清除皮屑及脫落毛髮，減少${petName || "牠"}自行理毛時食入過多毛髮引發腸阻塞的機會。` : `你用循序、穩定的方式試著抱起${petName || "牠"}，也把牠的安全感放在前面。`}</p>}
     knowledgeTitle={scenario.knowledgeTitle ?? "兔子小知識"}
-    correctItems={scenario.id === "rabbit-carry-sort" ? ["<mark>緩慢靠近、先讓牠嗅聞</mark>，再確認牠沒有緊張或後退。", "抱起時要<mark>同時托住胸口與臀部，讓牠靠著身體</mark>；不可拎耳朵或讓腹部朝上。"] : scenario.learningPoints}
+    correctItems={scenario.id === "rabbit-carry-sort" ? scenario.learningPoints?.map((text) => withPetName(text, petName)) : scenario.learningPoints}
     onReplay={onReplay}
     onVideoError={() => undefined}
     onContinue={onContinue}
@@ -3009,26 +3005,99 @@ function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onCont
   const order = activity.rabbitCarryOrder.length ? activity.rabbitCarryOrder : ["2", "0", "4", "1", "3"];
   const [message, setMessage] = useState("");
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dropIndex, setDropIndex] = useState<number | null>(null);
+  const feedbackRef = useRef<HTMLDivElement>(null);
+  const submittedRef = useRef(false);
   const complete = activity.rabbitCarryComplete;
-  const move = (from: number, to: number) => {
-    if (from === to || from < 0 || to < 0 || from >= order.length || to >= order.length) return;
+  const answerRevealed = activity.rabbitCarryAnswerRevealed;
+  const feedbackShown = activity.rabbitCarryFeedbackShown;
+  const attempts = activity.rabbitCarryAttempts ?? 0;
+
+  useEffect(() => {
+    if (complete || feedbackShown) {
+      feedbackRef.current?.focus({ preventScroll: true });
+      feedbackRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
+    }
+    submittedRef.current = false;
+  }, [complete, feedbackShown, attempts]);
+
+  const move = (from: number, insertAt: number) => {
+    if (complete || answerRevealed || from < 0 || insertAt < 0 || from >= order.length || insertAt > order.length) return;
     const next = [...order];
     const [moved] = next.splice(from, 1);
-    next.splice(to, 0, moved);
+    const destination = from < insertAt ? insertAt - 1 : insertAt;
+    next.splice(destination, 0, moved);
     onChange({ rabbitCarryOrder: next });
   };
   const check = () => {
+    if (complete || answerRevealed || submittedRef.current) return;
+    submittedRef.current = true;
     const incorrectIndex = order.findIndex((value, index) => value !== String(index));
     if (incorrectIndex !== -1) {
+      const nextAttempts = attempts + 1;
       onChoose(scenario, scenario.choices[0]);
-      setMessage(`第 ${incorrectIndex + 1} 步還需要重新想一想：先建立安全感，再以雙手穩定支撐牠。`);
+      if (nextAttempts >= 3) {
+        onChange({ rabbitCarryAttempts: nextAttempts, rabbitCarryAnswerRevealed: true, rabbitCarryOrder: ["0", "1", "2", "3", "4"] });
+        setMessage("已顯示正確順序。確認後可查看完整照護重點。");
+        return;
+      }
+      onChange({ rabbitCarryAttempts: nextAttempts });
+      setMessage(`第 ${incorrectIndex + 1} 步需要重新想一想：${rabbitCarrySortSteps[incorrectIndex].hint}`);
       return;
     }
     onChange({ rabbitCarryComplete: true });
     onChoose(scenario, scenario.choices[1]);
   };
-  if (complete) return <RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} />;
-  return <section className="rabbit-activity rabbit-carry-activity" aria-labelledby="rabbit-carry-title"><header><p>日常照護</p><h1 id="rabbit-carry-title">{withPetName(scenario.title, petName)}</h1><span>拖曳每個步驟卡片，排出從接近到安全支撐的順序。</span></header><div className="rabbit-activity-panel"><h2>請排出安全順序</h2><ol className="rabbit-sort-list rabbit-drag-sort-list">{order.map((value, index) => <li key={value} data-rabbit-step={index} draggable onPointerDown={(event) => { event.currentTarget.setPointerCapture(event.pointerId); setDraggedIndex(index); }} onPointerUp={(event) => { const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>("[data-rabbit-step]"); const targetIndex = Number(target?.dataset.rabbitStep); if (draggedIndex !== null && Number.isInteger(targetIndex)) move(draggedIndex, targetIndex); setDraggedIndex(null); }} onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; setDraggedIndex(index); }} onDragEnd={() => setDraggedIndex(null)} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); if (draggedIndex !== null) move(draggedIndex, index); setDraggedIndex(null); }} className={draggedIndex === index ? "is-dragging" : ""}><span>{index + 1}</span><div className="rabbit-step-image-slot" aria-hidden="true" /><p>{withPetName(rabbitCarrySteps[Number(value)], petName)}</p><small>拖曳排序</small></li>)}</ol><aside className="rabbit-unsafe-list"><b>請不要這樣抱兔兔</b><span>從耳朵拎起：耳朵是重要散熱器官，可能造成傷害。</span><span>讓牠腹部朝上：容易引發強烈壓力與掙扎。</span></aside>{message && <p className="rabbit-activity-message">{message}</p>}<button type="button" className="primary" onClick={check}>確認順序 <span>→</span></button></div></section>;
+
+  if (complete || feedbackShown) return <div ref={feedbackRef} tabIndex={-1} className="activity-feedback-focus"><RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} /></div>;
+  return (
+    <section className="rabbit-activity rabbit-carry-activity" aria-labelledby="rabbit-carry-title">
+      <header><p>日常照護</p><h1 id="rabbit-carry-title">{withPetName(scenario.title, petName)}</h1><span>{withPetName(scenario.description, petName)}</span></header>
+      <div className="rabbit-activity-panel">
+        <h2>{withPetName(scenario.questionText ?? "", petName)}</h2>
+        <ol className="rabbit-sort-list rabbit-drag-sort-list">
+          {order.map((value, index) => (
+            <li key={value} data-rabbit-step={index}
+              onPointerDown={(event) => {
+                if (answerRevealed || (event.target as HTMLElement).closest("button")) return;
+                event.preventDefault();
+                event.currentTarget.setPointerCapture(event.pointerId);
+                setDraggedIndex(index);
+                setDropIndex(index);
+              }}
+              onPointerMove={(event) => {
+                if (draggedIndex === null) return;
+                const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>("[data-rabbit-step]");
+                if (!target) return;
+                const rect = target.getBoundingClientRect();
+                const targetIndex = Number(target.dataset.rabbitStep);
+                setDropIndex(event.clientY > rect.top + rect.height / 2 ? targetIndex + 1 : targetIndex);
+              }}
+              onPointerUp={(event) => {
+                const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>("[data-rabbit-step]");
+                if (draggedIndex !== null && target) {
+                  const rect = target.getBoundingClientRect();
+                  const targetIndex = Number(target.dataset.rabbitStep);
+                  move(draggedIndex, event.clientY > rect.top + rect.height / 2 ? targetIndex + 1 : targetIndex);
+                }
+                setDraggedIndex(null);
+                setDropIndex(null);
+              }}
+              onPointerCancel={() => { setDraggedIndex(null); setDropIndex(null); }}
+              className={`${draggedIndex === index ? "is-dragging" : ""} ${dropIndex === index ? "is-drop-before" : ""} ${dropIndex === index + 1 ? "is-drop-after" : ""} ${answerRevealed ? "is-revealed" : ""}`}
+            >
+              <span>{index + 1}</span><div className="rabbit-step-image-slot" aria-hidden="true" />
+              <p>{withPetName(rabbitCarrySortSteps[Number(value)].text, petName)}</p>
+              {answerRevealed ? <small>正確動作</small> : <small className="sort-drag-label">按住拖曳排序</small>}
+            </li>
+          ))}
+        </ol>
+        {attempts > 0 && !answerRevealed && <p className="sort-attempts" role="status">還有 <strong>{Math.max(0, 3 - attempts)}</strong> 次可嘗試</p>}
+        {message && <p className="rabbit-activity-message" role="status">{message}</p>}
+        {answerRevealed ? <button type="button" className="primary" onClick={() => onChange({ rabbitCarryFeedbackShown: true })}>我知道正確做法了 <span>→</span></button> : <button type="button" className="primary" onClick={check}>確認順序 <span>→</span></button>}
+      </div>
+    </section>
+  );
 }
 
 function LegacyRabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue, onReplay }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void; onReplay?: () => void }) {
@@ -3050,7 +3119,7 @@ function LegacyRabbitDailyCheckActivity({ activity, petName, onChange, onChoose,
   return <section className="rabbit-activity" aria-labelledby="rabbit-check-title"><header><p>日常照護</p><h1 id="rabbit-check-title">{withPetName(scenario.title, petName)}</h1><span>依序完成今天的四項巡視，已完成的項目會保留進度。</span></header><div className="rabbit-activity-grid"><div className="rabbit-activity-media"><span>今日巡視 {selected.filter((item) => !item.startsWith("poop:")).length + (selected.some((item) => item.startsWith("poop:")) ? 1 : 0)} / 4</span><strong>牧草、飲水、便盆、糞便</strong><small>每天固定檢查，才能及早發現日常變化。</small></div><div className="rabbit-activity-panel">{current ? <><h2>{current.title}</h2><p>{current.prompt}</p><div className="scenario-option-list"><ScenarioOptionCard type="single" onClick={() => choose(true, current.id, "")}>{current.correct}</ScenarioOptionCard><ScenarioOptionCard type="single" onClick={() => choose(false, current.id, current.feedback)}>{current.incorrect}</ScenarioOptionCard></div></> : <><h2>看看今天的糞便狀況</h2><p>選出你在便盆中觀察到的情況。</p><div className="scenario-option-list">{poopOptions.map((option) => <ScenarioOptionCard key={option} type="single" onClick={() => option === poopCorrect ? (onChange({ rabbitDailyCheckSteps: [...selected, `poop:${variant}`] }), onChoose(scenario, scenario.choices[1]), setMessage("你完成了所有巡視項目。")) : markWrong("請再仔細比對今天觀察到的糞便狀況。")}>{option}</ScenarioOptionCard>)}</div></>}{message && <p className="rabbit-activity-message">{message}</p>}</div></div></section>;
 }
 
-function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
+function LegacyRabbitDailyCheckActivityScene({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
   const scenario = rabbitActivityScenarios["rabbit-daily-check"];
   const completed = activity.rabbitDailyCheckSteps;
   const pelletIds = ["pellet-1", "pellet-2", "pellet-3"];
@@ -3084,6 +3153,60 @@ function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onCon
   const checkNails = () => { if (!has("teeth") || has("nails")) return; add("nails"); onChoose(scenario, scenario.choices[1]); setMessage("每週觀察指甲是否彎曲影響抓握，定期修剪或由獸醫協助。"); };
   const showChecks = has("bedding");
   return <section className="rabbit-activity rabbit-daily-check-activity" onPointerMove={(event) => dragging && setPoint({ x: event.clientX, y: event.clientY })} onPointerUp={drop} onPointerCancel={drop}><header><p>日常照護</p><h1>{withPetName(scenario.title, petName)}</h1><span>清完便盆、換上新底材，再順手檢查門齒與指甲。</span></header><div className="rabbit-daily-scene rabbit-daily-inspection-scene"><div ref={targetRefs.litter} className={`rabbit-daily-target rabbit-daily-litter ${has("bedding") ? "done" : ""}`}><img src={rabbitAssets.room.litterBox} alt="兔子便盆" /><div className="rabbit-pellets" aria-label={`已清除 ${clearedCount} / ${pelletIds.length} 顆糞粒`}>{pelletIds.map((id) => !has(id) && <span key={id}>●</span>)}</div><b>{has("bedding") ? "新底材已鋪好" : `清除 ${clearedCount} / ${pelletIds.length} 顆`}</b></div><div ref={targetRefs.bin} className={`rabbit-daily-bin ${scoopLoaded ? "is-ready" : ""}`} aria-label="廢棄桶"><span>🗑️</span><b>廢棄桶</b></div>{showChecks && <div className="rabbit-daily-rabbit"><img src={rabbitAssets.selection.rabbit} alt={petName || "兔兔"} /><button type="button" className={`rabbit-health-check rabbit-teeth-check ${has("teeth") ? "done" : ""}`} disabled={has("teeth")} onClick={checkTeeth}>{has("teeth") ? "✓ 門齒已檢查" : "點擊嘴巴檢查門齒"}</button><button type="button" className={`rabbit-health-check rabbit-nails-check ${has("nails") ? "done" : ""}`} disabled={!has("teeth") || has("nails")} onClick={checkNails}>{has("nails") ? "✓ 指甲已檢查" : "點擊前腳掌檢查指甲"}</button></div>}</div><div className="rabbit-daily-tools">{!litterClean || scoopLoaded ? <button type="button" onPointerDown={(event) => start(event, "scoop")}>🧹 {scoopLoaded ? "拖拉便盆鏟到廢棄桶" : "拖拉便盆鏟掃過便盆"}</button> : !has("bedding") ? <button type="button" onPointerDown={(event) => start(event, "bedding")}>▤ 拖拉新墊料包到便盆</button> : null}</div><p className="rabbit-activity-message">{message}</p>{dragging && point && <div className="rabbit-daily-drag-ghost" style={{ left: point.x, top: point.y }}>{dragging === "scoop" ? "🧹" : "▤"}</div>}</section>;
+}
+
+const rabbitGroomingSteps = [
+  { id: "groom-head-ears", label: "頭頂與耳後", instruction: "拖曳梳子，輕輕梳理頭頂與耳後。", detail: "牠瞇眼放鬆，少量脫落毛髮已收集。" },
+  { id: "groom-back-sides", label: "背部與側面", instruction: "拖曳梳子，沿背部與側面梳理。", detail: "脫落毛髮已集中到毛球收集框。" },
+  { id: "groom-hind-tail", label: "後肢及尾根周圍", instruction: "拖曳梳子，仔細梳理後肢及尾根周圍。", detail: "尾根部容易藏污和結毛，是最需要仔細梳理的區域。" },
+  { id: "groom-paws", label: "足底", instruction: "點擊腳掌，完成足底檢查。", detail: "今日足底：毛髮正常 ✓／足底毛髮脫落或有紅腫時，建議諮詢獸醫。" },
+  { id: "groom-teeth", label: "門齒", instruction: "點擊嘴部，查看門齒觀察卡。", detail: "門齒長度適中、上下咬合正常；持續供應充足牧草幫助磨牙。若偏長，不可自行剪牙，應諮詢兔科獸醫。" },
+  { id: "groom-nails", label: "指甲", instruction: "點擊前腳，查看指甲觀察卡。", detail: "指甲長度適中，繼續每週定期確認。若偏長，請獸醫師或專業人員協助修剪，避免剪傷血線。" },
+] as const;
+
+function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue, onReplay }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void; onReplay?: () => void }) {
+  const scenario = rabbitActivityScenarios["rabbit-daily-check"];
+  const completed = activity.rabbitDailyCheckSteps;
+  const current = rabbitGroomingSteps.find((step) => !completed.includes(step.id));
+  const [draggingBrush, setDraggingBrush] = useState(false);
+  const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
+  const [message, setMessage] = useState(current?.instruction ?? "");
+  const [observation, setObservation] = useState<(typeof rabbitGroomingSteps)[number] | null>(null);
+  const targetRef = useRef<HTMLButtonElement>(null);
+  const isBrushStep = Boolean(current && ["groom-head-ears", "groom-back-sides", "groom-hind-tail"].includes(current.id));
+  const add = (id: string) => onChange({ rabbitDailyCheckSteps: completed.includes(id) ? completed : [...completed, id] });
+  const completeStep = (step: (typeof rabbitGroomingSteps)[number]) => {
+    add(step.id);
+    setObservation(null);
+    const next = rabbitGroomingSteps[rabbitGroomingSteps.findIndex((item) => item.id === step.id) + 1];
+    setMessage(next ? next.instruction : "今天的美容保養已完成。 ");
+    if (!next) onChoose(scenario, scenario.choices[1]);
+  };
+  const finishBrush = (event: ReactPointerEvent<HTMLElement>) => {
+    if (!draggingBrush || !current || !isBrushStep) return;
+    setDraggingBrush(false);
+    setPoint(null);
+    const rect = targetRef.current?.getBoundingClientRect();
+    const overTarget = Boolean(rect && event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom);
+    if (!overTarget) { setMessage(`請把梳子拖到「${current.label}」區域。`); return; }
+    completeStep(current);
+  };
+  const complete = !current;
+  if (complete) return <RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} />;
+  const firstPart = rabbitGroomingSteps.findIndex((step) => step.id === current.id) < 4;
+  return <section className="rabbit-activity rabbit-grooming-activity" onPointerMove={(event) => draggingBrush && setPoint({ x: event.clientX, y: event.clientY })} onPointerUp={finishBrush} onPointerCancel={() => { setDraggingBrush(false); setPoint(null); }} aria-labelledby="rabbit-grooming-title">
+    <header><p>日常照護</p><h1 id="rabbit-grooming-title">{withPetName(scenario.title, petName)}</h1><span>{firstPart ? "第一部分：梳毛與足底確認" : "第二部分：門齒與指甲外觀檢查"}</span></header>
+    <ol className="rabbit-grooming-progress" aria-label="美容保養進度">{rabbitGroomingSteps.map((step, index) => <li key={step.id} className={completed.includes(step.id) ? "done" : step.id === current.id ? "active" : ""}><span>{completed.includes(step.id) ? "✓" : index + 1}</span>{step.label}</li>)}</ol>
+    <div className="rabbit-grooming-scene">
+      <img src={rabbitAssets.selection.rabbit} alt={petName || "兔兔"} />
+      <button ref={targetRef} type="button" className={`rabbit-grooming-target ${current.id === "groom-hind-tail" ? "needs-care" : ""}`} onClick={() => !isBrushStep && setObservation(current)}>{current.label}{current.id === "groom-hind-tail" && <small>特別注意！</small>}</button>
+      {isBrushStep && <button type="button" className="rabbit-grooming-brush" onPointerDown={(event) => { event.currentTarget.setPointerCapture(event.pointerId); setDraggingBrush(true); setPoint({ x: event.clientX, y: event.clientY }); setMessage(`把梳子拖到「${current.label}」區域。`); }}>梳子</button>}
+      {!isBrushStep && <p className="rabbit-grooming-instruction">{current.instruction}</p>}
+    </div>
+    {observation && <section className="rabbit-grooming-observation" role="status"><h2>{observation.label}觀察</h2><p>{observation.detail}</p><button type="button" className="primary" onClick={() => completeStep(observation)}>確認完成 <span>→</span></button></section>}
+    {!observation && <p className="rabbit-activity-message">{message}</p>}
+    {draggingBrush && point && <div className="rabbit-daily-drag-ghost" style={{ left: point.x, top: point.y }}>梳</div>}
+  </section>;
 }
 
 function BirdArrivalMealActivity({ activity, petName, onChange, onAddExpense, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onAddExpense: (id: string) => void; onContinue: () => void }) {
@@ -3265,7 +3388,9 @@ export function LifeJourney({
   }
 
   function continueJourney() {
-    onCompleteItem(item.id);
+    if (!(isRabbitCarrySortActivity && activity.rabbitCarryAnswerRevealed && !activity.rabbitCarryComplete)) {
+      onCompleteItem(item.id);
+    }
     if (item.scenarioId === "illness-vet" && !activity.sickTimePassComplete) {
       setTimePassOpen(true);
       return;
@@ -3307,7 +3432,7 @@ export function LifeJourney({
       });
     }
     if (isDailyInspectionActivity) onActivityChange({ catInspectionSteps: [] });
-    if (isRabbitCarrySortActivity) onActivityChange({ rabbitCarryOrder: [], rabbitCarryComplete: false });
+    if (isRabbitCarrySortActivity) onActivityChange({ rabbitCarryOrder: [], rabbitCarryComplete: false, rabbitCarryAttempts: 0, rabbitCarryAnswerRevealed: false, rabbitCarryFeedbackShown: false });
     if (isRabbitDailyCheckActivity) onActivityChange({ rabbitDailyCheckSteps: [] });
     if (isBirdCageInspectionActivity) onActivityChange({ birdCageInspectionSteps: [] });
     setReplayInProgress(true);

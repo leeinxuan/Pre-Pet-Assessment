@@ -1,0 +1,328 @@
+{
+  "_readme": "每個物種的素材清單。status: 'done'=已有檔案, 'needed'=需要AI生成, 'placeholder'=暫用其他物種素材",
+  "species": {
+    "rabbit": {
+      "displayName": "兔子",
+      "style": "flat illustration, pastel color, soft edges, child-friendly",
+      "basePrompt": "a cute rabbit in a {scene}, {style}, white background, no text, square format",
+      "assets": {
+        "selection": [
+          {
+            "id": "rabbit-main",
+            "path": "public/assets/species/rabbit.png",
+            "status": "done",
+            "prompt": "a cute lop-eared rabbit sitting, front view, {style}"
+          }
+        ],
+        "room": [
+          {
+            "id": "room-background",
+            "path": "public/assets/rabbit/room/rabbit-room-background.png",
+            "status": "needed",
+            "prompt": "a cozy rabbit room, tatami floor, low furniture, rabbit-safe space, {style}, wide horizontal format"
+          },
+          {
+            "id": "hay-rack",
+            "path": "public/assets/rabbit/room/hay-rack.png",
+            "status": "needed",
+            "prompt": "a wooden hay rack filled with timothy hay for rabbits, {style}"
+          },
+          {
+            "id": "water-bowl",
+            "path": "public/assets/rabbit/room/water-bowl.png",
+            "status": "needed",
+            "prompt": "a ceramic water bowl for small pets, light blue, {style}"
+          },
+          {
+            "id": "litter-box",
+            "path": "public/assets/rabbit/room/litter-box.png",
+            "status": "needed",
+            "prompt": "a small corner litter box for rabbits, light grey plastic, {style}"
+          },
+          {
+            "id": "hiding-box",
+            "path": "public/assets/rabbit/room/hiding-box.png",
+            "status": "needed",
+            "prompt": "a wooden hiding box for rabbits, with a round entrance hole, {style}"
+          },
+          {
+            "id": "chew-toy",
+            "path": "public/assets/rabbit/room/chew-toy.png",
+            "status": "needed",
+            "prompt": "a woven grass ball chew toy for rabbits, natural color, {style}"
+          },
+          {
+            "id": "anti-slip-mat",
+            "path": "public/assets/rabbit/room/anti-slip-mat.png",
+            "status": "needed",
+            "prompt": "a grey anti-slip pet mat, flat, {style}"
+          },
+          {
+            "id": "toxic-plant",
+            "path": "public/assets/rabbit/room/toxic-plant.png",
+            "status": "needed",
+            "prompt": "a green leafy indoor plant that is toxic to rabbits, warning icon, {style}"
+          },
+          {
+            "id": "plastic-item",
+            "path": "public/assets/rabbit/room/plastic-item.png",
+            "status": "needed",
+            "prompt": "small plastic objects on the floor, dangerous for rabbits, {style}"
+          }
+        ],
+        "feeding": [
+          {
+            "id": "hay",
+            "path": "public/assets/rabbit/feeding/hay.png",
+            "status": "needed",
+            "prompt": "a pile of dried timothy hay, golden yellow, {style}"
+          },
+          {
+            "id": "leafy-veggie",
+            "path": "public/assets/rabbit/feeding/leafy-veggie.png",
+            "status": "needed",
+            "prompt": "fresh green leafy vegetables for rabbits, romaine lettuce, {style}"
+          },
+          {
+            "id": "fresh-water",
+            "path": "public/assets/rabbit/feeding/fresh-water.png",
+            "status": "needed",
+            "prompt": "a water bottle dispenser for small pets, transparent, {style}"
+          },
+          {
+            "id": "carrot",
+            "path": "public/assets/rabbit/feeding/carrot.png",
+            "status": "needed",
+            "prompt": "a single orange carrot with green leaves, {style}"
+          },
+          {
+            "id": "onion-danger",
+            "path": "public/assets/rabbit/feeding/onion-danger.png",
+            "status": "needed",
+            "prompt": "a white onion with an X warning sign, toxic food for rabbits, {style}"
+          },
+          {
+            "id": "macadamia-danger",
+            "path": "public/assets/rabbit/feeding/macadamia-danger.png",
+            "status": "needed",
+            "prompt": "macadamia nuts with a warning X sign, toxic for rabbits, {style}"
+          }
+        ],
+        "preparation": [
+          {
+            "id": "carrier",
+            "path": "public/assets/rabbit/preparation/carrier.png",
+            "status": "placeholder",
+            "currentFile": "public/assets/dog/preparation/carrier.png",
+            "prompt": "a small pet carrier box for rabbits, ventilated sides, {style}"
+          },
+          {
+            "id": "anti-slip-liner",
+            "path": "public/assets/rabbit/preparation/anti-slip-liner.png",
+            "status": "needed",
+            "prompt": "a small grey anti-slip mat liner for pet carrier, {style}"
+          },
+          {
+            "id": "hay-travel",
+            "path": "public/assets/rabbit/preparation/hay-travel.png",
+            "status": "needed",
+            "prompt": "a small bundle of timothy hay in a paper bag for travel, {style}"
+          },
+          {
+            "id": "id-card",
+            "path": "public/assets/rabbit/preparation/id-card.png",
+            "status": "placeholder",
+            "currentFile": "public/assets/dog/preparation/id-card.png",
+            "prompt": "a pet ID card document for a rabbit, {style}"
+          },
+          {
+            "id": "cooling-pack",
+            "path": "public/assets/rabbit/preparation/cooling-pack.png",
+            "status": "needed",
+            "prompt": "a blue gel cooling pack for pet travel, {style}"
+          }
+        ],
+        "breeds": [
+          {
+            "id": "lop-eared",
+            "path": "public/assets/rabbit/selection/lop-eared.png",
+            "status": "needed",
+            "prompt": "a cute lop-eared rabbit, floppy ears, brown and white, front view, {style}"
+          },
+          {
+            "id": "dutch",
+            "path": "public/assets/rabbit/selection/dutch.png",
+            "status": "needed",
+            "prompt": "a Dutch rabbit, black and white pattern, sitting upright, front view, {style}"
+          },
+          {
+            "id": "angora",
+            "path": "public/assets/rabbit/selection/angora.png",
+            "status": "needed",
+            "prompt": "an Angora rabbit with fluffy long white fur, front view, {style}"
+          },
+          {
+            "id": "mini-rex",
+            "path": "public/assets/rabbit/selection/mini-rex.png",
+            "status": "needed",
+            "prompt": "a Mini Rex rabbit, short velvety grey fur, front view, {style}"
+          },
+          {
+            "id": "mixed-rabbit",
+            "path": "public/assets/rabbit/selection/mixed-rabbit.png",
+            "status": "needed",
+            "prompt": "a mixed breed rabbit, white with brown spots, friendly face, front view, {style}"
+          }
+        ]
+      }
+    },
+    "bird": {
+      "displayName": "鳥類",
+      "style": "flat illustration, vibrant color, clean lines, child-friendly",
+      "basePrompt": "a cute {species} in a {scene}, {style}, white background, no text, square format",
+      "assets": {
+        "selection": [
+          {
+            "id": "bird-main",
+            "path": "public/assets/species/bird.png",
+            "status": "done"
+          }
+        ],
+        "room": [
+          {
+            "id": "room-background",
+            "path": "public/assets/bird/room/bird-room-background.png",
+            "status": "needed",
+            "prompt": "a bright bird room with large windows, perch stands, {style}, wide horizontal format"
+          },
+          {
+            "id": "cage",
+            "path": "public/assets/bird/room/cage.png",
+            "status": "needed",
+            "prompt": "a spacious bird cage with perches and toys inside, grey metal, {style}"
+          },
+          {
+            "id": "perch",
+            "path": "public/assets/bird/room/perch.png",
+            "status": "needed",
+            "prompt": "a natural wood bird perch stand, T-shape, {style}"
+          },
+          {
+            "id": "food-dish",
+            "path": "public/assets/bird/room/food-dish.png",
+            "status": "needed",
+            "prompt": "a small ceramic food dish for birds, white, {style}"
+          },
+          {
+            "id": "water-dish",
+            "path": "public/assets/bird/room/water-dish.png",
+            "status": "needed",
+            "prompt": "a small water dish for pet birds, blue, {style}"
+          },
+          {
+            "id": "mirror-toy",
+            "path": "public/assets/bird/room/mirror-toy.png",
+            "status": "needed",
+            "prompt": "a small round mirror toy hanging for birds, colorful, {style}"
+          },
+          {
+            "id": "bell-toy",
+            "path": "public/assets/bird/room/bell-toy.png",
+            "status": "needed",
+            "prompt": "a colorful bell toy hanging for birds, bright colors, {style}"
+          },
+          {
+            "id": "non-stick-pan-danger",
+            "path": "public/assets/bird/room/non-stick-pan-danger.png",
+            "status": "needed",
+            "prompt": "a non-stick cooking pan with warning icon, toxic fumes danger for birds, {style}"
+          },
+          {
+            "id": "aerosol-danger",
+            "path": "public/assets/bird/room/aerosol-danger.png",
+            "status": "needed",
+            "prompt": "an aerosol spray can with X warning sign, toxic for birds, {style}"
+          }
+        ],
+        "feeding": [
+          {
+            "id": "seeds",
+            "path": "public/assets/bird/feeding/seeds.png",
+            "status": "needed",
+            "prompt": "a mix of bird seeds in a small dish, millet and sunflower seeds, {style}"
+          },
+          {
+            "id": "pellets",
+            "path": "public/assets/bird/feeding/pellets.png",
+            "status": "needed",
+            "prompt": "colorful round bird pellets/kibble in a bowl, {style}"
+          },
+          {
+            "id": "fresh-fruit",
+            "path": "public/assets/bird/feeding/fresh-fruit.png",
+            "status": "needed",
+            "prompt": "small pieces of fresh fruit for birds, apple and berry, {style}"
+          },
+          {
+            "id": "avocado-danger",
+            "path": "public/assets/bird/feeding/avocado-danger.png",
+            "status": "needed",
+            "prompt": "half an avocado with X warning sign, toxic food for birds, {style}"
+          },
+          {
+            "id": "chocolate-danger",
+            "path": "public/assets/bird/feeding/chocolate-danger.png",
+            "status": "needed",
+            "prompt": "chocolate pieces with warning X sign, toxic for birds, {style}"
+          }
+        ],
+        "preparation": [
+          {
+            "id": "carrier-cage",
+            "path": "public/assets/bird/preparation/carrier-cage.png",
+            "status": "needed",
+            "prompt": "a small travel carrier cage for birds, plastic and wire, {style}"
+          },
+          {
+            "id": "cover-cloth",
+            "path": "public/assets/bird/preparation/cover-cloth.png",
+            "status": "needed",
+            "prompt": "a dark cloth cover for a bird cage, folded neatly, {style}"
+          },
+          {
+            "id": "seed-packet",
+            "path": "public/assets/bird/preparation/seed-packet.png",
+            "status": "needed",
+            "prompt": "a small packet of bird seeds for travel, {style}"
+          }
+        ],
+        "breeds": [
+          {
+            "id": "budgerigar",
+            "path": "public/assets/bird/selection/budgerigar.png",
+            "status": "needed",
+            "prompt": "a cute green budgerigar/budgie parakeet, front view, {style}"
+          },
+          {
+            "id": "cockatiel",
+            "path": "public/assets/bird/selection/cockatiel.png",
+            "status": "needed",
+            "prompt": "a cute cockatiel with yellow crest, front view, {style}"
+          },
+          {
+            "id": "lovebird",
+            "path": "public/assets/bird/selection/lovebird.png",
+            "status": "needed",
+            "prompt": "a colorful lovebird, green and orange face, front view, {style}"
+          },
+          {
+            "id": "conure",
+            "path": "public/assets/bird/selection/conure.png",
+            "status": "needed",
+            "prompt": "a green cheek conure parrot, vibrant colors, front view, {style}"
+          }
+        ]
+      }
+    }
+  }
+}

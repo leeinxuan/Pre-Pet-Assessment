@@ -1105,14 +1105,21 @@
 .rabbit-sort-list button { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 9px; background: white; cursor: pointer; }
 .rabbit-sort-list button:disabled { opacity: .35; cursor: default; }
 .rabbit-carry-activity .rabbit-activity-panel { padding: 0; }
-.rabbit-drag-sort-list li { grid-template-columns: 30px minmax(180px, .7fr) minmax(0, 1.3fr) auto; min-height: 156px; cursor: grab; }
+.rabbit-drag-sort-list li { grid-template-columns: 30px minmax(180px, .7fr) minmax(0, 1.3fr) auto; min-height: 156px; cursor: grab; touch-action: none; transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease; }
 .rabbit-drag-sort-list li:active { cursor: grabbing; }
-.rabbit-drag-sort-list li.is-dragging { opacity: .48; }
+.rabbit-drag-sort-list li.is-dragging { opacity: .52; transform: scale(.985); box-shadow: 0 12px 24px rgba(70, 48, 24, .14); }
+.rabbit-drag-sort-list li.is-drop-before { border-top: 4px solid var(--gold); }
+.rabbit-drag-sort-list li.is-drop-after { border-bottom: 4px solid var(--gold); }
 .rabbit-step-image-slot { width: 100%; min-height: 128px; border: 1px dashed rgba(153, 121, 66, .42); border-radius: 12px; background: #fffdf8; }
 .rabbit-drag-sort-list small { color: var(--gold-dark); font-weight: 800; white-space: nowrap; }
 .rabbit-unsafe-list { display: grid; gap: 6px; margin: 0 0 18px; padding: 13px 14px; border: 1px solid #d98d85; border-radius: 12px; background: #fff0ee; color: #6d302d; font-size: 14px; line-height: 1.6; }
 .rabbit-unsafe-list b { color: #a83f38; }
 .rabbit-activity-message { margin: 16px 0; padding: 12px 14px; border-radius: 12px; background: var(--gold-soft); color: var(--ink); line-height: 1.65; }
+.scenario-option-card.incorrect { border-color: #c66a60; background: #fff4f2; color: #8f3e36; }
+.rabbit-activity-panel > .sort-attempts { display: inline-flex; align-items: center; gap: 6px; margin: 8px 0 18px; padding: 9px 15px; border: 1px solid #d89143; border-radius: 999px; background: #fff0d6; color: #873b10; font-size: 17px; font-weight: 900; }
+.sort-attempts strong { font-size: 23px; }
+.rabbit-drag-sort-list .sort-drag-label { color: var(--gold-dark); font-weight: 800; white-space: nowrap; }
+.activity-feedback-focus:focus { outline: none; }
 .rabbit-daily-scene { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; min-height: 360px; padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: #fffdf8; }
 .rabbit-daily-target { display: grid; align-content: end; justify-items: center; gap: 9px; min-width: 0; padding: 14px; border: 1px dashed rgba(153, 121, 66, .42); border-radius: 18px; background: #fff; text-align: center; }
 .rabbit-daily-target.done { border-color: #8fbd96; background: var(--mint-soft); }
@@ -1137,6 +1144,24 @@
 .rabbit-daily-tools button { min-width: 190px; min-height: 54px; border: 1px dashed var(--gold-dark); border-radius: 15px; background: #fff8e7; color: var(--ink); font: inherit; font-weight: 900; cursor: grab; touch-action: none; }
 .rabbit-daily-tools button:active { cursor: grabbing; }
 .rabbit-daily-drag-ghost { position: fixed; z-index: 9999; width: 54px; height: 54px; display: grid; place-items: center; transform: translate(-50%, -50%); border-radius: 50%; background: #fff8e7; color: var(--gold-dark); font-size: 30px; pointer-events: none; }
+.rabbit-grooming-progress { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 20px; padding: 0; list-style: none; }
+.rabbit-grooming-progress li { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; font-weight: 800; }
+.rabbit-grooming-progress span { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; }
+.rabbit-grooming-progress li.active { color: var(--gold-dark); }
+.rabbit-grooming-progress li.active span { border-color: var(--gold); background: var(--gold); color: #fff; }
+.rabbit-grooming-progress li.done { color: #42734c; }
+.rabbit-grooming-progress li.done span { border-color: #83ae8a; background: var(--mint-soft); }
+.rabbit-grooming-scene { position: relative; display: grid; min-height: 380px; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, #fbf4e7, #eaf3e8); }
+.rabbit-grooming-scene > img { width: min(62%, 300px); max-height: 285px; object-fit: contain; }
+.rabbit-grooming-target { position: absolute; top: 25%; right: 13%; min-width: 126px; min-height: 58px; padding: 10px 14px; border: 2px dashed var(--gold-dark); border-radius: 16px; background: rgba(255,255,255,.88); color: var(--ink); font: inherit; font-weight: 900; cursor: pointer; touch-action: none; }
+.rabbit-grooming-target small { display: block; margin-top: 3px; color: #b76923; font-size: 11px; }
+.rabbit-grooming-target.needs-care { border-color: #d78330; animation: gentlePulse 1.8s ease-in-out infinite; }
+.rabbit-grooming-brush { position: absolute; bottom: 22px; left: 12%; min-width: 86px; min-height: 52px; border: 1px dashed var(--gold-dark); border-radius: 15px; background: #fff8e7; color: var(--ink); font: inherit; font-weight: 900; cursor: grab; touch-action: none; }
+.rabbit-grooming-brush:active { cursor: grabbing; }
+.rabbit-grooming-instruction { position: absolute; bottom: 20px; margin: 0; max-width: 70%; color: var(--ink-soft); font-weight: 800; text-align: center; }
+.rabbit-grooming-observation { margin-top: 18px; padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: #fff; }
+.rabbit-grooming-observation h2 { margin: 0 0 8px; font-size: 21px; }
+.rabbit-grooming-observation p { margin: 0 0 16px; color: var(--ink-soft); line-height: 1.75; }
 .rabbit-poop-observation { position: absolute; right: 26px; bottom: 22px; display: grid; gap: 5px; padding: 12px 14px; border: 1px solid #8fbd96; border-radius: 15px; background: #f0f8ee; color: #496b50; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; }
 .rabbit-poop-observation span { font-size: 22px; letter-spacing: 2px; }
 /* 情境題、回饋頁與生活變化的手機版佈局。 */
@@ -1194,6 +1219,7 @@
   .rabbit-step-image-slot { grid-column: 2; width: min(100%, 240px); min-height: 142px; }
   .rabbit-drag-sort-list p { grid-column: 2; }
   .rabbit-drag-sort-list small { grid-column: 3; }
+  .rabbit-drag-sort-list .sort-drag-label { grid-column: 2; }
   .rabbit-daily-scene { grid-template-columns: 1fr; min-height: 0; padding: 18px; }
   .rabbit-daily-inspection-scene { grid-template-columns: 1fr; }
   .rabbit-daily-target { grid-template-columns: 120px minmax(0, 1fr); align-items: center; text-align: left; }
@@ -1202,6 +1228,9 @@
   .rabbit-daily-bin { min-height: 96px; grid-auto-flow: column; }
   .rabbit-daily-bin span { font-size: 48px; }
   .rabbit-daily-rabbit { min-height: 230px; }
+  .rabbit-grooming-scene { min-height: 300px; }
+  .rabbit-grooming-target { top: 16%; right: 7%; }
+  .rabbit-grooming-brush { left: 7%; }
   .rabbit-health-check { max-width: 132px; }
   .rabbit-poop-observation { position: static; justify-self: center; }
 }

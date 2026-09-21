@@ -16,6 +16,9 @@ export const initialLifeActivityState: LifeActivityState = {
   seniorAdjustments: [],
   rabbitCarryOrder: [],
   rabbitCarryComplete: false,
+  rabbitCarryAttempts: 0,
+  rabbitCarryAnswerRevealed: false,
+  rabbitCarryFeedbackShown: false,
   rabbitDailyCheckSteps: [],
   birdCageInspectionSteps: [],
 };

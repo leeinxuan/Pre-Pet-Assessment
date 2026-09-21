@@ -52,7 +52,9 @@
 .previous-breed-grid button { min-height: 150px; }
 .previous-breed-grid .partner-card-image { width: 86px; height: 86px; object-fit: contain; }
 .previous-dog-name { max-width: 440px; display: grid; gap: 8px; color: var(--ink); font-weight: 900; }
-.previous-dog-name input { min-height: 50px; }
+.previous-dog-name input { min-height: 50px; width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font: inherit; }
+.previous-dog-name input:hover { border-color: var(--gold); }
+.previous-dog-name input:focus { border-color: var(--gold-dark); outline: 3px solid rgba(212,154,36,.22); outline-offset: 2px; }
 .pet-naming-page { min-height: min(720px, calc(100svh - 130px)); display: flex; flex-direction: column; justify-content: center; }
 .pet-naming-stage { position: relative; width: min(680px, 100%); margin: clamp(16px, 4vw, 42px) auto; filter: drop-shadow(0 24px 28px rgba(83,59,31,.14)); }
 .pet-naming-stage > img { display: block; width: 100%; height: auto; }

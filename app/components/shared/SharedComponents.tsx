@@ -324,7 +324,9 @@ export function SpeciesStep({
   type BreedOption = { id: string; image: string; label: string; shortDescription: string };
   const availableBreeds: readonly BreedOption[] = speciesConfig.breeds;
   const selectedBreed = availableBreeds.find((item) => item.id === breed);
-  const previousBreeds = (speciesConfig as { previousBreeds?: readonly BreedOption[] }).previousBreeds ?? availableBreeds;
+  const previousBreeds: readonly BreedOption[] = "previousBreeds" in speciesConfig.selection
+    ? speciesConfig.selection.previousBreeds
+    : availableBreeds;
   const selectedPreviousBreed = previousBreeds.find((item) => item.id === previousBreed);
   const sameBreed = Boolean(breed && previousBreed && breed === previousBreed);
   const breedCarouselRef = useRef<HTMLDivElement>(null);
