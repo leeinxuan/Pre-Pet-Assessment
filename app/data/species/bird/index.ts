@@ -1,9 +1,10 @@
 import { birdAssets } from "./assets";
 import { getBirdChallengeScenarios } from "./breed-challenges";
 import { birdJourney } from "./journey";
+import { birdLayout } from "./layout";
 import { birdPreparation } from "./preparation";
 import { birdReport } from "./report";
 import { birdLifeScenarios } from "./scenarios";
 export const birdSelection = { skipBreedPage: true, breeds: [{ id: "bird", species: "bird", label: "鳥", icon: "🦜", image: birdAssets.selection.bird, size: "small", shortDescription: "鳥對空氣品質、環境變化與社交互動很敏感；不同物種的壽命與食性差異也很大。" }] } as const;
-export const birdConfig = { id: "bird" as const, selection: birdSelection, preparation: birdPreparation, journey: birdJourney, scenarios: birdLifeScenarios, breedChallenges: getBirdChallengeScenarios, report: birdReport, assets: birdAssets, layout: {} } as const;
-export { birdAssets, birdJourney, birdPreparation, birdReport, birdLifeScenarios, getBirdChallengeScenarios };
+export const birdConfig = { id: "bird" as const, selection: birdSelection, preparation: birdPreparation, journey: birdJourney, scenarios: birdLifeScenarios, breedChallenges: getBirdChallengeScenarios, report: birdReport, assets: birdAssets, layout: birdLayout } as const;
+export { birdAssets, birdJourney, birdLayout, birdPreparation, birdReport, birdLifeScenarios, getBirdChallengeScenarios };

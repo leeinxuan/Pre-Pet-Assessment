@@ -107,6 +107,18 @@ export const rabbitLifeScenarios: Scenario[] = [
     description: "`{petName}` 已經 6 歲了。這幾個月牠的步伐慢了下來，以前每天都會跳上窩邊看你，現在越來越少。昨天，你看著牠費力跨過便盆矮沿，決定重新看看牠的生活環境。", topic: "生活變化：高齡兔環境與健康照護",
     reportSummary: "高齡兔應提高健檢頻率、降低出入高度並增加軟質墊料；牧草與適當活動仍不可省略。", artIndex: 1,
     learningPoints: rabbitKnowledge.senior, knowledgeTitle: "兔子高齡照護小知識",
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "高齡期的照護重點：定期健康檢查（至少半年一次）、友善關節的環境（降低出入高度、增加軟質墊料），以及持續供應充足的牧草。",
+      knowledgeTitle: "長達 8-13 年的每日陪伴與生命承諾",
+      knowledgeContent: [
+        { type: "item", text: "高齡期的照護重點：**定期健康檢查**（至少**半年一次**）、**友善關節的環境**（降低出入高度、增加**軟質墊料**），以及持續供應**充足的牧草**" },
+        { type: "item", text: "任何飲食或醫療調整，都建議先諮詢**兔科獸醫**，讓 {petName} 繼續舒適地生活在你身邊" },
+        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份長達 8-13 年的承諾。" },
+        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現失智、大小便失禁，甚至癱瘓。" },
+        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到生命盡頭的心理準備嗎？" },
+      ],
+    },
     choices: [
       { id: "rabbit-senior-space", text: "減少 {petName} 的活動空間，讓牠多休息", result: "incorrect", ...incorrect, explanation: "高齡兔仍需要適當活動空間；過度限制不利生活品質與腸道蠕動。", suggestion: "依個體狀況調整環境，而非完全限制活動。" },
       { id: "rabbit-senior-hay", text: "減少牧草量，改以軟食為主，比較好消化", result: "incorrect", ...incorrect, explanation: "牧草對高齡兔的磨牙與腸胃功能仍然重要。", suggestion: "飲食調整需依兔科獸醫建議進行。" },

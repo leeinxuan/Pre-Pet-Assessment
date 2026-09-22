@@ -3,7 +3,6 @@
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, money } from "../../data/shared/expenses";
-import { roomDoorplatePlacement } from "../../data/species/dog/layout";
 import {
   dogDepartureTrunkItems as departureTrunkItems,
   dogHazards as hazards,
@@ -73,16 +72,23 @@ function roomHazardPlacementStyle(item: HazardItem): CSSProperties {
   } as CSSProperties;
 }
 
-function roomDoorplatePlacementStyle(): CSSProperties {
+function roomDoorplatePlacementStyle(placement: {
+  desktop: { x: number; y: number; width: number };
+  mobile: { x: number; y: number; width: number };
+  mobileText: { left: number; top: number; width: number; height: number; fontSize: number };
+}): CSSProperties {
   return {
-    "--mobile-doorplate-x": `${roomDoorplatePlacement.mobile.x}%`,
-    "--mobile-doorplate-y": `${roomDoorplatePlacement.mobile.y}%`,
-    "--mobile-doorplate-width": `${roomDoorplatePlacement.mobile.width}%`,
-    "--mobile-doorplate-text-left": `${roomDoorplatePlacement.mobileText.left}%`,
-    "--mobile-doorplate-text-top": `${roomDoorplatePlacement.mobileText.top}%`,
-    "--mobile-doorplate-text-width": `${roomDoorplatePlacement.mobileText.width}%`,
-    "--mobile-doorplate-text-height": `${roomDoorplatePlacement.mobileText.height}%`,
-    "--mobile-doorplate-text-font-size": `${roomDoorplatePlacement.mobileText.fontSize}px`,
+    left: `${placement.desktop.x}%`,
+    top: `${placement.desktop.y}%`,
+    width: `${placement.desktop.width}%`,
+    "--mobile-doorplate-x": `${placement.mobile.x}%`,
+    "--mobile-doorplate-y": `${placement.mobile.y}%`,
+    "--mobile-doorplate-width": `${placement.mobile.width}%`,
+    "--mobile-doorplate-text-left": `${placement.mobileText.left}%`,
+    "--mobile-doorplate-text-top": `${placement.mobileText.top}%`,
+    "--mobile-doorplate-text-width": `${placement.mobileText.width}%`,
+    "--mobile-doorplate-text-height": `${placement.mobileText.height}%`,
+    "--mobile-doorplate-text-font-size": `${placement.mobileText.fontSize}px`,
   } as CSSProperties;
 }
 
@@ -117,6 +123,7 @@ export function RoomPreparation({
   species?: string;
 }) {
   const speciesConfig = getSpeciesConfig(species);
+  const doorplatePlacement = speciesConfig.layout.roomDoorplatePlacement;
   const activeRoomItems = speciesConfig.roomItems;
   const activeHazards = speciesConfig.hazards;
   const [roomCheckMessage, setRoomCheckMessage] = useState("");
@@ -130,6 +137,7 @@ export function RoomPreparation({
   const itemsDone = requiredRoomItems.filter((item) => selectedItems.includes(item.id)).length;
   // 只計算目前物種資料中存在的危險物 ID，避免舊進度造成完成判定失真。
   const hazardsDone = activeHazards.filter((item) => securedHazards.includes(item.id)).length;
+  const hazardsCleared = hazardsDone === activeHazards.length;
   const complete = itemsDone === requiredRoomItems.length && hazardsDone === activeHazards.length;
   const activeHazard = activeHazards.find((item) => item.id === activeHazardInfo);
   // 防護網的完成紀錄已存在 selectedItems，故回到此頁或重整後仍會正確保留安全房背景。
@@ -154,6 +162,10 @@ export function RoomPreparation({
 
   function prepareItem(id: string) {
     const item = activeRoomItems.find((entry) => entry.id === id);
+    if (!hazardsCleared) {
+      setRoomCheckMessage("請先完成空間安全整理，再開始佈置用品。");
+      return;
+    }
     if (!item || selectedItems.includes(id) || exitingItems.includes(id)) return;
     setExitingItems((current) => [...current, id]);
     onPrepare(id);
@@ -195,11 +207,20 @@ export function RoomPreparation({
 
   return (
     <div className="content-wrap preparation-page">
-      <StepHeading title={speciesConfig.copy.roomTitle} body={speciesConfig.copy.roomBody(petName)} />
+      <StepHeading
+        title={speciesConfig.copy.roomTitle}
+        body={hazardsCleared
+          ? "空間已整理完成。請點擊下方準備用品，將它們放進生活空間。"
+          : `在把${petName || "牠"}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。`}
+      />
+      <ol className="room-phase-progress" aria-label="房間佈置進度">
+        <li className={hazardsCleared ? "done" : "active"}><span>1</span>收好危險物品 <b>{hazardsDone}／{activeHazards.length}</b></li>
+        <li className={hazardsCleared ? "active" : "locked"}><span>2</span>佈置準備用品 <b>{itemsDone}／{requiredRoomItems.length}</b></li>
+      </ol>
       <div className="room-preparation-layout simplified-room-layout">
         <section className="room-supply-shelf" aria-label="生活用品準備區">
           <div className="room-supply-header">
-            <h2>用品準備箱</h2>
+            <h2>用品準備箱</h2>{!hazardsCleared && <span>請先完成空間安全整理</span>}
           </div>
           <div className="room-supply-rows">
             {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} full-seven`}>
@@ -208,7 +229,7 @@ export function RoomPreparation({
                 const note = preparedRoomItemNotes[item.id] ?? { label: item.label, note: item.purpose };
                 const price = item.expenseId ? expensePriceText([item.expenseId], breed) : "";
                 return <div key={item.id} className="supply-slot">
-                  {!selected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} aria-label={`${item.label}，可加入`} disabled={exitingItems.includes(item.id)} onClick={() => prepareItem(item.id)}>
+                  {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!hazardsCleared ? "locked" : ""}`} aria-label={`${item.label}，${hazardsCleared ? "可加入生活空間" : "請先完成空間安全整理"}`} disabled={exitingItems.includes(item.id) || !hazardsCleared} onClick={() => prepareItem(item.id)}>
                     <span className="room-supply-visual"><RoomItemVisual item={item} /></span>
                     <b>{item.label}</b>
                   </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{price && <span className="supply-slot-price">{price}</span>}</div>}
@@ -234,8 +255,8 @@ export function RoomPreparation({
               style={species === "dog" ? { objectFit: "contain", objectPosition: "center center" } : undefined}
             />
             {activeRoomItems.filter((item) => selectedItems.includes(item.id) && !(species === "cat" && item.id === "cat-safe-window")).map((item) => <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
-            {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} onClick={() => secureHazard(item.id)}><img src={item.image} alt={`房間中的危險物品：${item.label}`} /><span>{item.label}</span></button>)}
-            <div className="pet-doorplate" style={roomDoorplatePlacementStyle()}>
+            {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><img src={item.image} alt="" /><span>{item.label}</span></button>)}
+            <div className="pet-doorplate" style={roomDoorplatePlacementStyle(doorplatePlacement)}>
               <img src={dogAssets.room.doorplate} alt="小狗名字門牌" />
               <span className="pet-doorplate-name">{petName}</span>
             </div>

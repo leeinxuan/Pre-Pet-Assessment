@@ -6,6 +6,13 @@
 .room-supply-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: -17px -17px 12px; padding: 15px 17px; border-bottom: 1px solid rgba(111, 91, 58, .14); }
 .room-supply-header h2 { margin: 0; font-size: 15px; }
 .room-supply-header span { color: var(--muted); font-size: 11px; font-weight: 800; text-align: right; }
+.room-phase-progress { display: flex; gap: 10px; margin: 0 0 16px; padding: 0; list-style: none; }
+.room-phase-progress li { display: flex; flex: 1; align-items: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--muted); font-size: 12px; font-weight: 850; }
+.room-phase-progress li span { display: grid; width: 22px; height: 22px; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 11px; }
+.room-phase-progress li b { margin-left: auto; white-space: nowrap; font-size: 11px; }
+.room-phase-progress li.active { border-color: #d9a429; background: #fff8e9; color: #8a5d0a; }
+.room-phase-progress li.done { border-color: #90b18c; background: #f0f8ef; color: #4e7653; }
+.room-phase-progress li.locked { opacity: .65; }
 .room-supply-rows { display: flex; flex-direction: column; gap: 8px; min-height: 394px; }
 .room-supply-row { display: flex; flex: 0 0 auto; min-height: 126px; justify-content: flex-start; align-items: stretch; gap: 8px; }
 .room-supply-row--2 { width: 100%; align-self: stretch; gap: 8px; }
@@ -24,6 +31,7 @@
 .room-supply-row button:hover { opacity: .78; transform: scale(1.04); }
 .room-supply-row button:focus-visible { outline: 2px dashed #76591c; outline-offset: 2px; }
 .room-supply-row button.departing { pointer-events: none; opacity: 0; transform: scale(.84); }
+.room-supply-row button.locked { cursor: not-allowed; opacity: .48; filter: grayscale(.25); }
 .room-supply-visual { position: relative; display: grid; place-items: center; width: 100%; height: 88px; }
 .room-supply-row img { width: 78px; height: 82px; object-fit: contain; }
 .preparation-asset-placeholder { display: grid; place-items: center; width: 72px; height: 72px; border: 1px dashed #b9a98e; border-radius: 12px; background: #f7f3ea; color: #83745e; font-size: 11px; font-weight: 800; letter-spacing: .04em; }
@@ -346,6 +354,7 @@
 }
 
 @media (max-width: 720px) {
+  .room-phase-progress { display: grid; grid-template-columns: 1fr; gap: 7px; }
   .room-preparation { min-height: 430px; }
   .room-preparation .room-supply-shelf { min-height: 445px; }
   .room-actions,

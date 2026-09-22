@@ -163,6 +163,16 @@ export const catLifeScenarios: Scenario[] = [
     topic: "高齡貓環境與健康照顧",
     reportSummary: "高齡貓需要同步調整如廁、活動、休息與健康追蹤：增設合適砂盆與地墊、階梯式設施、保暖休息處，並定期健檢與記錄變化。",
     artIndex: 1,
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你已開始為牠調整生活空間，讓陪伴能跟著身體變化慢慢前進。",
+      knowledgeTitle: "長達 12-20 年的每日陪伴與生命承諾",
+      knowledgeContent: [
+        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份長達 12-20 年的承諾。" },
+        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現失智、大小便失禁，甚至癱瘓。" },
+        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到生命盡頭的心理準備嗎？" },
+      ],
+    },
     choices: [
       { id: "cat-senior-complete-plan", text: "增設高度適中的砂盆與地墊、改成階梯式設施並準備保暖休息處；每半年健檢、每週量體重並記錄日常變化", result: "correct", ...positive, explanation: "**如廁、活動、休息與健康追蹤**一起調整，才能更完整回應高齡生活需求。", expenseIds: ["cat-senior-room", "senior-checkup"] },
       { id: "cat-senior-supplement-only", text: "先換成高齡保健配方與關節保健品，平時留意食慾；下次例行就醫時再一起詢問", result: "incorrect", ...incorrect, explanation: "飲食或保健品可能是日常照護的一部分，但不能取代眼前的生活空間調整與獸醫追蹤。", suggestion: "先把日常移動、休息與如廁需要的環境調整好。" },

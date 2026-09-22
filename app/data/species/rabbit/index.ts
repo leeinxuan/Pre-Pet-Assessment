@@ -1,6 +1,7 @@
 import { rabbitAssets } from "./assets";
 import { getRabbitBreedChallengeScenarios } from "./breed-challenges";
 import { rabbitJourney } from "./journey";
+import { rabbitLayout } from "./layout";
 import { rabbitPreparation } from "./preparation";
 import { rabbitReport } from "./report";
 import { rabbitLifeScenarios } from "./scenarios";
@@ -26,7 +27,7 @@ export const rabbitConfig = {
   breedChallenges: getRabbitBreedChallengeScenarios,
   report: rabbitReport,
   assets: rabbitAssets,
-  layout: {}, // TODO(rabbit-layout): 兔版房間素材到位後集中放置 desktop/mobile 座標。
+  layout: rabbitLayout,
 } as const;
 
-export { rabbitAssets, rabbitJourney, rabbitPreparation, rabbitReport, rabbitLifeScenarios, getRabbitBreedChallengeScenarios };
+export { rabbitAssets, rabbitJourney, rabbitLayout, rabbitPreparation, rabbitReport, rabbitLifeScenarios, getRabbitBreedChallengeScenarios };

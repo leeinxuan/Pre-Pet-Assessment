@@ -25,4 +25,11 @@ export const catHazardPlacements = {
   "cat-cooling-product": { placement: { x: 45, y: 80, width: 14, layer: 5 }, mobilePlacement: { x: 86, y: 45, width: 17 } },
 } as const;
 
-export const catLayout = { roomPlacements: catRoomPlacements, hazardPlacements: catHazardPlacements } as const;
+// 可獨立調整貓咪房間名牌；數值皆為房間場景百分比。
+export const catRoomDoorplatePlacement = {
+  desktop: { x: 47, y: 16, width: 28 },
+  mobile: { x: 33, y: 20, width: 40 },
+  mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
+} as const;
+
+export const catLayout = { roomPlacements: catRoomPlacements, hazardPlacements: catHazardPlacements, roomDoorplatePlacement: catRoomDoorplatePlacement } as const;

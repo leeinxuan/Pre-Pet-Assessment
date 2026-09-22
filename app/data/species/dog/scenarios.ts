@@ -132,6 +132,16 @@ export const dogLifeScenarios: Scenario[] = [
     topic: "高齡照顧與醫療準備",
     reportSummary: "狗狗進入高齡後，可能出現行動退化、排泄照護與醫療需求；應提早準備時間、環境調整和醫療基金。",
     artIndex: 1,
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你願意提前為 {petName} 的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
+      knowledgeTitle: "長達 10-15 年的每日陪伴與生命承諾",
+      knowledgeContent: [
+        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份長達 10-15 年的承諾。" },
+        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現失智、大小便失禁，甚至癱瘓。" },
+        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到生命盡頭的心理準備嗎？" },
+      ],
+    },
     choices: [
       { id: "senior-plan-ahead", text: "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫", result: "correct", ...positive, explanation: "提前準備能幫助飼主在高齡階段更穩定地照顧小狗，也能及早安排健康觀察、醫療需求與長期照顧。", expenseIds: ["sick-vet-care", "dog-senior-room", "dog-senior-checkup"] },
       { id: "senior-wait", text: "等到牠真的很嚴重再處理，平常不用特別準備", result: "incorrect", ...incorrect, explanation: "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓小狗承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。" },

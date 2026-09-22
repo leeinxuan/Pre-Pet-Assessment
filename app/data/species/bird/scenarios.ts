@@ -41,7 +41,17 @@ export const birdLifeScenarios: Scenario[] = [
     { id: "bird-health-weight", text: "鸚鵡的體重不需要定期秤，憑外觀就能判斷", result: "incorrect", ...incorrect, explanation: "羽毛覆蓋讓鳥的體型難以用肉眼評估；定期秤體重與觸摸胸骨才能準確監測體態。", suggestion: "建立固定的體重與日常狀態紀錄。" },
     { id: "bird-health-cost", text: "鳥一年要健檢一次，是浪費錢的行為", result: "incorrect", ...incorrect, explanation: "鳥隱藏病徵能力強、病程發展快；年度健檢能提前發現潛在問題。", suggestion: "把健檢列入長期照護預算。" },
   ] },
-  { id: "bird-senior-care", stage: "生活變化", stageId: "life-change", stageTitle: "高齡照護", timeLabel: "逐漸進入高齡", title: "{petName} 慢慢變老了", description: "{petName} 跟你生活了很多年，牠的活動量慢慢減少，有時候站在低一點的棲木上，有時候理羽的時間更長了。你知道牠開始進入老年期了。", topic: "高齡鳥照護", reportSummary: "高齡鳥需降低跌落風險並提高健檢頻率，維持安全、舒適與密切觀察。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-senior-perch", "bird-senior-checkup"], wrongOptionIds: ["bird-senior-remove", "bird-senior-reduce-interaction"], correctSummary: ["將棲木調低，降低跌落風險。", "提高健檢頻率，從一年一次改為更頻繁。"], learningPoints: knowledge.senior, knowledgeTitle: "鳥類小知識", choices: [
+  { id: "bird-senior-care", stage: "生活變化", stageId: "life-change", stageTitle: "高齡照護", timeLabel: "逐漸進入高齡", title: "{petName} 慢慢變老了", description: "{petName} 跟你生活了很多年，牠的活動量慢慢減少，有時候站在低一點的棲木上，有時候理羽的時間更長了。你知道牠開始進入老年期了。", topic: "高齡鳥照護", reportSummary: "高齡鳥需降低跌落風險並提高健檢頻率，維持安全、舒適與密切觀察。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-senior-perch", "bird-senior-checkup"], wrongOptionIds: ["bird-senior-remove", "bird-senior-reduce-interaction"], correctSummary: ["將棲木調低，降低跌落風險。", "提高健檢頻率，從一年一次改為更頻繁。"], learningPoints: knowledge.senior, knowledgeTitle: "鳥類小知識", completionFeedback: {
+    title: "做得很好！",
+    encouragement: "你知道高齡照護不只是「讓牠安靜休息」，而是需要主動調整環境和加強醫療觀察，做得很好！",
+    knowledgeTitle: "長達 10 年至 60 年以上的每日陪伴與生命承諾",
+    knowledgeContent: [
+      { type: "paragraph", text: "高齡鳥的照護重點是「安全 + 舒適 + 密切觀察」。" },
+      { type: "paragraph", text: "降低跌落風險、提高健檢頻率、維持穩定溫度、諮詢飲食調整——這些都是讓 {petName} 在老年期維持生活品質的方法。" },
+      { type: "paragraph", text: "每隻鳥的老化速度不同，鳥類獸醫師的定期評估是最可靠的依據。" },
+      { type: "paragraph", text: "如果 {petName} 正經歷無法復原的痛苦，安樂死也是由獸醫師專業評估的醫療選項，這是照護責任的一部分。" },
+    ],
+  }, choices: [
     { id: "bird-senior-perch", text: "將棲木調低，降低跌落風險", result: "correct", ...positive, explanation: "可保留一根較高棲木，讓牠自行選擇。", expenseIds: ["bird-senior-room"] },
     { id: "bird-senior-checkup", text: "提高健檢頻率，從一年一次改為更頻繁", result: "correct", ...positive, explanation: "能及早發現老年常見的代謝與心血管問題。", expenseIds: ["bird-senior-checkup"] },
     { id: "bird-senior-remove", text: "高齡鳥不再需要豐富化設施，讓牠安靜休息就好", result: "incorrect", ...incorrect, explanation: "即使活動力下降，適合老年鳥的簡單啃咬玩具與低難度益智設施仍有助於心理健康，不應完全撤除所有刺激。", suggestion: "依活動能力調整豐富化，而非完全撤除。" },

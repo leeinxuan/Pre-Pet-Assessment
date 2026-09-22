@@ -42,6 +42,18 @@ export type ScenarioChoice = {
   };
 };
 
+/** 題目完成後由資料帶入的共用回饋內容。 */
+export type ScenarioCompletionFeedback = {
+  title: string;
+  encouragement: string;
+  knowledgeTitle: string;
+  knowledgeContent: Array<{
+    type: "paragraph" | "item";
+    text: string;
+  }>;
+  reminder?: string;
+};
+
 export type Scenario = {
   id: string;
   stage: string;
@@ -67,6 +79,7 @@ export type Scenario = {
   correctSummary?: string[];
   learningPoints?: string[];
   knowledgeTitle?: string;
+  completionFeedback?: ScenarioCompletionFeedback;
   /** 題庫資料識別欄位：供旅程、摘要與除錯使用，UI 不以畫面位置推斷。 */
   speciesId?: string;
   breedId?: string;

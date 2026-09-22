@@ -26,11 +26,10 @@ export const catLitterRescueConfig = {
   enableAbnormalObservation: false,
   weeklyWashRound: 2,
   abnormalObservationRound: 3,
+  // 清潔流程固定為：尿團 → 丟棄 → 便便 → 丟棄。
   wasteItems: [
-    { id: "urine-1", kind: "urine", label: "第 1 個尿團", x: 39, y: 57, size: 12 },
-    { id: "urine-2", kind: "urine", label: "第 2 個尿團", x: 60, y: 56, size: 12 },
-    { id: "poop-1", kind: "poop", label: "第 1 個便便", x: 43, y: 71, size: 11 },
-    { id: "poop-2", kind: "poop", label: "第 2 個便便", x: 65, y: 70, size: 11 },
+    { id: "urine-1", kind: "urine", label: "尿團", x: 39, y: 57, size: 12 },
+    { id: "poop-1", kind: "poop", label: "便便", x: 43, y: 71, size: 11 },
   ],
   bin: { x: 82, y: 70, size: 16 },
 } as const;
