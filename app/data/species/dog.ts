@@ -33,9 +33,13 @@ export const dogAssets = {
   },
   life: {
     root: "/assets/dog/pet-journey",
-    busyCareTransition: "/assets/dog/pet-journey/busy-day-transition.mp4",
+    shibaRoot: "/assets/dog/pet-journey/shiba",
+    busyCareTransition: "/assets/dog/pet-journey/shiba/busy-day-transition.mp4",
   },
-  daily: { root: "/assets/dog/walking" },
+  daily: {
+    root: "/assets/dog/walking",
+    shibaRoot: "/assets/dog/walking/shiba",
+  },
 } as const;
 
 /** 犬隻專屬資料集合；共用 UI 透過 species-config 取得。 */

@@ -40,6 +40,18 @@ export type SpeciesReportConfig = {
   dailyCareBreakdown: Array<{ title: string; detail: string }>;
 };
 
+/** 互動遊戲完成頁的內容資料；版型由共用完成頁元件統一處理。 */
+export type InteractionCompletionContent = {
+  title: string;
+  subtitle: string;
+  description: string;
+  reflectionTitle: string;
+  reflectionContent: string[];
+  careTimeTitle: string;
+  careTimeItems: Array<{ title: string; detail: string }>;
+  continueLabel: string;
+};
+
 export type SpeciesGameConfig = {
   id: SpeciesId;
   copy: SpeciesCopy;

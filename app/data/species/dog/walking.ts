@@ -2,6 +2,11 @@
  * 犬隻散步資料。
  * 場景、路徑、手機位置與預載素材都只屬於犬隻；共用旅程元件請由此匯入。
  */
+
+const dogShibaWalkingRoot = "/assets/dog/walking/shiba";
+
+export const dogShibaWalkingAsset = (fileName: string) => `${dogShibaWalkingRoot}/${fileName}`;
+
 export const walkingPrepItems = [
   { id: "leash", label: "牽繩／胸背帶", image: "/assets/dog/preparation/leash.png" },
   { id: "bag", label: "撿便袋", image: "/assets/dog/walking/poop-bag-1.png" },
@@ -59,9 +64,9 @@ export const walkingPreloadImages = [
   ...walkingScenes.map((scene) => scene.image),
   ...walkingScenes.map((scene) => scene.mobileImage),
   ...walkingPrepItems.map((item) => item.image),
-  "/assets/dog/walking/walker-and-dog.png",
-  "/assets/dog/walking/walker-and-dog-poop.png",
-  "/assets/dog/walking/walker-dog-bag.png",
+  dogShibaWalkingAsset("walker-and-dog.png"),
+  dogShibaWalkingAsset("walker-and-dog-poop.png"),
+  dogShibaWalkingAsset("walker-dog-bag.png"),
   "/assets/dog/walking/poop-bag-1.png",
   "/assets/dog/walking/poop.png",
 ] as const;

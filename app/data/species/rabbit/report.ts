@@ -1,4 +1,4 @@
-import type { SpeciesReportConfig } from "../../speciesGameConfig";
+import type { InteractionCompletionContent, SpeciesReportConfig } from "../../speciesGameConfig";
 
 /** 兔子照護指南與網頁回顧共用資料。 */
 export const rabbitReport: SpeciesReportConfig = {
@@ -23,6 +23,21 @@ export const rabbitReport: SpeciesReportConfig = {
     { title: "蔬菜備製與餵食", detail: "約 10 分鐘" },
     { title: "觀察精神、食量與行為", detail: "約 5～10 分鐘" },
     { title: "放風陪伴與互動", detail: "約 30～60 分鐘" },
-    { title: "梳毛", detail: "約 5～15 分鐘" },
+    { title: "梳毛（依毛長與換毛期）", detail: "約 5～15 分鐘" },
   ],
+};
+
+/** 兔子美容互動完成頁；由共用 DailyCareCompletion 呈現。 */
+export const rabbitGroomingCompletion: InteractionCompletionContent = {
+  title: "{petName} 的美容時間到了！",
+  subtitle: "你完成了今天的保養——梳毛、足底確認、門齒與指甲檢查。",
+  description: "定期梳毛，尤其注意後肢及尾根周圍，能預防皮膚感染、降低腸阻塞風險。門齒及指甲至少一週確認一次——若過長請交由兔科獸醫處理，不可自行修剪。",
+  reflectionTitle: "保養的同時，也是觀察健康的機會",
+  reflectionContent: [
+    "梳毛時若發現皮膚異常、脫毛區塊或足底紅腫，都是需要留意的訊號。",
+    "門齒與指甲的定期確認，能讓你在問題還小的時候就發現——這些保養動作，是你和 {petName} 之間最踏實的日常。",
+  ],
+  careTimeTitle: "每天留給牠的照護時間",
+  careTimeItems: rabbitReport.dailyCareBreakdown,
+  continueLabel: "繼續生活旅程",
 };

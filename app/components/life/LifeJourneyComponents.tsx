@@ -15,13 +15,13 @@ import { rabbitDailyBehaviorScenarioIds } from "../../data/species/rabbit/journe
 import { birdDailyBehaviorScenarioIds } from "../../data/species/bird/journey";
 import { rabbitActivityScenarios, rabbitCarrySortSteps } from "../../data/species/rabbit/scenarios";
 import { catScenarioCorrectFeedback } from "../../data/species/cat/scenarios";
-import { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/species/dog/walking";
+import { dogShibaWalkingAsset, walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../data/species/dog/walking";
 import { dogAssets } from "../../data/species/dog/assets";
 import { dogReport } from "../../data/species/dog/report";
 import { catReport } from "../../data/species/cat/report";
 import { catAssets } from "../../data/species/cat/assets";
 import { rabbitAssets } from "../../data/species/rabbit/assets";
-import { rabbitReport } from "../../data/species/rabbit/report";
+import { rabbitGroomingCompletion, rabbitReport } from "../../data/species/rabbit/report";
 import { birdReport } from "../../data/species/bird/report";
 import { birdAssets } from "../../data/species/bird/assets";
 import { birdActivityScenarios } from "../../data/species/bird/scenarios";
@@ -38,13 +38,14 @@ import type {
 } from "../../game-types";
 
 const dogLifeAsset = (fileName: string) => `${dogAssets.life.root}/${fileName}`;
+const dogShibaAsset = (fileName: string) => `${dogAssets.life.shibaRoot}/${fileName}`;
 const dogDailyAsset = (fileName: string) => `${dogAssets.daily.root}/${fileName}`;
 
-const arrivalVideoSource = dogLifeAsset("arrival-transition.mp4");
+const arrivalVideoSource = dogShibaAsset("arrival-transition.mp4");
 const busyCareTransitionSource = dogAssets.life.busyCareTransition;
 const correctAnswerVideos = [
-  dogLifeAsset("correct-answer.mp4"),
-  dogLifeAsset("correct-answer2.mp4"),
+  dogShibaAsset("correct-answer.mp4"),
+  dogShibaAsset("correct-answer2.mp4"),
 ] as const;
 
 const scenarioCorrectAnswerVideoIndex: Record<string, number> = {
@@ -59,8 +60,8 @@ const scenarioCorrectAnswerVideoIndex: Record<string, number> = {
 };
 
 const breedChallengeVideos: Record<string, string> = {
-  "一年四季都在掉毛": dogLifeAsset("shedding.mp4"),
-  "颳風下雨也要出門上廁所": dogLifeAsset("rainy-day-walk.mp4"),
+  "一年四季都在掉毛": dogShibaAsset("shedding.mp4"),
+  "颳風下雨也要出門上廁所": dogShibaAsset("rainy-day-walk.mp4"),
 };
 
 function arrivalMealPlacementStyle(kind: keyof typeof arrivalMealMobilePlacements): CSSProperties {
@@ -79,9 +80,9 @@ function getCorrectAnswerVideo(key: number | string) {
 }
 
 function posterForVideo(src: string) {
-  if (src.includes("sick") || src.includes("first-day")) return dogLifeAsset("shiba-sad.png");
-  if (src.includes("time-passes") || src.includes("senior")) return dogLifeAsset("shiba-dog.png");
-  return dogLifeAsset("shiba-dog.png");
+  if (src.includes("sick") || src.includes("first-day")) return dogShibaAsset("shiba-sad.png");
+  if (src.includes("time-passes") || src.includes("senior")) return dogShibaAsset("shiba-dog.png");
+  return dogShibaAsset("shiba-dog.png");
 }
 
 function useVideoMetadataPreload(src?: string) {
@@ -543,7 +544,7 @@ function TimePassTransition({ onComplete }: { onComplete: () => void }) {
 
   return (
     <section className="time-pass-transition" aria-label="時間流逝過場動畫">
-      <video ref={videoRef} src={dogLifeAsset("time-passes-aging.mp4")} autoPlay playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      <video ref={videoRef} src={dogShibaAsset("time-passes-aging.mp4")} autoPlay playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
       {needsManualPlay && <button type="button" className="time-pass-play" onClick={playManually}>播放影片</button>}
     </section>
   );
@@ -648,9 +649,9 @@ function ScenarioCard({
 }) {
   const [sceneVideoFailed, setSceneVideoFailed] = useState(false);
   const scenarioVideo = scenario.id === "arrival-adjustment"
-    ? { src: dogLifeAsset("first-day.mp4"), label: "小狗第一天適應新家的影片" }
+    ? { src: dogShibaAsset("first-day.mp4"), label: "小狗第一天適應新家的影片" }
     : scenario.id === "illness-vet"
-      ? { src: dogLifeAsset("sick.mp4"), label: "小狗生病與就醫情境影片" }
+      ? { src: dogShibaAsset("sick.mp4"), label: "小狗生病與就醫情境影片" }
       : null;
   useVideoMetadataPreload(scenarioVideo?.src);
   useEffect(() => setSceneVideoFailed(false), [scenario.id]);
@@ -764,10 +765,10 @@ function VideoScenarioActivity({
   const source = isCatScenario || isRabbitScenario || isBirdScenario
     ? undefined
     : scenario.id === "arrival-adjustment"
-    ? dogLifeAsset("first-day.mp4")
+    ? dogShibaAsset("first-day.mp4")
     : scenario.id === "growing-old"
-      ? dogLifeAsset("senior-life.mp4")
-      : dogLifeAsset("sick.mp4");
+      ? dogShibaAsset("senior-life.mp4")
+      : dogShibaAsset("sick.mp4");
   useVideoMetadataPreload(source);
   useVideoMetadataPreload(getCorrectAnswerVideo(scenario.id));
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
@@ -874,9 +875,9 @@ const dailyBehaviorScenarioIdsBySpecies = {
   bird: birdDailyBehaviorScenarioIds,
 } as const;
 const dailyBehaviorVideos: Record<string, string> = {
-  "behavior-barking": dogLifeAsset("barking.mp4"),
-  "behavior-chewing": dogLifeAsset("chewing-on-things.mp4"),
-  "behavior-toileting": dogLifeAsset("urinate-and-defecate.mp4"),
+  "behavior-barking": dogShibaAsset("barking.mp4"),
+  "behavior-chewing": dogShibaAsset("chewing-on-things.mp4"),
+  "behavior-toileting": dogShibaAsset("urinate-and-defecate.mp4"),
 };
 
 function DailyBehaviorActivity({
@@ -982,7 +983,7 @@ function DailyBehaviorActivity({
       </div>
       <div className="daily-behavior-video">
         <VideoWithToggle
-          src={dailyBehaviorVideos[scenario.id] ?? dogLifeAsset("chewing-on-things.mp4")}
+          src={dailyBehaviorVideos[scenario.id] ?? dogShibaAsset("chewing-on-things.mp4")}
           loop
           ariaLabel="小狗日常行為問題情境影片"
           onError={() => setVideoFailed(true)}
@@ -1053,8 +1054,8 @@ function DailyBehaviorActivityMulti({
     : species === "cat"
     ? dailyBehaviorVideos[scenario?.id ?? ""]
     : scenario
-      ? dailyBehaviorVideos[scenario.id] ?? dogLifeAsset("chewing-on-things.mp4")
-      : dogLifeAsset("chewing-on-things.mp4");
+      ? dailyBehaviorVideos[scenario.id] ?? dogShibaAsset("chewing-on-things.mp4")
+      : dogShibaAsset("chewing-on-things.mp4");
   const nextBehaviorScenario = scenarios[currentIndex + 1];
   useVideoMetadataPreload(behaviorVideoSource);
   useVideoMetadataPreload(nextBehaviorScenario ? dailyBehaviorVideos[nextBehaviorScenario.id] : undefined);
@@ -1385,11 +1386,11 @@ function BusyCareActivity({
           {isRabbit ? (
             <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} />
           ) : !isCat && !sceneVideoFailed ? (
-            <VideoWithToggle className="busy-care-room-video" src={dogLifeAsset("busy-daily-care.mp4")} loop ariaLabel="疲憊忙碌的日子情境影片" onError={() => setSceneVideoFailed(true)} />
+            <VideoWithToggle className="busy-care-room-video" src={dogShibaAsset("busy-daily-care.mp4")} loop ariaLabel="疲憊忙碌的日子情境影片" onError={() => setSceneVideoFailed(true)} />
           ) : (
             <>
               <img className="busy-care-room-background" src={isCat ? catAssets.life.safeRoom : dogAssets.feeding.room} alt="居家房間場景" />
-              <img className="busy-care-hungry-dog" src={isCat ? catAssets.life.mixedCat : dogLifeAsset("shiba-hungry.png")} alt={`${displayPetName}在房間裡等待照顧`} />
+              <img className="busy-care-hungry-dog" src={isCat ? catAssets.life.mixedCat : dogShibaAsset("shiba-hungry.png")} alt={`${displayPetName}在房間裡等待照顧`} />
             </>
           )}
         </div>
@@ -1661,7 +1662,7 @@ function WarningSignalsActivity({
       </div>
       <div className="warning-signal-layout">
         <div className="warning-signal-video-wrap">
-          {!videoFailed && <video ref={videoRef} className="warning-signal-video" src="/assets/dog/pet-journey/dog-body-language.mp4" playsInline preload="metadata" aria-label="小狗警告訊號教學影片" onTimeUpdate={syncSegment} onEnded={finishVideo} onError={() => { setVideoFailed(true); finishVideo(); }} />}
+          {!videoFailed && <video ref={videoRef} className="warning-signal-video" src="/assets/dog/pet-journey/shiba/dog-body-language.mp4" playsInline preload="metadata" aria-label="小狗警告訊號教學影片" onTimeUpdate={syncSegment} onEnded={finishVideo} onError={() => { setVideoFailed(true); finishVideo(); }} />}
           {!started && !videoFailed && <button type="button" className="warning-signal-start" onClick={startVideo} aria-label="開始播放小狗警告訊號教學影片"><span>▶</span>開始觀看</button>}
           {videoFailed && <div className="warning-signal-fallback" role="status">影片目前無法播放，仍可閱讀右側警告訊號說明。</div>}
           <span className="warning-signal-video-tag">Video</span>
@@ -1827,7 +1828,7 @@ function ArrivalMealActivity({
           <b>{foodWarning.title}</b>
           <p>{foodWarning.text}</p>
         </div>}
-        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? (catMealCelebrated ? catAssets.feeding.happyCat : catAssets.feeding.hungryScaredCat) : isRabbit ? rabbitAssets.selection.rabbit : isBird ? birdAssets.selection.bird : complete ? dogLifeAsset("shiba-dog.png") : dogLifeAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
+        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? (catMealCelebrated ? catAssets.feeding.happyCat : catAssets.feeding.hungryScaredCat) : isRabbit ? rabbitAssets.selection.rabbit : isBird ? birdAssets.selection.bird : complete ? dogShibaAsset("shiba-dog.png") : dogShibaAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
         <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={isCat ? (activity.arrivalMealWaterReady ? catAssets.feeding.waterBowl : catAssets.feeding.emptyWaterBowl) : isRabbit ? "/assets/shared/waterbottle.png" : isBird ? birdAssets.room.water : activity.arrivalMealWaterReady ? dogAssets.feeding.waterBowl : dogAssets.feeding.emptyWaterBowl} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
         <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={isCat ? (activity.arrivalMealFoodReady ? catAssets.feeding.foodBowl : catAssets.feeding.emptyFoodBowl) : isRabbit ? rabbitAssets.feeding.hay : isBird ? birdAssets.room.bowl : activity.arrivalMealFoodReady ? dogAssets.feeding.foodBowl : dogAssets.feeding.emptyFoodBowl} alt={activity.arrivalMealFoodReady ? "裝好主食的食碗" : "空食碗"} />
       </div>
@@ -2415,14 +2416,18 @@ function DailyCareCompletion({
   reflectionTitle,
   reflection,
   dailyCareBreakdown,
+  careTimeTitle = "每天留給牠的照護時間",
+  continueLabel = "繼續生活旅程",
   onContinue,
 }: {
   title: string;
   summary: string;
   detail: string;
   reflectionTitle: string;
-  reflection: string;
+  reflection: string | readonly string[];
   dailyCareBreakdown: readonly { title: string; detail: string }[];
+  careTimeTitle?: string;
+  continueLabel?: string;
   onContinue: () => void;
 }) {
   return <section className="walking-activity walking-complete">
@@ -2430,14 +2435,14 @@ function DailyCareCompletion({
       <h1>{title}</h1>
       <p>{summary}</p>
       <p>{detail}</p>
-      <div className="walking-reflection-note"><b>{reflectionTitle}</b><p>{reflection}</p></div>
+      <div className="walking-reflection-note"><b>{reflectionTitle}</b>{(Array.isArray(reflection) ? reflection : [reflection]).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
       <section className="walking-time-summary" aria-label="每日基本照護時間估計">
-        <p>每天留給牠的照護時間</p>
+        <p>{careTimeTitle}</p>
         <div className="walking-time-commitment">
           {dailyCareBreakdown.map((item) => <div key={item.title}><b>{item.title}</b><span>{item.detail}</span></div>)}
         </div>
       </section>
-      <DelayedContinueButton label="繼續生活旅程" onContinue={onContinue} />
+      <DelayedContinueButton label={continueLabel} onContinue={onContinue} />
     </div>
   </section>;
 }
@@ -2843,11 +2848,11 @@ function WalkingActivity({
             <h2 id="walking-safety-title">你會用哪一種方式陪牠散步？</h2>
             <div className="walking-safety-grid">
               <button type="button" onClick={() => setSafetyStep("correct")}>
-                <img src={dogDailyAsset("leash-choice.png")} alt="飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境" />
+                <img src={dogShibaWalkingAsset("leash-choice.png")} alt="飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境" />
                 <span><b>繫好牽繩，保持鬆弛</b><small>讓狗狗在可控距離內嗅聞、探索環境。</small></span>
               </button>
               <button type="button" onClick={() => setSafetyStep("law")}>
-                <img src={dogDailyAsset("off-leash-choice.png")} alt="沒有牽繩的柴犬離飼主一段距離自行探索" />
+                <img src={dogShibaWalkingAsset("off-leash-choice.png")} alt="沒有牽繩的柴犬離飼主一段距離自行探索" />
                 <span><b>不繫牽繩，讓牠自己走</b><small>讓狗狗自由自在探索，飼主在後方跟著。</small></span>
               </button>
             </div>
@@ -2925,7 +2930,7 @@ function WalkingActivity({
             )}
             <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position, isMobileWalkingLayout)}>
               <img
-                src={activity.walkingPoopCleaned ? dogDailyAsset("walker-dog-bag.png") : needsCleanup ? dogDailyAsset("walker-and-dog-poop.png") : dogDailyAsset("walker-and-dog.png")}
+                src={activity.walkingPoopCleaned ? dogShibaWalkingAsset("walker-dog-bag.png") : needsCleanup ? dogShibaWalkingAsset("walker-and-dog-poop.png") : dogShibaWalkingAsset("walker-and-dog.png")}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
             </div>
@@ -3164,7 +3169,7 @@ const rabbitGroomingSteps = [
   { id: "groom-nails", label: "指甲", instruction: "點擊前腳，查看指甲觀察卡。", detail: "指甲長度適中，繼續每週定期確認。若偏長，請獸醫師或專業人員協助修剪，避免剪傷血線。" },
 ] as const;
 
-function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue, onReplay }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void; onReplay?: () => void }) {
+function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
   const scenario = rabbitActivityScenarios["rabbit-daily-check"];
   const completed = activity.rabbitDailyCheckSteps;
   const current = rabbitGroomingSteps.find((step) => !completed.includes(step.id));
@@ -3192,7 +3197,17 @@ function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onCon
     completeStep(current);
   };
   const complete = !current;
-  if (complete) return <RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} />;
+  if (complete) return <DailyCareCompletion
+    title={withPetName(rabbitGroomingCompletion.title, petName)}
+    summary={withPetName(rabbitGroomingCompletion.subtitle, petName)}
+    detail={withPetName(rabbitGroomingCompletion.description, petName)}
+    reflectionTitle={rabbitGroomingCompletion.reflectionTitle}
+    reflection={rabbitGroomingCompletion.reflectionContent.map((paragraph) => withPetName(paragraph, petName))}
+    dailyCareBreakdown={rabbitGroomingCompletion.careTimeItems}
+    careTimeTitle={rabbitGroomingCompletion.careTimeTitle}
+    continueLabel={rabbitGroomingCompletion.continueLabel}
+    onContinue={onContinue}
+  />;
   const firstPart = rabbitGroomingSteps.findIndex((step) => step.id === current.id) < 4;
   return <section className="rabbit-activity rabbit-grooming-activity" onPointerMove={(event) => draggingBrush && setPoint({ x: event.clientX, y: event.clientY })} onPointerUp={finishBrush} onPointerCancel={() => { setDraggingBrush(false); setPoint(null); }} aria-labelledby="rabbit-grooming-title">
     <header><p>日常照護</p><h1 id="rabbit-grooming-title">{withPetName(scenario.title, petName)}</h1><span>{firstPart ? "第一部分：梳毛與足底確認" : "第二部分：門齒與指甲外觀檢查"}</span></header>

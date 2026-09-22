@@ -197,7 +197,7 @@ docs/
 - `public/assets/species/`：物種與品種圖片
 - `public/assets/dog/room/`：狗狗房間背景與房間用品
 - `public/assets/car/`：後車廂與接回家用品
-- `public/assets/dog/pet-journey/`：狗狗飼養生活影片與小狗狀態圖片
+- `public/assets/dog/pet-journey/`：狗狗飼養生活的共用圖片；柴犬專屬影片與圖片放在 `shiba/` 子目錄
 - `public/assets/dog/walking/`：狗狗散步互動遊戲素材
 
 請避免在新素材檔名中使用中文、空格或特殊符號。
@@ -212,4 +212,4 @@ docs/
 
 ## 已知事項
 
-原先曾有警告訊號教學影片路徑 `/assets/dog/pet-journey/dog-body-language.mp4`，但目前工作區尚未包含此影片檔。若未來恢復該互動頁，請補上對應素材。
+原先曾有警告訊號教學影片路徑 `/assets/dog/pet-journey/shiba/dog-body-language.mp4`，但目前工作區尚未包含此影片檔。若未來恢復該互動頁，請補上對應素材。

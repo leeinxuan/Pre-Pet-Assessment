@@ -283,7 +283,7 @@ type SpeciesActivityState = {
 | 接回車景 | `public/assets/car/car-trunk.png` | 暫時可 | 可沿用後車廂背景，物件與說明改成貓版。 |
 | 名牌 | `public/assets/dog/room/nameplate.png` | 是 | 可以延用為貓名牌。 |
 | 食水空碗／容器 | `public/assets/dog/room/food-bowl.png`、`water-bowl.png`、`public/assets/dog/pet-journey/empty-food-bowl.png`、`empty-water-bowl.png` | 僅暫時 | 功能可先共用，正式版需換為貓食器素材。 |
-| 通用 UI／回饋影片 | `public/assets/dog/pet-journey/correct-answer.mp4`、`correct-answer2.mp4` | 暫時可 | 僅作正確回饋，不能顯示犬隻內容。若畫面含犬，改文字佔位。 |
+| 通用 UI／回饋影片 | `public/assets/dog/pet-journey/shiba/correct-answer.mp4`、`correct-answer2.mp4` | 暫時可 | 僅作正確回饋，不能顯示犬隻內容。若畫面含犬，改文字佔位。 |
 
 ### 12.2 貓版缺少的正式素材
 
