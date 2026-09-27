@@ -31,14 +31,16 @@ export function getBreedChallengeScenarios(breedId: string): Scenario[] {
 }
 
 export function getAllScenariosForSpecies(species: string, breedId: string): Scenario[] {
-  if (species === "rabbit") return [...rabbitLifeScenarios, ...Object.values(rabbitActivityScenarios), ...getRabbitBreedChallengeScenarios("rabbit")];
-  if (species === "bird") return [...birdLifeScenarios, ...Object.values(birdActivityScenarios), ...getBirdChallengeScenarios()];
-  return [...getLifeScenariosForSpecies(species, breedId), ...getBreedChallengeScenarios(breedId)];
+  if (species === "rabbit") return [...rabbitLifeScenarios, ...Object.values(rabbitActivityScenarios)];
+  if (species === "bird") return [...birdLifeScenarios, ...Object.values(birdActivityScenarios)];
+  return getLifeScenariosForSpecies(species, breedId);
 }
 
 export function getJourneyItemsForSpecies(species: string): JourneyItem[] {
-  if (species === "cat") return catJourneyItems;
-  if (species === "rabbit") return rabbitJourneyItems;
-  if (species === "bird") return birdJourneyItems;
-  return dogJourneyItems;
+  const items = species === "cat" ? catJourneyItems
+    : species === "rabbit" ? rabbitJourneyItems
+      : species === "bird" ? birdJourneyItems
+        : dogJourneyItems;
+  // 品種資料與題庫仍保留供日後啟用；目前不納入可見流程、進度或匯出。
+  return items.filter((item) => item.stageId !== "breed" && item.type !== "breed-challenge" && item.type !== "bird-challenge");
 }

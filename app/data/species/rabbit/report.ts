@@ -32,10 +32,9 @@ export const rabbitGroomingCompletion: InteractionCompletionContent = {
   title: "{petName} 的美容時間到了！",
   subtitle: "你完成了今天的保養——梳毛、足底確認、門齒與指甲檢查。",
   description: "定期梳毛，尤其注意後肢及尾根周圍，能預防皮膚感染、降低腸阻塞風險。門齒及指甲至少一週確認一次——若過長請交由兔科獸醫處理，不可自行修剪。",
-  reflectionTitle: "保養的同時，也是觀察健康的機會",
+  reflectionTitle: "兔子需要的照護時間，比許多人想的還要長",
   reflectionContent: [
-    "梳毛時若發現皮膚異常、脫毛區塊或足底紅腫，都是需要留意的訊號。",
-    "門齒與指甲的定期確認，能讓你在問題還小的時候就發現——這些保養動作，是你和 {petName} 之間最踏實的日常。",
+    "兔子的日常照護不只是補飼料、換水而已。牧草補充、便盆清潔、新鮮蔬菜備製、健康觀察，加上**每天至少 30–60 分鐘的放風與陪伴**——每一項都需要固定時間投入，無法用假日一次補回。請想一想：在接下來每一天的生活裡，你能為 {petName} 穩定留出這段時間嗎？",
   ],
   careTimeTitle: "每天留給牠的照護時間",
   careTimeItems: rabbitReport.dailyCareBreakdown,

@@ -16,6 +16,88 @@ import { rabbitAssets } from "../../data/species/rabbit/assets";
 import { dogAssets } from "../../data/species/dog/assets";
 import type { CareMember, ExpenseRecord, HazardItem, RoomItem, TrunkItem } from "../../game-types";
 import { NavButtons, StepHeading } from "../shared/SharedComponents";
+import { getHomeReadinessConfig, type HomeReadinessTextBlock, type HomeReadinessTextSegment } from "../../data/shared/home-readiness";
+
+export type HomeReadinessState = {
+  housing: "owner" | "renter" | null;
+  housingReminderAcknowledged: boolean;
+  acknowledgedCardIds: string[];
+  openCardId: string | null;
+};
+
+export const initialHomeReadinessState: HomeReadinessState = { housing: null, housingReminderAcknowledged: false, acknowledgedCardIds: [], openCardId: null };
+
+function renderHomeReadinessSegments(segments: HomeReadinessTextSegment[], replaceName: (text: string) => string) {
+  return segments.map((segment, index) => segment.emphasis
+    ? <strong className="home-readiness-emphasis" key={`${segment.text}-${index}`}>{replaceName(segment.text)}</strong>
+    : <span key={`${segment.text}-${index}`}>{replaceName(segment.text)}</span>);
+}
+
+function HomeReadinessRichText({ blocks, replaceName }: { blocks: HomeReadinessTextBlock[]; replaceName: (text: string) => string }) {
+  const listItems = blocks.filter((block) => block.type === "item");
+  const paragraphs = blocks.filter((block) => block.type === "paragraph");
+  return <>{paragraphs.map((block, index) => <p key={`paragraph-${index}`}>{renderHomeReadinessSegments(block.segments, replaceName)}</p>)}{listItems.length > 0 && <ul>{listItems.map((block, index) => <li key={`item-${index}`}>{renderHomeReadinessSegments(block.segments, replaceName)}</li>)}</ul>}</>;
+}
+
+export function HomeReadinessActivity({ species = "dog", petName, state, onChange, onBack, onNext }: {
+  species?: string; petName: string; state: HomeReadinessState; onChange: (state: HomeReadinessState) => void; onBack: () => void; onNext: () => void;
+}) {
+  const config = getHomeReadinessConfig(species);
+  const displayName = petName.trim() || "牠";
+  const arrivalLead = petName.trim()
+    ? `${displayName} 快要來了！佈置家之前，我們先確認一件重要的事……`
+    : "牠快要來了！佈置家之前，我們先確認一件重要的事……";
+  const replaceName = (text: string) => text.replaceAll("{petName}", displayName);
+  const selectedHousing = config.housingChoices.find((choice) => choice.id === state.housing);
+  const canShowCards = Boolean(selectedHousing && state.housingReminderAcknowledged);
+  const allAcknowledged = config.cards.every((card) => state.acknowledgedCardIds.includes(card.id));
+  const firstIncompleteIndex = config.cards.findIndex((card) => !state.acknowledgedCardIds.includes(card.id));
+  const activeCardIndex = state.openCardId
+    ? Math.max(0, config.cards.findIndex((card) => card.id === state.openCardId))
+    : Math.max(0, firstIncompleteIndex);
+  const activeCard = allAcknowledged ? undefined : config.cards[activeCardIndex];
+
+  function openCommitmentCard(index: number) {
+    const card = config.cards[index];
+    if (!card) return;
+    const isComplete = state.acknowledgedCardIds.includes(card.id);
+    const canOpen = isComplete || index === firstIncompleteIndex;
+    if (canOpen) onChange({ ...state, openCardId: card.id });
+  }
+
+  function acknowledgeCommitmentCard() {
+    if (!activeCard || state.acknowledgedCardIds.includes(activeCard.id)) return;
+    const acknowledgedCardIds = [...state.acknowledgedCardIds, activeCard.id];
+    const nextCard = config.cards.find((card) => !acknowledgedCardIds.includes(card.id));
+    onChange({ ...state, acknowledgedCardIds, openCardId: nextCard?.id ?? null });
+  }
+
+  return <div className="content-wrap home-readiness">
+    {!canShowCards ? <>
+      <header className="home-readiness-heading"><p className="life-stage-label">飼養前準備</p><h1>家庭與居住確認</h1><p>{arrivalLead}</p></header>
+      {!selectedHousing ? <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question"><p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2><div className="home-readiness-choice-grid">
+        {config.housingChoices.map((choice) => <button type="button" key={choice.id} onClick={() => onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false })}><span className="home-readiness-choice-media" aria-hidden="true" /><span className="home-readiness-choice-label">{choice.label}</span></button>)}
+      </div></article></section> : <section className="home-readiness-workbench home-readiness-workbench--reminder"><article className="home-readiness-reminder-step"><p className="life-stage-label">第一步・居住提醒</p><h2>{selectedHousing.followUpTitle}</h2><HomeReadinessRichText blocks={selectedHousing.followUpContent} replaceName={replaceName} /><button type="button" className="primary" onClick={() => onChange({ ...state, housingReminderAcknowledged: true })}>我了解了</button></article></section>}
+    </> : <>
+      <header className="home-readiness-heading"><p className="life-stage-label">飼養前準備</p><h1>家庭與居住確認</h1><p>還有一件事——同住的人都準備好了嗎？</p></header>
+      <section className="home-readiness-checklist"><header><p className="life-stage-label">第二步・共同承諾</p><h2>逐一確認，讓照顧從全家的共識開始。</h2></header>
+        <nav className="home-readiness-progress" aria-label="共同承諾進度">{config.cards.map((card, index) => {
+          const complete = state.acknowledgedCardIds.includes(card.id);
+          const current = activeCard?.id === card.id;
+          const available = complete || index === firstIncompleteIndex;
+          return <button type="button" key={card.id} className={`${complete ? "is-complete" : ""} ${current ? "is-current" : ""}`} disabled={!available || allAcknowledged} onClick={() => openCommitmentCard(index)}><span>{complete ? "✓" : index + 1}</span><b>{card.stepLabel}</b></button>;
+        })}</nav>
+        {activeCard && <article className={`home-readiness-commitment-card ${allAcknowledged ? "is-complete" : ""}`}>
+          <h3>{renderHomeReadinessSegments(activeCard.title, replaceName)}</h3>
+          <div className="home-readiness-commitment-copy"><HomeReadinessRichText blocks={activeCard.body} replaceName={replaceName} /></div>
+          {state.acknowledgedCardIds.includes(activeCard.id)
+            ? <p className="home-readiness-reviewed">已確認；可從上方步驟回看其他內容。</p>
+            : <button type="button" className="primary" onClick={acknowledgeCommitmentCard}>我了解了</button>}
+        </article>}
+      </section>{allAcknowledged && <section className="home-readiness-completion" role="status"><span aria-hidden="true">✓</span><div><p className="life-stage-label">共同承諾完成</p><p>{renderHomeReadinessSegments(config.completionMessage, replaceName)}</p></div></section>}<NavButtons onBack={onBack} onNext={onNext} disabled={!allAcknowledged} nextLabel="繼續" />
+    </>}
+  </div>;
+}
 
 const preparedRoomItemNotes: Record<string, { label: string; note: string }> = {
   bed: { label: "睡墊", note: "提供固定、安靜的休息位置。" },

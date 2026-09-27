@@ -4,4 +4,8 @@ export const catBreeds = [
   { id: "british-shorthair", species: "cat", label: "英國短毛貓", icon: "🐱", image: "/assets/cat/selection/british-shorthair.png", size: "medium", shortDescription: "圓臉圓眼，個性沉穩獨立，喜歡陪在你身邊但不愛被強抱。活動量偏低、食慾旺盛，容易過重；加上品種有較高的心臟病（HCM）風險，建議定量餵食、定期健康檢查，並養成每週梳理豐厚被毛的習慣。" },
 ] as const;
 
-export const catSelection = { breeds: catBreeds } as const;
+/** 現行流程採通用貓資料；既有品種資料保留，暫不納入可見流程。 */
+export const catSelection = {
+  skipBreedPage: true,
+  breeds: [{ id: "cat", species: "cat", label: "貓", icon: "🐈", image: "/assets/species/cat.png", size: "medium", shortDescription: "以通用家貓照護需求為基礎，重點在室內安全、互動與健康觀察。" }],
+} as const;

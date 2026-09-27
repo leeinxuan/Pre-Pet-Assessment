@@ -60,8 +60,9 @@
 - 使用透明背景（cutout）或完整場景背景視情況而定
 
 #### C. 影片動畫風格（*.mp4）
-- **風格關鍵字**：`cartoon animation style, bold black outlines, flat colors, minimal shading, warm pastel background tones, child-friendly, smooth simple motion`
-- 統一為 A 風格的動畫版本
+- **風格關鍵字**：`Anime-style 2D animation, clean line art, cel-shaded with distinct flat shadow blocks, soft warm muted color palette (beige, cream, tan, warm brown), low saturation, cozy slice-of-life atmosphere, warm ambient lighting, child-friendly`
+- 角色有柔和漸層陰影（cel-shading），非完全平塗、非寫實 3D
+- 室內場景：溫暖米色牆壁、淺木色地板、圓形地毯、mid-century 家具、琥珀色燈光
 
 ---
 
@@ -100,7 +101,7 @@
 
 **Gemini 提示詞（英文）**：
 ```
-A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is sitting upright, looking forward with a happy relaxed expression, mouth slightly open with tongue out. Cartoon illustration style, bold black outlines, flat colors with minimal shading, transparent background, full body visible, square format, child-friendly, no text.
+A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is sitting upright, looking forward with a happy relaxed expression, mouth slightly open with tongue out. Cartoon illustration style, bold black outlines, flat colors with minimal shading. Transparent background (PNG with alpha channel), full body visible, square format, child-friendly, no text, no background scenery.
 ```
 
 ---
@@ -111,7 +112,7 @@ A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs
 
 **Gemini 提示詞（英文）**：
 ```
-A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is sitting with droopy posture, ears slightly flattened, eyes half-closed and sad-looking, looking downward. Cartoon illustration style, bold black outlines, flat colors with minimal shading, transparent background, full body visible, square format, child-friendly, no text.
+A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is sitting with droopy posture, ears slightly flattened, eyes half-closed and sad-looking, looking downward. Cartoon illustration style, bold black outlines, flat colors with minimal shading. Transparent background (PNG with alpha channel), full body visible, square format, child-friendly, no text, no background scenery.
 ```
 
 ---
@@ -123,7 +124,7 @@ A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs
 
 **Gemini 提示詞（英文）**：
 ```
-A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is lying down with front paws stretched forward, staring at an empty food bowl with big sad eyes. Cartoon illustration style, bold black outlines, flat colors with minimal shading, transparent background, horizontal composition, child-friendly, no text.
+A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is lying down with front paws stretched forward, staring at an empty food bowl with big sad eyes. Cartoon illustration style, bold black outlines, flat colors with minimal shading. Transparent background (PNG with alpha channel), horizontal composition, full body visible, child-friendly, no text, no background scenery.
 ```
 
 ---
@@ -144,7 +145,7 @@ A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs
 
 **Gemini 提示詞（英文）**：
 ```
-A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) on a red leash along a sidewalk. Trees and a street in the background. Side view, full scene horizontal composition. Anime illustration style, soft watercolor background, semi-realistic proportions, warm natural colors, no text.
+A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) on a red leash along a sidewalk. Trees and a street in the background. Side view, full scene horizontal composition. Anime illustration style, clean line art, semi-realistic proportions, warm natural colors. Transparent background (PNG with alpha channel), full body both characters visible, no background scenery, no text.
 ```
 
 ---
@@ -156,7 +157,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 
 **Gemini 提示詞（英文）**：
 ```
-A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking along a sidewalk while a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) walks ahead without a leash. The woman is looking toward the dog in the distance. Trees and street in the background. Side view, full scene horizontal composition. Anime illustration style, soft watercolor background, semi-realistic proportions, warm natural colors, no text.
+A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking along a sidewalk while a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) walks ahead without a leash. The woman is looking toward the dog in the distance. Trees and street in the background. Side view, full scene horizontal composition. Anime illustration style, clean line art, semi-realistic proportions, warm natural colors. Transparent background (PNG with alpha channel), full body both characters visible, no background scenery, no text.
 ```
 
 ---
@@ -168,7 +169,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 
 **Gemini 提示詞（英文）**：
 ```
-A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) in a park. The dog has just defecated (small pile visible on ground). Trees and park background. Side or three-quarter view. Anime illustration style, soft watercolor background, semi-realistic proportions, warm natural colors, no text. Tasteful depiction.
+A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) in a park. The dog has just defecated (small pile visible on ground). Trees and park background. Side or three-quarter view. Anime illustration style, clean line art, semi-realistic proportions, warm natural colors. Transparent background (PNG with alpha channel), full body both characters visible, no background scenery, no text. Tasteful depiction.
 ```
 
 ---
@@ -180,7 +181,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 
 **Gemini 提示詞（英文）**：
 ```
-A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking side by side with a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) on a leash. Transparent or plain white background. Cutout character style, side view, full body both characters. Anime illustration style, semi-realistic proportions, clean lines, no text.
+A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking side by side with a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) on a leash. Transparent background (PNG with alpha channel). Cutout character style, side view, full body both characters visible, no background scenery. Anime illustration style, semi-realistic proportions, clean lines, no text.
 ```
 
 ---
@@ -192,7 +193,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 
 **Gemini 提示詞（英文）**：
 ```
-A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, holding a green poop bag in her left hand while holding a leash in her right hand. A medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) walks beside her. Transparent or plain white background. Cutout character style, side view, full body both characters. Anime illustration style, semi-realistic proportions, clean lines, no text.
+A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, holding a green poop bag in her left hand while holding a leash in her right hand. A medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) walks beside her. Transparent background (PNG with alpha channel). Cutout character style, side view, full body both characters visible, no background scenery. Anime illustration style, semi-realistic proportions, clean lines, no text.
 ```
 
 ---
@@ -205,32 +206,37 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 > - 聲音：`include realistic sound effects and background music`
 > - 無文字：`no text or subtitles on screen`
 > - 動物行為：`animals behave realistically based on natural instincts, not anthropomorphized`
-> - 畫風：`cartoon animation style, bold black outlines, flat colors, minimal shading, warm pastel background tones, child-friendly, smooth simple motion`
+> - 畫風：`Anime-style 2D animation, clean line art, cel-shaded with distinct flat shadow blocks, soft warm muted color palette (beige, cream, tan, warm brown), low saturation, cozy slice-of-life atmosphere, warm ambient lighting, child-friendly`
 
 ---
 
 ### 過場動畫
 
 #### `arrival-transition.mp4` — 接回家過場
-**時長**：5–8 秒  
+**時長**：8–10 秒  
 **遊戲情境**：玩家選完品種後，過場動畫播放，帶入第一天情境  
-**場景描述**：飼主從收容所帶走米克斯 → 坐車回家 → 在新家放開狗 → 最後畫面出現「歡迎回家」
+**場景描述**：6 個分鏡依序呈現——車子開往收容所、飼主帶走米克斯、開車回家、到家開籠、米克斯走出來、歡迎回家文字
 
-**VideoFX 分鏡腳本**：
+**Gemini / Google Flow 提示詞**：
 ```
-Scene sequence — fixed medium shot throughout, no camera cuts or switches, no close-ups:
+Anime-style 2D animation, clean line art, cel-shaded. Warm, heartwarming, cozy slice-of-life style.
 
-Shot 1 (2s): Indoor setting resembling an animal shelter — simple kennels or cages in the background, warm but plain interior. A young woman (brown hair in a ponytail, pink sweatshirt, blue jeans, white sneakers) kneels down near a mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail). The dog sniffs her cautiously.
+Six-scene sequence with smooth dissolve transitions, fixed focal length, medium shot throughout, no close-ups, no hard camera cuts:
 
-Shot 2 (1-2s): The same woman and dog are seen through a car window, riding home. The dog sits in the backseat looking out the window with curious alert eyes. Natural scenery passes by outside.
+Scene 1: A small round blue vintage car drives left to right along a quiet two-lane countryside road. A young woman with brown hair in a ponytail, wearing a pink sweatshirt, is clearly visible as the driver through the side window. Soft rolling green hills, fluffy white clouds, and a clear blue sky in the background. Bright morning light.
 
-Shot 3 (1-2s): Interior of a new, cozy home living room. The woman sets the dog down gently. The dog steps forward slowly, sniffing the floor and looking around cautiously at the unfamiliar space.
+Scene 2: Interior of a warm animal shelter — cream walls, rows of kennels with other dogs visible in the background. The young woman (pink sweatshirt, blue jeans, white sneakers) kneels gently on the floor and guides a mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) into an open blue pet carrier.
 
-Final frame (1s): The screen shows the Chinese text "歡迎回家" in warm, friendly font on a soft background. This is the ONLY text in the entire video.
+Scene 3: The same round blue car drives along a tree-lined road under a warm golden sunset sky. The young woman is visible as the driver. The closed blue pet carrier sits in the backseat.
 
-Cartoon animation style, bold black outlines, flat colors, minimal shading, warm pastel tones, child-friendly, smooth simple motion. Fixed focal length, medium shot throughout, no close-ups, no camera cuts. Include ambient background music and subtle sound effects (car sounds, door sound, soft paw steps). Animals behave realistically based on natural instincts, not anthropomorphized.
+Scene 4: Cozy living room interior — warm beige walls, light wooden floor, large wooden bookshelf with books and potted plants including a Monstera, beige couch with patterned cushions, small table with a warm ambient lamp, framed pictures on the walls. The young woman kneels on a round cream rug and opens the blue pet carrier door.
+
+Scene 5: The mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) cautiously steps out of the open carrier onto the round rug, looking around with wide alert eyes — natural hesitant first-step behavior in a new space.
+
+Scene 6: The dog sits calmly on the round rug in the warm living room. Large warm-colored Chinese text "歡迎回家" appears prominently — light yellow with soft glowing edges, children's book title card style. This is the only text in the entire video.
+
+Include soft background music and gentle sound effects (car engine, shelter ambience, door opening, soft paw steps). Animals behave realistically, not anthropomorphized. High detailed and heartwarming.
 ```
-
 ---
 
 #### `busy-day-transition.mp4` — 忙碌生活過場（飼主視角）
@@ -240,13 +246,15 @@ Cartoon animation style, bold black outlines, flat colors, minimal shading, warm
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: First-person perspective (owner's viewpoint). Fixed focal length, medium shot, no camera cuts or switches, no close-ups.
+Anime-style 2D animation, clean line art, cel-shaded. Warm, cozy slice-of-life style.
 
-Shot 1 (2s): Hands of a young woman (pink sweatshirt visible at wrist) grabbing keys and a bag, rushing out the front door in the morning.
-Shot 2 (2s): View of a desk with papers and a computer, hands typing — busy working.
-Shot 3 (2-3s): Front door opens at night; a mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) is sitting by the door. The dog's tail wags once or twice, then settles — reacting naturally to the returning owner, not performing a dramatic greeting.
+First-person perspective (owner's viewpoint). Fixed focal length, medium shot, no camera cuts, no close-ups.
 
-Cartoon animation style, bold black outlines, flat colors, warm lighting, child-friendly. Include background music and subtle sound effects (keys, door opening). No text or subtitles on screen. Animals behave realistically, not anthropomorphized.
+Shot 1: Hands of a young woman (pink sweatshirt cuffs visible) grabbing keys and a tote bag from a hook near the front door — bright morning light streaming in.
+Shot 2: The same hands typing at a cluttered desk with papers and a laptop — warm afternoon indoor light.
+Shot 3: Front door opens at night. Warm amber lamp light fills the cozy hallway. A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) sits quietly near the door. The dog's tail wags once calmly, then settles — a natural low-key greeting, not excited jumping.
+
+Cozy home interior with warm beige walls, wooden floor, small table with a warm ambient lamp. Background music shifts from upbeat morning to quiet evening. Include sound effects (keys jingling, door opening). No text on screen. Animals behave realistically, not anthropomorphized.
 ```
 
 ---
@@ -258,13 +266,13 @@ Cartoon animation style, bold black outlines, flat colors, warm lighting, child-
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A warm indoor room. Fixed focal length, medium shot, no camera cuts or switches, no close-ups.
+Anime-style 2D animation, clean line art, cel-shaded. Warm, heartwarming, cozy slice-of-life style.
 
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) is shown in two moments: first as a healthy energetic adult dog, moving around the room; then slowly transitioning (soft visual dissolve effect) to an older version of the same dog — muzzle turning grey, movement slower, resting on a cozy dog bed in a sunny corner. The dog moves naturally, no human-like behaviors.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) in a cozy living room — warm beige walls, light wooden floor, round cream rug, large wooden bookshelf with books and potted plants including a Monstera, beige couch with patterned cushions. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-A subtle falling leaves or page-flip visual effect to imply time passing.
+The dog is first shown as a healthy adult, walking and sniffing around the room energetically. A soft dissolve transition — with a gentle falling-leaf visual effect — transitions to the same dog as a senior: grey around the muzzle and eyes, movement slower, settling onto a cozy dog bed in a sunny corner near the window.
 
-Cartoon animation style, bold black outlines, flat colors, warm tones, child-friendly. Include background music that shifts from lively to gentle. No text on screen. Animals behave realistically, not anthropomorphized.
+Background music shifts from lively to gentle and soft. No text on screen. Animals behave realistically, not anthropomorphized. Heartwarming.
 ```
 
 ---
@@ -278,9 +286,11 @@ Cartoon animation style, bold black outlines, flat colors, warm tones, child-fri
 
 **VideoFX 分鏡腳本**：
 ```
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) jumps up briefly with front paws raised — a natural excited dog behavior, not a human pose. Tail wags quickly. Sparkles and small stars burst around the dog. The dog lands and sits down calmly.
+Anime-style 2D animation, clean line art, cel-shaded. Cheerful and child-friendly. Duration: 3–5 seconds.
 
-Fixed focal length, medium shot, no close-ups, no camera cuts. Cartoon animation style, bold outlines, bright cheerful colors, white or light background, child-friendly. Include upbeat sound effect. No text on screen. Animals behave realistically, not anthropomorphized.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) on a warm cream background. The dog wags its tail happily and quickly — a natural joyful dog behavior. The tail sweeps back and forth with energy. The dog's expression is relaxed and happy, mouth slightly open in a natural panting smile.
+
+Fixed focal length, medium shot, no close-ups, no camera cuts. No sparkles or special effects. Include a short upbeat background music clip. No text on screen. Animals behave realistically, not anthropomorphized.
 ```
 
 ---
@@ -292,9 +302,11 @@ Fixed focal length, medium shot, no close-ups, no camera cuts. Cartoon animation
 
 **VideoFX 分鏡腳本**：
 ```
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) does a quick spin in place — a natural excited dog circling movement — then sits down and looks forward with a calm satisfied expression. Small hearts or stars pop around it.
+Anime-style 2D animation, clean line art, cel-shaded. Cheerful and child-friendly. Duration: 3–5 seconds.
 
-Fixed focal length, medium shot, no close-ups, no camera cuts. Cartoon animation style, bold outlines, bright cheerful colors, white or light background, child-friendly. Include cheerful sound effect. No text on screen. Animals behave realistically, not anthropomorphized.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) on a warm cream background. The dog wags its tail happily and energetically — a natural excited dog behavior. It shifts its weight slightly from side to side as its tail sweeps back and forth. The dog sits and looks forward with a calm satisfied expression, tail still gently wagging.
+
+Fixed focal length, medium shot, no close-ups, no camera cuts. No sparkles or special effects. Include a cheerful upbeat background music clip. No text on screen. Animals behave realistically, not anthropomorphized.
 ```
 
 ---
@@ -308,11 +320,13 @@ Fixed focal length, medium shot, no close-ups, no camera cuts. Cartoon animation
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A cartoon living room, unfamiliar to the dog. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Warm, heartwarming, cozy slice-of-life style.
 
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) is crouched down next to a pet carrier, looking around with wide alert eyes. Its body is low to the ground, ears slightly pulled back — natural fearful body posture in an unfamiliar place. A human hand (belonging to a young woman in a pink sweatshirt) slowly reaches toward the dog from the side. The dog instinctively retreats closer to the carrier without making eye contact.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) huddles close to a blue pet carrier in an unfamiliar cozy living room — warm beige walls, light wooden floor, round cream rug, large wooden bookshelf with books and potted Monstera, beige couch with patterned cushions, small table with warm ambient lamp. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Cartoon animation style, bold outlines, flat colors, child-friendly. Include ambient indoor sounds and soft background music. No text on screen. Animals behave realistically based on natural fear response, not anthropomorphized.
+The dog's body is low to the ground, ears slightly pulled back, wide alert eyes scanning the unfamiliar space — natural fearful posture. A young woman's hand (pink sweatshirt sleeve visible) slowly and gently extends toward the dog from the right side of the frame. The dog instinctively leans back closer to the carrier without breaking its cautious gaze.
+
+Include soft ambient indoor sounds and gentle background music. No text on screen. Animals behave realistically based on natural fear response, not anthropomorphized.
 ```
 
 ---
@@ -324,11 +338,13 @@ Cartoon animation style, bold outlines, flat colors, child-friendly. Include amb
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A cartoon home interior at night, dim lighting, front door visible. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Cozy slice-of-life style.
 
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) stands facing the front door, barking repeatedly — natural alert dog behavior triggered by sound outside. Body is tense, weight shifted forward, ears perked. The dog briefly glances back toward the interior of the room, then returns focus to the door.
+A cozy living room at night — warm beige walls, round cream rug, small table with a warm amber lamp glowing softly, front door visible in the background. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Cartoon animation style, bold outlines, flat colors, child-friendly. Include barking sound effect and muffled sounds from outside. No text on screen. Animals behave realistically, not anthropomorphized.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) stands on the rug facing the front door, barking repeatedly. Its body leans forward with weight on its front paws, ears fully erect — natural alert territorial behavior triggered by sounds outside. The dog briefly glances back over its shoulder, then refocuses on the door.
+
+Include barking sound effects and muffled sounds from outside. No text on screen. Animals behave realistically, not anthropomorphized.
 ```
 
 ---
@@ -340,11 +356,13 @@ Cartoon animation style, bold outlines, flat colors, child-friendly. Include bar
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A cartoon living room, items scattered on the floor. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Cozy slice-of-life style.
 
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) is chewing on a shoe near the table leg — natural teething/chewing behavior. The dog suddenly stops and looks up (reacting to a sound or presence), drops the shoe, and sits still with a cautious expression — not exaggerated guilt, just a natural pause in behavior.
+A cozy living room in daytime — warm beige walls, light wooden floor, items near the table base. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Cartoon animation style, bold outlines, flat colors, child-friendly. Include chewing sound effect and then sudden quiet. No text on screen. Animals behave realistically, not anthropomorphized.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) chews on a sneaker near the base of a table — natural teething behavior. The dog suddenly freezes and looks up toward the camera, drops the shoe, and sits still with a cautious alert expression — not exaggerated guilt, just a natural pause when startled.
+
+Include a chewing sound effect followed by sudden quiet. No text on screen. Animals behave realistically, not anthropomorphized.
 ```
 
 ---
@@ -356,11 +374,13 @@ Cartoon animation style, bold outlines, flat colors, child-friendly. Include che
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A cartoon living room with no training pads visible. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Tasteful and child-friendly.
 
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) sniffs the floor near a corner, circles once (natural pre-urination behavior), then squats and urinates on the floor — shown tastefully from the side, with a small puddle graphic. The dog's expression is neutral and natural — not guilty, not aware this is wrong. No training pad nearby.
+A cozy living room — warm beige walls, light wooden floor, no training pads visible anywhere. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Cartoon animation style, bold outlines, flat colors, tasteful depiction, child-friendly. Include subtle indoor ambient sound. No text on screen. Animals behave realistically based on natural instincts, not anthropomorphized.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) sniffs along the floor near a corner of the room. The dog circles once — natural pre-urination behavior — then squats and urinates on the floor, shown tastefully from the side with a small puddle graphic. The dog's expression is neutral and calm — no guilt, no awareness this is wrong.
+
+Include quiet ambient indoor sounds. No text on screen. Animals behave realistically based on natural instincts, not anthropomorphized.
 ```
 
 ---
@@ -374,11 +394,13 @@ Cartoon animation style, bold outlines, flat colors, tasteful depiction, child-f
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A cartoon home interior, front door and a clock on the wall visible. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Warm, heartwarming, cozy slice-of-life style.
 
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) is sitting or lying by the front door. It occasionally shifts its gaze to the clock. Its body posture is naturally relaxed but slightly droopy from waiting — no exaggerated human-like emotion. The dog puts its chin down on its paws. The clock hands visually indicate time passing.
+A cozy home interior — warm beige walls, light wooden floor, round cream rug, a round wall clock clearly visible on the wall, front door in the background, small table with a warm ambient lamp. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Cartoon animation style, bold outlines, flat colors, quiet subdued mood, child-friendly. Include soft ambient sound (quiet room, distant city). No text on screen. Animals behave realistically, not anthropomorphized.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) lies near the front door with its chin resting on its front paws. The dog occasionally shifts its gaze to the round wall clock on the wall, then back to the door — natural waiting behavior. Its posture is relaxed but slightly droopy from long waiting. The clock hands visually suggest time has passed.
+
+Include quiet ambient room sounds and soft distant city noise. Subdued gentle background music. No text on screen. Animals behave realistically, not anthropomorphized.
 ```
 
 ---
@@ -390,11 +412,13 @@ Cartoon animation style, bold outlines, flat colors, quiet subdued mood, child-f
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A cartoon home interior, food bowl on the floor. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Warm, child-friendly style.
 
-A mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) approaches its food bowl slowly and hesitantly — sniffs the food but does not eat. The dog uses a front paw to touch near its mouth (natural oral discomfort behavior). Then the dog pauses and scratches its belly and neck with its hind leg repeatedly (natural flea-scratching behavior). Small itch-line graphics may appear near the scratched areas.
+A cozy living room — warm beige walls, light wooden floor, food bowl on the floor. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Cartoon animation style, bold outlines, flat colors, child-friendly. Include ambient indoor sounds. No text on screen. Animals behave realistically based on natural discomfort responses, not anthropomorphized.
+A mixed-breed dog (black dorsal coat, tan cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) approaches its food bowl slowly and hesitantly. The dog sniffs the food but does not eat — it gently paws near its mouth, showing natural oral discomfort. Then the dog pauses and repeatedly scratches its belly and neck area with its hind leg — natural flea-related itching behavior. Small itch-line graphic marks appear near the scratching area.
+
+Color palette slightly more muted and desaturated to convey illness. Include soft ambient indoor sounds. No text on screen. Animals behave realistically based on natural discomfort responses, not anthropomorphized.
 ```
 
 ---
@@ -406,11 +430,13 @@ Cartoon animation style, bold outlines, flat colors, child-friendly. Include amb
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A sunny outdoor path or warm indoor room. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Warm, heartwarming, cozy slice-of-life style.
 
-An older mixed-breed dog (black dorsal coat with grey around the muzzle and eyes, tan/brown cheeks and legs, small white chest patch, erect ears, long slightly curled tail) walks slowly across the scene. The dog pauses midway, back legs slightly unsteady — natural age-related gait. A hand belonging to a young woman (pink sweatshirt visible) gently pets the dog. The dog settles down on a cozy mat in a warm patch of sunlight.
+A cozy living room — warm beige walls, light wooden floor, soft golden sunlight streaming through a curtained window. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Cartoon animation style, bold outlines, flat colors, warm gentle mood, child-friendly. Include soft gentle background music. No text on screen. Animals behave realistically, not anthropomorphized.
+An older mixed-breed dog (black dorsal coat with grey around the muzzle and eyes, tan cheeks and legs, small white chest patch, erect ears, long slightly curled tail) walks slowly across the living room. The dog pauses midway, back legs slightly unsteady — natural age-related gait. A young woman's hand (pink sweatshirt sleeve visible) gently strokes the dog's back. The dog settles down onto a cozy dog bed in a warm patch of sunlight near the window.
+
+Soft gentle background music. Include ambient indoor sounds. No text on screen. Animals behave realistically, not anthropomorphized. High detailed and heartwarming.
 ```
 
 ---
@@ -424,15 +450,17 @@ Cartoon animation style, bold outlines, flat colors, warm gentle mood, child-fri
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A cartoon home interior. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Warm, heartwarming, cozy slice-of-life style.
 
-Shot 1 (2-3s): A small, fluffy mixed-breed puppy (same black and tan coloring, small body) sits near a young woman (brown hair in a ponytail, pink sweatshirt, blue jeans, white sneakers). The puppy fits easily next to her feet.
+A cozy living room — warm beige walls, light wooden floor, large wooden bookshelf with books and potted plants, beige couch with patterned cushions, small table with a warm ambient lamp. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Shot 2 (2-3s): A visual transition (soft fade or page flip). The same dog, now a large fully-grown adult (unexpectedly big), sits next to the same woman who looks at it with a naturally surprised, wide-eyed expression.
+Shot 1: A young woman (brown hair in a ponytail, pink sweatshirt, blue jeans, white sneakers) sits on a round cream rug. A small fluffy mixed-breed puppy (black and tan coloring, compact little body) sits comfortably beside her feet.
 
-Both dogs have the same black-back, tan-legs coloring, just at very different sizes.
+Soft page-flip visual transition.
 
-Cartoon animation style, bold outlines, flat colors, warm humorous tone, child-friendly. Include transition sound effect and light background music. No text on screen. Animals behave realistically, not anthropomorphized.
+Shot 2: The same woman sits in the same spot — but the dog beside her has grown into a large, unexpectedly big adult dog (same black-back, tan-legs coloring, but much taller and broader). The woman's expression shows genuine wide-eyed surprise.
+
+Include a gentle transition sound effect and light background music. No text on screen. Animals behave realistically, not anthropomorphized.
 ```
 
 ---
@@ -444,11 +472,13 @@ Cartoon animation style, bold outlines, flat colors, warm humorous tone, child-f
 
 **VideoFX 分鏡腳本**：
 ```
-Scene: A clean cartoon background. Fixed focal length, medium shot, no close-ups, no camera cuts.
+Anime-style 2D animation, clean line art, cel-shaded. Warm, child-friendly style.
 
-Three different mixed-breed dogs stand side by side, each with distinctly different coat patterns, ear shapes, and sizes (one small with floppy ears, one medium with erect ears and black-tan coat, one large with patchy colors). Each dog displays different natural behavior: one stays still and cautious, one shifts and looks around, one lies down calmly. A cartoon book labeled "品種圖鑑" appears on the side with a question mark page for all three. Dogs behave according to natural temperament differences, not human-like personality acts.
+A clean warm cream background. Fixed focal length, medium shot, no close-ups, no camera cuts.
 
-Cartoon animation style, bold outlines, flat colors, playful warm mood, child-friendly. Include light background music. No text on screen except "品種圖鑑" on the book cover. Animals behave realistically, not anthropomorphized.
+Three different mixed-breed dogs stand side by side: one small dog with floppy ears and a spotted coat; one medium dog with erect ears and a black-and-tan coat; one large dog with a patchy multi-colored coat. Each dog displays naturally different behavior: the small one stays still and cautious, the medium one shifts and looks around alertly, the large one lies down calmly. A cartoon book with the title "品種圖鑑" appears beside them, showing a question mark for all three entries.
+
+Include light playful background music. The only visible text is "品種圖鑑" on the book cover. Animals behave realistically based on natural temperament, not anthropomorphized.
 ```
 
 ---

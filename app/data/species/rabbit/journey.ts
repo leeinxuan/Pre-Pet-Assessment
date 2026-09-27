@@ -14,7 +14,7 @@ export const rabbitJourneyItems: JourneyItem[] = [
 ];
 
 /** 不含由高溫預防題自動接續的 rabbit-heatstroke-emergency。 */
-export const rabbitDailyBehaviorScenarioIds = ["rabbit-stomp", "rabbit-heatstroke-prevention", "rabbit-shedding"] as const;
+export const rabbitDailyBehaviorScenarioIds = ["rabbit-heatstroke-prevention", "rabbit-cecotropes", "rabbit-bath"] as const;
 
 export const rabbitDailyCheckConfig = {
   steps: ["groom-head-ears", "groom-back-sides", "groom-hind-tail", "groom-paws", "groom-teeth", "groom-nails"] as const,

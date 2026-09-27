@@ -54,6 +54,27 @@ export type ScenarioCompletionFeedback = {
   reminder?: string;
 };
 
+/**
+ * 忙碌日常四項交接確認完成後的共用回饋內容。
+ * 文案與每日照護時間均由物種情境資料提供，避免共用元件混入特定物種內容。
+ */
+export type BusyCareCompletionContent = {
+  title?: string;
+  encouragement?: string;
+  reflectionText: string;
+  reflectionTitle: string;
+  reflectionContent: string[];
+  knowledgeTitle?: string;
+  knowledgeContent?: string[];
+  /** 特定完成頁只需反思與建議時，隱藏共用小知識卡。 */
+  showKnowledgeCard?: boolean;
+  careTimeTitle?: string;
+  careTimeItems?: Array<{ title: string; detail: string }>;
+  /** 某些完成頁只需要反思與知識；不影響報告中的每日照護時間資料。 */
+  showCareTime?: boolean;
+  additionalAdvice?: string[];
+};
+
 export type Scenario = {
   id: string;
   stage: string;
@@ -79,7 +100,11 @@ export type Scenario = {
   correctSummary?: string[];
   learningPoints?: string[];
   knowledgeTitle?: string;
+  /** 特定情境答對後顯示於共用做得很好頁的綠色提醒。 */
+  completionNotice?: string;
   completionFeedback?: ScenarioCompletionFeedback;
+  /** 忙碌日常完成頁的專屬內容；版型仍由共用 BusyCareActivity 呈現。 */
+  busyCareCompletion?: BusyCareCompletionContent;
   /** 題庫資料識別欄位：供旅程、摘要與除錯使用，UI 不以畫面位置推斷。 */
   speciesId?: string;
   breedId?: string;

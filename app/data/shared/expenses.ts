@@ -60,6 +60,8 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   "microchip-registration": { id: "microchip-registration", name: "\u6676\u7247\u690d\u5165\u8207\u5bf5\u7269\u767b\u8a18", amount: 1000, category: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa", stage: "\u5bf5\u7269\u5230\u5bb6\u5f8c", recurring: false },
   "rabies-vaccine": { id: "rabies-vaccine", name: "\u72c2\u72ac\u75c5\u75ab\u82d7", amount: 400, category: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa", stage: "\u5bf5\u7269\u5230\u5bb6\u5f8c", recurring: false },
   "basic-vaccine-checkup": { id: "basic-vaccine-checkup", name: "\u57fa\u790e\u75ab\u82d7\u8207\u521d\u671f\u5065\u5eb7\u6aa2\u67e5", amount: 3500, category: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa", stage: "\u5bf5\u7269\u5230\u5bb6\u5f8c", recurring: false },
+  "dog-sterilization": { id: "dog-sterilization", name: "絕育手術費用", amount: 5000, category: "到家後必要支出", stage: "寵物到家後", recurring: false, description: "無繁殖計畫強烈建議絕育；可預防多種生殖系統疾病，並減少發情期相關行為問題；費用依性別與體型而異。" },
+  "cat-sterilization": { id: "cat-sterilization", name: "絕育手術費用", amount: 3500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, description: "無繁殖計畫強烈建議絕育；可預防子宮蓄膿、乳腺腫瘤等疾病，並大幅減少發情嚎叫與外出衝動；費用依性別而異。" },
   "sick-vet-care": { id: "sick-vet-care", name: "生病就醫與檢查", amount: 4200, category: "醫療", stage: "生病與就醫", recurring: false, fromEmergency: true },
   "journey-care-service": { id: "journey-care-service", name: "短期照顧服務", amount: 2400, category: "照顧服務", stage: "飼主生活發生改變", recurring: false },
   "dog-senior-room": { id: "dog-senior-room", name: "高齡環境調整用品", amount: 1500, category: "高齡用品", stage: "逐漸進入高齡", recurring: false, description: "降低障礙物高度、提供防滑地墊並增加保暖設備。" },
@@ -95,6 +97,7 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   "rabbit-pellet-monthly": { id: "rabbit-pellet-monthly", name: "每月飼料費用（輔助）", amount: 200, category: "每月基本支出", stage: "日常照護", recurring: true, description: "輔助主食不超過飲食的 5%，依年齡選擇配方。" },
   "rabbit-veggies-monthly": { id: "rabbit-veggies-monthly", name: "每月新鮮葉菜費用", amount: 350, category: "每月基本支出", stage: "日常照護", recurring: true, description: "新鮮葉菜約占飲食 10～15%，不以紅蘿蔔取代主食。" },
   "rabbit-litter-monthly": { id: "rabbit-litter-monthly", name: "每月便盆墊料費用", amount: 275, category: "每月基本支出", stage: "日常照護", recurring: true, description: "定期更換吸附墊料，維持清潔並避免尿灼傷。" },
+  "rabbit-ac-monthly": { id: "rabbit-ac-monthly", name: "夏季冷氣電費（夏季月份）", amount: 1000, category: "每月基本支出", stage: "日常照護", recurring: true, description: "兔子非常怕熱，夏天（約 5–10 月）需全天開冷氣維持 25℃ 以下；電費依機型與使用時數而異，建議納入每月固定預算。" },
   "rabbit-care-service": { id: "rabbit-care-service", name: "短期代養費用", amount: 2000, category: "照顧服務", stage: "飼主生活發生改變", recurring: false, description: "僅在選擇付費專業代養時加入。" },
   "rabbit-emergency-reserve": { id: "rabbit-emergency-reserve", name: "緊急醫療備用金", amount: 5000, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "危急狀況需立即由兔科獸醫協助。" },
   "rabbit-routine-checkup": { id: "rabbit-routine-checkup", name: "定期健康檢查", amount: 1000, category: "臨時／醫療支出", stage: "生活變化", recurring: false, description: "建議至少半年至一年一次全面健康檢查。" },
@@ -120,6 +123,6 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
 
 /** 犬、貓第一題答對後才一次登錄的既有到家後必要支出。 */
 export const arrivalRequiredExpenseIdsBySpecies = {
-  dog: ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup"],
-  cat: ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup"],
+  dog: ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "dog-sterilization"],
+  cat: ["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "cat-sterilization"],
 } as const;

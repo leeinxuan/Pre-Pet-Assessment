@@ -158,8 +158,8 @@
 .walking-time-summary { width: min(100%, 760px); margin: 22px 0 10px; padding: 0; }
 .walking-time-summary > p { margin: 0 0 10px; color: #745625; font-size: 15px; font-weight: 900; }
 .walking-time-commitment { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; text-align: left; }
-.walking-time-commitment > div { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; border: 1px solid rgba(216, 174, 94, .46); border-radius: 16px; background: #fffaf0; }
-.walking-time-commitment b { color: var(--ink); font-size: 14px; line-height: 1.55; }.walking-time-commitment span { flex: 0 0 auto; color: var(--gold-dark); font-size: 13px; font-weight: 900; white-space: nowrap; }
+.walking-time-commitment > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(190px, max-content); align-items: start; gap: 14px; padding: 14px 16px; border: 1px solid rgba(216, 174, 94, .46); border-radius: 16px; background: #fffaf0; }
+.walking-time-commitment b { min-width: 0; color: var(--ink); font-size: 14px; line-height: 1.55; overflow-wrap: normal; word-break: keep-all; }.walking-time-commitment span { color: var(--gold-dark); font-size: 13px; font-weight: 900; line-height: 1.65; text-align: right; white-space: pre-line; }
 .walking-reflection-note { margin: 18px 0 8px; padding: 22px 24px; border: 1px solid rgba(216, 170, 75, .74); border-radius: 18px; background: #fff4ce; text-align: center; }
 .walking-reflection-note b { display: block; margin-bottom: 10px; color: #67470d; font-size: 18px; }
 .walking-reflection-note p { max-width: 680px; margin: 0 auto 10px; color: #715725; font-size: 15px; line-height: 1.75; }
@@ -698,15 +698,27 @@
   font-weight: 800;
   line-height: 1.75;
 }
-.busy-care-energy-reflection b { display: flex; align-items: center; gap: 9px; }
-.busy-care-energy-reflection b > span { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 50%; background: rgba(255,255,255,.65); font-size: 18px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(177,122,15,.2); }
-.busy-care-energy-reflection .busy-care-slogan { max-width: 100%; margin: 0 0 14px; color: #9b5b0b; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(18px, 2.2vw, 22px); font-weight: 950; line-height: 1.45; text-wrap: balance; }
+.busy-care-energy-reflection .busy-care-slogan { display: block; max-width: 100%; margin: 0; color: #67470d; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(18px, 2.2vw, 22px); font-weight: 950; line-height: 1.45; text-wrap: balance; }
+.busy-care-reflection-title { display: flex; align-items: center; gap: 9px; margin: 22px 0 8px !important; color: #67470d !important; font-size: 15px !important; font-weight: 900 !important; }
+.busy-care-reflection-title > span { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 50%; background: rgba(255,255,255,.65); font-size: 18px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(177,122,15,.2); }
+.busy-care-completion-content { display: grid; gap: 16px; }
+.busy-care-completion-content .busy-care-warm-note { margin: 0; }
+.busy-care-completion-content .busy-care-warm-note p + p { margin-top: 10px; }
+.busy-care-knowledge-card { margin: 0; }
+.busy-care-knowledge-card p { margin: 10px 0 0; line-height: 1.72; }
+.busy-care-care-time { padding: 16px 18px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255, 255, 255, .68); }
+.busy-care-care-time > b { display: block; margin-bottom: 8px; color: var(--ink); font-size: 16px; }
+.busy-care-care-time ul { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.busy-care-care-time li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 9px 0; border-top: 1px solid rgba(140, 119, 74, .18); color: var(--ink-soft); font-size: 14px; line-height: 1.5; }
+.busy-care-care-time li strong { color: var(--ink); text-align: right; white-space: nowrap; }
+.busy-care-additional-advice p { margin: 0; color: #4f6d51; font-size: clamp(14px, 1.5vw, 14px); font-weight: 850; line-height: 1.72; }
+.busy-care-additional-advice b { color: inherit; }
 /* 散步與貓砂盆救援隊的共用手機版節奏。 */
 @media (max-width: 720px) {
   .feedback-knowledge-card, .knowledge-card { padding: 18px; }
   .walking-time-commitment { grid-template-columns: 1fr; }
-  .walking-time-commitment > div { align-items: flex-start; flex-direction: column; gap: 5px; }
-  .walking-time-commitment span { white-space: normal; }
+  .walking-time-commitment > div { grid-template-columns: 1fr; gap: 5px; }
+  .walking-time-commitment span { text-align: left; white-space: pre-line; }
   .walking-reflection-note { padding: 20px 18px; }
   .correct-feedback-actions { align-items: stretch; flex-direction: column; }
   .correct-feedback-actions .secondary, .correct-feedback-actions .delayed-continue, .correct-feedback-actions .primary { width: 100%; }
@@ -1114,6 +1126,7 @@
 .rabbit-drag-sort-list small { color: var(--gold-dark); font-weight: 800; white-space: nowrap; }
 .rabbit-unsafe-list { display: grid; gap: 6px; margin: 0 0 18px; padding: 13px 14px; border: 1px solid #d98d85; border-radius: 12px; background: #fff0ee; color: #6d302d; font-size: 14px; line-height: 1.6; }
 .rabbit-unsafe-list b { color: #a83f38; }
+.knowledge-danger { color: #a83f38; font-weight: 950; }
 .rabbit-activity-message { margin: 16px 0; padding: 12px 14px; border-radius: 12px; background: var(--gold-soft); color: var(--ink); line-height: 1.65; }
 .scenario-option-card.incorrect { border-color: #c66a60; background: #fff4f2; color: #8f3e36; }
 .rabbit-activity-panel > .sort-attempts { display: inline-flex; align-items: center; gap: 6px; margin: 8px 0 18px; padding: 9px 15px; border: 1px solid #d89143; border-radius: 999px; background: #fff0d6; color: #873b10; font-size: 17px; font-weight: 900; }

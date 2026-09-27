@@ -10,7 +10,7 @@ import { catSelection } from "./selection";
 
 export const catConfig = {
   id: "cat" as const,
-  selection: { ...catSelection, skipBreedPage: false },
+  selection: catSelection,
   preparation: { roomItems: catRoomItems, hazards: catHazards, ...catPreparation },
   journey: catJourney,
   scenarios: catLifeScenarios,

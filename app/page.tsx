@@ -24,6 +24,8 @@ import {
 } from "./components/life/LifeJourneyComponents";
 import {
   CarTrunkPreparation,
+  HomeReadinessActivity,
+  initialHomeReadinessState,
   RoomPreparation,
 } from "./components/preparation/PreparationComponents";
 import { AssessmentReport } from "./components/report/ProfileReportComponents";
@@ -105,6 +107,7 @@ export default function Home() {
   const [preparationTask, setPreparationTask] = useState(0);
   const [preparationReached, setPreparationReached] = useState(0);
   const [preparationReplayTask, setPreparationReplayTask] = useState<number | null>(null);
+  const [homeReadiness, setHomeReadiness] = useState(initialHomeReadinessState);
   const [roomReady, setRoomReady] = useState<string[]>([]);
   const [hazardsReady, setHazardsReady] = useState<string[]>([]);
   const [members, setMembers] = useState<CareMember[]>(initialMembers);
@@ -123,6 +126,7 @@ export default function Home() {
   const [testSkipSignal, setTestSkipSignal] = useState(0);
   const [testNextSignal, setTestNextSignal] = useState(0);
   const costToastTimerRef = useRef<number | null>(null);
+  const committedSelectionRef = useRef<{ category: string; breed: string } | null>(null);
 
   useEffect(() => {
     return () => {
@@ -139,7 +143,6 @@ export default function Home() {
   const speciesConfig = getSpeciesConfig(category);
   // 舊存檔或舊網址帶入已移除犬種時，render 直接安全回選擇頁；
   // 不在 effect 中補寫狀態，避免把舊資料帶進 journey 或產生級聯 render。
-  const hasUnsupportedDogBreed = category === "dog" && Boolean(breed) && !speciesConfig.breeds.some((item) => item.id === breed);
 
   function goTo(next: number) {
     setStep(next);
@@ -155,37 +158,27 @@ export default function Home() {
   }
 
   function goToLifeStage(stageIndex: number) {
-    if (category === "rabbit" || category === "bird") {
-      const stageStarts = getJourneyItemsForSpecies(category).reduce<number[]>((starts, item, index, all) => {
-        if (index === 0 || item.stageId !== all[index - 1].stageId) starts.push(index);
-        return starts;
-      }, []);
-      const journeyStart = stageStarts[stageIndex] ?? 0;
-      setLifePhase("life-journey");
-      setJourneyIndex(journeyStart);
-      // 階段編號僅供既有總流程解鎖使用；兔子題目分段由 stageId 判定。
-      setStep(stageIndex === 0 ? 3 : stageIndex >= 4 ? 6 : 4);
-      setIntroOpen(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    const firstJourneyItem = [0, 1, 3, 4];
-    const underlyingStep = [3, 4, 4, 6];
+    const stageStarts = getJourneyItemsForSpecies(category).reduce<number[]>((starts, item, index, all) => {
+      if (index === 0 || item.stageId !== all[index - 1].stageId) starts.push(index);
+      return starts;
+    }, []);
+    const journeyStart = stageStarts[stageIndex] ?? 0;
     if (lifePhase === "arrival-video" && stageIndex === 0) {
       setStep(3);
       setIntroOpen(false);
     } else {
       setLifePhase("life-journey");
-      setJourneyIndex(firstJourneyItem[stageIndex]);
-      setStep(underlyingStep[stageIndex]);
+      setJourneyIndex(journeyStart);
+      setStep(stageIndex === 0 ? 3 : stageIndex >= stageStarts.length - 1 ? 6 : 4);
       setIntroOpen(false);
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function changeSelectionPage(page: "species" | "breed" | "name" | "history" | "transition") {
-    setSelectionPage(page);
-    const pageIndex = ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[page];
+    const resolvedPage = page === "breed" && getSpeciesConfig(category).selection.skipBreedPage ? "name" : page;
+    setSelectionPage(resolvedPage);
+    const pageIndex = ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[resolvedPage];
     setSelectionReached((current) => Math.max(current, pageIndex));
   }
 
@@ -198,13 +191,13 @@ export default function Home() {
   function skipCurrentJourneyItemForTest() {
     if (!testMode) return;
 
-    // 飼養前準備共有兩項；跳題只切換流程，不補寫用品、費用或完成紀錄。
+    // 飼養前準備共有三項；跳題只切換流程，不補寫用品、費用或完成紀錄。
     if (step === 2) {
       setPreparationReplayTask(null);
-      if (preparationTask === 0) {
-        changePreparationTask(1);
+      if (preparationTask < 2) {
+        changePreparationTask(preparationTask + 1);
       } else {
-        setPreparationReached((current) => Math.max(current, 1));
+        setPreparationReached((current) => Math.max(current, 2));
         setStep(3);
         setFurthestStep((current) => Math.max(current, 3));
         setIntroOpen(false);
@@ -397,7 +390,7 @@ export default function Home() {
     }
   }
 
-  function resetJourney() {
+  function resetAllGameData(nextSelection?: { category: string; breed: string }) {
     setCategory("");
     setBreed("");
     setSelectionPage("species");
@@ -407,6 +400,8 @@ export default function Home() {
     setPreviousDogName("");
     setPreparationTask(0);
     setPreparationReached(0);
+    setPreparationReplayTask(null);
+    setHomeReadiness(initialHomeReadinessState);
     setRoomReady([]);
     setHazardsReady([]);
     setMembers(initialMembers);
@@ -426,6 +421,35 @@ export default function Home() {
     setScenarioAnswers({});
     setProfile(initialProfile);
     setCareCommitted(false);
+    setTestSkipSignal(0);
+    setTestNextSignal(0);
+    committedSelectionRef.current = nextSelection ?? null;
+    if (nextSelection) {
+      setCategory(nextSelection.category);
+      setBreed(nextSelection.breed);
+      setSelectionPage("name");
+      setSelectionReached(2);
+      setStep(1);
+      setFurthestStep(1);
+      setIntroOpen(false);
+      setTestMode(false);
+    }
+  }
+
+  const resetJourney = () => resetAllGameData();
+
+  function confirmSelectedJourney() {
+    const nextSelection = { category, breed };
+    const previousSelection = committedSelectionRef.current;
+    const selectionChanged = Boolean(previousSelection && (previousSelection.category !== nextSelection.category || previousSelection.breed !== nextSelection.breed));
+    if (selectionChanged) {
+      // 新的物種／品種只保留選擇本身，其他資料回到首次進站的乾淨狀態。
+      resetAllGameData(nextSelection);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    committedSelectionRef.current = nextSelection;
+    goTo(2);
   }
 
   function startFreshJourney() {
@@ -450,29 +474,35 @@ export default function Home() {
     resetJourney();
     setTestMode(true);
     setCategory("dog");
-    setBreed("shiba");
+    setBreed("dog");
+    committedSelectionRef.current = { category: "dog", breed: "dog" };
     // 測試模式不依物種帶入犬隻名稱，統一使用中性的預設名稱。
     setPetName("小咪");
     setHasPreviousDog(true);
     setPreviousBreed("poodle");
     setPreviousDogName("豆豆");
     setSelectionReached(4);
-    setPreparationReached(1);
+    setPreparationReached(2);
     setFurthestStep(8);
     setLifePhase("arrival-video");
     setJourneyIndex(0);
     setStep(1);
+    // 測試模式也從共用的物種選擇入口開始，不能落入已隱藏的品種頁。
+    setSelectionPage("species");
     setIntroOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function renderPreparation() {
     if (preparationTask === 0) {
-      const reviewing = preparationReached >= 1 && preparationReplayTask !== 0;
-      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(0); }} onBack={() => goTo(1)} onNext={() => { changePreparationTask(1); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
+      return <HomeReadinessActivity species={category} petName={petName} state={homeReadiness} onChange={setHomeReadiness} onBack={() => goTo(1)} onNext={() => { changePreparationTask(1); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
     }
-    const reviewing = furthestStep >= 3 && preparationReplayTask !== 1;
-    return <CarTrunkPreparation selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { setPreparationReached((current) => Math.max(current, 1)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    if (preparationTask === 1) {
+      const reviewing = preparationReached >= 2 && preparationReplayTask !== 1;
+      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { changePreparationTask(2); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
+    }
+    const reviewing = furthestStep >= 3 && preparationReplayTask !== 2;
+    return <CarTrunkPreparation selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(2); }} onBack={() => changePreparationTask(1)} onNext={() => { setPreparationReached((current) => Math.max(current, 2)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
@@ -504,7 +534,7 @@ export default function Home() {
         onAddExpense={addExpenseById}
         onAddExpenseGroup={addExpenseGroupByIds}
         onStageChange={(nextStep) => { setStep(nextStep); setFurthestStep((current) => Math.max(current, nextStep)); setIntroOpen(false); }}
-        onBack={() => { setStep(2); setPreparationTask(1); setIntroOpen(false); }}
+        onBack={() => { setStep(2); setPreparationTask(2); setIntroOpen(false); }}
         onComplete={() => {
           setLifePhase("complete");
           setStep(7);
@@ -542,11 +572,11 @@ export default function Home() {
           />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} latestExpense={latestExpense} breed={breed} species={category} />}
-            {step === 1 && <SpeciesStep selectionPage={hasUnsupportedDogBreed ? "breed" : selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={hasUnsupportedDogBreed ? "" : breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={() => goTo(2)} />}
+            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={confirmSelectedJourney} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>
-              <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+              <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} homeReadiness={homeReadiness} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
               <div className="report-next-step-actions">
                 <p>準備好進一步了解合法、透明的取得方式了嗎？</p>
                 <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "auto" }); }}>取得寵物 <span>→</span></button>

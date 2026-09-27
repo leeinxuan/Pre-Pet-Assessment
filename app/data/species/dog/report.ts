@@ -11,7 +11,7 @@ export const dogReport: SpeciesReportConfig = {
   dailyCareTime: "每日約需安排 2～4 小時",
   dailyCareTimeNote: "時間會分散在散步、餵食、清潔、互動與日常觀察中，並會依犬種、年齡、健康狀況與家庭安排而變動。",
   dailyCareBreakdown: [
-    { title: "外出散步與如廁", detail: "每日至少 20～30 分鐘" },
+    { title: "外出散步與如廁", detail: "每日 1 至 2 次\n每次至少 20 至 30 分鐘" },
     { title: "餵食、換水與基本整理", detail: "約 15～30 分鐘" },
     { title: "陪伴、互動遊戲或訓練", detail: "約 30～60 分鐘" },
     { title: "清潔、梳理與排泄物處理", detail: "約 15～30 分鐘" },

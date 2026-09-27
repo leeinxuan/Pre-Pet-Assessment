@@ -1,5 +1,6 @@
 import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
+import { catReport } from "./report";
 
 /**
  * 貓咪影片情境答對後的完整回饋。集中在情境資料旁，避免共用回饋元件混入犬隻文案。
@@ -12,7 +13,7 @@ export const catScenarioCorrectFeedback = {
       "先讓牠保有**可退避的安全空間**，在安靜的小房間裡用自己的速度探索。",
       "關好門窗，準備食水與砂盆；不強迫互動，讓牠慢慢建立安全感。",
     ],
-    reminder: "接下來維持低干擾的節奏，觀察牠願意靠近、吃喝與探索的步調。",
+    reminder: "",
   },
   "cat-illness-vet": {
     encouragement: "你已先把重要線索整理好，及早聯繫能讓下一步更清楚。",
@@ -30,7 +31,7 @@ export const catScenarioCorrectFeedback = {
       "**維持穩定、容易進出的生活環境**：低入口砂盆、地墊、階梯式設施與溫暖休息處可以一起調整。",
       "將例行健檢與日常變化記錄納入照護，能更早發現牠需要的協助。",
     ],
-    reminder: "隨著年齡變化，持續觀察牠移動、如廁與休息的習慣，再逐步調整。",
+    reminder: "",
   },
 } as const;
 
@@ -45,6 +46,15 @@ export const catLifeScenarios: Scenario[] = [
     topic: "貓咪適應新家與安全感",
     reportSummary: "貓咪到家第一天應先進安靜安全的小房間，關好門窗，讓牠自行走出外出籠並用自己的速度探索。",
     artIndex: 0,
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你先替牠保留了慢慢適應的空間，這會讓第一次見面更安心。",
+      knowledgeTitle: "貓咪小知識",
+      knowledgeContent: [
+        { type: "item", text: "先讓牠保有**可退避的安全空間**，在安靜的小房間裡用自己的速度探索。" },
+        { type: "item", text: "關好門窗，準備食水與砂盆；不強迫互動，讓牠慢慢建立安全感。" },
+      ],
+    },
     choices: [
       { id: "cat-pull-out", text: "把牠抱出籠，讓牠快點認識新家", result: "incorrect", ...incorrect, explanation: "強迫離開外出籠可能讓貓更緊張，也可能引發防衛或躲藏。", suggestion: "先準備新家中的安靜空間，讓牠自己決定何時探索。" },
       { id: "cat-safe-room", text: "關好門窗，放好食水與砂盆，打開外出籠讓牠自行探索", result: "correct", ...positive, explanation: "保留退路並降低刺激，能幫助貓建立**安全感**。" },
@@ -131,6 +141,17 @@ export const catLifeScenarios: Scenario[] = [
     topic: "忙碌時的貓咪日常照顧",
     reportSummary: "臨時晚歸時，應安排可信任的協助者，確認對方有時間、有意願，知道食物、飲水、貓砂盆與環境巡視事項，並保有緊急聯絡方式。",
     artIndex: 5,
+    busyCareCompletion: {
+      title: "做得很好！",
+      encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！",
+      reflectionText: "在 {petName} 的世界裡，你是她選擇信任的那個人。",
+      reflectionTitle: "留給自己的一個問題",
+      reflectionContent: ["忙完一天回到家後，你還有心力注意 {petName} 今天的狀態、花時間陪她玩一段嗎？"],
+      careTimeTitle: "每日照護時間",
+      careTimeItems: catReport.dailyCareBreakdown,
+      showCareTime: false,
+      additionalAdvice: ["如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"],
+    },
     choices: [
       { id: "cat-alone-food", text: "出門前多放一些食物和水，回家後再一起處理砂盆和陪玩", result: "incorrect", ...incorrect, explanation: "食物和水不能取代砂盆清理、環境巡視、陪玩與狀況觀察，也可能造成食物過量或變質。", suggestion: "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。" },
       { id: "family-helper", text: "請可信任、了解照護需求的家人或朋友協助", result: "correct", ...positive, explanation: "貓咪看起來獨立，仍需要**穩定的食水、乾淨砂盆**、安全環境、適量互動與細心觀察。忙碌時先安排**可信任的人**協助，能讓牠的日常維持安心與規律。", suggestion: "交接時要說明貓咪個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。" },
@@ -147,6 +168,21 @@ export const catLifeScenarios: Scenario[] = [
     topic: "貓咪健康觀察與就醫判斷",
     reportSummary: "貓咪出現食慾、飲水、尿便、活動量或躲藏等明顯改變時，應記錄時間與觀察到的狀況並聯絡獸醫；不要自行判定原因或自行給藥。",
     artIndex: 3,
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你記錄了多項異常變化並第一時間聯絡獸醫，做得很好！",
+      knowledgeTitle: "貓咪小知識",
+      knowledgeContent: [
+        { type: "paragraph", text: "貓咪常見需要留意的健康問題：" },
+        { type: "item", text: "**泌尿道問題**（尤其公貓）：排尿減少、頻繁出入砂盆、哭叫、血尿——尿道阻塞是急症，立即就醫" },
+        { type: "item", text: "**腸胃問題**：嘔吐或腹瀉超過一天，或混有血絲" },
+        { type: "item", text: "**牙周病**：口臭、進食遲疑、抓嘴為早期徵兆，定期口腔檢查可預防" },
+        { type: "item", text: "**上呼吸道感染**（FHV / 卡里西病毒）：流鼻水、打噴嚏、眼分泌物增多" },
+        { type: "item", text: "**貓傳染病**（FeLV / FIV）：多年可能無症狀，有流浪或收容所背景的貓應確認篩檢" },
+        { type: "item", text: "**慢性腎臟病**（高齡貓）：飲水增加、食慾下降、體重減輕，定期抽血可早期發現" },
+      ],
+      reminder: "食慾、飲水、尿便、活動與躲藏的改變都是重要警訊；多項同時出現時，準備外出籠並盡速聯絡獸醫，不要自行給藥。",
+    },
     choices: [
       { id: "cat-health-wait", text: "先自行上網查詢症狀，照網友分享的方法在家觀察幾天", result: "incorrect", ...incorrect, explanation: "網路資訊和他人的經驗不能取代獸醫判斷；明顯變化不應延後聯繫獸醫。", suggestion: "可以整理可信資料供溝通，但先記錄時間與觀察到的狀況，並聯絡獸醫討論下一步。" },
       { id: "cat-health-complete-response", text: "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫", result: "correct", ...positive, explanation: "多項變化一起出現時，**完整紀錄、就醫準備**與聯繫獸醫要一起做；紀錄不能延後急症處置。", expenseIds: ["sick-vet-care"] },
@@ -168,9 +204,9 @@ export const catLifeScenarios: Scenario[] = [
       encouragement: "你已開始為牠調整生活空間，讓陪伴能跟著身體變化慢慢前進。",
       knowledgeTitle: "長達 12-20 年的每日陪伴與生命承諾",
       knowledgeContent: [
-        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份長達 12-20 年的承諾。" },
-        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現失智、大小便失禁，甚至癱瘓。" },
-        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到生命盡頭的心理準備嗎？" },
+        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份**長達 12-20 年**的承諾。" },
+        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現**失智**、**大小便失禁**，甚至**癱瘓**。" },
+        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到**生命盡頭**的心理準備嗎？" },
       ],
     },
     choices: [
@@ -195,11 +231,8 @@ const catIllnessByBreed = {
   },
 } as const;
 
-export function getCatLifeScenarios(breedId: string): Scenario[] {
-  const supportedBreedId = breedId === "british-shorthair" ? "british-shorthair" : "mixed-cat";
-  const illness = catIllnessByBreed[supportedBreedId];
-  return catLifeScenarios.map((scenario) => scenario.id !== "cat-illness-vet" ? scenario : {
-    ...scenario, speciesId: "cat", breedId: supportedBreedId, stageId: "life-change", order: 2, summaryCategory: "illness-vet",
-    description: illness.description, reportSummary: illness.reportSummary, breedKnowledge: illness.knowledge,
-  });
+export function getCatLifeScenarios(_breedId: string): Scenario[] {
+  return catLifeScenarios.map((scenario) => scenario.id === "cat-illness-vet" ? {
+    ...scenario, speciesId: "cat", stageId: "life-change", order: 2, summaryCategory: "illness-vet",
+  } : scenario);
 }

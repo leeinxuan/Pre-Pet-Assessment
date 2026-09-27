@@ -78,9 +78,9 @@
 .experience-story-line { margin: 0; color: #655c4f; font-size: clamp(16px, 2vw, 21px); font-weight: 750; line-height: 1.8; opacity: 0; transform: translateY(10px); animation: experienceLineIn .75s cubic-bezier(.16,1,.3,1) forwards; }
 .experience-story-line strong { color: var(--gold-dark); font-weight: 950; }
 .experience-story-line--past { animation-delay: .9s; }
-.experience-story-line--next { animation-delay: 3.9s; }
-.experience-story-line--bridge { animation-delay: 6.9s; }
-.experience-transition-actions { display: flex; justify-content: space-between; gap: 12px; opacity: 0; animation: experienceLineIn .6s 9.6s ease forwards; }
+.experience-story-line--next { animation-delay: 3.11s; }
+.experience-story-line--bridge { animation-delay: 5.32s; }
+.experience-transition-actions { display: flex; justify-content: space-between; gap: 12px; opacity: 0; animation: experienceLineIn .6s 7.34s ease forwards; }
 @keyframes experienceLineIn { to { opacity: 1; transform: translateY(0); } }
 @keyframes experiencePastGlow { 0% { opacity: .58; transform: translateY(5px); } 12%,42% { opacity: 1; transform: translateY(0); box-shadow: 0 0 0 4px rgba(212,154,36,.22), 0 18px 38px rgba(133,92,22,.13); } 70%,100% { opacity: .82; transform: translateY(0); } }
 @keyframes experienceNextGlow { 0%,32% { opacity: .54; transform: translateY(5px); } 52%,100% { opacity: 1; transform: translateY(0); box-shadow: 0 0 0 4px rgba(117,166,123,.22), 0 18px 38px rgba(67,112,75,.14); } }
@@ -117,6 +117,11 @@
 .breed-description > div { min-width: 0; }
 .breed-description p { line-height: 1.7; overflow-wrap: anywhere; white-space: normal; }
 .breed-description.empty { border: 1px dashed var(--line); background: transparent; }
+
+/* 品種選擇暫時下架：即使瀏覽器保留了舊版 HMR 元件，也不可短暫顯示舊品種頁。 */
+.partner-selection-page:has(.breed-carousel) {
+  display: none !important;
+}
 
 @media (max-width: 1000px) {
   .category-grid { grid-template-columns: repeat(3, 1fr); }

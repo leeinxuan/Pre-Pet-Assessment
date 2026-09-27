@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { money } from "../../data/shared/expenses";
+import { getHomeReadinessConfig, type HomeReadinessTextBlock, type HomeReadinessTextSegment } from "../../data/shared/home-readiness";
+import { getCareReviewAdditionalNotes } from "../../data/shared/care-review-notes";
 import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text";
 import { getAllScenariosForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
@@ -19,6 +21,7 @@ import {
   mergeDefaultVisibleExpenses,
   NavButtons,
 } from "../shared/SharedComponents";
+import type { HomeReadinessState } from "../preparation/PreparationComponents";
 
 const a4PageWidthPt = 595.28;
 const a4PageHeightPt = 841.89;
@@ -30,6 +33,25 @@ function personalizeReportText(text: string, petName: string, species?: string) 
 /** 各物種資料保留完整句子；回顧卡只呈現可掃讀的實際時間值。 */
 function dailyCareDurationLabel(value: string) {
   return value.replace(/^每日約需安排\s*/, "");
+}
+
+function homeReadinessText(segments: HomeReadinessTextSegment[], petName: string) {
+  return segments.map((segment) => interpolatePetName(segment.text, petName)).join("");
+}
+
+function HomeReadinessReviewText({ segments, petName }: { segments: HomeReadinessTextSegment[]; petName: string }) {
+  return <>{segments.map((segment, index) => {
+    const parts = interpolatePetName(segment.text, petName).split("**");
+    return <span key={`${segment.text}-${index}`}>{parts.map((part, partIndex) => (segment.emphasis || partIndex % 2 === 1)
+      ? <strong className="home-readiness-emphasis" key={`${part}-${partIndex}`}>{part}</strong>
+      : part)}</span>;
+  })}</>;
+}
+
+function CareReviewRichText({ blocks, petName }: { blocks: HomeReadinessTextBlock[]; petName: string }) {
+  const paragraphs = blocks.filter((block) => block.type === "paragraph");
+  const items = blocks.filter((block) => block.type === "item");
+  return <>{paragraphs.map((block, index) => <p key={`paragraph-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} /></p>)}{items.length > 0 && <ul>{items.map((block, index) => <li key={`item-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} /></li>)}</ul>}</>;
 }
 
 function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {
@@ -881,7 +903,7 @@ export function ProfileSupplementForm({
   embedded?: boolean;
 }) {
   const selectedBreed = getSpeciesConfig(species).breeds.find((item) => item.id === breed);
-  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : species === "bird" ? "鳥兒" : "柴犬");
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓" : species === "rabbit" ? "兔子" : species === "bird" ? "鸚鵡" : "犬");
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     onChange({ ...profile, [key]: value });
   };
@@ -1042,6 +1064,7 @@ export function AssessmentReport({
   trunkPassed,
   answers,
   lifeActivity,
+  homeReadiness,
   committed,
   onCommittedChange,
   onBack,
@@ -1059,6 +1082,7 @@ export function AssessmentReport({
   trunkPassed: boolean;
   answers: Record<string, ScenarioAnswer>;
   lifeActivity: LifeActivityState;
+  homeReadiness: HomeReadinessState;
   committed: boolean;
   onCommittedChange: (committed: boolean) => void;
   onBack: () => void;
@@ -1067,23 +1091,45 @@ export function AssessmentReport({
   const [activeDiscussionId, setActiveDiscussionId] = useState("");
   const [expenseDetailsOpen, setExpenseDetailsOpen] = useState(false);
   const [dailyCareDetailsOpen, setDailyCareDetailsOpen] = useState(false);
+  const [activeAdditionalNoteIndex, setActiveAdditionalNoteIndex] = useState<number | null>(null);
+  const additionalNotesTriggerRef = useRef<HTMLButtonElement>(null);
+  const additionalNotesModalRef = useRef<HTMLElement>(null);
   const speciesConfig = getSpeciesConfig(species);
+  const homeReadinessConfig = getHomeReadinessConfig(species);
+  const careReviewAdditionalNotes = getCareReviewAdditionalNotes(species);
+  const selectedHousing = homeReadinessConfig.housingChoices.find((choice) => choice.id === homeReadiness.housing);
+  const homeReadinessComplete = Boolean(selectedHousing && homeReadiness.housingReminderAcknowledged && homeReadinessConfig.cards.every((card) => homeReadiness.acknowledgedCardIds.includes(card.id)));
   useEffect(() => {
-    if (!activeDiscussionId && !dailyCareDetailsOpen) return;
+    if (!activeDiscussionId && !dailyCareDetailsOpen && activeAdditionalNoteIndex === null) return;
     const previousOverflow = document.body.style.overflow;
+    const additionalNotesTrigger = additionalNotesTriggerRef.current;
     document.body.style.overflow = "hidden";
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setActiveDiscussionId("");
         setDailyCareDetailsOpen(false);
+        setActiveAdditionalNoteIndex(null);
       }
     };
+    const trapAdditionalNotesFocus = (event: KeyboardEvent) => {
+      if (activeAdditionalNoteIndex === null || event.key !== "Tab") return;
+      const focusable = additionalNotesModalRef.current?.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
     window.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("keydown", trapAdditionalNotesFocus);
+    if (activeAdditionalNoteIndex !== null) window.setTimeout(() => additionalNotesModalRef.current?.querySelector<HTMLElement>("button")?.focus(), 0);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("keydown", trapAdditionalNotesFocus);
+      if (activeAdditionalNoteIndex !== null) additionalNotesTrigger?.focus();
     };
-  }, [activeDiscussionId, dailyCareDetailsOpen]);
+  }, [activeDiscussionId, dailyCareDetailsOpen, activeAdditionalNoteIndex]);
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const initialPreparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyBasicTotal = getMonthlyBasicTotal(visibleExpenses);
@@ -1126,7 +1172,7 @@ export function AssessmentReport({
       ? (enteredHousemates.length ? enteredHousemates.join("、") : legacyHousemates.length ? legacyHousemates.join("、") : "有同住家人（待補充）")
       : "待補充";
   const selectedBreed = speciesConfig.breeds.find((item) => item.id === breed);
-  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : species === "bird" ? "鳥兒" : "柴犬");
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓" : species === "rabbit" ? "兔子" : species === "bird" ? "鸚鵡" : "犬");
   const experienceStatus = profile.noShibaExperience ? `沒有${selectedTypeLabel}經驗` : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote ? "已補充飼養經驗" : "待補充";
   const reasonStatus = profile.reasons.length ? profile.reasons.map((item) => item === "其他" ? profile.reasonOther || "其他（待補充）" : item).join("、") : "待補充";
   const landlordConfirmed = profile.landlordConsent === "已確認並同意" || profile.landlordConsent === "房東已同意";
@@ -1216,7 +1262,7 @@ export function AssessmentReport({
       icon: "✦",
       title: "飲食與日常照護",
       summary: "了解牧草、乾淨飲水、環境巡視與日常觀察都需要穩定安排。",
-      scenarioIds: ["rabbit-carry-sort", "rabbit-daily-check", "rabbit-stomp", "rabbit-heatstroke-prevention", "rabbit-heatstroke-emergency", "rabbit-shedding"],
+      scenarioIds: ["rabbit-carry-sort", "rabbit-daily-check", "rabbit-heatstroke-prevention", "rabbit-cecotropes", "rabbit-bath"],
       practiceComplete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady,
     },
     {
@@ -1236,7 +1282,7 @@ export function AssessmentReport({
   ] : species === "bird" ? [
     { id: "bird-safe-home", icon: "⌂", title: "安全生活空間", summary: "知道鳥籠、棲木、食水容器與空氣安全都必須在到家前準備好。", scenarioIds: [], preparationComplete: roomCompletion === 100 && hazardsReady.length === speciesConfig.hazards.length },
     { id: "bird-arrival", icon: "♡", title: "接回與適應", summary: "理解剛到家的鳥需要安靜、遮光感與循序適應。", scenarioIds: ["bird-arrival-adjustment"] },
-    { id: "bird-daily-care", icon: "✦", title: "飲食與日常照護", summary: "能分辨安全食物，並把托盤清潔、健康觀察與陪伴安排成每天的節奏。", scenarioIds: ["bird-cage-inspection", "bird-puffing-feathers", "bird-molting-care"], practiceComplete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady },
+    { id: "bird-daily-care", icon: "✦", title: "飲食與日常照護", summary: "能分辨安全食物，並把托盤清潔、健康觀察與陪伴安排成每天的節奏。", scenarioIds: ["bird-cage-inspection", "bird-picky-eating", "bird-stereotypy", "bird-excessive-calling"], practiceComplete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady },
     { id: "bird-reality", icon: "◌", title: "鳥的長期責任", summary: "理解空氣安全、健康監測、叫聲與社交需求都是飼養前必須接受的現實。", scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"] },
     { id: "bird-life-change", icon: "✚", title: "生活變化", summary: "知道忙碌交接、急症就醫與高齡環境調整都要提早安排。", scenarioIds: ["bird-busy-care", "bird-health-emergency", "bird-senior-care"] },
   ] : species === "cat" ? [
@@ -1311,12 +1357,22 @@ export function AssessmentReport({
       summary: "知道狀況改變時要記錄並尋求協助，也會為高齡生活提早準備。",
       scenarioIds: ["illness-vet", "growing-old"],
     },
-  ]).map((theme) => ({
+  ]).filter((theme) => !["rabbit-breed-care", "bird-reality", "cat-breed-care", "dog-breed-care"].includes(theme.id)).map((theme) => ({
     ...theme,
     matchedCount: masteredDetails.filter((detail) => (theme.scenarioIds as readonly string[]).includes(detail.id)).length
       + ("preparationComplete" in theme && theme.preparationComplete ? 1 : 0)
       + ("practiceComplete" in theme && theme.practiceComplete ? 1 : 0),
   })).filter((theme) => theme.matchedCount > 0);
+  const masteredThemesWithHomeReadiness = [
+    ...(homeReadinessComplete && selectedHousing ? [{
+      id: "home-readiness",
+      icon: "⌂",
+      title: "家庭與居住確認",
+      summary: `${selectedHousing.label}；${homeReadinessText(selectedHousing.reviewSummary, petName)}`,
+      complete: true,
+    }] : []),
+    ...masteredThemes,
+  ];
   const knowledgeModal = activeKnowledge && typeof document !== "undefined"
     ? createPortal(
       <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
@@ -1341,6 +1397,21 @@ export function AssessmentReport({
           <p className="daily-care-modal-intro">{speciesConfig.report.dailyCareTimeNote}</p>
           <ul className="daily-care-modal-list">{speciesConfig.report.dailyCareBreakdown.map((item) => <li key={item.title}><b>{item.title}</b><span>{item.detail}</span></li>)}</ul>
           <button type="button" className="knowledge-modal-confirm" onClick={() => setDailyCareDetailsOpen(false)}>我知道了</button>
+        </section>
+      </div>,
+      document.body,
+    )
+    : null;
+  const activeAdditionalNote = activeAdditionalNoteIndex === null ? null : careReviewAdditionalNotes[activeAdditionalNoteIndex];
+  const additionalNotesModal = activeAdditionalNote && typeof document !== "undefined"
+    ? createPortal(
+      <div className="knowledge-modal-backdrop care-review-notes-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveAdditionalNoteIndex(null); }}>
+        <section ref={additionalNotesModalRef} className="knowledge-modal care-review-notes-modal" role="dialog" aria-modal="true" aria-labelledby="care-review-notes-modal-title" tabIndex={-1}>
+          <button type="button" className="knowledge-modal-close" onClick={() => setActiveAdditionalNoteIndex(null)} aria-label="關閉照顧路上的提醒">×</button>
+          <p className="life-stage-label">照顧路上的提醒</p>
+          <h2 id="care-review-notes-modal-title"><HomeReadinessReviewText segments={activeAdditionalNote.title} petName={petName} /></h2>
+          <div className="care-review-notes-modal-content"><CareReviewRichText blocks={activeAdditionalNote.content} petName={petName} /></div>
+          <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveAdditionalNoteIndex(null)}>關閉</button>
         </section>
       </div>,
       document.body,
@@ -1414,6 +1485,11 @@ export function AssessmentReport({
             {selectedBreed?.image && <img src={selectedBreed.image} alt={selectedBreed.label} />}
           </aside>
         </header>
+
+        <section className={`care-a4-home-readiness ${homeReadinessComplete ? "is-complete" : "is-pending"}`} aria-labelledby="care-a4-home-readiness-title">
+          <h2 id="care-a4-home-readiness-title">家庭與居住確認</h2>
+          {homeReadinessComplete && selectedHousing ? <><p className="care-a4-home-readiness-status">已確認</p><p>{selectedHousing.label}；<HomeReadinessReviewText segments={selectedHousing.reviewSummary} petName={petName} /></p></> : <><p className="care-a4-home-readiness-status">尚未確認</p><p><HomeReadinessReviewText segments={homeReadinessConfig.pendingReviewSummary} petName={petName} /></p></>}
+        </section>
 
         <section className="care-a4-checklists" aria-labelledby="care-a4-checklist-title">
           <h2 id="care-a4-checklist-title">準備清單</h2>
@@ -1510,9 +1586,9 @@ export function AssessmentReport({
 
         <section className="care-review-section care-review-mastered" aria-labelledby="mastered-care-title">
           <header><span aria-hidden="true">✓</span><div><h2 id="mastered-care-title">你已建立的照顧觀念</h2><p>這些是你在情境中已經掌握、可以帶進真實生活的照顧方向。</p></div></header>
-          {masteredThemes.length ? <div className="care-review-mastered-theme-grid">
-            {masteredThemes.map((theme) => <article key={theme.id}>
-              <span aria-hidden="true">✓</span>
+          {masteredThemesWithHomeReadiness.length ? <div className="care-review-mastered-theme-grid">
+            {masteredThemesWithHomeReadiness.map((theme) => <article key={theme.id} className={"complete" in theme && !theme.complete ? "is-pending" : ""}>
+              <span aria-hidden="true">{"complete" in theme && !theme.complete ? "○" : "✓"}</span>
               <div><b>{theme.title}</b><p>{theme.summary}</p></div>
             </article>)}
           </div> : <p className="care-review-empty">完成並答對情境題後，這裡會整理你已建立的照顧觀念。</p>}
@@ -1525,6 +1601,8 @@ export function AssessmentReport({
           </div> : <div className="care-review-all-clear"><span aria-hidden="true">✓</span><p>你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。</p></div>}
         </section>
 
+        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true">◌</span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true">◌</span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} /></p></div><button type="button" className="discussion-info-button" onClick={(event) => { additionalNotesTriggerRef.current = event.currentTarget; setActiveAdditionalNoteIndex(index); }} aria-label={`查看「${homeReadinessText(note.title, petName)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
+
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
           <div className="care-resource-grid">
@@ -1536,6 +1614,10 @@ export function AssessmentReport({
         <section className="care-guide-download" aria-labelledby="care-guide-download-title">
           <div><span aria-hidden="true">↓</span><h2 id="care-guide-download-title">帶走你的照護指南</h2><p>將這次體驗整理成可保存的照護指南，之後準備迎接牠時也能再次查看。</p><small>內容包含：照顧準備清單、需要留意的照顧重點、預估支出、每日時間投入與照顧承諾</small></div>
           <PdfDownloadButton petName={petName} label="下載我的照護指南" />
+        </section>
+        <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-official-title">
+          <div><span aria-hidden="true">↗</span><h2 id="care-guide-official-title">農業部寵物飼養與照顧指南</h2><p>想再深入了解更詳細的飼養需求、照護方式與相關規範嗎？這裡整理了農業部的官方知識庫，提供更完整的資訊供你查閱。</p></div>
+          <a className="secondary care-guide-official-link" href="https://animal.moa.gov.tw/Frontend/Know/PageTabList?TabID=31B05CB460072264BF30B852D5842398#tab1" target="_blank" rel="noopener noreferrer">查看官方指南 <span>↗</span></a>
         </section>
       </section>
 
@@ -1576,6 +1658,7 @@ export function AssessmentReport({
       {expenseDetailsOpen && <ExpenseDetails expenses={expenses} breed={breed} species={species} onClose={() => setExpenseDetailsOpen(false)} />}
       {knowledgeModal}
       {dailyCareModal}
+      {additionalNotesModal}
     </div>
     </>
   );

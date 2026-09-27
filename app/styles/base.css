@@ -253,10 +253,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   will-change: transform, opacity;
   transform: translate(-50%, -50%) scale(0) rotate(0deg);
   opacity: 0;
-  background: linear-gradient(130deg, #c8f0b0 0%, #5abf6a 55%, #38a050 100%);
+  background: linear-gradient(130deg, #c8e8f8 0%, #4a9fd4 55%, #2070b0 100%);
   border-radius: 3px;
-  border: 1.5px solid rgba(30, 110, 50, 0.45);
-  box-shadow: 0 1px 4px rgba(20,80,30,0.18);
+  border: 1.5px solid rgba(20, 80, 160, 0.45);
+  box-shadow: 0 1px 4px rgba(10,50,120,0.18);
 }
 
 /* Toast overlay (pointer-events none so it never blocks clicks) */
@@ -514,67 +514,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   .report-next-step-actions { align-items: stretch; flex-direction: column; margin-top: 22px; padding-top: 22px; }
   .report-next-step-actions p { flex: 0 1 auto; }
   .report-next-step-actions .primary { width: 100%; justify-content: center; }
-  .legal-acquisition-page { padding: 24px 16px 62px; }
-  .legal-acquisition-hero { padding: 0; }
-  .legal-acquisition-footer-actions { align-items: stretch; flex-direction: column; }
-  .legal-final-actions { display: grid; grid-template-columns: 1fr 1fr; }
-  .legal-final-actions button { justify-content: center; }
-  .legal-share-status { text-align: center; }
-  .legal-search > div { grid-template-columns: 1fr; }
-  .legal-search button { width: 100%; }
-  .legal-acquisition-tabs {
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    margin: 28px 0 14px;
-    border-bottom: 1px solid rgba(216, 199, 170, .72);
-  }
-  .legal-acquisition-tabs button {
-    position: relative;
-    padding: 0 2px 10px;
-    border: 0;
-    background: transparent;
-    color: #8a7b69;
-    font: inherit;
-    font-size: 24px;
-    font-weight: 950;
-    line-height: 1.2;
-    cursor: pointer;
-  }
-  .legal-acquisition-tabs button::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 3px;
-    border-radius: 999px;
-    background: transparent;
-  }
-  .legal-acquisition-tabs button.active {
-    color: var(--ink);
-  }
-  .legal-acquisition-tabs button.active::after {
-    background: var(--gold-dark);
-  }
-  .legal-acquisition-tabs button:focus-visible {
-    outline: 3px solid rgba(212,154,36,.32);
-    outline-offset: 3px;
-    border-radius: 8px;
-  }
-  .legal-acquisition-sections {
-    margin-top: 0;
-  }
-  .legal-section {
-    display: none;
-  }
-  .legal-section.is-mobile-active {
-    display: block;
-  }
-  .legal-section-head h2 {
-    display: none;
-  }
-  .legal-option-grid, .legal-acquisition-grid { grid-template-columns: 1fr; }
   .arrival-video-screen,
   .time-pass-transition {
     width: 100%;
@@ -751,6 +690,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-review-mastered > header > span { background: #dcefe0; color: #3c7446; }
 .care-review-followup { border-color: #e6c675; }
 .care-review-followup > header > span { background: #f5d98f; color: #855b0b; }
+.care-review-home-readiness { border-color: rgba(168,101,9,.28); }.care-review-home-readiness > header > span { background: #f7e4ae; color: #7a5410; }.care-review-home-readiness-summary { display: grid; gap: 6px; margin-top: 19px; padding: 16px 0; border-top: 1px solid rgba(168,101,9,.18); border-bottom: 1px solid rgba(168,101,9,.18); }.care-review-home-readiness-summary b { color: #5c4828; }.care-review-home-readiness-summary p { margin: 0; color: #70644e; font-weight: 750; line-height: 1.65; }.care-review-home-readiness-summary ul { display: grid; gap: 6px; margin: 0; padding-left: 1.25rem; color: #70644e; font-size: 14px; font-weight: 750; line-height: 1.6; }
+.care-review-additional-notes { border-color: rgba(83,125,88,.26); }.care-review-additional-notes > header > span { background: #dcefe0; color: #426246; }.care-review-additional-note-grid { display: grid; gap: 14px; margin-top: 20px; }.care-review-additional-note-grid article { padding: 18px; border: 1px solid rgba(83,125,88,.18); border-radius: 16px; background: #fffdf8; }.care-review-additional-note-grid h3 { margin: 0 0 11px; color: #4c603f; font-size: 17px; line-height: 1.55; }.care-review-additional-note-grid p { margin: 0; color: #70644e; font-weight: 700; line-height: 1.75; }.care-review-additional-note-grid p + p { margin-top: 10px; }.care-review-additional-note-grid ul { display: grid; gap: 8px; margin: 11px 0 0; padding-left: 1.25rem; color: #70644e; font-size: 14px; font-weight: 700; line-height: 1.7; }
 .care-review-section h2 { margin: 0; color: var(--ink); font-size: clamp(23px, 3vw, 30px); }
 .care-review-section header p { margin: 6px 0 0; color: var(--muted); font-weight: 750; line-height: 1.65; }
 .care-review-topic-grid { display: grid; gap: 0; margin-top: 19px; border-top: 1px solid rgba(94,116,86,.16); }
@@ -764,6 +705,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-review-mastered-theme-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin-top: 19px; }
 .care-review-mastered-theme-grid article { display: flex; align-items: flex-start; gap: 11px; min-width: 0; padding: 14px 2px; border-bottom: 1px solid rgba(94,116,86,.16); background: transparent; }
 .care-review-mastered-theme-grid article > span { display: grid; flex: 0 0 auto; width: 27px; height: 27px; place-items: center; border-radius: 50%; background: #dcefe0; color: #3c7446; font-weight: 900; }
+.care-review-mastered-theme-grid article.is-pending > span { background: #f3eee4; color: #907c5d; }.care-review-mastered-theme-grid article.is-pending b { color: #6d604b; }
 .care-review-mastered-theme-grid article > div { min-width: 0; }
 .care-review-mastered-theme-grid b { color: #433926; }
 .care-review-mastered-theme-grid p { margin: 4px 0 0; color: #70644e; font-size: 14px; font-weight: 750; line-height: 1.6; }
@@ -807,6 +749,44 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-guide-download small { display: block; color: #826c43; font-weight: 750; line-height: 1.5; }
 .care-guide-download .report-download-control { justify-items: stretch; min-width: 220px; }
 .care-guide-download .pdf-download-button { width: 100%; justify-content: center; }
+.care-guide-official { margin-top: 18px; }
+.care-guide-official-link { display: inline-flex; align-items: center; justify-content: center; min-width: 180px; }
+/* Hallmark · component: shared activity · genre: warm-practical · anchor hue: existing gold */
+.home-readiness { max-width: 1160px; }
+.home-readiness-heading { max-width: 720px; margin: 0 0 26px; }
+.home-readiness-heading h1 { margin: 0; font-size: clamp(34px, 4vw, 52px); line-height: 1.12; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.home-readiness-heading > p:last-child { margin: 12px 0 0; color: var(--muted); font-size: 18px; font-weight: 700; line-height: 1.65; }
+.home-readiness-workbench { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); border: 1px solid var(--line); border-radius: 26px; overflow: hidden; background: #fff; box-shadow: 0 14px 34px rgba(70,53,26,.07); }
+.home-readiness-workbench--housing, .home-readiness-workbench--reminder { grid-template-columns: minmax(0, 1fr); }
+.home-readiness-context { display: grid; align-content: space-between; gap: 24px; min-height: 360px; padding: clamp(24px, 4vw, 42px); background: var(--cream); border-right: 1px solid var(--line); }
+.home-readiness-context .preparation-asset-placeholder { display: grid; min-height: 170px; place-items: center; border: 1px dashed rgba(168,101,9,.32); border-radius: 18px; background: rgba(255,253,247,.62); color: var(--gold-dark); }
+.home-readiness-context p { margin: 0; color: var(--ink); font-size: clamp(19px, 2vw, 25px); font-weight: 850; line-height: 1.55; }
+.home-readiness-question { padding: clamp(24px, 4vw, 44px); }
+.home-readiness-question h2, .home-readiness-checklist h2 { margin: 0; font-size: clamp(24px, 3vw, 34px); line-height: 1.32; }
+.home-readiness-choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+.home-readiness-choice-grid button { display: grid; gap: 14px; min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); color: var(--ink); font: inherit; font-weight: 900; line-height: 1.5; text-align: left; cursor: pointer; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+.home-readiness-choice-media { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid rgba(168,101,9,.2); border-radius: 11px; background: var(--cream); }
+.home-readiness-choice-label { display: block; min-width: 0; font-size: 18px; overflow-wrap: anywhere; }
+.home-readiness-choice-grid button:hover, .home-readiness-choice-grid button.selected { border-color: var(--gold-dark); background: #fff7e7; transform: translateY(-2px); }
+.home-readiness-choice-grid button:active { transform: translateY(1px); }
+.home-readiness-choice-grid button:disabled { cursor: not-allowed; opacity: .45; }
+.home-readiness-reminder-step { display: grid; gap: 16px; max-width: 760px; padding: clamp(26px, 5vw, 52px); color: var(--muted); line-height: 1.75; }
+.home-readiness-reminder-step h2 { margin: 0; color: var(--ink); font-size: clamp(26px, 3vw, 36px); line-height: 1.3; }
+.home-readiness-reminder-step p { margin: 0; }.home-readiness-reminder-step ul { display: grid; gap: 12px; margin: 0; padding-left: 1.35rem; }.home-readiness-reminder-step li { padding-left: 3px; }.home-readiness-reminder-step .primary { justify-self: start; margin-top: 6px; }
+.home-readiness-emphasis { color: var(--gold-dark); font-weight: 800; }
+/* Hallmark · component: commitment flow · genre: warm-practical · theme: existing warm tokens
+ * states: default · hover · focus · active · disabled · success
+ * pre-emit critique: P5 · H4 · E5 · S5 · R5 · V4
+ */
+.home-readiness-checklist { padding: clamp(24px, 4vw, 42px); border: 1px solid var(--line); border-radius: 26px; background: #fffdf8; }
+.home-readiness-checklist > header { max-width: 650px; }.home-readiness-checklist h2 { font-size: clamp(22px, 2.4vw, 30px); }
+.home-readiness-progress { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 24px; }
+.home-readiness-progress button { display: flex; align-items: center; gap: 9px; min-width: 0; min-height: 48px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 14px; background: #fff; color: var(--muted); font: inherit; font-size: 14px; font-weight: 850; text-align: left; cursor: pointer; transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease; }
+.home-readiness-progress button:hover:not(:disabled), .home-readiness-progress button.is-current { border-color: var(--gold-dark); background: #fff8e9; color: var(--ink); transform: translateY(-1px); }.home-readiness-progress button:focus-visible { outline: 3px solid rgba(212,154,36,.35); outline-offset: 2px; }.home-readiness-progress button:active:not(:disabled) { transform: translateY(1px); }.home-readiness-progress button:disabled { cursor: default; opacity: .52; }.home-readiness-progress button.is-complete { border-color: rgba(83,125,88,.35); background: var(--mint-soft); color: #426246; }
+.home-readiness-progress button span { display: grid; flex: 0 0 24px; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: var(--cream); color: var(--gold-dark); font-size: 12px; font-weight: 950; }.home-readiness-progress button.is-complete span { background: #dcefe0; color: #3c7446; }.home-readiness-progress button b { min-width: 0; overflow-wrap: anywhere; }
+.home-readiness-commitment-card { display: grid; gap: 17px; max-width: 760px; margin-top: 16px; padding: clamp(22px, 4vw, 34px); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: 20px; background: #fff; box-shadow: 0 12px 30px rgba(70,53,26,.06); animation: stageIn .22s ease both; }
+.home-readiness-commitment-card h3 { margin: 0; color: var(--ink); font-size: clamp(21px, 2.5vw, 28px); line-height: 1.45; }.home-readiness-commitment-copy { color: var(--muted); font-weight: 700; line-height: 1.8; }.home-readiness-commitment-copy p { margin: 0; }.home-readiness-commitment-copy ul { display: grid; gap: 10px; margin: 0; padding-left: 1.3rem; }.home-readiness-commitment-card .primary { justify-self: start; margin-top: 2px; }.home-readiness-reviewed { margin: 0; color: #426246; font-size: 14px; font-weight: 850; }.home-readiness-completion { display: flex; align-items: flex-start; gap: 14px; max-width: 760px; margin-top: 16px; padding: 22px 24px; border: 1px solid rgba(83,125,88,.28); border-radius: 20px; background: var(--mint-soft); color: #426246; }.home-readiness-completion > span { display: grid; flex: 0 0 30px; width: 30px; height: 30px; place-items: center; border-radius: 50%; background: #dcefe0; font-weight: 950; }.home-readiness-completion .life-stage-label { margin: 0 0 5px; color: #426246; }.home-readiness-completion p:last-child { margin: 0; font-size: 16px; font-weight: 850; line-height: 1.7; }
+@media (max-width: 720px) { .home-readiness-workbench { grid-template-columns: 1fr; }.home-readiness-context { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }.home-readiness-context .preparation-asset-placeholder { min-height: 132px; }.home-readiness-choice-grid, .home-readiness-progress { grid-template-columns: 1fr; }.home-readiness-reminder-step .primary, .home-readiness-commitment-card .primary { width: 100%; justify-content: center; }.care-guide-official-link { width: 100%; } }
 
 @media (max-width: 720px) {
   .care-review-hero, .care-guide-download { align-items: flex-start; flex-direction: column; }
@@ -896,7 +876,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-a4-daily-time ul { display: grid; gap: 1.2mm; margin: 3mm 0 0; padding: 0; list-style: none; }
 .care-a4-daily-time li { display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 4mm; align-items: start; color: #536258; font-size: 10.5px; font-weight: 800; line-height: 1.45; }
 .care-a4-daily-time li span { min-width: 0; overflow-wrap: anywhere; }
-.care-a4-daily-time li b { margin: 0; color: #526c55; font-size: 10.5px; text-align: right; white-space: nowrap; }
+.care-a4-daily-time li b { margin: 0; color: #526c55; font-size: 10.5px; text-align: right; white-space: pre-line; }
 
 /* Unified life journey */
 .stage-layout:has(.arrival-video-screen) { height: 100svh; min-height: 0; overflow: hidden; }

@@ -12,6 +12,14 @@ export const dogLifeScenarios: Scenario[] = [
     topic: "適應新家與安全感",
     reportSummary: "第一天適應新家時，狗狗可能因陌生而躲藏或緊張；保留安靜、安全且能退回的空間，等待牠主動探索。",
     artIndex: 0,
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你知道第一天不要給 {petName} 太多壓力，做得很好！給牠時間和空間，才能讓牠以自己的速度建立安全感。",
+      knowledgeTitle: "狗狗小知識",
+      knowledgeContent: [
+        { type: "paragraph", text: "剛到新家的小狗需要先觀察環境。**保持距離**並提供**安靜、安全的空間**，能減少壓力，讓牠以**自己的速度**建立安全感。準備乾淨飲水與可休息的角落，等牠**主動靠近**後再慢慢增加互動。" },
+      ],
+    },
     choices: [
       { id: "force-pick-up", text: "強行抱出來", result: "incorrect", ...incorrect, explanation: "這個做法可能讓牠更緊張。被強行抱起會讓小狗失去退路，增加防衛反應，也可能降低牠對新環境的安全感。先放低互動強度，讓牠用自己的速度探索。" },
       { id: "quiet-explore", text: "保持距離，給牠安靜適應的時間", result: "correct", ...positive, explanation: "剛到新家的小狗需要先觀察環境。保持距離並提供安靜、安全的空間，能減少壓力，讓牠以自己的速度建立安全感。", suggestion: "準備乾淨飲水與可休息的角落，等牠主動靠近後再慢慢增加互動。" },
@@ -36,6 +44,7 @@ export const dogLifeScenarios: Scenario[] = [
       "吠叫是狗狗的溝通方式。先觀察**何時、對什麼叫**，再判斷是警戒、害怕、無聊或不舒服。",
       "責罵只可能暫時停止聲音，卻未處理原因；若持續發生，可記錄**頻率、時間與觸發情境**後詢問專業人員。",
     ],
+    completionNotice: "你有想過 {petName} 的吠叫是否可能影響鄰居嗎？提前評估你的居住環境與鄰里關係，積極學習行為引導，是對 {petName} 和周遭鄰里都負責的方式。",
     choices: [
       { id: "bark-play", text: "提供遊戲與互動，增加安全感", result: "correct", ...positive, explanation: "遊戲與溫和互動能提供安全感，也有助於把注意力轉向合適的活動。" },
       { id: "bark-walk", text: "帶牠適量散步，消耗精力", result: "correct", ...positive, explanation: "依小狗狀況安排適量散步，有助於滿足活動需求並降低累積的焦躁。" },
@@ -100,6 +109,12 @@ export const dogLifeScenarios: Scenario[] = [
     topic: "時間安排與照顧支援",
     reportSummary: "臨時加班或晚歸時，仍要事先安排可信任的人按時協助餵食、換水、排泄、活動與狀況觀察。",
     artIndex: 5,
+    busyCareCompletion: {
+      reflectionText: "在 {petName} 的世界裡，你就是他的全部。",
+      reflectionTitle: "留給自己的一個問題",
+      reflectionContent: ["忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"],
+      additionalAdvice: ["如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"],
+    },
     choices: [
       { id: "alone-with-food", text: "早上出門前先多放一些飼料和水，晚上忙完再好好陪牠", result: "incorrect", ...incorrect, explanation: "早上多放食物和水仍不能取代一整天的排泄、活動與狀況觀察，也可能造成過量進食或突發狀況沒有人發現。確定要加班時，應先安排能接手照顧的人，並清楚交接需求。" },
       { id: "family-helper", text: "請同住家人或朋友協助", result: "correct", ...positive, explanation: "你不只是想到一個人，也認真確認對方的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓小狗在你忙碌時仍獲得穩定照顧。" },
@@ -111,15 +126,29 @@ export const dogLifeScenarios: Scenario[] = [
     id: "illness-vet",
     stage: "生病與就醫",
     timeLabel: "生病與就醫",
-    title: "柴犬常見健康問題觀察",
-    description: "最近你發現小狗常常舔腳、抓癢，走路時偶爾不太想跳上跳下，眼睛也有些紅紅的。",
+    title: "牠看起來和平常不太一樣",
+    description: "最近你發現 {petName} 食慾有點變差，精神比平常沉，糞便的形狀和量也和平常不太一樣。你說不上來是哪裡不對，但牠看起來和平常不太一樣。",
     topic: "健康觀察與就醫判斷",
-    reportSummary: "出現搔癢、活動力下降或眼睛紅等變化時，應記錄食慾、精神與症狀並詢問獸醫，不要自行餵人用藥。",
+    reportSummary: "出現食慾、精神或排泄改變時，應記錄症狀並詢問獸醫，不要自行餵人用藥。",
     artIndex: 3,
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你記錄了觀察到的異常並諮詢獸醫，沒有拖延也沒有自行給藥，做得很好！",
+      knowledgeTitle: "狗狗小知識",
+      knowledgeContent: [
+        { type: "paragraph", text: "狗狗常見需要留意的健康問題：" },
+        { type: "item", text: "**皮膚問題**（搔癢、反覆舔腳、紅疹、局部掉毛）：常見原因包括環境或食物過敏，持續發生應就醫確認" },
+        { type: "item", text: "**腸胃問題**（嘔吐、腹瀉、排便量或形狀明顯改變）：超過一天或混有血絲時需就醫" },
+        { type: "item", text: "**牙周病**（口臭、進食遲疑、牙齦紅腫）：最常見卻常被忽略的問題，定期口腔檢查可預防" },
+        { type: "item", text: "**關節或活動問題**（不想上下樓梯、跛行、起身困難）：大型犬與高齡犬需定期評估" },
+        { type: "item", text: "**外寄生蟲**（跳蚤、蜱蟲）：定期預防是關鍵，外出後需仔細檢查" },
+      ],
+      reminder: "食慾、飲水、排泄、精神與活動的改變都是重要觀察指標；多項同時出現時，準備好記錄並盡速聯絡獸醫，不要自行判斷或給藥。",
+    },
     choices: [
       { id: "wait-and-see", text: "先等幾天看看，牠可能只是心情不好", result: "incorrect", ...incorrect, explanation: "等太久可能延誤皮膚過敏、關節不適或眼部問題的處理，讓小狗持續不舒服。", suggestion: "記錄具體症狀與變化，並聯絡獸醫確認是否需要檢查。" },
       { id: "human-medicine", text: "先拿家裡剩下的感冒藥餵一點，看看今晚會不會舒服些", result: "incorrect", ...incorrect, explanation: "即使只是少量，家中的人用感冒藥也可能含有不適合狗狗的成分，並讓原本的症狀更難判斷。", suggestion: "先不要自行給藥；記錄症狀、使用中的用品與可能接觸物，再向獸醫說明。" },
-      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "及早觀察與記錄能幫助獸醫判斷。", suggestion: "柴犬較常見需要留意的健康問題包括：\n**皮膚過敏或搔癢**、掉毛、紅腫；\n**關節不適**、跛行或活動力下降；\n**眼睛分泌物增加、紅眼或視力異常**。\n\n如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。", expenseIds: ["sick-vet-care"] },
+      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "及早觀察與記錄能幫助獸醫判斷。", suggestion: "狗狗常見需要留意的問題包括：\n**皮膚問題**、**腸胃問題**、**牙周病**、**關節或活動問題**與**外寄生蟲**。\n\n如果食慾、精神、排泄或活動和平常不同，請記錄並尋求獸醫建議。", expenseIds: ["sick-vet-care"] },
       { id: "ask-experienced-friend", text: "先拍照問有養狗的朋友，照他以前遇過的方式處理", result: "incorrect", ...incorrect, explanation: "朋友的經驗可以提供陪伴，但相似外觀不一定代表相同原因，仍可能錯過需要檢查的狀況。可以整理朋友提醒的觀察重點，但醫療判斷與用藥仍應交給獸醫。" },
     ],
   },
@@ -137,9 +166,9 @@ export const dogLifeScenarios: Scenario[] = [
       encouragement: "你願意提前為 {petName} 的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
       knowledgeTitle: "長達 10-15 年的每日陪伴與生命承諾",
       knowledgeContent: [
-        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份長達 10-15 年的承諾。" },
-        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現失智、大小便失禁，甚至癱瘓。" },
-        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到生命盡頭的心理準備嗎？" },
+        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份**長達 10-15 年**的承諾。" },
+        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現**失智**、**大小便失禁**，甚至**癱瘓**。" },
+        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到**生命盡頭**的心理準備嗎？" },
       ],
     },
     choices: [
@@ -166,12 +195,8 @@ const dogIllnessByBreed = {
   },
 } as const;
 
-export function getDogLifeScenarios(breedId: string): Scenario[] {
-  const supportedBreedId = breedId === "mixed" ? "mixed" : "shiba";
-  const illness = dogIllnessByBreed[supportedBreedId];
-  return dogLifeScenarios.map((scenario) => scenario.id !== "illness-vet" ? scenario : {
-    ...scenario, speciesId: "dog", breedId: supportedBreedId, stageId: "life-change", order: 2, summaryCategory: "illness-vet",
-    title: illness.title, description: illness.description, reportSummary: illness.reportSummary, breedKnowledge: illness.knowledge,
-    choices: scenario.choices.map((choice) => choice.id === "record-and-vet" ? { ...choice, suggestion: illness.knowledge } : choice),
-  });
+export function getDogLifeScenarios(_breedId: string): Scenario[] {
+  return dogLifeScenarios.map((scenario) => scenario.id === "illness-vet" ? {
+    ...scenario, speciesId: "dog", stageId: "life-change", order: 2, summaryCategory: "illness-vet",
+  } : scenario);
 }

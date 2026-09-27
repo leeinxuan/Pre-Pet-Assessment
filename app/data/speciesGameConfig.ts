@@ -146,11 +146,11 @@ export const speciesGameConfig: Record<SpeciesId, SpeciesGameConfig> = {
   bird: {
     id: "bird",
     copy: {
-      animalName: "鳥兒", animalNameFallback: "小啾", typeLabel: "物種",
-      selectionTitle: "你想飼養哪一種動物？", breedTitle: "認識你的新家人——鳥兒",
-      nameTitle: "先幫牠取一個名字", namePlaceholder: "請輸入鳥兒的名字",
-      historyTitle: "你養過鳥嗎？", historyBody: "鳥類照護有許多容易被忽略的細節；不論是否有經驗，都一起重新確認牠的需要。",
-      hasPreviousLabel: "有，以前養過鳥", noPreviousLabel: "沒有，這是第一次", previousSectionTitle: "以前陪伴你的鳥兒",
+      animalName: "鸚鵡", animalNameFallback: "小啾", typeLabel: "物種",
+      selectionTitle: "你想飼養哪一種動物？", breedTitle: "認識你的新家人——鸚鵡",
+      nameTitle: "先幫牠取一個名字", namePlaceholder: "請輸入鸚鵡的名字",
+      historyTitle: "你養過鸚鵡嗎？", historyBody: "鸚鵡照護有許多容易被忽略的細節；不論是否有經驗，都一起重新確認牠的需要。",
+      hasPreviousLabel: "有，以前養過鸚鵡", noPreviousLabel: "沒有，這是第一次", previousSectionTitle: "以前陪伴你的鸚鵡",
       roomTitle: "先替牠布置安全的生活空間",
       roomBody: (petName) => `${petName || "小啾"} 還沒到家。先準備合適鳥籠、棲木、食水容器與豐富化玩具，並移除會傷害鳥類呼吸道的物品。`,
       departureTitle: "出發接牠回家", departureBody: (petName) => `今天要去接 ${petName || "小啾"} 回家了。先整理安全外出籠、遮光布、熟悉飼料與防翻飲水。`,

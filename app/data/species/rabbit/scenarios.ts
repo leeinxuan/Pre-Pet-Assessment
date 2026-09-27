@@ -1,5 +1,6 @@
 import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
+import { rabbitReport } from "./report";
 
 const rabbitKnowledge = {
   arrival: ["**躲藏**是兔子面對陌生環境的正常**壓力反應**，不是失敗，也不需要急著安慰。", "先**保持安靜、靜靜等待**，讓牠用自己的節奏探索新家，慢慢建立**信任**。"],
@@ -42,16 +43,25 @@ export const rabbitLifeScenarios: Scenario[] = [
     ],
   },
   {
-    id: "rabbit-heatstroke-prevention", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "夏天到了，怎麼幫牠避暑？",
-    description: "今年夏天特別熱，接下來幾天氣溫都會超過 33℃。你家平常不會全天開冷氣，但兔子不能流汗，一旦中暑可能在幾小時內危及生命。\n\n你開始思考：可以怎麼為 `{petName}` 做好環境準備？", topic: "兔子高溫預防",
+    id: "rabbit-heatstroke-prevention", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "夏天到了，怎麼幫 {petName} 避暑？",
+    description: "台灣夏天氣溫超過 33℃，你家沒有全天開冷氣的習慣。你決定幫 {petName} 做好環境準備。", topic: "兔子高溫預防",
     reportSummary: "兔子怕熱；夏季應維持涼爽室內環境並提供可自主使用的陶板涼感墊。", artIndex: 2,
     multipleChoice: true, requiredCorrectOptionIds: ["rabbit-heat-air", "rabbit-heat-mat"], wrongOptionIds: ["rabbit-heat-balcony", "rabbit-heat-spray"],
     correctSummary: ["維持室內冷氣或風扇，讓環境保持涼爽。", "在活動區放置陶板涼感墊。"], learningPoints: rabbitKnowledge.heat, knowledgeTitle: "兔子小知識",
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你知道兔子比你想的還要怕熱，提前準備好降溫環境，做得很好！台灣夏天高溫對 {petName} 來說是真實的危險，而不是「熱一下就好」——正確的避暑準備，是每個兔飼主的必修課。",
+      knowledgeTitle: "兔兔小知識",
+      knowledgeContent: [
+        { type: "paragraph", text: "兔子沒有汗腺，只能靠**耳朵血管**散熱，對高溫的耐受力遠低於人類。台灣夏天氣溫動輒超過 **33℃**，對兔子來說是真實的生存威脅。" },
+        { type: "paragraph", text: "兔子最適環境溫度為 **15–25℃**，超過 **28℃** 就必須積極介入：夏季需要**全天開冷氣**（包含夜間與清晨，因為兔子在這兩個時段同樣活躍），搭配**陶板涼感墊**輔助散熱——但冷氣才是夏天真正的**保命關鍵**。" },
+      ],
+    },
     choices: [
-      { id: "rabbit-heat-balcony", text: "把 {petName} 移到陽台，讓牠呼吸新鮮空氣", result: "incorrect", ...incorrect, explanation: "夏天陽台可能曝曬、溫度遠高於室內，對兔子非常危險。", suggestion: "改在通風、可控且涼爽的室內安排降溫。" },
-      { id: "rabbit-heat-air", text: "確保室內有冷氣或風扇，維持溫度在 25℃ 以下", result: "correct", ...positive, explanation: "冷氣是夏天最有效的保護方式；超過 28℃就需留意高溫徵兆。" },
-      { id: "rabbit-heat-mat", text: "在 {petName} 的活動區放一塊陶板涼感墊", result: "correct", ...positive, explanation: "兔子可以自由選擇趴在陶板上降溫，是安全的輔助方式。" },
-      { id: "rabbit-heat-spray", text: "用噴霧瓶對 {petName} 噴水幫牠降溫", result: "incorrect", ...incorrect, explanation: "兔子不適合弄濕，直接噴水可能增加緊迫。", suggestion: "以涼爽環境為主，不要全身噴水。" },
+      { id: "rabbit-heat-balcony", text: "把 {petName} 移到陽台，讓牠呼吸新鮮空氣", result: "incorrect", ...incorrect, explanation: "陽台在夏天可能直接曝曬，溫度遠高於室內，是非常危險的選擇！兔子沒有汗腺，只靠耳朵散熱，中暑可致命。" },
+      { id: "rabbit-heat-air", text: "確保室內有冷氣或風扇，維持溫度在 25℃ 以下", result: "correct", ...positive, explanation: "兔子最適溫度是 15–25℃，超過 28℃ 就需開始關注高溫徵兆。冷氣是夏天最有效的保護方式。", expenseIds: ["rabbit-ac-monthly"] },
+      { id: "rabbit-heat-mat", text: "在 {petName} 的活動區放一塊陶板涼感墊", result: "correct", ...positive, explanation: "陶板散熱效果好，讓兔子可以自由選擇趴在上面降溫，是安全且有效的輔助散熱方式。" },
+      { id: "rabbit-heat-spray", text: "用噴霧瓶對 {petName} 噴水幫牠降溫", result: "incorrect", ...incorrect, explanation: "兔子不適合弄濕，直接噴水可能增加緊迫並引發感冒。輔助散熱應用稍涼的毛巾輕敷耳朵或腳掌，而非全身噴水。" },
     ],
   },
   {
@@ -79,9 +89,72 @@ export const rabbitLifeScenarios: Scenario[] = [
     ],
   },
   {
+    id: "rabbit-cecotropes", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 在吃什麼？！",
+    description: "你在旁邊看著 {petName} 吃東西，突然發現牠把嘴湊到屁股旁邊，吃了一種看起來像葡萄串、閃亮亮的柔軟東西。你嚇了一跳，以為牠在做什麼奇怪的事。", topic: "兔子的食糞行為",
+    reportSummary: "盲腸便是兔子正常且必要的營養來源；不應阻止牠自行食入。", artIndex: 3,
+    multipleChoice: true, requiredCorrectOptionIds: ["rabbit-cecotropes-normal", "rabbit-cecotropes-nutrition"], wrongOptionIds: ["rabbit-cecotropes-vet", "rabbit-cecotropes-stop"],
+    correctSummary: ["不去打擾，讓牠自行食入盲腸便。", "了解干預會影響牠的營養吸收，等牠自己吃完。"],
+    learningPoints: ["**圓形硬糞**是每天清理的正常代謝廢物。", "**盲腸便（葡萄便）**柔軟、成串、帶光澤，通常會被立即食入；這是正常本能，**不應阻止**。", "若大量盲腸便長期未被食入，可能反映**壓力**或**飲食問題**，需諮詢兔科獸醫。"], knowledgeTitle: "兔子小知識",
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你沒有打擾 {petName}，讓牠完成這個本能行為，做得很好！**盲腸便**是兔子每天必須自行食入的重要營養來源，阻止牠等於讓牠損失了**必需胺基酸**和 **B 群維生素**。",
+      knowledgeTitle: "兔兔小知識",
+      knowledgeContent: [
+        { type: "paragraph", text: "兔子的糞便有兩種，完全不同的東西：" },
+        { type: "item", text: "**圓形硬糞**（清便盆的那種）：正常代謝廢物，每天清理" },
+        { type: "item", text: "**盲腸便（葡萄便）**：柔軟、成串、帶光澤，通常在清晨或傍晚排出並**立即食入**——這是正常本能，**不應阻止**" },
+        { type: "item", text: "若大量盲腸便長期出現在便盆中**未被食入**，可能反映**壓力**或**飲食問題**，需諮詢獸醫" },
+      ],
+    },
+    choices: [
+      { id: "rabbit-cecotropes-normal", text: "不去打擾，讓 {petName} 繼續——這是正常的食糞行為（盲腸便），讓牠自行食入", result: "correct", ...positive, explanation: "盲腸便（俗稱葡萄便）柔軟、成串、帶光澤，與平時清便盆的圓形硬糞不同；這是本能，不應干預。" },
+      { id: "rabbit-cecotropes-nutrition", text: "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完", result: "correct", ...positive, explanation: "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。" },
+      { id: "rabbit-cecotropes-vet", text: "立刻帶去看獸醫，以為牠在做奇怪的事", result: "incorrect", ...incorrect, explanation: "這是正常的生理行為；只有大量盲腸便長期未被食入，才需要諮詢獸醫。" },
+      { id: "rabbit-cecotropes-stop", text: "試圖阻止牠，覺得這個行為不衛生", result: "incorrect", ...incorrect, explanation: "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。" },
+    ],
+  },
+  {
+    id: "rabbit-bath", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 好髒，幫牠洗個澡？",
+    description: "{petName} 身上有些氣味，尾根的毛也有點髒。你心想：「幫牠洗個澡吧。」", topic: "兔子日常清潔",
+    reportSummary: "兔子不適合洗澡；日常清潔以梳毛、局部微濕擦拭及必要時諮詢兔科獸醫為主。", artIndex: 3,
+    multipleChoice: true, requiredCorrectOptionIds: ["rabbit-bath-brush", "rabbit-bath-wipe", "rabbit-bath-vet"], wrongOptionIds: ["rabbit-bath-tub", "rabbit-bath-powder"],
+    correctSummary: ["用梳子梳毛。", "用微濕毛巾局部清潔。", "無法處理的污染先諮詢兔科獸醫。"],
+    learningPoints: ["**梳毛**是日常清潔核心，換毛期尤其重要。", "**局部污漬**以微濕毛巾小範圍輕擦即可，不需弄濕全身。", "全身沖洗與**乾洗粉**都不適合兔子；嚴重污染應諮詢**兔科獸醫**。"], knowledgeTitle: "兔子小知識",
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你知道兔子不能洗澡，選擇了梳毛和局部清潔，做得很好！全身弄濕會造成極大**緊迫**，可能引發**休克**，就算吹乾也無法消除過程的傷害。",
+      knowledgeTitle: "兔兔小知識",
+      knowledgeContent: [
+        { type: "paragraph", text: "兔子的日常清潔方式：" },
+        { type: "item", text: "**梳毛**是核心，每天或換毛期每天多梳幾次，避免毛球吞入造成腸道問題" },
+        { type: "item", text: "**局部污漬**（尾根、臀部）：用**微濕毛巾**小範圍輕擦，不需整隻弄濕" },
+        { type: "item", text: "**洗澡**：絕對禁止全身沖洗，**乾洗粉**農業部指南也明確不建議" },
+        { type: "item", text: "無法自行處理的髒污（如嚴重尾部污染）：應諮詢**兔科獸醫**評估，而非自行沖洗" },
+      ],
+    },
+    choices: [
+      { id: "rabbit-bath-powder", text: "用寵物乾洗粉幫牠清潔，這樣不用弄濕就能除臭", result: "incorrect", ...incorrect, explanation: "聽起來方便，但兔子不適合使用寵物乾洗粉——農業部指南明確指出這點，成分可能刺激兔子皮膚或被舔食吸收。" },
+      { id: "rabbit-bath-brush", text: "用梳子幫 {petName} 梳毛，這是日常清潔的基本方式", result: "correct", ...positive, explanation: "正確！梳毛是兔子日常護理的核心，換毛期尤其重要，也能降低因自行理毛吞入過多毛髮的風險。" },
+      { id: "rabbit-bath-tub", text: "用少量溫水輕輕清洗尾根髒污，洗完立刻用毛巾擦乾再吹乾", result: "incorrect", ...incorrect, explanation: "即使是局部、動作輕柔，把兔子放入水中仍會造成極大緊迫，可能引發休克。正確做法是用**微濕毛巾**小範圍輕擦，不讓皮膚真正浸濕。" },
+      { id: "rabbit-bath-wipe", text: "尾根的髒污用稍微濕潤的毛巾輕輕擦拭，不需要整隻弄濕", result: "correct", ...positive, explanation: "正確！局部污漬用微濕毛巾小範圍輕擦是安全的做法，不需弄濕全身。" },
+      { id: "rabbit-bath-vet", text: "如果污染情況自己無法處理，先諮詢兔科獸醫，不自行沖洗", result: "correct", ...positive, explanation: "正確！如尾部嚴重污染，應請兔科獸醫評估處理方式，不應自行將牠放入水中。" },
+    ],
+  },
+  {
     id: "rabbit-busy-care", stage: "當生活發生變化", stageId: "life-change", stageTitle: "當生活發生變化", timeLabel: "當生活發生變化", title: "如果你很忙，牠怎麼辦？",
     description: "你臨時需要到外地出差三天，沒辦法親自照顧 `{petName}`。這幾天，牠怎麼辦？", topic: "忙碌時的兔子照護安排",
     reportSummary: "兔子需要每日補草、換水、清便盆與觀察糞便；離家時應安排可信任的人每天協助照顧。", artIndex: 5,
+    busyCareCompletion: {
+      title: "做得很好！",
+      encouragement: "你認真安排了支援，確保 {petName} 在你不在時也能被好好照顧，做得很好！照顧的責任不因生活變化而消失。",
+      reflectionText: "在 {petName} 的世界裡，你的存在是他安全感的一部分。",
+      reflectionTitle: "留給自己的一個問題",
+      reflectionContent: ["你每天能撥出時間讓 {petName} 在圍欄外活動，並確認他今天有沒有正常吃草、排便嗎？就算是忙碌的日子？"],
+      careTimeTitle: "每日照護時間",
+      careTimeItems: rabbitReport.dailyCareBreakdown,
+      showCareTime: false,
+      additionalAdvice: ["如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔兔照護的寵物旅館，作為備用方案。接受兔子的旅館較少，建議平時就事先查詢確認。"],
+    },
     choices: [
       { id: "rabbit-busy-hay", text: "多放一週份量的牧草，讓 {petName} 自己吃", result: "incorrect", ...incorrect, explanation: "牧草需要每天補充新鮮的；飲水、便盆與糞便觀察也不能中斷。", suggestion: "安排可信任的人每日協助照顧。" },
       { id: "rabbit-busy-helper", text: "請家人或朋友每天來幫忙照顧 {petName}", result: "correct", ...positive, explanation: "兔子的照護需要每天進行；先確認協助者知道照護步驟與危急警訊。", suggestion: "交接牧草、飲水、便盆、糞便觀察與緊急聯絡方式。" },
@@ -95,6 +168,20 @@ export const rabbitLifeScenarios: Scenario[] = [
     questionText: "根據這些觀察，你應該？",
     reportSummary: "排便量驟減與食慾下降是兔子重要危急警訊，應立刻聯繫兔科獸醫。", artIndex: 4,
     learningPoints: rabbitKnowledge.health, knowledgeTitle: "兔子小知識",
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你立刻察覺到異常並聯繫獸醫，沒有觀望等待，做得很好！",
+      knowledgeTitle: "兔兔小知識",
+      knowledgeContent: [
+        { type: "paragraph", text: "兔子常見需要留意的健康問題：" },
+        { type: "item", text: "**消化道停滯**（排便量減少或無排便、食慾下降、腹部脹氣）：兔子最危急的狀況之一，12 小時未進食需立即就醫" },
+        { type: "item", text: "**牙齒問題**（流口水、進食遲疑、嘴巴周圍濕）：牙齒終身生長需靠牧草磨牙，出現流口水需就醫" },
+        { type: "item", text: "**斜頸**（頭部傾斜、走路不穩或打轉）：可能源自中耳炎或 E. cuniculi 寄生蟲感染，需緊急就醫" },
+        { type: "item", text: "**皮膚問題**（大量脫毛、皮膚異常、持續抓撓）：可能源自壓力、寄生蟲或疾病，持續發生需就醫" },
+        { type: "item", text: "**呼吸道問題**（鼻涕、打噴嚏、呼吸急促）：兔子不能用嘴呼吸，呼吸困難是急症" },
+      ],
+      reminder: "排便量減少、食慾下降、活動力降低都是兔子最重要的危急警訊；12 小時完全無進食就是非常緊急的情形，應立刻帶去兔科獸醫，不可自行換食物或等待下次回診。",
+    },
     choices: [
       { id: "rabbit-health-wait", text: "這是正常波動，明天再看看", result: "incorrect", ...incorrect, explanation: "排便量突然減少＋食慾下降是兔子最重要的危急警訊，不能等待。", suggestion: "立刻聯繫兔科獸醫，帶去看診。" },
       { id: "rabbit-health-vet", text: "立刻聯繫兔科獸醫，帶去看診", result: "correct", ...positive, explanation: "兔子突然排便量變少、食慾變差，應立刻尋求獸醫師協助。12 小時完全無進食就是非常危急的情形。", expenseIds: ["rabbit-emergency-reserve"] },
@@ -112,11 +199,9 @@ export const rabbitLifeScenarios: Scenario[] = [
       encouragement: "高齡期的照護重點：定期健康檢查（至少半年一次）、友善關節的環境（降低出入高度、增加軟質墊料），以及持續供應充足的牧草。",
       knowledgeTitle: "長達 8-13 年的每日陪伴與生命承諾",
       knowledgeContent: [
-        { type: "item", text: "高齡期的照護重點：**定期健康檢查**（至少**半年一次**）、**友善關節的環境**（降低出入高度、增加**軟質墊料**），以及持續供應**充足的牧草**" },
-        { type: "item", text: "任何飲食或醫療調整，都建議先諮詢**兔科獸醫**，讓 {petName} 繼續舒適地生活在你身邊" },
-        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份長達 8-13 年的承諾。" },
-        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現失智、大小便失禁，甚至癱瘓。" },
-        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到生命盡頭的心理準備嗎？" },
+        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份**長達 8-13 年**的承諾。" },
+        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現**牙齒退化**、**消化系統弱化**，甚至**活動力大幅下降**。" },
+        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到**生命盡頭**的心理準備嗎？" },
       ],
     },
     choices: [
@@ -145,10 +230,10 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
     questionText: "請把這 5 個動作拖曳到正確的順序，安全地抱起 {petName}。",
     knowledgeTitle: "兔子小知識", learningPoints: [
       "正確順序：**緩慢靠近** → **手背嗅聞** → **輕摸頭確認放鬆** → **雙手同時托胸和臀** → **靠著身體保持穩定**",
-      "**請不要這樣抱兔兔**",
-      "**從耳朵拎起**：耳朵是兔子的散熱器官，從耳朵拎起會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。",
-      "**讓牠腹部朝上**：腹部朝上對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不安全。",
-      "**從耳朵拎起**或**腹部朝上**都可能造成嚴重傷害，永遠不要這樣做",
+      "<danger>請不要這樣抱兔兔</danger>",
+      "<danger>從耳朵拎起</danger>：耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。",
+      "<danger>讓牠腹部朝上</danger>：<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不安全。",
+      "<danger>從耳朵拎起</danger>或<danger>腹部朝上</danger>都可能造成嚴重傷害，永遠不要這樣做",
     ],
     choices: [
       { id: "rabbit-carry-incorrect", text: "需要重新思考順序", result: "incorrect", ...incorrect, explanation: "安全抱兔需要循序降低緊張感，確認每一步都完成後再往下。" },

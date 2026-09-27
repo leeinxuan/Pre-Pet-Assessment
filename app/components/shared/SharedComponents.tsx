@@ -48,27 +48,17 @@ type MainNavigation = {
   children?: NavigationChild[];
 };
 
-function getLifeStageRanges(breed: string, species = "dog") {
-  if (species === "rabbit" || species === "bird") {
-    const items = getJourneyItemsForSpecies(species);
-    return items.reduce<Array<{ label: string; start: number; end: number }>>((groups, item, index) => {
-      const last = groups.at(-1);
-      if (last && item.stageId && last.label === item.stageLabel) {
-        last.end = index;
-      } else {
-        groups.push({ label: item.stageLabel ?? item.timeLabel, start: index, end: index });
-      }
-      return groups;
-    }, []);
-  }
-  const config = getSpeciesConfig(species);
-  const breedLabel = config.breeds.find((item) => item.id === breed)?.label ?? "品種";
-  return [
-    { label: "接回家", start: 0, end: 0 },
-    { label: "日常照護", start: 1, end: 2 },
-    { label: config.copy.lifeChallengeLabel(breedLabel), start: 3, end: 3 },
-    { label: "生活變化", start: 4, end: 6 },
-  ] as const;
+function getLifeStageRanges(_breed: string, species = "dog") {
+  const items = getJourneyItemsForSpecies(species);
+  return items.reduce<Array<{ label: string; start: number; end: number }>>((groups, item, index) => {
+    const last = groups.at(-1);
+    if (last && item.stageId && last.label === item.stageLabel) {
+      last.end = index;
+    } else {
+      groups.push({ label: item.stageLabel ?? item.timeLabel, start: index, end: index });
+    }
+    return groups;
+  }, []);
 }
 
 function statusAt(index: number, current: number, reached: number): NavigationStatus {
@@ -127,10 +117,7 @@ export function StageRail({
     if (mainUnlockSteps[index] <= furthestStep) return "completed";
     return "locked";
   };
-  // 兔子沒有品種細選；側欄也不顯示一個無法操作的空白步驟。
-  const selectionNavigationPages = species === "rabbit" || species === "bird"
-    ? [{ id: "species", label: "選擇物種", progress: 0 }, { id: "name", label: "替牠取名", progress: 2 }, { id: "history", label: "過往經驗", progress: 3 }, { id: "transition", label: "新的開始", progress: 4 }]
-    : [{ id: "species", label: "選擇物種", progress: 0 }, { id: "breed", label: "選擇品種", progress: 1 }, { id: "name", label: "替牠取名", progress: 2 }, { id: "history", label: "過往經驗", progress: 3 }, { id: "transition", label: "新的開始", progress: 4 }];
+  const selectionNavigationPages = [{ id: "species", label: "選擇物種", progress: 0 }, { id: "name", label: "替牠取名", progress: 2 }, { id: "history", label: "過往經驗", progress: 3 }, { id: "transition", label: "新的開始", progress: 4 }];
 
   const navigation: MainNavigation[] = [
     {
@@ -154,7 +141,7 @@ export function StageRail({
       label: "飼養前準備",
       status: mainStatus(1),
       onClick: () => onGoTo(2),
-      children: ["布置生活空間", "出發前準備"].map((label, index) => ({
+      children: ["家庭與居住確認", "布置生活空間", "出發前準備"].map((label, index) => ({
         id: `preparation-${index}`,
         label,
         status: testMode
@@ -321,6 +308,9 @@ export function SpeciesStep({
   onNext: () => void;
 }) {
   const speciesConfig = getSpeciesConfig(category);
+  // 品種流程目前在全站皆暫時停用。無論父層的 state 更新順序為何，
+  // 都不能掛載舊的品種頁，避免在物種選擇後閃過已下架的畫面。
+  const visibleSelectionPage: typeof selectionPage = selectionPage === "breed" ? "name" : selectionPage;
   type BreedOption = { id: string; image: string; label: string; shortDescription: string };
   const availableBreeds: readonly BreedOption[] = speciesConfig.breeds;
   const selectedBreed = availableBreeds.find((item) => item.id === breed);
@@ -329,49 +319,17 @@ export function SpeciesStep({
     : availableBreeds;
   const selectedPreviousBreed = previousBreeds.find((item) => item.id === previousBreed);
   const sameBreed = Boolean(breed && previousBreed && breed === previousBreed);
-  const breedCarouselRef = useRef<HTMLDivElement>(null);
-  const breedScrollTimerRef = useRef<number | null>(null);
-
-  useEffect(() => () => {
-    if (breedScrollTimerRef.current) window.clearTimeout(breedScrollTimerRef.current);
-  }, []);
-
   function chooseCategory(id: string) {
     onCategory(id);
     const nextConfig = getSpeciesConfig(id);
-    if (nextConfig.selection.skipBreedPage) {
-      onBreed(nextConfig.breeds[0]?.id ?? "");
-      onSelectionPage("name");
-    } else {
-      onBreed("");
-      onSelectionPage("breed");
-    }
+    onBreed(nextConfig.breeds[0]?.id ?? "");
+    onSelectionPage("name");
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function syncBreedFromCarousel() {
-    const container = breedCarouselRef.current;
-    if (!container) return;
-    const containerCenter = container.getBoundingClientRect().left + container.clientWidth / 2;
-    const cards = Array.from(container.querySelectorAll<HTMLButtonElement>("[data-breed-id]"));
-    const centered = cards.reduce<{ id: string; distance: number } | null>((closest, card) => {
-      const rect = card.getBoundingClientRect();
-      const distance = Math.abs(rect.left + rect.width / 2 - containerCenter);
-      const id = card.dataset.breedId ?? "";
-      if (!id || (closest && closest.distance <= distance)) return closest;
-      return { id, distance };
-    }, null);
-    if (centered && centered.id !== breed) onBreed(centered.id);
-  }
-
-  function handleBreedCarouselScroll() {
-    if (breedScrollTimerRef.current) window.clearTimeout(breedScrollTimerRef.current);
-    breedScrollTimerRef.current = window.setTimeout(syncBreedFromCarousel, 120);
   }
 
   return (
     <div className="content-wrap partner-picker">
-      {selectionPage === "species" ? (
+      {visibleSelectionPage === "species" ? (
         <section className="partner-selection-page" key="species">
           <StepHeading title={speciesConfig.copy.selectionTitle} />
           <div className="category-grid species-page-grid">
@@ -389,23 +347,7 @@ export function SpeciesStep({
             ))}
           </div>
         </section>
-      ) : selectionPage === "breed" ? (
-        <section className="partner-selection-page" key="breed">
-          <StepHeading title={speciesConfig.copy.breedTitle} />
-          <div className="breed-row breed-page-grid breed-carousel" ref={breedCarouselRef} onScroll={handleBreedCarouselScroll} aria-label="品種橫向滑動選擇">
-            {availableBreeds.map((item) => (
-              <button key={item.id} data-breed-id={item.id} className={breed === item.id ? "selected" : ""} onClick={() => onBreed(item.id)} aria-pressed={breed === item.id}>
-                <img className="partner-card-image" src={item.image} alt="" /><b>{item.label}</b>{breed === item.id && <i>✓</i>}
-              </button>
-            ))}
-          </div>
-          <div className={`selection-note breed-description ${selectedBreed ? "selected" : "empty"}`} role="status" aria-live="polite" aria-atomic="true">
-            {selectedBreed ? <img className="selection-note-image" src={selectedBreed.image} alt="" /> : <span aria-hidden="true">🐾</span>}
-            <div><b>{selectedBreed ? `你選擇了：${selectedBreed.label}` : `${speciesConfig.copy.typeLabel}飼養特性`}</b><p>{selectedBreed?.shortDescription ?? `點選一個${speciesConfig.copy.typeLabel}，查看牠的飼養特性。`}</p></div>
-          </div>
-          <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("name")} disabled={!breed} nextLabel="下一步" />
-        </section>
-      ) : selectionPage === "name" ? (
+      ) : visibleSelectionPage === "name" ? (
         <section className="partner-selection-page pet-naming-page" key="name">
           <StepHeading title={speciesConfig.copy.nameTitle} body="這個名字會陪著牠走進接下來的生活，也會出現在後面的情境演練裡。" />
           <div className="pet-naming-stage">
@@ -413,9 +355,9 @@ export function SpeciesStep({
             <label htmlFor="new-pet-name" className="sr-only">{speciesConfig.copy.animalName}的名字</label>
             <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} autoFocus />
           </div>
-          <NavButtons onBack={() => onSelectionPage(speciesConfig.selection.skipBreedPage ? "species" : "breed")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
+          <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
         </section>
-      ) : selectionPage === "history" ? (
+      ) : visibleSelectionPage === "history" ? (
         <section className="partner-selection-page previous-dog-page" key="history">
           <StepHeading title={speciesConfig.copy.historyTitle} body={speciesConfig.copy.historyBody} />
           <div className="previous-dog-choice" role="group" aria-label={`是否曾經養過${speciesConfig.copy.animalName}`}>
@@ -495,11 +437,7 @@ const expenseLabels = {
   addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
-const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
-const defaultVisibleExpenseIds = ["monthly-preventive-medicine"];
-const defaultVisibleExpenses = defaultVisibleExpenseIds
-  .map((id) => expenseCatalog[id])
-  .filter((item): item is ExpenseRecord => Boolean(item));
+const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "dog-sterilization", "cat-sterilization", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
 const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "dog-senior-room", "dog-senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-routine-checkup", "rabbit-senior-room", "bird-emergency-vet", "bird-senior-checkup", "bird-senior-room"]);
 
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
@@ -585,17 +523,10 @@ export function getAccumulatedExpenseTotal(expenses: ExpenseRecord[]) {
   return expenses.reduce((sum, item) => sum + item.amount, 0);
 }
 
-export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], breed: string, species?: string) {
-  // 到家後必要支出必須在完成第一題後才寫入 expense store，不能在明細預先顯示。
-  const speciesDefaultExpenses = species === "rabbit" || species === "bird" ? [] : defaultVisibleExpenses;
-  const petSize = getPetSizeForBreed(breed);
-  const existingIds = new Set(expenses.map((item) => item.id));
-  return [
-    ...expenses,
-    ...speciesDefaultExpenses
-      .filter((item) => !existingIds.has(item.id))
-      .map((item) => applySizeBasedExpenseAmount(item, petSize)),
-  ];
+export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], _breed?: string, _species?: string) {
+  // 明細、回顧與輸出只能讀取已實際寫入共用 expense store 的資料；
+  // 不能為特定物種在 render 時補回預設費用，否則切換流程後會殘留舊支出。
+  return expenses;
 }
 
 function detailGroupForExpense(item: ExpenseRecord): ExpenseDetailGroup {
@@ -670,7 +601,7 @@ function CoinFlightAnimation({
     toast.className = "coin-toast-overlay";
     toast.innerHTML = `
       <div class="coin-toast-card" role="status" aria-live="polite">
-        <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(20,80,30,0.10)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#7ec87a"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.25)"/><rect x="1" y="20" width="90" height="4" fill="rgba(30,100,40,0.08)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#3a8a48" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#3a8a48" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(30,120,50,0.18)" stroke="#3a8a48" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#1a4a22">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#1e5a28">100</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="7" font-weight="700" text-anchor="end" fill="#1e5a28">100</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#3a8a48" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#3a8a48" opacity="0.7">&#10022;</text></svg>
+        <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(10,50,120,0.10)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#8dc8ea"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.28)"/><rect x="1" y="20" width="90" height="4" fill="rgba(10,60,140,0.07)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#1a60a8" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#1a60a8" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(10,80,180,0.14)" stroke="#1a60a8" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#0a2e6e">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#0e3d80">100</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="7" font-weight="700" text-anchor="end" fill="#0e3d80">100</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#1a60a8" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#1a60a8" opacity="0.7">&#10022;</text></svg>
         <div class="coin-toast-body">
           <b>已加入準備清單</b>
           <span>${expense.name}</span>
