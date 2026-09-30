@@ -185,7 +185,7 @@ export const catLifeScenarios: Scenario[] = [
     },
     choices: [
       { id: "cat-health-wait", text: "先自行上網查詢症狀，照網友分享的方法在家觀察幾天", result: "incorrect", ...incorrect, explanation: "網路資訊和他人的經驗不能取代獸醫判斷；明顯變化不應延後聯繫獸醫。", suggestion: "可以整理可信資料供溝通，但先記錄時間與觀察到的狀況，並聯絡獸醫討論下一步。" },
-      { id: "cat-health-complete-response", text: "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫", result: "correct", ...positive, explanation: "多項變化一起出現時，**完整紀錄、就醫準備**與聯繫獸醫要一起做；紀錄不能延後急症處置。", expenseIds: ["sick-vet-care"] },
+      { id: "cat-health-complete-response", text: "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫", result: "correct", ...positive, explanation: "多項變化一起出現時，**完整紀錄、就醫準備**與聯繫獸醫要一起做；紀錄不能延後急症處置。", expenseIds: ["cat-mild-sick", "cat-moderate-sick", "cat-hospitalization"] },
       { id: "cat-health-friend", text: "拍一張照片傳給有養貓的朋友，等對方回覆後再決定", result: "incorrect", ...incorrect, explanation: "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。", suggestion: "整理觀察資料後儘速聯絡獸醫。" },
       { id: "cat-health-medicine", text: "先用家裡的人用藥或剩下的藥物試試看", result: "incorrect", ...incorrect, explanation: "未經獸醫指示的藥物可能對貓有害，也會干擾後續判斷。", suggestion: "不要自行給藥，先記錄狀況並聯絡獸醫。" },
     ],

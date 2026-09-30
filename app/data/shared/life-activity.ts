@@ -5,6 +5,7 @@ export const initialLifeActivityState: LifeActivityState = {
   bodyLanguageSignals: [],
   arrivalMealFoodReady: false,
   arrivalMealWaterReady: false,
+  arrivalMealVeggieReady: false,
   walkingPreparedItems: [],
   walkingSceneIndex: 0,
   walkingMinutes: 0,
@@ -20,5 +21,9 @@ export const initialLifeActivityState: LifeActivityState = {
   rabbitCarryAnswerRevealed: false,
   rabbitCarryFeedbackShown: false,
   rabbitDailyCheckSteps: [],
+  rabbitGroomingIntroStarted: false,
+  rabbitGroomingState: "part-1-step-1-head-ears",
+  rabbitGroomingObservations: {},
+  rabbitGroomingInspection: {},
   birdCageInspectionSteps: [],
 };

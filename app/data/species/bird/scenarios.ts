@@ -87,7 +87,7 @@ export const birdLifeScenarios: Scenario[] = [
     reminder: "進食量減少、飲水異常、糞便改變、澎毛超過 24 小時、行為突然改變都是需要關注的警訊；觀察到多項同時出現時，應盡速聯繫鳥類獸醫，不要觀望等待。",
   }, choices: [
     { id: "bird-health-eating", text: "鳥只要還在吃東西，就不需要擔心健康問題", result: "incorrect", ...incorrect, explanation: "鳥隱藏病徵的能力極強，可能在相當不適的情況下仍維持部分進食；等到完全不吃，往往已是嚴重狀況。", suggestion: "每天一起觀察進食量、飲水量、糞便、精神與行為。" },
-    { id: "bird-health-checkup", text: "鳥每年應帶至熟悉鳥類醫療的獸醫進行健康檢查，同時每天觀察行為、進食量和糞便", result: "correct", ...positive, explanation: "定期健檢可發現看不出來的問題；每天觀察進食量、飲水量、糞便與行為，是最早發現異常的方式。", expenseIds: ["bird-arrival-checkup"] },
+    { id: "bird-health-checkup", text: "鳥每年應帶至熟悉鳥類醫療的獸醫進行健康檢查，同時每天觀察行為、進食量和糞便", result: "correct", ...positive, explanation: "定期健檢可發現看不出來的問題；每天觀察進食量、飲水量、糞便與行為，是最早發現異常的方式。", expenseIds: ["bird-mild-sick", "bird-moderate-sick", "bird-hospitalization"] },
     { id: "bird-health-weight", text: "鸚鵡的體重不需要定期秤，憑外觀就能判斷", result: "incorrect", ...incorrect, explanation: "羽毛覆蓋讓鳥的體型難以用肉眼評估；定期秤體重與觸摸胸骨才能準確監測體態。", suggestion: "建立固定的體重與日常狀態紀錄。" },
     { id: "bird-health-cost", text: "鳥一年要健檢一次，是浪費錢的行為", result: "incorrect", ...incorrect, explanation: "鳥隱藏病徵能力強、病程發展快；年度健檢能提前發現潛在問題。", suggestion: "把健檢列入長期照護預算。" },
   ] },

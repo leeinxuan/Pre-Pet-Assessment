@@ -184,7 +184,7 @@ export const rabbitLifeScenarios: Scenario[] = [
     },
     choices: [
       { id: "rabbit-health-wait", text: "這是正常波動，明天再看看", result: "incorrect", ...incorrect, explanation: "排便量突然減少＋食慾下降是兔子最重要的危急警訊，不能等待。", suggestion: "立刻聯繫兔科獸醫，帶去看診。" },
-      { id: "rabbit-health-vet", text: "立刻聯繫兔科獸醫，帶去看診", result: "correct", ...positive, explanation: "兔子突然排便量變少、食慾變差，應立刻尋求獸醫師協助。12 小時完全無進食就是非常危急的情形。", expenseIds: ["rabbit-emergency-reserve"] },
+      { id: "rabbit-health-vet", text: "立刻聯繫兔科獸醫，帶去看診", result: "correct", ...positive, explanation: "兔子突然排便量變少、食慾變差，應立刻尋求獸醫師協助。12 小時完全無進食就是非常危急的情形。", expenseIds: ["rabbit-mild-sick", "rabbit-moderate-sick", "rabbit-hospitalization"] },
       { id: "rabbit-health-vegetable", text: "換成 {petName} 喜歡的蔬菜，刺激食慾", result: "incorrect", ...incorrect, explanation: "突然改變食物種類可能加重消化問題。", suggestion: "此時應立刻就醫，而不是嘗試調整飲食。" },
       { id: "rabbit-health-next-week", text: "記錄下來，下週例行健康檢查時告訴獸醫", result: "incorrect", ...incorrect, explanation: "排便量驟減＋食慾下降需要立刻處置，等一週可能已造成嚴重腸阻塞。", suggestion: "立刻聯繫兔科獸醫，帶去看診。" },
     ],
@@ -214,12 +214,21 @@ export const rabbitLifeScenarios: Scenario[] = [
 ];
 
 /** 規劃文件 D-1：順序即為正解；操作元件只讀取動作與對應提示。 */
+const rabbitHoldStepAssets = {
+  approach: "/assets/rabbit/pet-journey/rabbit-hold-step-1-approach.png",
+  handSniff: "/assets/rabbit/pet-journey/rabbit-hold-step-2-hand-sniff.png",
+  headStroke: "/assets/rabbit/pet-journey/rabbit-hold-step-3-head-stroke.png",
+  supportChestHindquarters: "/assets/rabbit/pet-journey/rabbit-hold-step-4-support-chest-hindquarters.png",
+  holdClose: "/assets/rabbit/pet-journey/rabbit-hold-step-5-hold-close.png",
+} as const;
+
+/** 抱兔排序的文字、順序與素材皆集中於此，供拖曳卡與正解狀態共用。 */
 export const rabbitCarrySortSteps = [
-  { text: "緩慢靠近，不發出大聲音，蹲低到與 {petName} 視線同高", hint: "突然靠近或蹲太快都會嚇到兔子，牠可能逃跑或警戒。" },
-  { text: "伸出手背讓 {petName} 嗅聞，等牠不緊張", hint: "讓兔子先認識你的氣味，才能進行下一步。不要急著摸牠。" },
-  { text: "輕輕摸頭頂，確認 {petName} 沒有蹲低或後退", hint: "摸頭是確認兔子放鬆的重要步驟，耳朵貼後、蹲低代表牠還不安心。" },
-  { text: "一手托住胸口，另一手同時托住臀部", hint: "兩手必須同時支撐，單手抓會讓兔子掙扎，增加骨折風險。" },
-  { text: "讓 {petName} 靠著你的身體，前肢有支撐", hint: "兔子靠著身體才有安全感，懸空抱容易引發恐慌和掙扎。" },
+  { text: "緩慢靠近，不發出大聲音，蹲低到與 {petName} 視線同高", hint: "突然靠近或蹲太快都會嚇到兔子，牠可能逃跑或警戒。", image: rabbitHoldStepAssets.approach },
+  { text: "伸出手背讓 {petName} 嗅聞，等牠不緊張", hint: "讓兔子先認識你的氣味，才能進行下一步。不要急著摸牠。", image: rabbitHoldStepAssets.handSniff },
+  { text: "輕輕摸頭頂，確認 {petName} 沒有蹲低或後退", hint: "摸頭是確認兔子放鬆的重要步驟，耳朵貼後、蹲低代表牠還不安心。", image: rabbitHoldStepAssets.headStroke },
+  { text: "一手托住胸口，另一手同時托住臀部", hint: "兩手必須同時支撐，單手抓會讓兔子掙扎，增加骨折風險。", image: rabbitHoldStepAssets.supportChestHindquarters },
+  { text: "讓 {petName} 靠著你的身體，前肢有支撐", hint: "兔子靠著身體才有安全感，懸空抱容易引發恐慌和掙扎。", image: rabbitHoldStepAssets.holdClose },
 ] as const;
 
 /** 兔子專屬互動也以 Scenario 紀錄結果，讓共用回顧與下載摘要可直接讀取。 */

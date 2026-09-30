@@ -107,6 +107,7 @@
   user-select: none;
   transform: translateY(-50%);
 }
+
 .walking-forward-orb {
   width: 68px;
   height: 68px;
@@ -1097,6 +1098,7 @@
 
 /* 兔子專屬活動僅補足互動內容，沿用情境頁的雙欄閱讀節奏。 */
 .rabbit-activity { padding: clamp(24px, 4vw, 52px); border: 1px solid var(--line); border-radius: 28px; background: var(--paper); box-shadow: var(--shadow); }
+.rabbit-grooming-activity { container-type: inline-size; container-name: rabbit-grooming; }
 .rabbit-activity > header { max-width: 760px; margin-bottom: 26px; }
 .rabbit-activity > header p { margin: 0 0 8px; color: var(--gold-dark); font-size: 14px; font-weight: 800; }
 .rabbit-activity > header h1 { margin: 0 0 10px; font-size: clamp(30px, 4vw, 46px); }
@@ -1122,7 +1124,8 @@
 .rabbit-drag-sort-list li.is-dragging { opacity: .52; transform: scale(.985); box-shadow: 0 12px 24px rgba(70, 48, 24, .14); }
 .rabbit-drag-sort-list li.is-drop-before { border-top: 4px solid var(--gold); }
 .rabbit-drag-sort-list li.is-drop-after { border-bottom: 4px solid var(--gold); }
-.rabbit-step-image-slot { width: 100%; min-height: 128px; border: 1px dashed rgba(153, 121, 66, .42); border-radius: 12px; background: #fffdf8; }
+.rabbit-step-image-slot { display: grid; width: 100%; min-height: 128px; place-items: center; overflow: hidden; border: 1px solid rgba(153, 121, 66, .25); border-radius: 12px; background: #fffdf8; }
+.rabbit-step-image-slot img { display: block; width: 100%; height: 128px; object-fit: contain; }
 .rabbit-drag-sort-list small { color: var(--gold-dark); font-weight: 800; white-space: nowrap; }
 .rabbit-unsafe-list { display: grid; gap: 6px; margin: 0 0 18px; padding: 13px 14px; border: 1px solid #d98d85; border-radius: 12px; background: #fff0ee; color: #6d302d; font-size: 14px; line-height: 1.6; }
 .rabbit-unsafe-list b { color: #a83f38; }
@@ -1164,17 +1167,96 @@
 .rabbit-grooming-progress li.active span { border-color: var(--gold); background: var(--gold); color: #fff; }
 .rabbit-grooming-progress li.done { color: #42734c; }
 .rabbit-grooming-progress li.done span { border-color: #83ae8a; background: var(--mint-soft); }
-.rabbit-grooming-scene { position: relative; display: grid; min-height: 380px; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, #fbf4e7, #eaf3e8); }
-.rabbit-grooming-scene > img { width: min(62%, 300px); max-height: 285px; object-fit: contain; }
-.rabbit-grooming-target { position: absolute; top: 25%; right: 13%; min-width: 126px; min-height: 58px; padding: 10px 14px; border: 2px dashed var(--gold-dark); border-radius: 16px; background: rgba(255,255,255,.88); color: var(--ink); font: inherit; font-weight: 900; cursor: pointer; touch-action: none; }
-.rabbit-grooming-target small { display: block; margin-top: 3px; color: #b76923; font-size: 11px; }
-.rabbit-grooming-target.needs-care { border-color: #d78330; animation: gentlePulse 1.8s ease-in-out infinite; }
-.rabbit-grooming-brush { position: absolute; bottom: 22px; left: 12%; min-width: 86px; min-height: 52px; border: 1px dashed var(--gold-dark); border-radius: 15px; background: #fff8e7; color: var(--ink); font: inherit; font-weight: 900; cursor: grab; touch-action: none; }
-.rabbit-grooming-brush:active { cursor: grabbing; }
-.rabbit-grooming-instruction { position: absolute; bottom: 20px; margin: 0; max-width: 70%; color: var(--ink-soft); font-weight: 800; text-align: center; }
-.rabbit-grooming-observation { margin-top: 18px; padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: #fff; }
-.rabbit-grooming-observation h2 { margin: 0 0 8px; font-size: 21px; }
-.rabbit-grooming-observation p { margin: 0 0 16px; color: var(--ink-soft); line-height: 1.75; }
+.rabbit-grooming-scene { position: relative; display: grid; min-height: 440px; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, #fbf4e7, #eaf3e8); }
+.rabbit-grooming-character { position: relative; width: min(70%, 390px); max-height: 335px; }
+.rabbit-grooming-character > img { display: block; width: 100%; max-height: 335px; object-fit: contain; }
+.rabbit-grooming-scene.asset-unavailable::after { content: "素材暫時無法顯示，仍可依熱區完成操作"; color: var(--ink-soft); font-weight: 800; }
+.rabbit-grooming-guideline { position: absolute; z-index: 1; pointer-events: none; transition: opacity .18s ease; }
+.rabbit-grooming-guideline::before, .rabbit-grooming-guideline::after { position: absolute; content: ""; pointer-events: none; }
+.rabbit-grooming-guideline[data-grooming-step="groom-head-ears"] { top: 9%; left: 30%; width: 32%; height: 22%; }
+.rabbit-grooming-guideline[data-grooming-step="groom-back-sides"] { top: 42%; left: 25%; width: 48%; height: 24%; }
+.rabbit-grooming-guideline[data-grooming-step="groom-hind-tail"] { top: 62%; left: 30%; width: 22%; height: 22%; }
+.rabbit-grooming-guideline::before { z-index: -1; width: 46px; height: 9px; border-radius: 50%; background: rgba(132, 87, 39, .18); transform: translate(-50%, -50%); animation: rabbit-grooming-arrow-shadow 1.3s ease-in-out infinite; }
+.rabbit-grooming-guideline::after { width: 44px; height: 52px; border-radius: 12px; background: linear-gradient(145deg, #f5c861, #dc903b); clip-path: polygon(20% 0, 80% 0, 80% 48%, 100% 48%, 50% 100%, 0 48%, 20% 48%); filter: drop-shadow(0 4px 4px rgba(126, 78, 27, .24)); animation: rabbit-grooming-arrow-float 1.3s ease-in-out infinite; }
+.rabbit-grooming-guideline[data-grooming-step="groom-head-ears"]::before { top: 40%; left: 50%; }
+.rabbit-grooming-guideline[data-grooming-step="groom-head-ears"]::after { top: -16px; left: calc(50% - 22px); }
+.rabbit-grooming-guideline[data-grooming-step="groom-back-sides"]::before { top: 68%; left: 57%; }
+.rabbit-grooming-guideline[data-grooming-step="groom-back-sides"]::after { top: -18px; left: calc(57% - 22px); transform: rotate(18deg); }
+.rabbit-grooming-guideline[data-grooming-step="groom-hind-tail"]::before { top: 67%; left: 49%; }
+.rabbit-grooming-guideline[data-grooming-step="groom-hind-tail"]::after { top: -22px; left: calc(49% - 22px); transform: rotate(22deg); }
+.rabbit-grooming-guideline.is-dragging { opacity: .28; }
+@keyframes rabbit-grooming-arrow-float { 0%, 100% { margin-top: 0; } 50% { margin-top: -7px; } }
+@keyframes rabbit-grooming-arrow-shadow { 0%, 100% { opacity: .56; transform: translate(-50%, -50%) scale(1); } 50% { opacity: .28; transform: translate(-50%, -50%) scale(.75); } }
+.rabbit-grooming-brush { position: absolute; z-index: 2; bottom: 22px; left: 6%; width: 194px; height: 152px; padding: 7px; border: 1px solid rgba(196, 143, 62, .62); border-radius: 20px; background: rgba(255, 248, 231, .96); box-shadow: 0 8px 20px rgba(76, 56, 31, .12); cursor: grab; touch-action: none; }
+.rabbit-grooming-brush img { width: 100%; height: 100%; object-fit: contain; }
+.rabbit-grooming-brush:hover { transform: translateY(-2px); }
+.rabbit-grooming-brush:active { cursor: grabbing; transform: scale(.98); }
+.rabbit-grooming-brush:focus-visible, .rabbit-anatomy-hitbox:focus-visible { outline: 3px solid var(--gold-dark); outline-offset: 3px; }
+.rabbit-grooming-instruction { position: absolute; z-index: 2; bottom: 28px; left: 50%; margin: 0; max-width: 42%; color: var(--ink-soft); font-weight: 800; text-align: center; transform: translateX(-50%); }
+.rabbit-fur-collector { position: absolute; right: 18px; bottom: 12px; display: grid; justify-items: center; width: 204px; color: var(--ink-soft); font-size: 14px; font-weight: 800; line-height: 1.4; text-align: center; }
+.rabbit-fur-collector img { width: 180px; height: 180px; object-fit: contain; }
+.rabbit-fur-collector small { margin-bottom: 4px; color: var(--gold-dark); font-size: 13px; font-weight: 900; white-space: nowrap; }
+.rabbit-fur-collector span { white-space: nowrap; }
+.rabbit-grooming-caution { position: absolute; z-index: 4; top: 18px; left: 18px; display: grid; gap: 3px; max-width: 245px; margin: 0; padding: 11px 14px; border: 1px solid #e2a55c; border-radius: 13px; background: #fff5e7; color: #8f5118; font-size: 13px; line-height: 1.55; }
+.rabbit-grooming-caution b { color: #b56720; }
+.rabbit-anatomy-hitbox { position: absolute; z-index: 2; display: block; border: 1.5px dashed rgba(196, 143, 62, .82); border-radius: 50%; background: rgba(255, 231, 165, .12); box-shadow: 0 0 0 5px rgba(255, 238, 190, .16); cursor: pointer; animation: rabbit-check-pulse 1.7s ease-in-out infinite; touch-action: manipulation; }
+.rabbit-anatomy-hitbox:hover { background: rgba(255, 231, 165, .26); }
+.rabbit-anatomy-hitbox:disabled { cursor: default; opacity: .52; animation: none; }
+.rabbit-anatomy-hitbox.done { border-color: #83ae8a; background: var(--mint-soft); box-shadow: 0 0 0 5px rgba(157, 199, 164, .14); }
+.rabbit-footpad-hitbox { bottom: 30%; left: 20%; width: 57%; height: 14%; }
+.rabbit-incisor-hitbox { top: 55%; left: 40%; width: 14%; height: 10%; }
+.rabbit-nail-hitbox { bottom: -1%; left: 20%; width: 60%; height: 30%; }
+.rabbit-grooming-drag-ghost { position: fixed; z-index: 9999; width: 78px; height: 68px; transform: translate(-50%, -50%) rotate(-8deg); pointer-events: none; }
+.rabbit-grooming-drag-ghost img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 8px rgba(72, 52, 30, .24)); }
+.rabbit-grooming-transition { display: grid; min-height: 260px; place-items: center; margin: 12px 0; padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: #fffaf0; color: var(--ink); font-size: clamp(20px, 3vw, 30px); font-weight: 900; line-height: 1.55; text-align: center; animation: rabbit-grooming-enter .45s ease both; }
+@keyframes rabbit-grooming-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
+ * macrostructure: Narrative Workflow · tone: warm-practical · anchor hue: existing gold
+ */
+.activity-intro-page { display: grid; min-height: min(690px, 76vh); place-items: center; padding: clamp(16px, 3vw, 40px); border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(145deg, #fff9eb, #edf5e9); overflow: clip; }
+.activity-intro-page-card { display: grid; grid-template-columns: minmax(240px, .78fr) minmax(0, 1.22fr); width: min(100%, 980px); overflow: hidden; border: 1px solid rgba(216, 196, 159, .72); border-radius: 20px; background: rgba(255, 255, 255, .9); box-shadow: 0 12px 30px rgba(76, 56, 31, .08); }
+.activity-intro-page-visual { position: relative; min-height: 440px; overflow: hidden; border-right: 1px solid rgba(216, 196, 159, .64); background: linear-gradient(160deg, rgba(239, 227, 194, .82), rgba(226, 239, 222, .94)); }
+.activity-intro-page-visual::before { position: absolute; top: 12%; right: -18%; width: 72%; aspect-ratio: 1; border: 1px solid rgba(212, 154, 36, .26); border-radius: 50%; content: ""; }
+.activity-intro-page-pet { position: absolute; z-index: 1; right: 5%; bottom: 7%; width: 94%; max-height: 74%; object-fit: contain; filter: drop-shadow(0 18px 14px rgba(76, 56, 31, .14)); }
+.activity-intro-page-tool { position: absolute; z-index: 2; bottom: 8%; left: 7%; width: 34%; transform: rotate(-11deg); filter: drop-shadow(0 7px 8px rgba(76, 56, 31, .15)); }
+.activity-intro-page-collector { position: absolute; z-index: 2; right: 7%; bottom: 7%; width: 27%; filter: drop-shadow(0 7px 8px rgba(76, 56, 31, .12)); }
+.activity-intro-page-content { display: grid; align-content: center; min-width: 0; padding: clamp(28px, 5vw, 52px); }
+.activity-intro-page-card h1 { margin: 8px 0 20px; font-size: clamp(29px, 4vw, 46px); line-height: 1.3; overflow-wrap: anywhere; }
+.activity-intro-page-copy { display: grid; gap: 15px; max-width: 64ch; margin-bottom: 28px; color: var(--ink-soft); line-height: 1.9; }
+.activity-intro-page-copy p { margin: 0; }
+.activity-intro-page-copy .knowledge-emphasis,
+.rabbit-grooming-observation .knowledge-emphasis { color: var(--gold-dark); font-weight: 800; }
+.activity-intro-page .primary { justify-self: start; white-space: nowrap; }
+.activity-intro-page .primary:focus-visible { outline: 3px solid rgba(168, 101, 9, .55); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  .rabbit-grooming-guideline::before,
+  .rabbit-grooming-guideline::after { animation: none; }
+}
+.rabbit-grooming-observation { position: absolute; z-index: 5; top: 48px; display: grid; gap: 10px; width: min(270px, 27%); margin: 0; padding: 18px; border: 1px solid rgba(216, 174, 94, .55); border-radius: 18px; background: #fffdf8; box-shadow: 0 12px 28px rgba(75, 55, 28, .16); text-align: left; }
+.rabbit-grooming-observation::before { position: absolute; top: 34px; width: 14px; height: 14px; content: ""; background: #fffdf8; border-top: 1px solid rgba(216, 174, 94, .55); border-right: 1px solid rgba(216, 174, 94, .55); transform: rotate(45deg); }
+.rabbit-grooming-observation-footpad, .rabbit-grooming-observation-nail { left: 22px; }
+.rabbit-grooming-observation-footpad::before, .rabbit-grooming-observation-nail::before { right: -8px; }
+.rabbit-grooming-observation-incisor { right: 22px; }
+.rabbit-grooming-observation-incisor::before { left: -8px; transform: rotate(-135deg); }
+.rabbit-grooming-observation > img { width: min(100%, 210px); max-height: 150px; margin: 0 auto; object-fit: contain; }
+.rabbit-grooming-observation h2 { margin: 0; font-size: 19px; }
+.rabbit-grooming-observation p { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
+.rabbit-grooming-observation .knowledge-modal-confirm { width: 100%; margin-top: 2px; }
+.rabbit-grooming-observation.is-incorrect { border-color: #d98c83; background: #fff6f3; }
+.rabbit-grooming-observation.is-incorrect::before { border-color: #d98c83; background: #fff6f3; }
+.rabbit-grooming-observation.is-correct { border-color: #95bb99; background: #f3faf1; }
+.rabbit-grooming-observation.is-correct::before { border-color: #95bb99; background: #f3faf1; }
+.rabbit-grooming-observation-question { color: var(--ink) !important; font-size: 15px !important; font-weight: 900; }
+.rabbit-grooming-observation-feedback { padding: 10px 11px; border-radius: 11px; background: rgba(204, 99, 84, .11); color: #9d4d43 !important; font-weight: 800; }
+.rabbit-grooming-observation-choices { display: grid; gap: 8px; }
+.rabbit-grooming-observation-choices button { width: 100%; min-height: 42px; padding: 9px 12px; border: 1px solid rgba(184, 141, 73, .48); border-radius: 12px; background: #fff; color: var(--ink); font: inherit; font-size: 13px; font-weight: 850; line-height: 1.45; text-align: left; cursor: pointer; transition: border-color .18s ease, background-color .18s ease, transform .18s ease; }
+.rabbit-grooming-observation-choices button:hover { border-color: #c98724; background: #fff8e9; transform: translateY(-1px); }
+.rabbit-grooming-observation-choices button:focus-visible { outline: 3px solid rgba(197, 132, 32, .42); outline-offset: 3px; }
+.rabbit-grooming-warning-example { padding: 9px 11px; border-left: 3px solid #d5912c; background: rgba(236, 186, 89, .12); color: #735327 !important; font-weight: 750; }
+.walking-care-supplement { width: 100%; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
+.walking-care-supplement h2 { margin: 0 0 12px; font-size: 18px; }
+.walking-care-supplement-grid > div { grid-template-columns: minmax(0, 1fr) max-content; }
+.walking-care-supplement-grid small { grid-column: 1 / -1; color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
 .rabbit-poop-observation { position: absolute; right: 26px; bottom: 22px; display: grid; gap: 5px; padding: 12px 14px; border: 1px solid #8fbd96; border-radius: 15px; background: #f0f8ee; color: #496b50; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; }
 .rabbit-poop-observation span { font-size: 22px; letter-spacing: 2px; }
 /* 情境題、回饋頁與生活變化的手機版佈局。 */
@@ -1230,6 +1312,7 @@
   .rabbit-sort-list div { grid-column: 2; }
   .rabbit-drag-sort-list li { grid-template-columns: 28px minmax(0, 1fr); min-height: 0; }
   .rabbit-step-image-slot { grid-column: 2; width: min(100%, 240px); min-height: 142px; }
+  .rabbit-step-image-slot img { height: 142px; }
   .rabbit-drag-sort-list p { grid-column: 2; }
   .rabbit-drag-sort-list small { grid-column: 3; }
   .rabbit-drag-sort-list .sort-drag-label { grid-column: 2; }
@@ -1241,9 +1324,72 @@
   .rabbit-daily-bin { min-height: 96px; grid-auto-flow: column; }
   .rabbit-daily-bin span { font-size: 48px; }
   .rabbit-daily-rabbit { min-height: 230px; }
-  .rabbit-grooming-scene { min-height: 300px; }
-  .rabbit-grooming-target { top: 16%; right: 7%; }
-  .rabbit-grooming-brush { left: 7%; }
+  .rabbit-grooming-scene { min-height: 360px; }
+  .rabbit-grooming-character { width: min(86%, 390px); }
+  .rabbit-grooming-brush { bottom: 12px; left: 3%; width: 146px; height: 114px; }
+  .rabbit-fur-collector { right: 2px; bottom: 6px; width: 148px; font-size: 11px; }
+  .rabbit-fur-collector img { width: 128px; height: 128px; }
+  .rabbit-fur-collector small { font-size: 10px; }
+  .rabbit-grooming-instruction { bottom: 18px; max-width: 40%; font-size: 12px; }
+  .rabbit-grooming-caution { top: 12px; left: 12px; max-width: min(210px, calc(100% - 24px)); font-size: 11px; }
+  .rabbit-grooming-scene.has-observation { min-height: 590px; align-items: start; padding-top: 22px; }
+  .rabbit-grooming-scene.has-observation .rabbit-grooming-character { width: min(66%, 300px); }
+  .rabbit-grooming-observation { top: auto; right: 12px; bottom: 14px; left: 12px; width: auto; max-width: none; padding: 16px; }
+  .rabbit-grooming-observation::before { display: none; }
+  .rabbit-grooming-observation > img { max-height: 135px; }
+  .activity-intro-page { min-height: 0; padding: 16px; }
+  .activity-intro-page-card { grid-template-columns: 1fr; padding: 0; }
+  .activity-intro-page-visual { min-height: 245px; border-right: 0; border-bottom: 1px solid rgba(216, 196, 159, .64); }
+  .activity-intro-page-pet { right: 16%; bottom: 2%; width: 68%; max-height: 91%; }
+  .activity-intro-page-tool { bottom: 9%; left: 8%; width: 24%; }
+  .activity-intro-page-collector { right: 8%; bottom: 8%; width: 20%; }
+  .activity-intro-page-content { padding: 28px 22px; }
+  .activity-intro-page-card h1 { font-size: clamp(27px, 8vw, 36px); }
   .rabbit-health-check { max-width: 132px; }
   .rabbit-poop-observation { position: static; justify-self: center; }
+}
+
+/* 判斷卡是場景的一部分：以正常 grid 流排版，讓場景依內容增高，而不是由絕對定位卡片被固定高度裁切。 */
+.rabbit-grooming-scene.has-observation {
+  display: grid;
+  grid-template-columns: minmax(250px, .82fr) minmax(0, 1.18fr);
+  grid-template-areas: "observation character";
+  align-items: center;
+  align-content: center;
+  gap: clamp(16px, 2.4vw, 30px);
+  min-height: 440px;
+  padding: 26px clamp(20px, 3vw, 36px);
+  overflow: visible;
+}
+.rabbit-grooming-scene.has-observation .rabbit-grooming-character {
+  grid-area: character;
+  justify-self: center;
+  width: min(100%, 390px);
+}
+.rabbit-grooming-scene.has-observation .rabbit-grooming-observation {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  grid-area: observation;
+  width: min(100%, 350px);
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  overflow: visible;
+}
+.rabbit-grooming-scene.has-observation .rabbit-grooming-observation::before { display: none; }
+
+@container rabbit-grooming (max-width: 760px) {
+  .rabbit-grooming-scene.has-observation {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "character" "observation";
+    align-items: start;
+    gap: 18px;
+    min-height: 0;
+    padding: 22px 16px 18px;
+  }
+  .rabbit-grooming-scene.has-observation .rabbit-grooming-character { width: min(72%, 340px); }
+  .rabbit-grooming-scene.has-observation .rabbit-grooming-observation { width: min(100%, 520px); margin: 0 auto; }
 }

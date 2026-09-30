@@ -16,10 +16,10 @@ export const dogAssets = {
     doorplate: "/assets/dog/room/nameplate.png",
   },
   preparation: {
-    trunk: "/assets/dog/preparation/car-trunk.png",
-    documents: "/assets/dog/preparation/adoption-documents.png",
-    idCard: "/assets/dog/preparation/id-card.png",
-    peePad: "/assets/dog/preparation/pee-pad.png",
+    trunk: "/assets/car/car-trunk.png",
+    documents: "/assets/car/adoption-documents.png",
+    idCard: "/assets/car/id-card.png",
+    peePad: "/assets/car/pee-pad.png",
   },
   feeding: {
     room: "/assets/dog/room/empty-room.png",

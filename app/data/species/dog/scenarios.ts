@@ -148,7 +148,7 @@ export const dogLifeScenarios: Scenario[] = [
     choices: [
       { id: "wait-and-see", text: "先等幾天看看，牠可能只是心情不好", result: "incorrect", ...incorrect, explanation: "等太久可能延誤皮膚過敏、關節不適或眼部問題的處理，讓小狗持續不舒服。", suggestion: "記錄具體症狀與變化，並聯絡獸醫確認是否需要檢查。" },
       { id: "human-medicine", text: "先拿家裡剩下的感冒藥餵一點，看看今晚會不會舒服些", result: "incorrect", ...incorrect, explanation: "即使只是少量，家中的人用感冒藥也可能含有不適合狗狗的成分，並讓原本的症狀更難判斷。", suggestion: "先不要自行給藥；記錄症狀、使用中的用品與可能接觸物，再向獸醫說明。" },
-      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "及早觀察與記錄能幫助獸醫判斷。", suggestion: "狗狗常見需要留意的問題包括：\n**皮膚問題**、**腸胃問題**、**牙周病**、**關節或活動問題**與**外寄生蟲**。\n\n如果食慾、精神、排泄或活動和平常不同，請記錄並尋求獸醫建議。", expenseIds: ["sick-vet-care"] },
+      { id: "record-and-vet", text: "記錄食慾、飲水、排泄、精神與症狀變化，並聯絡獸醫確認是否就醫", result: "correct", ...positive, explanation: "及早觀察與記錄能幫助獸醫判斷。", suggestion: "狗狗常見需要留意的問題包括：\n**皮膚問題**、**腸胃問題**、**牙周病**、**關節或活動問題**與**外寄生蟲**。\n\n如果食慾、精神、排泄或活動和平常不同，請記錄並尋求獸醫建議。", expenseIds: ["dog-mild-sick", "dog-moderate-sick", "dog-hospitalization"] },
       { id: "ask-experienced-friend", text: "先拍照問有養狗的朋友，照他以前遇過的方式處理", result: "incorrect", ...incorrect, explanation: "朋友的經驗可以提供陪伴，但相似外觀不一定代表相同原因，仍可能錯過需要檢查的狀況。可以整理朋友提醒的觀察重點，但醫療判斷與用藥仍應交給獸醫。" },
     ],
   },
@@ -172,7 +172,7 @@ export const dogLifeScenarios: Scenario[] = [
       ],
     },
     choices: [
-      { id: "senior-plan-ahead", text: "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫", result: "correct", ...positive, explanation: "提前準備能幫助飼主在高齡階段更穩定地照顧小狗，也能及早安排健康觀察、醫療需求與長期照顧。", expenseIds: ["sick-vet-care", "dog-senior-room", "dog-senior-checkup"] },
+      { id: "senior-plan-ahead", text: "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫", result: "correct", ...positive, explanation: "提前準備能幫助飼主在高齡階段更穩定地照顧小狗，也能及早安排健康觀察、醫療需求與長期照顧。", expenseIds: ["dog-senior-room", "senior-checkup"] },
       { id: "senior-wait", text: "等到牠真的很嚴重再處理，平常不用特別準備", result: "incorrect", ...incorrect, explanation: "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓小狗承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。" },
       { id: "senior-human-medicine", text: "自行判斷並使用人用藥物或網路偏方", result: "incorrect", ...incorrect, explanation: "人用藥物或網路偏方可能對小狗造成危險。高齡階段若有健康疑慮，應諮詢獸醫並依專業建議處理。", suggestion: "不要自行給藥；記錄觀察到的變化，再與獸醫討論適合的照顧方式。" },
       { id: "senior-supplements-first", text: "先買大家推薦的保健食品補一補，等下次有空再安排檢查", result: "incorrect", ...incorrect, explanation: "想提早保養是好意，但保健食品不能取代健康檢查，也未必適合牠當下的身體狀況。", suggestion: "先把活動、食慾與排泄變化記下來，和獸醫討論檢查及適合的日常調整。" },

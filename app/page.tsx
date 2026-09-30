@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { initialMembers, initialProfile, intros } from "./data/shared/app-flow";
-import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed } from "./data/shared/expenses";
+import { applySizeBasedExpenseAmount, getExpenseForSpecies, getPetSizeForBreed, isTemporaryReserveExpense } from "./data/shared/expenses";
 import { getSpeciesConfig } from "./data/species/index";
 import { getJourneyItemsForSpecies } from "./data/species/journey";
 import { initialLifeActivityState } from "./data/shared/life-activity";
@@ -226,7 +226,7 @@ export default function Home() {
   }
 
   function addExpenseById(id: string, triggerMeta?: ExpenseTriggerMeta) {
-    const expense = expenseCatalog[id];
+    const expense = getExpenseForSpecies(id, category);
     if (!expense) return;
     const sizedExpense = {
       ...applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed)),
@@ -250,7 +250,7 @@ export default function Home() {
   /** 同一個旅程節點新增一組既有費用，明細仍以原本 expenseId 個別去重。 */
   function addExpenseGroupByIds(ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) {
     const catalogExpenses = ids
-      .map((id) => expenseCatalog[id])
+      .map((id) => getExpenseForSpecies(id, category))
       .filter((expense): expense is ExpenseRecord => Boolean(expense))
       .map((expense) => ({ ...applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed)), ...triggerMeta }));
 
@@ -330,11 +330,16 @@ export default function Home() {
           },
       };
     });
-    // 兔、鳥的既有到家後費用仍和正確回饋頁同步；犬、貓由 LifeJourney 以三筆群組統一登錄。
+    // 臨時性預留支出等「做得很好」頁出現後，才由 LifeJourney 寫入。
     const deferredArrivalExpenseIds = scenario.stageId === "arrival" && choice.result === "correct"
       ? new Set(["rabbit-arrival-checkup", "bird-arrival-checkup"])
       : new Set<string>();
-    choice.expenseIds?.filter((id) => !deferredArrivalExpenseIds.has(id)).forEach((expenseId) => addExpenseById(expenseId));
+    choice.expenseIds
+      ?.filter((id) => {
+        const expense = getExpenseForSpecies(id, category);
+        return !deferredArrivalExpenseIds.has(id) && !isTemporaryReserveExpense(expense ?? { category: "", fromEmergency: false });
+      })
+      .forEach((expenseId) => addExpenseById(expenseId));
   }
 
   function markScenarioForReview(scenario: Scenario, flag: string) {
@@ -386,15 +391,22 @@ export default function Home() {
       };
     });
     if (result === "correct") {
-      choices.flatMap((choice) => choice.expenseIds ?? []).forEach((expenseId) => addExpenseById(expenseId));
+      choices
+        .flatMap((choice) => choice.expenseIds ?? [])
+        .filter((expenseId) => {
+          const expense = getExpenseForSpecies(expenseId, category);
+          return !isTemporaryReserveExpense(expense ?? { category: "", fromEmergency: false });
+        })
+        .forEach((expenseId) => addExpenseById(expenseId));
     }
   }
 
-  function resetAllGameData(nextSelection?: { category: string; breed: string }) {
-    setCategory("");
-    setBreed("");
-    setSelectionPage("species");
-    setSelectionReached(0);
+  function resetAllGameData(nextSelection?: { category: string; breed: string }, options?: { preserveTestMode?: boolean }) {
+    // 一次寫入最終值，避免先寫空值再覆寫的雙重渲染問題。
+    setCategory(nextSelection?.category ?? "");
+    setBreed(nextSelection?.breed ?? "");
+    setSelectionPage(nextSelection ? "name" : "species");
+    setSelectionReached(nextSelection ? 2 : 0);
     setHasPreviousDog(null);
     setPreviousBreed("");
     setPreviousDogName("");
@@ -425,14 +437,10 @@ export default function Home() {
     setTestNextSignal(0);
     committedSelectionRef.current = nextSelection ?? null;
     if (nextSelection) {
-      setCategory(nextSelection.category);
-      setBreed(nextSelection.breed);
-      setSelectionPage("name");
-      setSelectionReached(2);
       setStep(1);
       setFurthestStep(1);
       setIntroOpen(false);
-      setTestMode(false);
+      if (!options?.preserveTestMode) setTestMode(false);
     }
   }
 
@@ -444,12 +452,33 @@ export default function Home() {
     const selectionChanged = Boolean(previousSelection && (previousSelection.category !== nextSelection.category || previousSelection.breed !== nextSelection.breed));
     if (selectionChanged) {
       // 新的物種／品種只保留選擇本身，其他資料回到首次進站的乾淨狀態。
-      resetAllGameData(nextSelection);
+      resetAllGameData(nextSelection, { preserveTestMode: testMode });
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     committedSelectionRef.current = nextSelection;
     goTo(2);
+  }
+
+  function selectSpeciesForJourney(nextSelection: { category: string; breed: string }) {
+    const previousSelection = committedSelectionRef.current;
+    const selectionChanged = Boolean(previousSelection && (
+      previousSelection.category !== nextSelection.category || previousSelection.breed !== nextSelection.breed
+    ));
+
+    // 新物種／品種必須在選擇當下清空舊流程。若延到最後確認才重置，
+    // 會先進一次取名頁、確認後又回到取名頁，造成重複渲染與重複輸入。
+    if (selectionChanged) {
+      resetAllGameData(nextSelection, { preserveTestMode: testMode });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    setCategory(nextSelection.category);
+    setBreed(nextSelection.breed);
+    setSelectionPage("name");
+    setSelectionReached((current) => Math.max(current, 2));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function startFreshJourney() {
@@ -572,7 +601,7 @@ export default function Home() {
           />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} latestExpense={latestExpense} breed={breed} species={category} />}
-            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={confirmSelectedJourney} />}
+            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onSelectSpecies={selectSpeciesForJourney} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={confirmSelectedJourney} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>

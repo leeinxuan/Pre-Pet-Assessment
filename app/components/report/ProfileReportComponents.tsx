@@ -12,6 +12,8 @@ import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, S
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
   ExpenseDetails,
+  formatTemporaryExpenseAmount,
+  formatTemporaryExpenseReserve,
   getInitialPreparationBreakdown,
   getInitialPreparationTotal,
   getMonthlyBasicTotal,
@@ -20,6 +22,7 @@ import {
   getTemporaryExpenses,
   mergeDefaultVisibleExpenses,
   NavButtons,
+  temporaryExpenseReserveNote,
 } from "../shared/SharedComponents";
 import type { HomeReadinessState } from "../preparation/PreparationComponents";
 
@@ -1143,8 +1146,11 @@ export function AssessmentReport({
   const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const correctedTopics = corrected.map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
+  const arrivalMealComplete = species === "rabbit"
+    ? lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady && lifeActivity.arrivalMealVeggieReady
+    : lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady;
   const practiceItems = [
-    { label: "已完成到家第一餐", complete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady },
+    { label: "已完成到家第一餐", complete: arrivalMealComplete },
     ...(species === "cat" ? [{ label: "已完成貓砂盆救援隊", complete: lifeActivity.catInspectionSteps.includes("litter-complete") }] : []),
   ];
   const practiceComplete = practiceItems.filter((item) => item.complete).length;
@@ -1263,7 +1269,7 @@ export function AssessmentReport({
       title: "飲食與日常照護",
       summary: "了解牧草、乾淨飲水、環境巡視與日常觀察都需要穩定安排。",
       scenarioIds: ["rabbit-carry-sort", "rabbit-daily-check", "rabbit-heatstroke-prevention", "rabbit-cecotropes", "rabbit-bath"],
-      practiceComplete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady,
+      practiceComplete: arrivalMealComplete,
     },
     {
       id: "rabbit-breed-care",
@@ -1527,9 +1533,9 @@ export function AssessmentReport({
               <h3>每月預估支出</h3><strong>NT$ {money.format(monthlyBasicTotal)}／月</strong>
               <div>{monthlyExpenses.length ? <dl className="care-a4-expense-lines">{monthlyExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}／月</dd></div>)}</dl> : <p>目前尚未登記項目</p>}</div>
             </section>
-            <section className="care-a4-expense-card">
-              <h3>臨時性支出</h3><strong>NT$ {money.format(temporaryExpenseTotal)}</strong>
-              <div>{temporaryExpenses.length ? <dl className="care-a4-expense-lines">{temporaryExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}</dd></div>)}</dl> : <p>目前尚未登記項目</p>}</div>
+            <section className="care-a4-expense-card care-a4-expense-card--reserve">
+              <h3>臨時性支出預留</h3><strong>{formatTemporaryExpenseReserve(temporaryExpenseTotal)}</strong><p>{temporaryExpenseReserveNote}</p>
+              <div>{temporaryExpenses.length ? <dl className="care-a4-expense-lines">{temporaryExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>{formatTemporaryExpenseAmount(item.amount)}</dd></div>)}</dl> : <p>目前尚未登記項目</p>}</div>
             </section>
           </div>
         </section>
@@ -1606,7 +1612,7 @@ export function AssessmentReport({
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
           <div className="care-resource-grid">
-            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><section><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></section><section><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}</b></section></div><p>臨時性支出會依健康與高齡照護狀況發生，建議另外預留備用金。</p><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
+            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><section><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></section><section><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}</b></section></div><p>臨時性支出預留：{temporaryExpenseReserveNote}</p><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
             <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><section className="care-time-summary"><small>每日約需安排</small><b>{dailyCareDurationLabel(speciesConfig.report.dailyCareTime)}</b></section><p>{speciesConfig.report.dailyCareTimeNote}</p><button type="button" className="secondary care-expense-button" onClick={() => setDailyCareDetailsOpen(true)}>查看每日照護細項</button></div></article>
           </div>
         </section>

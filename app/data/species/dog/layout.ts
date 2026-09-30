@@ -15,6 +15,7 @@ export const arrivalMealMobilePlacements = {
   dog: { left: 32, bottom: 10, width: 50, maxHeight: 58 },
   water: { left: 10, bottom: 10, width: 24 },
   food: { left: 28, bottom: 5, width: 24 },
+  veggie: { left: 52, bottom: 7, width: 20 },
 } as const;
 
 export const dogLayout = { roomDoorplatePlacement, arrivalMealMobilePlacements } as const;

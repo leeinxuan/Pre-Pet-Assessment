@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { categories } from "../../data/shared/app-flow";
-import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, money } from "../../data/shared/expenses";
+import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, isTemporaryReserveExpense, money } from "../../data/shared/expenses";
 import { getJourneyItemsForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
@@ -282,6 +282,7 @@ export function SpeciesStep({
   petName,
   onCategory,
   onBreed,
+  onSelectSpecies,
   onPetName,
   hasPreviousDog,
   previousBreed,
@@ -298,6 +299,7 @@ export function SpeciesStep({
   petName: string;
   onCategory: (value: string) => void;
   onBreed: (value: string) => void;
+  onSelectSpecies?: (selection: { category: string; breed: string }) => void;
   onPetName: (value: string) => void;
   hasPreviousDog: boolean | null;
   previousBreed: string;
@@ -320,9 +322,14 @@ export function SpeciesStep({
   const selectedPreviousBreed = previousBreeds.find((item) => item.id === previousBreed);
   const sameBreed = Boolean(breed && previousBreed && breed === previousBreed);
   function chooseCategory(id: string) {
-    onCategory(id);
     const nextConfig = getSpeciesConfig(id);
-    onBreed(nextConfig.breeds[0]?.id ?? "");
+    const nextBreed = nextConfig.breeds[0]?.id ?? "";
+    if (onSelectSpecies) {
+      onSelectSpecies({ category: id, breed: nextBreed });
+      return;
+    }
+    onCategory(id);
+    onBreed(nextBreed);
     onSelectionPage("name");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -330,7 +337,7 @@ export function SpeciesStep({
   return (
     <div className="content-wrap partner-picker">
       {visibleSelectionPage === "species" ? (
-        <section className="partner-selection-page" key="species">
+        <section className="partner-selection-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.selectionTitle} />
           <div className="category-grid species-page-grid">
             {categories.map((item) => (
@@ -348,7 +355,7 @@ export function SpeciesStep({
           </div>
         </section>
       ) : visibleSelectionPage === "name" ? (
-        <section className="partner-selection-page pet-naming-page" key="name">
+        <section className="partner-selection-page pet-naming-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.nameTitle} body="這個名字會陪著牠走進接下來的生活，也會出現在後面的情境演練裡。" />
           <div className="pet-naming-stage">
             <img src="/assets/dog/room/nameplate.png" alt={`${speciesConfig.copy.animalName}名字吊牌`} />
@@ -358,7 +365,7 @@ export function SpeciesStep({
           <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
         </section>
       ) : visibleSelectionPage === "history" ? (
-        <section className="partner-selection-page previous-dog-page" key="history">
+        <section className="partner-selection-page previous-dog-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.historyTitle} body={speciesConfig.copy.historyBody} />
           <div className="previous-dog-choice" role="group" aria-label={`是否曾經養過${speciesConfig.copy.animalName}`}>
             <button type="button" className={hasPreviousDog === true ? "selected" : ""} aria-pressed={hasPreviousDog === true} onClick={() => onHasPreviousDog(true)}><b>{speciesConfig.copy.hasPreviousLabel}</b><small>接著填寫牠的{speciesConfig.copy.typeLabel}與名字</small></button>
@@ -385,7 +392,7 @@ export function SpeciesStep({
           />
         </section>
       ) : (
-        <section className="experience-transition-page" key="transition" aria-labelledby="experience-transition-title">
+        <section className="experience-transition-page" key="selection-page" aria-labelledby="experience-transition-title">
           <div className="experience-dogs" aria-label="從過去的陪伴經驗走向新的生命">
             <article className="experience-dog-card experience-dog-card--past">
               <span>過去熟悉的生活</span>
@@ -426,7 +433,7 @@ const expenseLabels = {
   requiredAfterArrival: "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa",
   oneTimePrep: "\u4e00\u6b21\u6027\u6e96\u5099\u8cbb",
   monthlyBasic: "\u6bcf\u6708\u57fa\u672c\u652f\u51fa",
-  temporaryMedical: "\u81e8\u6642\u6027\u652f\u51fa",
+  temporaryMedical: "\u81e8\u6642\u6027\u652f\u51fa\u9810\u7559",
   detailEyebrow: "\u82b1\u8cbb\u660e\u7d30",
   detailTitle: "\u76ee\u524d\u5df2\u767b\u8a18\u7684\u652f\u51fa",
   closeDetails: "\u95dc\u9589\u660e\u7d30",
@@ -437,8 +444,18 @@ const expenseLabels = {
   addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
+export const temporaryExpenseReserveNote = "實際費用會依症狀、檢查項目、治療方式與醫院而異。";
+
+export function formatTemporaryExpenseAmount(amount: number) {
+  return `NT$ ${money.format(amount)} 起`;
+}
+
+export function formatTemporaryExpenseReserve(amount: number) {
+  return `建議預留 NT$ ${money.format(amount)} 起`;
+}
+
 const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "dog-sterilization", "cat-sterilization", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
-const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "senior-checkup", "dog-senior-room", "dog-senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-routine-checkup", "rabbit-senior-room", "bird-emergency-vet", "bird-senior-checkup", "bird-senior-room"]);
+const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "dog-mild-sick", "dog-moderate-sick", "dog-hospitalization", "cat-mild-sick", "cat-moderate-sick", "cat-hospitalization", "senior-checkup", "dog-senior-room", "dog-senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-mild-sick", "rabbit-moderate-sick", "rabbit-hospitalization", "rabbit-routine-checkup", "rabbit-senior-room", "bird-emergency-vet", "bird-mild-sick", "bird-moderate-sick", "bird-hospitalization", "bird-senior-checkup", "bird-senior-room"]);
 
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
   expenseLabels.requiredAfterArrival,
@@ -545,10 +562,10 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
   const oneTimePreparation = grouped.find((entry) => entry.group === expenseLabels.oneTimePrep)?.items ?? [];
   const requiredAfterArrival = grouped.find((entry) => entry.group === expenseLabels.requiredAfterArrival)?.items ?? [];
   const monthlyExpenses = grouped.find((entry) => entry.group === expenseLabels.monthlyBasic)?.items ?? [];
-  const temporaryExpenses = grouped.find((entry) => entry.group === expenseLabels.temporaryMedical)?.items ?? [];
+  const temporaryExpenses = getTemporaryExpenses(visibleExpenses);
   const totalFor = (items: ExpenseRecord[]) => items.reduce((sum, item) => sum + item.amount, 0);
-  const renderItems = (items: ExpenseRecord[]) => items.length ? (
-    <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b><small>{item.description ?? item.stage}</small></span><strong>NT$ {money.format(item.amount)}{isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}</strong></li>)}</ul>
+  const renderItems = (items: ExpenseRecord[], showReserveAmount = false) => items.length ? (
+    <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b>{item.description && <small>{item.description}</small>}</span><strong>{showReserveAmount ? formatTemporaryExpenseAmount(item.amount) : `NT$ ${money.format(item.amount)}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
   ) : <p>{expenseLabels.noGroupExpenses}</p>;
 
   return (
@@ -558,7 +575,7 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
         <div className="expense-modal-summary" aria-label="費用摘要">
           <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}</b></div>
           <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
-          <div><small>{expenseLabels.temporaryMedical}</small><b>NT$ {money.format(temporaryMedicalTotal)}</b></div>
+          <div className="expense-modal-summary-reserve"><small>{expenseLabels.temporaryMedical}</small><b>{formatTemporaryExpenseReserve(temporaryMedicalTotal)}</b><small>{temporaryExpenseReserveNote}</small></div>
         </div>
         <div className="expense-groups">
           <section className="expense-group expense-group--initial">
@@ -569,7 +586,7 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
             </div>
           </section>
           <section className="expense-group"><h3>{expenseLabels.monthlyBasic}<span>NT$ {money.format(totalFor(monthlyExpenses))}{expenseLabels.monthlySuffix}</span></h3>{renderItems(monthlyExpenses)}</section>
-          <section className="expense-group"><h3>{expenseLabels.temporaryMedical}<span>NT$ {money.format(totalFor(temporaryExpenses))}</span></h3>{renderItems(temporaryExpenses)}</section>
+          <section className="expense-group"><h3>{expenseLabels.temporaryMedical}<span>{formatTemporaryExpenseReserve(temporaryMedicalTotal)}</span></h3><p className="expense-temporary-reserve-note">{temporaryExpenseReserveNote}</p>{renderItems(temporaryExpenses, true)}</section>
         </div>
         <button className="primary" onClick={onClose}>{expenseLabels.closeDetails}</button>
       </section>
@@ -580,16 +597,20 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
 /** 金幣飛入動畫：新費用加入時，金幣從畫面中央飛向「查看明細」按鈕。 */
 function CoinFlightAnimation({
   expense,
+  temporaryReserveTotal,
+  temporaryExpenseRange,
   triggerRef,
 }: {
   expense: ExpenseRecord | null;
+  temporaryReserveTotal: number;
+  temporaryExpenseRange: { min: number; max: number } | null;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 }) {
   const lastKey = useRef("");
 
   useEffect(() => {
     if (!expense) return;
-    const key = `${expense.id}-${expense.amount}`;
+    const key = `${expense.id}-${expense.amount}-${temporaryExpenseRange?.min ?? ""}-${temporaryExpenseRange?.max ?? ""}`;
     if (lastKey.current === key) return;
     lastKey.current = key;
 
@@ -597,15 +618,24 @@ function CoinFlightAnimation({
     if (!btn) return;
 
     // Create toast card
+    const isTemporaryReserve = isTemporaryReserveExpense(expense);
+    const amountLabel = temporaryExpenseRange
+      ? `${money.format(temporaryExpenseRange.min)} 元 ～ ${money.format(temporaryExpenseRange.max)} 元 起`
+      : isTemporaryReserve
+      ? formatTemporaryExpenseAmount(expense.amount)
+      : `+NT$ ${money.format(expense.amount)}${isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}`;
+    const title = isTemporaryReserve ? "臨時性支出預留已更新" : "已加入準備清單";
+    const reserveTotalLabel = isTemporaryReserve ? `<small>${formatTemporaryExpenseReserve(temporaryReserveTotal)}</small>` : "";
     const toast = document.createElement("div");
     toast.className = "coin-toast-overlay";
     toast.innerHTML = `
       <div class="coin-toast-card" role="status" aria-live="polite">
         <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(10,50,120,0.10)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#8dc8ea"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.28)"/><rect x="1" y="20" width="90" height="4" fill="rgba(10,60,140,0.07)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#1a60a8" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#1a60a8" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(10,80,180,0.14)" stroke="#1a60a8" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#0a2e6e">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#0e3d80">100</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="7" font-weight="700" text-anchor="end" fill="#0e3d80">100</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#1a60a8" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#1a60a8" opacity="0.7">&#10022;</text></svg>
         <div class="coin-toast-body">
-          <b>已加入準備清單</b>
+          <b>${title}</b>
           <span>${expense.name}</span>
-          <em>+NT$ ${money.format(expense.amount)}${isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}</em>
+          <em>${amountLabel}</em>
+          ${reserveTotalLabel}
         </div>
       </div>`;
     document.body.appendChild(toast);
@@ -692,7 +722,7 @@ function CoinFlightAnimation({
       try { toast.remove(); } catch { /* noop */ }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expense?.id, expense?.amount]);
+  }, [expense?.id, expense?.amount, temporaryExpenseRange?.min, temporaryExpenseRange?.max]);
 
   return null;
 }
@@ -710,10 +740,19 @@ export function CostBar({
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const temporaryReserveTotal = getTemporaryExpenseTotal(expenses);
+  const temporaryExpenseRange = latestExpense?.fromEmergency && latestExpense.sourceScenarioId
+    ? (() => {
+      const relatedExpenses = expenses.filter((expense) => expense.fromEmergency && expense.sourceScenarioId === latestExpense.sourceScenarioId);
+      if (relatedExpenses.length < 2) return null;
+      const amounts = relatedExpenses.map((expense) => expense.amount);
+      return { min: Math.min(...amounts), max: Math.max(...amounts) };
+    })()
+    : null;
 
   return (
     <>
-      <CoinFlightAnimation expense={latestExpense} triggerRef={triggerRef} />
+      <CoinFlightAnimation expense={latestExpense} temporaryReserveTotal={temporaryReserveTotal} temporaryExpenseRange={temporaryExpenseRange} triggerRef={triggerRef} />
       <div className="cost-bar cost-bar-compact" aria-label={expenseLabels.currentCostStatus}>
         <button ref={triggerRef} type="button" className="bill-trigger" onClick={() => setDetailsOpen(true)} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
           <span className="bill-trigger-icon" aria-hidden="true">＄</span>

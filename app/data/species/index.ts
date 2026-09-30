@@ -20,6 +20,7 @@ export const speciesConfigs = {
     roomItems: dogConfig.preparation.roomItems,
     hazards: dogConfig.preparation.hazards,
     trunkItems: dogConfig.preparation.trunkItems,
+    roomFlow: speciesGameConfig.dog.roomFlow,
   },
   cat: {
     ...catConfig,
@@ -28,6 +29,7 @@ export const speciesConfigs = {
     roomItems: catConfig.preparation.roomItems,
     hazards: catConfig.preparation.hazards,
     trunkItems: catConfig.preparation.trunkItems,
+    roomFlow: speciesGameConfig.cat.roomFlow,
   },
   rabbit: {
     ...rabbitConfig,
@@ -36,6 +38,7 @@ export const speciesConfigs = {
     roomItems: rabbitConfig.preparation.roomItems,
     hazards: rabbitConfig.preparation.hazards,
     trunkItems: rabbitConfig.preparation.trunkItems,
+    roomFlow: speciesGameConfig.rabbit.roomFlow,
   },
   bird: {
     ...birdConfig,
@@ -44,6 +47,7 @@ export const speciesConfigs = {
     roomItems: birdConfig.preparation.roomItems,
     hazards: birdConfig.preparation.hazards,
     trunkItems: birdConfig.preparation.trunkItems,
+    roomFlow: speciesGameConfig.bird.roomFlow,
   },
 } as const;
 export type SpeciesConfig = (typeof speciesConfigs)[SpeciesId];

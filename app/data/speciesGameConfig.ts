@@ -49,6 +49,11 @@ export type InteractionCompletionContent = {
   reflectionContent: string[];
   careTimeTitle: string;
   careTimeItems: Array<{ title: string; detail: string }>;
+  /** 互動完成頁可在每日照護卡後補充資料驅動的保養頻率。 */
+  careTimeSupplement?: {
+    title: string;
+    items: Array<{ title: string; detail: string; description: string }>;
+  };
   continueLabel: string;
 };
 
@@ -59,6 +64,25 @@ export type SpeciesGameConfig = {
   hazards: HazardItem[];
   trunkItems: TrunkItem[];
   report: SpeciesReportConfig;
+  /** 特定物種的房間階段與背景切換；共用元件只依設定執行。 */
+  roomFlow?: {
+    initialBackground: string;
+    safeBackground: string;
+    interiorBackground: string;
+    interiorSafeBackground: string;
+    floorHazardId: string;
+    fenceItemId: string;
+    interiorItemId: string;
+    floorHotspot: {
+      desktop: { x: number; y: number; width: number; height: number };
+      mobile: { x: number; y: number; width: number; height: number };
+    };
+    copy: {
+      fenceInstruction: string;
+      fencePlacedInstruction: string;
+      interiorInstruction: string;
+    };
+  };
 };
 
 /** @deprecated 請改至 data/species/cat/preparation.ts 調整。 */
@@ -142,6 +166,17 @@ export const speciesGameConfig: Record<SpeciesId, SpeciesGameConfig> = {
     hazards: rabbitPreparation.hazards,
     trunkItems: rabbitPreparation.trunkItems,
     report: rabbitReport,
+    roomFlow: {
+      initialBackground: rabbitPreparation.roomFlow.initialBackground,
+      safeBackground: rabbitPreparation.roomFlow.safeBackground,
+      interiorBackground: rabbitPreparation.roomFlow.interiorBackground,
+      interiorSafeBackground: rabbitPreparation.roomFlow.interiorSafeBackground,
+      floorHazardId: "slippery-floor",
+      fenceItemId: "fence-pen",
+      interiorItemId: "anti-slip-mat",
+      floorHotspot: rabbitPreparation.roomFlow.floorHotspot,
+      copy: rabbitPreparation.roomFlow.copy,
+    },
   },
   bird: {
     id: "bird",

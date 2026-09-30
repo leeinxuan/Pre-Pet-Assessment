@@ -10,6 +10,8 @@ export type ExpenseRecord = {
   fromEmergency?: boolean;
   /** 供共用費用明細、摘要與匯出使用的簡短用途說明。 */
   description?: string;
+  /** 共用 expense id 在不同物種有不同官方說明時，由寫入 store 前解析。 */
+  descriptionBySpecies?: Partial<Record<"dog" | "cat" | "rabbit" | "bird", string>>;
   /** 由 journey 觸發時保留來源，供共用明細、摘要與匯出追溯。 */
   speciesId?: string;
   stageId?: string;
@@ -162,6 +164,7 @@ export type LifeActivityState = {
   bodyLanguageSignals: string[];
   arrivalMealFoodReady: boolean;
   arrivalMealWaterReady: boolean;
+  arrivalMealVeggieReady: boolean;
   walkingPreparedItems: string[];
   walkingSceneIndex: number;
   walkingMinutes: number;
@@ -178,6 +181,18 @@ export type LifeActivityState = {
   /** 已看完三次錯誤後的正解；僅用來切換共用回饋頁，不算自行答對。 */
   rabbitCarryFeedbackShown: boolean;
   rabbitDailyCheckSteps: string[];
+  /** 美容活動前導說明已閱讀；重新開始此題時才回到前導頁。 */
+  rabbitGroomingIntroStarted: boolean;
+  /** 兔子美容互動的固定 state machine，目前狀態不可由素材或陣列位置推斷。 */
+  rabbitGroomingState: string;
+  /** 同一局的足底、門齒與指甲觀察結果固定保留，重開卡片不會重新隨機。 */
+  rabbitGroomingObservations: Record<string, "normal" | "warning">;
+  /** 美容判斷題的隨機圖片、答錯次數與回饋狀態，回到同一題時不可重抽。 */
+  rabbitGroomingInspection: Record<string, {
+    displayState: "normal" | "warning";
+    status: "question" | "incorrect" | "correct";
+    attempts: number;
+  }>;
   birdCageInspectionSteps: string[];
 };
 
@@ -227,6 +242,8 @@ export type RoomItem = {
   icon: string;
   /** 未提供正式素材時保留為 undefined，由共用準備介面顯示中性預留位置。 */
   image?: string;
+  /** 場景中的已放置素材；未設定時沿用物品欄 image。 */
+  sceneImage?: string;
   placement: { x: number; y: number; width: number; layer: number };
   mobilePlacement?: { x: number; y: number; width: number };
   required: boolean;

@@ -1,4 +1,4 @@
-# 米克斯影片｜首幀鎖定流程（Gemini 換狗 → Flow 轉影片）
+# 米克斯影片｜首幀鎖定流程（ChatGPT 換狗 → Flow 轉影片）
 
 > 取代 `mixed-video-prompts.md` 的純文字生成方式。每段 Flow prompt 都含 `SOUND:`（該鏡頭的音效與配樂），並要加上【Flow 通用音訊結尾】。
 > 參考畫面：`scripts/dog/shiba-ref-frames/`（`<影片名>-s1.png`、`-s2.png`…，依柴犬版鏡頭順序編號）
@@ -11,19 +11,20 @@
 有了起始畫面，**畫風、線條、色調、房間佈置都由圖片決定**。這時如果 prompt 又重新描述一次房間和畫風，模型反而會「照文字重畫」，把畫風拉走。
 所以這一版分成兩段：
 
-1. **Gemini 換狗 prompt**：負責做出正確的起始畫面。
+1. **ChatGPT 換狗 prompt**：負責做出正確的起始畫面。
 2. **Flow 動作 prompt**：很短，只描述「接下來發生什麼動作」，並要求維持起始畫面的樣子。
 
 ---
 
 ## 流程
 
-1. **Gemini（做起始畫面）**
-   - 上傳兩張圖：**圖 1** 是 `shiba-ref-frames/` 裡對應的畫面，**圖 2** 是 `mixed-breed.png`。
+1. **ChatGPT（做起始畫面）**：由 Claude 用 Computer Use 操作，步驟見下方〈Computer Use 操作步驟〉
+   - 每張起始畫面都開一個新對話，上傳兩張圖：**圖 1** 是 `shiba-ref-frames/` 裡對應的畫面，**圖 2** 是 `mixed-breed.png`（部分鏡頭還有圖 3）。
    - 貼上下面的【通用換狗指令】；如果該鏡頭有【額外指示】，接在後面一起貼。
-   - 檢查結果：狗要是黑背、棕褐色臉頰和腿、兩眼上方有棕色眉斑、白胸斑、短毛、長尾下垂；線條粗細和色調要跟圖 1 一樣。不對就重新生成。
+   - 檢查結果：狗要是黑背、棕褐色臉頰和腿、兩眼上方有棕色眉斑、白胸斑、短毛、長尾下垂；線條粗細和色調要跟圖 1 一樣，而且沒有被整張染黃。不對就在同一個對話請它修正，或重新生成。
+   - ChatGPT 只能輸出 3:2 的橫圖（1536×1024），Flow 需要 16:9。下載後由 Claude 自動裁切成 1280×720 並存檔，不用手動處理。
 2. **Flow（轉影片）**
-   - 選 **Frames to Video**，把 Gemini 做好的圖設成起始畫面（breed-size 同時設起始和結束畫面）。
+   - 選 **Frames to Video**，把 ChatGPT 做好的圖設成起始畫面（breed-size 同時設起始和結束畫面）。
    - 貼上該鏡頭的【Flow 動作 prompt】（含 SOUND）＋【Flow 通用結尾】＋【Flow 通用音訊結尾】。
 3. **多鏡頭影片**
    - 每個鏡頭各生成一段，再剪掉多餘的部分、接起來（保留秒數寫在各鏡頭）。
@@ -32,13 +33,43 @@
 
 ---
 
+## Computer Use 操作步驟（Claude 執行）
+
+**事前準備（你要做的）**
+- 在 Chrome 登入 ChatGPT（chatgpt.com）和 Google Flow 的帳號。Claude 不會代為輸入密碼。
+- 開啟 Claude in Chrome 擴充功能，並允許 chatgpt.com 與 labs.google。上傳檔案需要用 Chrome 擴充功能；Claude 內建瀏覽器目前不能上傳本機圖片。
+- 第一次下載前，Claude 會先詢問你是否同意下載。你可以一次同意「這批起始畫面都下載」。
+
+**ChatGPT 生圖（每張起始畫面重複）**
+1. 在 Chrome 開新分頁到 chatgpt.com，按「新對話」。每張圖都用新對話，避免前一張的內容影響下一張。
+2. 模型選支援生圖的版本，確認是「建立圖片」模式。
+3. 上傳圖 1（柴犬畫面）、圖 2（`mixed-breed.png`），需要時再加圖 3。
+4. 貼上【通用換狗指令】＋該鏡頭的【額外指示】，送出。
+5. 等圖片生成好（通常 1–2 分鐘），截圖檢查。檢查項目和上面的「檢查結果」相同。
+   - 不對：在同一個對話回覆修正，例如 `The tail must hang low, not curl over the back. Keep everything else the same.`，最多修 2 次；還是不行就開新對話重做。
+6. 下載圖片，存成 `scripts/dog/mixed-start-frames/<影片名>-s<鏡頭>.png`（例如 `barking-s1.png`）。
+7. Claude 用 ffmpeg 置中裁切成 16:9，並縮放成 1280×720 覆蓋存檔。
+8. 下一張 →（回到步驟 1）
+
+**Flow 轉影片（每個鏡頭重複）**
+1. 開啟 labs.google/fx/tools/flow，進入專案。
+2. 選 **Frames to Video**，上傳 `mixed-start-frames/` 對應的圖作為起始畫面（breed-size 同時上傳結束畫面）。
+3. 貼上該鏡頭的【Flow 動作 prompt】（含 SOUND）＋【Flow 通用結尾】＋【Flow 通用音訊結尾】，生成。
+4. 檢查畫風和狗的外觀有沒有跑掉，挑最好的一版下載，存成 `public/assets/dog/pet-journey/mixed/clips/<影片名>-s<鏡頭>.mp4`。
+5. 全部片段都完成後，Claude 剪接成完整影片。
+
+**建議順序**：先做 `barking-s1` 一張完整跑完 ChatGPT → 裁切 → Flow，確認效果沒問題，再批次做其他張。
+
+---
+
 ## 共用段落
 
-**【通用換狗指令】（Gemini，每張都要貼）**
+**【通用換狗指令】（ChatGPT，每張都要貼）**
 ```
 Edit image 1. Replace the Shiba Inu with the dog shown in image 2: a lean, medium-sized black-and-tan mixed-breed dog — black saddle on the back, neck, top of the head and top of the tail; rust-tan cheeks, two small tan eyebrow dots above the eyes, tan legs and belly; a small white patch on the chest; large erect triangular ears; short smooth coat (not fluffy); a long tail that hangs low with a slight upward curve at the tip (NOT curled over the back).
 Keep the new dog in the same pose, size, position and facing direction as the Shiba. Keep everything else in image 1 exactly unchanged: background, furniture, people, objects, framing, lighting and color grading.
-Draw the new dog in the illustration style of image 1, NOT the style of image 2: the same bold dark-brown outline thickness, the same fine fur-texture strokes and soft shading, the same eye highlights and the same warm color tone. Output the same aspect ratio as image 1 (16:9).
+Draw the new dog in the illustration style of image 1, NOT the style of image 2: the same bold dark-brown outline thickness, the same fine fur-texture strokes and soft shading, the same eye highlights and the same warm color tone.
+This is a precise edit of image 1, not a new drawing: do not redraw, restyle or re-light the scene, do not add a yellow or sepia filter, do not add or remove objects. Landscape format (1536x1024), keep the whole scene composed so that it still works when cropped to 16:9 (important content away from the top and bottom edges).
 ```
 
 **【Flow 通用結尾】（每段影片都要貼）**
@@ -122,11 +153,11 @@ SOUND: sniffing, a single kibble crunch then silence, lip-licking, rapid scratch
 | 鏡頭 | 起始畫面 | 保留 | 做法 |
 |---|---|---|---|
 | 1 車子白天 | — | 0–1.4s | ♻️ 剪柴犬原片 |
-| 2 收容所 | `arrival-transition-s2.png` | 2s | Gemini 換狗 → Flow |
+| 2 收容所 | `arrival-transition-s2.png` | 2s | ChatGPT 換狗 → Flow |
 | 3 夕陽開車 | — | 3.5–5s | ♻️ 剪柴犬原片 |
-| 4 提籠進客廳 | — | 5–6.5s | ♻️ 剪柴犬原片（籠子裡的狗看不清楚；如果看得出是柴犬，就改成 Gemini 換狗 → Flow） |
-| 5 走出籠子 | `arrival-transition-s5.png` | 2s | Gemini 換狗 → Flow |
-| 6 歡迎回家 | `arrival-transition-s6.png` | 1.5s | Gemini 換狗（「歡迎回家」字樣會保留下來）→ Flow |
+| 4 提籠進客廳 | — | 5–6.5s | ♻️ 剪柴犬原片（籠子裡的狗看不清楚；如果看得出是柴犬，就改成 ChatGPT 換狗 → Flow） |
+| 5 走出籠子 | `arrival-transition-s5.png` | 2s | ChatGPT 換狗 → Flow |
+| 6 歡迎回家 | `arrival-transition-s6.png` | 1.5s | ChatGPT 換狗（「歡迎回家」字樣會保留下來）→ Flow |
 
 鏡頭 2 動作：
 ```
@@ -152,9 +183,9 @@ SOUND: relaxed panting, tail brushing the floor; music: the warm piano-and-strin
 |---|---|---|---|
 | 1 辦公室白天→夜 | — | 0–5s | ♻️ 剪柴犬原片 |
 | 2 狗獨自等待 | `busy-day-transition-s2.png` | 0.8s | 和鏡頭 3 用同一段影片 |
-| 3 開門迎接 | `busy-day-transition-s2.png` | 3.5s | Gemini 換狗 → Flow（鏡頭 2、3 一次生成） |
+| 3 開門迎接 | `busy-day-transition-s2.png` | 3.5s | ChatGPT 換狗 → Flow（鏡頭 2、3 一次生成） |
 | 4 飼主臉部近景 | — | 9–11s | ♻️ 剪柴犬原片 |
-| 5 摸狗 | `busy-day-transition-s5.png` | 2.5s | Gemini 換狗 → Flow |
+| 5 摸狗 | `busy-day-transition-s5.png` | 2.5s | ChatGPT 換狗 → Flow |
 
 鏡頭 2–3 動作：
 ```
@@ -241,8 +272,8 @@ SOUND: happy panting, tail swishing; music: the mischievous tune ending on a lig
 | 鏡頭 | 起始畫面 | 保留 | 做法 |
 |---|---|---|---|
 | 1 辦公室夜晚 | — | 0–4s | ♻️ 剪柴犬原片 |
-| 2 狗獨自坐著 | `busy-daily-care-s2.png` | 2s | Gemini 換狗 → Flow |
-| 3 狗趴下難過 | `busy-daily-care-s3.png` | 4s | Gemini 換狗 → Flow |
+| 2 狗獨自坐著 | `busy-daily-care-s2.png` | 2s | ChatGPT 換狗 → Flow |
+| 3 狗趴下難過 | `busy-daily-care-s3.png` | 4s | ChatGPT 換狗 → Flow |
 
 鏡頭 2 動作：
 ```
@@ -293,7 +324,7 @@ SOUND: quiet room tone, slow calm breathing, soft fur rustle; music: tender, hea
 ### ⑬ `breed-size.mp4`（約 8 秒）｜米克斯專屬：成犬體型無法預測
 > 用 Flow 的**起始畫面＋結束畫面**一次生成，讓模型自己補出「長大」的過程。
 
-**起始畫面**（Gemini）
+**起始畫面**（ChatGPT）
 - 上傳：圖 1 `correct-answer2-s1.png`（全彩客廳），圖 2 `mixed-breed.png`，圖 3 `arrival-transition-s2.png`（飼主外觀參考）
 - 指令（這張**不用**貼通用換狗指令，直接用這段）：
 ```
@@ -302,7 +333,7 @@ Add the young woman from image 3 (brown ponytail, pink sweatshirt, blue jeans, w
 Draw everything in the illustration style of image 1 (bold dark-brown outlines, fur strokes, warm tones). 16:9.
 ```
 
-**結束畫面**（Gemini）
+**結束畫面**（ChatGPT）
 - 上傳：圖 1 是**上一步做好的起始畫面**，圖 2 `mixed-breed.png`
 - 指令：
 ```

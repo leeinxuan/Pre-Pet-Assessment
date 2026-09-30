@@ -1,7 +1,7 @@
 # 米克斯（混種犬）素材生成規格
 
 > Pre-Pet Assessment — 米克斯專屬素材  
-> 生成工具：Gemini（圖片）、VideoFX（影片）  
+> 生成工具：ChatGPT（圖片）、Google Flow（影片）｜影片起始畫面流程見 `mixed-frames-workflow.md`  
 > 生成方式：Computer Use — 使用 Claude 內建瀏覽器操作網頁介面
 
 ---
@@ -99,7 +99,7 @@
 
 **用途**：第一餐完成後出現的狗、時光流逝過場、高齡階段的狗
 
-**Gemini 提示詞（英文）**：
+**ChatGPT 提示詞（英文）**：
 ```
 A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is sitting upright, looking forward with a happy relaxed expression, mouth slightly open with tongue out. Cartoon illustration style, bold black outlines, flat colors with minimal shading. Transparent background (PNG with alpha channel), full body visible, square format, child-friendly, no text, no background scenery.
 ```
@@ -110,7 +110,7 @@ A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs
 
 **用途**：生病情境、第一天情境（答錯時）
 
-**Gemini 提示詞（英文）**：
+**ChatGPT 提示詞（英文）**：
 ```
 A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is sitting with droopy posture, ears slightly flattened, eyes half-closed and sad-looking, looking downward. Cartoon illustration style, bold black outlines, flat colors with minimal shading. Transparent background (PNG with alpha channel), full body visible, square format, child-friendly, no text, no background scenery.
 ```
@@ -122,7 +122,7 @@ A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs
 **用途**：飼主忙碌時狗狗在旁等待的畫面  
 **構圖**：橫向，狗俯趴在地，旁邊有空碗（參考 shiba-hungry.png 構圖）
 
-**Gemini 提示詞（英文）**：
+**ChatGPT 提示詞（英文）**：
 ```
 A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, and a long slightly curled tail. The dog is lying down with front paws stretched forward, staring at an empty food bowl with big sad eyes. Cartoon illustration style, bold black outlines, flat colors with minimal shading. Transparent background (PNG with alpha channel), horizontal composition, full body visible, child-friendly, no text, no background scenery.
 ```
@@ -143,7 +143,7 @@ A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs
 **參考**：`walking/shiba/leash-choice.png`  
 **構圖**：飼主牽著米克斯沿人行道散步，側面視角，有樹木/街道背景，完整場景
 
-**Gemini 提示詞（英文）**：
+**ChatGPT 提示詞（英文）**：
 ```
 A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) on a red leash along a sidewalk. Trees and a street in the background. Side view, full scene horizontal composition. Anime illustration style, clean line art, semi-realistic proportions, warm natural colors. Transparent background (PNG with alpha channel), full body both characters visible, no background scenery, no text.
 ```
@@ -155,7 +155,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 **參考**：`walking/shiba/off-leash-choice.png`  
 **構圖**：飼主在後方走，米克斯在前方較遠處不戴牽繩，飼主望向狗的方向，相同人行道場景
 
-**Gemini 提示詞（英文）**：
+**ChatGPT 提示詞（英文）**：
 ```
 A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking along a sidewalk while a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) walks ahead without a leash. The woman is looking toward the dog in the distance. Trees and street in the background. Side view, full scene horizontal composition. Anime illustration style, clean line art, semi-realistic proportions, warm natural colors. Transparent background (PNG with alpha channel), full body both characters visible, no background scenery, no text.
 ```
@@ -167,7 +167,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 **參考**：`walking/shiba/walker-and-dog-poop.png`  
 **構圖**：公園背景，米克斯剛排泄（地上有糞便），飼主在旁，有樹木公園場景，cutout 或半透明背景
 
-**Gemini 提示詞（英文）**：
+**ChatGPT 提示詞（英文）**：
 ```
 A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) in a park. The dog has just defecated (small pile visible on ground). Trees and park background. Side or three-quarter view. Anime illustration style, clean line art, semi-realistic proportions, warm natural colors. Transparent background (PNG with alpha channel), full body both characters visible, no background scenery, no text. Tasteful depiction.
 ```
@@ -179,7 +179,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 **參考**：`walking/shiba/walker-and-dog.png`  
 **構圖**：飼主與米克斯並肩同行，transparent/white 背景，人物剪影風格
 
-**Gemini 提示詞（英文）**：
+**ChatGPT 提示詞（英文）**：
 ```
 A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, walking side by side with a medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) on a leash. Transparent background (PNG with alpha channel). Cutout character style, side view, full body both characters visible, no background scenery. Anime illustration style, semi-realistic proportions, clean lines, no text.
 ```
@@ -191,7 +191,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 **參考**：`walking/shiba/walker-dog-bag.png`  
 **構圖**：飼主左手提著綠色糞便袋，右手牽米克斯，transparent/white 背景，人物剪影風格
 
-**Gemini 提示詞（英文）**：
+**ChatGPT 提示詞（英文）**：
 ```
 A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jeans, and white sneakers, holding a green poop bag in her left hand while holding a leash in her right hand. A medium-sized mixed-breed dog (black dorsal coat, tan/brown cheeks and legs, small white chest patch, erect triangular ears, long slightly curled tail) walks beside her. Transparent background (PNG with alpha channel). Cutout character style, side view, full body both characters visible, no background scenery. Anime illustration style, semi-realistic proportions, clean lines, no text.
 ```
@@ -217,7 +217,7 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 **遊戲情境**：玩家選完品種後，過場動畫播放，帶入第一天情境  
 **場景描述**：6 個分鏡依序呈現——車子開往收容所、飼主帶走米克斯、開車回家、到家開籠、米克斯走出來、歡迎回家文字
 
-**Gemini / Google Flow 提示詞**：
+**Google Flow 提示詞**：
 ```
 Anime-style 2D animation, clean line art, cel-shaded. Warm, heartwarming, cozy slice-of-life style.
 
@@ -523,12 +523,13 @@ Include light playful background music. The only visible text is "品種圖鑑" 
 
 ## ⚙️ 生成流程（Computer Use）
 
-### 圖片生成（Gemini）
-1. 開啟 https://gemini.google.com（或 ImageFX：https://labs.google/fx/tools/image-fx）
-2. 用實驗室帳號登入
-3. 依序貼上每個圖片的英文提示詞
-4. 生成後確認外觀（犬種毛色、人物服裝）與畫風是否一致，不符合再重新生成
-5. 下載存檔：
+### 圖片生成（ChatGPT，Claude 以 Computer Use 操作 Chrome）
+1. 在 Chrome 開啟 https://chatgpt.com（請先自行登入；Claude 不會輸入密碼）
+2. 每張圖開一個新對話，選「建立圖片」
+3. 貼上該圖的英文提示詞；有參考圖的（散步圖對應 `walking/shiba/` 同名圖）一併上傳
+4. 透明背景的圖在提示詞最後加上 `Transparent background.`，並確認下載的檔案是透明 PNG
+5. 生成後確認外觀（犬種毛色、人物服裝）與畫風是否一致，不符合就在同一個對話請它修正，或重新生成
+6. 下載存檔（每次下載前 Claude 會先徵求同意）：
    - 靜態圖片 → `public/assets/dog/pet-journey/mixed/`
    - 散步圖片 → `public/assets/dog/walking/mixed/`
 

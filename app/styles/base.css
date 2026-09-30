@@ -370,6 +370,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .expense-modal-summary > div { padding: 13px 14px; border: 1px solid var(--line); border-radius: 14px; background: white; }
 .expense-modal-summary small { display: block; color: var(--muted); font-size: 10px; font-weight: 900; }
 .expense-modal-summary b { display: block; margin-top: 5px; color: var(--ink); font-size: 15px; }
+.expense-modal-summary-reserve > small:last-child { margin-top: 5px; font-weight: 700; line-height: 1.45; }
 .expense-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
 .expense-group { padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: white; }
 .expense-group--initial { grid-column: 1 / -1; padding: 20px; border-color: #cdb47a; background: #fffdf7; }
@@ -379,11 +380,15 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .expense-initial-subgroup { min-width: 0; padding: 16px; border: 1px solid #e7ddca; border-radius: 13px; background: rgba(255,255,255,.72); }
 .expense-initial-subgroup h4 { margin-bottom: 10px; font-size: 14px; }
 .expense-groups ul { list-style: none; padding: 0; margin: 0; }
-.expense-groups li { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid #eee8dc; }
+.expense-groups li { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px solid #eee8dc; }
 .expense-groups li:last-child { border-bottom: 0; }
-.expense-groups li > span { display: flex; flex-direction: column; min-width: 0; }
+.expense-groups li > span { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+.expense-groups li > span b { overflow-wrap: anywhere; }
 .expense-groups small, .expense-groups p { color: var(--muted); font-size: 11px; }
-.expense-groups strong { font-size: 12px; white-space: nowrap; color: var(--gold-dark); }
+.expense-groups li > span small { margin-top: 3px; line-height: 1.55; overflow-wrap: anywhere; }
+.expense-groups strong { flex: 0 0 auto; padding-top: 1px; font-size: 12px; white-space: nowrap; color: var(--gold-dark); }
+.expense-groups h3 span { font-size: 12px; }
+.expense-group .expense-temporary-reserve-note { margin: -2px 0 9px; color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.5; }
 .expense-reserve-note { background: #f4ead0 !important; }
 .expense-reserve-note > b { display: block; color: #6d4c13; font-size: 16px; line-height: 1.45; }
 .expense-reserve-note > p { margin: 10px 0 0; color: #725f3d; font-size: 12px; font-weight: 750; line-height: 1.6; }

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { breeds, expenseCatalog, money, roomItems } from "../../game-data";
+import { isTemporaryReserveExpense } from "../../data/shared/expenses";
 import { arrivalMealMobilePlacements } from "../../data/species/dog/layout";
 import {
   getBreedChallengeScenarios,
@@ -11,7 +12,7 @@ import {
   dogLifeScenarios as lifeScenarios,
 } from "../../data/species/journey";
 import { catDailyBehaviorScenarioIds, catLitterRescueConfig } from "../../data/species/cat/journey";
-import { rabbitDailyBehaviorScenarioIds } from "../../data/species/rabbit/journey";
+import { rabbitDailyBehaviorScenarioIds, rabbitGroomingConfig } from "../../data/species/rabbit/journey";
 import { birdDailyBehaviorScenarioIds } from "../../data/species/bird/journey";
 import { rabbitActivityScenarios, rabbitCarrySortSteps } from "../../data/species/rabbit/scenarios";
 import { catScenarioCorrectFeedback } from "../../data/species/cat/scenarios";
@@ -103,6 +104,13 @@ function withPetName(text: string, petName: string) {
     .replaceAll("豆豆", displayName)
     .replaceAll("小狗", displayName)
     .replaceAll("狗狗", displayName);
+}
+
+function choiceHasTemporaryReserveExpense(choice: ScenarioChoice) {
+  return (choice.expenseIds ?? []).some((id) => {
+    const expense = expenseCatalog[id];
+    return Boolean(expense && isTemporaryReserveExpense(expense));
+  });
 }
 
 const lifeStageLabels = {
@@ -219,6 +227,27 @@ function renderKnowledgeText(text: string) {
         ? <strong className="knowledge-danger" key={`${part}-${index}`}>{part.slice(8, -9)}</strong>
       : <span key={`${part}-${index}`}>{part}</span>
   ));
+}
+
+/** 可由各活動資料帶入的純說明前導頁，避免活動專屬頁面與內容散落在互動元件中。 */
+function ActivityIntroPage({ eyebrow, title, paragraphs, actionLabel, visualAssets, onStart }: { eyebrow: string; title: string; paragraphs: readonly string[]; actionLabel: string; visualAssets?: { character: string; tool: string; collector: string }; onStart: () => void }) {
+  return <section className="activity-intro-page" aria-labelledby="activity-intro-title">
+    <div className="activity-intro-page-card">
+      {visualAssets && <div className="activity-intro-page-visual" aria-hidden="true">
+        <img className="activity-intro-page-pet" src={visualAssets.character} alt="" />
+        <img className="activity-intro-page-tool" src={visualAssets.tool} alt="" />
+        <img className="activity-intro-page-collector" src={visualAssets.collector} alt="" />
+      </div>}
+      <div className="activity-intro-page-content">
+        <p className="life-stage-label">{eyebrow}</p>
+        <h1 id="activity-intro-title">{title}</h1>
+        <div className="activity-intro-page-copy">
+          {paragraphs.map((paragraph, index) => <p key={`${paragraph}-${index}`}>{renderKnowledgeText(paragraph)}</p>)}
+        </div>
+        <button type="button" className="primary" onClick={onStart}>{actionLabel}</button>
+      </div>
+    </div>
+  </section>;
 }
 
 /** 一般回饋維持自然內文；只有知識卡片才解析必要的重點標示。 */
@@ -746,7 +775,7 @@ function VideoScenarioActivity({
   onChoose,
   onCorrectComplete,
   onCorrectFeedbackShown,
-  deferArrivalExpenseUntilFeedback = false,
+  deferExpensesUntilFeedback = false,
   resetSignal,
   onReplay,
   continueImmediately = false,
@@ -758,8 +787,8 @@ function VideoScenarioActivity({
   onChoose: (choice: ScenarioChoice) => void;
   onCorrectComplete: () => void;
   onCorrectFeedbackShown?: (scenario: Scenario, choice: ScenarioChoice) => void;
-  /** 指定的到家第一題要在「做得很好」畫面呈現後才登錄費用。 */
-  deferArrivalExpenseUntilFeedback?: boolean;
+  /** 指定費用須在「做得很好」畫面呈現後才登錄。 */
+  deferExpensesUntilFeedback?: boolean;
   resetSignal: number;
   onReplay?: () => void;
   continueImmediately?: boolean;
@@ -791,7 +820,7 @@ function VideoScenarioActivity({
 
   function choose(choice: ScenarioChoice) {
     onChoose(choice);
-    if (choice.result === "correct" && scenario.stageId === "arrival" && !deferArrivalExpenseUntilFeedback) {
+    if (choice.result === "correct" && scenario.stageId === "arrival" && !deferExpensesUntilFeedback) {
       onCorrectFeedbackShown?.(scenario, choice);
     }
     setVideoFailed(false);
@@ -801,12 +830,12 @@ function VideoScenarioActivity({
 
   // Effect 在正確回饋畫面提交後才執行，避免費用動畫早於「做得很好」。
   useEffect(() => {
-    if (!deferArrivalExpenseUntilFeedback || mode !== "positive" || selectedChoice?.result !== "correct") return;
+    if (!deferExpensesUntilFeedback || mode !== "positive" || selectedChoice?.result !== "correct") return;
     const key = `${scenario.id}:${selectedChoice.id}`;
     if (feedbackExpenseShownFor.current === key) return;
     feedbackExpenseShownFor.current = key;
     onCorrectFeedbackShown?.(scenario, selectedChoice);
-  }, [deferArrivalExpenseUntilFeedback, mode, onCorrectFeedbackShown, scenario, selectedChoice]);
+  }, [deferExpensesUntilFeedback, mode, onCorrectFeedbackShown, scenario, selectedChoice]);
 
   if (mode === "positive" && selectedChoice) {
     const catFeedback = isCatScenario && !(scenario.id === "cat-illness-vet" && scenario.breedKnowledge)
@@ -1029,6 +1058,7 @@ function DailyBehaviorActivityMulti({
   answers,
   petName,
   onChooseMultiple,
+  onCorrectFeedbackShown,
   onContinue,
   resetSignal,
   onReplay,
@@ -1040,6 +1070,7 @@ function DailyBehaviorActivityMulti({
   answers: Record<string, ScenarioAnswer>;
   petName: string;
   onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
+  onCorrectFeedbackShown?: (scenario: Scenario, choices: ScenarioChoice[]) => void;
   onContinue: () => void;
   resetSignal: number;
   onReplay?: () => void;
@@ -1062,6 +1093,7 @@ function DailyBehaviorActivityMulti({
   const [retryCopy, setRetryCopy] = useState<{ title: string; explanation: string; suggestion?: string } | null>(null);
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
+  const feedbackExpenseShownFor = useRef("");
   const scenario = scenarios[currentIndex];
   const behaviorVideoSource = species === "rabbit"
     ? undefined // 暫用共用影片預留區，待兔子日常素材補齊後由資料設定提供。
@@ -1085,6 +1117,17 @@ function DailyBehaviorActivityMulti({
     setVideoFailed(false);
     setVideoFinished(false);
   }, [resetSignal]);
+
+  // 臨時性預留費用必須先讓使用者看到正確回饋，再登錄到共用費用明細。
+  useEffect(() => {
+    if (mode !== "positive" || !scenario) return;
+    const selectedChoices = scenario.choices.filter((choice) => selectedIds.includes(choice.id));
+    if (!selectedChoices.some(choiceHasTemporaryReserveExpense)) return;
+    const key = `${scenario.id}:${selectedChoices.map((choice) => choice.id).join(",")}`;
+    if (feedbackExpenseShownFor.current === key) return;
+    feedbackExpenseShownFor.current = key;
+    onCorrectFeedbackShown?.(scenario, selectedChoices);
+  }, [mode, onCorrectFeedbackShown, scenario, selectedIds]);
 
   if (!scenario) return null;
 
@@ -1739,13 +1782,14 @@ function ArrivalMealActivity({
   onAddExpense: (id: string) => void;
   onContinue: () => void;
 }) {
-  const complete = activity.arrivalMealFoodReady && activity.arrivalMealWaterReady;
+  const rabbitMealComplete = activity.arrivalMealFoodReady && activity.arrivalMealWaterReady && activity.arrivalMealVeggieReady;
   const hasRecordedMeal = useRef(false);
   const [foodWarning, setFoodWarning] = useState<{ title: string; text: string } | null>(null);
   const [unsafeFoodIds, setUnsafeFoodIds] = useState<string[]>([]);
   const isCat = species === "cat";
   const isRabbit = species === "rabbit";
   const isBird = species === "bird";
+  const complete = isRabbit ? rabbitMealComplete : activity.arrivalMealFoodReady && activity.arrivalMealWaterReady;
   const [catMealCelebrated, setCatMealCelebrated] = useState(false);
   const animalName = isCat ? "貓咪" : isRabbit ? "兔子" : isBird ? "小啾" : "小狗";
   const completionMessage = isCat
@@ -1822,6 +1866,11 @@ function ArrivalMealActivity({
     setFoodWarning(null);
     onChange({ arrivalMealWaterReady: true });
   }
+  function prepareVeggie() {
+    if (!isRabbit || activity.arrivalMealVeggieReady) return;
+    setFoodWarning(null);
+    onChange({ arrivalMealVeggieReady: true });
+  }
   function warnUnsafeFood(kind: string) {
     const unsafeFood = unsafeFoods.find((item) => item.id === kind);
     if (!unsafeFood) return;
@@ -1839,21 +1888,23 @@ function ArrivalMealActivity({
         <h1>幫{petName || animalName}準備第一餐</h1>
         <p>{petName || animalName}剛到新家，還有些不安。先幫{petName || "牠"}準備合適的主食與乾淨飲水，讓牠慢慢安心下來。</p>
       </div>
-      <aside className={`arrival-meal-supplies ${activity.arrivalMealFoodReady && activity.arrivalMealWaterReady ? "mobile-condensed" : ""}`} aria-label="晚餐用品">
-        <div className="arrival-meal-supply-slot">
-          {!activity.arrivalMealFoodReady ? (
-            <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src={isCat ? catAssets.feeding.food : isRabbit ? rabbitAssets.feeding.hay : isBird ? birdAssets.room.bowl : dogAssets.feeding.food} alt={isCat ? "貓主食" : isRabbit ? "牧草／新鮮葉菜" : isBird ? "鸚鵡專用飼料與新鮮蔬菜" : "飼料"} /><span>{isCat ? "貓主食" : isRabbit ? "牧草／新鮮葉菜" : isBird ? "專用飼料／新鮮蔬菜" : "飼料"}</span></button>
-          ) : (
-            <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
-          )}
-        </div>
-        <div className="arrival-meal-supply-slot">
-          {!activity.arrivalMealWaterReady ? (
-            <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isCat ? catAssets.feeding.waterBottle : isRabbit || isBird ? "/assets/shared/waterbottle.png" : dogAssets.feeding.waterBottle} alt="水瓶" /><span>水</span></button>
-          ) : (
-            <div className="arrival-meal-supply-placeholder" aria-hidden="true" />
-          )}
-        </div>
+      <aside className={`arrival-meal-supplies ${complete ? "mobile-condensed" : ""}`} aria-label="晚餐用品">
+        {isRabbit ? <>
+          <div className="arrival-meal-supply-slot">{!activity.arrivalMealFoodReady ? <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src={rabbitAssets.feeding.hayRackEmpty} alt="牧草" /><span>牧草</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
+          <div className="arrival-meal-supply-slot">{!activity.arrivalMealWaterReady ? <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={rabbitAssets.feeding.waterBowlEmpty} alt="飲水" /><span>飲水</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
+          <div className="arrival-meal-supply-slot">{!activity.arrivalMealVeggieReady ? <button type="button" onClick={prepareVeggie}><img src={rabbitAssets.feeding.leafyVeggie} alt="新鮮葉菜" /><span>新鮮葉菜</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
+        </> : <>
+          <div className="arrival-meal-supply-slot">
+            {!activity.arrivalMealFoodReady ? (
+              <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src={isCat ? catAssets.feeding.food : isBird ? birdAssets.room.bowl : dogAssets.feeding.food} alt={isCat ? "貓主食" : isBird ? "鸚鵡專用飼料與新鮮蔬菜" : "飼料"} /><span>{isCat ? "貓主食" : isBird ? "專用飼料／新鮮蔬菜" : "飼料"}</span></button>
+            ) : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}
+          </div>
+          <div className="arrival-meal-supply-slot">
+            {!activity.arrivalMealWaterReady ? (
+              <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isCat ? catAssets.feeding.waterBottle : isBird ? "/assets/shared/waterbottle.png" : dogAssets.feeding.waterBottle} alt="水瓶" /><span>水</span></button>
+            ) : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}
+          </div>
+        </>}
         {isRabbit && <button type="button" className={unsafeFoodIds.includes("rabbit-carrot") ? "arrival-meal-unsafe caution warning" : "arrival-meal-unsafe caution"} onClick={placeRabbitCarrot}>
           <span className="unsafe-food-visual"><img src={rabbitAssets.feeding.carrotMain} alt="整袋紅蘿蔔" />{unsafeFoodIds.includes("rabbit-carrot") && <WarningTriangle className="unsafe-food-warning-icon" />}</span><span>整袋紅蘿蔔</span>
         </button>}
@@ -1862,16 +1913,17 @@ function ArrivalMealActivity({
         ))}
       </aside>
       <div className="arrival-meal-scene">
-        <img className="arrival-meal-room arrival-meal-room--desktop" src={isCat ? catAssets.life.safeRoom : isRabbit ? rabbitAssets.room.background : isBird ? birdAssets.room.background : dogAssets.feeding.room} alt={`${animalName}的新家房間`} />
-        <img className="arrival-meal-room arrival-meal-room--mobile" src={isCat ? catAssets.life.safeRoom : isRabbit ? rabbitAssets.room.mobileBackground : isBird ? birdAssets.room.mobileBackground : dogAssets.feeding.mobileRoom} alt="" />
+        <img className="arrival-meal-room arrival-meal-room--desktop" src={isCat ? catAssets.life.safeRoom : isRabbit ? rabbitAssets.room.fenceInteriorWithMat : isBird ? birdAssets.room.background : dogAssets.feeding.room} alt={`${animalName}的新家房間`} />
+        <img className="arrival-meal-room arrival-meal-room--mobile" src={isCat ? catAssets.life.safeRoom : isRabbit ? rabbitAssets.room.fenceInteriorWithMat : isBird ? birdAssets.room.mobileBackground : dogAssets.feeding.mobileRoom} alt="" />
         {foodWarning && <div className="arrival-meal-warning" role="alert">
           <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
           <b>{foodWarning.title}</b>
           <p>{foodWarning.text}</p>
         </div>}
-        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? (catMealCelebrated ? catAssets.feeding.happyCat : catAssets.feeding.hungryScaredCat) : isRabbit ? rabbitAssets.selection.rabbit : isBird ? birdAssets.selection.bird : complete ? dogShibaAsset("shiba-dog.png") : dogShibaAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
-        <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={isCat ? (activity.arrivalMealWaterReady ? catAssets.feeding.waterBowl : catAssets.feeding.emptyWaterBowl) : isRabbit ? "/assets/shared/waterbottle.png" : isBird ? birdAssets.room.water : activity.arrivalMealWaterReady ? dogAssets.feeding.waterBowl : dogAssets.feeding.emptyWaterBowl} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
-        <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={isCat ? (activity.arrivalMealFoodReady ? catAssets.feeding.foodBowl : catAssets.feeding.emptyFoodBowl) : isRabbit ? rabbitAssets.feeding.hay : isBird ? birdAssets.room.bowl : activity.arrivalMealFoodReady ? dogAssets.feeding.foodBowl : dogAssets.feeding.emptyFoodBowl} alt={activity.arrivalMealFoodReady ? "裝好主食的食碗" : "空食碗"} />
+        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? (catMealCelebrated ? catAssets.feeding.happyCat : catAssets.feeding.hungryScaredCat) : isRabbit ? (rabbitMealComplete ? rabbitAssets.feeding.rabbitHappy : rabbitAssets.feeding.rabbitUnhappy) : isBird ? birdAssets.selection.bird : complete ? dogShibaAsset("shiba-dog.png") : dogShibaAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
+        <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={isCat ? (activity.arrivalMealWaterReady ? catAssets.feeding.waterBowl : catAssets.feeding.emptyWaterBowl) : isRabbit ? (activity.arrivalMealWaterReady ? rabbitAssets.room.waterBowl : rabbitAssets.feeding.waterBowlEmpty) : isBird ? birdAssets.room.water : activity.arrivalMealWaterReady ? dogAssets.feeding.waterBowl : dogAssets.feeding.emptyWaterBowl} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
+        <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={isCat ? (activity.arrivalMealFoodReady ? catAssets.feeding.foodBowl : catAssets.feeding.emptyFoodBowl) : isRabbit ? (activity.arrivalMealFoodReady ? rabbitAssets.preparation.hay : rabbitAssets.feeding.hayRackEmpty) : isBird ? birdAssets.room.bowl : activity.arrivalMealFoodReady ? dogAssets.feeding.foodBowl : dogAssets.feeding.emptyFoodBowl} alt={activity.arrivalMealFoodReady ? "裝好主食的食碗" : "空食碗"} />
+        {isRabbit && activity.arrivalMealVeggieReady && <img className="arrival-meal-veggie" style={arrivalMealPlacementStyle("veggie")} src={rabbitAssets.feeding.leafyVeggie} alt="已準備的新鮮葉菜" />}
       </div>
       <div className="arrival-meal-footer">
         {complete && <p role="status">{completionMessage}</p>}
@@ -2462,6 +2514,7 @@ function DailyCareCompletion({
   reflection,
   dailyCareBreakdown,
   careTimeTitle = "每天留給牠的照護時間",
+  careTimeSupplement,
   continueLabel = "繼續生活旅程",
   onContinue,
 }: {
@@ -2472,6 +2525,7 @@ function DailyCareCompletion({
   reflection: string | readonly string[];
   dailyCareBreakdown: readonly { title: string; detail: string }[];
   careTimeTitle?: string;
+  careTimeSupplement?: { title: string; items: readonly { title: string; detail: string; description: string }[] };
   continueLabel?: string;
   onContinue: () => void;
 }) {
@@ -2479,13 +2533,19 @@ function DailyCareCompletion({
     <div className="walking-complete-card">
       <h1>{title}</h1>
       <p>{summary}</p>
-      <p>{detail}</p>
+      <p>{renderKnowledgeText(detail)}</p>
       <div className="walking-reflection-note"><b>{renderKnowledgeText(reflectionTitle)}</b>{(Array.isArray(reflection) ? reflection : [reflection]).map((paragraph) => <p key={paragraph}>{renderKnowledgeText(paragraph)}</p>)}</div>
       <section className="walking-time-summary" aria-label="每日基本照護時間估計">
         <p>{careTimeTitle}</p>
         <div className="walking-time-commitment">
           {dailyCareBreakdown.map((item) => <div key={item.title}><b>{item.title}</b><span>{item.detail}</span></div>)}
         </div>
+        {careTimeSupplement && <section className="walking-care-supplement" aria-label={careTimeSupplement.title}>
+          <h2>{careTimeSupplement.title}</h2>
+          <div className="walking-time-commitment walking-care-supplement-grid">
+            {careTimeSupplement.items.map((item) => <div key={item.title}><b>{item.title}</b><span>{item.detail}</span><small>{item.description}</small></div>)}
+          </div>
+        </section>}
       </section>
       <DelayedContinueButton label={continueLabel} onContinue={onContinue} />
     </div>
@@ -3136,7 +3196,7 @@ function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onCont
               onPointerCancel={() => { setDraggedIndex(null); setDropIndex(null); }}
               className={`${draggedIndex === index ? "is-dragging" : ""} ${dropIndex === index ? "is-drop-before" : ""} ${dropIndex === index + 1 ? "is-drop-after" : ""} ${answerRevealed ? "is-revealed" : ""}`}
             >
-              <span>{index + 1}</span><div className="rabbit-step-image-slot" aria-hidden="true" />
+              <span>{index + 1}</span><div className="rabbit-step-image-slot"><img src={rabbitCarrySortSteps[Number(value)].image} alt="" draggable={false} /></div>
               <p>{withPetName(rabbitCarrySortSteps[Number(value)].text, petName)}</p>
               {answerRevealed ? <small>正確動作</small> : <small className="sort-drag-label">按住拖曳排序</small>}
             </li>
@@ -3205,67 +3265,116 @@ function LegacyRabbitDailyCheckActivityScene({ activity, petName, onChange, onCh
   return <section className="rabbit-activity rabbit-daily-check-activity" onPointerMove={(event) => dragging && setPoint({ x: event.clientX, y: event.clientY })} onPointerUp={drop} onPointerCancel={drop}><header><p>日常照護</p><h1>{withPetName(scenario.title, petName)}</h1><span>清完便盆、換上新底材，再順手檢查門齒與指甲。</span></header><div className="rabbit-daily-scene rabbit-daily-inspection-scene"><div ref={targetRefs.litter} className={`rabbit-daily-target rabbit-daily-litter ${has("bedding") ? "done" : ""}`}><img src={rabbitAssets.room.litterBox} alt="兔子便盆" /><div className="rabbit-pellets" aria-label={`已清除 ${clearedCount} / ${pelletIds.length} 顆糞粒`}>{pelletIds.map((id) => !has(id) && <span key={id}>●</span>)}</div><b>{has("bedding") ? "新底材已鋪好" : `清除 ${clearedCount} / ${pelletIds.length} 顆`}</b></div><div ref={targetRefs.bin} className={`rabbit-daily-bin ${scoopLoaded ? "is-ready" : ""}`} aria-label="廢棄桶"><span>🗑️</span><b>廢棄桶</b></div>{showChecks && <div className="rabbit-daily-rabbit"><img src={rabbitAssets.selection.rabbit} alt={petName || "兔兔"} /><button type="button" className={`rabbit-health-check rabbit-teeth-check ${has("teeth") ? "done" : ""}`} disabled={has("teeth")} onClick={checkTeeth}>{has("teeth") ? "✓ 門齒已檢查" : "點擊嘴巴檢查門齒"}</button><button type="button" className={`rabbit-health-check rabbit-nails-check ${has("nails") ? "done" : ""}`} disabled={!has("teeth") || has("nails")} onClick={checkNails}>{has("nails") ? "✓ 指甲已檢查" : "點擊前腳掌檢查指甲"}</button></div>}</div><div className="rabbit-daily-tools">{!litterClean || scoopLoaded ? <button type="button" onPointerDown={(event) => start(event, "scoop")}>🧹 {scoopLoaded ? "拖拉便盆鏟到廢棄桶" : "拖拉便盆鏟掃過便盆"}</button> : !has("bedding") ? <button type="button" onPointerDown={(event) => start(event, "bedding")}>▤ 拖拉新墊料包到便盆</button> : null}</div><p className="rabbit-activity-message">{message}</p>{dragging && point && <div className="rabbit-daily-drag-ghost" style={{ left: point.x, top: point.y }}>{dragging === "scoop" ? "🧹" : "▤"}</div>}</section>;
 }
 
-const rabbitGroomingSteps = [
-  { id: "groom-head-ears", label: "頭頂與耳後", instruction: "拖曳梳子，輕輕梳理頭頂與耳後。", detail: "牠瞇眼放鬆，少量脫落毛髮已收集。" },
-  { id: "groom-back-sides", label: "背部與側面", instruction: "拖曳梳子，沿背部與側面梳理。", detail: "脫落毛髮已集中到毛球收集框。" },
-  { id: "groom-hind-tail", label: "後肢及尾根周圍", instruction: "拖曳梳子，仔細梳理後肢及尾根周圍。", detail: "尾根部容易藏污和結毛，是最需要仔細梳理的區域。" },
-  { id: "groom-paws", label: "足底", instruction: "點擊腳掌，完成足底檢查。", detail: "今日足底：毛髮正常 ✓／足底毛髮脫落或有紅腫時，建議諮詢獸醫。" },
-  { id: "groom-teeth", label: "門齒", instruction: "點擊嘴部，查看門齒觀察卡。", detail: "門齒長度適中、上下咬合正常；持續供應充足牧草幫助磨牙。若偏長，不可自行剪牙，應諮詢兔科獸醫。" },
-  { id: "groom-nails", label: "指甲", instruction: "點擊前腳，查看指甲觀察卡。", detail: "指甲長度適中，繼續每週定期確認。若偏長，請獸醫師或專業人員協助修剪，避免剪傷血線。" },
-] as const;
-
 function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
   const scenario = rabbitActivityScenarios["rabbit-daily-check"];
   const completed = activity.rabbitDailyCheckSteps;
-  const current = rabbitGroomingSteps.find((step) => !completed.includes(step.id));
+  const state = activity.rabbitGroomingState || rabbitGroomingConfig.initialState;
   const [draggingBrush, setDraggingBrush] = useState(false);
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
-  const [message, setMessage] = useState(current?.instruction ?? "");
-  const [observation, setObservation] = useState<(typeof rabbitGroomingSteps)[number] | null>(null);
-  const targetRef = useRef<HTMLButtonElement>(null);
-  const isBrushStep = Boolean(current && ["groom-head-ears", "groom-back-sides", "groom-hind-tail"].includes(current.id));
+  const [observation, setObservation] = useState<{ key: keyof typeof rabbitGroomingConfig.observations; displayState: "normal" | "warning"; status: "question" | "incorrect" | "correct" } | null>(null);
+  const brushTargetRef = useRef<HTMLDivElement>(null);
+  const groomingSteps = rabbitGroomingConfig.groomingSteps;
+  const current = groomingSteps.find((step) => step.stateId === state)
+    ?? (state === "part-1-footpad-observation" ? groomingSteps.find((step) => step.id === "groom-footpad") : undefined);
+  const isBrushStep = Boolean(current && current.id !== "groom-footpad");
+  const isTransition = state === "part-2-transition";
+  const isInspection = state === "part-2-inspection" || state === "part-2-incisor-observation" || state === "part-2-nail-observation";
+  const furCollectionProgress = [0, 33, 67, 100][groomingSteps.slice(0, 3).filter((step) => completed.includes(step.id)).length] ?? 100;
   const add = (id: string) => onChange({ rabbitDailyCheckSteps: completed.includes(id) ? completed : [...completed, id] });
-  const completeStep = (step: (typeof rabbitGroomingSteps)[number]) => {
-    add(step.id);
+  const setState = (next: string) => onChange({ rabbitGroomingState: next });
+
+  useEffect(() => {
+    const nextState: Record<string, string> = { "part-1-step-1-complete": "part-1-step-2-back-sides", "part-1-step-2-complete": "part-1-step-3-hindquarters", "part-1-step-3-complete": "part-1-step-4-footpad", "part-1-complete": "part-2-transition", "part-2-transition": "part-2-inspection" };
+    const next = nextState[state];
+    if (!next) return;
+    const timer = window.setTimeout(() => setState(next), state === "part-2-transition" ? 900 : 500);
+    return () => window.clearTimeout(timer);
+  }, [state]);
+
+  const openObservation = (key: keyof typeof rabbitGroomingConfig.observations) => {
+    const stored = activity.rabbitGroomingInspection?.[key];
+    const displayState = stored?.displayState ?? (Math.random() < 0.5 ? "normal" : "warning");
+    const status = stored?.status ?? "question";
+    if (!stored) onChange({
+      rabbitGroomingObservations: { ...activity.rabbitGroomingObservations, [key]: displayState },
+      rabbitGroomingInspection: { ...activity.rabbitGroomingInspection, [key]: { displayState, status, attempts: 0 } },
+    });
+    setObservation({ key, displayState, status });
+  };
+  const answerObservation = (choiceId: "normal" | "warning") => {
+    if (!observation) return;
+    const isCorrect = choiceId === observation.displayState;
+    const nextStatus: "correct" | "incorrect" = isCorrect ? "correct" : "incorrect";
+    const prior = activity.rabbitGroomingInspection?.[observation.key];
+    const next = { displayState: observation.displayState, status: nextStatus, attempts: (prior?.attempts ?? 0) + (isCorrect ? 0 : 1) };
+    onChange({ rabbitGroomingInspection: { ...activity.rabbitGroomingInspection, [observation.key]: next } });
+    setObservation({ ...observation, status: nextStatus });
+  };
+  const confirmObservation = () => {
+    if (!observation || observation.status !== "correct") return;
+    const nextState = observation.key === "footpad" ? "part-1-complete" : observation.key === "incisor" ? "part-2-nail-observation" : "interaction-complete";
+    if (observation.key === "footpad") add("groom-footpad");
+    if (observation.key === "incisor") add("inspect-incisor");
+    if (observation.key === "nail") { add("inspect-nail"); onChoose(scenario, scenario.choices[1]); }
     setObservation(null);
-    const next = rabbitGroomingSteps[rabbitGroomingSteps.findIndex((item) => item.id === step.id) + 1];
-    setMessage(next ? next.instruction : "今天的美容保養已完成。 ");
-    if (!next) onChoose(scenario, scenario.choices[1]);
+    setState(nextState);
   };
   const finishBrush = (event: ReactPointerEvent<HTMLElement>) => {
     if (!draggingBrush || !current || !isBrushStep) return;
-    setDraggingBrush(false);
-    setPoint(null);
-    const rect = targetRef.current?.getBoundingClientRect();
-    const overTarget = Boolean(rect && event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom);
-    if (!overTarget) { setMessage(`請把梳子拖到「${current.label}」區域。`); return; }
-    completeStep(current);
+    setDraggingBrush(false); setPoint(null);
+    const inRect = (rect: DOMRect | undefined, padding = 0) => Boolean(rect && event.clientX >= rect.left - padding && event.clientX <= rect.right + padding && event.clientY >= rect.top - padding && event.clientY <= rect.bottom + padding);
+    // 只接受目前局部提示對應的部位，避免梳到其他身體區域也被判定完成。
+    const overTarget = inRect(brushTargetRef.current?.getBoundingClientRect(), 12);
+    if (!overTarget) return;
+    add(current.id); setState(current.completeStateId);
   };
-  const complete = !current;
-  if (complete) return <DailyCareCompletion
-    title={withPetName(rabbitGroomingCompletion.title, petName)}
-    summary={withPetName(rabbitGroomingCompletion.subtitle, petName)}
-    detail={withPetName(rabbitGroomingCompletion.description, petName)}
-    reflectionTitle={rabbitGroomingCompletion.reflectionTitle}
-    reflection={rabbitGroomingCompletion.reflectionContent.map((paragraph) => withPetName(paragraph, petName))}
-    dailyCareBreakdown={rabbitGroomingCompletion.careTimeItems}
-    careTimeTitle={rabbitGroomingCompletion.careTimeTitle}
-    continueLabel={rabbitGroomingCompletion.continueLabel}
-    onContinue={onContinue}
+  if (!activity.rabbitGroomingIntroStarted) return <ActivityIntroPage
+    eyebrow={rabbitGroomingConfig.intro.eyebrow}
+    title={withPetName(rabbitGroomingConfig.intro.title, petName)}
+    paragraphs={rabbitGroomingConfig.intro.paragraphs.map((paragraph) => withPetName(paragraph, petName))}
+    actionLabel={rabbitGroomingConfig.intro.startLabel}
+    visualAssets={rabbitGroomingConfig.intro.visualAssets}
+    onStart={() => { setObservation(null); setDraggingBrush(false); setPoint(null); onChange({ rabbitGroomingIntroStarted: true, rabbitDailyCheckSteps: [], rabbitGroomingState: rabbitGroomingConfig.initialState, rabbitGroomingObservations: {}, rabbitGroomingInspection: {} }); }}
   />;
-  const firstPart = rabbitGroomingSteps.findIndex((step) => step.id === current.id) < 4;
+  if (state === "interaction-complete") return <DailyCareCompletion title={withPetName(rabbitGroomingCompletion.title, petName)} summary={withPetName(rabbitGroomingCompletion.subtitle, petName)} detail={withPetName(rabbitGroomingCompletion.description, petName)} reflectionTitle={rabbitGroomingCompletion.reflectionTitle} reflection={rabbitGroomingCompletion.reflectionContent.map((paragraph) => withPetName(paragraph, petName))} dailyCareBreakdown={rabbitGroomingCompletion.careTimeItems} careTimeTitle={rabbitGroomingCompletion.careTimeTitle} careTimeSupplement={rabbitGroomingCompletion.careTimeSupplement} continueLabel={rabbitGroomingCompletion.continueLabel} onContinue={onContinue} />;
+  const firstPart = !isInspection && !isTransition;
+  const characterKey = isInspection || isTransition ? "inspection" : current?.character ?? (state.startsWith("part-1-step-") && state.endsWith("-complete") ? "eyesClose" : "idle");
+  const furBallKey = current?.furBall ?? (state === "part-1-step-1-complete" ? "furBallStep1" : state === "part-1-step-2-complete" ? "furBallStep2" : "furBallStep3");
+  const observationData = observation ? rabbitGroomingConfig.observations[observation.key] : null;
   return <section className="rabbit-activity rabbit-grooming-activity" onPointerMove={(event) => draggingBrush && setPoint({ x: event.clientX, y: event.clientY })} onPointerUp={finishBrush} onPointerCancel={() => { setDraggingBrush(false); setPoint(null); }} aria-labelledby="rabbit-grooming-title">
     <header><p>日常照護</p><h1 id="rabbit-grooming-title">{withPetName(scenario.title, petName)}</h1><span>{firstPart ? "第一部分：梳毛與足底確認" : "第二部分：門齒與指甲外觀檢查"}</span></header>
-    <ol className="rabbit-grooming-progress" aria-label="美容保養進度">{rabbitGroomingSteps.map((step, index) => <li key={step.id} className={completed.includes(step.id) ? "done" : step.id === current.id ? "active" : ""}><span>{completed.includes(step.id) ? "✓" : index + 1}</span>{step.label}</li>)}</ol>
-    <div className="rabbit-grooming-scene">
-      <img src={rabbitAssets.selection.rabbit} alt={petName || "兔兔"} />
-      <button ref={targetRef} type="button" className={`rabbit-grooming-target ${current.id === "groom-hind-tail" ? "needs-care" : ""}`} onClick={() => !isBrushStep && setObservation(current)}>{current.label}{current.id === "groom-hind-tail" && <small>特別注意！</small>}</button>
-      {isBrushStep && <button type="button" className="rabbit-grooming-brush" onPointerDown={(event) => { event.currentTarget.setPointerCapture(event.pointerId); setDraggingBrush(true); setPoint({ x: event.clientX, y: event.clientY }); setMessage(`把梳子拖到「${current.label}」區域。`); }}>梳子</button>}
-      {!isBrushStep && <p className="rabbit-grooming-instruction">{current.instruction}</p>}
-    </div>
-    {observation && <section className="rabbit-grooming-observation" role="status"><h2>{observation.label}觀察</h2><p>{observation.detail}</p><button type="button" className="primary" onClick={() => completeStep(observation)}>確認完成 <span>→</span></button></section>}
-    {!observation && <p className="rabbit-activity-message">{message}</p>}
-    {draggingBrush && point && <div className="rabbit-daily-drag-ghost" style={{ left: point.x, top: point.y }}>梳</div>}
+    {firstPart && <ol className="rabbit-grooming-progress" aria-label="美容保養進度">{groomingSteps.map((step, index) => <li key={step.id} className={completed.includes(step.id) ? "done" : step.stateId === state ? "active" : ""}><span>{completed.includes(step.id) ? "✓" : index + 1}</span>{step.label}</li>)}</ol>}
+    {isTransition ? <div className="rabbit-grooming-transition" role="status">第一部分完成！現在一起幫 {petName || "兔兔"} 做外觀檢查吧。</div> : <>
+      <div className={`rabbit-grooming-scene ${observation ? "has-observation" : ""}`}>
+        {current?.id === "groom-hind-tail" && <aside className="rabbit-grooming-caution"><b>特別注意！</b><span>{current.caution}</span></aside>}
+        <div className="rabbit-grooming-character"><img src={rabbitGroomingConfig.assets[characterKey]} alt={petName || "兔兔"} onError={(event) => { event.currentTarget.style.display = "none"; event.currentTarget.parentElement?.classList.add("asset-unavailable"); }} />
+          {!isInspection && current && (current.id === "groom-footpad" ? <button type="button" data-grooming-step={current.id} className="rabbit-anatomy-hitbox rabbit-footpad-hitbox" aria-label="檢查兔子足底" disabled={Boolean(observation) || completed.includes("groom-footpad")} onClick={() => { setState("part-1-footpad-observation"); openObservation("footpad"); }} /> : <div ref={brushTargetRef} data-grooming-step={current.id} className={`rabbit-grooming-guideline ${draggingBrush ? "is-dragging" : ""}`} aria-label={current.label} />)}
+          {isInspection && <>
+            <button type="button" className={`rabbit-anatomy-hitbox rabbit-incisor-hitbox ${completed.includes("inspect-incisor") ? "done" : ""}`} aria-label="檢查兔子門齒" disabled={Boolean(observation) || completed.includes("inspect-incisor")} onClick={() => { setState("part-2-incisor-observation"); openObservation("incisor"); }} />
+            <button type="button" className={`rabbit-anatomy-hitbox rabbit-nail-hitbox ${completed.includes("inspect-nail") ? "done" : ""}`} aria-label="檢查兔子指甲" disabled={Boolean(observation) || !completed.includes("inspect-incisor") || completed.includes("inspect-nail")} onClick={() => { setState("part-2-nail-observation"); openObservation("nail"); }} />
+          </>}
+        </div>
+        {firstPart && <aside className="rabbit-fur-collector" aria-label={`毛球收集進度 ${furCollectionProgress}%`}><small>毛球收集進度 {furCollectionProgress}%</small><img src={rabbitGroomingConfig.assets[furBallKey]} alt="收集到的毛球" onError={(event) => { event.currentTarget.style.display = "none"; }} /><span>毛球收集罐</span></aside>}
+      {isBrushStep && current && <button type="button" className="rabbit-grooming-brush" onDragStart={(event) => event.preventDefault()} onPointerDown={(event) => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingBrush(true); setPoint({ x: event.clientX, y: event.clientY }); }} onPointerUp={(event) => { finishBrush(event); event.stopPropagation(); }}><img draggable={false} src={rabbitGroomingConfig.assets.brush} alt="可拖曳的梳子" onError={(event) => { event.currentTarget.style.display = "none"; }} /></button>}
+      <p className="rabbit-grooming-instruction">{isInspection ? "請依序點擊嘴部與前腳，完成外觀檢查。" : current?.instruction ?? "請依照提示完成保養。"}</p>
+      {observation && observationData && <section className={`rabbit-grooming-observation rabbit-grooming-observation-${observation.key} is-${observation.status}`} role="dialog" aria-labelledby="rabbit-grooming-observation-title" aria-live="polite">
+        <img src={observation.status === "correct" || observation.displayState === "warning" ? observationData.warningImage : observationData.normalImage} alt={observationData.title} onError={(event) => { event.currentTarget.style.display = "none"; }} />
+        <h2 id="rabbit-grooming-observation-title">{observationData.title}</h2>
+        {observation.status === "correct" ? <>
+          <p>{renderKnowledgeText(withPetName(observationData.correctFeedback, petName))}</p>
+          <p className="rabbit-grooming-warning-example">{renderKnowledgeText(withPetName(observationData.warningExplanation, petName))}</p>
+          <button type="button" className="knowledge-modal-confirm" onClick={confirmObservation}>我了解了 →</button>
+        </> : <>
+          <p className="rabbit-grooming-observation-question">{renderKnowledgeText(withPetName(observationData.question, petName))}</p>
+          {observation.status === "incorrect" && <p className="rabbit-grooming-observation-feedback">{renderKnowledgeText(withPetName(observationData.incorrectFeedback[observation.displayState], petName))}</p>}
+          <div className="rabbit-grooming-observation-choices" aria-label={withPetName(observationData.question, petName)}>
+            {observationData.choices.map((choice) => <button type="button" key={choice.id} onClick={() => answerObservation(choice.id as "normal" | "warning")}>{choice.label}</button>)}
+          </div>
+        </>}
+      </section>}
+      </div>
+    </>}
+    {draggingBrush && point && <div className="rabbit-grooming-drag-ghost" style={{ left: point.x, top: point.y }}><img src={rabbitGroomingConfig.assets.brush} alt="" /></div>}
   </section>;
 }
 
@@ -3493,7 +3602,7 @@ export function LifeJourney({
     }
     if (isDailyInspectionActivity) onActivityChange({ catInspectionSteps: [] });
     if (isRabbitCarrySortActivity) onActivityChange({ rabbitCarryOrder: [], rabbitCarryComplete: false, rabbitCarryAttempts: 0, rabbitCarryAnswerRevealed: false, rabbitCarryFeedbackShown: false });
-    if (isRabbitDailyCheckActivity) onActivityChange({ rabbitDailyCheckSteps: [] });
+    if (isRabbitDailyCheckActivity) onActivityChange({ rabbitDailyCheckSteps: [], rabbitGroomingIntroStarted: false, rabbitGroomingState: rabbitGroomingConfig.initialState, rabbitGroomingObservations: {}, rabbitGroomingInspection: {} });
     if (isBirdCageInspectionActivity) onActivityChange({ birdCageInspectionSteps: [] });
     setReplayInProgress(true);
     setResetItemId(item.id);
@@ -3553,6 +3662,13 @@ export function LifeJourney({
           answers={answers}
           petName={petName}
           onChooseMultiple={onChooseMultiple}
+          onCorrectFeedbackShown={(correctScenario, choices) => {
+            choices.flatMap((choice) => choice.expenseIds ?? []).forEach((expenseId) => onAddExpense(expenseId, {
+              speciesId: species,
+              stageId: correctScenario.stageId,
+              sourceScenarioId: correctScenario.id,
+            }));
+          }}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
           scenarioIds={dailyBehaviorScenarioIdsBySpecies[species as keyof typeof dailyBehaviorScenarioIdsBySpecies] ?? dailyBehaviorScenarioIds}
@@ -3615,6 +3731,13 @@ export function LifeJourney({
           answers={answers}
           petName={petName}
           onChooseMultiple={onChooseMultiple}
+          onCorrectFeedbackShown={(correctScenario, choices) => {
+            choices.flatMap((choice) => choice.expenseIds ?? []).forEach((expenseId) => onAddExpense(expenseId, {
+              speciesId: species,
+              stageId: correctScenario.stageId,
+              sourceScenarioId: correctScenario.id,
+            }));
+          }}
           onContinue={continueJourney}
           resetSignal={currentResetSignal}
           scenarioIds={[scenario.id]}
@@ -3635,18 +3758,17 @@ export function LifeJourney({
             const isCatArrival = species === "cat" && item.id === "cat-arrival" && correctScenario.id === "cat-arrival-adjustment";
             const isDeferredDogOrCatArrival = isDogArrival || isCatArrival;
             const expenseIds = isDeferredDogOrCatArrival ? item.expenseIds : choice.expenseIds;
-            const triggerMeta = isDeferredDogOrCatArrival
-              ? { speciesId: species, stageId: item.stageId ?? correctScenario.stageId, sourceScenarioId: correctScenario.id }
-              : undefined;
+            const triggerMeta = { speciesId: species, stageId: item.stageId ?? correctScenario.stageId, sourceScenarioId: correctScenario.id };
             if (isDeferredDogOrCatArrival && expenseIds?.length) {
               onAddExpenseGroup(expenseIds, triggerMeta);
             } else {
               expenseIds?.forEach((expenseId) => onAddExpense(expenseId, triggerMeta));
             }
           }}
-          deferArrivalExpenseUntilFeedback={
+          deferExpensesUntilFeedback={
             (species === "dog" && item.id === "arrival" && scenario.id === "arrival-adjustment")
             || (species === "cat" && item.id === "cat-arrival" && scenario.id === "cat-arrival-adjustment")
+            || scenario.choices.some(choiceHasTemporaryReserveExpense)
           }
           resetSignal={currentResetSignal}
           {...replayCorrectProps}
