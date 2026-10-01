@@ -109,10 +109,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   .experience-dog-card,
-  .experience-story-line,
-  .experience-transition-actions,
   .experience-arrow i { opacity: 1; transform: none; animation: none; }
+  .experience-story-line { opacity: 0; transform: none; animation: experienceReducedLineIn .18s ease forwards; }
+  .experience-story-line--past { animation-delay: .05s; }
+  .experience-story-line--next { animation-delay: .35s; }
+  .experience-story-line--bridge { animation-delay: .65s; }
+  .experience-transition-actions { opacity: 0; transform: none; animation: experienceReducedLineIn .18s .95s ease forwards; }
 }
+@keyframes experienceReducedLineIn { to { opacity: 1; } }
 .breed-description { min-height: 86px; }
 .breed-description > div { min-width: 0; }
 .breed-description p { line-height: 1.7; overflow-wrap: anywhere; white-space: normal; }

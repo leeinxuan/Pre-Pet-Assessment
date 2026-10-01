@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { officialPetSources } from "../../data/shared/pet-sources";
+import { contentLastUpdated } from "../../data/shared/content-meta";
 import { ProfileSupplementForm } from "../report/ProfileReportComponents";
 import type { Profile } from "../../game-types";
 
@@ -62,6 +63,11 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
       </div>
     </div>
     {shareMessage && <p className="official-share-status" role="status">{shareMessage}</p>}
+    <footer className="official-acquisition-source-note">
+      <p>照顧相關資料參考農業部寵物飼養與照顧指南。</p>
+      <p>網站中的圖片與影片為 AI 生成。</p>
+      <p>最後更新：{contentLastUpdated}</p>
+    </footer>
     {profileModalOpen && <div className="profile-modal-backdrop" role="presentation" onMouseDown={() => setProfileModalOpen(false)}><section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-supplement-title" onMouseDown={(event) => event.stopPropagation()}><button type="button" className="profile-modal-close" aria-label="關閉真實生活條件表單" onClick={() => setProfileModalOpen(false)}>×</button><ProfileSupplementForm embedded profile={profile} petName={petName} breed={breed} species={species} onChange={(nextProfile) => { setProfileEdited(true); onProfileChange(nextProfile); }} onBack={() => undefined} onReset={() => undefined} /></section></div>}
   </div>;
 }

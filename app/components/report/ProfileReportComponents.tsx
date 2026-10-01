@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { money } from "../../data/shared/expenses";
 import { getHomeReadinessConfig, type HomeReadinessTextBlock, type HomeReadinessTextSegment } from "../../data/shared/home-readiness";
 import { getCareReviewAdditionalNotes } from "../../data/shared/care-review-notes";
+import { masteredCareThemesBySpecies, type MasteredCareSource } from "../../data/shared/mastered-care-themes";
 import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text";
 import { getAllScenariosForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
@@ -1232,153 +1233,21 @@ export function AssessmentReport({
       knowledgePoints: knowledgePointsForScenario(scenario, petName, species),
     }));
   const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
-  const discussionTopicIds = new Set(discussionTopics.map((topic) => topic.id));
-  const masteredDetails: SharedDiscussionTopic[] = Object.values(answers)
-    // 曾答錯、選擇「還不確定」或需補充確認的題目只保留在下方補強區，不重複列在已建立觀念。
-    .filter((answer) => answer.finalResult === "correct" && !discussionTopicIds.has(answer.scenarioId))
-    .map((answer) => reportScenarios.find((scenario) => scenario.id === answer.scenarioId))
-    .filter((scenario): scenario is Scenario => Boolean(scenario))
-    .map((scenario) => ({
-      id: scenario.id,
-      title: personalizeReportText(scenario.title, petName, species),
-      topic: personalizeReportText(scenario.topic ?? scenario.stage, petName, species),
-      summary: personalizeReportText(scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName, species),
-      knowledgePoints: knowledgePointsForScenario(scenario, petName, species),
-    }));
   const activeKnowledge = activeDiscussion;
-  // 僅彙整使用者第一次即掌握的題目，讓此區維持快速掃讀的主題摘要。
-  const masteredThemes = (species === "rabbit" ? [
-    {
-      id: "rabbit-safe-home",
-      icon: "⌂",
-      title: "安全生活空間",
-      summary: "知道要準備防滑、可躲藏且避開危險物的安全活動環境。",
-      scenarioIds: [],
-      preparationComplete: roomCompletion === 100 && hazardsReady.length === speciesConfig.hazards.length,
-    },
-    {
-      id: "rabbit-arrival",
-      icon: "♡",
-      title: "接回與適應",
-      summary: "理解兔子剛到家時需要安靜、可退避的空間，依自己的節奏探索。",
-      scenarioIds: ["rabbit-arrival-adjustment"],
-    },
-    {
-      id: "rabbit-food-daily",
-      icon: "✦",
-      title: "飲食與日常照護",
-      summary: "了解牧草、乾淨飲水、環境巡視與日常觀察都需要穩定安排。",
-      scenarioIds: ["rabbit-carry-sort", "rabbit-daily-check", "rabbit-heatstroke-prevention", "rabbit-cecotropes", "rabbit-bath"],
-      practiceComplete: arrivalMealComplete,
-    },
-    {
-      id: "rabbit-breed-care",
-      icon: "◌",
-      title: "兔子的生理與習慣",
-      summary: "能分辨正常生理行為，並把繁殖、清潔與日常照護放進長期安排。",
-      scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"],
-    },
-    {
-      id: "rabbit-life-change",
-      icon: "✚",
-      title: "生活變化",
-      summary: "知道忙碌時的交接、排泄與食慾異常，以及高齡後的環境調整都需要提早安排。",
-      scenarioIds: ["rabbit-busy-care", "rabbit-health-emergency", "rabbit-senior-care"],
-    },
-  ] : species === "bird" ? [
-    { id: "bird-safe-home", icon: "⌂", title: "安全生活空間", summary: "知道鳥籠、棲木、食水容器與空氣安全都必須在到家前準備好。", scenarioIds: [], preparationComplete: roomCompletion === 100 && hazardsReady.length === speciesConfig.hazards.length },
-    { id: "bird-arrival", icon: "♡", title: "接回與適應", summary: "理解剛到家的鳥需要安靜、遮光感與循序適應。", scenarioIds: ["bird-arrival-adjustment"] },
-    { id: "bird-daily-care", icon: "✦", title: "飲食與日常照護", summary: "能分辨安全食物，並把托盤清潔、健康觀察與陪伴安排成每天的節奏。", scenarioIds: ["bird-cage-inspection", "bird-picky-eating", "bird-stereotypy", "bird-excessive-calling"], practiceComplete: lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady },
-    { id: "bird-reality", icon: "◌", title: "鳥的長期責任", summary: "理解空氣安全、健康監測、叫聲與社交需求都是飼養前必須接受的現實。", scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"] },
-    { id: "bird-life-change", icon: "✚", title: "生活變化", summary: "知道忙碌交接、急症就醫與高齡環境調整都要提早安排。", scenarioIds: ["bird-busy-care", "bird-health-emergency", "bird-senior-care"] },
-  ] : species === "cat" ? [
-    {
-      id: "cat-safe-home",
-      icon: "⌂",
-      title: "安全生活空間",
-      summary: "讓牠能在熟悉、可退回的環境裡，按照自己的節奏安心生活。",
-      scenarioIds: ["cat-arrival-adjustment"],
-    },
-    {
-      id: "cat-daily-care",
-      icon: "✦",
-      title: "日常照護",
-      summary: "把互動、抓磨與環境清潔安排成每天可持續的照顧節奏。",
-      scenarioIds: ["cat-night-energy-care", "cat-scratching-care", "cat-climbing-care"],
-    },
-    {
-      id: "cat-breed-care",
-      icon: "◌",
-      title: "品種與日常習慣",
-      summary: "依牠的個性、活動量、飲食與健康需求，安排合適的日常照顧。",
-      scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"],
-    },
-    {
-      id: "cat-life-arrangement",
-      icon: "♡",
-      title: "生活安排",
-      summary: "生活忙碌時，也先替牠安排穩定、可信任的照顧支持。",
-      scenarioIds: ["cat-busy-care"],
-    },
-    {
-      id: "cat-health-senior",
-      icon: "☀",
-      title: "健康與高齡照護",
-      summary: "持續觀察日常變化，並隨年齡調整牠容易活動與休息的環境。",
-      scenarioIds: ["cat-illness-vet", "cat-growing-old"],
-    },
-  ] : [
-    {
-      id: "dog-safe-home",
-      icon: "⌂",
-      title: "安全生活空間",
-      summary: "知道先整理安全、穩定的環境，讓牠能安心適應與活動。",
-      scenarioIds: ["arrival-adjustment", "behavior-chewing", "behavior-toileting"],
-    },
-    {
-      id: "dog-daily-care",
-      icon: "✦",
-      title: "每日照護安排",
-      summary: "了解餵食、清潔、互動與規律如廁，都需要每天穩定投入。",
-      scenarioIds: ["behavior-barking", "behavior-chewing", "behavior-toileting"],
-    },
-    {
-      id: "dog-breed-care",
-      icon: "◌",
-      title: "品種與日常習慣",
-      summary: "能把品種特性放進日常安排，提前準備合適的照顧方式。",
-      scenarioIds: ["breed-challenge-1", "breed-challenge-2", "breed-challenge-3"],
-    },
-    {
-      id: "dog-life-arrangement",
-      icon: "♡",
-      title: "生活變化與協助安排",
-      summary: "知道忙碌時應先安排可信任的人，並清楚交接照顧需求。",
-      scenarioIds: ["busy-daily-care"],
-    },
-    {
-      id: "dog-health-senior",
-      icon: "☀",
-      title: "健康與高齡照護",
-      summary: "知道狀況改變時要記錄並尋求協助，也會為高齡生活提早準備。",
-      scenarioIds: ["illness-vet", "growing-old"],
-    },
-  ]).filter((theme) => !["rabbit-breed-care", "bird-reality", "cat-breed-care", "dog-breed-care"].includes(theme.id)).map((theme) => ({
-    ...theme,
-    matchedCount: masteredDetails.filter((detail) => (theme.scenarioIds as readonly string[]).includes(detail.id)).length
-      + ("preparationComplete" in theme && theme.preparationComplete ? 1 : 0)
-      + ("practiceComplete" in theme && theme.practiceComplete ? 1 : 0),
-  })).filter((theme) => theme.matchedCount > 0);
-  const masteredThemesWithHomeReadiness = [
-    ...(homeReadinessComplete && selectedHousing ? [{
-      id: "home-readiness",
-      icon: "⌂",
-      title: "家庭與居住確認",
-      summary: `${selectedHousing.label}；${homeReadinessText(selectedHousing.reviewSummary, petName)}`,
-      complete: true,
-    }] : []),
-    ...masteredThemes,
-  ];
+  const completedSource = (source: MasteredCareSource) => {
+    if (source.kind === "home-readiness") return homeReadinessComplete;
+    if (source.kind === "room-preparation") return roomCompletion === 100 && hazardsReady.length === speciesConfig.hazards.length;
+    if (source.kind === "trunk-preparation") return trunkPassed;
+    if (source.kind === "arrival-meal") return arrivalMealComplete;
+    if (source.kind === "scenario") return source.scenarioIds.every((scenarioId) => answers[scenarioId]?.finalResult === "correct");
+    if (source.key === "walkingComplete") return lifeActivity.walkingComplete;
+    if (source.key === "cat-litter-complete") return lifeActivity.catInspectionSteps.includes("litter-complete");
+    if (source.key === "rabbit-grooming-complete") return lifeActivity.rabbitGroomingState === "interaction-complete";
+    return (source.requiredStepIds ?? []).every((stepId) => lifeActivity.birdCageInspectionSteps.includes(stepId));
+  };
+  const visibleMasteredCareThemes = (masteredCareThemesBySpecies[species] ?? [])
+    .filter((theme) => theme.sources.every(completedSource))
+    .sort((left, right) => left.order - right.order);
   const knowledgeModal = activeKnowledge && typeof document !== "undefined"
     ? createPortal(
       <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
@@ -1592,9 +1461,9 @@ export function AssessmentReport({
 
         <section className="care-review-section care-review-mastered" aria-labelledby="mastered-care-title">
           <header><span aria-hidden="true">✓</span><div><h2 id="mastered-care-title">你已建立的照顧觀念</h2><p>這些是你在情境中已經掌握、可以帶進真實生活的照顧方向。</p></div></header>
-          {masteredThemesWithHomeReadiness.length ? <div className="care-review-mastered-theme-grid">
-            {masteredThemesWithHomeReadiness.map((theme) => <article key={theme.id} className={"complete" in theme && !theme.complete ? "is-pending" : ""}>
-              <span aria-hidden="true">{"complete" in theme && !theme.complete ? "○" : "✓"}</span>
+          {visibleMasteredCareThemes.length ? <div className="care-review-mastered-theme-grid">
+            {visibleMasteredCareThemes.map((theme) => <article key={theme.id}>
+              <span aria-hidden="true">✓</span>
               <div><b>{theme.title}</b><p>{theme.summary}</p></div>
             </article>)}
           </div> : <p className="care-review-empty">完成並答對情境題後，這裡會整理你已建立的照顧觀念。</p>}

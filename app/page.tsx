@@ -101,9 +101,8 @@ export default function Home() {
   const [breed, setBreed] = useState("");
   const [selectionPage, setSelectionPage] = useState<"species" | "breed" | "name" | "history" | "transition">("species");
   const [selectionReached, setSelectionReached] = useState(0);
-  const [hasPreviousDog, setHasPreviousDog] = useState<boolean | null>(null);
-  const [previousBreed, setPreviousBreed] = useState("");
-  const [previousDogName, setPreviousDogName] = useState("");
+  const [hasPreviousPet, setHasPreviousPet] = useState<boolean | null>(null);
+  const [oldPetName, setOldPetName] = useState("");
   const [preparationTask, setPreparationTask] = useState(0);
   const [preparationReached, setPreparationReached] = useState(0);
   const [preparationReplayTask, setPreparationReplayTask] = useState<number | null>(null);
@@ -296,7 +295,9 @@ export default function Home() {
 
   function selectTrunkItem(id: string) {
     if (!id) return;
-    const expenseIds = speciesConfig.trunkItems.find((item) => item.id === id)?.expenseIds ?? [];
+    const trunkItem = speciesConfig.trunkItems.find((item) => item.id === id);
+    const reusedExpenseIds = new Set(trunkItem?.reusedExpenseIds ?? []);
+    const expenseIds = (trunkItem?.expenseIds ?? []).filter((expenseId) => !reusedExpenseIds.has(expenseId));
     setTrunkSelected((current) => {
       if (current.includes(id)) return current;
       const next = [...current, id];
@@ -407,9 +408,8 @@ export default function Home() {
     setBreed(nextSelection?.breed ?? "");
     setSelectionPage(nextSelection ? "name" : "species");
     setSelectionReached(nextSelection ? 2 : 0);
-    setHasPreviousDog(null);
-    setPreviousBreed("");
-    setPreviousDogName("");
+    setHasPreviousPet(null);
+    setOldPetName("");
     setPreparationTask(0);
     setPreparationReached(0);
     setPreparationReplayTask(null);
@@ -470,6 +470,7 @@ export default function Home() {
     // 會先進一次取名頁、確認後又回到取名頁，造成重複渲染與重複輸入。
     if (selectionChanged) {
       resetAllGameData(nextSelection, { preserveTestMode: testMode });
+      if (testMode) setPetName("多多");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -505,11 +506,10 @@ export default function Home() {
     setCategory("dog");
     setBreed("dog");
     committedSelectionRef.current = { category: "dog", breed: "dog" };
-    // 測試模式不依物種帶入犬隻名稱，統一使用中性的預設名稱。
-    setPetName("小咪");
-    setHasPreviousDog(true);
-    setPreviousBreed("poodle");
-    setPreviousDogName("豆豆");
+    // 測試模式不依物種帶入名稱，統一使用同一個預設名稱。
+    setPetName("多多");
+    setHasPreviousPet(true);
+    setOldPetName("豆豆");
     setSelectionReached(4);
     setPreparationReached(2);
     setFurthestStep(8);
@@ -601,7 +601,7 @@ export default function Home() {
           />
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} latestExpense={latestExpense} breed={breed} species={category} />}
-            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onSelectSpecies={selectSpeciesForJourney} onPetName={setPetName} hasPreviousDog={hasPreviousDog} previousBreed={previousBreed} previousDogName={previousDogName} onHasPreviousDog={(value) => { setHasPreviousDog(value); if (!value) { setPreviousBreed(""); setPreviousDogName(""); } }} onPreviousBreed={setPreviousBreed} onPreviousDogName={setPreviousDogName} onNext={confirmSelectedJourney} />}
+            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onSelectSpecies={selectSpeciesForJourney} onPetName={setPetName} hasPreviousPet={hasPreviousPet} oldPetName={oldPetName} onHasPreviousPet={(value) => { setHasPreviousPet(value); if (!value) setOldPetName(""); }} onOldPetName={setOldPetName} onNext={confirmSelectedJourney} />}
             {step === 2 && renderPreparation()}
             {step >= 3 && step <= 6 && renderLifeJourney()}
             {step === 7 && <>

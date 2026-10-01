@@ -80,7 +80,6 @@ export const catAssets = {
 export const catSpeciesData = {
   id: "cat" as const,
   breeds: catBreeds,
-  previousBreeds: catBreeds,
   assets: catAssets,
   lifeScenarios: catLifeScenarios,
   journeyItems: catJourneyItems,

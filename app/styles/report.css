@@ -44,9 +44,11 @@
 .profile-modal { position: relative; width: min(760px, 100%); max-height: min(860px, calc(100vh - 48px)); overflow: auto; padding: 28px; border: 1px solid rgba(216,199,170,.9); border-radius: 24px; background: #fffdf8; box-shadow: 0 24px 60px rgba(56,42,24,.22); }
 .profile-modal-close { position: absolute; top: 12px; right: 14px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--ink); font-size: 24px; line-height: 1; cursor: pointer; }
 .profile-modal-close:focus-visible { outline: 3px solid rgba(212,154,36,.35); outline-offset: 2px; }
-.official-acquisition-footer-actions { align-items: center; margin-top: 32px; }
+.official-acquisition-footer-actions { align-items: center; margin-top: 32px; border-top: 0; }
 .official-final-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .official-share-status { margin: 12px 0 0; color: var(--gold-dark); font-size: 13px; font-weight: 900; text-align: right; }
+.official-acquisition-source-note { display: flex; flex-wrap: wrap; gap: 6px 24px; margin-top: 30px; padding-top: 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; font-weight: 700; line-height: 1.7; }
+.official-acquisition-source-note p { margin: 0; }
 
 @media (max-width: 720px) {
   .profile-wizard-head { align-items: flex-start; }.profile-wizard-head h1 { font-size: 35px; }.profile-panel { min-height: 0; padding: 22px 18px; border-radius: 20px; }.profile-time-grid, .supplement-choice-grid, .housing-options, .pet-experience-row { grid-template-columns: 1fr; }.home-space-gallery figure, .home-space-add-photo { width: min(100%,190px); }
@@ -56,6 +58,7 @@
   .official-acquisition-footer-actions, .official-final-actions { align-items: stretch; flex-direction: column; }
   .official-final-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .official-share-status { text-align: center; }
+  .official-acquisition-source-note { display: grid; gap: 5px; margin-top: 24px; }
 }
 .compact-assessment .a4-toolbar {
   height: 0;

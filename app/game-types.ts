@@ -251,7 +251,8 @@ export type RoomItem = {
   expenseId?: string;
   /** 同一個實際互動可同時帶入用品與每月耗材等共用費用。 */
   expenseIds?: string[];
-  purpose: string;
+  /** 物品完成放置後，顯示於用品卡中的簡短說明。 */
+  description: string;
 };
 
 export type HazardItem = {
@@ -271,12 +272,9 @@ export type TrunkItem = {
   kind: "document" | "supply";
   image: string;
   description: string;
-  reason: string;
-  caution: string;
-  sourceLabel: string;
-  sourceUrl?: string;
-  feedback: string;
   preparedLabel: "已攜帶" | "已準備";
   expenseIds?: string[];
+  /** 已在前一個準備階段計入、此處僅重複使用的穩定費用 id。 */
+  reusedExpenseIds?: string[];
   placement: { x: number; y: number; width: number; layer: number };
 };

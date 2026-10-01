@@ -15,7 +15,6 @@ export const speciesConfig = {
   dog: {
     ...legacySpeciesGameConfig.dog,
     breeds: dogSpeciesData.breeds,
-    previousBreeds: dogSpeciesData.previousBreeds,
     assets: dogSpeciesData.assets,
     lifeScenarios: dogSpeciesData.lifeScenarios,
     journeyItems: dogSpeciesData.journeyItems,
@@ -25,7 +24,6 @@ export const speciesConfig = {
   cat: {
     ...legacySpeciesGameConfig.cat,
     breeds: catSpeciesData.breeds,
-    previousBreeds: catSpeciesData.previousBreeds,
     assets: catSpeciesData.assets,
     lifeScenarios: catSpeciesData.lifeScenarios,
     journeyItems: catSpeciesData.journeyItems,

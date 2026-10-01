@@ -1,7 +1,7 @@
 import { getDogBreedChallengeScenarios } from "./dog/breed-challenges";
 import { dogJourneyItems } from "./dog/journey";
 import { dogLifeScenarios } from "./dog/scenarios";
-import { dogBreeds, dogPreviousBreeds } from "./dog/selection";
+import { dogBreeds } from "./dog/selection";
 import { dogDepartureTrunkItems, dogHazards, dogRoomItems } from "./dog/preparation";
 
 /**
@@ -46,7 +46,6 @@ export const dogAssets = {
 export const dogSpeciesData = {
   id: "dog" as const,
   breeds: dogBreeds,
-  previousBreeds: dogPreviousBreeds,
   roomItems: dogRoomItems,
   hazards: dogHazards,
   trunkItems: dogDepartureTrunkItems,

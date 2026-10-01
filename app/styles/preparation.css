@@ -111,9 +111,6 @@
 .car-document-folder span { position: absolute; left: 50%; bottom: -10px; width: max-content; max-width: 150px; padding: 4px 8px; border-radius: 999px; background: rgba(255,253,247,.94); font-size: 9px; font-weight: 900; transform: translateX(-50%); }
 .placed-car-item { position: absolute; height: auto; object-fit: contain; transform: translate(-50%,-50%); filter: drop-shadow(0 7px 6px rgba(44,53,54,.2)); animation: carItemArrive .48s cubic-bezier(.16,1.2,.3,1) both; }
 .placed-car-id { left: 0%; top: 34%; z-index: 4; width: 12%; transform: translate(-50%,-50%) rotate(-4deg); }
-.placed-car-carrier-kit { height: 32%; }
-.placed-car-carrier-kit .carrier-image { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: contain; animation: carrierArrive .45s .12s both; }
-.placed-car-carrier-kit .carrier-pad { position: absolute; left: 14%; bottom: 8%; z-index: 3; width: 43%; height: auto; object-fit: contain; animation: padArrive .35s both; }
 .departure-item-information { margin-top: 18px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 20px; background: white; box-shadow: 0 8px 24px rgba(70,53,26,.05); }
 .departure-item-information h2 { margin: 0; font-size: 22px; }
 .departure-item-information .eyebrow { margin-bottom: 4px; }
@@ -190,7 +187,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .placed-car-item, .placed-car-carrier-kit .carrier-image, .placed-car-carrier-kit .carrier-pad, .departure-layout { animation: none; transition: none; }
+  .placed-car-item, .departure-layout { animation: none; transition: none; }
 }
 
 /* 手機版準備互動：房間、後車廂與第一餐的版面、固定 slot 與位置變數。 */

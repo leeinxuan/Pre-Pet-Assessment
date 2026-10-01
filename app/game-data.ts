@@ -2,7 +2,7 @@ import { dogBreeds } from "./data/species/dog/selection";
 import { catBreeds } from "./data/species/cat/selection";
 import { rabbitSelection } from "./data/species/rabbit";
 import { arrivalMealMobilePlacements as dogArrivalMealMobilePlacements, roomDoorplatePlacement as dogRoomDoorplatePlacement } from "./data/species/dog/layout";
-import { dogDepartureTrunkItems, dogHazards, dogRoomItems, dogTrunkItems } from "./data/species/dog/preparation";
+import { dogDepartureTrunkItems, dogHazards, dogRoomItems } from "./data/species/dog/preparation";
 /** @deprecated 請改從 data/shared/app-flow.ts 匯入。 */
 export {
   categories,
@@ -43,11 +43,10 @@ export const hazards = dogHazards;
 export const arrivalMealMobilePlacements = dogArrivalMealMobilePlacements;
 
 /** @deprecated 請改至 data/species/dog/preparation.ts 調整。 */
-export const trunkItems = dogTrunkItems;
+export const trunkItems = dogDepartureTrunkItems;
 /** @deprecated 請改至 data/species/dog/preparation.ts 調整。 */
 export const departureTrunkItems = dogDepartureTrunkItems;
 
 /** @deprecated 請改從 data/shared/legacy-scenarios.ts 匯入。 */
 export { scenarios } from "./data/shared/legacy-scenarios";
-
 
