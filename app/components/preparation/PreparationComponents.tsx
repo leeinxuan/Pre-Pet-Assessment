@@ -335,7 +335,8 @@ export function RoomPreparation({
               {row.map((item) => {
                 const selected = selectedItems.includes(item.id);
                 const note = { label: item.label, note: item.description };
-                const price = item.expenseId ? expensePriceText([item.expenseId], breed) : "";
+                const expenseIds = [...(item.expenseIds ?? []), ...(item.expenseId ? [item.expenseId] : [])];
+                const price = expensePriceText(Array.from(new Set(expenseIds)), breed);
                 const canPrepare = hazardsCleared && (!roomFlow || item.id === roomFlow.fenceItemId || (fencePlaced && insideView));
                 return <div key={item.id} className="supply-slot">
                   {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : fencePlaced ? "請先進入圍欄內部" : "請先放置圍欄"}`} disabled={exitingItems.includes(item.id) || !canPrepare} onClick={() => prepareItem(item.id)}>

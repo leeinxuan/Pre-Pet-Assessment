@@ -41,7 +41,7 @@ export const catLifeScenarios: Scenario[] = [
     stage: "一起生活的第一天",
     stageId: "arrival",
     timeLabel: "一起生活的第一天",
-    title: "第一次來到新家",
+    title: "第一天適應新家",
     description: "`{petName}` 剛到陌生的新家，躲在外出籠裡觀察。家人很想立刻摸摸牠、抱牠出來看看房間。",
     topic: "貓咪適應新家與安全感",
     reportSummary: "貓咪到家第一天應先進安靜安全的小房間，關好門窗，讓牠自行走出外出籠並用自己的速度探索。",
@@ -152,6 +152,12 @@ export const catLifeScenarios: Scenario[] = [
       showCareTime: false,
       additionalAdvice: ["如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"],
     },
+    busyCareChecklist: [
+      { id: "daily-care", prompt: "你已經向協助者說明 {petName} 每天的餵食、換水、貓砂盆清理、環境安全巡視安排了嗎？", correctAnswer: "yes", reviewHint: "每日餵食、換水、貓砂盆清理與環境安全巡視安排還需要先交接" },
+      { id: "support-confirmed", prompt: "我還沒有確認協助者在你忙碌時，是否真的有時間協助照顧 {petName}。", correctAnswer: "no", reviewHint: "協助者的時間還需要先確認" },
+      { id: "care-willing", prompt: "協助者願意依照你的交接方式照顧 {petName} 嗎？", correctAnswer: "yes", reviewHint: "協助者的意願還需要先確認" },
+      { id: "emergency-contact", prompt: "協助者知道 {petName} 出現異常或緊急狀況時怎麼聯絡你嗎？", correctAnswer: "yes", reviewHint: "緊急聯絡方式還需要補充確認" },
+    ],
     choices: [
       { id: "cat-alone-food", text: "出門前多放一些食物和水，回家後再一起處理砂盆和陪玩", result: "incorrect", ...incorrect, explanation: "食物和水不能取代砂盆清理、環境巡視、陪玩與狀況觀察，也可能造成食物過量或變質。", suggestion: "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。" },
       { id: "family-helper", text: "請可信任、了解照護需求的家人或朋友協助", result: "correct", ...positive, explanation: "貓咪看起來獨立，仍需要**穩定的食水、乾淨砂盆**、安全環境、適量互動與細心觀察。忙碌時先安排**可信任的人**協助，能讓牠的日常維持安心與規律。", suggestion: "交接時要說明貓咪個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。" },

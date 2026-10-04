@@ -33,6 +33,8 @@ export type ScenarioChoice = {
   id: string;
   text: string;
   result: ScenarioResult;
+  /** 忙碌備援題中，選到此選項後進入共用交接確認流程。 */
+  isSupportChoice?: boolean;
   feedbackTitle: string;
   explanation: string;
   suggestion?: string;
@@ -56,6 +58,17 @@ export type ScenarioCompletionFeedback = {
   reminder?: string;
 };
 
+/** 題目完成頁下方的補充提醒；內容與圖片預留說明均由題目資料提供。 */
+export type ScenarioCompletionReminder = {
+  title: string;
+  items: Array<{
+    title: string;
+    description: string;
+    imagePlaceholderLabel: string;
+  }>;
+  footer: string;
+};
+
 /**
  * 忙碌日常四項交接確認完成後的共用回饋內容。
  * 文案與每日照護時間均由物種情境資料提供，避免共用元件混入特定物種內容。
@@ -75,6 +88,14 @@ export type BusyCareCompletionContent = {
   /** 某些完成頁只需要反思與知識；不影響報告中的每日照護時間資料。 */
   showCareTime?: boolean;
   additionalAdvice?: string[];
+};
+
+/** 忙碌備援計劃的交接確認題；文字與順序由各物種情境資料提供。 */
+export type BusyCareChecklistQuestion = {
+  id: string;
+  prompt: string;
+  correctAnswer: "yes" | "no";
+  reviewHint?: string;
 };
 
 export type Scenario = {
@@ -105,8 +126,16 @@ export type Scenario = {
   /** 特定情境答對後顯示於共用做得很好頁的綠色提醒。 */
   completionNotice?: string;
   completionFeedback?: ScenarioCompletionFeedback;
+  /** 題目資料指定時，顯示於主要完成回饋框下方的補充提醒。 */
+  completionReminder?: ScenarioCompletionReminder;
+  /** 互動題完成後仍留在原頁時顯示的完成標題。 */
+  activityCompletionTitle?: string;
+  /** 互動題自動揭示正解時，顯示於完成標題上方的低層級提示。 */
+  activityRevealNotice?: string;
   /** 忙碌日常完成頁的專屬內容；版型仍由共用 BusyCareActivity 呈現。 */
   busyCareCompletion?: BusyCareCompletionContent;
+  /** 忙碌備援計劃的四項確認題；不可依物種名稱在 UI 推斷文案。 */
+  busyCareChecklist?: BusyCareChecklistQuestion[];
   /** 題庫資料識別欄位：供旅程、摘要與除錯使用，UI 不以畫面位置推斷。 */
   speciesId?: string;
   breedId?: string;

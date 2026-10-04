@@ -18,7 +18,7 @@ const rabbitKnowledge = {
 /** 兔子生活情境題；所有文字依 rabbit-game-planning.md 建立。 */
 export const rabbitLifeScenarios: Scenario[] = [
   {
-    id: "rabbit-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "接回家", title: "牠躲起來了……",
+    id: "rabbit-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "接回家", title: "第一天適應新家",
     description: "等了這麼久，`{petName}` 終於到家了。牠走出外出籠後快速嗅了嗅，隨即衝進躲藏箱，縮在最裡面，只有鼻子偶爾微微顫動。\n\n你看著牠，不確定是不是該做點什麼。",
     topic: "兔子適應新家與安全感", reportSummary: "兔子剛到家躲藏是正常反應；應保持安靜，讓牠自己決定何時探索。", artIndex: 0,
     learningPoints: rabbitKnowledge.arrival, knowledgeTitle: "兔子小知識",
@@ -141,25 +141,31 @@ export const rabbitLifeScenarios: Scenario[] = [
     ],
   },
   {
-    id: "rabbit-busy-care", stage: "當生活發生變化", stageId: "life-change", stageTitle: "當生活發生變化", timeLabel: "當生活發生變化", title: "如果你很忙，牠怎麼辦？",
-    description: "你臨時需要到外地出差三天，沒辦法親自照顧 `{petName}`。這幾天，牠怎麼辦？", topic: "忙碌時的兔子照護安排",
+    id: "rabbit-busy-care", stage: "當生活發生變化", stageId: "life-change", stageTitle: "當生活發生變化", timeLabel: "當生活發生變化", title: "臨時晚歸，{petName} 的照顧怎麼辦？",
+    description: "今天臨時需要加班，預計晚上九點才能到家。{petName} 到了傍晚就該補充牧草、換水和清理便盆——而且每天觀察糞便狀況，是你必須親自確認的事。你開始想：這樣下去，今晚誰來照顧牠？", questionText: "你會怎麼做？", topic: "忙碌備援計畫",
     reportSummary: "兔子需要每日補草、換水、清便盆與觀察糞便；離家時應安排可信任的人每天協助照顧。", artIndex: 5,
     busyCareCompletion: {
       title: "做得很好！",
-      encouragement: "你認真安排了支援，確保 {petName} 在你不在時也能被好好照顧，做得很好！照顧的責任不因生活變化而消失。",
-      reflectionText: "在 {petName} 的世界裡，你的存在是他安全感的一部分。",
+      encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！",
+      reflectionText: "在 {petName} 的世界裡，你是那個讓牠願意靠近的人。",
       reflectionTitle: "留給自己的一個問題",
-      reflectionContent: ["你每天能撥出時間讓 {petName} 在圍欄外活動，並確認他今天有沒有正常吃草、排便嗎？就算是忙碌的日子？"],
+      reflectionContent: ["忙完這段時間回到家，你還有心思觀察 {petName} 的糞便、牧草量和精神狀態，確認牠一切都好嗎？"],
       careTimeTitle: "每日照護時間",
       careTimeItems: rabbitReport.dailyCareBreakdown,
       showCareTime: false,
-      additionalAdvice: ["如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔兔照護的寵物旅館，作為備用方案。接受兔子的旅館較少，建議平時就事先查詢確認。"],
+      additionalAdvice: ["如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館或兔科獸醫診所提供的住宿服務，作為備用方案。"],
     },
+    busyCareChecklist: [
+      { id: "daily-care", prompt: "你已經向協助者說明 {petName} 每天的牧草補充、換水、便盆清理、糞便觀察與健康巡視安排了嗎？", correctAnswer: "yes", reviewHint: "每日牧草補充、換水、便盆清理、糞便觀察與健康巡視安排還需要先交接" },
+      { id: "support-confirmed", prompt: "我還沒有確認協助者在你忙碌時，是否真的有時間協助照顧 {petName}。", correctAnswer: "no", reviewHint: "協助者的時間還需要先確認" },
+      { id: "care-willing", prompt: "協助者願意依照你的交接方式照顧 {petName} 嗎？", correctAnswer: "yes", reviewHint: "協助者的意願還需要先確認" },
+      { id: "emergency-contact", prompt: "協助者知道 {petName} 出現異常或緊急狀況時怎麼聯絡你嗎？", correctAnswer: "yes", reviewHint: "緊急聯絡方式還需要補充確認" },
+    ],
     choices: [
-      { id: "rabbit-busy-hay", text: "多放一週份量的牧草，讓 {petName} 自己吃", result: "incorrect", ...incorrect, explanation: "牧草需要每天補充新鮮的；飲水、便盆與糞便觀察也不能中斷。", suggestion: "安排可信任的人每日協助照顧。" },
-      { id: "rabbit-busy-helper", text: "請家人或朋友每天來幫忙照顧 {petName}", result: "correct", ...positive, explanation: "兔子的照護需要每天進行；先確認協助者知道照護步驟與危急警訊。", suggestion: "交接牧草、飲水、便盆、糞便觀察與緊急聯絡方式。" },
-      { id: "rabbit-busy-hotel", text: "把 {petName} 帶到一般寵物旅館寄宿", result: "incorrect", ...incorrect, explanation: "並非每家旅館都熟悉兔子的照護需求。", suggestion: "若需寄宿，要先確認有兔子照護經驗並完整交接。" },
-      { id: "rabbit-busy-reduce", text: "這幾天就減少照顧頻率，撐過去就好", result: "incorrect", ...incorrect, explanation: "兔子會隱藏不適；照護中斷可能很快造成危險。", suggestion: "出發前先安排每日可到場的協助者。" },
+      { id: "seek-help", text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}", result: "correct", isSupportChoice: true, ...positive, explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。" },
+      { id: "rabbit-extra-hay", text: "出門前多放一份牧草，讓 {petName} 自己撐到晚上", result: "incorrect", ...incorrect, explanation: "多放牧草仍無法取代傍晚的飲水更換、便盆清理和糞便觀察。兔子的糞便狀況每天都需要確認，12 小時無進食就是危急訊號。確定要晚歸時，應先安排可信任的人代為照顧。（R4 危急警訊）" },
+      { id: "rabbit-neighbor-glance", text: "請鄰居幫忙「看一下」就好，不用特別交代", result: "incorrect", ...incorrect, explanation: "只是「看一下」可能遺漏牧草補充、便盆清理與糞便觀察，也不知道要注意什麼警訊。請照顧的人需要知道具體的照顧內容和緊急時如何聯絡你。（R2；R4）" },
+      { id: "rabbit-hold-till-return", text: "等晚上回家再一次處理，平常兔子也能撐幾小時", result: "incorrect", ...incorrect, explanation: "把傍晚的牧草補充、飲水和便盆清理全部延後，加上一整天沒有人觀察糞便狀況，可能在你不知情時發生問題。確定晚歸時，應事先安排合適的人接手照顧。（R4）" },
     ],
   },
   {
@@ -235,15 +241,27 @@ export const rabbitCarrySortSteps = [
 export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily-check", Scenario> = {
   "rabbit-carry-sort": {
     id: "rabbit-carry-sort", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護",
-    title: "和 {petName} 成為好朋友吧！", description: "{petName} 已經到家一段時間了，今天你想試著把牠抱起來。", topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
+    title: "和{petName} 成為好朋友吧！", description: "{petName} 已經到家一段時間了，跟你越來越熟悉。\n\n今天，你想試著第一次把牠抱起來。你慢慢靠近，{petName} 停下來看著你，鬍鬚輕輕一動。", topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
     questionText: "請把這 5 個動作拖曳到正確的順序，安全地抱起 {petName}。",
-    knowledgeTitle: "兔子小知識", learningPoints: [
-      "正確順序：**緩慢靠近** → **手背嗅聞** → **輕摸頭確認放鬆** → **雙手同時托胸和臀** → **靠著身體保持穩定**",
-      "<danger>請不要這樣抱兔兔</danger>",
-      "<danger>從耳朵拎起</danger>：耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。",
-      "<danger>讓牠腹部朝上</danger>：<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不安全。",
-      "<danger>從耳朵拎起</danger>或<danger>腹部朝上</danger>都可能造成嚴重傷害，永遠不要這樣做",
-    ],
+    activityCompletionTitle: "你已學會安全抱起 {petName} 的方式！",
+    activityRevealNotice: "不用擔心，抱兔子確實需要練習～我們一起看看正確的步驟吧！",
+    knowledgeTitle: "兔子小知識", learningPoints: [],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你知道怎麼讓 {petName} 安心被抱起，做得很好！每一個步驟都是在幫牠建立對你的信任。",
+      knowledgeTitle: "兔兔小知識",
+      knowledgeContent: [
+        { type: "paragraph", text: "**緩慢靠近、先讓牠嗅聞**，再確認牠沒有緊張或後退。抱起時要**同時托住胸口與臀部，讓牠靠著身體**；不可拎耳朵或讓腹部朝上。" },
+      ],
+    },
+    completionReminder: {
+      title: "<danger>請不要這樣抱兔兔</danger>",
+      items: [
+        { title: "<danger>從耳朵拎起</danger>", description: "耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。", imagePlaceholderLabel: "從耳朵拎起示意圖片待補" },
+        { title: "<danger>讓牠腹部朝上</danger>", description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不安全。", imagePlaceholderLabel: "腹部朝上示意圖片待補" },
+      ],
+      footer: "<danger>從耳朵拎起</danger>或<danger>腹部朝上</danger>都可能造成嚴重傷害，永遠不要這樣做",
+    },
     choices: [
       { id: "rabbit-carry-incorrect", text: "需要重新思考順序", result: "incorrect", ...incorrect, explanation: "安全抱兔需要循序降低緊張感，確認每一步都完成後再往下。" },
       { id: "rabbit-carry-complete", text: "完成安全抱兔步驟", result: "correct", ...positive, explanation: "你用循序、穩定的方式照顧牠的安全感。" },

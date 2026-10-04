@@ -115,6 +115,12 @@ export const dogLifeScenarios: Scenario[] = [
       reflectionContent: ["忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"],
       additionalAdvice: ["如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"],
     },
+    busyCareChecklist: [
+      { id: "daily-care", prompt: "你已經向協助者說明 {petName} 每天的餵食、換水、外出散步如廁、活動與陪伴安排了嗎？", correctAnswer: "yes", reviewHint: "每日餵食、換水、外出散步如廁、活動與陪伴安排還需要先交接" },
+      { id: "support-confirmed", prompt: "我還沒有確認協助者在你忙碌時，是否真的有時間協助照顧 {petName}。", correctAnswer: "no", reviewHint: "協助者的時間還需要先確認" },
+      { id: "care-willing", prompt: "協助者願意依照你的交接方式照顧 {petName} 嗎？", correctAnswer: "yes", reviewHint: "協助者的意願還需要先確認" },
+      { id: "emergency-contact", prompt: "協助者知道 {petName} 出現異常或緊急狀況時怎麼聯絡你嗎？", correctAnswer: "yes", reviewHint: "緊急聯絡方式還需要補充確認" },
+    ],
     choices: [
       { id: "alone-with-food", text: "早上出門前先多放一些飼料和水，晚上忙完再好好陪牠", result: "incorrect", ...incorrect, explanation: "早上多放食物和水仍不能取代一整天的排泄、活動與狀況觀察，也可能造成過量進食或突發狀況沒有人發現。確定要加班時，應先安排能接手照顧的人，並清楚交接需求。" },
       { id: "family-helper", text: "請同住家人或朋友協助", result: "correct", ...positive, explanation: "你不只是想到一個人，也認真確認對方的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓小狗在你忙碌時仍獲得穩定照顧。" },

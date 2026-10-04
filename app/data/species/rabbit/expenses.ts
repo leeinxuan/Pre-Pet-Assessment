@@ -1,0 +1,30 @@
+import type { ExpenseRecord } from "../../../game-types";
+
+/** 兔子流程的費用清單。 */
+export const rabbitExpenses: Record<string, ExpenseRecord> = {
+  "rabbit-hay-rack": { id: "rabbit-hay-rack", name: "牧草架", amount: 550, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "牧草為兔子主食（>80%），牧草架保持乾淨可持續取用。" },
+  "rabbit-heavy-water-bowl": { id: "rabbit-heavy-water-bowl", name: "較重的飲水碗", amount: 200, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "選重碗避免打翻；比滾珠瓶更受兔子歡迎，也能觀察飲水量。" },
+  "rabbit-litter-box": { id: "rabbit-litter-box", name: "兔用便盆", amount: 400, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔有固定排泄習性，便盆須與食水區分開。" },
+  "rabbit-hiding-box": { id: "rabbit-hiding-box", name: "躲藏箱／小屋", amount: 500, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔子需要可自由進出的藏身處以紓解壓力。" },
+  "rabbit-anti-slip-mat": { id: "rabbit-anti-slip-mat", name: "防滑墊", amount: 280, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "地面須防滑，避免骨骼受傷；骨骼脆弱、掙扎易致腰椎損傷。" },
+  "rabbit-cooling-mat": { id: "rabbit-cooling-mat", name: "陶板涼感墊", amount: 400, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔子無汗腺僅靠雙耳散熱，氣溫高於 28℃ 時必備。" },
+  "rabbit-chew-toy": { id: "rabbit-chew-toy", name: "木製咀嚼玩具", amount: 120, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔齒終生生長，需持續提供磨牙材質。" },
+  "rabbit-dig-box": { id: "rabbit-dig-box", name: "挖掘箱", amount: 250, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "滿足挖掘天性並減少破壞行為。" },
+  "rabbit-fence-pen": { id: "rabbit-fence-pen", name: "圍片／柵欄", amount: 900, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "室內以圍片區隔飼養活動空間，讓兔子安全移動。" },
+  "rabbit-carrier": { id: "rabbit-carrier", name: "安全外出籠／提袋", amount: 1100, category: "一次性準備費", stage: "出發前準備", recurring: false, description: "兔子必須在適當外出籠中運送，不可散放；籠內需有足夠空間自然站立。" },
+  "rabbit-cooling-pack": { id: "rabbit-cooling-pack", name: "保冷袋／冰袋", amount: 250, category: "一次性準備費", stage: "出發前準備", recurring: false, description: "夏季接回途中協助避免高溫中暑。" },
+  "rabbit-arrival-checkup": { id: "rabbit-arrival-checkup", name: "到家後首次健康檢查", amount: 1500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, description: "建立可信任的兔科獸醫並進行健康評估。" },
+  "rabbit-sterilization": { id: "rabbit-sterilization", name: "絕育手術費用", amount: 3500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, description: "建議 4–5 月齡評估後絕育；預防子宮腫瘤、減少打架與意外繁殖。" },
+  "rabbit-hay-monthly": { id: "rabbit-hay-monthly", name: "每月牧草與基本飲食費", amount: 850, category: "每月基本支出", stage: "日常照護", recurring: true, description: "主食（>80%），提摩西草、果園草等，需每月穩定採購。" },
+  "rabbit-pellet-monthly": { id: "rabbit-pellet-monthly", name: "每月飼料費用（輔助）", amount: 200, category: "每月基本支出", stage: "日常照護", recurring: true, description: "輔助主食不超過飲食的 5%，依年齡選擇配方。" },
+  "rabbit-veggies-monthly": { id: "rabbit-veggies-monthly", name: "每月新鮮葉菜費用", amount: 350, category: "每月基本支出", stage: "日常照護", recurring: true, description: "新鮮葉菜約占飲食 10～15%，不以紅蘿蔔取代主食。" },
+  "rabbit-litter-monthly": { id: "rabbit-litter-monthly", name: "每月便盆墊料費用", amount: 275, category: "每月基本支出", stage: "日常照護", recurring: true, description: "定期更換吸附墊料，維持清潔並避免尿灼傷。" },
+  "rabbit-ac-monthly": { id: "rabbit-ac-monthly", name: "夏季冷氣電費（夏季月份）", amount: 1000, category: "每月基本支出", stage: "日常照護", recurring: true, description: "兔子非常怕熱，夏天（約 5–10 月）需全天開冷氣維持 25℃ 以下；電費依機型與使用時數而異，建議納入每月固定預算。" },
+  "rabbit-care-service": { id: "rabbit-care-service", name: "短期代養費用", amount: 2000, category: "照顧服務", stage: "飼主生活發生改變", recurring: false, description: "僅在選擇付費專業代養時加入。" },
+  "rabbit-emergency-reserve": { id: "rabbit-emergency-reserve", name: "緊急醫療備用金", amount: 5000, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "消化道停滯、受驚嚇緊迫等危急狀況需立即就醫；兔子隱藏不適，警訊出現時通常已嚴重。" },
+  "rabbit-mild-sick": { id: "rabbit-mild-sick", name: "輕症就診（輕微消化不順／皮膚問題）", amount: 1500, category: "臨時／醫療支出", stage: "生病與就醫", recurring: false, fromEmergency: true, description: "掛號費 + 診察費 + 3–5 天藥費；輕微消化不順、輕度皮膚問題等症狀輕微未達抽血標準；兔科獸醫資源稀少，建議事先確認診所。" },
+  "rabbit-moderate-sick": { id: "rabbit-moderate-sick", name: "急症檢查（嘔吐不吃／精神極差）", amount: 4500, category: "臨時／醫療支出", stage: "生病與就醫", recurring: false, fromEmergency: true, description: "掛號費 + 血液檢查 + X 光 + 藥費；消化道停滯初期（食慾明顯下降）、斜頸觀察等；兔類血量少，採樣費用較一般犬貓高。" },
+  "rabbit-hospitalization": { id: "rabbit-hospitalization", name: "住院與手術費用", amount: 15000, category: "臨時／醫療支出", stage: "生病與就醫", recurring: false, fromEmergency: true, description: "需住院觀察、腸道手術或齒科整牙（開刀）；兔子麻醉風險較高，手術費用相對昂貴；費用依病因差異極大。" },
+  "rabbit-routine-checkup": { id: "rabbit-routine-checkup", name: "定期健康檢查", amount: 1000, category: "臨時／醫療支出", stage: "生活變化", recurring: false, description: "建議至少半年至一年一次全面健康檢查；門齒與指甲每週檢查。" },
+  "rabbit-senior-room": { id: "rabbit-senior-room", name: "高齡環境調整用品", amount: 1500, category: "高齡用品", stage: "生活變化", recurring: false, description: "6 歲以上注意老化；調低棲架高度、強化防滑、提供保暖設施、增加健檢頻率。" },
+};

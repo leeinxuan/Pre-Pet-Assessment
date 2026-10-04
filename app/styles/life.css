@@ -1119,6 +1119,10 @@
 .rabbit-sort-list button { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 9px; background: white; cursor: pointer; }
 .rabbit-sort-list button:disabled { opacity: .35; cursor: default; }
 .rabbit-carry-activity .rabbit-activity-panel { padding: 0; }
+.rabbit-carry-activity { scroll-margin-top: 20px; }
+.rabbit-carry-description { white-space: pre-line; }
+.rabbit-carry-reveal-notice { margin: 0 0 7px !important; color: #607661 !important; font-size: 14px !important; font-weight: 800; line-height: 1.65 !important; }
+.rabbit-carry-completion-title { margin-bottom: 18px !important; color: var(--ink); }
 .rabbit-drag-sort-list li { grid-template-columns: 30px minmax(180px, .7fr) minmax(0, 1.3fr) auto; min-height: 156px; cursor: grab; touch-action: none; transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease; }
 .rabbit-drag-sort-list li:active { cursor: grabbing; }
 .rabbit-drag-sort-list li.is-dragging { opacity: .52; transform: scale(.985); box-shadow: 0 12px 24px rgba(70, 48, 24, .14); }
@@ -1130,6 +1134,16 @@
 .rabbit-unsafe-list { display: grid; gap: 6px; margin: 0 0 18px; padding: 13px 14px; border: 1px solid #d98d85; border-radius: 12px; background: #fff0ee; color: #6d302d; font-size: 14px; line-height: 1.6; }
 .rabbit-unsafe-list b { color: #a83f38; }
 .knowledge-danger { color: #a83f38; font-weight: 950; }
+.rabbit-activity-feedback { display: grid; gap: 22px; }
+.completion-reminder-block { padding: clamp(22px, 4vw, 34px); border: 1px solid #e6c779; border-radius: 24px; background: #fff8e9; color: var(--ink); }
+.completion-reminder-block > header { margin-bottom: 18px; }
+.completion-reminder-block h2 { margin: 0; font-size: clamp(22px, 3vw, 30px); line-height: 1.3; }
+.completion-reminder-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.completion-reminder-item { display: grid; grid-template-columns: minmax(140px, .85fr) minmax(0, 1.15fr); gap: 16px; align-items: center; min-width: 0; padding: 16px; border: 1px solid rgba(189, 134, 74, .35); border-radius: 18px; background: rgba(255, 253, 247, .76); }
+.completion-reminder-placeholder { display: grid; aspect-ratio: 4 / 3; place-items: center; border: 1px dashed #c99d65; border-radius: 13px; background: #fffdf8; color: #8d6d44; font-size: 13px; font-weight: 800; text-align: center; }
+.completion-reminder-item h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.45; }
+.completion-reminder-item p, .completion-reminder-footer { margin: 0; color: #5f5547; font-size: 14px; font-weight: 650; line-height: 1.75; }
+.completion-reminder-footer { margin-top: 18px; color: #70433c; font-weight: 800; }
 .rabbit-activity-message { margin: 16px 0; padding: 12px 14px; border-radius: 12px; background: var(--gold-soft); color: var(--ink); line-height: 1.65; }
 .scenario-option-card.incorrect { border-color: #c66a60; background: #fff4f2; color: #8f3e36; }
 .rabbit-activity-panel > .sort-attempts { display: inline-flex; align-items: center; gap: 6px; margin: 8px 0 18px; padding: 9px 15px; border: 1px solid #d89143; border-radius: 999px; background: #fff0d6; color: #873b10; font-size: 17px; font-weight: 900; }
@@ -1308,6 +1322,9 @@
   .rabbit-activity { padding: 22px 16px; }
   .rabbit-activity-grid { grid-template-columns: 1fr; }
   .rabbit-activity-media { min-height: 220px; }
+  .completion-reminder-block { padding: 20px 18px; border-radius: 20px; }
+  .completion-reminder-grid { grid-template-columns: 1fr; }
+  .completion-reminder-item { grid-template-columns: minmax(112px, .72fr) minmax(0, 1.28fr); gap: 13px; padding: 14px; }
   .rabbit-sort-list li { grid-template-columns: 28px 1fr; }
   .rabbit-sort-list div { grid-column: 2; }
   .rabbit-drag-sort-list li { grid-template-columns: 28px minmax(0, 1fr); min-height: 0; }

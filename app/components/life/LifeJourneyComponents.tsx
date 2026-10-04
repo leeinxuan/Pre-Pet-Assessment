@@ -29,6 +29,7 @@ import { birdActivityScenarios } from "../../data/species/bird/scenarios";
 import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text";
 import type {
   CareMember,
+  BusyCareChecklistQuestion,
   ExpenseRecord,
   ExpenseTriggerMeta,
   LifeActivityState,
@@ -268,6 +269,26 @@ function IncorrectExplanation({ text }: { text: string }) {
   const keyPoint = firstSentenceEnd >= 0 ? text.slice(0, firstSentenceEnd + 1) : text;
   const detail = firstSentenceEnd >= 0 ? text.slice(firstSentenceEnd + 1) : "";
   return <p className="incorrect-feedback-explanation"><strong className="incorrect-feedback-key">{renderKnowledgeText(keyPoint)}</strong>{detail && <span>{renderKnowledgeText(detail)}</span>}</p>;
+}
+
+function CompletionReminderBlock({ reminder, petName }: { reminder: NonNullable<Scenario["completionReminder"]>; petName: string }) {
+  return <section className="completion-reminder-block" aria-labelledby="completion-reminder-title">
+    <header>
+      <h2 id="completion-reminder-title">{renderKnowledgeText(withPetName(reminder.title, petName))}</h2>
+    </header>
+    <div className="completion-reminder-grid">
+      {reminder.items.map((item) => <article key={item.title} className="completion-reminder-item">
+        <div className="completion-reminder-placeholder" role="img" aria-label={item.imagePlaceholderLabel}>
+          <span>示意圖片待補</span>
+        </div>
+        <div>
+          <h3>{renderKnowledgeText(withPetName(item.title, petName))}</h3>
+          <p>{renderKnowledgeText(withPetName(item.description, petName))}</p>
+        </div>
+      </article>)}
+    </div>
+    <p className="completion-reminder-footer">{renderKnowledgeText(withPetName(reminder.footer, petName))}</p>
+  </section>;
 }
 
 
@@ -1283,29 +1304,10 @@ function DailyBehaviorActivityMulti({
   );
 }
 
-type BusyCareChecklistItem = {
-  id: string;
-  order: 1 | 2 | 3 | 4;
-  prompt: string;
-  correctAnswer: "yes" | "no";
-  petName: string;
-  helperName?: string;
-};
-
-const busyCareChecklistTemplate = [
-  { id: "daily-care", order: 1, prompt: "你已經向{helperName}說明{petName}每天的餵食、換水、排泄清理、活動與陪伴安排了嗎？", correctAnswer: "yes" },
-  { id: "support-confirmed", order: 2, prompt: "我還沒有確認{helperName}在你忙碌時，是否真的有時間協助照顧{petName}。", correctAnswer: "no" },
-  { id: "care-willing", order: 3, prompt: "{helperName}願意依照你的交接方式照顧{petName}嗎？", correctAnswer: "yes" },
-  { id: "emergency-contact", order: 4, prompt: "{helperName}知道{petName}出現異常或緊急狀況時怎麼聯絡你嗎？", correctAnswer: "yes" },
-] as const;
-
-function getBusyCareChecklist(petName: string, helperName: string): BusyCareChecklistItem[] {
-  const resolvedHelperName = helperName || "協助者";
-  return busyCareChecklistTemplate.map((item) => ({
+function getBusyCareChecklist(items: readonly BusyCareChecklistQuestion[] | undefined, petName: string) {
+  return (items ?? []).map((item) => ({
     ...item,
-    petName,
-    helperName: resolvedHelperName,
-    prompt: item.prompt.replaceAll("{petName}", petName).replaceAll("{helperName}", resolvedHelperName),
+    prompt: item.prompt.replaceAll("{petName}", petName),
   }));
 }
 
@@ -1350,9 +1352,9 @@ function BusyCareActivity({
   const displayPetName = petName || animalName;
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const busyCompletion = scenario.busyCareCompletion;
-  const familySupportChoice = scenario.choices.find((choice) => choice.id === "family-helper" || choice.id === "rabbit-busy-helper" || choice.id === "bird-busy-helper");
-  // 所有物種共用犬類既有的四題「是／否」交接確認流程；名稱只由當前資料帶入。
-  const helperQuestions = getBusyCareChecklist(displayPetName, helperName).map((item) => ({
+  const familySupportChoice = scenario.choices.find((choice) => choice.isSupportChoice)
+    ?? scenario.choices.find((choice) => choice.id === "family-helper" || choice.id === "rabbit-busy-helper" || choice.id === "bird-busy-helper");
+  const helperQuestions = getBusyCareChecklist(scenario.busyCareChecklist, displayPetName).map((item) => ({
     ...item,
     text: item.prompt,
     short: {
@@ -1387,7 +1389,7 @@ function BusyCareActivity({
   }, [resetSignal]);
 
   function choose(choice: ScenarioChoice) {
-    if (choice.id === "family-helper" || choice.id === "rabbit-busy-helper" || choice.id === "bird-busy-helper") {
+    if (choice.id === familySupportChoice?.id) {
       setFamilyStep("name");
       setHelperChecks({});
       setMode("family");
@@ -1432,7 +1434,7 @@ function BusyCareActivity({
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{encouragement
           ? renderKnowledgeText(withPetName(encouragement, petName))
-          : helperName.trim() && (selectedChoice.id === "family-helper" || selectedChoice.id === "rabbit-busy-helper" || selectedChoice.id === "bird-busy-helper")
+          : helperName.trim() && selectedChoice.id === familySupportChoice?.id
             ? `你確認了${helperName.trim()}的交接內容與緊急聯絡方式。這樣的交接才能讓${displayPetName}在你忙碌時仍獲得穩定照顧。`
             : plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
         otherTips={busyCompletion && <div className="busy-care-completion-content">
@@ -1492,7 +1494,7 @@ function BusyCareActivity({
                 <div className="busy-helper-checklist">
                   {helperQuestions.map((question, questionIndex) => (
                     <div className="busy-helper-question" role="group" aria-label={question.text} key={question.id}>
-                      <p><span>{questionIndex + 1}</span><span className="busy-helper-question-text">{question.text}</span></p>
+                      <p><span>{questionIndex + 1}</span><span className="busy-helper-question-text">{renderKnowledgeText(question.text)}</span></p>
                       <div>
                         <button type="button" className={helperChecks[question.id] === "yes" ? "is-selected" : ""} aria-pressed={helperChecks[question.id] === "yes"} onClick={() => selectHelperCheck(question, "yes")}>{"yesLabel" in question && typeof question.yesLabel === "string" ? question.yesLabel : "是"}</button>
                         <button type="button" className={helperChecks[question.id] === "no" ? "is-selected is-no" : ""} aria-pressed={helperChecks[question.id] === "no"} onClick={() => selectHelperCheck(question, "no")}>{"noLabel" in question && typeof question.noLabel === "string" ? question.noLabel : "否"}</button>
@@ -1515,7 +1517,7 @@ function BusyCareActivity({
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (
-          <section className="busy-care-options"><h2>你會怎麼安排？</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</section>
+          <section className="busy-care-options"><h2>{withPetName(scenario.questionText ?? "你會怎麼安排？", petName)}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</section>
         )}
       </div>
     </section>
@@ -3094,20 +3096,27 @@ const rabbitCheckSteps = [
 ] as const;
 
 function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { scenario: Scenario; petName: string; onReplay?: () => void; onContinue: () => void }) {
-  return <CorrectFeedbackLayout
+  const completionFeedback = scenario.completionFeedback;
+  return <div className="rabbit-activity-feedback">
+    <CorrectFeedbackLayout
     variant="single"
     videoSrc=""
     videoFailed
     fallbackText="兔子日常照護完成"
     mediaPlaceholder={<div className="scene-media-placeholder"><span>兔子日常照護</span><strong>{withPetName(scenario.title, petName)}</strong><small>每一個穩定的日常，都是牠的安全感。</small></div>}
-    intro={<p>{scenario.id === "rabbit-daily-check" ? `你完成了今天的保養——梳毛、足底確認、門齒與指甲檢查。定期梳毛，尤其是後肢及尾根周圍，能清除皮屑及脫落毛髮，減少${petName || "牠"}自行理毛時食入過多毛髮引發腸阻塞的機會。` : `你用循序、穩定的方式試著抱起${petName || "牠"}，也把牠的安全感放在前面。`}</p>}
-    knowledgeTitle={scenario.knowledgeTitle ?? "兔子小知識"}
-    correctItems={scenario.id === "rabbit-carry-sort" ? scenario.learningPoints?.map((text) => withPetName(text, petName)) : scenario.learningPoints}
+    title={completionFeedback?.title}
+    intro={<p>{completionFeedback
+      ? renderKnowledgeText(withPetName(completionFeedback.encouragement, petName))
+      : scenario.id === "rabbit-daily-check" ? `你完成了今天的保養——梳毛、足底確認、門齒與指甲檢查。定期梳毛，尤其是後肢及尾根周圍，能清除皮屑及脫落毛髮，減少${petName || "牠"}自行理毛時食入過多毛髮引發腸阻塞的機會。` : `你用循序、穩定的方式試著抱起${petName || "牠"}，也把牠的安全感放在前面。`}</p>}
+    knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "兔子小知識"}
+    knowledgeContent={completionFeedback?.knowledgeContent}
+    correctItems={completionFeedback ? undefined : scenario.id === "rabbit-carry-sort" ? scenario.learningPoints?.map((text) => withPetName(text, petName)) : scenario.learningPoints}
     onReplay={onReplay}
     onVideoError={() => undefined}
     onContinue={onContinue}
-    continueImmediately
-  />;
+    />
+    {scenario.completionReminder && <CompletionReminderBlock reminder={scenario.completionReminder} petName={petName} />}
+  </div>;
 }
 
 function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onContinue, onReplay }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void; onReplay?: () => void }) {
@@ -3116,23 +3125,38 @@ function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onCont
   const [message, setMessage] = useState("");
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dropIndex, setDropIndex] = useState<number | null>(null);
+  const activityRef = useRef<HTMLElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const submittedRef = useRef(false);
+  const previousCompletionStateRef = useRef<boolean | null>(null);
   const complete = activity.rabbitCarryComplete;
   const answerRevealed = activity.rabbitCarryAnswerRevealed;
   const feedbackShown = activity.rabbitCarryFeedbackShown;
   const attempts = activity.rabbitCarryAttempts ?? 0;
+  const isCompletionState = complete || answerRevealed;
 
   useEffect(() => {
-    if (complete || feedbackShown) {
+    const wasCompletionState = previousCompletionStateRef.current;
+    previousCompletionStateRef.current = isCompletionState;
+    // 初次還原已完成進度時不搶走使用者目前的閱讀位置；只在本次操作切換完成狀態時捲動。
+    if (wasCompletionState === null || wasCompletionState || !isCompletionState) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    activityRef.current?.focus({ preventScroll: true });
+    activityRef.current?.scrollIntoView({ block: "start", behavior: reducedMotion ? "auto" : "smooth" });
+  }, [isCompletionState]);
+
+  useEffect(() => {
+    if (feedbackShown) {
       feedbackRef.current?.focus({ preventScroll: true });
-      feedbackRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
     }
+  }, [feedbackShown]);
+
+  useEffect(() => {
     submittedRef.current = false;
   }, [complete, feedbackShown, attempts]);
 
   const move = (from: number, insertAt: number) => {
-    if (complete || answerRevealed || from < 0 || insertAt < 0 || from >= order.length || insertAt > order.length) return;
+    if (isCompletionState || from < 0 || insertAt < 0 || from >= order.length || insertAt > order.length) return;
     const next = [...order];
     const [moved] = next.splice(from, 1);
     const destination = from < insertAt ? insertAt - 1 : insertAt;
@@ -3140,7 +3164,7 @@ function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onCont
     onChange({ rabbitCarryOrder: next });
   };
   const check = () => {
-    if (complete || answerRevealed || submittedRef.current) return;
+    if (isCompletionState || submittedRef.current) return;
     submittedRef.current = true;
     const incorrectIndex = order.findIndex((value, index) => value !== String(index));
     if (incorrectIndex !== -1) {
@@ -3148,7 +3172,7 @@ function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onCont
       onChoose(scenario, scenario.choices[0]);
       if (nextAttempts >= 3) {
         onChange({ rabbitCarryAttempts: nextAttempts, rabbitCarryAnswerRevealed: true, rabbitCarryOrder: ["0", "1", "2", "3", "4"] });
-        setMessage("已顯示正確順序。確認後可查看完整照護重點。");
+        setMessage("");
         return;
       }
       onChange({ rabbitCarryAttempts: nextAttempts });
@@ -3159,17 +3183,18 @@ function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onCont
     onChoose(scenario, scenario.choices[1]);
   };
 
-  if (complete || feedbackShown) return <div ref={feedbackRef} tabIndex={-1} className="activity-feedback-focus"><RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} /></div>;
+  if (feedbackShown) return <div ref={feedbackRef} tabIndex={-1} className="activity-feedback-focus"><RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} /></div>;
   return (
-    <section className="rabbit-activity rabbit-carry-activity" aria-labelledby="rabbit-carry-title">
-      <header><p>日常照護</p><h1 id="rabbit-carry-title">{withPetName(scenario.title, petName)}</h1><span>{withPetName(scenario.description, petName)}</span></header>
+    <section ref={activityRef} tabIndex={-1} className={`rabbit-activity rabbit-carry-activity ${isCompletionState ? "is-completion-state" : ""}`} aria-labelledby="rabbit-carry-title">
+      <header><p>日常照護</p><h1 id="rabbit-carry-title">{withPetName(scenario.title, petName)}</h1>{!isCompletionState && <span className="rabbit-carry-description">{withPetName(scenario.description, petName)}</span>}</header>
       <div className="rabbit-activity-panel">
-        <h2>{withPetName(scenario.questionText ?? "", petName)}</h2>
+        {answerRevealed && scenario.activityRevealNotice && <p className="rabbit-carry-reveal-notice" role="status">{withPetName(scenario.activityRevealNotice, petName)}</p>}
+        <h2 className={isCompletionState ? "rabbit-carry-completion-title" : undefined}>{withPetName(isCompletionState ? scenario.activityCompletionTitle ?? scenario.questionText ?? "" : scenario.questionText ?? "", petName)}</h2>
         <ol className="rabbit-sort-list rabbit-drag-sort-list">
           {order.map((value, index) => (
             <li key={value} data-rabbit-step={index}
               onPointerDown={(event) => {
-                if (answerRevealed || (event.target as HTMLElement).closest("button")) return;
+                if (isCompletionState || (event.target as HTMLElement).closest("button")) return;
                 event.preventDefault();
                 event.currentTarget.setPointerCapture(event.pointerId);
                 setDraggedIndex(index);
@@ -3194,17 +3219,17 @@ function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onCont
                 setDropIndex(null);
               }}
               onPointerCancel={() => { setDraggedIndex(null); setDropIndex(null); }}
-              className={`${draggedIndex === index ? "is-dragging" : ""} ${dropIndex === index ? "is-drop-before" : ""} ${dropIndex === index + 1 ? "is-drop-after" : ""} ${answerRevealed ? "is-revealed" : ""}`}
+              className={`${draggedIndex === index ? "is-dragging" : ""} ${dropIndex === index ? "is-drop-before" : ""} ${dropIndex === index + 1 ? "is-drop-after" : ""} ${isCompletionState ? "is-revealed" : ""}`}
             >
               <span>{index + 1}</span><div className="rabbit-step-image-slot"><img src={rabbitCarrySortSteps[Number(value)].image} alt="" draggable={false} /></div>
               <p>{withPetName(rabbitCarrySortSteps[Number(value)].text, petName)}</p>
-              {answerRevealed ? <small>正確動作</small> : <small className="sort-drag-label">按住拖曳排序</small>}
+              {isCompletionState ? <small>正確動作</small> : <small className="sort-drag-label">按住拖曳排序</small>}
             </li>
           ))}
         </ol>
         {attempts > 0 && !answerRevealed && <p className="sort-attempts" role="status">還有 <strong>{Math.max(0, 3 - attempts)}</strong> 次可嘗試</p>}
-        {message && <p className="rabbit-activity-message" role="status">{message}</p>}
-        {answerRevealed ? <button type="button" className="primary" onClick={() => onChange({ rabbitCarryFeedbackShown: true })}>我知道正確做法了 <span>→</span></button> : <button type="button" className="primary" onClick={check}>確認順序 <span>→</span></button>}
+        {message && !isCompletionState && <p className="rabbit-activity-message" role="status">{message}</p>}
+        {isCompletionState ? <button type="button" className="primary" onClick={() => onChange({ rabbitCarryFeedbackShown: true })}>我知道正確做法了 <span>→</span></button> : <button type="button" className="primary" onClick={check}>確認順序 <span>→</span></button>}
       </div>
     </section>
   );
