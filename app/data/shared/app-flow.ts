@@ -65,7 +65,7 @@ export const categories = [
   { id: "rabbit", label: "兔", icon: "🐇", image: "/assets/species/rabbit.png", active: true },
   { id: "bird", label: "鸚鵡", icon: "🦜", image: "/assets/species/bird.png", active: true },
   { id: "reptile", label: "小型地棲性守宮", icon: "🦎", image: "/assets/species/reptile.png", active: false },
-  { id: "small", label: "倉鼠", icon: "🐹", image: "/assets/species/small-mammal.png", active: false },
+  { id: "hamster", label: "倉鼠", icon: "🐹", image: "/assets/species/small-mammal.png", active: true },
 ];
 
 export const initialMembers: CareMember[] = [
@@ -118,6 +118,5 @@ export const initialProfile: Profile = {
   emergencyFund: null,
   backupSupport: null,
 };
-
 
 

@@ -120,6 +120,18 @@ function roomItemPlacementStyle(item: RoomItem): CSSProperties {
   } as CSSProperties;
 }
 
+function roomScenePartPlacementStyle(part: NonNullable<RoomItem["sceneParts"]>[number]): CSSProperties {
+  return {
+    left: `${part.placement.x}%`,
+    top: `${part.placement.y}%`,
+    width: `${part.placement.width}%`,
+    zIndex: part.placement.layer,
+    "--mobile-room-item-x": `${part.mobilePlacement?.x ?? part.placement.x}%`,
+    "--mobile-room-item-y": `${part.mobilePlacement?.y ?? part.placement.y}%`,
+    "--mobile-room-item-width": `${part.mobilePlacement?.width ?? part.placement.width}%`,
+  } as CSSProperties;
+}
+
 function roomHazardPlacementStyle(item: HazardItem): CSSProperties {
   return {
     left: `${item.placement.x}%`,
@@ -221,9 +233,12 @@ export function RoomPreparation({
   const isWindowSecured = species === "cat" && selectedItems.includes("cat-safe-window");
   const roomFlow = speciesConfig.roomFlow;
   const [insideRoomView, setInsideRoomView] = useState(false);
-  const floorHazardComplete = Boolean(roomFlow && securedHazards.includes(roomFlow.floorHazardId));
+  const floorHazardComplete = Boolean(roomFlow && (roomFlow.safeWhenAllHazards ? hazardsCleared : securedHazards.includes(roomFlow.floorHazardId)));
   const fencePlaced = Boolean(roomFlow && selectedItems.includes(roomFlow.fenceItemId));
-  const insideView = Boolean(roomFlow && fencePlaced && insideRoomView);
+  const entryRequiredItemIds = roomFlow?.entryRequiredItemIds ?? (roomFlow ? [roomFlow.fenceItemId] : []);
+  const entryReady = Boolean(roomFlow && entryRequiredItemIds.every((id) => selectedItems.includes(id)));
+  const outsideItemIds = roomFlow?.outsideItemIds ?? (roomFlow ? [roomFlow.fenceItemId] : []);
+  const insideView = Boolean(roomFlow && entryReady && insideRoomView);
   const interiorItemPlaced = Boolean(roomFlow && selectedItems.includes(roomFlow.interiorItemId));
   const roomBackground = roomFlow
     ? (insideView ? (interiorItemPlaced ? roomFlow.interiorSafeBackground : roomFlow.interiorBackground) : (floorHazardComplete ? roomFlow.safeBackground : roomFlow.initialBackground))
@@ -231,12 +246,14 @@ export function RoomPreparation({
   const displayName = petName.trim() || "牠";
   const roomInstruction = roomFlow
     ? !hazardsCleared
-      ? `在把${displayName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。`
+      ? (roomFlow.copy.hazardInstruction ?? "在把{petName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。").replaceAll("{petName}", displayName)
       : !fencePlaced
         ? roomFlow.copy.fenceInstruction.replaceAll("{petName}", displayName)
-        : insideView
+        : !entryReady
+          ? roomFlow.copy.fencePlacedInstruction.replaceAll("{petName}", displayName)
+          : insideView
           ? roomFlow.copy.interiorInstruction.replaceAll("{petName}", displayName)
-          : roomFlow.copy.fencePlacedInstruction.replaceAll("{petName}", displayName)
+          : (roomFlow.copy.entryReadyInstruction ?? roomFlow.copy.fencePlacedInstruction).replaceAll("{petName}", displayName)
     : hazardsCleared
       ? "空間已整理完成。請點擊下方準備用品，將它們放進生活空間。"
       : `在把${displayName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。`;
@@ -244,8 +261,8 @@ export function RoomPreparation({
     if (!selectedItems.includes(item.id) || (species === "cat" && item.id === "cat-safe-window")) return false;
     if (!roomFlow) return true;
     return insideView
-      ? item.id !== roomFlow.fenceItemId && item.id !== roomFlow.interiorItemId
-      : item.id === roomFlow.fenceItemId;
+      ? !outsideItemIds.includes(item.id) && item.id !== roomFlow.interiorItemId
+      : outsideItemIds.includes(item.id);
   });
   // 依目前物種資料切列，不能假設每種動物只有八件用品；否則第九件起會存在資料卻無法操作。
   const supplyRows = Array.from(
@@ -272,8 +289,13 @@ export function RoomPreparation({
       return;
     }
     if (!item || selectedItems.includes(id) || exitingItems.includes(id)) return;
-    if (roomFlow && item.id !== roomFlow.fenceItemId && (!fencePlaced || !insideView)) {
-      setRoomCheckMessage(fencePlaced ? "請先點擊已放置的圍欄，進入裡面佈置。" : "請先放置圍欄，再開始佈置裡面的用品。");
+    const isOutsideItem = Boolean(roomFlow?.outsideItemIds?.includes(item.id) ?? item.id === roomFlow?.fenceItemId);
+    if (roomFlow && !insideView && !isOutsideItem) {
+      setRoomCheckMessage(entryReady ? (roomFlow.copy.entryReadyInstruction ?? roomFlow.copy.fencePlacedInstruction).replaceAll("{petName}", displayName) : roomFlow.copy.lockedInstruction ?? "請先完成入口用品，再開始佈置裡面的用品。");
+      return;
+    }
+    if (roomFlow && isOutsideItem && item.id !== roomFlow.fenceItemId && !fencePlaced) {
+      setRoomCheckMessage(roomFlow.copy.lockedInstruction ?? "請先放置入口用品。");
       return;
     }
     if (roomFlow && item.id === roomFlow.fenceItemId) setInsideRoomView(false);
@@ -337,9 +359,10 @@ export function RoomPreparation({
                 const note = { label: item.label, note: item.description };
                 const expenseIds = [...(item.expenseIds ?? []), ...(item.expenseId ? [item.expenseId] : [])];
                 const price = expensePriceText(Array.from(new Set(expenseIds)), breed);
-                const canPrepare = hazardsCleared && (!roomFlow || item.id === roomFlow.fenceItemId || (fencePlaced && insideView));
+                const isOutsideItem = Boolean(roomFlow?.outsideItemIds?.includes(item.id) ?? item.id === roomFlow?.fenceItemId);
+                const canPrepare = hazardsCleared && (!roomFlow || (insideView ? !isOutsideItem : (isOutsideItem && (item.id === roomFlow.fenceItemId || fencePlaced))));
                 return <div key={item.id} className="supply-slot">
-                  {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : fencePlaced ? "請先進入圍欄內部" : "請先放置圍欄"}`} disabled={exitingItems.includes(item.id) || !canPrepare} onClick={() => prepareItem(item.id)}>
+                  {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : fencePlaced ? roomFlow?.copy.interiorInstruction ?? "請先進入圍欄內部" : roomFlow?.copy.lockedInstruction ?? "請先放置圍欄"}`} disabled={exitingItems.includes(item.id) || !canPrepare} onClick={() => prepareItem(item.id)}>
                     <span className="room-supply-visual"><RoomItemVisual item={item} /></span>
                     <b>{item.label}</b>
                   </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{price && <span className="supply-slot-price">{price}</span>}</div>}
@@ -350,27 +373,29 @@ export function RoomPreparation({
         </section>
 
         <div className="room-interaction-column">
-          <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "rabbit-room-scene" : ""} ${insideView ? "rabbit-room-scene--interior" : ""} ${roomSceneReady ? "room-scene-ready" : ""}`} role="group" aria-label="寵物生活空間">
-            <img
-              className={`room-scene-background room-scene-background--desktop ${species === "dog" ? "room-scene-background--dog" : "room-scene-background--cat"}`}
+          <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${roomSceneReady ? "room-scene-ready" : ""}`} style={insideView && roomFlow?.interiorAspectRatio ? { "--room-flow-aspect-ratio": roomFlow.interiorAspectRatio } as CSSProperties : undefined} role="group" aria-label="寵物生活空間">
+            {roomBackground ? <img
+              className={`room-scene-background room-scene-background--desktop ${species === "dog" ? "room-scene-background--dog" : "room-scene-background--cat"} ${insideView ? "room-scene-background--portrait" : ""}`}
               src={roomBackground}
               alt={insideView ? "兔子圍欄內部" : species === "cat" ? "貓咪安全房" : species === "rabbit" ? "兔子生活空間" : species === "bird" ? "鳥兒生活空間" : "空的寵物生活房間"}
               style={species === "dog" ? { objectFit: "contain", objectPosition: "center center" } : undefined}
-            />
-            <img
-              className={`room-scene-background room-scene-background--mobile ${species === "dog" ? "room-scene-background--dog-mobile" : ""}`}
+            /> : <div className="preparation-asset-placeholder hamster-room-background-placeholder" role="img" aria-label={insideView ? "倉鼠籠內背景素材待補" : "倉鼠房間背景素材待補"}>素材待補</div>}
+            {roomBackground && <img
+              className={`room-scene-background room-scene-background--mobile ${species === "dog" ? "room-scene-background--dog-mobile" : ""} ${insideView ? "room-scene-background--portrait" : ""}`}
               // 犬隻手機版也直接使用原始房間圖；完整顯示，不裁切、不額外放大。
               src={roomBackground}
               alt=""
               style={species === "dog" ? { objectFit: "contain", objectPosition: "center center" } : undefined}
-            />
+            />}
             {visiblePlacedItems.map((item) => roomFlow && item.id === roomFlow.fenceItemId
-              ? <button key={item.id} type="button" className={`room-object placed-supply auto-room-object placed-room-item--${item.id} rabbit-fence-entry`} style={roomItemPlacementStyle(item)} aria-label="查看圍欄內部配置" onClick={() => setInsideRoomView(true)}><RoomItemVisual item={item} scene /><span>{item.label}</span></button>
-              : <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
-            {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => roomFlow && item.id === roomFlow.floorHazardId
+              ? <button key={item.id} type="button" className="room-object placed-supply auto-room-object placed-room-item--entry room-flow-entry" style={roomItemPlacementStyle(item)} aria-label={entryReady ? roomFlow.copy.entryLabel ?? "查看內部配置" : roomFlow.copy.fencePlacedInstruction.replaceAll("{petName}", displayName)} disabled={!entryReady} onClick={() => setInsideRoomView(true)}><RoomItemVisual item={item} scene /><span>{item.label}</span></button>
+              : item.sceneParts?.length
+                ? item.sceneParts.map((part) => <div key={`${item.id}-${part.id}`} className={`room-object room-object-part placed-supply auto-room-object placed-room-item--${item.id}`} style={roomScenePartPlacementStyle(part)}><img src={part.image} alt={`房間中已配置的${item.label}`} /></div>)
+                : <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
+            {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => roomFlow && roomFlow.floorHazardId && item.id === roomFlow.floorHazardId
               ? <button key={item.id} type="button" className="rabbit-slippery-floor-hotspot" style={roomHotspotStyle(roomFlow.floorHotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span>{item.label}</span></button>
-              : <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><img src={item.image} alt="" /><span>{item.label}</span></button>)}
-            {insideView && <button type="button" className="rabbit-room-return" aria-label="返回整個房間" onClick={() => setInsideRoomView(false)}>←</button>}
+              : <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}>{item.image ? <img src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-hidden="true">{item.icon}</span>}<span>{item.label}</span></button>)}
+            {insideView && <button type="button" className="room-flow-return" aria-label="返回整個房間" onClick={() => setInsideRoomView(false)}>←</button>}
             {!roomFlow && <div className="pet-doorplate" style={roomDoorplatePlacementStyle(doorplatePlacement)}>
               <img src={dogAssets.room.doorplate} alt="小狗名字門牌" />
               <span className="pet-doorplate-name">{petName}</span>
@@ -455,7 +480,7 @@ export function CarTrunkPreparation({ selected, petName, breed, species = "dog",
               const isRabbitRoomReuse = species === "rabbit" && item.id === "anti-slip-liner";
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
-                  <span className="departure-supply-visual"><img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /></span><b>{item.label}</b>
+                  <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b>
                 </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{reusedExpense ? <span className="supply-slot-price">已於房間準備計入</span> : price && !(species === "rabbit" && isRabbitRoomReuse) && <span className="supply-slot-price">{price}</span>}</div>}
               </div>;
             })}
@@ -466,8 +491,8 @@ export function CarTrunkPreparation({ selected, petName, breed, species = "dog",
       <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">
         <img className="car-trunk-background" src={dogAssets.preparation.trunk} alt="打開的汽車後車廂" />
         {documents.some((item) => selected.includes(item.id)) && <div className="car-document-folder complete"><img src={dogAssets.preparation.documents} alt="飼養文件夾" /></div>}
-        {documents.filter((item) => selected.includes(item.id) && (item.id === "id" || item.id === "id-card")).map((item) => <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`已放入文件夾的${item.label}`} />)}
-        {supplies.filter((item) => selected.includes(item.id)).map((item) => <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`後車廂內的${item.label}`} />)}
+        {documents.filter((item) => selected.includes(item.id) && item.image && (item.id === "id" || item.id === "id-card")).map((item) => <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`已放入文件夾的${item.label}`} />)}
+        {supplies.filter((item) => selected.includes(item.id)).map((item) => item.image ? <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`後車廂內的${item.label}`} /> : <div key={item.id} className={`placed-car-item placed-car-${item.id} preparation-asset-placeholder`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} role="img" aria-label={`已準備${item.label}，素材待補`}>{item.label}</div>)}
       </section>
     </div>
     <div className="departure-actions">

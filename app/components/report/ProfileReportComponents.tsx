@@ -907,7 +907,7 @@ export function ProfileSupplementForm({
   embedded?: boolean;
 }) {
   const selectedBreed = getSpeciesConfig(species).breeds.find((item) => item.id === breed);
-  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓" : species === "rabbit" ? "兔子" : species === "bird" ? "鸚鵡" : "犬");
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓" : species === "rabbit" ? "兔子" : species === "bird" ? "鸚鵡" : species === "hamster" ? "倉鼠" : "犬");
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     onChange({ ...profile, [key]: value });
   };
@@ -1147,7 +1147,9 @@ export function AssessmentReport({
   const correctTopics = Object.values(answers).filter((item) => item.firstResult === "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const correctedTopics = corrected.map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
   const needsLearning = Object.values(answers).filter((item) => item.firstResult === "incorrect" && item.finalResult !== "correct").map((item) => reportScenarios.find((scenario) => scenario.id === item.scenarioId)?.topic).filter(Boolean) as string[];
-  const arrivalMealComplete = species === "rabbit"
+  const arrivalMealComplete = species === "hamster"
+    ? lifeActivity.hamsterMealSelected.includes("hamster-pellet") && lifeActivity.hamsterMealSelected.includes("fresh-water")
+    : species === "rabbit"
     ? lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady && lifeActivity.arrivalMealVeggieReady
     : lifeActivity.arrivalMealFoodReady && lifeActivity.arrivalMealWaterReady;
   const practiceItems = [
@@ -1179,7 +1181,7 @@ export function AssessmentReport({
       ? (enteredHousemates.length ? enteredHousemates.join("、") : legacyHousemates.length ? legacyHousemates.join("、") : "有同住家人（待補充）")
       : "待補充";
   const selectedBreed = speciesConfig.breeds.find((item) => item.id === breed);
-  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓" : species === "rabbit" ? "兔子" : species === "bird" ? "鸚鵡" : "犬");
+  const selectedTypeLabel = selectedBreed?.label ?? (species === "cat" ? "貓" : species === "rabbit" ? "兔子" : species === "bird" ? "鸚鵡" : species === "hamster" ? "倉鼠" : "犬");
   const experienceStatus = profile.noShibaExperience ? `沒有${selectedTypeLabel}經驗` : profile.pastPetTypes.length || profile.currentPetTypes.length || profile.experienceNote ? "已補充飼養經驗" : "待補充";
   const reasonStatus = profile.reasons.length ? profile.reasons.map((item) => item === "其他" ? profile.reasonOther || "其他（待補充）" : item).join("、") : "待補充";
   const landlordConfirmed = profile.landlordConsent === "已確認並同意" || profile.landlordConsent === "房東已同意";
@@ -1243,6 +1245,7 @@ export function AssessmentReport({
     if (source.key === "walkingComplete") return lifeActivity.walkingComplete;
     if (source.key === "cat-litter-complete") return lifeActivity.catInspectionSteps.includes("litter-complete");
     if (source.key === "rabbit-grooming-complete") return lifeActivity.rabbitGroomingState === "interaction-complete";
+    if (source.key === "hamster-inspection-complete") return lifeActivity.hamsterInspectionCompleted.length === 4;
     return (source.requiredStepIds ?? []).every((stepId) => lifeActivity.birdCageInspectionSteps.includes(stepId));
   };
   const visibleMasteredCareThemes = (masteredCareThemesBySpecies[species] ?? [])
@@ -1464,7 +1467,7 @@ export function AssessmentReport({
           {visibleMasteredCareThemes.length ? <div className="care-review-mastered-theme-grid">
             {visibleMasteredCareThemes.map((theme) => <article key={theme.id}>
               <span aria-hidden="true">✓</span>
-              <div><b>{theme.title}</b><p>{theme.summary}</p></div>
+              <div><b>{theme.title}</b><p><HomeReadinessReviewText segments={[{ text: theme.summary }]} petName={petName} /></p></div>
             </article>)}
           </div> : <p className="care-review-empty">完成並答對情境題後，這裡會整理你已建立的照顧觀念。</p>}
         </section>

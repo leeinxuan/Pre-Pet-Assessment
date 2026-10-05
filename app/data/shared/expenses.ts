@@ -5,6 +5,7 @@ import { birdExpenses } from "../species/bird/expenses";
 import { dogExpenses } from "../species/dog/expenses";
 import { dogBreeds } from "../species/dog/selection";
 import { rabbitExpenses } from "../species/rabbit/expenses";
+import { hamsterExpenses } from "../species/hamster/expenses";
 
 /** 共用金額格式與費用計算資料。 */
 export const money = new Intl.NumberFormat("zh-TW");
@@ -54,6 +55,7 @@ export const expenseCatalogBySpecies = {
   cat: catExpenses,
   rabbit: rabbitExpenses,
   bird: birdExpenses,
+  hamster: hamsterExpenses,
 } as const;
 
 /** 舊有元件以 ID 查詢時使用的合併目錄；金額與資料仍只在物種檔維護。 */
@@ -62,11 +64,12 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
   ...catExpenses,
   ...rabbitExpenses,
   ...birdExpenses,
+  ...hamsterExpenses,
 };
 
 /** 依目前物種取費用，避免同一 ID 的犬貓說明互相覆蓋。 */
 export function getExpenseForSpecies(id: string, species?: string): ExpenseRecord | undefined {
-  const speciesCatalog = species === "dog" || species === "cat" || species === "rabbit" || species === "bird"
+  const speciesCatalog = species === "dog" || species === "cat" || species === "rabbit" || species === "bird" || species === "hamster"
     ? expenseCatalogBySpecies[species]
     : undefined;
   return speciesCatalog?.[id] ?? expenseCatalog[id];

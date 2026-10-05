@@ -10,6 +10,7 @@ export const birdExpenses: Record<string, ExpenseRecord> = {
   "bird-climbing-toy": { id: "bird-climbing-toy", name: "攀爬玩具", amount: 300, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "增加籠內落腳空間，鼓勵活動；視使用狀況定期更換。" },
   "bird-feces-tray": { id: "bird-feces-tray", name: "糞尿托盤與墊料", amount: 250, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "籠底附糞尿盤；放報紙、紙棉等墊料，每日清潔。" },
   "bird-thermometer": { id: "bird-thermometer", name: "溫度計", amount: 200, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "鳥對溫度變化敏感，維持環境溫度穩定非常重要。" },
+  "food-initial": { id: "food-initial", name: "主食飼料", amount: 150, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "依食性選購一包初期存量（種子飼料、滋養丸或吸蜜粉）；到家第一天即可立刻餵食" },
   "bird-carrier": { id: "bird-carrier", name: "鳥用外出籠", amount: 800, category: "一次性準備費", stage: "出發前準備", recurring: false, description: "通風良好、材質堅固、內有棲木；縫隙不讓肢體探出。" },
   "bird-cover-cloth": { id: "bird-cover-cloth", name: "遮光布", amount: 200, category: "一次性準備費", stage: "出發前準備", recurring: false, description: "遮蔽籠具降低外界刺激，減少途中緊迫；也用於日常安靜休息。" },
   "bird-starter-food": { id: "bird-starter-food", name: "物種主食飼料", amount: 150, category: "一次性準備費", stage: "出發前準備", recurring: false, description: "依食性選購：種子飼料、滋養丸或吸蜜粉；切勿混用不同食性飼料。" },

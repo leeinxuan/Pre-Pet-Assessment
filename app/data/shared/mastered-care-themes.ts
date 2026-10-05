@@ -10,7 +10,7 @@ export type MasteredCareSource =
   | { kind: "scenario"; scenarioIds: readonly string[] }
   | {
     kind: "life-state";
-    key: "walkingComplete" | "cat-litter-complete" | "rabbit-grooming-complete" | "bird-cage-inspection-complete";
+    key: "walkingComplete" | "cat-litter-complete" | "rabbit-grooming-complete" | "bird-cage-inspection-complete" | "hamster-inspection-complete";
     requiredStepIds?: readonly string[];
   };
 
@@ -77,5 +77,16 @@ export const masteredCareThemesBySpecies: Record<string, readonly MasteredCareTh
     { id: "behavior-response", title: "行為情境應對", summary: "遇到挑食、刻板行為或持續鳴叫，了解背後原因與應對方式。", order: 50, sources: [{ kind: "scenario", scenarioIds: ["bird-picky-eating", "bird-stereotypy", "bird-excessive-calling"] }] },
     { id: "cage-inspection", title: "鳥籠日常巡視", summary: "知道每天檢查棲木、玩具與糞便托盤的重要性與具體做法。", order: 60, sources: [{ kind: "life-state", key: "bird-cage-inspection-complete", requiredStepIds: ["tray-clean", "feces-observed", "health-observed", "social-time"] }] },
     { id: "life-changes", title: "生活變化應對", summary: "忙碌、突發健康事件、高齡時，知道如何調整照護安排。", order: 70, sources: [{ kind: "scenario", scenarioIds: ["bird-busy-care", "bird-health-emergency", "bird-senior-care"] }] },
+  ],
+  hamster: [
+    ...preparationThemes({
+      home: "確認住家空間與同住者共識，評估是否做好迎接倉鼠的準備。",
+      room: "清除危險物品，備好**籠具、砂浴盆、滾輪、飲水器、磨牙棒**，讓{petName}安心紮根。",
+      trunk: "帶上**防逃運輸容器、少量墊料、領養文件**，做好接回{petName}的準備。",
+    }),
+    { id: "arrival-meal", title: "安頓與第一餐", summary: "了解到家後讓倉鼠自行適應的安置流程，以及第一餐應選用哪些食物、避免哪些禁忌。", order: 40, sources: [{ kind: "scenario", scenarioIds: ["hamster-arrival-adjustment"] }, { kind: "arrival-meal" }] },
+    { id: "behavior-response", title: "行為情境應對", summary: "遇到獨居性合籠迷思、夜行性作息誤解、囤食挑食問題，以理解物種需求的方式應對，而非強迫改變。", order: 50, sources: [{ kind: "scenario", scenarioIds: ["hamster-nocturnal", "hamster-picky-eating", "hamster-solitary"] }] },
+    { id: "inspection", title: "每日早晨籠具巡視", summary: "每天早晨花幾分鐘完成砂浴盆篩沙、食碗觀察、滾輪確認與睡眠狀態判斷，掌握{petName}的日常健康訊號。", order: 60, sources: [{ kind: "life-state", key: "hamster-inspection-complete" }] },
+    { id: "life-changes", title: "生活變化應對", summary: "忙碌、生病、高齡時，知道如何調整安排並及時尋求協助，不讓{petName}在關鍵時刻等待。", order: 70, sources: [{ kind: "scenario", scenarioIds: ["hamster-busy-care", "hamster-health-emergency", "hamster-senior-care"] }] },
   ],
 };

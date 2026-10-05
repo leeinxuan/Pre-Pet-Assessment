@@ -1,5 +1,51 @@
 /* 犬隻散步與貓砂盆救援隊等物種專屬互動。 */
 
+.guided-activity { display: grid; gap: 20px; padding: clamp(22px, 4vw, 42px); border: 1px solid var(--line); border-radius: 28px; background: #fffdf8; color: var(--ink); box-shadow: var(--shadow); }
+.guided-activity h1 { margin: 0; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.3; overflow-wrap: anywhere; }
+.guided-activity-heading { display: grid; gap: 8px; }
+.guided-activity-heading .life-stage-label { color: var(--gold-dark); font-size: 13px; font-weight: 900; }
+.guided-activity h2 { margin: 0; font-size: clamp(20px, 2.5vw, 26px); }
+.guided-activity p { margin: 0; line-height: 1.8; overflow-wrap: anywhere; }
+.guided-activity .primary { justify-self: start; }
+.guided-activity-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .65fr); gap: 20px; }
+.guided-activity-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-content: start; }
+.guided-activity-options button { min-height: 68px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 16px; background: #fffaf0; color: var(--ink); font: inherit; font-weight: 800; line-height: 1.5; text-align: left; cursor: pointer; }
+.guided-activity-options button:hover, .guided-activity-options button:focus-visible { border-color: var(--gold); background: #fff3d7; }
+.guided-activity-options button.is-selected { border-color: #90b99b; background: #eef6ee; }
+.guided-activity-options button:disabled { cursor: default; opacity: .72; }
+.guided-activity-bowl, .guided-activity-observation { display: grid; align-content: center; gap: 8px; min-height: 150px; padding: 22px; border: 1px solid var(--line); border-radius: 22px; background: var(--cream); }
+.guided-activity-bowl strong, .guided-activity-observation strong { font-size: 22px; }
+.guided-activity-feedback { padding: 15px 18px; border-radius: 14px; background: #e9f4e8; color: #3c6b43; font-weight: 750; }
+.guided-activity-feedback.incorrect { background: #fff0ea; color: #a34134; }
+.guided-activity-feedback.caution { background: #fff1d5; color: #815c19; }
+.guided-activity-reflection { display: grid; gap: 12px; margin-top: 20px; padding: 22px; border-radius: 18px; background: #fff3d9; }
+.guided-activity-reflection h3, .guided-activity-care h3 { margin: 0; font-size: clamp(18px, 2vw, 23px); line-height: 1.45; }
+.guided-activity-reflection p { margin: 0; line-height: 1.75; }
+.guided-activity-care { display: grid; gap: 14px; margin-top: 24px; }
+.guided-activity-care-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.guided-activity-care-grid > div { min-width: 0; display: grid; gap: 8px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+.guided-activity-care-grid span { color: var(--gold-dark); font-weight: 900; }
+.arrival-video-screen--placeholder { display: grid; place-items: center; gap: 20px; padding: 32px; }
+.arrival-video-screen--placeholder .scene-media-placeholder { min-height: 320px; }
+.arrival-meal-activity--choice { grid-template-columns: minmax(330px, 380px) minmax(0, 1fr); }
+.arrival-meal-supplies--choice { grid-template-columns: minmax(0, 1fr); align-content: stretch; gap: 12px; padding: 22px; }
+.arrival-meal-supplies .arrival-meal-choice-button { min-height: 108px; padding: 15px; border: 1px solid var(--line); border-radius: 16px; background: #fffaf0; color: var(--ink); text-align: left; cursor: pointer; }
+.arrival-meal-supplies .arrival-meal-choice-button:hover, .arrival-meal-supplies .arrival-meal-choice-button:focus-visible { border-color: var(--gold); background: #fff3d7; }
+.arrival-meal-supplies .arrival-meal-choice-button.done { border-color: #90b99b; background: #eef6ee; }
+.arrival-meal-supplies .arrival-meal-choice-button b, .arrival-meal-supplies .arrival-meal-choice-button small { display: block; }
+.arrival-meal-supplies .arrival-meal-choice-button small { margin-top: 8px; color: var(--muted); font-weight: 700; }
+.arrival-meal-supplies--choice + .arrival-meal-scene { min-height: 430px; }
+.arrival-meal-supplies--choice + .arrival-meal-scene .scene-media-placeholder { min-height: 100%; border: 0; border-radius: 0; }
+.arrival-meal-supplies--choice + .arrival-meal-scene .scene-media-placeholder p { max-width: min(100%, 420px); overflow-wrap: anywhere; }
+.arrival-meal-activity .arrival-meal-footer { display: grid; gap: 14px; }
+.arrival-meal-activity .arrival-meal-footer .primary { justify-self: end; }
+.guided-inspection-completion { grid-template-columns: minmax(0, 1fr); min-height: 0; max-width: 1160px; margin: 0 auto; }
+.guided-inspection-completion .daily-behavior-positive-copy { min-height: 0; align-items: center; padding: clamp(38px, 5vw, 68px); text-align: center; }
+.guided-inspection-completion .daily-behavior-positive-copy > p { max-width: 860px; }
+.guided-inspection-completion .guided-activity-reflection, .guided-inspection-completion .guided-activity-care { width: min(100%, 980px); text-align: left; }
+.guided-inspection-completion .primary { align-self: center; }
+@media (max-width: 700px) { .arrival-meal-activity--choice, .guided-activity-layout, .guided-activity-care-grid, .arrival-meal-supplies--choice { grid-template-columns: 1fr; } .guided-activity-options { grid-template-columns: 1fr; } .guided-activity .primary, .arrival-meal-activity .arrival-meal-footer .primary, .guided-inspection-completion .primary { width: 100%; } .arrival-meal-supplies--choice + .arrival-meal-scene { min-height: 280px; } }
+
 /* 共用情境媒體的安全預留區：素材尚未到位時仍保留雙欄場景比例。 */
 .scene-media-placeholder { width: 100%; min-height: 100%; display: grid; align-content: center; justify-items: center; gap: 10px; padding: 28px; border: 2px dashed rgba(168, 101, 9, .35); border-radius: inherit; background: linear-gradient(145deg, #fff9ea, #f1eadb); color: var(--muted); text-align: center; }
 .scene-media-placeholder small { padding: 5px 10px; border-radius: 999px; background: rgba(212, 154, 36, .16); color: var(--gold-dark); font-size: 12px; font-weight: 900; }
@@ -947,7 +993,7 @@
 .daily-behavior-positive-copy p { margin: 0; line-height: 1.85; font-size: 17px; }
 .feedback-knowledge-card, .knowledge-card { --knowledge-title: #5d4324; --knowledge-copy: #5f5547; --knowledge-emphasis: var(--gold-dark); width: 100%; max-width: none; margin-top: 18px; padding: 20px 22px; border: 1px solid rgba(215,205,187,.78); border-radius: 16px; background: rgba(255,253,247,.82); color: var(--knowledge-copy); font-weight: 600; }
 .feedback-knowledge-title { display: flex; align-items: center; gap: 8px; color: var(--knowledge-title); font-size: 15px; font-weight: 800; }
-.feedback-knowledge-title > span { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #ffe9a5; font-size: 17px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(194,139,20,.2); }
+.feedback-knowledge-title > span[aria-hidden="true"] { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #ffe9a5; font-size: 17px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(194,139,20,.2); }
 .daily-behavior-correct-list { margin: 0 0 0; padding-left: 1.25rem; display: grid; gap: 8px; }
 .daily-behavior-correct-list li { line-height: 1.65; font-weight: 700; }
 .feedback-knowledge-card .daily-behavior-correct-list { margin-top: 12px; }

@@ -11,6 +11,8 @@ import { rabbitActivityScenarios, rabbitLifeScenarios } from "./rabbit/scenarios
 import { birdJourneyItems } from "./bird/journey";
 import { getBirdChallengeScenarios } from "./bird/breed-challenges";
 import { birdActivityScenarios, birdLifeScenarios } from "./bird/scenarios";
+import { hamsterJourneyItems } from "./hamster/journey";
+import { hamsterLifeScenarios } from "./hamster/scenarios";
 
 export { catJourneyItems, catLifeScenarios, dogJourneyItems, dogLifeScenarios, rabbitJourneyItems, rabbitLifeScenarios, birdJourneyItems, birdLifeScenarios };
 
@@ -19,6 +21,7 @@ export function getLifeScenariosForSpecies(species: string, breedId = ""): Scena
   if (species === "cat") return getCatLifeScenarios(breedId);
   if (species === "rabbit") return rabbitLifeScenarios;
   if (species === "bird") return birdLifeScenarios;
+  if (species === "hamster") return hamsterLifeScenarios;
   return getDogLifeScenarios(breedId);
 }
 
@@ -33,6 +36,7 @@ export function getBreedChallengeScenarios(breedId: string): Scenario[] {
 export function getAllScenariosForSpecies(species: string, breedId: string): Scenario[] {
   if (species === "rabbit") return [...rabbitLifeScenarios, ...Object.values(rabbitActivityScenarios)];
   if (species === "bird") return [...birdLifeScenarios, ...Object.values(birdActivityScenarios)];
+  if (species === "hamster") return hamsterLifeScenarios;
   return getLifeScenariosForSpecies(species, breedId);
 }
 
@@ -40,6 +44,7 @@ export function getJourneyItemsForSpecies(species: string): JourneyItem[] {
   const items = species === "cat" ? catJourneyItems
     : species === "rabbit" ? rabbitJourneyItems
       : species === "bird" ? birdJourneyItems
+        : species === "hamster" ? hamsterJourneyItems
         : dogJourneyItems;
   // 品種資料與題庫仍保留供日後啟用；目前不納入可見流程、進度或匯出。
   return items.filter((item) => item.stageId !== "breed" && item.type !== "breed-challenge" && item.type !== "bird-challenge");

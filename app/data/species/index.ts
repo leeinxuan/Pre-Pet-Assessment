@@ -2,6 +2,7 @@ import { dogConfig } from "./dog/index";
 import { catConfig } from "./cat/index";
 import { rabbitConfig } from "./rabbit/index";
 import { birdConfig } from "./bird/index";
+import { hamsterConfig } from "./hamster/index";
 import type { SpeciesId } from "../shared/types";
 import { speciesGameConfig } from "../speciesGameConfig";
 
@@ -49,6 +50,15 @@ export const speciesConfigs = {
     trunkItems: birdConfig.preparation.trunkItems,
     roomFlow: speciesGameConfig.bird.roomFlow,
   },
+  hamster: {
+    ...hamsterConfig,
+    copy: speciesGameConfig.hamster.copy,
+    breeds: hamsterConfig.selection.breeds,
+    roomItems: hamsterConfig.preparation.roomItems,
+    hazards: hamsterConfig.preparation.hazards,
+    trunkItems: hamsterConfig.preparation.trunkItems,
+    roomFlow: speciesGameConfig.hamster.roomFlow,
+  },
 } as const;
 export type SpeciesConfig = (typeof speciesConfigs)[SpeciesId];
 
@@ -56,6 +66,7 @@ export function getSpeciesConfig(species: string | undefined): SpeciesConfig {
   if (species === "cat") return speciesConfigs.cat;
   if (species === "rabbit") return speciesConfigs.rabbit;
   if (species === "bird") return speciesConfigs.bird;
+  if (species === "hamster") return speciesConfigs.hamster;
   return speciesConfigs.dog;
 }
 
@@ -64,6 +75,7 @@ export function getSpeciesCopy(species: string | undefined) {
   if (species === "cat") return speciesGameConfig.cat.copy;
   if (species === "rabbit") return speciesGameConfig.rabbit.copy;
   if (species === "bird") return speciesGameConfig.bird.copy;
+  if (species === "hamster") return speciesGameConfig.hamster.copy;
   return speciesGameConfig.dog.copy;
 }
 
@@ -71,4 +83,4 @@ export function getBreedForSpecies(species: string | undefined, breedId: string 
   return getSpeciesConfig(species).selection.breeds.find((breed) => breed.id === breedId);
 }
 
-export { dogConfig, catConfig, rabbitConfig, birdConfig };
+export { dogConfig, catConfig, rabbitConfig, birdConfig, hamsterConfig };

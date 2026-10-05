@@ -5,6 +5,7 @@ import { categories } from "../../data/shared/app-flow";
 import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, isTemporaryReserveExpense, money } from "../../data/shared/expenses";
 import { getJourneyItemsForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
+import { interpolatePetName } from "../../data/shared/pet-text";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
 
 export function StepHeading({ title, body }: { title: string; body?: string }) {
@@ -357,8 +358,8 @@ export function SpeciesStep({
         <section className="partner-selection-page previous-dog-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.historyTitle} body={speciesConfig.copy.historyBody} />
           <div className="previous-dog-choice" role="group" aria-label={`是否曾經養過${speciesConfig.copy.animalName}`}>
-            <button type="button" className={hasPreviousPet === true ? "selected" : ""} aria-pressed={hasPreviousPet === true} onClick={() => onHasPreviousPet(true)}><b>{speciesConfig.copy.hasPreviousLabel}</b><small>接著填寫以前養過的寵物名字</small></button>
-            <button type="button" className={hasPreviousPet === false ? "selected" : ""} aria-pressed={hasPreviousPet === false} onClick={() => onHasPreviousPet(false)}><b>{speciesConfig.copy.noPreviousLabel}</b><small>直接開始這次的飼養前準備</small></button>
+            <button type="button" className={hasPreviousPet === true ? "selected" : ""} aria-pressed={hasPreviousPet === true} onClick={() => onHasPreviousPet(true)}><b>{interpolatePetName(speciesConfig.copy.hasPreviousLabel, petName, category)}</b><small>接著填寫以前養過的寵物名字</small></button>
+            <button type="button" className={hasPreviousPet === false ? "selected" : ""} aria-pressed={hasPreviousPet === false} onClick={() => onHasPreviousPet(false)}><b>{interpolatePetName(speciesConfig.copy.noPreviousLabel, petName, category)}</b><small>直接開始這次的飼養前準備</small></button>
           </div>
           {hasPreviousPet === true && (
             <div className="previous-dog-details">

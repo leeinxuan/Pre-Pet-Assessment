@@ -333,7 +333,7 @@ export default function Home() {
     });
     // 臨時性預留支出等「做得很好」頁出現後，才由 LifeJourney 寫入。
     const deferredArrivalExpenseIds = scenario.stageId === "arrival" && choice.result === "correct"
-      ? new Set(["rabbit-arrival-checkup", "bird-arrival-checkup"])
+      ? new Set(["rabbit-arrival-checkup", "bird-arrival-checkup", "hamster-arrival-checkup"])
       : new Set<string>();
     choice.expenseIds
       ?.filter((id) => {

@@ -11,7 +11,7 @@ export type ExpenseRecord = {
   /** 供共用費用明細、摘要與匯出使用的簡短用途說明。 */
   description?: string;
   /** 共用 expense id 在不同物種有不同官方說明時，由寫入 store 前解析。 */
-  descriptionBySpecies?: Partial<Record<"dog" | "cat" | "rabbit" | "bird", string>>;
+  descriptionBySpecies?: Partial<Record<"dog" | "cat" | "rabbit" | "bird" | "hamster", string>>;
   /** 由 journey 觸發時保留來源，供共用明細、摘要與匯出追溯。 */
   speciesId?: string;
   stageId?: string;
@@ -167,6 +167,7 @@ export type JourneyItemType =
   | "walking"
   | "daily-inspection"
   | "arrival-meal"
+  | "guided-inspection"
   // 兔子專屬活動仍沿用共用旅程的完成、回顧與下載資料格式。
   | "rabbit-carry-sort"
   | "rabbit-daily-check"
@@ -223,6 +224,12 @@ export type LifeActivityState = {
     attempts: number;
   }>;
   birdCageInspectionSteps: string[];
+  hamsterMealSelected: string[];
+  hamsterMealFeedbackId: string;
+  hamsterInspectionStarted: boolean;
+  hamsterInspectionStates: Record<string, "normal" | "warning">;
+  hamsterInspectionCompleted: string[];
+  hamsterInspectionFeedback: Record<string, "question" | "incorrect" | "correct">;
 };
 
 export type Profile = {
@@ -273,6 +280,13 @@ export type RoomItem = {
   image?: string;
   /** 場景中的已放置素材；未設定時沿用物品欄 image。 */
   sceneImage?: string;
+  /** 一項用品在場景中需要由多張素材組成時，各部件的位置仍由物種資料提供。 */
+  sceneParts?: Array<{
+    id: string;
+    image: string;
+    placement: { x: number; y: number; width: number; layer: number };
+    mobilePlacement?: { x: number; y: number; width: number };
+  }>;
   placement: { x: number; y: number; width: number; layer: number };
   mobilePlacement?: { x: number; y: number; width: number };
   required: boolean;
@@ -288,7 +302,7 @@ export type HazardItem = {
   id: string;
   label: string;
   icon: string;
-  image: string;
+  image?: string;
   placement: { x: number; y: number; width: number; layer: number };
   mobilePlacement?: { x: number; y: number; width: number };
   danger: string;
@@ -299,7 +313,7 @@ export type TrunkItem = {
   id: string;
   label: string;
   kind: "document" | "supply";
-  image: string;
+  image?: string;
   description: string;
   preparedLabel: "已攜帶" | "已準備";
   expenseIds?: string[];

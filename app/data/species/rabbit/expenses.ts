@@ -7,6 +7,7 @@ export const rabbitExpenses: Record<string, ExpenseRecord> = {
   "rabbit-litter-box": { id: "rabbit-litter-box", name: "兔用便盆", amount: 400, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔有固定排泄習性，便盆須與食水區分開。" },
   "rabbit-hiding-box": { id: "rabbit-hiding-box", name: "躲藏箱／小屋", amount: 500, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔子需要可自由進出的藏身處以紓解壓力。" },
   "rabbit-anti-slip-mat": { id: "rabbit-anti-slip-mat", name: "防滑墊", amount: 280, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "地面須防滑，避免骨骼受傷；骨骼脆弱、掙扎易致腰椎損傷。" },
+  "hay": { id: "hay", name: "牧草", amount: 400, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔子最重要的主食，入住前需備妥足量；之後每月持續補充（見每月基本支出）" },
   "rabbit-cooling-mat": { id: "rabbit-cooling-mat", name: "陶板涼感墊", amount: 400, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔子無汗腺僅靠雙耳散熱，氣溫高於 28℃ 時必備。" },
   "rabbit-chew-toy": { id: "rabbit-chew-toy", name: "木製咀嚼玩具", amount: 120, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "兔齒終生生長，需持續提供磨牙材質。" },
   "rabbit-dig-box": { id: "rabbit-dig-box", name: "挖掘箱", amount: 250, category: "一次性準備費", stage: "飼養前準備", recurring: false, description: "滿足挖掘天性並減少破壞行為。" },

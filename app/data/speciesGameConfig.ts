@@ -7,8 +7,10 @@ import { rabbitPreparation } from "./species/rabbit/preparation";
 import { rabbitReport } from "./species/rabbit/report";
 import { birdPreparation } from "./species/bird/preparation";
 import { birdReport } from "./species/bird/report";
+import { hamsterPreparation } from "./species/hamster/preparation";
+import { hamsterReport } from "./species/hamster/report";
 
-export type SpeciesId = "dog" | "cat" | "rabbit" | "bird";
+export type SpeciesId = "dog" | "cat" | "rabbit" | "bird" | "hamster";
 
 export type SpeciesCopy = {
   animalName: string;
@@ -70,9 +72,16 @@ export type SpeciesGameConfig = {
     safeBackground: string;
     interiorBackground: string;
     interiorSafeBackground: string;
+    /** 籠內背景依原始素材比例顯示；避免共用場景強制裁成固定尺寸。 */
+    interiorAspectRatio?: string;
     floorHazardId: string;
+    safeWhenAllHazards?: boolean;
     fenceItemId: string;
     interiorItemId: string;
+    /** 在房間全景可放置的項目；未設定時沿用既有只顯示入口用品的流程。 */
+    outsideItemIds?: string[];
+    /** 點進內部視角前必須完成的物品。 */
+    entryRequiredItemIds?: string[];
     floorHotspot: {
       desktop: { x: number; y: number; width: number; height: number };
       mobile: { x: number; y: number; width: number; height: number };
@@ -80,7 +89,11 @@ export type SpeciesGameConfig = {
     copy: {
       fenceInstruction: string;
       fencePlacedInstruction: string;
+      entryReadyInstruction?: string;
       interiorInstruction: string;
+      hazardInstruction?: string;
+      lockedInstruction?: string;
+      entryLabel?: string;
     };
   };
 };
@@ -192,6 +205,37 @@ export const speciesGameConfig: Record<SpeciesId, SpeciesGameConfig> = {
       lifeChallengeLabel: () => "鳥的考驗",
     },
     roomItems: birdPreparation.roomItems, hazards: birdPreparation.hazards, trunkItems: birdPreparation.trunkItems, report: birdReport,
+    roomFlow: {
+      initialBackground: birdPreparation.roomFlow.initialBackground,
+      safeBackground: birdPreparation.roomFlow.safeBackground,
+      interiorBackground: birdPreparation.roomFlow.interiorBackground,
+      interiorSafeBackground: birdPreparation.roomFlow.interiorSafeBackground,
+      interiorAspectRatio: "2 / 3",
+      floorHazardId: "",
+      safeWhenAllHazards: true,
+      fenceItemId: "bird-cage",
+      interiorItemId: "bird-feces-tray",
+      outsideItemIds: [...birdPreparation.roomFlow.outsideItemIds],
+      entryRequiredItemIds: [...birdPreparation.roomFlow.entryRequiredItemIds],
+      floorHotspot: { desktop: { x: 0, y: 0, width: 0, height: 0 }, mobile: { x: 0, y: 0, width: 0, height: 0 } },
+      copy: birdPreparation.roomFlow.copy,
+    },
+  },
+  hamster: {
+    id: "hamster",
+    copy: {
+      animalName: "倉鼠", animalNameFallback: "芝麻", typeLabel: "物種",
+      selectionTitle: "你想飼養哪一種動物？", breedTitle: "認識你的新家人——倉鼠",
+      nameTitle: "先幫牠取一個名字", namePlaceholder: "請輸入倉鼠的名字",
+      historyTitle: "你之前養過倉鼠嗎？", historyBody: "你之前養過倉鼠嗎？",
+      hasPreviousLabel: "養過，{petName} 是我的第二隻以上", noPreviousLabel: "沒養過，{petName} 是我第一隻倉鼠",
+      previousSectionTitle: "以前陪伴你的倉鼠",
+      roomTitle: "先替牠布置安全的生活空間", roomBody: (petName) => `在把${petName || "芝麻"}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。`,
+      departureTitle: "出發接牠回家", departureBody: (petName) => `今天要去接${petName || "芝麻"}回家了。出門前先把需要的文件與接回用品準備好，讓牠在路上有安全的位置，也讓你能從容處理突發狀況。`,
+      lifeChallengeLabel: () => "倉鼠的考驗",
+    },
+    roomItems: hamsterPreparation.roomItems, hazards: hamsterPreparation.hazards, trunkItems: hamsterPreparation.trunkItems,
+    report: hamsterReport, roomFlow: hamsterPreparation.roomFlow,
   },
 };
 
@@ -199,5 +243,6 @@ export function getSpeciesGameConfig(species: string): SpeciesGameConfig {
   if (species === "cat") return speciesGameConfig.cat;
   if (species === "rabbit") return speciesGameConfig.rabbit;
   if (species === "bird") return speciesGameConfig.bird;
+  if (species === "hamster") return speciesGameConfig.hamster;
   return speciesGameConfig.dog;
 }

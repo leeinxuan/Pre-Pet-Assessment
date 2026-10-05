@@ -2,6 +2,7 @@
 export function petNameFallback(species?: string) {
   if (species === "rabbit") return "小白";
   if (species === "cat") return "貓咪";
+  if (species === "hamster") return "芝麻";
   return "小狗";
 }
 
