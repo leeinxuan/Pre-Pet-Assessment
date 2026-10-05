@@ -1,4 +1,5 @@
 import { catAssets } from "./assets";
+import { catArrivalMealSceneLayout, catArrivalMealSupplyImageSizes } from "./feeding";
 import { catHazards, catRoomItems } from "./preparation";
 import { catJourney } from "./journey";
 import { catLayout } from "./layout";
@@ -18,6 +19,7 @@ export const catConfig = {
   report: catReport,
   assets: catAssets,
   layout: catLayout,
+  feeding: { arrivalMealSceneLayout: catArrivalMealSceneLayout, arrivalMealSupplyImageSizes: catArrivalMealSupplyImageSizes },
 } as const;
 
-export { catAssets, catJourney, catLayout, catPreparation, catReport, catSelection, catLifeScenarios, getCatBreedChallengeScenarios };
+export { catAssets, catJourney, catLayout, catPreparation, catReport, catSelection, catLifeScenarios, getCatBreedChallengeScenarios, catArrivalMealSceneLayout, catArrivalMealSupplyImageSizes };

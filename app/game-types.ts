@@ -20,6 +20,22 @@ export type ExpenseRecord = {
 
 export type ExpenseTriggerMeta = Pick<ExpenseRecord, "speciesId" | "stageId" | "sourceScenarioId">;
 
+/** 第一餐物品欄圖片的桌機／手機尺寸；內容由各物種 feeding.ts 提供。 */
+export type ArrivalMealSupplyImageSize = { width: number; height: number };
+export type ArrivalMealSupplyImageKey = "default" | "food" | "water" | "veggie" | "unsafe";
+export type ArrivalMealSupplyImageSizes = {
+  desktop: Record<ArrivalMealSupplyImageKey, ArrivalMealSupplyImageSize>;
+  mobile: Record<ArrivalMealSupplyImageKey, ArrivalMealSupplyImageSize>;
+};
+
+/** 第一餐場景內素材的位置與大小；內容由各物種 feeding.ts 提供。 */
+export type ArrivalMealSceneItemKey = "pet" | "water" | "food" | "veggie";
+export type ArrivalMealScenePlacement = { left: number; bottom: number; width: number; maxHeight?: number };
+export type ArrivalMealSceneLayout = {
+  desktop: Record<ArrivalMealSceneItemKey, ArrivalMealScenePlacement>;
+  mobile: Record<ArrivalMealSceneItemKey, ArrivalMealScenePlacement>;
+};
+
 export type CareMember = {
   id: string;
   name: string;
@@ -314,6 +330,12 @@ export type TrunkItem = {
   label: string;
   kind: "document" | "supply";
   image?: string;
+  /**
+   * 圖片尺寸等共用視覺規則使用的 class key；不可取代互動、狀態或費用的穩定 id。
+   */
+  visualClassName?: string;
+  /** 物品欄圖片的個別縮放倍率；各物種可獨立調整。 */
+  visualScale?: number;
   description: string;
   preparedLabel: "已攜帶" | "已準備";
   expenseIds?: string[];

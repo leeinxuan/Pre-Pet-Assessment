@@ -1,7 +1,7 @@
 import { dogBreeds } from "./data/species/dog/selection";
 import { catBreeds } from "./data/species/cat/selection";
 import { rabbitSelection } from "./data/species/rabbit";
-import { arrivalMealMobilePlacements as dogArrivalMealMobilePlacements, roomDoorplatePlacement as dogRoomDoorplatePlacement } from "./data/species/dog/layout";
+import { roomDoorplatePlacement as dogRoomDoorplatePlacement } from "./data/species/dog/layout";
 import { dogDepartureTrunkItems, dogHazards, dogRoomItems } from "./data/species/dog/preparation";
 /** @deprecated 請改從 data/shared/app-flow.ts 匯入。 */
 export {
@@ -36,12 +36,6 @@ export const roomDoorplatePlacement = dogRoomDoorplatePlacement;
 /** @deprecated 請改至 data/species/dog/preparation.ts 調整。 */
 export const hazards = dogHazards;
 
-// Mobile feeding item positions:
-// 在這裡調整手機版「準備第一餐」房間裡狗狗、裝水碗、裝食物碗的位置與大小。
-// left / bottom / width / maxHeight 都是百分比，基準是手機版 1:1 餵食房間容器；不會影響桌機版。
-/** @deprecated 請改至 data/species/dog/layout.ts 調整。 */
-export const arrivalMealMobilePlacements = dogArrivalMealMobilePlacements;
-
 /** @deprecated 請改至 data/species/dog/preparation.ts 調整。 */
 export const trunkItems = dogDepartureTrunkItems;
 /** @deprecated 請改至 data/species/dog/preparation.ts 調整。 */
@@ -49,4 +43,3 @@ export const departureTrunkItems = dogDepartureTrunkItems;
 
 /** @deprecated 請改從 data/shared/legacy-scenarios.ts 匯入。 */
 export { scenarios } from "./data/shared/legacy-scenarios";
-

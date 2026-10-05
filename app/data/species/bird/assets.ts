@@ -7,7 +7,9 @@ export const birdAssets = {
   room: {
     background: "/assets/bird/room/bird-safe-room.png",
     mobileBackground: "/assets/bird/room/bird-safe-room.png",
+    /** 物品欄使用 cage；成功放進完整房間後使用正面視角。 */
     cage: "/assets/bird/room/bird-cage.png",
+    cageFront: "/assets/bird/room/bird-cage-front.png",
     cageInterior: "/assets/bird/room/bg-cage-interior.png",
     cageInteriorWithTray: "/assets/bird/room/bg-cage-interior-feces-tray.png",
     perch: "/assets/bird/room/perch-set.png",

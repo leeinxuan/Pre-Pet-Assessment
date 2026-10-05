@@ -1,4 +1,5 @@
 import { dogAssets } from "./assets";
+import { dogArrivalMealSceneLayout, dogArrivalMealSupplyImageSizes } from "./feeding";
 import { dogJourney } from "./journey";
 import { dogLayout } from "./layout";
 import { dogPreparation } from "./preparation";
@@ -17,6 +18,7 @@ export const dogConfig = {
   report: dogReport,
   assets: dogAssets,
   layout: dogLayout,
+  feeding: { arrivalMealSceneLayout: dogArrivalMealSceneLayout, arrivalMealSupplyImageSizes: dogArrivalMealSupplyImageSizes },
 } as const;
 
-export { dogAssets, dogJourney, dogLayout, dogPreparation, dogReport, dogSelection, dogLifeScenarios, getDogBreedChallengeScenarios };
+export { dogAssets, dogJourney, dogLayout, dogPreparation, dogReport, dogSelection, dogLifeScenarios, getDogBreedChallengeScenarios, dogArrivalMealSceneLayout, dogArrivalMealSupplyImageSizes };

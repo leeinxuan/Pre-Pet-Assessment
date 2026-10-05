@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { breeds, expenseCatalog, money, roomItems } from "../../game-data";
 import { isTemporaryReserveExpense } from "../../data/shared/expenses";
-import { arrivalMealMobilePlacements } from "../../data/species/dog/layout";
+import { getSpeciesConfig } from "../../data/species";
 import {
   getBreedChallengeScenarios,
   getJourneyItemsForSpecies,
@@ -33,6 +33,10 @@ import { birdActivityScenarios } from "../../data/species/bird/scenarios";
 import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text";
 import type {
   CareMember,
+  ArrivalMealSceneItemKey,
+  ArrivalMealSceneLayout,
+  ArrivalMealSupplyImageKey,
+  ArrivalMealSupplyImageSizes,
   BusyCareChecklistQuestion,
   ExpenseRecord,
   ExpenseTriggerMeta,
@@ -70,13 +74,42 @@ const breedChallengeVideos: Record<string, string> = {
   "颳風下雨也要出門上廁所": dogShibaAsset("rainy-day-walk.mp4"),
 };
 
-function arrivalMealPlacementStyle(kind: keyof typeof arrivalMealMobilePlacements): CSSProperties {
-  const placement = arrivalMealMobilePlacements[kind];
+function arrivalMealPlacementStyle(layout: ArrivalMealSceneLayout, kind: ArrivalMealSceneItemKey): CSSProperties {
+  const desktop = layout.desktop[kind];
+  const mobile = layout.mobile[kind];
   return {
-    "--mobile-arrival-meal-left": `${placement.left}%`,
-    "--mobile-arrival-meal-bottom": `${placement.bottom}%`,
-    "--mobile-arrival-meal-width": `${placement.width}%`,
-    "--mobile-arrival-meal-max-height": "maxHeight" in placement ? `${placement.maxHeight}%` : "none",
+    "--arrival-meal-left": `${desktop.left}%`,
+    "--arrival-meal-bottom": `${desktop.bottom}%`,
+    "--arrival-meal-width": `${desktop.width}%`,
+    "--arrival-meal-max-height": desktop.maxHeight === undefined ? "none" : `${desktop.maxHeight}%`,
+    "--mobile-arrival-meal-left": `${mobile.left}%`,
+    "--mobile-arrival-meal-bottom": `${mobile.bottom}%`,
+    "--mobile-arrival-meal-width": `${mobile.width}%`,
+    "--mobile-arrival-meal-max-height": mobile.maxHeight === undefined ? "none" : `${mobile.maxHeight}%`,
+  } as CSSProperties;
+}
+
+function arrivalMealSupplyImageStyle(sizes: ArrivalMealSupplyImageSizes, kind: ArrivalMealSupplyImageKey): CSSProperties {
+  const desktop = sizes.desktop[kind];
+  const mobile = sizes.mobile[kind];
+  return {
+    "--arrival-meal-supply-width": `${desktop.width}px`,
+    "--arrival-meal-supply-height": `${desktop.height}px`,
+    "--mobile-arrival-meal-supply-width": `${mobile.width}px`,
+    "--mobile-arrival-meal-supply-height": `${mobile.height}px`,
+  } as CSSProperties;
+}
+
+/**
+ * 完成後以透明預留格取代用品按鈕；高度跟原本「圖片＋名稱」一致，
+ * 避免任何物種在點擊用品後讓左側物品欄或整個餵食場景縮動。
+ */
+function arrivalMealSupplySlotStyle(sizes: ArrivalMealSupplyImageSizes, kind: ArrivalMealSupplyImageKey): CSSProperties {
+  const desktop = sizes.desktop[kind];
+  const mobile = sizes.mobile[kind];
+  return {
+    "--arrival-meal-supply-slot-height": `${desktop.height + 36}px`,
+    "--mobile-arrival-meal-supply-slot-height": `${mobile.height + 36}px`,
   } as CSSProperties;
 }
 
@@ -1798,6 +1831,9 @@ function ArrivalMealActivity({
   onAddExpense: (id: string) => void;
   onContinue: () => void;
 }) {
+  const speciesConfig = getSpeciesConfig(species);
+  const arrivalMealSceneLayout = speciesConfig.feeding.arrivalMealSceneLayout;
+  const arrivalMealSupplyImageSizes = speciesConfig.feeding.arrivalMealSupplyImageSizes;
   const produceMealComplete = activity.arrivalMealFoodReady && activity.arrivalMealWaterReady && activity.arrivalMealVeggieReady;
   const hasRecordedMeal = useRef(false);
   const [foodWarning, setFoodWarning] = useState<{ title: string; text: string } | null>(null);
@@ -1921,32 +1957,32 @@ function ArrivalMealActivity({
         <h1>{isHamster ? interpolatePetName(hamsterFirstMeal.title, petName) : `幫${petName || animalName}準備第一餐`}</h1>
         <p>{isHamster ? `選出適合的第一餐，讓${petName || "牠"}在新家慢慢安心下來。` : `${petName || animalName}剛到新家，還有些不安。先幫${petName || "牠"}準備合適的主食與乾淨飲水，讓牠慢慢安心下來。`}</p>
       </div>
-      <aside className={`arrival-meal-supplies ${complete ? "mobile-condensed" : ""}${isHamster ? " arrival-meal-supplies--choice" : ""}`} aria-label="晚餐用品">
+      <aside className={`arrival-meal-supplies${isHamster ? " arrival-meal-supplies--choice" : ""}`} aria-label="晚餐用品">
         {isHamster ? hamsterFirstMeal.items.map((item) => <button key={item.id} type="button" draggable={!activity.hamsterMealSelected.includes(item.id)}
           onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} onClick={() => chooseHamsterFood(item.id)}
           className={`arrival-meal-choice-button ${item.result === "incorrect" ? "is-unsafe" : ""} ${activity.hamsterMealSelected.includes(item.id) ? "done" : ""}`}>
           <b>{item.result === "caution" ? "▲ " : ""}{item.label}</b><small>{activity.hamsterMealSelected.includes(item.id) ? "已放入食碗" : item.result === "incorrect" ? "點擊查看原因" : "點擊或拖曳放入"}</small>
         </button>) : (isRabbit || isBird) ? <>
-          <div className="arrival-meal-supply-slot">{!activity.arrivalMealFoodReady ? <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src={isBird ? birdAssets.feeding.seedMix : rabbitAssets.preparation.hay} alt={isBird ? "鸚鵡專用混合飼料" : "牧草"} /><span>{isBird ? "鸚鵡專用混合飼料" : "牧草"}</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
-          <div className="arrival-meal-supply-slot">{!activity.arrivalMealWaterReady ? <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isBird ? birdAssets.feeding.waterBottle : "/assets/shared/waterbottle.png"} alt="飲水" /><span>飲水</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
-          <div className="arrival-meal-supply-slot">{!activity.arrivalMealVeggieReady ? <button type="button" onClick={prepareVeggie}><img src={isBird ? birdAssets.feeding.freshVeggie : rabbitAssets.feeding.leafyVeggie} alt={isBird ? "新鮮蔬菜" : "新鮮葉菜"} /><span>{isBird ? "新鮮蔬菜" : "新鮮葉菜"}</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
+          <div className="arrival-meal-supply-slot" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, "food")}>{!activity.arrivalMealFoodReady ? <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "food")} src={isBird ? birdAssets.feeding.seedMix : rabbitAssets.feeding.hay} alt={isBird ? "鸚鵡專用混合飼料" : "牧草"} /><span>{isBird ? "鸚鵡專用混合飼料" : "牧草"}</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
+          <div className="arrival-meal-supply-slot" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, "water")}>{!activity.arrivalMealWaterReady ? <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "water")} src={isBird ? birdAssets.feeding.waterBottle : "/assets/shared/waterbottle.png"} alt="飲水" /><span>飲水</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
+          <div className="arrival-meal-supply-slot" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, "veggie")}>{!activity.arrivalMealVeggieReady ? <button type="button" onClick={prepareVeggie}><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "veggie")} src={isBird ? birdAssets.feeding.freshVeggie : rabbitAssets.feeding.leafyVeggie} alt={isBird ? "新鮮蔬菜" : "新鮮葉菜"} /><span>{isBird ? "新鮮蔬菜" : "新鮮葉菜"}</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}</div>
         </> : <>
-          <div className="arrival-meal-supply-slot">
+          <div className="arrival-meal-supply-slot" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, "food")}>
             {!activity.arrivalMealFoodReady ? (
-              <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" src={isCat ? catAssets.feeding.food : dogAssets.feeding.food} alt={isCat ? "貓主食" : "飼料"} /><span>{isCat ? "貓主食" : "飼料"}</span></button>
+              <button type="button" className="arrival-meal-supply-food-button" onClick={prepareFood}><img className="arrival-meal-supply-food" style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "food")} src={isCat ? catAssets.feeding.food : dogAssets.feeding.food} alt={isCat ? "貓主食" : "飼料"} /><span>{isCat ? "貓主食" : "飼料"}</span></button>
             ) : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}
           </div>
-          <div className="arrival-meal-supply-slot">
+          <div className="arrival-meal-supply-slot" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, "water")}>
             {!activity.arrivalMealWaterReady ? (
-              <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" src={isCat ? catAssets.feeding.waterBottle : dogAssets.feeding.waterBottle} alt="水瓶" /><span>水</span></button>
+              <button type="button" onClick={prepareWater}><img className="arrival-meal-supply-water" style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "water")} src={isCat ? catAssets.feeding.waterBottle : dogAssets.feeding.waterBottle} alt="水瓶" /><span>水</span></button>
             ) : <div className="arrival-meal-supply-placeholder" aria-hidden="true" />}
           </div>
         </>}
         {isRabbit && <button type="button" className={unsafeFoodIds.includes("rabbit-carrot") ? "arrival-meal-unsafe caution warning" : "arrival-meal-unsafe caution"} onClick={placeRabbitCarrot}>
-          <span className="unsafe-food-visual"><img src={rabbitAssets.feeding.carrotMain} alt="整袋紅蘿蔔" />{unsafeFoodIds.includes("rabbit-carrot") && <WarningTriangle className="unsafe-food-warning-icon" />}</span><span>整袋紅蘿蔔</span>
+          <span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={rabbitAssets.feeding.carrotMain} alt="整袋紅蘿蔔" />{unsafeFoodIds.includes("rabbit-carrot") && <WarningTriangle className="unsafe-food-warning-icon" />}</span><span>整袋紅蘿蔔</span>
         </button>}
         {unsafeFoods.map((food) => (
-          <button key={food.id} type="button" className={unsafeFoodIds.includes(food.id) ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img src={food.image} alt={food.label} />{unsafeFoodIds.includes(food.id) && <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>}</span><span>{food.label}</span></button>
+          <button key={food.id} type="button" className={unsafeFoodIds.includes(food.id) ? "arrival-meal-unsafe warning" : "arrival-meal-unsafe"} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={food.image} alt={food.label} />{unsafeFoodIds.includes(food.id) && <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>}</span><span>{food.label}</span></button>
         ))}
       </aside>
       <div className="arrival-meal-scene" role={isHamster ? "group" : undefined} aria-label={isHamster ? "第一餐食碗" : undefined} onDragOver={isHamster ? (event) => event.preventDefault() : undefined} onDrop={isHamster ? (event) => { event.preventDefault(); chooseHamsterFood(event.dataTransfer.getData("text/plain")); } : undefined}>
@@ -1958,15 +1994,15 @@ function ArrivalMealActivity({
           <b>{foodWarning.title}</b>
           <p>{foodWarning.text}</p>
         </div>}
-        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle("dog")} src={isCat ? (catMealCelebrated ? catAssets.feeding.happyCat : catAssets.feeding.hungryScaredCat) : isRabbit ? (produceMealComplete ? rabbitAssets.feeding.rabbitHappy : rabbitAssets.feeding.rabbitUnhappy) : isBird ? (complete ? birdAssets.feeding.happy : birdAssets.feeding.unhappy) : complete ? dogShibaAsset("shiba-dog.png") : dogShibaAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
-        <img className="arrival-meal-water" style={arrivalMealPlacementStyle("water")} src={isCat ? (activity.arrivalMealWaterReady ? catAssets.feeding.waterBowl : catAssets.feeding.emptyWaterBowl) : isRabbit ? (activity.arrivalMealWaterReady ? rabbitAssets.room.waterBowl : rabbitAssets.feeding.waterBowlEmpty) : isBird ? (activity.arrivalMealWaterReady ? birdAssets.feeding.fullWaterBowl : birdAssets.feeding.emptyWaterBowl) : activity.arrivalMealWaterReady ? dogAssets.feeding.waterBowl : dogAssets.feeding.emptyWaterBowl} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
-        <img className="arrival-meal-food" style={arrivalMealPlacementStyle("food")} src={isCat ? (activity.arrivalMealFoodReady ? catAssets.feeding.foodBowl : catAssets.feeding.emptyFoodBowl) : isRabbit ? (activity.arrivalMealFoodReady ? rabbitAssets.room.hayRack : rabbitAssets.feeding.hayRackEmpty) : isBird ? (activity.arrivalMealFoodReady ? birdAssets.feeding.fullFoodBowl : birdAssets.feeding.emptyFoodBowl) : activity.arrivalMealFoodReady ? dogAssets.feeding.foodBowl : dogAssets.feeding.emptyFoodBowl} alt={activity.arrivalMealFoodReady ? "裝好主食的食碗" : "空食碗"} />
-        {(isRabbit || isBird) && activity.arrivalMealVeggieReady && <img className="arrival-meal-veggie" style={arrivalMealPlacementStyle("veggie")} src={isBird ? birdAssets.feeding.freshVeggie : rabbitAssets.feeding.leafyVeggie} alt={isBird ? "已準備的新鮮蔬菜" : "已準備的新鮮葉菜"} />}
+        <img className="arrival-meal-dog" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "pet")} src={isCat ? (catMealCelebrated ? catAssets.feeding.happyCat : catAssets.feeding.hungryScaredCat) : isRabbit ? (produceMealComplete ? rabbitAssets.feeding.rabbitHappy : rabbitAssets.feeding.rabbitUnhappy) : isBird ? (complete ? birdAssets.feeding.happy : birdAssets.feeding.unhappy) : complete ? dogShibaAsset("shiba-dog.png") : dogShibaAsset("shiba-sad.png")} alt={complete ? `${petName || animalName}安心地待在房間裡` : `${petName || animalName}還在等待晚餐與飲水`} />
+        <img className="arrival-meal-water" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "water")} src={isCat ? (activity.arrivalMealWaterReady ? catAssets.feeding.waterBowl : catAssets.feeding.emptyWaterBowl) : isRabbit ? (activity.arrivalMealWaterReady ? rabbitAssets.room.waterBowl : rabbitAssets.feeding.waterBowlEmpty) : isBird ? (activity.arrivalMealWaterReady ? birdAssets.feeding.fullWaterBowl : birdAssets.feeding.emptyWaterBowl) : activity.arrivalMealWaterReady ? dogAssets.feeding.waterBowl : dogAssets.feeding.emptyWaterBowl} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
+        <img className="arrival-meal-food" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "food")} src={isCat ? (activity.arrivalMealFoodReady ? catAssets.feeding.foodBowl : catAssets.feeding.emptyFoodBowl) : isRabbit ? (activity.arrivalMealFoodReady ? rabbitAssets.feeding.hayRack : rabbitAssets.feeding.hayRackEmpty) : isBird ? (activity.arrivalMealFoodReady ? birdAssets.feeding.fullFoodBowl : birdAssets.feeding.emptyFoodBowl) : activity.arrivalMealFoodReady ? dogAssets.feeding.foodBowl : dogAssets.feeding.emptyFoodBowl} alt={activity.arrivalMealFoodReady ? "裝好主食的食碗" : "空食碗"} />
+        {(isRabbit || isBird) && activity.arrivalMealVeggieReady && <img className="arrival-meal-veggie" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "veggie")} src={isBird ? birdAssets.feeding.freshVeggie : rabbitAssets.feeding.leafyVeggie} alt={isBird ? "已準備的新鮮蔬菜" : "已準備的新鮮葉菜"} />}
         </>}
       </div>
       <div className="arrival-meal-footer">
         {isHamster && hamsterFeedback && <p className={`guided-activity-feedback ${hamsterFeedback.result}`} role="status">{interpolatePetName(hamsterFeedback.feedback, petName)}</p>}
-        {complete && <p role="status">{completionMessage}</p>}
+        <p className="arrival-meal-completion-message" role="status">{complete ? completionMessage : "\u00a0"}</p>
         <button className="primary" disabled={!complete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
       </div>
     </section>

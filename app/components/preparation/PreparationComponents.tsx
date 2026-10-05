@@ -239,6 +239,7 @@ export function RoomPreparation({
   const entryReady = Boolean(roomFlow && entryRequiredItemIds.every((id) => selectedItems.includes(id)));
   const outsideItemIds = roomFlow?.outsideItemIds ?? (roomFlow ? [roomFlow.fenceItemId] : []);
   const insideView = Boolean(roomFlow && entryReady && insideRoomView);
+  const interiorUsesOwnAspectRatio = Boolean(insideView && roomFlow?.interiorBackgroundAspectRatio && roomFlow.interiorBackgroundAspectRatio !== "match-room");
   const interiorItemPlaced = Boolean(roomFlow && selectedItems.includes(roomFlow.interiorItemId));
   const roomBackground = roomFlow
     ? (insideView ? (interiorItemPlaced ? roomFlow.interiorSafeBackground : roomFlow.interiorBackground) : (floorHazardComplete ? roomFlow.safeBackground : roomFlow.initialBackground))
@@ -373,15 +374,15 @@ export function RoomPreparation({
         </section>
 
         <div className="room-interaction-column">
-          <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${roomSceneReady ? "room-scene-ready" : ""}`} style={insideView && roomFlow?.interiorAspectRatio ? { "--room-flow-aspect-ratio": roomFlow.interiorAspectRatio } as CSSProperties : undefined} role="group" aria-label="寵物生活空間">
+          <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${interiorUsesOwnAspectRatio ? "room-flow-scene--custom-aspect" : ""} ${roomSceneReady ? "room-scene-ready" : ""}`} style={interiorUsesOwnAspectRatio ? { "--room-flow-aspect-ratio": roomFlow?.interiorBackgroundAspectRatio } as CSSProperties : undefined} role="group" aria-label="寵物生活空間">
             {roomBackground ? <img
-              className={`room-scene-background room-scene-background--desktop ${species === "dog" ? "room-scene-background--dog" : "room-scene-background--cat"} ${insideView ? "room-scene-background--portrait" : ""}`}
+              className={`room-scene-background room-scene-background--desktop ${species === "dog" ? "room-scene-background--dog" : "room-scene-background--cat"} ${interiorUsesOwnAspectRatio ? "room-scene-background--portrait" : ""}`}
               src={roomBackground}
               alt={insideView ? "兔子圍欄內部" : species === "cat" ? "貓咪安全房" : species === "rabbit" ? "兔子生活空間" : species === "bird" ? "鳥兒生活空間" : "空的寵物生活房間"}
               style={species === "dog" ? { objectFit: "contain", objectPosition: "center center" } : undefined}
             /> : <div className="preparation-asset-placeholder hamster-room-background-placeholder" role="img" aria-label={insideView ? "倉鼠籠內背景素材待補" : "倉鼠房間背景素材待補"}>素材待補</div>}
             {roomBackground && <img
-              className={`room-scene-background room-scene-background--mobile ${species === "dog" ? "room-scene-background--dog-mobile" : ""} ${insideView ? "room-scene-background--portrait" : ""}`}
+              className={`room-scene-background room-scene-background--mobile ${species === "dog" ? "room-scene-background--dog-mobile" : ""} ${interiorUsesOwnAspectRatio ? "room-scene-background--portrait" : ""}`}
               // 犬隻手機版也直接使用原始房間圖；完整顯示，不裁切、不額外放大。
               src={roomBackground}
               alt=""
@@ -480,7 +481,7 @@ export function CarTrunkPreparation({ selected, petName, breed, species = "dog",
               const isRabbitRoomReuse = species === "rabbit" && item.id === "anti-slip-liner";
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
-                  <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.id}`} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b>
+                  <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.visualClassName ?? item.id}`} style={item.visualScale === undefined ? undefined : { "--departure-item-image-scale": item.visualScale } as CSSProperties} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b>
                 </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{reusedExpense ? <span className="supply-slot-price">已於房間準備計入</span> : price && !(species === "rabbit" && isRabbitRoomReuse) && <span className="supply-slot-price">{price}</span>}</div>}
               </div>;
             })}
@@ -490,7 +491,7 @@ export function CarTrunkPreparation({ selected, petName, breed, species = "dog",
 
       <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">
         <img className="car-trunk-background" src={dogAssets.preparation.trunk} alt="打開的汽車後車廂" />
-        {documents.some((item) => selected.includes(item.id)) && <div className="car-document-folder complete"><img src={dogAssets.preparation.documents} alt="飼養文件夾" /></div>}
+        {documents.some((item) => selected.includes(item.id) && (item.visualClassName ?? item.id) === "documents") && <div className="car-document-folder complete"><img src={dogAssets.preparation.documents} alt="飼養文件夾" /></div>}
         {documents.filter((item) => selected.includes(item.id) && item.image && (item.id === "id" || item.id === "id-card")).map((item) => <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`已放入文件夾的${item.label}`} />)}
         {supplies.filter((item) => selected.includes(item.id)).map((item) => item.image ? <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`後車廂內的${item.label}`} /> : <div key={item.id} className={`placed-car-item placed-car-${item.id} preparation-asset-placeholder`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} role="img" aria-label={`已準備${item.label}，素材待補`}>{item.label}</div>)}
       </section>

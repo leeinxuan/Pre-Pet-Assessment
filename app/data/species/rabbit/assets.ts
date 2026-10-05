@@ -1,3 +1,5 @@
+const rabbitHayAsset = "/assets/car/hay-in-carrier.png";
+
 /**
  * 兔版素材入口。
  * 所有值都指向 public 中已存在的兔子或共用車用素材，避免缺圖造成流程中斷。
@@ -27,9 +29,12 @@ export const rabbitAssets = {
     fencePenInRoom: "/assets/rabbit/room/fence-pen-in-room.png",
   },
   feeding: {
+    /** 第一餐與房間初期備量共用同一張既有牧草素材。 */
+    hay: rabbitHayAsset,
     rabbitUnhappy: "/assets/rabbit/feeding/rabbit-unhappy.png",
     rabbitHappy: "/assets/rabbit/feeding/rabbit-happy.png",
     hayRackEmpty: "/assets/rabbit/feeding/hay-rack-empty.png",
+    hayRack: "/assets/rabbit/room/hay-rack.png",
     waterBowlEmpty: "/assets/rabbit/feeding/heavy-water-bowl-empty.png",
     leafyVeggie: "/assets/rabbit/feeding/leafy-veggie.png",
     carrotMain: "/assets/rabbit/feeding/carrot-main.png",
@@ -39,7 +44,7 @@ export const rabbitAssets = {
   preparation: {
     carrier: "/assets/car/rabbit-carrier.png",
     antiSlipLiner: "/assets/car/anti-slip-liner.png",
-    hay: "/assets/car/hay-in-carrier.png",
+    hay: rabbitHayAsset,
     idCard: "/assets/car/id-card.png",
     documents: "/assets/car/adoption-documents.png",
     coolingPack: "/assets/car/cooling-pack.png",

@@ -1010,8 +1010,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   .arrival-meal-supplies { grid-template-columns: repeat(2, minmax(92px, 1fr)); min-height: 0; padding: 16px; }
   .arrival-meal-supplies button { max-width: 130px; justify-self: center; }
   .arrival-meal-supplies .arrival-meal-supply-food-button { max-width: none; }
-  .arrival-meal-supplies img { width: 72px; height: 78px; }
-  .arrival-meal-supplies img.arrival-meal-supply-food { width: 150px !important; height: 150px !important; max-width: none; }
+  .arrival-meal-supplies img { width: var(--mobile-arrival-meal-supply-width) !important; height: var(--mobile-arrival-meal-supply-height) !important; max-width: none; }
   .arrival-meal-scene { aspect-ratio: 16 / 9; }
   .arrival-meal-footer { flex-direction: column; align-items: stretch; padding: 16px; }
   .arrival-meal-footer .primary { width: 100%; }
@@ -1148,14 +1147,14 @@ html, body { overflow-x: clip; }
 
 .arrival-meal-supply-slot {
   width: 100%;
-  min-height: 132px;
+  min-height: var(--arrival-meal-supply-slot-height, 132px);
   display: grid;
   place-items: center;
 }
 
 .arrival-meal-supply-placeholder {
   width: 100%;
-  min-height: 112px;
+  min-height: var(--arrival-meal-supply-slot-height, 132px);
   opacity: 0;
   pointer-events: none;
 }
@@ -1402,12 +1401,11 @@ html, body { overflow-x: clip; }
     aspect-ratio: 1 / 1;
   }
 
-  /* Mobile feeding item positions:
-     手機版「準備第一餐」房間裡狗狗、裝水碗、裝食物碗的位置與大小，
-     請到 app/game-data.ts 的 arrivalMealMobilePlacements 調整。 */
+  /* 手機版第一餐場景位置由各物種 feeding.ts 的 CSS 變數提供。 */
   .arrival-meal-dog,
   .arrival-meal-water,
-  .arrival-meal-food {
+  .arrival-meal-food,
+  .arrival-meal-veggie {
     left: var(--mobile-arrival-meal-left) !important;
     bottom: var(--mobile-arrival-meal-bottom) !important;
     width: var(--mobile-arrival-meal-width) !important;
@@ -1422,15 +1420,7 @@ html, body { overflow-x: clip; }
   }
 
   .arrival-meal-supply-slot {
-    min-height: 104px;
-  }
-
-  .arrival-meal-supplies.mobile-condensed {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .arrival-meal-supplies.mobile-condensed .arrival-meal-supply-slot {
-    display: none;
+    min-height: var(--mobile-arrival-meal-supply-slot-height, 104px);
   }
 
   .arrival-meal-supplies button,
@@ -1439,12 +1429,7 @@ html, body { overflow-x: clip; }
     min-height: 104px;
   }
 
-  /* 手機版餵食頁面物品欄水瓶大小：要再放大／縮小就改這裡 */
-  .arrival-meal-supplies img.arrival-meal-supply-water {
-    width: 130px !important;
-    height: 130px !important;
-    max-width: none;
-  }
+  .arrival-meal-supplies img { width: var(--mobile-arrival-meal-supply-width) !important; height: var(--mobile-arrival-meal-supply-height) !important; max-width: none; }
 
   .arrival-meal-footer {
     order: 3;

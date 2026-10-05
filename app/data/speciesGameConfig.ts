@@ -72,8 +72,8 @@ export type SpeciesGameConfig = {
     safeBackground: string;
     interiorBackground: string;
     interiorSafeBackground: string;
-    /** 籠內背景依原始素材比例顯示；避免共用場景強制裁成固定尺寸。 */
-    interiorAspectRatio?: string;
+    /** 籠內背景的容器比例；match-room 會沿用完整房間容器。 */
+    interiorBackgroundAspectRatio?: "match-room" | string;
     floorHazardId: string;
     safeWhenAllHazards?: boolean;
     fenceItemId: string;
@@ -184,6 +184,7 @@ export const speciesGameConfig: Record<SpeciesId, SpeciesGameConfig> = {
       safeBackground: rabbitPreparation.roomFlow.safeBackground,
       interiorBackground: rabbitPreparation.roomFlow.interiorBackground,
       interiorSafeBackground: rabbitPreparation.roomFlow.interiorSafeBackground,
+      interiorBackgroundAspectRatio: rabbitPreparation.roomFlow.interiorBackgroundAspectRatio,
       floorHazardId: "slippery-floor",
       fenceItemId: "fence-pen",
       interiorItemId: "anti-slip-mat",
@@ -210,7 +211,7 @@ export const speciesGameConfig: Record<SpeciesId, SpeciesGameConfig> = {
       safeBackground: birdPreparation.roomFlow.safeBackground,
       interiorBackground: birdPreparation.roomFlow.interiorBackground,
       interiorSafeBackground: birdPreparation.roomFlow.interiorSafeBackground,
-      interiorAspectRatio: "2 / 3",
+      interiorBackgroundAspectRatio: birdPreparation.roomFlow.interiorBackgroundAspectRatio,
       floorHazardId: "",
       safeWhenAllHazards: true,
       fenceItemId: "bird-cage",

@@ -37,7 +37,7 @@ export const catHazards: HazardItem[] = [
 export const catTrunkItems: TrunkItem[] = dogDepartureTrunkItems
   .filter((item) => item.id !== "leash")
   .map((item) => {
-    if (item.id === "carrier") return { ...item, label: "外出籠", description: "讓小貓在移動途中有安全固定的空間。", expenseIds: ["cat-carrier"] };
+    if (item.id === "carrier") return { ...item, label: "外出籠", visualScale: 1.5, description: "讓小貓在移動途中有安全固定的空間。", expenseIds: ["cat-carrier"] };
     if (item.id === "pee-pad") return { ...item, description: "接回途中可降低排泄與清潔壓力。" };
     if (item.id === "water-kit") return { ...item, description: "必要時補充飲水，避免長時間缺水。" };
     if (item.id === "cleaner") return { ...item, description: "處理接回途中可能發生的髒污。" };

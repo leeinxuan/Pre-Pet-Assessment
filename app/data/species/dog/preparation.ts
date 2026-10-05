@@ -24,7 +24,7 @@ export const dogHazards: HazardItem[] = [
 export const dogDepartureTrunkItems: TrunkItem[] = [
   { id: "id", label: "身分證", kind: "document", image: "/assets/car/id-card.png", preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
   { id: "documents", label: "飼養文件", kind: "document", image: "/assets/car/adoption-documents.png", preparedLabel: "已攜帶", description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。", placement: { x: 22, y: 32, width: 24, layer: 3 } },
-  { id: "carrier", label: "運輸籠", kind: "supply", image: "/assets/car/carrier.png", preparedLabel: "已準備", description: "讓小狗在移動途中有安全固定的空間。", expenseIds: ["carrier"], placement: { x: 51, y: 60, width: 34, layer: 5 } },
+  { id: "carrier", label: "運輸籠", kind: "supply", image: "/assets/car/carrier.png", visualScale: 1.5, preparedLabel: "已準備", description: "讓小狗在移動途中有安全固定的空間。", expenseIds: ["carrier"], placement: { x: 51, y: 60, width: 34, layer: 5 } },
   { id: "pee-pad", label: "尿墊", kind: "supply", image: "/assets/car/pee-pad.png", preparedLabel: "已準備", description: "接回途中可降低排泄與清潔壓力。", expenseIds: ["toilet"], reusedExpenseIds: ["toilet"], placement: { x: 49, y: 66, width: 20, layer: 6 } },
   { id: "water-kit", label: "水碗", kind: "supply", image: "/assets/car/water-bottle.png", preparedLabel: "已準備", description: "必要時補充飲水，避免長時間缺水。", expenseIds: ["water-bowl"], placement: { x: 55, y: 67, width: 27, layer: 6 } },
   { id: "leash", label: "牽繩", kind: "supply", image: "/assets/car/leash.png", preparedLabel: "已準備", description: "下車或移動時維持安全防護。", expenseIds: ["leash"], placement: { x: 30, y: 60, width: 25, layer: 4 } },

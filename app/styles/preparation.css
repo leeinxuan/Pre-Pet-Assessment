@@ -139,14 +139,13 @@
 .departure-supply-row button:focus-visible { outline: 2px dashed #76591c; outline-offset: 2px; }
 .departure-supply-row button.departing { pointer-events: none; opacity: 0; transform: scale(.84); }
 .departure-supply-visual { display: grid; place-items: center; width: 90px; height: 90px; }
-.departure-supply-row img { width: 90px !important; height: 90px !important; max-width: none; object-fit: contain; }
+.departure-supply-row img { width: 90px !important; height: 90px !important; max-width: none; object-fit: contain; transform: scale(var(--departure-item-image-scale, 1)); }
 .departure-supply-row img.departure-item-image--id,
-.departure-supply-row img.departure-item-image--documents { transform: scale(1.35); }
-.departure-supply-row img.departure-item-image--carrier { transform: scale(1.8); }
+.departure-supply-row img.departure-item-image--documents { --departure-item-image-scale: 1.35; }
 .departure-supply-row img.departure-item-image--pee-pad { transform: scale(1.22); }
 .departure-supply-row img.departure-item-image--water-kit { transform: scale(2); }
 .departure-supply-row img.departure-item-image--leash { transform: scale(1.28); }
-.departure-supply-row img.departure-item-image--cleaner { transform: scale(1.5); }
+.departure-supply-row img.departure-item-image--cleaner { transform: scale(1.3); }
 .departure-supply-row b { display: block; font-size: 12px; line-height: 1.35; text-align: center; }
 .departure-car { position: relative; justify-self: end; width: min(100%, 760px); min-width: 0; isolation: isolate; }
 .departure-car .car-trunk-background { display: block; width: 100%; height: auto; object-fit: contain; }
@@ -214,7 +213,7 @@
   .room-scene .placed-supply { left: var(--mobile-room-item-x) !important; top: var(--mobile-room-item-y) !important; width: var(--mobile-room-item-width) !important; }
   .room-scene .room-hazard { left: var(--mobile-room-hazard-x) !important; top: var(--mobile-room-hazard-y) !important; width: var(--mobile-room-hazard-width) !important; }
   .room-scene .rabbit-slippery-floor-hotspot { left: var(--mobile-room-hotspot-x) !important; top: var(--mobile-room-hotspot-y) !important; width: var(--mobile-room-hotspot-width) !important; height: var(--mobile-room-hotspot-height) !important; }
-  .room-flow-scene--interior { width: min(100%, 390px); aspect-ratio: var(--room-flow-aspect-ratio, 9 / 16); justify-self: center; }
+  .room-flow-scene--custom-aspect { width: min(100%, 390px); aspect-ratio: var(--room-flow-aspect-ratio); justify-self: center; }
   .room-flow-return { top: 11px; left: 11px; width: 36px; height: 36px; font-size: 21px; }
   .room-scene .pet-doorplate { left: var(--mobile-doorplate-x) !important; top: var(--mobile-doorplate-y) !important; width: var(--mobile-doorplate-width) !important; min-width: 0; }
   .room-scene .pet-doorplate-name,
@@ -242,7 +241,7 @@
   .arrival-meal-activity { grid-template-columns: 1fr; }
   .arrival-meal-heading { order: 0; }
   .arrival-meal-scene { order: 1; width: 100%; aspect-ratio: 1 / 1; }
-  /* 手機版第一餐的狗／貓、飲水與食物位置：由 layout.ts 的 mobile placement CSS 變數提供。 */
+  /* 手機版第一餐場景的位置由各物種 feeding.ts 的 CSS 變數提供。 */
   .arrival-meal-dog,
   .arrival-meal-water,
   .arrival-meal-food,
@@ -253,12 +252,10 @@
     max-height: var(--mobile-arrival-meal-max-height) !important;
   }
   .arrival-meal-supplies { order: 2; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 16px; }
-  .arrival-meal-supply-slot { min-height: 104px; }
-  .arrival-meal-supplies.mobile-condensed { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .arrival-meal-supplies.mobile-condensed .arrival-meal-supply-slot { display: none; }
+  .arrival-meal-supply-slot { min-height: var(--mobile-arrival-meal-supply-slot-height, 104px); }
   .arrival-meal-supplies button,
   .arrival-meal-supplies .arrival-meal-supply-food-button { max-width: none; min-height: 104px; }
-  .arrival-meal-supplies img.arrival-meal-supply-water { width: 130px !important; height: 130px !important; max-width: none; }
+  .arrival-meal-supplies img { width: var(--mobile-arrival-meal-supply-width) !important; height: var(--mobile-arrival-meal-supply-height) !important; max-width: none; }
   .arrival-meal-footer { order: 3; }
 }
 
@@ -297,7 +294,7 @@
 .rabbit-slippery-floor-hotspot { position: absolute; z-index: 4; box-sizing: border-box; padding: 0; border: 2px dashed rgba(180, 119, 42, .75); border-radius: 18px; background: rgba(255, 239, 193, .18); color: #725022; cursor: pointer; transition: background .18s ease, box-shadow .18s ease; transform: translate(-50%, -50%); }
 .rabbit-slippery-floor-hotspot span { position: absolute; left: 50%; top: 50%; padding: 5px 10px; border: 1px solid rgba(180,119,42,.32); border-radius: 999px; background: rgba(255,252,243,.94); box-shadow: 0 4px 12px rgba(96,62,21,.12); color: #725022; font-size: 12px; font-weight: 900; white-space: nowrap; transform: translate(-50%, -50%); }
 .rabbit-slippery-floor-hotspot:hover, .rabbit-slippery-floor-hotspot:focus-visible { background: rgba(255, 229, 158, .3); box-shadow: 0 0 0 5px rgba(224, 164, 52, .17); outline: none; }
-.room-flow-scene--interior { width: min(100%, 480px); aspect-ratio: var(--room-flow-aspect-ratio, 9 / 16); justify-self: center; }
+.room-flow-scene--custom-aspect { width: min(100%, 480px); aspect-ratio: var(--room-flow-aspect-ratio); justify-self: center; }
 .room-flow-entry { pointer-events: auto; border-radius: 12px; }
 .room-flow-entry:disabled { cursor: not-allowed; filter: saturate(.7) opacity(.72); }
 .room-flow-entry:not(:disabled):hover, .room-flow-entry:not(:disabled):focus-visible { filter: drop-shadow(0 0 12px rgba(218, 157, 37, .48)); outline: 3px solid rgba(212,154,36,.66); outline-offset: 5px; }
@@ -395,8 +392,7 @@
 .arrival-meal-supplies .arrival-meal-supply-food-button { max-width: none; }
 .arrival-meal-supplies button:hover img, .arrival-meal-supplies button:focus-visible img { transform: translateY(-4px) scale(1.04); }
 .arrival-meal-supplies button:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; border-radius: 9px; }
-.arrival-meal-supplies img { width: 92px; height: 108px; object-fit: contain; transition: transform .2s ease; }
-.arrival-meal-supplies img.arrival-meal-supply-food { width: 125px !important; height: 125px !important; max-width: none; }
+.arrival-meal-supplies img { width: var(--arrival-meal-supply-width); height: var(--arrival-meal-supply-height); object-fit: contain; transition: transform .2s ease; }
 .arrival-meal-supplies p { grid-column: 1 / -1; margin: 0; color: var(--mint); font-size: 13px; font-weight: 900; text-align: center; }
 .arrival-meal-supplies .arrival-meal-unsafe.warning img { animation: chocolateNudge .38s ease-in-out 2; }
 .unsafe-food-visual { position: relative; display: grid; place-items: center; }
@@ -419,13 +415,12 @@
 @keyframes chocolateNudge { 0%, 100% { transform: translateX(0); } 35% { transform: translateX(-5px) rotate(-3deg); } 70% { transform: translateX(5px) rotate(3deg); } }
 .arrival-meal-scene { position: relative; aspect-ratio: 16 / 9; min-height: 0; overflow: hidden; background: #dbc28d; }
 .arrival-meal-room { display: block; width: 100%; height: 100%; object-fit: cover; }
-.arrival-meal-dog, .arrival-meal-water, .arrival-meal-food, .arrival-meal-veggie { position: absolute; height: auto; object-fit: contain; }
-.arrival-meal-dog { width: 33%; max-height: 67%; left: 47%; bottom: 11%; z-index: 2; }
-.arrival-meal-water { width: 15%; left: 25%; bottom: 10%; z-index: 3; }
-.arrival-meal-food { width: 15%; left: 39%; bottom: 8%; z-index: 3; }
-.arrival-meal-veggie { width: 13%; left: 55%; bottom: 10%; z-index: 3; }
-.arrival-meal-footer { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 18px; min-height: 76px; padding: 14px 24px; border-top: 1px solid var(--line); }
+.arrival-meal-dog, .arrival-meal-water, .arrival-meal-food, .arrival-meal-veggie { position: absolute; left: var(--arrival-meal-left); bottom: var(--arrival-meal-bottom); width: var(--arrival-meal-width); max-height: var(--arrival-meal-max-height); height: auto; object-fit: contain; }
+.arrival-meal-dog { z-index: 2; }
+.arrival-meal-water, .arrival-meal-food, .arrival-meal-veggie { z-index: 3; }
+.arrival-meal-footer { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 18px; min-height: 112px; padding: 14px 24px; border-top: 1px solid var(--line); }
 .arrival-meal-footer p { flex: 1; margin: 0; color: #3e6848; line-height: 1.6; }
+.arrival-meal-completion-message { min-height: calc(1.6em * 2); }
 
 .feeding-steps { display: grid; grid-template-columns: 1.15fr .9fr .75fr; gap: 14px; }
 .feeding-steps > article { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
@@ -460,10 +455,8 @@
   .arrival-meal-supplies { grid-template-columns: repeat(4, minmax(0, 1fr)); min-height: 0; gap: 12px; padding: 16px; }
   .arrival-meal-supplies button { max-width: none; min-height: 104px; justify-self: center; }
   .arrival-meal-supplies .arrival-meal-supply-food-button { max-width: none; }
-  .arrival-meal-supplies img { width: 72px; height: 78px; }
-  .arrival-meal-supplies img.arrival-meal-supply-food { width: 150px !important; height: 150px !important; max-width: none; }
+  .arrival-meal-supplies img { width: var(--mobile-arrival-meal-supply-width) !important; height: var(--mobile-arrival-meal-supply-height) !important; max-width: none; }
   .arrival-meal-supplies .arrival-meal-supply-food-button { min-height: 104px; }
-  .arrival-meal-supplies img.arrival-meal-supply-water { width: 130px !important; height: 130px !important; max-width: none; }
   .arrival-meal-scene { aspect-ratio: 1 / 1; }
   .arrival-meal-footer { flex-direction: column; align-items: stretch; padding: 16px; }
   .arrival-meal-footer .primary { width: 100%; }

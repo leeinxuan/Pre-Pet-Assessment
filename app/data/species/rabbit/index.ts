@@ -1,4 +1,5 @@
 import { rabbitAssets } from "./assets";
+import { rabbitArrivalMealSceneLayout, rabbitArrivalMealSupplyImageSizes } from "./feeding";
 import { getRabbitBreedChallengeScenarios } from "./breed-challenges";
 import { rabbitJourney } from "./journey";
 import { rabbitLayout } from "./layout";
@@ -28,6 +29,7 @@ export const rabbitConfig = {
   report: rabbitReport,
   assets: rabbitAssets,
   layout: rabbitLayout,
+  feeding: { arrivalMealSceneLayout: rabbitArrivalMealSceneLayout, arrivalMealSupplyImageSizes: rabbitArrivalMealSupplyImageSizes },
 } as const;
 
-export { rabbitAssets, rabbitJourney, rabbitLayout, rabbitPreparation, rabbitReport, rabbitLifeScenarios, getRabbitBreedChallengeScenarios };
+export { rabbitAssets, rabbitJourney, rabbitLayout, rabbitPreparation, rabbitReport, rabbitLifeScenarios, getRabbitBreedChallengeScenarios, rabbitArrivalMealSceneLayout, rabbitArrivalMealSupplyImageSizes };
