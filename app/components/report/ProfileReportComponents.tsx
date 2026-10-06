@@ -19,7 +19,6 @@ import {
   getInitialPreparationTotal,
   getMonthlyBasicTotal,
   getMonthlyBasicExpenses,
-  getTemporaryExpenseTotal,
   getTemporaryExpenses,
   mergeDefaultVisibleExpenses,
   NavButtons,
@@ -1137,8 +1136,12 @@ export function AssessmentReport({
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const initialPreparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyBasicTotal = getMonthlyBasicTotal(visibleExpenses);
-  const temporaryExpenseTotal = getTemporaryExpenseTotal(visibleExpenses);
   const initialPreparationBreakdown = getInitialPreparationBreakdown(visibleExpenses);
+  const oneTimePreparationItems = [
+    ...initialPreparationBreakdown.environment.items,
+    ...initialPreparationBreakdown.departure.items,
+  ];
+  const oneTimePreparationTotal = initialPreparationBreakdown.environment.total + initialPreparationBreakdown.departure.total;
   const monthlyExpenses = getMonthlyBasicExpenses(visibleExpenses);
   const temporaryExpenses = getTemporaryExpenses(visibleExpenses);
   const correctFirst = Object.values(answers).filter((item) => item.firstResult === "correct").length;
@@ -1245,7 +1248,7 @@ export function AssessmentReport({
     if (source.key === "walkingComplete") return lifeActivity.walkingComplete;
     if (source.key === "cat-litter-complete") return lifeActivity.catInspectionSteps.includes("litter-complete");
     if (source.key === "rabbit-grooming-complete") return lifeActivity.rabbitGroomingState === "interaction-complete";
-    if (source.key === "hamster-inspection-complete") return lifeActivity.hamsterInspectionCompleted.length === 4;
+    if (source.key === "hamster-inspection-complete") return lifeActivity.hamsterInspectionCompleted.length === 2;
     return (source.requiredStepIds ?? []).every((stepId) => lifeActivity.birdCageInspectionSteps.includes(stepId));
   };
   const visibleMasteredCareThemes = (masteredCareThemesBySpecies[species] ?? [])
@@ -1399,15 +1402,25 @@ export function AssessmentReport({
           <div className="care-a4-expense-cards">
             <section className="care-a4-expense-card">
               <h3>初期準備金</h3><strong>NT$ {money.format(initialPreparationTotal)}</strong>
-              <div><p>第一次需要準備的總金額，包含：</p><dl>{[initialPreparationBreakdown.afterArrival, initialPreparationBreakdown.environment, initialPreparationBreakdown.departure].map((source) => <div key={source.label}><dt>{source.label}</dt><dd>NT$ {money.format(source.total)}</dd></div>)}</dl></div>
+              <div className="care-a4-initial-groups">
+                <section className="care-a4-initial-group">
+                  <h4>一次性準備費 <span>NT$ {money.format(oneTimePreparationTotal)}</span></h4>
+                  {oneTimePreparationItems.length ? <dl className="care-a4-expense-lines">{oneTimePreparationItems.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}</dd></div>)}</dl> : <p>目前尚未登記項目</p>}
+                </section>
+                <section className="care-a4-initial-group">
+                  <h4>{initialPreparationBreakdown.afterArrival.label} <span>NT$ {money.format(initialPreparationBreakdown.afterArrival.total)}</span></h4>
+                  {initialPreparationBreakdown.afterArrival.items.length ? <dl className="care-a4-expense-lines">{initialPreparationBreakdown.afterArrival.items.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}</dd></div>)}</dl> : <p>目前尚未登記項目</p>}
+                </section>
+              </div>
             </section>
             <section className="care-a4-expense-card">
               <h3>每月預估支出</h3><strong>NT$ {money.format(monthlyBasicTotal)}／月</strong>
               <div>{monthlyExpenses.length ? <dl className="care-a4-expense-lines">{monthlyExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}／月</dd></div>)}</dl> : <p>目前尚未登記項目</p>}</div>
             </section>
             <section className="care-a4-expense-card care-a4-expense-card--reserve">
-              <h3>臨時性支出預留</h3><strong>{formatTemporaryExpenseReserve(temporaryExpenseTotal)}</strong><p>{temporaryExpenseReserveNote}</p>
-              <div>{temporaryExpenses.length ? <dl className="care-a4-expense-lines">{temporaryExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>{formatTemporaryExpenseAmount(item.amount)}</dd></div>)}</dl> : <p>目前尚未登記項目</p>}</div>
+              <h3>臨時性支出預留</h3>{temporaryExpenses.length > 0
+                ? <><strong>{formatTemporaryExpenseReserve(temporaryExpenses)}</strong><p>{temporaryExpenseReserveNote}</p><div><dl className="care-a4-expense-lines">{temporaryExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>{formatTemporaryExpenseAmount(item)}</dd></div>)}</dl></div></>
+                : <p>完成對應情境後顯示費用細項。</p>}
             </section>
           </div>
         </section>

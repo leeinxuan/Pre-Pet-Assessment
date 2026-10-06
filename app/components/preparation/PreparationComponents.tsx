@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
-import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, money } from "../../data/shared/expenses";
+import { expenseCatalog, money } from "../../data/shared/expenses";
 import {
   dogDepartureTrunkItems as departureTrunkItems,
   dogHazards as hazards,
@@ -98,11 +98,9 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
 }
 
 function expensePriceText(expenseIds: string[] = [], breed: string) {
-  const petSize = getPetSizeForBreed(breed);
-  const prices = expenseIds
-    .map((id) => expenseCatalog[id])
-    .filter((item): item is ExpenseRecord => Boolean(item))
-    .map((item) => applySizeBasedExpenseAmount(item, petSize));
+  // 物種價格已集中在 expenses.ts；保留呼叫端的 breed 參數以維持既有元件介面。
+  void breed;
+  const prices = expenseIds.map((id) => expenseCatalog[id]).filter((item): item is ExpenseRecord => Boolean(item));
   if (prices.length === 0) return "";
   const total = prices.reduce((sum, item) => sum + item.amount, 0);
   return `NT$${money.format(total)}`;

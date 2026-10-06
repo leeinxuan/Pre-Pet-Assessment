@@ -1,5 +1,4 @@
-/**
- * 手動維護的內容更新日；僅在照顧資料、流程或官方資訊實際更新時調整。
- * 不可替換為 build、部署或使用者瀏覽當日的動態日期。
- */
-export const contentLastUpdated = "2026 年 10 月 2 日";
+/** 由 Vite 於伺服器端啟動或建置／部署時注入；不讀取瀏覽者端日期。 */
+declare const __CONTENT_LAST_UPDATED__: string;
+
+export const contentLastUpdated = __CONTENT_LAST_UPDATED__;

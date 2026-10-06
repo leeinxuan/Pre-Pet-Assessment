@@ -11,7 +11,7 @@ const knowledge = {
 };
 
 export const birdLifeScenarios: Scenario[] = [
-  { id: "bird-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "一起生活的第一天", title: "第一天適應新家", description: "你把外出籠帶進房間。{petName} 在籠內靜靜站在棲木上，左右張望，羽毛微微膨起。", topic: "新環境安置", reportSummary: "鳥剛到家應放在安靜固定位置，覆上遮光布並保留通風，讓牠慢慢適應。", artIndex: 0, learningPoints: knowledge.arrival, knowledgeTitle: "鳥類小知識", choices: [
+  { id: "bird-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "一起生活的第一天", title: "第一天適應新家", description: "你把外出籠帶進房間，輕輕放在鳥籠旁邊。{petName} 縮在籠角，羽毛膨起，對你的靠近完全沒有反應——平常在店裡還會東張西望的牠，現在一動也不動。你心裡有點擔心，不確定自己應該做什麼。", topic: "新環境安置", reportSummary: "鳥剛到家應放在安靜固定位置，覆上遮光布並保留通風，讓牠慢慢適應。", artIndex: 0, learningPoints: knowledge.arrival, knowledgeTitle: "鳥類小知識", choices: [
     { id: "bird-arrival-move", text: "立刻把 {petName} 移到鳥籠，讓牠趕快適應", result: "partial", ...incorrect, explanation: "環境轉換本身就有壓力；此刻強迫移動會增加緊迫。", suggestion: "先把外出籠放在鳥籠旁，等待牠自行探索的時機。" },
     { id: "bird-arrival-cover", text: "放在安靜固定位置，輕蓋遮光布讓 {petName} 平靜下來", result: "correct", ...positive, explanation: "新環境刺激很強；保留通風並輕蓋遮光布，能提供熟悉的封閉感。", expenseIds: ["bird-arrival-checkup"] },
     { id: "bird-arrival-family", text: "邀請全家人圍過來，讓牠快點認識大家", result: "incorrect", ...incorrect, explanation: "多人圍觀是強烈視覺和聽覺刺激。", suggestion: "先保持安靜，讓牠在最少干擾中適應。" },
@@ -107,7 +107,7 @@ export const birdLifeScenarios: Scenario[] = [
     ],
   }, choices: [
     { id: "bird-senior-perch", text: "將棲木調低，降低跌落風險", result: "correct", ...positive, explanation: "可保留一根較高棲木，讓牠自行選擇。", expenseIds: ["bird-senior-room"] },
-    { id: "bird-senior-checkup", text: "提高健檢頻率，從一年一次改為更頻繁", result: "correct", ...positive, explanation: "能及早發現老年常見的代謝與心血管問題。", expenseIds: ["bird-senior-checkup"] },
+    { id: "bird-senior-checkup", text: "提高健檢頻率，從一年一次改為更頻繁", result: "correct", ...positive, explanation: "能及早發現老年常見的代謝與心血管問題。" },
     { id: "bird-senior-remove", text: "高齡鳥不再需要豐富化設施，讓牠安靜休息就好", result: "incorrect", ...incorrect, explanation: "即使活動力下降，適合老年鳥的簡單啃咬玩具與低難度益智設施仍有助於心理健康，不應完全撤除所有刺激。", suggestion: "依活動能力調整豐富化，而非完全撤除。" },
     { id: "bird-senior-reduce-interaction", text: "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息", result: "incorrect", ...incorrect, explanation: "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。", suggestion: "依個體狀況調整互動方式，而非直接縮短時間。" },
   ] },

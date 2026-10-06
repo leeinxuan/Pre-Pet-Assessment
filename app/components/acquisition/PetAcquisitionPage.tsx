@@ -64,8 +64,14 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
     </div>
     {shareMessage && <p className="official-share-status" role="status">{shareMessage}</p>}
     <footer className="official-acquisition-source-note">
-      <p>照顧相關資料參考農業部寵物飼養與照顧指南。</p>
-      <p>網站中的圖片與影片為 AI 生成。</p>
+      <div className="official-acquisition-source-note__identity">
+        <p>© 2026 伴日子新手村。</p>
+        <p>陪你在迎接新生命之前，練習看見照顧需要的時間、空間與承諾。</p>
+      </div>
+      <div className="official-acquisition-source-note__details">
+        <p>飼養與照護資訊參考農業部寵物飼養與照顧指南及相關公開資料；</p>
+        <p>插圖、情境圖片與動畫素材由 AI 輔助生成。</p>
+      </div>
       <p>最後更新：{contentLastUpdated}</p>
     </footer>
     {profileModalOpen && <div className="profile-modal-backdrop" role="presentation" onMouseDown={() => setProfileModalOpen(false)}><section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-supplement-title" onMouseDown={(event) => event.stopPropagation()}><button type="button" className="profile-modal-close" aria-label="關閉真實生活條件表單" onClick={() => setProfileModalOpen(false)}>×</button><ProfileSupplementForm embedded profile={profile} petName={petName} breed={breed} species={species} onChange={(nextProfile) => { setProfileEdited(true); onProfileChange(nextProfile); }} onBack={() => undefined} onReset={() => undefined} /></section></div>}

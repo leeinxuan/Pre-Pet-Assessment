@@ -108,7 +108,7 @@ export const hamsterLifeScenarios: Scenario[] = [
     questionText: "你會怎麼做？", topic: "高齡照護", reportSummary: "高齡前提前諮詢獸醫、安排規律檢查，並調整環境。", artIndex: 0,
     completionFeedback: { title: "做得很好！", encouragement: "你願意提前為{petName}的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。", knowledgeTitle: "長達 **2–3 年**的每日陪伴與生命承諾", knowledgeContent: [{ type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？" }] },
     choices: [
-      correct("hamster-senior-vet", "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查", "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。", ["hamster-routine-checkup", "hamster-senior-care"]),
+      correct("hamster-senior-vet", "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查", "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。", ["hamster-senior-care"]),
       wrong("hamster-senior-wait", "等到牠真的很嚴重再就醫，平常不需要特別準備", "高齡照護需要提前準備；等到症狀很明顯才處理，可能讓{petName}在不必要的不適中度過最後一段時間。提前規劃才能在最需要時穩定陪著牠。"),
       wrong("hamster-senior-remove-wheel", "把滾輪拿出來，讓高齡的{petName}多休息", "適當的活動對高齡倉鼠仍然重要，不應直接移除滾輪；可以換成較輕鬆的環境（如降低設施的難度），但不應剝奪活動機會。"),
       wrong("hamster-senior-no-change", "維持現有環境不動，避免環境改變造成壓力", "小幅度的環境優化（如確保設施容易取用、維持舒適溫度）是必要的；同時安排更規律的健康檢查，才能完整照顧高齡{petName}的需求。"),

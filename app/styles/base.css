@@ -840,6 +840,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-a4-expense-card h3 { margin: 0; color: #4f6e54; font-size: 13px; font-weight: 950; }
 .care-a4-expense-card > strong { display: block; margin-top: 2mm; color: var(--ink); font-size: 17px; font-weight: 950; line-height: 1.2; white-space: nowrap; }
 .care-a4-expense-card > div { margin-top: 3mm; }
+.care-a4-initial-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5mm; }
+.care-a4-initial-group { min-width: 0; padding: 2.5mm; border: 1px solid rgba(79, 110, 84, .22); border-radius: 9px; background: rgba(255,255,255,.56); }
+.care-a4-initial-group h4 { display: flex; justify-content: space-between; gap: 2mm; margin: 0; color: #4f6e54; font-size: 10.5px; font-weight: 950; }
+.care-a4-initial-group h4 span { color: #3f5a44; white-space: nowrap; }
 .care-a4-expense-card p { margin: 0; color: #537057; font-size: 10px; font-weight: 800; line-height: 1.45; }
 .care-a4-expense-card dl { display: grid; gap: 1.6mm; margin: 2mm 0 0; }
 .care-a4-expense-card dl div { display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 2mm; padding: 0; border: 0; }
@@ -1572,6 +1576,9 @@ html, body { overflow-x: clip; }
 .care-a4-expense-card h3 { font-size: 16px; }
 .care-a4-expense-card > strong { margin-top: 8px; font-size: 22px; }
 .care-a4-expense-card > div { margin-top: 12px; }
+.care-a4-initial-groups { gap: 10px; }
+.care-a4-initial-group { padding: 10px; }
+.care-a4-initial-group h4 { font-size: 13px; }
 .care-a4-expense-card p { font-size: 12px; }
 .care-a4-expense-card dl { gap: 7px; margin-top: 9px; }
 .care-a4-expense-card dt,
@@ -1618,6 +1625,7 @@ html, body { overflow-x: clip; }
   .care-a4-header { display: grid; }
   .care-a4-header aside { width: 100%; }
   .care-a4-expense-cards { grid-template-columns: 1fr; }
+  .care-a4-initial-groups { grid-template-columns: 1fr; }
   .care-a4-table div,
   .print-profile-grid dl div { grid-template-columns: 1fr; gap: 5px; }
 }
@@ -1680,6 +1688,9 @@ html, body { overflow-x: clip; }
   .care-a4-expense-card h3 { margin: 0 !important; font-size: 12px !important; }
   .care-a4-expense-card > strong { margin-top: 2mm !important; font-size: 15px !important; }
   .care-a4-expense-card > div { margin-top: 2.5mm !important; }
+  .care-a4-initial-groups { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 2mm !important; }
+  .care-a4-initial-group { padding: 2mm !important; }
+  .care-a4-initial-group h4 { font-size: 9.5px !important; }
   .care-a4-expense-card p { margin: 0 !important; font-size: 9.5px !important; }
   .care-a4-expense-card dl { gap: 1.4mm !important; margin-top: 1.8mm !important; }
   .care-a4-expense-card dl div { gap: 1.5mm !important; padding: 0 !important; }

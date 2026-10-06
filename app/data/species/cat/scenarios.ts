@@ -216,7 +216,7 @@ export const catLifeScenarios: Scenario[] = [
       ],
     },
     choices: [
-      { id: "cat-senior-complete-plan", text: "增設高度適中的砂盆與地墊、改成階梯式設施並準備保暖休息處；每半年健檢、每週量體重並記錄日常變化", result: "correct", ...positive, explanation: "**如廁、活動、休息與健康追蹤**一起調整，才能更完整回應高齡生活需求。", expenseIds: ["cat-senior-room", "senior-checkup"] },
+      { id: "cat-senior-complete-plan", text: "增設高度適中的砂盆與地墊、改成階梯式設施並準備保暖休息處；每半年健檢、每週量體重並記錄日常變化", result: "correct", ...positive, explanation: "**如廁、活動、休息與健康追蹤**一起調整，才能更完整回應高齡生活需求。", expenseIds: ["cat-senior-room"] },
       { id: "cat-senior-supplement-only", text: "先換成高齡保健配方與關節保健品，平時留意食慾；下次例行就醫時再一起詢問", result: "incorrect", ...incorrect, explanation: "飲食或保健品可能是日常照護的一部分，但不能取代眼前的生活空間調整與獸醫追蹤。", suggestion: "先把日常移動、休息與如廁需要的環境調整好。" },
       { id: "cat-senior-bed-only", text: "先在牠常待的角落增加軟墊與保暖處，等牠更不願跳或上砂盆時再調整其他動線", result: "incorrect", ...incorrect, explanation: "休息處很重要，但等到生活困難更明顯才調整，可能錯過減少如廁與活動負擔的時機。", suggestion: "同時調整低入口砂盆、階梯式跳台與溫暖休息處。" },
       { id: "cat-senior-keep-jumping", text: "維持原本高跳台，讓牠多跳一點就會慢慢適應", result: "incorrect", ...incorrect, explanation: "忽略行動變化可能增加關節負擔，也可能讓牠減少使用生活空間。", suggestion: "改用高度合適的砂盆與階梯式設施，降低移動負擔。" },

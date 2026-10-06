@@ -47,8 +47,8 @@
 .official-acquisition-footer-actions { align-items: center; margin-top: 32px; border-top: 0; }
 .official-final-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .official-share-status { margin: 12px 0 0; color: var(--gold-dark); font-size: 13px; font-weight: 900; text-align: right; }
-.official-acquisition-source-note { display: flex; flex-wrap: wrap; gap: 6px 24px; margin-top: 30px; padding-top: 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; font-weight: 700; line-height: 1.7; }
-.official-acquisition-source-note p { margin: 0; }
+.official-acquisition-source-note { display: grid; gap: 14px; margin-top: 30px; padding: 22px 0 12px; border-top: 1px solid var(--line); color: #82745f; font-size: 12px; font-weight: 700; line-height: 1.75; }
+.official-acquisition-source-note p { margin: 0; }.official-acquisition-source-note__identity { display: grid; gap: 3px; color: #685942; font-size: 13px; font-weight: 800; }.official-acquisition-source-note__identity p:first-child { color: var(--ink); font-size: 14px; font-weight: 900; }.official-acquisition-source-note__details { display: grid; gap: 1px; }
 
 @media (max-width: 720px) {
   .profile-wizard-head { align-items: flex-start; }.profile-wizard-head h1 { font-size: 35px; }.profile-panel { min-height: 0; padding: 22px 18px; border-radius: 20px; }.profile-time-grid, .supplement-choice-grid, .housing-options, .pet-experience-row { grid-template-columns: 1fr; }.home-space-gallery figure, .home-space-add-photo { width: min(100%,190px); }
@@ -58,7 +58,7 @@
   .official-acquisition-footer-actions, .official-final-actions { align-items: stretch; flex-direction: column; }
   .official-final-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .official-share-status { text-align: center; }
-  .official-acquisition-source-note { display: grid; gap: 5px; margin-top: 24px; }
+  .official-acquisition-source-note { gap: 12px; margin-top: 24px; padding: 20px 0 20px; }.official-acquisition-source-note__identity { font-size: 13px; }
 }
 .compact-assessment .a4-toolbar {
   height: 0;

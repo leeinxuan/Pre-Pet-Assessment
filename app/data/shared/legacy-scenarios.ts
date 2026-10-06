@@ -49,7 +49,7 @@ export const scenarios: Scenario[] = [
     description: "牠聞了聞飼料就離開，家人想拿人類食物引誘。你會怎麼處理？",
     artIndex: 2,
     choices: [
-      { id: "familiar-food", text: "提供少量原本熟悉的飼料與乾淨飲水，記錄進食狀況。", result: "correct", ...positive, explanation: "維持熟悉飲食能減少腸胃負擔，也方便觀察適應情況。", expenseIds: ["monthly-food-main"] },
+      { id: "familiar-food", text: "提供少量原本熟悉的飼料與乾淨飲水，記錄進食狀況。", result: "correct", ...positive, explanation: "維持熟悉飲食能減少腸胃負擔，也方便觀察適應情況。" },
       { id: "wait-calm", text: "先讓環境安靜，稍後再提供相同飼料。", result: "partial", ...partial, explanation: "減少壓力是好方向，也要持續記錄飲水與進食。", suggestion: "若長時間不吃或合併精神異常，應聯絡獸醫。" },
       { id: "table-food", text: "加很多人類食物，至少先讓牠吃下去。", result: "incorrect", ...incorrect, explanation: "突然更換或混入不適合的食物可能造成腸胃不適。", suggestion: "回到熟悉飼料，必要時詢問獸醫安全的轉食方式。" },
     ],
@@ -101,7 +101,7 @@ export const scenarios: Scenario[] = [
     description: "生活漸漸穩定，你要建立家中每個人都能遵守的餵食方式。",
     artIndex: 2,
     choices: [
-      { id: "measured-meals", text: "固定時段與份量，隨時提供乾淨飲水並記錄異常。", result: "correct", ...positive, explanation: "規律份量與飲水有助於體重、腸胃與健康觀察。", expenseIds: ["monthly-food-main", "monthly-waste-bags"] },
+      { id: "measured-meals", text: "固定時段與份量，隨時提供乾淨飲水並記錄異常。", result: "correct", ...positive, explanation: "規律份量與飲水有助於體重、腸胃與健康觀察。" },
       { id: "family-board", text: "用家庭紀錄板標記誰餵過，避免重複餵食。", result: "correct", ...positive, explanation: "清楚交接能避免漏餐或重複餵食。" },
       { id: "free-treats", text: "家人看到牠撒嬌就各自給零食，不需要特別記錄。", result: "incorrect", ...incorrect, explanation: "多人重複餵食容易造成熱量過量，也不易追蹤食慾變化。", suggestion: "統一零食份量並記錄每日總量。" },
     ],
@@ -229,5 +229,4 @@ export const scenarios: Scenario[] = [
     ],
   },
 ];
-
 

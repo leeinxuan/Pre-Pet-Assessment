@@ -27,7 +27,6 @@ export const rabbitBreedChallengeContent: Record<"rabbit", BreedChallengeQuestio
       correctChoiceIndex: 2,
       correctText: "兔子繁殖力極強，4–5 月齡就應諮詢獸醫評估絕育",
       correctExplanation: "短暫接觸也可能繁殖；及早由獸醫評估絕育是更安全、負責任的安排。",
-      correctExpenseIds: ["rabbit-sterilization"],
       distractors: [
         { text: "兔子 5 個月還很小，不用擔心懷孕", explanation: "兔子最早約 3～4 月齡就可能具有繁殖能力。", suggestion: "不要以年紀小為由讓未絕育公母兔接觸。" },
         { text: "玩 30 分鐘不會有事", explanation: "兔子繁殖行為發生很快，短暫接觸也有高風險。", suggestion: "未絕育公母兔不應以短暫接觸作為安全安排。" },

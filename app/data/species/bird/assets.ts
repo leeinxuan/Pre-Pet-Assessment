@@ -49,6 +49,34 @@ export const birdAssets = {
     avocado: "/assets/bird/feeding/avocado.png",
     saltySnack: "/assets/bird/feeding/salty-snack.png",
   },
+  dailyGame: {
+    cage: {
+      dirty: "/assets/bird/dailygame/cage-dirty.png",
+      clean: "/assets/bird/dailygame/cage-clean.png",
+      doorOpen: "/assets/bird/dailygame/cage-door-open.png",
+      trayOutDirty: "/assets/bird/dailygame/cage-tray-out-dirty.png",
+      trayOutClean: "/assets/bird/dailygame/cage-tray-out-clean.png",
+    },
+    birdCloseup: "/assets/bird/dailygame/bird-closeup-interactive.png",
+    beddingDirty: "/assets/bird/dailygame/bedding-dirty.png",
+    droppings: {
+      healthy: "/assets/bird/dailygame/droppings-health.png",
+      watery: "/assets/bird/dailygame/droppings-watery.png",
+      small: "/assets/bird/dailygame/droppings-small.png",
+    },
+    parts: {
+      eyes: { normal: "/assets/bird/dailygame/part-eye-normal.png", abnormal: "/assets/bird/dailygame/part-eye-abnormal.png" },
+      feathers: { normal: "/assets/bird/dailygame/part-feather-normal.png", abnormal: "/assets/bird/dailygame/part-feather-abnormal.png" },
+      feet: { normal: "/assets/bird/dailygame/part-feet-normal.png", abnormal: "/assets/bird/dailygame/part-feet-abnormal.png" },
+      breathing: { normal: "/assets/bird/dailygame/part-breath-normal.png", abnormal: "/assets/bird/dailygame/part-breath-abnormal.png" },
+    },
+    onHand: {
+      idle: "/assets/bird/dailygame/bird-on-hand-idle.png",
+      nod: "/assets/bird/dailygame/bird-on-hand-nod.png",
+      sing: "/assets/bird/dailygame/bird-on-hand-sing.png",
+    },
+    magnifier: "/assets/bird/dailygame/magnifier.png",
+  },
   preparation: {
     carrier: "/assets/car/bird-carrier.png",
     cover: "/assets/car/bird-cover-cloth.png",

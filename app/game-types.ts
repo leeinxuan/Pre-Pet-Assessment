@@ -4,6 +4,10 @@ export type ExpenseRecord = {
   id: string;
   name: string;
   amount: number;
+  /** 臨時性預留支出的最高參考金額；未填時代表單一金額。 */
+  maxAmount?: number;
+  /** 最高金額為開放式上限（例如 50,000+）時使用。 */
+  maxAmountOpenEnded?: boolean;
   category: ExpenseCategory;
   stage: string;
   recurring: boolean;
@@ -81,6 +85,8 @@ export type ScenarioCompletionReminder = {
     title: string;
     description: string;
     imagePlaceholderLabel: string;
+    image?: string;
+    imageAlt?: string;
   }>;
   footer: string;
 };
@@ -240,6 +246,8 @@ export type LifeActivityState = {
     attempts: number;
   }>;
   birdCageInspectionSteps: string[];
+  /** 同一輪鳥籠巡視的四個健康觀察結果；重新開卡或重新 render 時不得重抽。 */
+  birdCageInspectionStates: Record<string, "normal" | "warning">;
   hamsterMealSelected: string[];
   hamsterMealFeedbackId: string;
   hamsterInspectionStarted: boolean;

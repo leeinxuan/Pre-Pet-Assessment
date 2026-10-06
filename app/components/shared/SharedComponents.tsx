@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { categories } from "../../data/shared/app-flow";
-import { applySizeBasedExpenseAmount, expenseCatalog, getPetSizeForBreed, isTemporaryReserveExpense, money } from "../../data/shared/expenses";
+import { isTemporaryReserveExpense, money } from "../../data/shared/expenses";
 import { getJourneyItemsForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
 import { interpolatePetName } from "../../data/shared/pet-text";
@@ -419,16 +419,22 @@ const expenseLabels = {
 
 export const temporaryExpenseReserveNote = "實際費用會依症狀、檢查項目、治療方式與醫院而異。";
 
-export function formatTemporaryExpenseAmount(amount: number) {
-  return `NT$ ${money.format(amount)} 起`;
+export function formatTemporaryExpenseAmount(expense: Pick<ExpenseRecord, "amount" | "maxAmount" | "maxAmountOpenEnded">) {
+  if (typeof expense.maxAmount === "number") {
+    const upper = `${money.format(expense.maxAmount)}${expense.maxAmountOpenEnded ? "+" : ""}`;
+    return `NT$ ${money.format(expense.amount)}～${upper}`;
+  }
+  return `NT$ ${money.format(expense.amount)}`;
 }
 
-export function formatTemporaryExpenseReserve(amount: number) {
-  return `建議預留 NT$ ${money.format(amount)} 起`;
+export function formatTemporaryExpenseReserve(expenses: Pick<ExpenseRecord, "amount" | "maxAmount" | "maxAmountOpenEnded">[]) {
+  const min = expenses.reduce((sum, item) => sum + item.amount, 0);
+  const hasRange = expenses.some((item) => typeof item.maxAmount === "number");
+  if (!hasRange) return `建議預留 NT$ ${money.format(min)}`;
+  const max = expenses.reduce((sum, item) => sum + (item.maxAmount ?? item.amount), 0);
+  const openEnded = expenses.some((item) => item.maxAmountOpenEnded);
+  return `建議預留 NT$ ${money.format(min)}～${money.format(max)}${openEnded ? "+" : ""}`;
 }
-
-const requiredAfterArrivalExpenseIds = new Set(["microchip-registration", "rabies-vaccine", "basic-vaccine-checkup", "dog-sterilization", "cat-sterilization", "rabbit-arrival-checkup", "rabbit-sterilization", "bird-arrival-checkup"]);
-const temporaryMedicalExpenseIds = new Set(["sick-vet-care", "dog-mild-sick", "dog-moderate-sick", "dog-hospitalization", "cat-mild-sick", "cat-moderate-sick", "cat-hospitalization", "senior-checkup", "dog-senior-room", "dog-senior-checkup", "journey-care-service", "senior-slipmat", "senior-access-bed", "rabbit-care-service", "rabbit-emergency-reserve", "rabbit-mild-sick", "rabbit-moderate-sick", "rabbit-hospitalization", "rabbit-routine-checkup", "rabbit-senior-room", "bird-emergency-vet", "bird-mild-sick", "bird-moderate-sick", "bird-hospitalization", "bird-senior-checkup", "bird-senior-room"]);
 
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
   expenseLabels.requiredAfterArrival,
@@ -438,7 +444,7 @@ const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
 ];
 
 export function isRequiredAfterArrivalExpense(item: ExpenseRecord) {
-  return requiredAfterArrivalExpenseIds.has(item.id) || item.category === "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa";
+  return item.category === "\u5230\u5bb6\u5f8c\u5fc5\u8981\u652f\u51fa";
 }
 
 export function isMonthlyExpense(item: ExpenseRecord) {
@@ -446,7 +452,7 @@ export function isMonthlyExpense(item: ExpenseRecord) {
 }
 
 export function isTemporaryOrMedicalExpense(item: ExpenseRecord) {
-  return temporaryMedicalExpenseIds.has(item.id) || item.category === "\u91ab\u7642" || item.category === "\u7167\u9867\u670d\u52d9" || item.category === "\u9ad8\u9f61\u7528\u54c1" || Boolean(item.fromEmergency);
+  return item.category === "\u81e8\u6642\uff0f\u91ab\u7642\u652f\u51fa" || item.category === "\u9ad8\u9f61\u7528\u54c1" || Boolean(item.fromEmergency);
 }
 
 export function isOneTimePreparationExpense(item: ExpenseRecord) {
@@ -530,15 +536,15 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const preparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyTotal = getMonthlyBasicTotal(visibleExpenses);
-  const temporaryMedicalTotal = getTemporaryExpenseTotal(visibleExpenses);
   const grouped = expenseDetailGroupOrder.map((group) => ({ group, items: visibleExpenses.filter((item) => detailGroupForExpense(item) === group) }));
-  const oneTimePreparation = grouped.find((entry) => entry.group === expenseLabels.oneTimePrep)?.items ?? [];
-  const requiredAfterArrival = grouped.find((entry) => entry.group === expenseLabels.requiredAfterArrival)?.items ?? [];
+  const { environment, departure, afterArrival } = getInitialPreparationBreakdown(visibleExpenses);
+  const oneTimePreparationItems = [...environment.items, ...departure.items];
+  const oneTimePreparationTotal = environment.total + departure.total;
   const monthlyExpenses = grouped.find((entry) => entry.group === expenseLabels.monthlyBasic)?.items ?? [];
   const temporaryExpenses = getTemporaryExpenses(visibleExpenses);
   const totalFor = (items: ExpenseRecord[]) => items.reduce((sum, item) => sum + item.amount, 0);
   const renderItems = (items: ExpenseRecord[], showReserveAmount = false) => items.length ? (
-    <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b>{item.description && <small>{item.description}</small>}</span><strong>{showReserveAmount ? formatTemporaryExpenseAmount(item.amount) : `NT$ ${money.format(item.amount)}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
+    <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b>{item.description && <small>{item.description}</small>}</span><strong>{showReserveAmount ? formatTemporaryExpenseAmount(item) : `NT$ ${money.format(item.amount)}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
   ) : <p>{expenseLabels.noGroupExpenses}</p>;
 
   return (
@@ -548,18 +554,28 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
         <div className="expense-modal-summary" aria-label="費用摘要">
           <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}</b></div>
           <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
-          <div className="expense-modal-summary-reserve"><small>{expenseLabels.temporaryMedical}</small><b>{formatTemporaryExpenseReserve(temporaryMedicalTotal)}</b><small>{temporaryExpenseReserveNote}</small></div>
+          <div className="expense-modal-summary-reserve"><small>{expenseLabels.temporaryMedical}</small>{temporaryExpenses.length > 0
+            ? <><b>{formatTemporaryExpenseReserve(temporaryExpenses)}</b><small>{temporaryExpenseReserveNote}</small></>
+            : <small>完成對應情境後顯示費用細項。</small>}</div>
         </div>
         <div className="expense-groups">
           <section className="expense-group expense-group--initial">
             <h3>{expenseLabels.initialPreparation}<span>NT$ {money.format(preparationTotal)}</span></h3>
             <div className="expense-initial-subgroups">
-              <section className="expense-initial-subgroup"><h4>{expenseLabels.oneTimePrep}<span>NT$ {money.format(totalFor(oneTimePreparation))}</span></h4>{renderItems(oneTimePreparation)}</section>
-              <section className="expense-initial-subgroup"><h4>{expenseLabels.requiredAfterArrival}<span>NT$ {money.format(totalFor(requiredAfterArrival))}</span></h4>{renderItems(requiredAfterArrival)}</section>
+              <section className="expense-initial-subgroup">
+                <h4>{expenseLabels.oneTimePrep}<span>NT$ {money.format(oneTimePreparationTotal)}</span></h4>
+                {renderItems(oneTimePreparationItems)}
+              </section>
+              <section className="expense-initial-subgroup">
+                <h4>{afterArrival.label}<span>NT$ {money.format(afterArrival.total)}</span></h4>
+                {renderItems(afterArrival.items)}
+              </section>
             </div>
           </section>
           <section className="expense-group"><h3>{expenseLabels.monthlyBasic}<span>NT$ {money.format(totalFor(monthlyExpenses))}{expenseLabels.monthlySuffix}</span></h3>{renderItems(monthlyExpenses)}</section>
-          <section className="expense-group"><h3>{expenseLabels.temporaryMedical}<span>{formatTemporaryExpenseReserve(temporaryMedicalTotal)}</span></h3><p className="expense-temporary-reserve-note">{temporaryExpenseReserveNote}</p>{renderItems(temporaryExpenses, true)}</section>
+          <section className="expense-group"><h3>{expenseLabels.temporaryMedical}{temporaryExpenses.length > 0 && <span>{formatTemporaryExpenseReserve(temporaryExpenses)}</span>}</h3>{temporaryExpenses.length > 0
+            ? <><p className="expense-temporary-reserve-note">{temporaryExpenseReserveNote}</p>{renderItems(temporaryExpenses, true)}</>
+            : <p className="expense-temporary-reserve-note">完成對應情境後顯示費用細項。</p>}</section>
         </div>
         <button className="primary" onClick={onClose}>{expenseLabels.closeDetails}</button>
       </section>
@@ -568,22 +584,15 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
 }
 
 /** 金幣飛入動畫：新費用加入時，金幣從畫面中央飛向「查看明細」按鈕。 */
-function CoinFlightAnimation({
-  expense,
-  temporaryReserveTotal,
-  temporaryExpenseRange,
-  triggerRef,
-}: {
+function CoinFlightAnimation({ expense, triggerRef }: {
   expense: ExpenseRecord | null;
-  temporaryReserveTotal: number;
-  temporaryExpenseRange: { min: number; max: number } | null;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 }) {
   const lastKey = useRef("");
 
   useEffect(() => {
     if (!expense) return;
-    const key = `${expense.id}-${expense.amount}-${temporaryExpenseRange?.min ?? ""}-${temporaryExpenseRange?.max ?? ""}`;
+    const key = `${expense.id}-${expense.amount}-${expense.maxAmount ?? ""}-${expense.maxAmountOpenEnded ?? ""}`;
     if (lastKey.current === key) return;
     lastKey.current = key;
 
@@ -592,13 +601,11 @@ function CoinFlightAnimation({
 
     // Create toast card
     const isTemporaryReserve = isTemporaryReserveExpense(expense);
-    const amountLabel = temporaryExpenseRange
-      ? `${money.format(temporaryExpenseRange.min)} 元 ～ ${money.format(temporaryExpenseRange.max)} 元 起`
-      : isTemporaryReserve
-      ? formatTemporaryExpenseAmount(expense.amount)
+    const amountLabel = isTemporaryReserve
+      ? formatTemporaryExpenseAmount(expense)
       : `+NT$ ${money.format(expense.amount)}${isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}`;
     const title = isTemporaryReserve ? "臨時性支出預留已更新" : "已加入準備清單";
-    const reserveTotalLabel = isTemporaryReserve ? `<small>${formatTemporaryExpenseReserve(temporaryReserveTotal)}</small>` : "";
+    const reserveTotalLabel = isTemporaryReserve ? `<small>臨時性支出預留已更新</small>` : "";
     const toast = document.createElement("div");
     toast.className = "coin-toast-overlay";
     toast.innerHTML = `
@@ -695,7 +702,7 @@ function CoinFlightAnimation({
       try { toast.remove(); } catch { /* noop */ }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expense?.id, expense?.amount, temporaryExpenseRange?.min, temporaryExpenseRange?.max]);
+  }, [expense?.id, expense?.amount, expense?.maxAmount, expense?.maxAmountOpenEnded]);
 
   return null;
 }
@@ -713,19 +720,9 @@ export function CostBar({
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const temporaryReserveTotal = getTemporaryExpenseTotal(expenses);
-  const temporaryExpenseRange = latestExpense?.fromEmergency && latestExpense.sourceScenarioId
-    ? (() => {
-      const relatedExpenses = expenses.filter((expense) => expense.fromEmergency && expense.sourceScenarioId === latestExpense.sourceScenarioId);
-      if (relatedExpenses.length < 2) return null;
-      const amounts = relatedExpenses.map((expense) => expense.amount);
-      return { min: Math.min(...amounts), max: Math.max(...amounts) };
-    })()
-    : null;
-
   return (
     <>
-      <CoinFlightAnimation expense={latestExpense} temporaryReserveTotal={temporaryReserveTotal} temporaryExpenseRange={temporaryExpenseRange} triggerRef={triggerRef} />
+      <CoinFlightAnimation expense={latestExpense} triggerRef={triggerRef} />
       <div className="cost-bar cost-bar-compact" aria-label={expenseLabels.currentCostStatus}>
         <button ref={triggerRef} type="button" className="bill-trigger" onClick={() => setDetailsOpen(true)} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
           <span className="bill-trigger-icon" aria-hidden="true">＄</span>

@@ -17,13 +17,9 @@ export const breeds = [...dogBreeds, ...catBreeds, ...rabbitSelection.breeds];
 
 /** @deprecated 請改從 data/shared/expenses.ts 匯入。 */
 export {
-  applySizeBasedExpenseAmount,
   expenseCatalog,
-  getPetSizeForBreed,
   money,
-  sizeBasedCosts,
 } from "./data/shared/expenses";
-export type { PetSize } from "./data/shared/expenses";
 /** @deprecated 請改至 data/species/dog/preparation.ts 調整。 */
 export const roomItems = dogRoomItems;
 

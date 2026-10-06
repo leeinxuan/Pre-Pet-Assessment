@@ -26,6 +26,7 @@ export const initialLifeActivityState: LifeActivityState = {
   rabbitGroomingObservations: {},
   rabbitGroomingInspection: {},
   birdCageInspectionSteps: [],
+  birdCageInspectionStates: {},
   hamsterMealSelected: [],
   hamsterMealFeedbackId: "",
   hamsterInspectionStarted: false,

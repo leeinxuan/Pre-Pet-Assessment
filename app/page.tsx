@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { initialMembers, initialProfile, intros } from "./data/shared/app-flow";
-import { applySizeBasedExpenseAmount, getExpenseForSpecies, getPetSizeForBreed, isTemporaryReserveExpense } from "./data/shared/expenses";
+import { getExpenseForSpecies, isTemporaryReserveExpense } from "./data/shared/expenses";
 import { getSpeciesConfig } from "./data/species/index";
 import { getJourneyItemsForSpecies } from "./data/species/journey";
 import { initialLifeActivityState } from "./data/shared/life-activity";
@@ -227,10 +227,7 @@ export default function Home() {
   function addExpenseById(id: string, triggerMeta?: ExpenseTriggerMeta) {
     const expense = getExpenseForSpecies(id, category);
     if (!expense) return;
-    const sizedExpense = {
-      ...applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed)),
-      ...triggerMeta,
-    };
+    const sizedExpense = { ...expense, ...triggerMeta };
     setExpenses((current) => {
       if (current.some((item) => item.id === id)) return current;
       if (costToastTimerRef.current !== null) {
@@ -251,7 +248,7 @@ export default function Home() {
     const catalogExpenses = ids
       .map((id) => getExpenseForSpecies(id, category))
       .filter((expense): expense is ExpenseRecord => Boolean(expense))
-      .map((expense) => ({ ...applySizeBasedExpenseAmount(expense, getPetSizeForBreed(breed)), ...triggerMeta }));
+      .map((expense) => ({ ...expense, ...triggerMeta }));
 
     if (!catalogExpenses.length) return;
 
