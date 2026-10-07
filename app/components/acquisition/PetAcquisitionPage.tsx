@@ -66,7 +66,6 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
     <footer className="official-acquisition-source-note">
       <div className="official-acquisition-source-note__identity">
         <p>© 2026 伴日子新手村。</p>
-        <p>陪你在迎接新生命之前，練習看見照顧需要的時間、空間與承諾。</p>
       </div>
       <div className="official-acquisition-source-note__details">
         <p>飼養與照護資訊參考農業部寵物飼養與照顧指南及相關公開資料；</p>

@@ -808,6 +808,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 @media (max-width: 720px) {
   .care-review-hero, .care-guide-download { align-items: flex-start; flex-direction: column; }
   .care-review-pet { width: 100%; justify-content: space-between; }
+  .care-review-pet div { display: flex; flex-direction: row; align-items: center; gap: 10px; text-align: left; }
+  .care-review-pet b { font-size: 20px; }
+  .care-review-pet span { font-size: 18px; }
+  .care-review-pet img { width: 84px; height: 84px; }
   .care-resource-grid { grid-template-columns: 1fr; }
   .care-cost-summary { grid-template-columns: 1fr; }
   .care-daily-detail-list li { align-items: flex-start; flex-direction: column; gap: 3px; }.care-daily-detail-list li span { text-align: left; }

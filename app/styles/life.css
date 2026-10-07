@@ -830,9 +830,9 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
 /* 散步與貓砂盆救援隊的共用手機版節奏。 */
 @media (max-width: 720px) {
   .feedback-knowledge-card, .knowledge-card { padding: 18px; }
-  .walking-time-commitment { grid-template-columns: 1fr; }
-  .walking-time-commitment > div { grid-template-columns: 1fr; gap: 5px; }
-  .walking-time-commitment span { text-align: left; white-space: pre-line; }
+  .walking-time-commitment { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .walking-time-commitment > div { grid-template-columns: 1fr; gap: 4px; padding: 12px 12px; }
+  .walking-time-commitment span { text-align: left; white-space: pre-line; font-size: 12px; }
   .walking-reflection-note { padding: 20px 18px; }
   .correct-feedback-actions { align-items: stretch; flex-direction: column; }
   .correct-feedback-actions .secondary, .correct-feedback-actions .delayed-continue, .correct-feedback-actions .primary { width: 100%; }
