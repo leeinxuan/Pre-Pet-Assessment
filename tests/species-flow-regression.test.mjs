@@ -82,6 +82,64 @@ test("five species preserve journey component dispatch", async () => {
   });
 });
 
+test("daily-behavior activities receive the active species", async () => {
+  const lifeJourney = await source("app/components/life/LifeJourneyComponents.tsx");
+  const dailyBehaviorStart = lifeJourney.indexOf("<DailyBehaviorActivityMulti");
+  assert.notEqual(dailyBehaviorStart, -1, "daily-behavior renderer must exist");
+  const dailyBehaviorEnd = lifeJourney.indexOf("/>", dailyBehaviorStart);
+  const dailyBehavior = lifeJourney.slice(dailyBehaviorStart, dailyBehaviorEnd);
+  assert.match(dailyBehavior, /scenarioIds=.*getDailyBehaviorScenarioIds\(species\)/s);
+  assert.match(dailyBehavior, /species=\{species\}/, "daily behavior must use the active species data");
+});
+
+test("scenario media selection stays out of shared scenario UI", async () => {
+  const [dailyBehavior, videoScenario, breedChallenge, scenarioUi, journeyRegistry, dogScenarios, dogBreedChallenges] = await Promise.all([
+    source("app/components/life/activities/DailyBehaviorActivityMulti.tsx"),
+    source("app/components/life/activities/VideoScenarioActivity.tsx"),
+    source("app/components/life/activities/BreedChallengeActivity.tsx"),
+    source("app/components/life/activities/scenario-ui.tsx"),
+    source("app/data/species/journey.ts"),
+    source("app/data/species/dog/scenarios.ts"),
+    source("app/data/species/dog/breed-challenges.ts"),
+  ]);
+  const componentSource = `${dailyBehavior}\n${videoScenario}\n${breedChallenge}`;
+  assert.doesNotMatch(componentSource, /species\s*===|isDog|isCat|isRabbit|isBird|isHamster|\.startsWith\("(?:cat|rabbit|bird|hamster)-/);
+  assert.doesNotMatch(componentSource, /dogAssets|getCorrectAnswerVideo|correct-answer(?:2)?\.mp4|chewing-on-things\.mp4/);
+  assert.doesNotMatch(scenarioUi, /dogAssets|getCorrectAnswerVideo|breedChallengeVideos|arrival-adjustment|illness-vet|growing-old|busy-daily-care/);
+  assert.match(videoScenario, /scenario\.sceneMedia/);
+  assert.match(videoScenario, /scenario\.correctFeedbackMedia/);
+  assert.match(breedChallenge, /scenario\?\.sceneMedia/);
+  assert.match(scenarioUi, /scenario\.requiresRetry/);
+  assert.match(scenarioUi, /scenario\.questionTitle/);
+  assert.match(scenarioUi, /scenario\.continueLabel/);
+  assert.match(dogScenarios, /sceneMedia:\s*\{ type: "video"/);
+  assert.match(dogScenarios, /correctFeedbackMedia:\s*\{ type: "video"/);
+  assert.match(dogBreedChallenges, /scenarioMedia\.dog\.shedding/);
+  assert.match(dogBreedChallenges, /scenarioMedia\.dog\.rainyWalk/);
+  for (const species of Object.keys(speciesFlows)) {
+    const journey = await source(`app/data/species/${species}/journey.ts`);
+    assert.match(journey, new RegExp(`export const ${species}ScenarioPresentation`));
+    assert.match(journeyRegistry, new RegExp(`${species}: ${species}ScenarioPresentation`));
+    if (species !== "dog") {
+      assert.match(journey, /correctFeedbackMedia:\s*\{ type: "placeholder" \}/, `${species} must not borrow dog feedback video`);
+      assert.doesNotMatch(journey, /scenarioMedia\.dog\./, `${species} must not borrow dog question video`);
+    }
+  }
+});
+
+test("busy-care presentation and support choice come from scenario data", async () => {
+  const busyCare = await source("app/components/life/activities/BusyCareActivity.tsx");
+  assert.doesNotMatch(busyCare, /species\s*===|isDog|isCat|isRabbit|isBird|isHamster/);
+  assert.doesNotMatch(busyCare, /dogAssets|catAssets|getCorrectAnswerVideo|family-helper|rabbit-busy-helper|bird-busy-helper/);
+  assert.match(busyCare, /scenario\.busyCarePresentation/);
+  assert.match(busyCare, /choice\.isSupportChoice/);
+  for (const species of Object.keys(speciesFlows)) {
+    const scenarios = await source(`app/data/species/${species}/scenarios.ts`);
+    assert.match(scenarios, /busyCarePresentation:\s*\{/s, `${species} busy-care presentation must be data-driven`);
+    assert.match(scenarios, /isSupportChoice:\s*true/, `${species} busy-care support choice must be explicit`);
+  }
+});
+
 test("replay reset strategies retain the activity state fields they clear", async () => {
   const registry = await source("app/data/species/activity-registry.ts");
   const resetContracts = {
@@ -117,7 +175,27 @@ test("dynamic flow loading and error states remain accessible and retryable", as
   const fallback = await source("app/components/shared/AsyncFlowState.tsx");
   assert.match(fallback, /role="status"/);
   assert.match(fallback, /aria-busy="true"/);
+  assert.match(fallback, /aria-label="內容載入中"/);
+  assert.doesNotMatch(fallback, /正在準備下一段練習|正在載入畫面與互動內容/);
   assert.match(fallback, /role="alert"/);
   assert.match(fallback, /window\.location\.reload\(\)/);
   assert.match(fallback, />重新載入</);
+});
+
+test("test-mode next signal cannot leak into the following journey item", async () => {
+  const [page, lifeJourney, journeyData] = await Promise.all([
+    source("app/page.tsx"),
+    source("app/components/life/LifeJourneyComponents.tsx"),
+    source("app/data/species/journey.ts"),
+  ]);
+  assert.match(page, /setTestNextTargetIndex\(journeyIndex\)/);
+  assert.match(page, /testNextSignal=\{testNextTargetIndex === journeyIndex \? testNextSignal : 0\}/);
+  assert.match(page, /onIndex=\{\(nextIndex\) => \{ setTestNextTargetIndex\(null\); setJourneyIndex\(nextIndex\); \}\}/);
+  assert.match(lifeJourney, /transition === "busy-care" && busyCareTransitionIndex !== index[\s\S]*setBusyCareTransitionIndex\(index\)[\s\S]*return/);
+  assert.match(lifeJourney, /timePassOpen && activityConfig\?\.transition === "time-pass"[\s\S]*sickTimePassComplete: true[\s\S]*selectItem\(index \+ 1\)/);
+  assert.doesNotMatch(lifeJourney, /stageForIndex|species === "hamster"/);
+  assert.match(lifeJourney, /onStageChange\(getJourneyStepForItem\(activeJourneyItems\[next\]\)\)/);
+  for (const stageId of ["arrival", "daily", "breed", "life-change"]) {
+    assert.match(journeyData, new RegExp(`item\\?\\.stageId === "${stageId}"`));
+  }
 });

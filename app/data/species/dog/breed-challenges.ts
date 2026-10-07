@@ -1,15 +1,16 @@
 import { buildBreedChallengeScenarios, type BreedChallengeQuestion } from "../../shared/breed-challenges";
+import { scenarioMedia } from "../../shared/scenario-media";
 
 /** Only breeds available in the current dog journey are represented here. */
 export const dogBreedChallengeContent: Record<"shiba" | "mixed", BreedChallengeQuestion[]> = {
   // Existing verified Shiba content is intentionally retained verbatim.
   shiba: [
-    { title: "一年四季都在掉毛", description: "柴犬換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？", topic: "柴犬的換毛與居家清潔", reportSummary: "柴犬有雙層被毛，平時與換毛期都可能讓家中累積大量毛髮，需要把梳毛、吸塵與衣物除毛納入長期日常。", breedKnowledge: "柴犬具有**雙層被毛**，平時就會掉毛，換毛期更會**大量脫落底毛**；生活在較溫暖或室內環境時，掉毛也可能分散在**全年**。規律梳毛與吸塵能減少散落毛髮，但**無法讓家中完全沒有毛**，也不建議只為了止掉毛就任意剃除雙層毛。", correctText: "固定梳毛與吸塵，把清潔排進每週生活，也接受家裡不可能完全沒有毛", correctExplanation: "規律梳理、清潔與可接受的生活標準，比追求一次清到完全沒毛更能長期維持。", distractors: [
+    { title: "一年四季都在掉毛", sceneMedia: { type: "video", src: scenarioMedia.dog.shedding, ariaLabel: "柴犬換毛情境影片" }, description: "柴犬換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？", topic: "柴犬的換毛與居家清潔", reportSummary: "柴犬有雙層被毛，平時與換毛期都可能讓家中累積大量毛髮，需要把梳毛、吸塵與衣物除毛納入長期日常。", breedKnowledge: "柴犬具有**雙層被毛**，平時就會掉毛，換毛期更會**大量脫落底毛**；生活在較溫暖或室內環境時，掉毛也可能分散在**全年**。規律梳毛與吸塵能減少散落毛髮，但**無法讓家中完全沒有毛**，也不建議只為了止掉毛就任意剃除雙層毛。", correctText: "固定梳毛與吸塵，把清潔排進每週生活，也接受家裡不可能完全沒有毛", correctExplanation: "規律梳理、清潔與可接受的生活標準，比追求一次清到完全沒毛更能長期維持。", distractors: [
       { text: "等毛多到看不下去時，再一次把牠剃得很短", explanation: "一次剃短不等於解決正常換毛，也可能影響毛髮與皮膚保護。", suggestion: "用適合雙層毛犬的工具規律梳理；若皮膚或掉毛狀況異常，再詢問獸醫或美容專業人員。" },
       { text: "平常先用黏毛滾輪處理衣服，地板週末再一起清就好", explanation: "這能暫時改善外觀，但只處理衣服可能讓毛髮持續堆積，也忽略了狗狗本身需要規律梳理。", suggestion: "把短時間梳毛、局部吸塵和衣物除毛拆成可持續的小任務。" },
       { text: "不讓牠進客廳和房間，應該就不需要常常打掃", explanation: "限制活動範圍無法停止換毛，也可能犧牲原本需要的陪伴與生活品質。", suggestion: "可以設定好清潔的休息區與家具保護方式，但仍要安排互動、梳毛與環境清潔。" },
     ] },
-    { title: "颳風下雨也要出門上廁所", description: "柴犬通常很愛乾淨，有些柴犬不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？", topic: "柴犬的外出排泄需求", reportSummary: "許多柴犬傾向離開生活區域後才排泄，飼主需要每天安排穩定外出，也要準備雨天短路線與室內備案。", breedKnowledge: "柴犬往往很重視生活區域的清潔，許多個體會**傾向離開睡眠與活動空間後才排泄**，因此可能逐漸習慣在戶外如廁。這**不代表牠能長時間憋尿**；飼主仍需每天安排**穩定的外出機會**，也要準備雨具、短路線，以及必要時可逐步練習的室內備案。", correctChoiceIndex: 3, correctText: "準備雨具與擦腳用品，依天氣調整路線和時間，但仍完成安全的外出排泄與基本散步", correctExplanation: "把雨具、短路線與回家清潔準備好，才能在壞天氣中持續滿足排泄與活動需求。", distractors: [
+    { title: "颳風下雨也要出門上廁所", sceneMedia: { type: "video", src: scenarioMedia.dog.rainyWalk, ariaLabel: "柴犬雨天外出情境影片" }, description: "柴犬通常很愛乾淨，有些柴犬不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？", topic: "柴犬的外出排泄需求", reportSummary: "許多柴犬傾向離開生活區域後才排泄，飼主需要每天安排穩定外出，也要準備雨天短路線與室內備案。", breedKnowledge: "柴犬往往很重視生活區域的清潔，許多個體會**傾向離開睡眠與活動空間後才排泄**，因此可能逐漸習慣在戶外如廁。這**不代表牠能長時間憋尿**；飼主仍需每天安排**穩定的外出機會**，也要準備雨具、短路線，以及必要時可逐步練習的室內備案。", correctChoiceIndex: 3, correctText: "準備雨具與擦腳用品，依天氣調整路線和時間，但仍完成安全的外出排泄與基本散步", correctExplanation: "把雨具、短路線與回家清潔準備好，才能在壞天氣中持續滿足排泄與活動需求。", distractors: [
       { text: "今天雨太大，忍一天不上廁所應該還好，明天再遛久一點", explanation: "把需求延到隔天可能讓狗狗長時間不舒服，隔天加長散步也無法補回今天的排泄需求。", suggestion: "縮短路線、避開危險時段並做好雨天防護，但仍要提供安全如廁機會。" },
       { text: "抱牠到門口看雨，如果牠不肯走就直接回家", explanation: "短暫嘗試是有彈性的做法，但若沒有替代安排，牠仍可能整天缺乏合適的排泄機會。", suggestion: "先找有遮蔽的短路線，也可在平日逐步建立備用的室內如廁選項。" },
       { text: "只要在家鋪很多尿墊，牠應該自然就會改在室內上", explanation: "只增加尿墊不一定能立刻改變已建立的如廁習慣，也可能讓牠更困惑。", suggestion: "若要建立室內備案，需要用固定位置、漸進引導與正向回饋慢慢練習。" },
@@ -31,5 +32,10 @@ export const dogBreedChallengeContent: Record<"shiba" | "mixed", BreedChallengeQ
 
 export function getDogBreedChallengeScenarios(breedId: string) {
   const supportedBreedId = breedId === "mixed" ? "mixed" : "shiba";
-  return buildBreedChallengeScenarios(dogBreedChallengeContent[supportedBreedId], supportedBreedId, "dog");
+  return buildBreedChallengeScenarios(
+    dogBreedChallengeContent[supportedBreedId],
+    supportedBreedId,
+    "dog",
+    { type: "video", src: scenarioMedia.correctPrimary, ariaLabel: "正確處置後的正向結果影片" },
+  );
 }

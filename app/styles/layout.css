@@ -43,7 +43,7 @@
 .flow-load-card p { margin: 0; color: var(--muted); line-height: 1.75; }
 .flow-load-card .primary { margin-top: 22px; }
 .flow-load-spinner, .flow-load-error-mark { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; }
-.flow-load-spinner { border: 5px solid var(--sand); border-top-color: var(--gold-dark); animation: flowLoadSpin .9s linear infinite; }
+.flow-load-spinner { border: 5px solid rgba(212, 154, 36, .2); border-top-color: var(--gold-dark); box-shadow: 0 8px 24px rgba(70, 53, 26, .08); animation: flowLoadSpin .9s linear infinite; }
 .flow-load-error-mark { border: 1px solid rgba(217, 117, 60, .35); background: var(--orange-soft); color: #a84f25; font-size: 26px; font-weight: 900; }
 @keyframes flowLoadSpin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .flow-load-spinner { animation: none; border-color: var(--sand); border-top-color: var(--gold-dark); } }
@@ -81,10 +81,19 @@
   .mobile-progress-step.completed i { background: #729275; }
   .mobile-progress-step.current { color: var(--gold-dark); }
   .mobile-progress-step.current i { width: 10px; height: 10px; border-color: #fff9e8; background: var(--gold); box-shadow: 0 0 0 3px rgba(211,154,34,.2), 0 0 11px 3px rgba(211,154,34,.38); }
+  /* progress track 的輔助文字（aria 用）不顯示在視覺上。 */
+  .mobile-progress-step span { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   .mobile-progress-nav > div { max-height: min(68vh, 590px); overflow-y: auto; padding: 8px 18px 18px; border-top: 1px solid #eee6d9; }
   .mobile-progress-nav .station-navigation { max-width: 430px; margin: auto; }
   .mobile-progress-nav .nav-main.current > .nav-main-button { border: 1px solid var(--sand); }
   .mobile-progress-nav .nav-children { margin-left: 27px; }
+  /* ≤ 768px：縮小 summary 尺寸，但保留三欄佈局（階段名稱｜進度點｜箭頭）。 */
+  @media (max-width: 768px) {
+    .mobile-progress-nav summary { min-height: 44px; grid-template-columns: max-content minmax(80px, 1fr) 24px; gap: 6px; padding: 6px 12px; }
+    .mobile-progress-copy { max-width: 120px; }
+    .mobile-progress-copy b { font-size: 12px; }
+    .mobile-progress-toggle { width: 24px; height: 24px; }
+  }
 }
 
 @media (max-width: 720px) {
@@ -92,11 +101,8 @@
   .flow-load-state { min-height: calc(100svh - 48px); padding: 30px 18px; }
   .flow-load-card { min-height: 220px; grid-template-columns: 1fr; justify-items: center; gap: 16px; text-align: center; }
   .step-heading h1 { font-size: 37px; }
-  .mobile-progress-nav summary { min-height: 48px; grid-template-columns: max-content minmax(94px, 1fr) 24px; gap: 5px; padding: 7px 10px; }
-  .mobile-progress-copy { max-width: 112px; }
-  .mobile-progress-copy b { font-size: 11px; }
-  .mobile-progress-toggle { width: 24px; height: 24px; }
 }
+
 
 /* 首頁 Welcome／Hero 專屬視覺規則。 */
 /* 首頁目前真正生效的背景在這一段：

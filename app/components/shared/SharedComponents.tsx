@@ -4,6 +4,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { categories } from "../../data/shared/app-flow";
+import { sharedAssets } from "../../data/shared/assets";
 import { isTemporaryReserveExpense, money } from "../../data/shared/expenses";
 import { getJourneyItemsForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
@@ -309,6 +310,10 @@ export function SpeciesStep({
   onNext: () => void;
 }) {
   const speciesConfig = getSpeciesConfig(category);
+  useEffect(() => {
+    const nameplate = new Image();
+    nameplate.src = sharedAssets.nameplate;
+  }, []);
   // 品種流程目前在全站皆暫時停用。無論父層的 state 更新順序為何，
   // 都不能掛載舊的品種頁，避免在物種選擇後閃過已下架的畫面。
   const visibleSelectionPage: typeof selectionPage = selectionPage === "breed" ? "name" : selectionPage;
@@ -323,7 +328,7 @@ export function SpeciesStep({
     onCategory(id);
     onBreed(nextBreed);
     onSelectionPage("name");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   return (
@@ -350,7 +355,7 @@ export function SpeciesStep({
         <section className="partner-selection-page pet-naming-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.nameTitle} body="這個名字會陪著牠走進接下來的生活，也會出現在後面的情境演練裡。" />
           <div className="pet-naming-stage">
-            <img src="/assets/dog/room/nameplate.webp" alt={`${speciesConfig.copy.animalName}名字吊牌`} />
+            <img src={sharedAssets.nameplate} width={2720} height={1860} alt={`${speciesConfig.copy.animalName}名字吊牌`} />
             <label htmlFor="new-pet-name" className="sr-only">{speciesConfig.copy.animalName}的名字</label>
             <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} autoFocus />
           </div>

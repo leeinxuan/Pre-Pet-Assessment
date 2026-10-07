@@ -1,51 +1,24 @@
 import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
+import { catAssets } from "./assets";
 import { catReport } from "./report";
-
-/**
- * 貓咪影片情境答對後的完整回饋。集中在情境資料旁，避免共用回饋元件混入犬隻文案。
- */
-export const catScenarioCorrectFeedback = {
-  "cat-arrival-adjustment": {
-    encouragement: "你先替牠保留了慢慢適應的空間，這會讓第一次見面更安心。",
-    knowledgeTitle: "貓咪小知識",
-    knowledgePoints: [
-      "先讓牠保有**可退避的安全空間**，在安靜的小房間裡用自己的速度探索。",
-      "關好門窗，準備食水與砂盆；不強迫互動，讓牠慢慢建立安全感。",
-    ],
-    reminder: "",
-  },
-  "cat-illness-vet": {
-    encouragement: "你已先把重要線索整理好，及早聯繫能讓下一步更清楚。",
-    knowledgeTitle: "貓咪小知識",
-    knowledgePoints: [
-      "**記錄異常發生的時間與狀況**，包含食慾、飲水、尿便、活動與躲藏的改變。",
-      "多項明顯變化一起出現時，準備外出籠與資料並**儘速聯絡獸醫**；不要自行判定原因或給藥。",
-    ],
-    reminder: "紀錄能協助獸醫判斷，但不應延後需要的處置。",
-  },
-  "cat-growing-old": {
-    encouragement: "你已開始為牠調整生活空間，讓陪伴能跟著身體變化慢慢前進。",
-    knowledgeTitle: "高齡照護小知識",
-    knowledgePoints: [
-      "**維持穩定、容易進出的生活環境**：低入口砂盆、地墊、階梯式設施與溫暖休息處可以一起調整。",
-      "將例行健檢與日常變化記錄納入照護，能更早發現牠需要的協助。",
-    ],
-    reminder: "",
-  },
-} as const;
 
 export const catLifeScenarios: Scenario[] = [
   {
     id: "cat-arrival-adjustment",
     stage: "一起生活的第一天",
     stageId: "arrival",
+    stageTitle: "適應新家與安全感",
     timeLabel: "一起生活的第一天",
     title: "第一天適應新家",
     description: "`{petName}` 剛到陌生的新家，躲在外出籠裡觀察。家人很想立刻摸摸牠、抱牠出來看看房間。",
     topic: "貓咪適應新家與安全感",
     reportSummary: "貓咪到家第一天應先進安靜安全的小房間，關好門窗，讓牠自行走出外出籠並用自己的速度探索。",
     artIndex: 0,
+    sceneMedia: { type: "placeholder" },
+    correctFeedbackMedia: { type: "placeholder" },
+    requiresRetry: true,
+    continueLabel: "繼續",
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你先替牠保留了慢慢適應的空間，這會讓第一次見面更安心。",
@@ -135,12 +108,19 @@ export const catLifeScenarios: Scenario[] = [
   {
     id: "cat-busy-care",
     stage: "當生活發生變化",
+    stageId: "life-change",
+    stageTitle: "當生活發生變化",
     timeLabel: "當生活發生變化",
     title: "臨時晚歸，誰來接手？",
     description: "今天臨時需要晚歸，`{petName}` 仍需要食水確認、貓砂盆清理、環境巡視、適當陪玩與狀況觀察。",
     topic: "忙碌時的貓咪日常照顧",
     reportSummary: "臨時晚歸時，應安排可信任的協助者，確認對方有時間、有意願，知道食物、飲水、貓砂盆與環境巡視事項，並保有緊急聯絡方式。",
     artIndex: 5,
+    busyCarePresentation: {
+      animalName: "貓咪",
+      sceneMedia: { type: "image-layers", backgroundSrc: catAssets.life.safeRoom, backgroundAlt: "居家房間場景", characterSrc: catAssets.life.mixedCat, characterAlt: "{petName}在房間裡等待照顧" },
+      feedbackMedia: { type: "placeholder" },
+    },
     busyCareCompletion: {
       title: "做得很好！",
       encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！",
@@ -160,7 +140,7 @@ export const catLifeScenarios: Scenario[] = [
     ],
     choices: [
       { id: "cat-alone-food", text: "出門前多放一些食物和水，回家後再一起處理砂盆和陪玩", result: "incorrect", ...incorrect, explanation: "食物和水不能取代砂盆清理、環境巡視、陪玩與狀況觀察，也可能造成食物過量或變質。", suggestion: "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。" },
-      { id: "family-helper", text: "請可信任、了解照護需求的家人或朋友協助", result: "correct", ...positive, explanation: "貓咪看起來獨立，仍需要**穩定的食水、乾淨砂盆**、安全環境、適量互動與細心觀察。忙碌時先安排**可信任的人**協助，能讓牠的日常維持安心與規律。", suggestion: "交接時要說明貓咪個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。" },
+      { id: "family-helper", text: "請可信任、了解照護需求的家人或朋友協助", result: "correct", isSupportChoice: true, ...positive, explanation: "貓咪看起來獨立，仍需要**穩定的食水、乾淨砂盆**、安全環境、適量互動與細心觀察。忙碌時先安排**可信任的人**協助，能讓牠的日常維持安心與規律。", suggestion: "交接時要說明貓咪個性、互動界線、餵食規則、砂盆清理方式、環境巡視重點與不可餵食食物，避免因不了解而造成壓力或風險。" },
       { id: "cat-no-check", text: "貓咪本來就很獨立，晚一點回家再看就好", result: "incorrect", ...incorrect, explanation: "獨立不代表不需要日常照護與安全巡視。砂盆、飲水、食慾、活動與異常狀況仍需要有人確認。", suggestion: "至少安排可信任者確認基本需求、環境安全與是否有異常。" },
       { id: "cat-late-meal", text: "只請人倒飼料，不用交代砂盆、陪玩或觀察狀況", result: "incorrect", ...incorrect, explanation: "只補食物會漏掉砂盆、飲水、環境安全與行為變化，也可能讓協助者不知道如何安全互動。", suggestion: "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。" },
     ],
@@ -168,12 +148,16 @@ export const catLifeScenarios: Scenario[] = [
   {
     id: "cat-illness-vet",
     stage: "生病與就醫",
+    stageTitle: "當生活發生變化",
     timeLabel: "生病與就醫",
     title: "牠突然變得不太一樣",
     description: "`{petName}` 今天吃得比平常少、躲得更久，貓砂盆裡的尿團也明顯減少。你無法確定是壓力還是身體不舒服，但這些改變一起出現了。此刻要先怎麼做？",
     topic: "貓咪健康觀察與就醫判斷",
     reportSummary: "貓咪出現食慾、飲水、尿便、活動量或躲藏等明顯改變時，應記錄時間與觀察到的狀況並聯絡獸醫；不要自行判定原因或自行給藥。",
     artIndex: 3,
+    sceneMedia: { type: "placeholder" },
+    correctFeedbackMedia: { type: "placeholder" },
+    requiresRetry: true,
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你記錄了多項異常變化並第一時間聯絡獸醫，做得很好！",
@@ -199,12 +183,17 @@ export const catLifeScenarios: Scenario[] = [
   {
     id: "cat-growing-old",
     stage: "逐漸進入高齡",
+    stageId: "life-change",
+    stageTitle: "當生活發生變化",
     timeLabel: "逐漸進入高齡",
     title: "貓咪慢慢變老",
     description: "11 歲的 `{petName}` 最近跳上跳下變慢，進出原本的砂盆也比較猶豫。你想讓牠繼續安全地活動、上廁所與休息，同時建立可長期追蹤的照護節奏。需要怎麼調整？",
     topic: "高齡貓環境與健康照顧",
     reportSummary: "高齡貓需要同步調整如廁、活動、休息與健康追蹤：增設合適砂盆與地墊、階梯式設施、保暖休息處，並定期健檢與記錄變化。",
     artIndex: 1,
+    sceneMedia: { type: "placeholder" },
+    correctFeedbackMedia: { type: "placeholder" },
+    requiresRetry: true,
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你已開始為牠調整生活空間，讓陪伴能跟著身體變化慢慢前進。",

@@ -1,4 +1,5 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
+import { sharedAssets } from "../../shared/assets";
 
 /**
  * 犬隻房間用品。placement / mobilePlacement 是唯一的物件位置來源；
@@ -32,6 +33,6 @@ export const dogDepartureTrunkItems: TrunkItem[] = [
 ];
 
 /** 犬隻房間、危險物、接回與餵食的共用資料。 */
-export const dogRoomScene: RoomSceneConfig = { background: "/assets/dog/room/empty-room.png", mobileBackground: "/assets/dog/room/empty-room-mobile.png", backgroundAlt: "空的寵物生活房間", desktopBackgroundClass: "room-scene-background--dog", mobileBackgroundClass: "room-scene-background--dog-mobile", backgroundStyle: { objectFit: "contain", objectPosition: "center center" }, doorplate: { image: "/assets/dog/room/nameplate.webp", alt: "小狗名字門牌" } };
+export const dogRoomScene: RoomSceneConfig = { background: "/assets/dog/room/empty-room.png", mobileBackground: "/assets/dog/room/empty-room-mobile.png", backgroundAlt: "空的寵物生活房間", desktopBackgroundClass: "room-scene-background--dog", mobileBackgroundClass: "room-scene-background--dog-mobile", backgroundStyle: { objectFit: "contain", objectPosition: "center center" }, doorplate: { image: sharedAssets.nameplate, alt: "小狗名字門牌" } };
 export const dogDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.png", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: "/assets/car/adoption-documents.png", documentFolderAlt: "飼養文件夾" };
 export const dogPreparation = { roomItems: dogRoomItems, hazards: dogHazards, trunkItems: dogDepartureTrunkItems, roomScene: dogRoomScene, departureScene: dogDepartureScene } as const;

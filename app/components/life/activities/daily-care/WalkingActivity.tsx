@@ -396,11 +396,11 @@ export function WalkingActivity({
             <h2 id="walking-safety-title">你會用哪一種方式陪牠散步？</h2>
             <div className="walking-safety-grid">
               <button type="button" onClick={() => setSafetyStep("correct")}>
-                <img src={dogShibaWalkingAsset("leash-choice.png")} alt="飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境" />
+                <img src={dogShibaWalkingAsset("leash-choice.webp")} alt="飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境" />
                 <span><b>繫好牽繩，保持鬆弛</b><small>讓狗狗在可控距離內嗅聞、探索環境。</small></span>
               </button>
               <button type="button" onClick={() => setSafetyStep("law")}>
-                <img src={dogShibaWalkingAsset("off-leash-choice.png")} alt="沒有牽繩的柴犬離飼主一段距離自行探索" />
+                <img src={dogShibaWalkingAsset("off-leash-choice.webp")} alt="沒有牽繩的柴犬離飼主一段距離自行探索" />
                 <span><b>不繫牽繩，讓牠自己走</b><small>讓狗狗自由自在探索，飼主在後方跟著。</small></span>
               </button>
             </div>
@@ -478,7 +478,7 @@ export function WalkingActivity({
             )}
             <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position, isMobileWalkingLayout)}>
               <img
-                src={activity.walkingPoopCleaned ? dogShibaWalkingAsset("walker-dog-bag.webp") : needsCleanup ? dogShibaWalkingAsset("walker-and-dog-poop.png") : dogShibaWalkingAsset("walker-and-dog.webp")}
+                src={activity.walkingPoopCleaned ? dogShibaWalkingAsset("walker-dog-bag.png") : needsCleanup ? dogShibaWalkingAsset("walker-and-dog-poop.png") : dogShibaWalkingAsset("walker-and-dog.png")}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
             </div>

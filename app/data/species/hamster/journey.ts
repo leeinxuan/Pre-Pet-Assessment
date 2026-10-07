@@ -1,4 +1,4 @@
-import type { JourneyItem } from "../../../game-types";
+import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 
 export const hamsterJourneyItems: JourneyItem[] = [
   { id: "hamster-arrival", type: "scenario", timeLabel: "接回家", title: "第一天適應新家", scenarioId: "hamster-arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
@@ -13,4 +13,8 @@ export const hamsterJourneyItems: JourneyItem[] = [
 ];
 
 export const hamsterDailyBehaviorScenarioIds = ["hamster-nocturnal", "hamster-picky-eating"] as const;
+export const hamsterScenarioPresentation: SpeciesScenarioPresentationConfig = {
+  defaults: { defaultPetName: "芝麻", knowledgeTitle: "狗狗小知識", correctFeedbackMedia: { type: "placeholder" } },
+  scenarios: {},
+};
 export const hamsterJourney = { items: hamsterJourneyItems, dailyBehaviorScenarioIds: hamsterDailyBehaviorScenarioIds } as const;

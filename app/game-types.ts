@@ -130,6 +130,10 @@ export type CareMember = {
 
 export type ScenarioResult = "correct" | "partial" | "incorrect";
 
+export type ScenarioMediaConfig =
+  | { type: "video"; src: string; ariaLabel: string }
+  | { type: "placeholder" };
+
 export type ScenarioChoice = {
   id: string;
   text: string;
@@ -201,6 +205,23 @@ export type BusyCareChecklistQuestion = {
   reviewHint?: string;
 };
 
+export type BusyCareImageScene = {
+  type: "image-layers";
+  backgroundSrc: string;
+  backgroundAlt: string;
+  characterSrc: string;
+  characterAlt: string;
+};
+
+export type BusyCarePresentationConfig = {
+  animalName: string;
+  sceneMedia:
+    | { type: "placeholder" }
+    | BusyCareImageScene
+    | { type: "video"; src: string; ariaLabel: string; fallback: BusyCareImageScene };
+  feedbackMedia: { type: "video"; src: string } | { type: "placeholder" };
+};
+
 export type Scenario = {
   id: string;
   stage: string;
@@ -213,6 +234,16 @@ export type Scenario = {
   description: string;
   /** 題目資料指定時，供共用選項元件顯示的提問文字。 */
   questionText?: string;
+  /** 共用情境頁的題目區標題。 */
+  questionTitle?: string;
+  /** 題目場景媒體；沒有正式影片時明確使用 placeholder。 */
+  sceneMedia?: ScenarioMediaConfig;
+  /** 答對後的媒體；沒有物種專屬影片時明確使用 placeholder。 */
+  correctFeedbackMedia?: ScenarioMediaConfig;
+  /** 答錯時是否必須重試，不能直接繼續。 */
+  requiresRetry?: boolean;
+  /** 回饋頁繼續按鈕文字。 */
+  continueLabel?: string;
   topic?: string;
   reportSummary?: string;
   breedKnowledge?: string;
@@ -239,6 +270,8 @@ export type Scenario = {
   busyCareCompletion?: BusyCareCompletionContent;
   /** 忙碌備援計劃的四項確認題；不可依物種名稱在 UI 推斷文案。 */
   busyCareChecklist?: BusyCareChecklistQuestion[];
+  /** 忙碌照護共用版型所需的物種名稱、場景與完成回饋媒體。 */
+  busyCarePresentation?: BusyCarePresentationConfig;
   /** 題庫資料識別欄位：供旅程、摘要與除錯使用，UI 不以畫面位置推斷。 */
   speciesId?: string;
   breedId?: string;
@@ -246,6 +279,21 @@ export type Scenario = {
   /** 規劃文件中的原始題號；品種題目不可依陣列位置推斷。 */
   sourceQuestionNumber?: number;
   summaryCategory?: string;
+};
+
+/** 共用情境版型所需的媒體與顯示文字；實際選擇由各物種 journey 資料提供。 */
+export type ScenarioPresentationConfig = {
+  defaultPetName: string;
+  knowledgeTitle: string;
+  preserveGenericAnimalTerms?: boolean;
+  sceneVideo?: { src: string; ariaLabel: string };
+  correctFeedbackMedia: { type: "video"; src: string } | { type: "placeholder" };
+  completionIntro?: string;
+};
+
+export type SpeciesScenarioPresentationConfig = {
+  defaults: Pick<ScenarioPresentationConfig, "defaultPetName" | "knowledgeTitle" | "preserveGenericAnimalTerms" | "correctFeedbackMedia">;
+  scenarios: Record<string, Partial<ScenarioPresentationConfig>>;
 };
 
 export type ScenarioAnswer = {

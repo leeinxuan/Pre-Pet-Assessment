@@ -1,4 +1,4 @@
-import type { JourneyItem } from "../../../game-types";
+import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 
 export const birdJourneyItems: JourneyItem[] = [
   { id: "bird-arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "bird-arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
@@ -11,5 +11,14 @@ export const birdJourneyItems: JourneyItem[] = [
   { id: "bird-senior", type: "scenario", timeLabel: "逐漸進入高齡", title: "鸚鵡慢慢變老", scenarioId: "bird-senior-care", stageId: "life-change", stageLabel: "生活變化" },
 ];
 export const birdDailyBehaviorScenarioIds = ["bird-picky-eating", "bird-stereotypy", "bird-excessive-calling"] as const;
+export const birdScenarioPresentation: SpeciesScenarioPresentationConfig = {
+  defaults: { defaultPetName: "鸚鵡", knowledgeTitle: "鳥類小知識", correctFeedbackMedia: { type: "placeholder" } },
+  scenarios: {
+    "bird-picky-eating": {},
+    "bird-stereotypy": {},
+    "bird-excessive-calling": {},
+    "bird-senior-care": {},
+  },
+};
 export const birdCageInspectionConfig = { targetStamps: 4, steps: ["tray-clean", "feces-observed", "health-observed", "social-time"] as const } as const;
 export const birdJourney = { items: birdJourneyItems, dailyBehaviorScenarioIds: birdDailyBehaviorScenarioIds, cageInspection: birdCageInspectionConfig, activity: "bird-cage-inspection" as const } as const;

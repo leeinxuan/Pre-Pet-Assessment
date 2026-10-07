@@ -3,9 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Existing layered busy-care scene uses native images for exact positioning. */
 
 import { useState } from "react";
-import { dogAssets } from "../../../data/species/dog/assets";
-import { catAssets } from "../../../data/species/cat/assets";
-import type { BusyCareChecklistQuestion, CareMember, Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
+import type { BusyCareChecklistQuestion, BusyCareImageScene, CareMember, Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
 import {
   CorrectFeedbackLayout,
@@ -14,12 +12,9 @@ import {
   SceneMediaPlaceholder,
   ScenarioOptionCard,
   VideoWithToggle,
-  getCorrectAnswerVideo,
   lifeStageLabelForScenario,
   plainFeedbackText,
 } from "./scenario-ui";
-
-const dogShibaAsset = (fileName: string) => `${dogAssets.life.shibaRoot}/${fileName}`;
 
 function getBusyCareChecklist(items: readonly BusyCareChecklistQuestion[] | undefined, petName: string) {
   return (items ?? []).map((item) => ({
@@ -34,7 +29,6 @@ export function BusyCareActivity({
   answer,
   petName,
   members,
-  species = "dog",
   onMembersChange,
   onChoose,
   onMarkForReview,
@@ -46,7 +40,6 @@ export function BusyCareActivity({
   answer?: ScenarioAnswer;
   petName: string;
   members: CareMember[];
-  species?: string;
   onMembersChange: (members: CareMember[]) => void;
   onChoose: (choice: ScenarioChoice) => void;
   onMarkForReview?: (scenario: Scenario, flag: string) => void;
@@ -61,15 +54,16 @@ export function BusyCareActivity({
   const [sceneVideoFailed, setSceneVideoFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
-  const isCat = species === "cat";
-  const isRabbit = species === "rabbit";
-  const isBird = species === "bird";
-  const animalName = isCat ? "貓咪" : isRabbit ? "兔子" : isBird ? "鸚鵡" : species === "hamster" ? "倉鼠" : "犬";
+  const presentation = scenario.busyCarePresentation ?? {
+    animalName: "寵物",
+    sceneMedia: { type: "placeholder" as const },
+    feedbackMedia: { type: "placeholder" as const },
+  };
+  const animalName = presentation.animalName;
   const displayPetName = petName || animalName;
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const busyCompletion = scenario.busyCareCompletion;
-  const familySupportChoice = scenario.choices.find((choice) => choice.isSupportChoice)
-    ?? scenario.choices.find((choice) => choice.id === "family-helper" || choice.id === "rabbit-busy-helper" || choice.id === "bird-busy-helper");
+  const familySupportChoice = scenario.choices.find((choice) => choice.isSupportChoice);
   const helperQuestions = getBusyCareChecklist(scenario.busyCareChecklist, displayPetName).map((item) => ({
     ...item,
     text: item.prompt,
@@ -134,8 +128,8 @@ export function BusyCareActivity({
         key={scenario.id}
         variant="single"
         title={completionTitle}
-        videoSrc={getCorrectAnswerVideo(scenario.id)}
-        mediaPlaceholder={species === "hamster" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
+        videoSrc={presentation.feedbackMedia.type === "video" ? presentation.feedbackMedia.src : ""}
+        mediaPlaceholder={presentation.feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{encouragement
@@ -175,15 +169,18 @@ export function BusyCareActivity({
       <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(scenario.title, petName)}</h1><p>{withPetName(scenario.description, petName)}</p></div>
       <div className="busy-care-layout">
         <div className="busy-care-room" aria-label={`${animalName}在房間中等待照顧的情境`}>
-          {isRabbit || species === "hamster" ? (
+          {presentation.sceneMedia.type === "placeholder" ? (
             <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} />
-          ) : !isCat && !sceneVideoFailed ? (
-            <VideoWithToggle className="busy-care-room-video" src={dogShibaAsset("busy-daily-care.mp4")} loop ariaLabel="疲憊忙碌的日子情境影片" onError={() => setSceneVideoFailed(true)} />
+          ) : presentation.sceneMedia.type === "video" && !sceneVideoFailed ? (
+            <VideoWithToggle className="busy-care-room-video" src={presentation.sceneMedia.src} loop ariaLabel={presentation.sceneMedia.ariaLabel} onError={() => setSceneVideoFailed(true)} />
           ) : (
-            <>
-              <img className="busy-care-room-background" src={isCat ? catAssets.life.safeRoom : dogAssets.feeding.room} alt="居家房間場景" />
-              <img className="busy-care-hungry-dog" src={isCat ? catAssets.life.mixedCat : dogShibaAsset("shiba-hungry.png")} alt={`${displayPetName}在房間裡等待照顧`} />
-            </>
+            (() => {
+              const imageScene: BusyCareImageScene = presentation.sceneMedia.type === "video" ? presentation.sceneMedia.fallback : presentation.sceneMedia;
+              return <>
+                <img className="busy-care-room-background" src={imageScene.backgroundSrc} alt={imageScene.backgroundAlt} />
+                <img className="busy-care-hungry-dog" src={imageScene.characterSrc} alt={withPetName(imageScene.characterAlt, displayPetName)} />
+              </>;
+            })()
           )}
         </div>
         {mode === "family" ? (
@@ -229,4 +226,3 @@ export function BusyCareActivity({
     </section>
   );
 }
-

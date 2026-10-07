@@ -1,20 +1,54 @@
-import type { JourneyItem, Scenario } from "../../game-types";
-import { catJourneyItems } from "./cat/journey";
+import type { JourneyItem, Scenario, ScenarioPresentationConfig, SpeciesScenarioPresentationConfig } from "../../game-types";
+import { catDailyBehaviorScenarioIds, catJourneyItems, catScenarioPresentation } from "./cat/journey";
 import { getCatBreedChallengeScenarios } from "./cat/breed-challenges";
 import { catLifeScenarios, getCatLifeScenarios } from "./cat/scenarios";
-import { dogJourneyItems } from "./dog/journey";
+import { dogDailyBehaviorScenarioIds, dogJourneyItems, dogScenarioPresentation } from "./dog/journey";
 import { getDogBreedChallengeScenarios } from "./dog/breed-challenges";
 import { dogLifeScenarios, getDogLifeScenarios } from "./dog/scenarios";
-import { rabbitJourneyItems } from "./rabbit/journey";
+import { rabbitDailyBehaviorScenarioIds, rabbitJourneyItems, rabbitScenarioPresentation } from "./rabbit/journey";
 import { getRabbitBreedChallengeScenarios } from "./rabbit/breed-challenges";
 import { rabbitActivityScenarios, rabbitLifeScenarios } from "./rabbit/scenarios";
-import { birdJourneyItems } from "./bird/journey";
+import { birdDailyBehaviorScenarioIds, birdJourneyItems, birdScenarioPresentation } from "./bird/journey";
 import { getBirdChallengeScenarios } from "./bird/breed-challenges";
 import { birdActivityScenarios, birdLifeScenarios } from "./bird/scenarios";
-import { hamsterJourneyItems } from "./hamster/journey";
+import { hamsterDailyBehaviorScenarioIds, hamsterJourneyItems, hamsterScenarioPresentation } from "./hamster/journey";
 import { hamsterLifeScenarios } from "./hamster/scenarios";
 
 export { catJourneyItems, catLifeScenarios, dogJourneyItems, dogLifeScenarios, rabbitJourneyItems, rabbitLifeScenarios, birdJourneyItems, birdLifeScenarios };
+
+const dailyBehaviorScenarioIdsBySpecies = {
+  dog: dogDailyBehaviorScenarioIds,
+  cat: catDailyBehaviorScenarioIds,
+  rabbit: rabbitDailyBehaviorScenarioIds,
+  bird: birdDailyBehaviorScenarioIds,
+  hamster: hamsterDailyBehaviorScenarioIds,
+} as const;
+
+const scenarioPresentationBySpecies: Record<string, SpeciesScenarioPresentationConfig> = {
+  dog: dogScenarioPresentation,
+  cat: catScenarioPresentation,
+  rabbit: rabbitScenarioPresentation,
+  bird: birdScenarioPresentation,
+  hamster: hamsterScenarioPresentation,
+};
+
+export function getDailyBehaviorScenarioIds(species: string): readonly string[] {
+  return dailyBehaviorScenarioIdsBySpecies[species as keyof typeof dailyBehaviorScenarioIdsBySpecies] ?? dailyBehaviorScenarioIdsBySpecies.dog;
+}
+
+export function getScenarioPresentation(species: string, scenarioId: string): ScenarioPresentationConfig {
+  const config = scenarioPresentationBySpecies[species] ?? scenarioPresentationBySpecies.dog;
+  return { ...config.defaults, ...config.scenarios[scenarioId] } as ScenarioPresentationConfig;
+}
+
+/** 旅程畫面站點由資料中的階段識別決定，不依物種或陣列索引猜測。 */
+export function getJourneyStepForItem(item: JourneyItem | undefined): number {
+  if (item?.stageId === "arrival") return 3;
+  if (item?.stageId === "daily") return 4;
+  if (item?.stageId === "breed") return 5;
+  if (item?.stageId === "life-change") return 6;
+  return 4;
+}
 
 /** 共用旅程框架只透過此入口讀取物種資料，不在 UI 內分支題庫來源。 */
 export function getLifeScenariosForSpecies(species: string, breedId = ""): Scenario[] {

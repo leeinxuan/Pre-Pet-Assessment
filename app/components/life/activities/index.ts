@@ -3,11 +3,7 @@ export { BirdCageInspectionActivity } from "./daily-care/BirdCageInspectionActiv
 export { BreedChallengeActivity } from "./BreedChallengeActivity";
 export { BusyCareActivity } from "./BusyCareActivity";
 export { CatDailyInspectionActivity } from "./daily-care/CatDailyInspectionActivity";
-export {
-  DailyBehaviorActivityMulti,
-  dailyBehaviorScenarioIds,
-  dailyBehaviorScenarioIdsBySpecies,
-} from "./DailyBehaviorActivityMulti";
+export { DailyBehaviorActivityMulti } from "./DailyBehaviorActivityMulti";
 export { GuidedInspection } from "./daily-care/GuidedActivities";
 export {
   ArrivalTransitionVideo,

@@ -64,9 +64,9 @@ export const walkingPreloadImages = [
   ...walkingScenes.map((scene) => scene.image),
   ...walkingScenes.map((scene) => scene.mobileImage),
   ...walkingPrepItems.map((item) => item.image),
-  dogShibaWalkingAsset("walker-and-dog.webp"),
+  dogShibaWalkingAsset("walker-and-dog.png"),
   dogShibaWalkingAsset("walker-and-dog-poop.png"),
-  dogShibaWalkingAsset("walker-dog-bag.webp"),
+  dogShibaWalkingAsset("walker-dog-bag.png"),
   "/assets/dog/walking/poop-bag-1.png",
   "/assets/dog/walking/poop.png",
 ] as const;

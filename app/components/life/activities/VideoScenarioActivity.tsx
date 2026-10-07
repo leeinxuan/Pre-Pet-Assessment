@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { dogAssets } from "../../../data/species/dog/assets";
-import { catScenarioCorrectFeedback } from "../../../data/species/cat/scenarios";
 import type { Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
 import {
@@ -14,14 +12,11 @@ import {
   ScenarioOptionCard,
   VideoWithToggle,
   breedLabelForId,
-  getCorrectAnswerVideo,
   lifeStageLabelForScenario,
   plainFeedbackText,
   useVideoMetadataPreload,
   withBreedName,
 } from "./scenario-ui";
-
-const dogShibaAsset = (fileName: string) => `${dogAssets.life.shibaRoot}/${fileName}`;
 
 export function VideoScenarioActivity({
   scenario,
@@ -50,19 +45,12 @@ export function VideoScenarioActivity({
   const [mode, setMode] = useState<"question" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
-  const isCatScenario = scenario.id.startsWith("cat-");
-  const isRabbitScenario = scenario.id.startsWith("rabbit-");
-  const isBirdScenario = scenario.id.startsWith("bird-");
-  const isHamsterScenario = scenario.id.startsWith("hamster-");
-  const source = isCatScenario || isRabbitScenario || isBirdScenario || isHamsterScenario
-    ? undefined
-    : scenario.id === "arrival-adjustment"
-    ? dogShibaAsset("first-day.mp4")
-    : scenario.id === "growing-old"
-      ? dogShibaAsset("senior-life.mp4")
-      : dogShibaAsset("sick.mp4");
+  const sceneMedia = scenario.sceneMedia ?? { type: "placeholder" as const };
+  const feedbackMedia = scenario.correctFeedbackMedia ?? { type: "placeholder" as const };
+  const source = sceneMedia.type === "video" ? sceneMedia.src : undefined;
+  const correctFeedbackVideo = feedbackMedia.type === "video" ? feedbackMedia.src : undefined;
   useVideoMetadataPreload(source);
-  useVideoMetadataPreload(isHamsterScenario ? undefined : getCorrectAnswerVideo(scenario.id));
+  useVideoMetadataPreload(correctFeedbackVideo);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const feedbackExpenseShownFor = useRef("");
 
@@ -86,9 +74,6 @@ export function VideoScenarioActivity({
   }, [deferExpensesUntilFeedback, mode, onCorrectFeedbackShown, scenario, selectedChoice]);
 
   if (mode === "positive" && selectedChoice) {
-    const catFeedback = isCatScenario && !(scenario.id === "cat-illness-vet" && scenario.breedKnowledge)
-      ? catScenarioCorrectFeedback[scenario.id as keyof typeof catScenarioCorrectFeedback]
-      : undefined;
     // 通用品種流程不再顯示獨立「品種小知識」卡；健康題的內容由題目資料
     // 直接放進既有的物種小知識卡，避免重複且錯誤地標示為特定品種。
     const breedSpecificSuggestion = scenario.breedKnowledge ?? "";
@@ -98,28 +83,23 @@ export function VideoScenarioActivity({
       <CorrectFeedbackLayout
         variant="single"
         title={completionFeedback?.title}
-        videoSrc={getCorrectAnswerVideo(scenario.id)}
-        mediaPlaceholder={isHamsterScenario ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
+        videoSrc={correctFeedbackVideo ?? ""}
+        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={completionFeedback ? <p>{renderKnowledgeText(withPetName(completionFeedback.encouragement, petName))}</p> : catFeedback ? <>
-          <p>{withPetName(catFeedback.encouragement, petName)}</p>
-          <p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>
-        </> : <p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
+        intro={completionFeedback ? <p>{renderKnowledgeText(withPetName(completionFeedback.encouragement, petName))}</p> : <p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
         breedHighlight={breedKnowledge ? <BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={`${breedLabelForId(breed)}小知識`} /> : null}
-        correctItems={completionFeedback ? undefined : catFeedback ? catFeedback.knowledgePoints.map((point) => withPetName(point, petName)) : scenario.learningPoints?.map((point) => withPetName(point, petName))}
+        correctItems={completionFeedback ? undefined : scenario.learningPoints?.map((point) => withPetName(point, petName))}
         knowledgeContent={completionFeedback?.knowledgeContent.map((content) => ({ ...content, text: withPetName(content.text, petName) }))}
-        knowledgeTitle={completionFeedback?.knowledgeTitle ?? catFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? (isBirdScenario ? "鳥類小知識" : isRabbitScenario ? "兔子小知識" : undefined)}
+        knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "照護小知識"}
         suggestion={completionFeedback?.reminder ? (
           <p>{renderKnowledgeText(withPetName(completionFeedback.reminder, petName))}</p>
-        ) : catFeedback ? (
-          <p>{plainFeedbackText(withPetName(catFeedback.reminder, petName))}</p>
         ) : followupSuggestion ? (
           <p>{plainFeedbackText(withPetName(followupSuggestion, petName))}</p>
         ) : !completionFeedback && !breedKnowledge && selectedChoice.suggestion ? (
           <p>{plainFeedbackText(withPetName(withBreedName(selectedChoice.suggestion, breed), petName))}</p>
         ) : null}
-        otherTips={completionFeedback || catFeedback ? null : <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />}
+        otherTips={completionFeedback ? null : <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
         onReplay={onReplay}
@@ -138,7 +118,7 @@ export function VideoScenarioActivity({
             <VideoWithToggle
               src={source}
               loop
-              ariaLabel={scenario.id === "arrival-adjustment" ? "小狗第一天適應新家的影片" : scenario.id === "growing-old" ? "小狗逐漸進入高齡的情境影片" : "柴犬常見健康問題觀察影片"}
+              ariaLabel={sceneMedia.type === "video" ? sceneMedia.ariaLabel : scenario.title}
               onError={() => setVideoFailed(true)}
             />
           ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} />}
@@ -158,4 +138,3 @@ export function VideoScenarioActivity({
     </section>
   );
 }
-

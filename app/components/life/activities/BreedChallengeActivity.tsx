@@ -11,9 +11,8 @@ import {
   ScenarioOptionCard,
   VideoWithToggle,
   breedChallengeLabelForId,
-  breedChallengeVideos,
-  getCorrectAnswerVideo,
   plainFeedbackText,
+  SceneMediaPlaceholder,
 } from "./scenario-ui";
 
 export function BreedChallengeActivity({
@@ -45,7 +44,8 @@ export function BreedChallengeActivity({
   const questionVideoFailed = questionVideoFailedFor === scenario?.id;
   const selectedChoice = scenario?.choices.find((choice) => choice.id === answers[scenario.id]?.finalChoiceId);
   const breedLabel = breedChallengeLabelForId(breed);
-  const challengeVideoSource = scenario ? breedChallengeVideos[scenario.title] : undefined;
+  const challengeMedia = scenario?.sceneMedia ?? { type: "placeholder" as const };
+  const challengeVideoSource = challengeMedia.type === "video" ? challengeMedia.src : undefined;
 
   function choose(choice: ScenarioChoice) {
     setFeedbackVideoFailed(false);
@@ -72,11 +72,13 @@ export function BreedChallengeActivity({
 
   if (mode === "positive" && selectedChoice) {
     const breedKnowledge = scenario.breedKnowledge ?? `${scenario.description} ${selectedChoice.explanation}`;
+    const feedbackMedia = scenario.correctFeedbackMedia ?? { type: "placeholder" as const };
     return (
       <CorrectFeedbackLayout
         key={scenario.id}
         variant="single"
-        videoSrc={getCorrectAnswerVideo(scenario.id)}
+        videoSrc={feedbackMedia.type === "video" ? feedbackMedia.src : ""}
+        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={scenario.title} /> : undefined}
         videoFailed={feedbackVideoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續。"
         intro={<p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
@@ -122,4 +124,3 @@ export function BreedChallengeActivity({
     </section>
   );
 }
-

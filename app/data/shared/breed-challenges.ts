@@ -1,4 +1,4 @@
-import type { Scenario, ScenarioChoice } from "../../game-types";
+import type { Scenario, ScenarioChoice, ScenarioMediaConfig } from "../../game-types";
 import { incorrect, positive } from "./scenario-feedback";
 
 export type BreedChallengeQuestion = {
@@ -7,6 +7,7 @@ export type BreedChallengeQuestion = {
   title: string;
   description: string;
   questionText?: string;
+  sceneMedia?: ScenarioMediaConfig;
   topic: string;
   reportSummary: string;
   breedKnowledge?: string;
@@ -22,6 +23,7 @@ export function buildBreedChallengeScenarios(
   questions: BreedChallengeQuestion[],
   breedId: string,
   speciesId = "dog",
+  correctFeedbackMedia: ScenarioMediaConfig = { type: "placeholder" },
 ): Scenario[] {
   return questions.map((question, questionIndex) => {
     const sourceQuestionNumber = question.sourceQuestionNumber ?? questionIndex + 1;
@@ -58,6 +60,8 @@ export function buildBreedChallengeScenarios(
       title: question.title,
       description: question.description,
       questionText: question.questionText,
+      sceneMedia: question.sceneMedia ?? { type: "placeholder" },
+      correctFeedbackMedia,
       topic: question.topic,
       reportSummary: question.reportSummary,
       breedKnowledge: question.breedKnowledge,

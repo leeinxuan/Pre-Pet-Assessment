@@ -6,37 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { money, getExpenseForSpecies } from "../../../data/shared/expenses";
 import { getSpeciesConfig } from "../../../data/species";
-import { dogAssets } from "../../../data/species/dog/assets";
 import type { ExpenseRecord, Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
-
-const dogShibaAsset = (fileName: string) => `${dogAssets.life.shibaRoot}/${fileName}`;
-
-const correctAnswerVideos = [
-  dogShibaAsset("correct-answer.mp4"),
-  dogShibaAsset("correct-answer2.mp4"),
-] as const;
-
-const scenarioCorrectAnswerVideoIndex: Record<string, number> = {
-  "arrival-adjustment": 0,
-  "illness-vet": 1,
-  "growing-old": 0,
-  "busy-daily-care": 1,
-  "cat-arrival-adjustment": 0,
-  "cat-busy-care": 1,
-  "cat-illness-vet": 1,
-  "cat-growing-old": 0,
-};
-
-export const breedChallengeVideos: Record<string, string> = {
-  "一年四季都在掉毛": dogShibaAsset("shedding.mp4"),
-  "颳風下雨也要出門上廁所": dogShibaAsset("rainy-day-walk.mp4"),
-};
-
-export function getCorrectAnswerVideo(key: number | string) {
-  const index = typeof key === "number" ? key : (scenarioCorrectAnswerVideoIndex[key] ?? 0);
-  return correctAnswerVideos[Math.abs(index) % correctAnswerVideos.length];
-}
 
 export function useVideoMetadataPreload(src?: string) {
   useEffect(() => {
@@ -47,12 +18,6 @@ export function useVideoMetadataPreload(src?: string) {
     video.load();
   }, [src]);
 }
-
-const lifeStageLabels = {
-  arrival: "適應新家與安全感",
-  daily: "日常照護",
-  change: "當生活發生變化",
-} as const;
 
 export function breedLabelForId(breed: string, species = "dog") {
   return getSpeciesConfig(species).selection.breeds.find((item) => item.id === breed)?.label ?? "這個品種";
@@ -67,12 +32,7 @@ export function withBreedName(text: string, breed: string, species = "dog") {
 }
 
 export function lifeStageLabelForScenario(scenario: Scenario) {
-  if (scenario.stageTitle) return scenario.stageTitle;
-  if (scenario.stageId === "arrival") return lifeStageLabels.arrival;
-  if (scenario.stageId === "life-change") return lifeStageLabels.change;
-  if (scenario.id === "arrival-adjustment" || scenario.id === "cat-arrival-adjustment") return lifeStageLabels.arrival;
-  if (scenario.id === "busy-daily-care" || scenario.id === "illness-vet" || scenario.id === "growing-old" || scenario.id === "cat-busy-care" || scenario.id === "cat-illness-vet" || scenario.id === "cat-growing-old") return lifeStageLabels.change;
-  return lifeStageLabels.daily;
+  return scenario.stageTitle ?? scenario.stage;
 }
 
 /** 沒有正式素材時仍保留共用情境媒體版面，避免題目區因缺片滿版。 */
@@ -87,12 +47,8 @@ export function SceneMediaPlaceholder({ title }: { title: string }) {
 /** 共用提醒圖示：兔子餵食的「注意」與禁止操作都使用同一種非責備式警示。 */
 function otherCorrectChoices(scenario: Scenario, choice: ScenarioChoice, petName: string) {
   if (choice.result !== "correct") return [];
-  if (scenario.id === "busy-daily-care") {
-    return [];
-  }
   return scenario.choices
     .filter((entry) => entry.result === "correct" && entry.id !== choice.id)
-    .filter((entry) => !(scenario.id === "busy-daily-care" && entry.id === "family-helper"))
     .slice(0, 2)
     .map((entry) => withPetName(entry.text, petName));
 }
@@ -100,9 +56,6 @@ function otherCorrectChoices(scenario: Scenario, choice: ScenarioChoice, petName
 export function OtherCorrectTips({ scenario, choice, petName }: { scenario: Scenario; choice: ScenarioChoice; petName: string }) {
   const tips = otherCorrectChoices(scenario, choice, petName);
   if (tips.length === 0) return null;
-  if (scenario.id === "busy-daily-care") {
-    return <div className="busy-care-warm-note"><b>也可以這樣做</b>{tips.map((tip) => <p key={tip}>{tip}</p>)}</div>;
-  }
   return <div className="other-correct-tips"><b>也可以這樣做</b><ul>{tips.map((tip) => <li key={tip}>{tip}</li>)}</ul></div>;
 }
 
@@ -390,14 +343,8 @@ function ScenarioFeedback({
   onReplay?: () => void;
   continueImmediately?: boolean;
 }) {
-  const requiresRetry = [
-    "arrival-adjustment",
-    "illness-vet",
-    "growing-old",
-    "cat-arrival-adjustment",
-    "cat-illness-vet",
-    "cat-growing-old",
-  ].includes(scenario.id);
+  const requiresRetry = scenario.requiresRetry === true;
+  const feedbackMedia = scenario.correctFeedbackMedia ?? { type: "placeholder" as const };
   const [feedbackVideoFailed, setFeedbackVideoFailed] = useState(false);
   const [, setFeedbackVideoFinished] = useState(false);
   const labels = {
@@ -410,7 +357,8 @@ function ScenarioFeedback({
     return (
       <CorrectFeedbackLayout
         variant="single"
-        videoSrc={getCorrectAnswerVideo(scenario.id)}
+        videoSrc={feedbackMedia.type === "video" ? feedbackMedia.src : ""}
+        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
         videoFailed={feedbackVideoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{plainFeedbackText(withPetName(choice.explanation, petName))}</p>}
@@ -441,7 +389,7 @@ function ScenarioFeedback({
       {scenario.reminder && <div className="law-reminder"><span>i</span><p><b>生活裡的責任提醒</b>{withPetName(scenario.reminder, petName)}</p></div>}
       <div className="feedback-actions">
         {choice.result === "incorrect" && <button className="secondary" onClick={onRetry}>重新想一次</button>}
-        {(!requiresRetry || choice.result !== "incorrect") && <button className="primary" onClick={onContinue}>{scenario.id === "arrival-adjustment" || scenario.id === "cat-arrival-adjustment" ? "繼續" : labels[choice.result].button} <span>→</span></button>}
+        {(!requiresRetry || choice.result !== "incorrect") && <button className="primary" onClick={onContinue}>{scenario.continueLabel ?? labels[choice.result].button} <span>→</span></button>}
       </div>
     </section>
   );
@@ -474,12 +422,9 @@ export function ScenarioCard({
 }) {
   const [failedSceneVideoFor, setFailedSceneVideoFor] = useState<string | null>(null);
   const sceneVideoFailed = failedSceneVideoFor === scenario.id;
-  const scenarioVideo = scenario.id === "arrival-adjustment"
-    ? { src: dogShibaAsset("first-day.mp4"), label: "小狗第一天適應新家的影片" }
-    : scenario.id === "illness-vet"
-      ? { src: dogShibaAsset("sick.mp4"), label: "小狗生病與就醫情境影片" }
-      : null;
-  useVideoMetadataPreload(scenarioVideo?.src);
+  const sceneMedia = scenario.sceneMedia ?? { type: "placeholder" as const };
+  const sceneVideoSource = sceneMedia.type === "video" ? sceneMedia.src : undefined;
+  useVideoMetadataPreload(sceneVideoSource);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   if (feedbackOpen && selectedChoice) {
     return <ScenarioFeedback scenario={scenario} choice={selectedChoice} species={species} petName={petName} onRetry={onRetry} onContinue={onContinue} onReplay={onReplay} continueImmediately={continueImmediately} />;
@@ -499,17 +444,17 @@ export function ScenarioCard({
             </div>
           )}
         </div>
-        <div className={`scene-art scene-${scenario.artIndex} ${scenarioVideo ? "scene-art--video" : ""}`}>
-          {scenarioVideo ? (
+        <div className={`scene-art scene-${scenario.artIndex} ${sceneMedia.type === "video" ? "scene-art--video" : ""}`}>
+          {sceneMedia.type === "video" ? (
             sceneVideoFailed
               ? <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>
-              : <VideoWithToggle className="scene-video" src={scenarioVideo.src} loop ariaLabel={scenarioVideo.label} onError={() => setFailedSceneVideoFor(scenario.id)} />
+              : <VideoWithToggle className="scene-video" src={sceneMedia.src} loop ariaLabel={sceneMedia.ariaLabel} onError={() => setFailedSceneVideoFor(scenario.id)} />
           ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} />}
           <p>{scenario.timeLabel}</p>
         </div>
       </article>
       <section className="reflection">
-        <h2>{scenario.id === "growing-old" ? "你會怎麼安排？" : "如果是你，會怎麼做？"}</h2>
+        <h2>{scenario.questionTitle ?? "如果是你，會怎麼做？"}</h2>
         <div className="choice-grid">
           {scenario.choices.filter((choice) => choice.id !== "assigned-helper" || hasBackup).map((choice) => {
             const text = choice.id === "assigned-helper"

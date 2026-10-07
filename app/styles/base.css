@@ -534,6 +534,18 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
     object-fit: cover;
     object-position: center center;
   }
+  /* 接回家的過場素材是橫式影片；手機保持原始比例並置中，不裁切成直式畫面。 */
+  .arrival-video-screen {
+    display: grid;
+    place-items: center;
+    aspect-ratio: auto;
+  }
+  .arrival-video-screen video {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+  }
   .daily-behavior-activity, .daily-behavior-positive, .correct-feedback-layout { grid-template-columns: 1fr; min-height: auto; }
   .daily-behavior-video, .daily-behavior-video video, .daily-behavior-positive-video, .daily-behavior-positive-video video, .correct-feedback-media, .correct-feedback-media video { min-height: 250px; }
   .daily-behavior-choices { padding: 26px 20px 24px; }
@@ -1208,7 +1220,47 @@ html, body { overflow-x: clip; }
     object-fit: cover;
     object-position: center center;
   }
+}
 
+/* 直向手機播放橫式影片：CSS 旋轉 90° 模擬橫向全螢幕，無須使用者手動轉機。 */
+@media (max-width: 768px) and (orientation: portrait) {
+  .stage-layout:has(.arrival-video-screen),
+  .stage-layout:has(.time-pass-transition) {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .arrival-video-screen,
+  .time-pass-transition {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* 旋轉後：視覺寬 = 螢幕高、視覺高 = 螢幕寬，恰好填滿直式螢幕的橫向空間 */
+    width: 100dvh;
+    height: 100dvw;
+    min-height: 0;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    transform-origin: center center;
+    z-index: 50;
+    background: black;
+    overflow: hidden;
+  }
+
+  .arrival-video-screen video,
+  .time-pass-transition video {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+@media (max-width: 768px) {
   .walking-game {
     justify-items: center;
     overflow: visible;

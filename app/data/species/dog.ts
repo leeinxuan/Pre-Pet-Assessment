@@ -3,6 +3,7 @@ import { dogJourneyItems } from "./dog/journey";
 import { dogLifeScenarios } from "./dog/scenarios";
 import { dogBreeds } from "./dog/selection";
 import { dogDepartureTrunkItems, dogHazards, dogRoomItems } from "./dog/preparation";
+import { sharedAssets } from "../shared/assets";
 
 /**
  * 犬隻專屬素材入口。
@@ -13,7 +14,7 @@ export const dogAssets = {
   room: {
     background: "/assets/dog/room/empty-room.png",
     mobileBackground: "/assets/dog/room/empty-room-mobile.png",
-    doorplate: "/assets/dog/room/nameplate.webp",
+    doorplate: sharedAssets.nameplate,
   },
   preparation: {
     trunk: "/assets/car/car-trunk.png",

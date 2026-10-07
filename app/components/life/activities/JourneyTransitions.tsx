@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getSpeciesConfig } from "../../../data/species";
 import { dogAssets } from "../../../data/species/dog/assets";
-import { SceneMediaPlaceholder } from "./scenario-ui";
 
 const dogShibaAsset = (fileName: string) => `${dogAssets.life.shibaRoot}/${fileName}`;
 const arrivalVideoSource = dogShibaAsset("arrival-transition.mp4");
@@ -82,9 +82,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
     showFinalFrame();
   }
 
-  const animalLabel = species === "cat" ? "貓咪" : species === "rabbit" ? "兔子" : species === "bird" ? "鸚鵡" : species === "hamster" ? "倉鼠" : "犬";
-
-  if (species === "hamster") return <section className="arrival-video-screen arrival-video-screen--placeholder" aria-label="接回家過場"><SceneMediaPlaceholder title="接回家" /><button type="button" className="primary" onClick={onContinue}>繼續生活旅程 →</button></section>;
+  const animalLabel = getSpeciesConfig(species).copy.animalName;
 
   return (
     <section className="arrival-video-screen" aria-label="接回家影片過場">
@@ -162,4 +160,3 @@ export function BusyCareTransition({ onComplete }: { onComplete: () => void }) {
     </section>
   );
 }
-

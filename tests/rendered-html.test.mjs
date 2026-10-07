@@ -31,10 +31,11 @@ test("server-renders the pet readiness journey", async () => {
 });
 
 test("contains the five-unit journey and current project-owned artwork", async () => {
-  const [page, appFlow, shared, preparation, dogPreparation, profileReport, dogJourney, dogScenarios, lifeComponents, activityUi, journeyTransitions, css, packageJson] = await Promise.all([
+  const [page, appFlow, shared, sharedAssetData, preparation, dogPreparation, profileReport, dogJourney, dogScenarios, lifeComponents, activityUi, journeyTransitions, css, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/data/shared/app-flow.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/components/shared/SharedComponents.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/data/shared/assets.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/components/preparation/PreparationComponents.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/data/species/dog/preparation.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/components/report/AssessmentReport.tsx", import.meta.url), "utf8"),
@@ -52,7 +53,7 @@ test("contains the five-unit journey and current project-owned artwork", async (
     ...["car-trunk", "id-card", "adoption-documents", "carrier", "pee-pad", "leash"].map((name) => access(new URL(`../public/assets/car/${name}.png`, import.meta.url))),
     ...["hamster-carrier", "water-bottle"].map((name) => access(new URL(`../public/assets/car/${name}.webp`, import.meta.url))),
     ...["empty-room", "empty-room-mobile", "pee-pad", "water-bowl", "cleaner", "food-bowl", "toy", "pet-bed", "food", "small-items", "detergent", "wire"].map((name) => access(new URL(`../public/assets/dog/room/${name}.png`, import.meta.url))),
-    access(new URL("../public/assets/dog/room/nameplate.webp", import.meta.url)),
+    access(new URL("../public/assets/shared/nameplate.webp", import.meta.url)),
   ]);
 
   for (const label of ["選擇寵物", "飼養前準備", "飼養生活", "飼養觀念回顧", "取得寵物"]) {
@@ -65,6 +66,9 @@ test("contains the five-unit journey and current project-owned artwork", async (
   }
   assert.doesNotMatch(shared, /分配照顧工作/);
   assert.doesNotMatch(preparation, /CareTaskAssignment|分配照顧工作|檢查分工/);
+  assert.match(sharedAssetData, /nameplate: "\/assets\/shared\/nameplate\.webp"/);
+  assert.match(shared, /nameplate\.src = sharedAssets\.nameplate/);
+  assert.match(shared, /<img src=\{sharedAssets\.nameplate\} width=\{2720\} height=\{1860\}/);
 
   const roomSection = preparation.slice(preparation.indexOf("export function RoomPreparation"), preparation.indexOf("export function CareMemberSetup"));
   assert.match(roomSection, /const activeRoomItems = speciesConfig\.roomItems/);
@@ -88,7 +92,7 @@ test("contains the five-unit journey and current project-owned artwork", async (
   }
   assert.match(dogPreparation, /background: "\/assets\/dog\/room\/empty-room\.png"/);
   assert.match(dogPreparation, /mobileBackground: "\/assets\/dog\/room\/empty-room-mobile\.png"/);
-  assert.match(dogPreparation, /doorplate: \{ image: "\/assets\/dog\/room\/nameplate\.webp"/);
+  assert.match(dogPreparation, /doorplate: \{ image: sharedAssets\.nameplate/);
   assert.match(dogPreparation, /id: "toilet"[\s\S]*?x: 15, y: 85, width: 20, layer: 1/);
   assert.match(dogPreparation, /id: "water-bowl"[\s\S]*?x: 32, y: 90, width: 12, layer: 3/);
   assert.match(dogPreparation, /id: "food-bowl"[\s\S]*?x: 41, y: 90, width: 10, layer: 3/);
@@ -136,6 +140,7 @@ test("contains the five-unit journey and current project-owned artwork", async (
   assert.match(activityUi, /replaceAll\("狗狗", displayName\)/);
   assert.doesNotMatch(lifeComponents, /量杯|飼料克數|每餐份量|餵食後觀察|是否吃完/);
   assert.match(profileReport, /petName/);
+  assert.match(shared, /width=\{2720\} height=\{1860\}/);
 
   assert.match(css, /font-family: "Huninn"/);
   assert.match(css, /\.cost-bar/);

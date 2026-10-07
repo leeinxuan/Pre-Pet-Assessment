@@ -11,7 +11,7 @@ const knowledge = {
 };
 
 export const birdLifeScenarios: Scenario[] = [
-  { id: "bird-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "一起生活的第一天", title: "第一天適應新家", description: "你把外出籠帶進房間，輕輕放在鳥籠旁邊。{petName} 縮在籠角，羽毛膨起，對你的靠近完全沒有反應——平常在店裡還會東張西望的牠，現在一動也不動。你心裡有點擔心，不確定自己應該做什麼。", topic: "新環境安置", reportSummary: "鳥剛到家應放在安靜固定位置，覆上遮光布並保留通風，讓牠慢慢適應。", artIndex: 0, learningPoints: knowledge.arrival, knowledgeTitle: "鳥類小知識", choices: [
+{ id: "bird-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "一起生活的第一天", title: "第一天適應新家", description: "你把外出籠帶進房間，輕輕放在鳥籠旁邊。{petName} 縮在籠角，羽毛膨起，對你的靠近完全沒有反應——平常在店裡還會東張西望的牠，現在一動也不動。你心裡有點擔心，不確定自己應該做什麼。", topic: "新環境安置", reportSummary: "鳥剛到家應放在安靜固定位置，覆上遮光布並保留通風，讓牠慢慢適應。", artIndex: 0, learningPoints: knowledge.arrival, knowledgeTitle: "鳥類小知識", sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" }, choices: [
     { id: "bird-arrival-move", text: "立刻把 {petName} 移到鳥籠，讓牠趕快適應", result: "partial", ...incorrect, explanation: "環境轉換本身就有壓力；此刻強迫移動會增加緊迫。", suggestion: "先把外出籠放在鳥籠旁，等待牠自行探索的時機。" },
     { id: "bird-arrival-cover", text: "放在安靜固定位置，輕蓋遮光布讓 {petName} 平靜下來", result: "correct", ...positive, explanation: "新環境刺激很強；保留通風並輕蓋遮光布，能提供熟悉的封閉感。", expenseIds: ["bird-arrival-checkup"] },
     { id: "bird-arrival-family", text: "邀請全家人圍過來，讓牠快點認識大家", result: "incorrect", ...incorrect, explanation: "多人圍觀是強烈視覺和聽覺刺激。", suggestion: "先保持安靜，讓牠在最少干擾中適應。" },
@@ -55,7 +55,11 @@ export const birdLifeScenarios: Scenario[] = [
     { id: "bird-call-yell", text: "大聲責罵 {petName}，讓牠知道不能再叫", result: "incorrect", ...incorrect, explanation: "大聲回應可能被鳥理解成加入鳴叫，還會增加緊迫。" },
     { id: "bird-call-cover", text: "把籠子整個蓋住，強迫牠安靜", result: "incorrect", ...incorrect, explanation: "強制遮籠無法解決原因，也可能破壞穩定作息與安全感。" },
   ] },
-  { id: "bird-busy-care", stage: "生活變化", stageId: "life-change", stageTitle: "當生活發生變化", timeLabel: "當生活發生變化", title: "臨時晚歸，誰來接手？", description: "今天臨時需要加班，預計到晚上才能回家。{petName} 的飼料和飲水需要補充確認、鳥籠需要清潔、每天的健康觀察也不能中斷。你開始想：今晚誰來照顧牠？", questionText: "你現在要先怎麼做？", topic: "忙碌備援計畫", reportSummary: "忙碌前要安排可信任協助者，並交接每日照護、鳥類獸醫與緊急聯絡方式。", artIndex: 0, learningPoints: ["鳥類每天需要新鮮飼料、乾淨飲水、清潔和健康觀察，這些事情沒有人做，就會累積問題。", "平時就要確認<mark>鳥類獸醫的聯絡方式</mark>，關鍵時刻才能立即行動。"], knowledgeTitle: "鳥類小知識", busyCareCompletion: {
+  { id: "bird-busy-care", stage: "生活變化", stageId: "life-change", stageTitle: "當生活發生變化", timeLabel: "當生活發生變化", title: "臨時晚歸，誰來接手？", description: "今天臨時需要加班，預計到晚上才能回家。{petName} 的飼料和飲水需要補充確認、鳥籠需要清潔、每天的健康觀察也不能中斷。你開始想：今晚誰來照顧牠？", questionText: "你現在要先怎麼做？", topic: "忙碌備援計畫", reportSummary: "忙碌前要安排可信任協助者，並交接每日照護、鳥類獸醫與緊急聯絡方式。", artIndex: 0, learningPoints: ["鳥類每天需要新鮮飼料、乾淨飲水、清潔和健康觀察，這些事情沒有人做，就會累積問題。", "平時就要確認<mark>鳥類獸醫的聯絡方式</mark>，關鍵時刻才能立即行動。"], knowledgeTitle: "鳥類小知識", busyCarePresentation: {
+    animalName: "鸚鵡",
+    sceneMedia: { type: "placeholder" },
+    feedbackMedia: { type: "placeholder" },
+  }, busyCareCompletion: {
     title: "做得很好！",
     encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！",
     reflectionText: "在 {petName} 的世界裡，你的聲音是牠最熟悉的安定。",
@@ -77,7 +81,7 @@ export const birdLifeScenarios: Scenario[] = [
     { id: "bird-leave-open", text: "把鳥籠的門打開，讓 {petName} 在家自由活動", result: "incorrect", ...incorrect, explanation: "讓鳥在無人看管的環境自由活動，可能接觸到電線、廚具蒸氣、有毒植物等危險，且無法觀察健康狀況。確定晚歸時，應先安排可信任的人代為照顧並告知注意事項。（B4 安全環境）" },
     { id: "bird-wait-return", text: "等晚上回家再一起補充和確認，平常也都是這樣", result: "incorrect", ...incorrect, explanation: "把飼料補充、飲水確認和健康觀察全部延後，可能無法及時發現當天的異常。確定晚歸時，應事先安排合適的人接手照顧。（B5）" },
   ] },
-  { id: "bird-health-emergency", stage: "生活變化", stageId: "life-change", stageTitle: "健康狀況變化", timeLabel: "健康狀況變化", title: "{petName} 今天澎毛縮在角落", description: "你下班回家，發現 {petName} 澎著羽毛縮在鳥籠一角，對你的聲音沒什麼反應，飼料碗幾乎沒有動過。你腦中響起之前學到的：鳥類出現明顯症狀，往往代表病情已進展到相當嚴重的程度。", questionText: "你現在要先怎麼做？", topic: "健康突發事件", reportSummary: "鳥類出現澎毛、精神低落與不進食等明確警訊時，應當天聯繫鳥類獸醫。", artIndex: 1, learningPoints: knowledge.health, knowledgeTitle: "鳥類小知識", completionFeedback: {
+  { id: "bird-health-emergency", stage: "生活變化", stageId: "life-change", stageTitle: "健康狀況變化", timeLabel: "健康狀況變化", title: "{petName} 今天澎毛縮在角落", description: "你下班回家，發現 {petName} 澎著羽毛縮在鳥籠一角，對你的聲音沒什麼反應，飼料碗幾乎沒有動過。你腦中響起之前學到的：鳥類出現明顯症狀，往往代表病情已進展到相當嚴重的程度。", questionText: "你現在要先怎麼做？", topic: "健康突發事件", reportSummary: "鳥類出現澎毛、精神低落與不進食等明確警訊時，應當天聯繫鳥類獸醫。", artIndex: 1, learningPoints: knowledge.health, knowledgeTitle: "鳥類小知識", sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" }, completionFeedback: {
     title: "做得很好！",
     encouragement: "你在明確症狀出現時，立刻做出正確判斷，做得很好！鳥類就醫資源比犬貓稀少，建議平時就先找好熟悉鳥類的獸醫，緊急時才不會臨時找不到。",
     knowledgeTitle: "鸚鵡小知識",

@@ -1,4 +1,4 @@
-import type { JourneyItem } from "../../../game-types";
+import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 
 export const rabbitJourneyItems: JourneyItem[] = [
   { id: "rabbit-arrival", type: "scenario", timeLabel: "接回家", title: "第一天適應新家", scenarioId: "rabbit-arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
@@ -15,6 +15,14 @@ export const rabbitJourneyItems: JourneyItem[] = [
 
 /** 不含由高溫預防題自動接續的 rabbit-heatstroke-emergency。 */
 export const rabbitDailyBehaviorScenarioIds = ["rabbit-heatstroke-prevention", "rabbit-cecotropes", "rabbit-bath"] as const;
+
+export const rabbitScenarioPresentation: SpeciesScenarioPresentationConfig = {
+  defaults: { defaultPetName: "兔子", knowledgeTitle: "兔子小知識", correctFeedbackMedia: { type: "placeholder" } },
+  scenarios: {
+    "rabbit-heatstroke-prevention": { completionIntro: "你已經把降溫安排放進日常環境。維持涼爽室內與提供陶板涼感墊，能讓{petName}自己選擇舒服的位置。" },
+    "rabbit-cecotropes": {},
+  },
+};
 
 export const rabbitDailyCheckConfig = {
   steps: ["groom-head-ears", "groom-back-sides", "groom-hind-tail", "groom-paws", "groom-teeth", "groom-nails"] as const,

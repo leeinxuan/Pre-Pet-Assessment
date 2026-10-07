@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { getExpenseForSpecies, isTemporaryReserveExpense } from "../../data/shared/expenses";
 import {
+  getDailyBehaviorScenarioIds,
   getJourneyItemsForSpecies,
+  getJourneyStepForItem,
   getLifeScenariosForSpecies,
 } from "../../data/species/journey";
 import { getJourneyActivityConfig, getJourneyActivityResetPatch } from "../../data/species/activity-registry";
@@ -22,8 +24,6 @@ import {
   TimePassTransition,
   VideoScenarioActivity,
   WalkingActivity,
-  dailyBehaviorScenarioIds,
-  dailyBehaviorScenarioIdsBySpecies,
 } from "./activities";
 export { ArrivalTransitionVideo } from "./activities";
 import type {
@@ -43,19 +43,6 @@ function choiceHasTemporaryReserveExpense(choice: ScenarioChoice, species: strin
     return Boolean(expense && isTemporaryReserveExpense(expense));
   });
 }
-
-
-
-function stageForIndex(index: number) {
-  if (index <= 0) return 3;
-  if (index <= 3) return 4;
-  return 6;
-}
-
-
-
-
-
 
 
 
@@ -152,9 +139,7 @@ export function LifeJourney({
     setFeedbackOpen(Boolean(nextScenarioId && answers[nextScenarioId]));
     setReplayInProgress(false);
     onIndex(next);
-    onStageChange(species === "hamster"
-      ? activeJourneyItems[next].stageId === "arrival" ? 3 : activeJourneyItems[next].stageId === "daily" ? 4 : 6
-      : stageForIndex(next));
+    onStageChange(getJourneyStepForItem(activeJourneyItems[next]));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -183,14 +168,28 @@ export function LifeJourney({
   }
 
   // 測試模式以外部訊號驅動下一小題或下一個旅程節點。
+  // 這是測試控制器送入的明確事件，不是由渲染資料反推 state。
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (testNextSignal <= 0) return;
+    // 過場與題目是兩個獨立畫面；測試按鈕在過場時只結束過場，不能連題目一起略過。
+    if (activityConfig?.transition === "busy-care" && busyCareTransitionIndex !== index) {
+      setBusyCareTransitionIndex(index);
+      return;
+    }
+    if (timePassOpen && activityConfig?.transition === "time-pass") {
+      onActivityChange({ sickTimePassComplete: true });
+      setTimePassOpen(false);
+      selectItem(index + 1);
+      return;
+    }
     if (isActivityWithSubQuestions) {
-      setActivityNextSignal((n) => n + 1); // eslint-disable-line react-hooks/set-state-in-effect
+      setActivityNextSignal((n) => n + 1);
     } else {
       continueJourney();
     }
   }, [testNextSignal]); // eslint-disable-line react-hooks/exhaustive-deps
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   function choose(choice: ScenarioChoice) {
     if (!scenario) return;
@@ -273,7 +272,7 @@ export function LifeJourney({
             }));
           }}
           onContinue={continueJourney}
-          scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : dailyBehaviorScenarioIdsBySpecies[species as keyof typeof dailyBehaviorScenarioIdsBySpecies] ?? dailyBehaviorScenarioIds}
+          scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : getDailyBehaviorScenarioIds(species)}
           species={species}
           testNextSignal={activityNextSignal}
           {...replayCorrectProps}
@@ -321,7 +320,6 @@ export function LifeJourney({
           answer={answer}
           petName={petName}
           members={members}
-          species={species}
           onMembersChange={onMembersChange}
           onChoose={choose}
           onMarkForReview={onMarkScenarioForReview}

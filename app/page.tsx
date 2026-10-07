@@ -6,7 +6,7 @@ import { initialMembers, initialProfile, intros } from "./data/shared/app-flow";
 import { getExpenseForSpecies, isTemporaryReserveExpense } from "./data/shared/expenses";
 import { initialHomeReadinessState } from "./data/shared/home-readiness-state";
 import { getSpeciesConfig } from "./data/species/index";
-import { getJourneyItemsForSpecies } from "./data/species/journey";
+import { getJourneyItemsForSpecies, getJourneyStepForItem } from "./data/species/journey";
 import { initialLifeActivityState } from "./data/shared/life-activity";
 import type {
   CareMember,
@@ -125,6 +125,7 @@ export default function Home() {
   const [careCommitted, setCareCommitted] = useState(false);
   const [testSkipSignal, setTestSkipSignal] = useState(0);
   const [testNextSignal, setTestNextSignal] = useState(0);
+  const [testNextTargetIndex, setTestNextTargetIndex] = useState<number | null>(null);
   const costToastTimerRef = useRef<number | null>(null);
   const committedSelectionRef = useRef<{ category: string; breed: string } | null>(null);
 
@@ -152,24 +153,28 @@ export default function Home() {
   }
 
   function goToStation(next: number) {
+    if (next < 3 || next > 6) setTestNextTargetIndex(null);
+    if (next >= 3 && next <= 6 && lifePhase === "complete") setLifePhase("life-journey");
     setStep(next);
     setIntroOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function goToLifeStage(stageIndex: number) {
-    const stageStarts = getJourneyItemsForSpecies(category).reduce<number[]>((starts, item, index, all) => {
+    const journeyItems = getJourneyItemsForSpecies(category);
+    const stageStarts = journeyItems.reduce<number[]>((starts, item, index, all) => {
       if (index === 0 || item.stageId !== all[index - 1].stageId) starts.push(index);
       return starts;
     }, []);
     const journeyStart = stageStarts[stageIndex] ?? 0;
+    setTestNextTargetIndex(null);
     if (lifePhase === "arrival-video" && stageIndex === 0) {
       setStep(3);
       setIntroOpen(false);
     } else {
       setLifePhase("life-journey");
       setJourneyIndex(journeyStart);
-      setStep(stageIndex === 0 ? 3 : stageIndex >= stageStarts.length - 1 ? 6 : 4);
+      setStep(getJourneyStepForItem(journeyItems[journeyStart]));
       setIntroOpen(false);
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -221,6 +226,7 @@ export default function Home() {
     }
 
     // 一般關卡：只觸發子題目前進，由 LifeJourneyMap 決定是否推進到下一大關。
+    setTestNextTargetIndex(journeyIndex);
     setTestNextSignal((current) => current + 1);
     window.scrollTo({ top: 0, behavior: "auto" });
   }
@@ -433,6 +439,7 @@ export default function Home() {
     setCareCommitted(false);
     setTestSkipSignal(0);
     setTestNextSignal(0);
+    setTestNextTargetIndex(null);
     committedSelectionRef.current = nextSelection ?? null;
     if (nextSelection) {
       setStep(1);
@@ -469,7 +476,7 @@ export default function Home() {
     if (selectionChanged) {
       resetAllGameData(nextSelection, { preserveTestMode: testMode });
       if (testMode) setPetName("多多");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "auto" });
       return;
     }
 
@@ -477,7 +484,7 @@ export default function Home() {
     setBreed(nextSelection.breed);
     setSelectionPage("name");
     setSelectionReached((current) => Math.max(current, 2));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   function startFreshJourney() {
@@ -551,8 +558,8 @@ export default function Home() {
         members={members}
         roomReady={roomReady}
         testSkipSignal={testSkipSignal}
-        testNextSignal={testNextSignal}
-        onIndex={setJourneyIndex}
+        testNextSignal={testNextTargetIndex === journeyIndex ? testNextSignal : 0}
+        onIndex={(nextIndex) => { setTestNextTargetIndex(null); setJourneyIndex(nextIndex); }}
         onChoose={answerScenario}
         onMarkScenarioForReview={markScenarioForReview}
         onChooseMultiple={answerScenarioMultiple}
@@ -564,6 +571,7 @@ export default function Home() {
         onStageChange={(nextStep) => { setStep(nextStep); setFurthestStep((current) => Math.max(current, nextStep)); setIntroOpen(false); }}
         onBack={() => { setStep(2); setPreparationTask(2); setIntroOpen(false); }}
         onComplete={() => {
+          setTestNextTargetIndex(null);
           setLifePhase("complete");
           setStep(7);
           setFurthestStep((current) => Math.max(current, 7));
@@ -605,7 +613,7 @@ export default function Home() {
               {step === 2 && renderPreparation()}
               {step >= 3 && step <= 6 && renderLifeJourney()}
               {step === 7 && <>
-                <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} homeReadiness={homeReadiness} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+                <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} homeReadiness={homeReadiness} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setTestNextTargetIndex(null); setLifePhase("life-journey"); setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
                 <div className="report-next-step-actions">
                   <p>準備好進一步了解合法、透明的取得方式了嗎？</p>
                   <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "auto" }); }}>取得寵物 <span>→</span></button>

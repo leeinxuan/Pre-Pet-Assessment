@@ -9,6 +9,8 @@ const wrong = (id: string, text: string, explanation: string) => ({ id, text, re
 export const hamsterLifeScenarios: Scenario[] = [
   {
     id: "hamster-arrival-adjustment", stage: "接回家", stageId: "arrival", timeLabel: "接回家", title: "第一天適應新家",
+    stageTitle: "適應新家與安全感",
+    sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
     description: "等了這麼久，{petName} 終於到家了。你打開運輸容器，牠小心翼翼地探出頭，鼻子快速抽動嗅聞，然後一個箭步衝進了巢箱，縮在最深處，一動也不動。你看著牠，不確定是不是該做點什麼。",
     questionText: "你會怎麼做？", topic: "新環境安置", reportSummary: "讓倉鼠用自己的節奏探索新家，不強迫牠離開巢箱。", artIndex: 0,
     completionFeedback: { title: "做得很好！", encouragement: "**躲藏**是面對新環境的正常**壓力反應**，不是不友善，也不需要「做點什麼」來安慰", knowledgeTitle: "倉鼠小知識", knowledgeContent: [{ type: "paragraph", text: "最好的第一步就是**保持安靜、靜靜等待**，讓 {petName} 用自己的節奏探索新家、建立對你的**信任**" }] },
@@ -55,6 +57,7 @@ export const hamsterLifeScenarios: Scenario[] = [
   },
   {
     id: "hamster-solitary", stage: "日常照護", stageId: "daily", timeLabel: "日常照護", title: "{petName} 需要一個同伴嗎？",
+    sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
     description: "你的朋友看到 {petName}，說：「只養一隻倉鼠不會很孤單嗎？要不要再領養一隻，讓牠們互相作伴？」你有點猶豫——{petName} 平時獨自在籠裡玩，真的沒問題嗎？",
     questionText: "你會怎麼做？", topic: "獨居與合籠風險", reportSummary: "先了解倉鼠的領域性，避免貿然合籠。", artIndex: 0,
     completionFeedback: { title: "做得很好！", encouragement: "你了解 {petName} 的天性，做出了最安全的選擇！", knowledgeTitle: "倉鼠小知識", knowledgeContent: [{ type: "paragraph", text: "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。" }] },
@@ -67,8 +70,10 @@ export const hamsterLifeScenarios: Scenario[] = [
   },
   {
     id: "hamster-busy-care", stage: "生活變化", stageId: "life-change", timeLabel: "當生活發生變化", title: "臨時晚歸，{petName} 的照顧怎麼辦？",
+    stageTitle: "當生活發生變化",
     description: "今天臨時需要加班，預計晚上九點才能到家。{petName} 傍晚開始活動，飲水器要確認出水、食碗需要補充今天的份量、砂浴盆也需要篩一下——而且每天傍晚確認牠的狀態，是你掌握健康的重要時機。你開始想：今晚誰來照顧牠？",
     questionText: "你會怎麼做？", topic: "忙碌備援計畫", reportSummary: "晚歸時安排可信任的人照顧，交接飲水、餵食、砂浴與健康觀察。", artIndex: 0,
+    busyCarePresentation: { animalName: "倉鼠", sceneMedia: { type: "placeholder" }, feedbackMedia: { type: "placeholder" } },
     busyCareCompletion: { title: "做得很好！", encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！", reflectionText: "在 {petName} 的世界裡，你是那個讓牠願意靠近的人。", reflectionTitle: "留給自己的一個問題", reflectionContent: ["忙完這段時間回到家，你還有心思觀察 {petName} 的食量、活動跡象和精神狀態，確認牠一切都好嗎？"], showCareTime: false, careTimeTitle: "每日照護時間", careTimeItems: hamsterReport.dailyCareBreakdown, additionalAdvice: ["如果未來找不到合適的代養人，可以提前了解附近是否有熟悉小型哺乳類照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"] },
     busyCareChecklist: [
       { id: "daily-care", prompt: "你已經向協助者說明 {petName} 每天的飲水確認、食碗補充、砂浴盆篩沙與健康觀察安排了嗎？", reviewHint: "你已經向協助者說明 {petName} 每天的飲水確認、食碗補充、砂浴盆篩沙與健康觀察安排了嗎？", correctAnswer: "yes" },
@@ -85,6 +90,8 @@ export const hamsterLifeScenarios: Scenario[] = [
   },
   {
     id: "hamster-health-emergency", stage: "生活變化", stageId: "life-change", timeLabel: "當生活發生變化", title: "{petName} 活動力明顯下降",
+    stageTitle: "當生活發生變化",
+    sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
     description: "最近這兩天，你傍晚去確認{petName}時，發現牠比平常晚很多才從巢箱出來，滾輪也幾乎沒有轉動的聲音，食碗的食物到了隔天幾乎原封未動。今天更發現牠縮在角落，對你的靠近也沒什麼反應。",
     questionText: "根據這些觀察，你應該？", topic: "健康突發事件", reportSummary: "活動力與食量明顯下降時，立刻諮詢熟悉倉鼠的獸醫。", artIndex: 0,
     completionFeedback: { title: "做得很好！", encouragement: "你注意到了{petName}的異常，而且立刻決定就醫而不是再等等，做得很好！日常觀察習慣讓你能在關鍵時刻保護牠。", knowledgeTitle: "倉鼠小知識", knowledgeContent: [
@@ -104,6 +111,8 @@ export const hamsterLifeScenarios: Scenario[] = [
   },
   {
     id: "hamster-senior-care", stage: "生活變化", stageId: "life-change", timeLabel: "當生活發生變化", title: "{petName} 進入高齡期了",
+    stageTitle: "當生活發生變化",
+    sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
     description: "{petName} 已經快要兩歲了。這幾個月你注意到牠跑滾輪的時間短了，有時候你靠近籠子牠也不一定馬上反應。牠的毛色也沒有以前那麼光亮，活動量比以前少了一些。你知道倉鼠的壽命不長，開始想著要怎麼照顧這個階段的牠。",
     questionText: "你會怎麼做？", topic: "高齡照護", reportSummary: "高齡前提前諮詢獸醫、安排規律檢查，並調整環境。", artIndex: 0,
     completionFeedback: { title: "做得很好！", encouragement: "你願意提前為{petName}的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。", knowledgeTitle: "長達 **2–3 年**的每日陪伴與生命承諾", knowledgeContent: [{ type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？" }] },

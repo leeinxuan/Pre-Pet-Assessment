@@ -1,5 +1,6 @@
-import type { JourneyItem } from "../../../game-types";
+import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 import { arrivalRequiredExpenseIdsBySpecies } from "../../shared/expenses";
+import { scenarioMedia } from "../../shared/scenario-media";
 export { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "./walking";
 
 /** 犬隻旅程順序；WalkingActivity 是唯一專屬玩法元件。 */
@@ -18,3 +19,14 @@ export const dogJourney = {
   items: dogJourneyItems,
   activity: "walking" as const,
 } as const;
+
+export const dogDailyBehaviorScenarioIds = ["behavior-barking", "behavior-chewing", "behavior-toileting"] as const;
+
+export const dogScenarioPresentation: SpeciesScenarioPresentationConfig = {
+  defaults: { defaultPetName: "小狗", knowledgeTitle: "狗狗小知識", correctFeedbackMedia: { type: "video", src: scenarioMedia.correctPrimary } },
+  scenarios: {
+    "behavior-barking": { sceneVideo: { src: scenarioMedia.dog.barking, ariaLabel: "日常行為照顧影片" }, completionIntro: "你已經找到合適的做法。接著多認識一點{petName}吠叫時可能想傳達的需求。" },
+    "behavior-chewing": { sceneVideo: { src: scenarioMedia.dog.chewing, ariaLabel: "日常行為照顧影片" }, correctFeedbackMedia: { type: "video", src: scenarioMedia.correctSecondary }, completionIntro: "你已經找到合適的做法。接著看看狗狗為什麼需要啃咬，以及如何安全地引導{petName}。" },
+    "behavior-toileting": { sceneVideo: { src: scenarioMedia.dog.toileting, ariaLabel: "日常行為照顧影片" }, completionIntro: "你已經找到合適的做法。如廁不只是記住一個地點，還和{petName}的年齡、時機與健康狀況有關。" },
+  },
+};

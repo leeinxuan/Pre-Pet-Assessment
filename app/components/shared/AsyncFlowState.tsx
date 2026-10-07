@@ -4,14 +4,8 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 
 export function FlowLoadingFallback() {
   return (
-    <section className="flow-load-state" role="status" aria-live="polite" aria-busy="true">
-      <div className="flow-load-card">
-        <span className="flow-load-spinner" aria-hidden="true" />
-        <div>
-          <h1>正在準備下一段練習</h1>
-          <p>正在載入畫面與互動內容，請稍候一下。</p>
-        </div>
-      </div>
+    <section className="flow-load-state" role="status" aria-label="內容載入中" aria-live="polite" aria-busy="true">
+      <span className="flow-load-spinner" aria-hidden="true" />
     </section>
   );
 }

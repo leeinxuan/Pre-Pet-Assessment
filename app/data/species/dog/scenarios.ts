@@ -1,17 +1,23 @@
 import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
+import { scenarioMedia } from "../../shared/scenario-media";
 
 export const dogLifeScenarios: Scenario[] = [
   {
     id: "arrival-adjustment",
     stage: "一起生活的第一天",
     stageId: "arrival",
+    stageTitle: "適應新家與安全感",
     timeLabel: "一起生活的第一天",
     title: "第一天適應新家",
     description: "豆豆剛走進陌生的新家，躲在外出籠旁觀察，家人都很想立刻和牠打招呼。",
     topic: "適應新家與安全感",
     reportSummary: "第一天適應新家時，狗狗可能因陌生而躲藏或緊張；保留安靜、安全且能退回的空間，等待牠主動探索。",
     artIndex: 0,
+    sceneMedia: { type: "video", src: scenarioMedia.dog.arrival, ariaLabel: "小狗第一天適應新家的影片" },
+    correctFeedbackMedia: { type: "video", src: scenarioMedia.correctPrimary, ariaLabel: "正確處置後的正向結果影片" },
+    requiresRetry: true,
+    continueLabel: "繼續",
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你知道第一天不要給 {petName} 太多壓力，做得很好！給牠時間和空間，才能讓牠以自己的速度建立安全感。",
@@ -30,6 +36,7 @@ export const dogLifeScenarios: Scenario[] = [
   {
     id: "behavior-barking",
     stage: "日常行為照顧",
+    stageTitle: "日常照護",
     timeLabel: "日常照護",
     title: "牠一直吠叫，該怎麼辦？",
     description: "晚上你正在休息，小狗突然對著門口一直吠叫。你看見牠有些警覺，也注意到附近有聲音經過。",
@@ -55,6 +62,7 @@ export const dogLifeScenarios: Scenario[] = [
   {
     id: "behavior-chewing",
     stage: "日常行為照顧",
+    stageTitle: "日常照護",
     timeLabel: "日常照護",
     title: "牠開始亂咬東西，該怎麼辦？",
     description: "你回到客廳時，發現小狗正在咬桌腳旁的物品。旁邊還有一些不能讓牠碰到的小東西。",
@@ -79,6 +87,7 @@ export const dogLifeScenarios: Scenario[] = [
   {
     id: "behavior-toileting",
     stage: "日常行為照顧",
+    stageTitle: "日常照護",
     timeLabel: "日常照護",
     title: "牠在不適合的地方大小便，該怎麼辦？",
     description: "你發現小狗在不適合的位置大小便。牠看起來不是故意搗亂，而是還沒建立固定如廁習慣。",
@@ -103,12 +112,22 @@ export const dogLifeScenarios: Scenario[] = [
   {
     id: "busy-daily-care",
     stage: "當生活發生變化",
+    stageId: "life-change",
+    stageTitle: "當生活發生變化",
     timeLabel: "當生活發生變化",
     title: "疲憊忙碌的日子",
     description: "今天臨時需要加班，早上出門後一路忙到很晚。你已經很疲累，但豆豆仍需要晚餐、乾淨飲水、排泄與適當活動。",
     topic: "時間安排與照顧支援",
     reportSummary: "臨時加班或晚歸時，仍要事先安排可信任的人按時協助餵食、換水、排泄、活動與狀況觀察。",
     artIndex: 5,
+    busyCarePresentation: {
+      animalName: "犬",
+      sceneMedia: {
+        type: "video", src: scenarioMedia.dog.busyCare, ariaLabel: "疲憊忙碌的日子情境影片",
+        fallback: { type: "image-layers", backgroundSrc: scenarioMedia.dog.room, backgroundAlt: "居家房間場景", characterSrc: scenarioMedia.dog.busyCareCharacter, characterAlt: "{petName}在房間裡等待照顧" },
+      },
+      feedbackMedia: { type: "video", src: scenarioMedia.correctSecondary },
+    },
     busyCareCompletion: {
       reflectionText: "在 {petName} 的世界裡，你就是他的全部。",
       reflectionTitle: "留給自己的一個問題",
@@ -123,7 +142,7 @@ export const dogLifeScenarios: Scenario[] = [
     ],
     choices: [
       { id: "alone-with-food", text: "早上出門前先多放一些飼料和水，晚上忙完再好好陪牠", result: "incorrect", ...incorrect, explanation: "早上多放食物和水仍不能取代一整天的排泄、活動與狀況觀察，也可能造成過量進食或突發狀況沒有人發現。確定要加班時，應先安排能接手照顧的人，並清楚交接需求。" },
-      { id: "family-helper", text: "請同住家人或朋友協助", result: "correct", ...positive, explanation: "你不只是想到一個人，也認真確認對方的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓小狗在你忙碌時仍獲得穩定照顧。" },
+      { id: "family-helper", text: "請同住家人或朋友協助", result: "correct", isSupportChoice: true, ...positive, explanation: "你不只是想到一個人，也認真確認對方的時間、意願、照護知識與緊急聯絡方式。這樣的交接才能讓小狗在你忙碌時仍獲得穩定照顧。" },
       { id: "guard-dog-can-wait", text: "狗狗本來就有顧家的功能，在家裡睡久一點沒關係", result: "incorrect", ...incorrect, explanation: "會顧家，不等於能長時間獨處。超過八小時無人照護，狗狗可能錯過排泄、飲水與活動，也可能因焦慮或無聊而吠叫、破壞物品。確定會晚歸時，仍要安排合適的人中途協助照顧。" },
       { id: "hold-until-tomorrow", text: "傍晚到家再餵，至少睡前有吃到晚餐就好", result: "incorrect", ...incorrect, explanation: "把晚餐、排泄與活動一路延後到回家，會讓小狗長時間等待，也無法因應加班比預期更晚或臨時狀況。確定會晚歸時，應先安排可信任的人按平常時間協助基本照顧。" },
     ],
@@ -131,12 +150,16 @@ export const dogLifeScenarios: Scenario[] = [
   {
     id: "illness-vet",
     stage: "生病與就醫",
+    stageTitle: "當生活發生變化",
     timeLabel: "生病與就醫",
     title: "牠看起來和平常不太一樣",
     description: "最近你發現 {petName} 食慾有點變差，精神比平常沉，糞便的形狀和量也和平常不太一樣。你說不上來是哪裡不對，但牠看起來和平常不太一樣。",
     topic: "健康觀察與就醫判斷",
     reportSummary: "出現食慾、精神或排泄改變時，應記錄症狀並詢問獸醫，不要自行餵人用藥。",
     artIndex: 3,
+    sceneMedia: { type: "video", src: scenarioMedia.dog.illness, ariaLabel: "小狗生病與就醫情境影片" },
+    correctFeedbackMedia: { type: "video", src: scenarioMedia.correctSecondary, ariaLabel: "正確處置後的正向結果影片" },
+    requiresRetry: true,
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你記錄了觀察到的異常並諮詢獸醫，沒有拖延也沒有自行給藥，做得很好！",
@@ -161,12 +184,18 @@ export const dogLifeScenarios: Scenario[] = [
   {
     id: "growing-old",
     stage: "逐漸進入高齡",
+    stageId: "life-change",
+    stageTitle: "當生活發生變化",
     timeLabel: "逐漸進入高齡",
     title: "高齡後的照顧準備",
     description: "小狗走路開始變慢，後腳偶爾使不上力，曾經輕鬆走完的路如今需要停下休息。你花更多時間陪牠慢慢曬太陽，也要留意牠來不及走到如廁處時，協助清理排泄物、保持身體乾爽。",
     topic: "高齡照顧與醫療準備",
     reportSummary: "狗狗進入高齡後，可能出現行動退化、排泄照護與醫療需求；應提早準備時間、環境調整和醫療基金。",
     artIndex: 1,
+    questionTitle: "你會怎麼安排？",
+    sceneMedia: { type: "video", src: scenarioMedia.dog.senior, ariaLabel: "小狗逐漸進入高齡的情境影片" },
+    correctFeedbackMedia: { type: "video", src: scenarioMedia.correctPrimary, ariaLabel: "正確處置後的正向結果影片" },
+    requiresRetry: true,
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你願意提前為 {petName} 的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
