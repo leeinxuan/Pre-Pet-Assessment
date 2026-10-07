@@ -276,6 +276,8 @@
 .room-scene:not(.room-scene-ready) .room-object { visibility: hidden; }
 .room-scene:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .room-scene-background { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center; }
+/* 桌機只顯示桌機背景；手機背景會在 max-width: 720px 時才切換顯示。 */
+.room-scene-background--mobile { display: none; }
 /* 犬隻原圖與桌機舞台同為 2558:1444；保留完整畫面，不額外放大裁切。 */
 .room-scene-background--dog { object-fit: contain; object-position: center center; background: #dbc7a4; }
 .room-scene-background--portrait { object-fit: contain; background: #f8f0df; }

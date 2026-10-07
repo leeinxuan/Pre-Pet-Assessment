@@ -112,6 +112,7 @@ export const rabbitBreedChallengeContent: Record<string, BreedChallengeQuestion[
 
 /** 兔版考驗不分品種，固定回傳 rabbit 題組。 */
 export function getRabbitBreedChallengeScenarios(_breedId: string) {
+  void _breedId;
   return buildBreedChallengeScenarios(
     rabbitBreedChallengeContent["rabbit"],
     "rabbit",

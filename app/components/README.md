@@ -6,7 +6,10 @@
 - `preparation/PreparationComponents.tsx`：領養前準備互動，例如布置生活空間與後車廂準備。
 - `life/LifeJourneyComponents.tsx`：飼養生活流程、情境題、影片回饋與互動遊戲。
 - `life/ScenarioComponents.tsx`：舊情境題元件相容入口。
-- `report/ProfileReportComponents.tsx`：照顧準備總覽、資料補充、PDF 列印相關元件。
+- `report/AssessmentReport.tsx`：照顧準備總覽與觀念回顧。
+- `report/ProfileForms.tsx`：個人資料與補充資料表單。
+- `report/PdfExportControls.tsx`：PDF／圖片輸出。
+- `report/ProfileReportComponents.tsx`：保留給舊引用的相容入口。
 
 舊的 `app/*-components.tsx` 檔案目前保留為 re-export 相容層，讓既有 import 不會立即失效。
 

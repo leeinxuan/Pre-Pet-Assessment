@@ -1,4 +1,4 @@
-import type { HazardItem, RoomItem, TrunkItem } from "../../../game-types";
+import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 
 // TODO(species:hamster, section:§4.1/§4.2, type:asset, status:blocked):
 // 房間背景、籠內背景及專屬用品素材尚未提供，使用既有中性佔位，不引用其他物種圖像。
@@ -23,7 +23,7 @@ export const hamsterRoomItems: RoomItem[] = [
 ];
 
 export const hamsterTrunkItems: TrunkItem[] = [
-  { id: "carrier", label: "防逃運輸容器", kind: "supply", visualScale: 1, description: "擅長啃咬與鑽縫隙，需選金屬或硬質材料。", preparedLabel: "已準備", expenseIds: ["hamster-carrier"], placement: { x: 51, y: 60, width: 34, layer: 5 } },
+  { id: "carrier", label: "防逃運輸容器", kind: "supply", image: "/assets/car/hamster-carrier.webp", visualScale: 1, description: "擅長啃咬與鑽縫隙，需選金屬或硬質材料。", preparedLabel: "已準備", expenseIds: ["hamster-carrier"], placement: { x: 51, y: 60, width: 34, layer: 5 } },
   { id: "bedding-in-carrier", label: "容器內墊料", kind: "supply", description: "運輸容器內放入{petName}熟悉氣味的墊料，有助穩定情緒。", preparedLabel: "已準備", placement: { x: 46, y: 69, width: 20, layer: 6 } },
   { id: "hideout-in-carrier", label: "小型躲藏物", kind: "supply", description: "提供可躲藏的空間，讓{petName}在移動過程中感到安心。", preparedLabel: "已準備", placement: { x: 55, y: 54, width: 17, layer: 6 } },
   { id: "id-card", visualClassName: "id", label: "身分證", kind: "document", image: "/assets/car/id-card.png", description: "辦理認養與核對身分時使用。", preparedLabel: "已攜帶", placement: { x: 20, y: 36, width: 15, layer: 4 } },
@@ -51,4 +51,6 @@ export const hamsterRoomFlow = {
   },
 } as const;
 
-export const hamsterPreparation = { roomItems: hamsterRoomItems, hazards: hamsterHazards, trunkItems: hamsterTrunkItems, roomFlow: hamsterRoomFlow } as const;
+export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠房間背景素材待補", interiorBackgroundAlt: "倉鼠籠內背景素材待補" };
+export const hamsterDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.png", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: "/assets/car/adoption-documents.png", documentFolderAlt: "飼養文件夾" };
+export const hamsterPreparation = { roomItems: hamsterRoomItems, hazards: hamsterHazards, trunkItems: hamsterTrunkItems, roomFlow: hamsterRoomFlow, roomScene: hamsterRoomScene, departureScene: hamsterDepartureScene } as const;

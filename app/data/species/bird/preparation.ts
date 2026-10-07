@@ -1,4 +1,4 @@
-import type { HazardItem, RoomItem, TrunkItem } from "../../../game-types";
+import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 import { birdAssets } from "./assets";
 
 export const birdRoomItems: RoomItem[] = [
@@ -46,8 +46,13 @@ export const birdRoomFlow = {
   interiorBackground: birdAssets.room.cageInterior,
   interiorSafeBackground: birdAssets.room.cageInteriorWithTray,
   interiorBackgroundAspectRatio: "9 / 16",
+  floorHazardId: "",
+  safeWhenAllHazards: true,
+  fenceItemId: "bird-cage",
+  interiorItemId: "bird-feces-tray",
   outsideItemIds: ["bird-cage", "food-initial"],
   entryRequiredItemIds: ["bird-cage", "food-initial"],
+  floorHotspot: { desktop: { x: 0, y: 0, width: 0, height: 0 }, mobile: { x: 0, y: 0, width: 0, height: 0 } },
   copy: {
     fenceInstruction: "先決定 {petName} 的生活角落，把鳥籠放好吧。",
     fencePlacedInstruction: "鳥籠放好了！把飼料也準備好吧 🌿",
@@ -58,4 +63,6 @@ export const birdRoomFlow = {
   },
 } as const;
 
-export const birdPreparation = { roomItems: birdRoomItems, hazards: birdHazards, trunkItems: birdTrunkItems, roomFlow: birdRoomFlow } as const;
+export const birdRoomScene: RoomSceneConfig = { backgroundAlt: "鳥兒生活空間", interiorBackgroundAlt: "鳥籠內部配置" };
+export const birdDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.png", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: birdAssets.preparation.documents, documentFolderAlt: "飼養文件夾" };
+export const birdPreparation = { roomItems: birdRoomItems, hazards: birdHazards, trunkItems: birdTrunkItems, roomFlow: birdRoomFlow, roomScene: birdRoomScene, departureScene: birdDepartureScene } as const;

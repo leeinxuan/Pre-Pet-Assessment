@@ -186,22 +186,8 @@ export const dogLifeScenarios: Scenario[] = [
   },
 ];
 
-const dogIllnessByBreed = {
-  shiba: {
-    title: "柴犬常見健康問題觀察",
-    description: "最近你發現 {petName} 常常舔腳、抓癢，走路時偶爾不太想跳上跳下，眼睛也有些紅紅的。",
-    reportSummary: "出現搔癢、活動力下降或眼睛紅等變化時，應記錄食慾、精神與症狀並詢問獸醫，不要自行餵人用藥。",
-    knowledge: "柴犬較常見需要留意的健康問題包括：**皮膚過敏或搔癢**、掉毛、紅腫；**關節不適**、跛行或活動力下降；**眼睛分泌物增加、紅眼或視力異常**。如果發現食慾、精神、排泄或活動狀況和平常不同，請記錄變化並尋求獸醫建議。",
-  },
-  mixed: {
-    title: "米克斯常見健康問題觀察",
-    description: "最近你發現 {petName} 吃東西的動作有些遲疑，嘴巴靠近時有異味，牙齦看起來比以前紅；你也注意到牠偶爾在身上抓個不停，撥開毛看到一些小黑點。",
-    reportSummary: "米克斯犬出現口腔異味、進食遲疑、外寄生蟲或精神食慾改變時，應記錄症狀並聯絡獸醫，不要自行給藥。",
-    knowledge: "米克斯犬同樣需要定期留意健康狀況。常見需要觀察的問題包括：**牙周病（齒垢堆積、牙齦炎）**——口臭、進食遲疑或抓嘴都可能是早期徵兆；**外寄生蟲（跳蚤、蜱蟲）**——尤其曾在戶外活動或收容所的米克斯，應定期確認並進行防治；以及**食慾或精神突然改變**——可能來自消化、感染或其他問題，記錄變化並聯繫獸醫。",
-  },
-} as const;
-
 export function getDogLifeScenarios(_breedId: string): Scenario[] {
+  void _breedId;
   return dogLifeScenarios.map((scenario) => scenario.id === "illness-vet" ? {
     ...scenario, speciesId: "dog", stageId: "life-change", order: 2, summaryCategory: "illness-vet",
   } : scenario);

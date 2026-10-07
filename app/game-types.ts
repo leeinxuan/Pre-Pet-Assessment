@@ -40,6 +40,87 @@ export type ArrivalMealSceneLayout = {
   mobile: Record<ArrivalMealSceneItemKey, ArrivalMealScenePlacement>;
 };
 
+/** 第一餐的資料契約。共用元件只依此設定呈現各物種差異。 */
+export type ArrivalMealUnsafeFood = {
+  id: string;
+  label: string;
+  image: string;
+  title: string;
+  text: string;
+  /** caution 使用警示三角形；warning 使用禁止符號。 */
+  presentation?: "caution" | "warning";
+};
+
+export type ArrivalMealSupply = {
+  stateKey: "food" | "water" | "veggie";
+  label: string;
+  image: string;
+  alt: string;
+};
+
+export type ArrivalMealSceneAssets = {
+  desktopBackground: string;
+  mobileBackground: string;
+  pet: { waiting: string; ready: string };
+  water: { empty: string; ready: string };
+  food: { empty: string; ready: string };
+  veggie?: { ready: string; alt: string };
+};
+
+export type ArrivalMealChoice = {
+  id: string;
+  label: string;
+  result: "correct" | "caution" | "incorrect";
+  feedback: string;
+  expenseIds?: readonly string[];
+};
+
+export type FeedingConfig = {
+  animalName: string;
+  completionMessage: string;
+  recurringExpenseIds: readonly string[];
+  arrivalMealSceneLayout: ArrivalMealSceneLayout;
+  arrivalMealSupplyImageSizes: ArrivalMealSupplyImageSizes;
+} & ({
+  interaction: "scene";
+  requiredSupplies: readonly ArrivalMealSupply["stateKey"][];
+  supplies: readonly ArrivalMealSupply[];
+  unsafeFoods: readonly ArrivalMealUnsafeFood[];
+  scene: ArrivalMealSceneAssets;
+  /** 貓咪保留完成 700ms 後才切換開心素材的既有動畫節奏。 */
+  readyPetDelayMs?: number;
+} | {
+  interaction: "choice";
+  title: string;
+  intro: string;
+  choices: readonly ArrivalMealChoice[];
+  emptyBowlText: string;
+});
+
+/** 房間佈置畫面中與物種素材相關的設定；流程規則仍由 roomFlow 負責。 */
+export type RoomSceneConfig = {
+  background?: string;
+  mobileBackground?: string;
+  safeBackground?: string;
+  safeBackgroundWhenItemId?: string;
+  hidePlacedItemId?: string;
+  backgroundAlt: string;
+  interiorBackgroundAlt?: string;
+  desktopBackgroundClass?: string;
+  mobileBackgroundClass?: string;
+  backgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string };
+  doorplate?: { image: string; alt: string };
+};
+
+/** 出發前準備畫面中與物種素材相關的設定。 */
+export type DepartureSceneConfig = {
+  trunkBackground: string;
+  trunkBackgroundAlt: string;
+  documentFolderImage: string;
+  documentFolderAlt: string;
+  hidePriceForReusedItemIds?: readonly string[];
+};
+
 export type CareMember = {
   id: string;
   name: string;
@@ -210,6 +291,31 @@ export type JourneyItem = {
   stageLabel?: string;
   /** 完成此 journey item 的既有正確回饋後才登錄的共用費用。 */
   expenseIds?: string[];
+};
+
+/** 生活旅程活動的註冊資料；共用路由以 activityKey 決定既有元件，不以物種或 ID 推斷。 */
+export type JourneyActivityKey =
+  | "scenario" | "video-scenario" | "arrival-meal" | "daily-behavior" | "daily-behavior-single"
+  | "walking" | "cat-inspection" | "rabbit-carry-sort" | "rabbit-daily-check"
+  | "bird-cage-inspection" | "hamster-inspection" | "breed-challenge" | "busy-care";
+
+export type JourneyActivityConfig = {
+  itemId: string;
+  scenarioId?: string;
+  activityKey: JourneyActivityKey;
+  /** 保留既有流程視覺節點；實際轉場元件在共用路由處理。 */
+  transition?: "arrival-meal" | "time-pass" | "busy-care";
+  /** 答對後原本由 journey item 費用在回饋確認時寫入。 */
+  deferItemExpenses?: boolean;
+  /** 下一步會依此鍵搬移重玩 state 重設策略。 */
+  resetKey?: string;
+};
+
+export type ReportPracticeItemConfig = {
+  id: string;
+  label: string;
+  completionSelector: "arrival-meal" | "cat-litter";
+  requiredActivityIds?: readonly string[];
 };
 
 export type LifeActivityState = {

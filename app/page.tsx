@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { initialMembers, initialProfile, intros } from "./data/shared/app-flow";
 import { getExpenseForSpecies, isTemporaryReserveExpense } from "./data/shared/expenses";
+import { initialHomeReadinessState } from "./data/shared/home-readiness-state";
 import { getSpeciesConfig } from "./data/species/index";
 import { getJourneyItemsForSpecies } from "./data/species/journey";
 import { initialLifeActivityState } from "./data/shared/life-activity";
@@ -19,24 +21,23 @@ import type {
   ScenarioResult,
 } from "./game-types";
 import {
-  ArrivalTransitionVideo,
-  LifeJourney,
-} from "./components/life/LifeJourneyComponents";
-import {
-  CarTrunkPreparation,
-  HomeReadinessActivity,
-  initialHomeReadinessState,
-  RoomPreparation,
-} from "./components/preparation/PreparationComponents";
-import { AssessmentReport } from "./components/report/ProfileReportComponents";
-import { PetAcquisitionPage } from "./components/acquisition/PetAcquisitionPage";
-import {
   CostBar,
   SpeciesStep,
   StageRail,
   TestSkipButton,
   Welcome,
 } from "./components/shared/SharedComponents";
+import { FlowLoadErrorBoundary, FlowLoadingFallback } from "./components/shared/AsyncFlowState";
+
+const dynamicFlowOptions = { loading: FlowLoadingFallback };
+
+const ArrivalTransitionVideo = dynamic(() => import("./components/life/LifeJourneyComponents").then((module) => module.ArrivalTransitionVideo), dynamicFlowOptions);
+const LifeJourney = dynamic(() => import("./components/life/LifeJourneyComponents").then((module) => module.LifeJourney), dynamicFlowOptions);
+const HomeReadinessActivity = dynamic(() => import("./components/preparation/PreparationComponents").then((module) => module.HomeReadinessActivity), dynamicFlowOptions);
+const RoomPreparation = dynamic(() => import("./components/preparation/PreparationComponents").then((module) => module.RoomPreparation), dynamicFlowOptions);
+const CarTrunkPreparation = dynamic(() => import("./components/preparation/PreparationComponents").then((module) => module.CarTrunkPreparation), dynamicFlowOptions);
+const AssessmentReport = dynamic(() => import("./components/report/AssessmentReport").then((module) => module.AssessmentReport), dynamicFlowOptions);
+const PetAcquisitionPage = dynamic(() => import("./components/acquisition/PetAcquisitionPage").then((module) => module.PetAcquisitionPage), dynamicFlowOptions);
 
 function IntroIcon({ step }: { step: number }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 2.1, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -537,6 +538,7 @@ export default function Home() {
     }
     return (
       <LifeJourney
+        key={`${category}:${journeyIndex}`}
         index={journeyIndex}
         petName={petName}
         breed={breed}
@@ -599,16 +601,18 @@ export default function Home() {
           <section className="stage" aria-live="polite">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} latestExpense={latestExpense} breed={breed} species={category} />}
             {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onSelectSpecies={selectSpeciesForJourney} onPetName={setPetName} hasPreviousPet={hasPreviousPet} oldPetName={oldPetName} onHasPreviousPet={(value) => { setHasPreviousPet(value); if (!value) setOldPetName(""); }} onOldPetName={setOldPetName} onNext={confirmSelectedJourney} />}
-            {step === 2 && renderPreparation()}
-            {step >= 3 && step <= 6 && renderLifeJourney()}
-            {step === 7 && <>
-              <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} homeReadiness={homeReadiness} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
-              <div className="report-next-step-actions">
-                <p>準備好進一步了解合法、透明的取得方式了嗎？</p>
-                <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "auto" }); }}>取得寵物 <span>→</span></button>
-              </div>
-            </>}
-            {step === 8 && <PetAcquisitionPage profile={profile} petName={petName} breed={breed} species={category} onProfileChange={setProfile} onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
+            <FlowLoadErrorBoundary resetKey={`${step}:${preparationTask}:${lifePhase}:${journeyIndex}`}>
+              {step === 2 && renderPreparation()}
+              {step >= 3 && step <= 6 && renderLifeJourney()}
+              {step === 7 && <>
+                <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} homeReadiness={homeReadiness} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+                <div className="report-next-step-actions">
+                  <p>準備好進一步了解合法、透明的取得方式了嗎？</p>
+                  <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "auto" }); }}>取得寵物 <span>→</span></button>
+                </div>
+              </>}
+              {step === 8 && <PetAcquisitionPage profile={profile} petName={petName} breed={breed} species={category} onProfileChange={setProfile} onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
+            </FlowLoadErrorBoundary>
           </section>
         </div>
       )}

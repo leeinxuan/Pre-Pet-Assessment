@@ -1,1 +1,1 @@
-export { AssessmentReport as ProfilePrintPage } from "./ProfileReportComponents";
+export { AssessmentReport as ProfilePrintPage } from "./AssessmentReport";

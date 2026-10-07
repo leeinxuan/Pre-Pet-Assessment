@@ -1,4 +1,4 @@
-import type { HazardItem, RoomItem, TrunkItem } from "../../../game-types";
+import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 import { catAssets } from "./assets";
 import { catHazardPlacements, catRoomPlacements } from "./layout";
 import { dogDepartureTrunkItems } from "../dog/preparation";
@@ -44,4 +44,6 @@ export const catTrunkItems: TrunkItem[] = dogDepartureTrunkItems
     return item;
   });
 
-export const catPreparation = { trunkItems: catTrunkItems } as const;
+export const catRoomScene: RoomSceneConfig = { background: catAssets.room.safeRoom, mobileBackground: catAssets.room.safeRoom, safeBackground: catAssets.room.safeRoomSecured, safeBackgroundWhenItemId: "cat-safe-window", hidePlacedItemId: "cat-safe-window", backgroundAlt: "貓咪安全房", doorplate: { image: "/assets/dog/room/nameplate.webp", alt: "小狗名字門牌" } };
+export const catDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.png", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: "/assets/car/adoption-documents.png", documentFolderAlt: "飼養文件夾" };
+export const catPreparation = { trunkItems: catTrunkItems, roomScene: catRoomScene, departureScene: catDepartureScene } as const;

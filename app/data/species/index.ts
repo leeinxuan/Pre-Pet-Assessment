@@ -4,7 +4,7 @@ import { rabbitConfig } from "./rabbit/index";
 import { birdConfig } from "./bird/index";
 import { hamsterConfig } from "./hamster/index";
 import type { SpeciesId } from "../shared/types";
-import { speciesGameConfig } from "../speciesGameConfig";
+import type { RoomFlowConfig } from "../shared/species-config-types";
 
 /**
  * 共用 UI 的單一物種設定入口。
@@ -16,48 +16,48 @@ import { speciesGameConfig } from "../speciesGameConfig";
 export const speciesConfigs = {
   dog: {
     ...dogConfig,
-    copy: speciesGameConfig.dog.copy,
+    copy: dogConfig.copy,
     breeds: dogConfig.selection.breeds,
     roomItems: dogConfig.preparation.roomItems,
     hazards: dogConfig.preparation.hazards,
     trunkItems: dogConfig.preparation.trunkItems,
-    roomFlow: speciesGameConfig.dog.roomFlow,
+    roomFlow: undefined,
   },
   cat: {
     ...catConfig,
-    copy: speciesGameConfig.cat.copy,
+    copy: catConfig.copy,
     breeds: catConfig.selection.breeds,
     roomItems: catConfig.preparation.roomItems,
     hazards: catConfig.preparation.hazards,
     trunkItems: catConfig.preparation.trunkItems,
-    roomFlow: speciesGameConfig.cat.roomFlow,
+    roomFlow: undefined,
   },
   rabbit: {
     ...rabbitConfig,
-    copy: speciesGameConfig.rabbit.copy,
+    copy: rabbitConfig.copy,
     breeds: rabbitConfig.selection.breeds,
     roomItems: rabbitConfig.preparation.roomItems,
     hazards: rabbitConfig.preparation.hazards,
     trunkItems: rabbitConfig.preparation.trunkItems,
-    roomFlow: speciesGameConfig.rabbit.roomFlow,
+    roomFlow: rabbitConfig.preparation.roomFlow as unknown as RoomFlowConfig,
   },
   bird: {
     ...birdConfig,
-    copy: speciesGameConfig.bird.copy,
+    copy: birdConfig.copy,
     breeds: birdConfig.selection.breeds,
     roomItems: birdConfig.preparation.roomItems,
     hazards: birdConfig.preparation.hazards,
     trunkItems: birdConfig.preparation.trunkItems,
-    roomFlow: speciesGameConfig.bird.roomFlow,
+    roomFlow: birdConfig.preparation.roomFlow as unknown as RoomFlowConfig,
   },
   hamster: {
     ...hamsterConfig,
-    copy: speciesGameConfig.hamster.copy,
+    copy: hamsterConfig.copy,
     breeds: hamsterConfig.selection.breeds,
     roomItems: hamsterConfig.preparation.roomItems,
     hazards: hamsterConfig.preparation.hazards,
     trunkItems: hamsterConfig.preparation.trunkItems,
-    roomFlow: speciesGameConfig.hamster.roomFlow,
+    roomFlow: hamsterConfig.preparation.roomFlow as unknown as RoomFlowConfig,
   },
 } as const;
 export type SpeciesConfig = (typeof speciesConfigs)[SpeciesId];
@@ -70,13 +70,9 @@ export function getSpeciesConfig(species: string | undefined): SpeciesConfig {
   return speciesConfigs.dog;
 }
 
-/** 舊共用文案在完全搬移前的相容入口。 */
+/** 共用元件讀取正式註冊表提供的物種文案。 */
 export function getSpeciesCopy(species: string | undefined) {
-  if (species === "cat") return speciesGameConfig.cat.copy;
-  if (species === "rabbit") return speciesGameConfig.rabbit.copy;
-  if (species === "bird") return speciesGameConfig.bird.copy;
-  if (species === "hamster") return speciesGameConfig.hamster.copy;
-  return speciesGameConfig.dog.copy;
+  return getSpeciesConfig(species).copy;
 }
 
 export function getBreedForSpecies(species: string | undefined, breedId: string | undefined) {

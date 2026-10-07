@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { officialPetSources } from "../../data/shared/pet-sources";
 import { contentLastUpdated } from "../../data/shared/content-meta";
-import { ProfileSupplementForm } from "../report/ProfileReportComponents";
+import { ProfileSupplementForm } from "../report/ProfileForms";
 import type { Profile } from "../../game-types";
 
 export function PetAcquisitionPage({ profile, petName, breed, species, onProfileChange, onBack, onReset }: { profile: Profile; petName: string; breed: string; species: string; onProfileChange: (profile: Profile) => void; onBack: () => void; onReset: () => void }) {

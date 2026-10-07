@@ -1,4 +1,4 @@
-import type { SpeciesReportConfig } from "../../speciesGameConfig";
+import type { SpeciesReportConfig } from "../../shared/species-config-types";
 export const birdReport: SpeciesReportConfig = {
   checklistGroups: [
     { title: "每日照顧", items: ["補充符合食性的主食並確認實際進食量", "更換乾淨飲水與清洗容器", "更換糞便托盤墊料、觀察糞便", "觀察精神、羽毛、站棲與呼吸", "安排安全籠外互動與豐富化"] },

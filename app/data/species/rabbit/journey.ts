@@ -36,23 +36,23 @@ export const rabbitGroomingConfig = {
     ],
     startLabel: "開始美容時間 →",
     visualAssets: {
-      character: rabbitGroomingAsset("rabbit-grooming-eyes-close.png"),
-      tool: rabbitGroomingAsset("grooming-brush.png"),
-      collector: rabbitGroomingAsset("fur-ball-empty.png"),
+      character: rabbitGroomingAsset("rabbit-grooming-eyes-close.webp"),
+      tool: rabbitGroomingAsset("grooming-brush.webp"),
+      collector: rabbitGroomingAsset("fur-ball-empty.webp"),
     },
   },
   assets: {
-    idle: rabbitGroomingAsset("rabbit-grooming-idle.png"),
-    eyesClose: rabbitGroomingAsset("rabbit-grooming-eyes-close.png"),
-    side: rabbitGroomingAsset("rabbit-grooming-side.png"),
-    hindquarters: rabbitGroomingAsset("rabbit-grooming-hindquarters.png"),
-    footpad: rabbitGroomingAsset("rabbit-grooming-footpad.png"),
-    inspection: rabbitGroomingAsset("rabbit-inspection-front.png"),
-    brush: rabbitGroomingAsset("grooming-brush.png"),
-    furBallEmpty: rabbitGroomingAsset("fur-ball-empty.png"),
-    furBallStep1: rabbitGroomingAsset("fur-ball-step1.png"),
-    furBallStep2: rabbitGroomingAsset("fur-ball-step2.png"),
-    furBallStep3: rabbitGroomingAsset("fur-ball-step3.png"),
+    idle: rabbitGroomingAsset("rabbit-grooming-idle.webp"),
+    eyesClose: rabbitGroomingAsset("rabbit-grooming-eyes-close.webp"),
+    side: rabbitGroomingAsset("rabbit-grooming-side.webp"),
+    hindquarters: rabbitGroomingAsset("rabbit-grooming-hindquarters.webp"),
+    footpad: rabbitGroomingAsset("rabbit-grooming-footpad.webp"),
+    inspection: rabbitGroomingAsset("rabbit-inspection-front.webp"),
+    brush: rabbitGroomingAsset("grooming-brush.webp"),
+    furBallEmpty: rabbitGroomingAsset("fur-ball-empty.webp"),
+    furBallStep1: rabbitGroomingAsset("fur-ball-step1.webp"),
+    furBallStep2: rabbitGroomingAsset("fur-ball-step2.webp"),
+    furBallStep3: rabbitGroomingAsset("fur-ball-step3.webp"),
   },
   groomingSteps: [
     { id: "groom-head-ears", stateId: "part-1-step-1-head-ears", completeStateId: "part-1-step-1-complete", label: "頭頂與耳後", instruction: "拖曳梳子，輕輕梳理頭頂與耳後。", character: "idle", furBall: "furBallEmpty" },
@@ -62,7 +62,7 @@ export const rabbitGroomingConfig = {
   ],
   observations: {
     footpad: {
-      title: "足底觀察", normalImage: rabbitGroomingAsset("footpad-normal.png"), warningImage: rabbitGroomingAsset("footpad-warning.png"),
+      title: "足底觀察", normalImage: rabbitGroomingAsset("footpad-normal.webp"), warningImage: rabbitGroomingAsset("footpad-warning.webp"),
       question: "{petName} 的足底看起來……？",
       choices: [{ id: "normal", label: "正常，毛髮完整" }, { id: "warning", label: "有脫毛或紅腫，需要注意" }],
       incorrectFeedback: {
@@ -73,7 +73,7 @@ export const rabbitGroomingConfig = {
       warningExplanation: "⚠️ 足底警告示例——毛髮稀疏、膚色偏紅，可能為足底皮膚炎初期，需要獸醫評估。",
     },
     incisor: {
-      title: "門齒觀察", normalImage: rabbitGroomingAsset("incisor-normal.png"), warningImage: rabbitGroomingAsset("incisor-long.png"),
+      title: "門齒觀察", normalImage: rabbitGroomingAsset("incisor-normal.webp"), warningImage: rabbitGroomingAsset("incisor-long.webp"),
       question: "{petName} 的門齒看起來……？",
       choices: [{ id: "normal", label: "正常，長度適中" }, { id: "warning", label: "偏長，需要注意" }],
       incorrectFeedback: {
@@ -84,7 +84,7 @@ export const rabbitGroomingConfig = {
       warningExplanation: "⚠️ 偏長的門齒示例——門齒明顯向外延伸，上下不對稱，需要獸醫評估。",
     },
     nail: {
-      title: "指甲觀察", normalImage: rabbitGroomingAsset("nail-normal.png"), warningImage: rabbitGroomingAsset("nail-long.png"),
+      title: "指甲觀察", normalImage: rabbitGroomingAsset("nail-normal.webp"), warningImage: rabbitGroomingAsset("nail-long.webp"),
       question: "{petName} 的指甲看起來……？",
       choices: [{ id: "normal", label: "正常，長度適中" }, { id: "warning", label: "偏長，需要注意" }],
       incorrectFeedback: {

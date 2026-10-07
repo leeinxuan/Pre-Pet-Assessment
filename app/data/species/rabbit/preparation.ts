@@ -1,4 +1,4 @@
-import type { HazardItem, RoomItem, TrunkItem } from "../../../game-types";
+import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 import { rabbitAssets } from "./assets";
 
 /** 兔子房間用品與素材由此資料設定提供，共用房間元件只負責渲染與流程控制。 */
@@ -41,6 +41,9 @@ export const rabbitRoomFlow = {
   interiorBackground: rabbitAssets.room.fenceInterior,
   interiorSafeBackground: rabbitAssets.room.fenceInteriorWithMat,
   interiorBackgroundAspectRatio: "match-room",
+  floorHazardId: "slippery-floor",
+  fenceItemId: "fence-pen",
+  interiorItemId: "anti-slip-mat",
   floorHotspot: {
     desktop: { x: 49, y: 82, width: 78, height: 27 },
     mobile: { x: 49, y: 81, width: 84, height: 29 },
@@ -52,4 +55,6 @@ export const rabbitRoomFlow = {
   },
 } as const;
 
-export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow } as const;
+export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部" };
+export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.png", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: rabbitAssets.preparation.documents, documentFolderAlt: "飼養文件夾", hidePriceForReusedItemIds: ["anti-slip-liner"] };
+export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow, roomScene: rabbitRoomScene, departureScene: rabbitDepartureScene } as const;

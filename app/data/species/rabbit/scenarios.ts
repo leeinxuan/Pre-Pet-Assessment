@@ -221,11 +221,11 @@ export const rabbitLifeScenarios: Scenario[] = [
 
 /** 規劃文件 D-1：順序即為正解；操作元件只讀取動作與對應提示。 */
 const rabbitHoldStepAssets = {
-  approach: "/assets/rabbit/pet-journey/rabbit-hold-step-1-approach.png",
+  approach: "/assets/rabbit/pet-journey/rabbit-hold-step-1-approach.webp",
   handSniff: "/assets/rabbit/pet-journey/rabbit-hold-step-2-hand-sniff.png",
-  headStroke: "/assets/rabbit/pet-journey/rabbit-hold-step-3-head-stroke.png",
-  supportChestHindquarters: "/assets/rabbit/pet-journey/rabbit-hold-step-4-support-chest-hindquarters.png",
-  holdClose: "/assets/rabbit/pet-journey/rabbit-hold-step-5-hold-close.png",
+  headStroke: "/assets/rabbit/pet-journey/rabbit-hold-step-3-head-stroke.webp",
+  supportChestHindquarters: "/assets/rabbit/pet-journey/rabbit-hold-step-4-support-chest-hindquarters.webp",
+  holdClose: "/assets/rabbit/pet-journey/rabbit-hold-step-5-hold-close.webp",
 } as const;
 
 /** 抱兔排序的文字、順序與素材皆集中於此，供拖曳卡與正解狀態共用。 */
@@ -257,8 +257,8 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
     completionReminder: {
       title: "<danger>請不要這樣抱兔兔</danger>",
       items: [
-        { title: "<danger>從耳朵拎起</danger>", description: "耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。", imagePlaceholderLabel: "從耳朵拎起示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.png", imageAlt: "從耳朵拎起兔子的錯誤抱法示意" },
-        { title: "<danger>讓牠腹部朝上</danger>", description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不安全。", imagePlaceholderLabel: "腹部朝上示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.png", imageAlt: "讓兔子腹部朝上的錯誤抱法示意" },
+        { title: "<danger>從耳朵拎起</danger>", description: "耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。", imagePlaceholderLabel: "從耳朵拎起示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.webp", imageAlt: "從耳朵拎起兔子的錯誤抱法示意" },
+        { title: "<danger>讓牠腹部朝上</danger>", description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不安全。", imagePlaceholderLabel: "腹部朝上示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp", imageAlt: "讓兔子腹部朝上的錯誤抱法示意" },
       ],
       footer: "<danger>從耳朵拎起</danger>或<danger>腹部朝上</danger>都可能造成嚴重傷害，永遠不要這樣做",
     },

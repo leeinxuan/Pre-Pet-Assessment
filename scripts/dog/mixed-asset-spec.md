@@ -50,7 +50,7 @@
 - 適合兒童友善的可愛風格
 
 #### B. 散步互動圖片風格（walking/mixed/*.png）
-參考圖：`public/assets/dog/walking/shiba/leash-choice.png`（及同資料夾其他圖）
+參考圖：`public/assets/dog/walking/shiba/leash-choice.webp`（及同資料夾其他圖）
 
 - **風格關鍵字**：`anime illustration style, soft watercolor background, semi-realistic proportions, warm natural colors`
 - 比 A 風格更細緻，接近手繪水彩感
@@ -95,7 +95,7 @@
 
 ---
 
-### 1. `mixed-dog.png` — 正常/開心狀態
+### 1. `mixed-dog.webp` — 正常/開心狀態
 
 **用途**：第一餐完成後出現的狗、時光流逝過場、高齡階段的狗
 
@@ -106,7 +106,7 @@ A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs
 
 ---
 
-### 2. `mixed-sad.png` — 難過/生病狀態
+### 2. `mixed-sad.webp` — 難過/生病狀態
 
 **用途**：生病情境、第一天情境（答錯時）
 
@@ -117,7 +117,7 @@ A medium-sized mixed-breed dog with black dorsal coat, tan/brown cheeks and legs
 
 ---
 
-### 3. `mixed-hungry.png` — 等待/餓了狀態
+### 3. `mixed-hungry.webp` — 等待/餓了狀態
 
 **用途**：飼主忙碌時狗狗在旁等待的畫面  
 **構圖**：橫向，狗俯趴在地，旁邊有空碗（參考 shiba-hungry.png 構圖）
@@ -174,9 +174,9 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 
 ---
 
-### 7. `walker-and-dog.png` — 飼主與狗同行（人物cutout）
+### 7. `walker-and-dog.webp` — 飼主與狗同行（人物cutout）
 
-**參考**：`walking/shiba/walker-and-dog.png`  
+**參考**：`walking/shiba/walker-and-dog.webp`  
 **構圖**：飼主與米克斯並肩同行，transparent/white 背景，人物剪影風格
 
 **ChatGPT 提示詞（英文）**：
@@ -186,9 +186,9 @@ A young woman with brown hair in a ponytail, wearing a pink sweatshirt, blue jea
 
 ---
 
-### 8. `walker-dog-bag.png` — 飼主提糞便袋（人物cutout）
+### 8. `walker-dog-bag.webp` — 飼主提糞便袋（人物cutout）
 
-**參考**：`walking/shiba/walker-dog-bag.png`  
+**參考**：`walking/shiba/walker-dog-bag.webp`  
 **構圖**：飼主左手提著綠色糞便袋，右手牽米克斯，transparent/white 背景，人物剪影風格
 
 **ChatGPT 提示詞（英文）**：
@@ -489,9 +489,9 @@ Include light playful background music. The only visible text is "品種圖鑑" 
 
 | # | 檔案名稱 | 類型 | 時長 | 對應遊戲情境 |
 |---|---------|------|------|------------|
-| 1 | `mixed-dog.png` | 圖片 | — | 開心狀態（多處使用） |
-| 2 | `mixed-sad.png` | 圖片 | — | 難過/生病狀態 |
-| 3 | `mixed-hungry.png` | 圖片 | — | 等待/餓了 |
+| 1 | `mixed-dog.webp` | 圖片 | — | 開心狀態（多處使用） |
+| 2 | `mixed-sad.webp` | 圖片 | — | 難過/生病狀態 |
+| 3 | `mixed-hungry.webp` | 圖片 | — | 等待/餓了 |
 | 4 | `arrival-transition.mp4` | 影片 | 5-8s | 接回家過場（收容所→車→新家→歡迎回家）|
 | 5 | `busy-day-transition.mp4` | 影片 | 5-8s | 忙碌生活過場（飼主視角）|
 | 6 | `time-passes-aging.mp4` | 影片 | 5-8s | 老化過場 |
@@ -514,8 +514,8 @@ Include light playful background music. The only visible text is "品種圖鑑" 
 | 18 | `leash-choice.png` | 圖片 | `walking/shiba/leash-choice.png` |
 | 19 | `off-leash-choice.png` | 圖片 | `walking/shiba/off-leash-choice.png` |
 | 20 | `walker-and-dog-poop.png` | 圖片 | `walking/shiba/walker-and-dog-poop.png` |
-| 21 | `walker-and-dog.png` | 圖片 | `walking/shiba/walker-and-dog.png` |
-| 22 | `walker-dog-bag.png` | 圖片 | `walking/shiba/walker-dog-bag.png` |
+| 21 | `walker-and-dog.webp` | 圖片 | `walking/shiba/walker-and-dog.webp` |
+| 22 | `walker-dog-bag.webp` | 圖片 | `walking/shiba/walker-dog-bag.webp` |
 
 **共計：8 張圖片 + 14 支影片 = 22 個素材**
 

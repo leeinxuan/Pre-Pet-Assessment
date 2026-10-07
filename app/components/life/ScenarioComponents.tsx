@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { scenarios } from "../../data/shared/legacy-scenarios";
 import type { Scenario, ScenarioAnswer, ScenarioChoice } from "../../game-types";
 
@@ -58,11 +58,8 @@ export function ScenarioGame({
 }) {
   const scenario = scenarios[index];
   const answer = answers[scenario.id];
-  const [feedbackOpen, setFeedbackOpen] = useState(Boolean(answer));
-
-  useEffect(() => {
-    setFeedbackOpen(Boolean(answers[scenarios[index].id]));
-  }, [index, answers]);
+  const [feedbackDismissedFor, setFeedbackDismissedFor] = useState<string | null>(null);
+  const feedbackOpen = Boolean(answer) && feedbackDismissedFor !== scenario.id;
 
   const selectedChoice = useMemo(
     () => scenario.choices.find((choice) => choice.id === answer?.finalChoiceId) ?? null,
@@ -75,7 +72,7 @@ export function ScenarioGame({
 
   function choose(choice: ScenarioChoice) {
     onChoose(scenario, choice);
-    setFeedbackOpen(true);
+    setFeedbackDismissedFor(null);
   }
 
   function continueJourney() {
@@ -111,7 +108,7 @@ export function ScenarioGame({
         <ScenarioFeedback
           scenario={scenario}
           choice={selectedChoice}
-          onRetry={() => setFeedbackOpen(false)}
+          onRetry={() => setFeedbackDismissedFor(scenario.id)}
           onContinue={continueJourney}
         />
       ) : null}

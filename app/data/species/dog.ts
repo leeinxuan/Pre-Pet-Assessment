@@ -13,7 +13,7 @@ export const dogAssets = {
   room: {
     background: "/assets/dog/room/empty-room.png",
     mobileBackground: "/assets/dog/room/empty-room-mobile.png",
-    doorplate: "/assets/dog/room/nameplate.png",
+    doorplate: "/assets/dog/room/nameplate.webp",
   },
   preparation: {
     trunk: "/assets/car/car-trunk.png",

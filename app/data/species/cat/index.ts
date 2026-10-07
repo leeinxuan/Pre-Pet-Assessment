@@ -1,5 +1,5 @@
 import { catAssets } from "./assets";
-import { catArrivalMealSceneLayout, catArrivalMealSupplyImageSizes } from "./feeding";
+import { catFeeding } from "./feeding";
 import { catHazards, catRoomItems } from "./preparation";
 import { catJourney } from "./journey";
 import { catLayout } from "./layout";
@@ -8,6 +8,10 @@ import { catReport } from "./report";
 import { catLifeScenarios } from "./scenarios";
 import { getCatBreedChallengeScenarios } from "./breed-challenges";
 import { catSelection } from "./selection";
+import { catCopy } from "./copy";
+import { catHomeReadiness } from "./home-readiness";
+import { catMasteredCareThemes } from "./mastered-care-themes";
+import { catCareReviewAdditionalNotes } from "./care-review-notes";
 
 export const catConfig = {
   id: "cat" as const,
@@ -19,7 +23,11 @@ export const catConfig = {
   report: catReport,
   assets: catAssets,
   layout: catLayout,
-  feeding: { arrivalMealSceneLayout: catArrivalMealSceneLayout, arrivalMealSupplyImageSizes: catArrivalMealSupplyImageSizes },
+  feeding: catFeeding,
+  copy: catCopy,
+  homeReadiness: catHomeReadiness,
+  masteredCareThemes: catMasteredCareThemes,
+  careReviewAdditionalNotes: catCareReviewAdditionalNotes,
 } as const;
 
-export { catAssets, catJourney, catLayout, catPreparation, catReport, catSelection, catLifeScenarios, getCatBreedChallengeScenarios, catArrivalMealSceneLayout, catArrivalMealSupplyImageSizes };
+export { catAssets, catJourney, catLayout, catPreparation, catReport, catSelection, catLifeScenarios, getCatBreedChallengeScenarios, catFeeding };

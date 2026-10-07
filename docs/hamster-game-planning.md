@@ -211,9 +211,9 @@
 
 | 階段 | 當前背景 | 觸發操作 | 切換至 |
 |---|---|---|---|
-| 危險物品移除中 | hamster/room/direct-sunlight-spot.png | 點擊右側桌子熱區（太陽直曬位置） | hamster-safe-room.png |
-| 危險物品移除中（桌子已挪位） | hamster-safe-room.png | 其餘危險物品（側欄）全部移除完成 | hamster-safe-room.png（維持，解鎖側欄） |
-| 放置籠具＋飼料 / 點擊籠具 | hamster-safe-room.png | hamster-cage ＋ pellet 皆放置完成後，點擊籠具 | bg-cage-interior |
+| 危險物品移除中 | hamster/room/direct-sunlight-spot.webp | 點擊右側桌子熱區（太陽直曬位置） | hamster-safe-room.webp |
+| 危險物品移除中（桌子已挪位） | hamster-safe-room.webp | 其餘危險物品（側欄）全部移除完成 | hamster-safe-room.webp（維持，解鎖側欄） |
+| 放置籠具＋飼料 / 點擊籠具 | hamster-safe-room.webp | hamster-cage ＋ pellet 皆放置完成後，點擊籠具 | bg-cage-interior |
 | 籠內視角 | bg-cage-interior | 點擊左上角返回鍵 icon | hamster-safe-room |
 | 籠內視角（鋪墊料後） | bg-cage-interior | 從側欄點擊/放置 bedding | bg-cage-interior-bedding |
 
@@ -229,10 +229,10 @@
 |---|---|---|---|---|
 | `cable` | 電線 | 側欄拖曳移除 | 倉鼠有強烈啃咬天性，咬電線可能觸電或食入絕緣皮層。<br>整理固定電線或收入線槽，讓{petName}的活動區域無電線可及。 | H1「齧齒類特性」；H4「磨牙需求」 |
 | `loose-gap-cage` | 格柵過大的舊籠（危險籠型） | 側欄拖曳移除 | 倉鼠擅長利用縫隙逃脫，格柵過寬或薄壁塑膠籠都難以防逃。<br>更換為格柵間距適當、不易啃穿的金屬籠具。 | H1「籠具飼養・縫隙逃脫」；H4「籠具環境」 |
-| `direct-sunlight-spot` | 陽光直曬的桌子位置 | **熱區點擊**（hamster/room/direct-sunlight-spot.png 中右側桌子）→ 背景切換至 hamster-safe-room.png | 倉鼠靠耳朵的微血管散熱，對高溫耐受性低，直曬可能導致中暑。<br>點擊右側桌子後，桌子移至陰涼角落，背景換為安全房間。 | H1「體溫調節・耳朵散熱」；H3 生理特性 |
+| `direct-sunlight-spot` | 陽光直曬的桌子位置 | **熱區點擊**（hamster/room/direct-sunlight-spot.webp 中右側桌子）→ 背景切換至 hamster-safe-room.webp | 倉鼠靠耳朵的微血管散熱，對高溫耐受性低，直曬可能導致中暑。<br>點擊右側桌子後，桌子移至陰涼角落，背景換為安全房間。 | H1「體溫調節・耳朵散熱」；H3 生理特性 |
 | `strong-scent-item` | 強烈氣味物品（香薰蠟燭） | 側欄拖曳移除 | 小型哺乳類嗅覺靈敏，強烈香薰、化學揮發物可能刺激呼吸道。<br>籠具附近應避免使用香薰、殺蟲劑或強烈清潔劑。 | H4「飼養環境・空氣品質」 |
 
-> 通關條件（危險物品）：點擊 hamster/room/direct-sunlight-spot.png 中右側桌子熱區 → 背景切換至 hamster-safe-room.png（第一步，同兔版光滑地板邏輯）；其餘危險物品（側欄）全部移除後解鎖物品側欄。
+> 通關條件（危險物品）：點擊 hamster/room/direct-sunlight-spot.webp 中右側桌子熱區 → 背景切換至 hamster-safe-room.webp（第一步，同兔版光滑地板邏輯）；其餘危險物品（側欄）全部移除後解鎖物品側欄。
 
 ---
 
@@ -250,12 +250,12 @@
 
 | id | 素材路徑 | 顯示名稱 | 說明文字 | 參考費用（台幣） | 知識來源 |
 |---|---|---|---|---|---|
-| `hamster-cage` | hamster/room/hamster-cage.png | 倉鼠籠（金屬格柵、底板穩固） | 防逃金屬籠；有足夠空間放置滾輪、巢穴與砂浴盆。 | 3,500 元（1,000–3,500） | H1「籠具飼養」；H5 環境需求 |
-| `pellet` | hamster/feeding/pellet.png | 倉鼠綜合飼料（初期備量） | 入住前先備妥足量主食；每日固定量餵食，避免挑食。 | 300 元（100–300） | H4「固定餵食・均衡飲食」 |
+| `hamster-cage` | hamster/room/hamster-cage.webp | 倉鼠籠（金屬格柵、底板穩固） | 防逃金屬籠；有足夠空間放置滾輪、巢穴與砂浴盆。 | 3,500 元（1,000–3,500） | H1「籠具飼養」；H5 環境需求 |
+| `pellet` | hamster/feeding/pellet.webp | 倉鼠綜合飼料（初期備量） | 入住前先備妥足量主食；每日固定量餵食，避免挑食。 | 300 元（100–300） | H4「固定餵食・均衡飲食」 |
 
 互動：
 - 玩家從側欄拖曳籠具（hamster-cage）至房間指定放置區（陰涼牆角熱區，遠離窗台與廚房）
-- 籠具放置完成 → 側欄解鎖 pellet；玩家再拖曳飼料袋（hamster/feeding/pellet.png）至籠具旁指定位置
+- 籠具放置完成 → 側欄解鎖 pellet；玩家再拖曳飼料袋（hamster/feeding/pellet.webp）至籠具旁指定位置
 - 兩件物品皆放置完成 → 出現提示：「都準備好了！點進去幫 {petName} 佈置裡面吧 👆」
 - 玩家點擊籠具區域 → 觸發 zoom-in 動畫（約 0.4s）→ 進入階段二
 
@@ -282,11 +282,8 @@
 | `sand-bath-box` | 砂浴盆（附倉鼠沙） | 倉鼠清潔毛髮的正確方式；定期篩砂，不用水洗。 | 400 元（150–400）（沙每月費用見每月支出） | H1「沙浴清潔」；H4「毛髮清潔」 |
 | `bedding` | 紙質墊料（或木屑墊料） | 足夠深度讓{petName}挖掘保暖；安全吸附力佳。放置後背景更新為 bg-cage-interior-bedding。 | 175 元/月（100–250） | H4「環境衛生管理」；H5 環境需求 |
 | `gnaw-stick` | 磨牙棒（木製） | 牙齒終生持續生長，磨牙棒幫助維持磨損。 | 150 元（50–150） | H1「牙齒持續生長」；H4「磨牙需求」 |
-通關條件：五項必要物品（滾輪、飲水器、食碗、巢箱、砂浴盆）皆放置完成後，解鎖「完成佈置」按鈕。玩家點擊後自動帶出完成動畫（{petName} 進入籠中探索並鑽入巢箱），接著進入 Task 1（出發前準備）。
 
----
-
----
+> 通關條件：五項必要物品（滾輪、飲水器、食碗、巢箱、砂浴盆）皆放置完成後，解鎖「完成佈置」按鈕。玩家點擊後自動帶出完成動畫（{petName} 進入籠中探索並鑽入巢箱），接著進入 Task 1（出發前準備）。
 
 ### 4.2 出發前準備（Task 1：CarTrunkPreparation）
 

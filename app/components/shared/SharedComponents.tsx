@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- Shared game artwork uses CSS-controlled intrinsic sizing that must remain unchanged. */
+
 import React, { useEffect, useRef, useState } from "react";
 import { categories } from "../../data/shared/app-flow";
 import { isTemporaryReserveExpense, money } from "../../data/shared/expenses";
@@ -188,7 +190,7 @@ export function StageRail({
     return (
       <nav className="station-navigation">
         {testMode && <p className="test-mode-badge">測試模式・關卡已解鎖</p>}
-        {navigation.map((item, index) => (
+        {navigation.map((item) => (
           <div className={`nav-main ${item.status}`} key={item.id}>
             <button className="nav-main-button" disabled={item.status === "locked"} onClick={item.onClick} aria-current={item.status === "current" ? "step" : undefined}>
               <span>{item.status === "completed" ? "✓" : item.number}</span><em>{item.label}</em>
@@ -348,7 +350,7 @@ export function SpeciesStep({
         <section className="partner-selection-page pet-naming-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.nameTitle} body="這個名字會陪著牠走進接下來的生活，也會出現在後面的情境演練裡。" />
           <div className="pet-naming-stage">
-            <img src="/assets/dog/room/nameplate.png" alt={`${speciesConfig.copy.animalName}名字吊牌`} />
+            <img src="/assets/dog/room/nameplate.webp" alt={`${speciesConfig.copy.animalName}名字吊牌`} />
             <label htmlFor="new-pet-name" className="sr-only">{speciesConfig.copy.animalName}的名字</label>
             <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} autoFocus />
           </div>
@@ -520,6 +522,8 @@ export function getAccumulatedExpenseTotal(expenses: ExpenseRecord[]) {
 }
 
 export function mergeDefaultVisibleExpenses(expenses: ExpenseRecord[], _breed?: string, _species?: string) {
+  void _breed;
+  void _species;
   // 明細、回顧與輸出只能讀取已實際寫入共用 expense store 的資料；
   // 不能為特定物種在 render 時補回預設費用，否則切換流程後會殘留舊支出。
   return expenses;
@@ -736,5 +740,6 @@ export function CostBar({
 
 /** @deprecated 已由 CoinFlightAnimation 取代，保留以避免 import 錯誤。 */
 export function ExpenseAdditionNotice({ expense }: { expense: ExpenseRecord | null }) {
+  void expense;
   return null;
 }

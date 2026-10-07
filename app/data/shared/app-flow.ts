@@ -60,12 +60,12 @@ export const intros = [
 ] as const;
 
 export const categories = [
-  { id: "dog", label: "犬", icon: "🐕", image: "/assets/species/dog.png", active: true },
-  { id: "cat", label: "貓", icon: "🐈", image: "/assets/species/cat.png", active: true },
+  { id: "dog", label: "犬", icon: "🐕", image: "/assets/species/dog.webp", active: true },
+  { id: "cat", label: "貓", icon: "🐈", image: "/assets/species/cat.webp", active: true },
   { id: "rabbit", label: "兔", icon: "🐇", image: "/assets/species/rabbit.png", active: true },
   { id: "bird", label: "鸚鵡", icon: "🦜", image: "/assets/species/bird.png", active: true },
   { id: "reptile", label: "小型地棲性守宮", icon: "🦎", image: "/assets/species/reptile.png", active: false },
-  { id: "hamster", label: "倉鼠", icon: "🐹", image: "/assets/species/small-mammal.png", active: true },
+  { id: "hamster", label: "倉鼠", icon: "🐹", image: "/assets/species/small-mammal.webp", active: true },
 ];
 
 export const initialMembers: CareMember[] = [

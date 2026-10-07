@@ -1,1 +1,1 @@
-export { AssessmentReport as CareCommitment } from "./ProfileReportComponents";
+export { AssessmentReport as CareCommitment } from "./AssessmentReport";

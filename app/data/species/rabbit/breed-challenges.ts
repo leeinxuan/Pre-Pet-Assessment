@@ -52,5 +52,6 @@ export const rabbitBreedChallengeContent: Record<"rabbit", BreedChallengeQuestio
 };
 
 export function getRabbitBreedChallengeScenarios(_breedId: string) {
+  void _breedId;
   return buildBreedChallengeScenarios(rabbitBreedChallengeContent.rabbit, "rabbit");
 }

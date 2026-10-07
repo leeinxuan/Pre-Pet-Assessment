@@ -1,4 +1,4 @@
-import type { SpeciesReportConfig } from "../../speciesGameConfig";
+import type { SpeciesReportConfig } from "../../shared/species-config-types";
 
 /** §6 照護評估報告與 PDF 共用資料。 */
 export const hamsterReport: SpeciesReportConfig = {

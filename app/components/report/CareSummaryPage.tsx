@@ -1,1 +1,1 @@
-export { AssessmentReport as CareSummaryPage } from "./ProfileReportComponents";
+export { AssessmentReport as CareSummaryPage } from "./AssessmentReport";

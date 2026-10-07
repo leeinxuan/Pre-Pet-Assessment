@@ -1,1 +1,1 @@
-export type { SpeciesReportConfig } from "../speciesGameConfig";
+export type { SpeciesReportConfig } from "./species-config-types";

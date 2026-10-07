@@ -1,4 +1,4 @@
-import type { SpeciesReportConfig } from "../../speciesGameConfig";
+import type { SpeciesReportConfig } from "../../shared/species-config-types";
 
 /** 貓咪照護指南與網頁回顧共用資料。 */
 export const catReport: SpeciesReportConfig = {

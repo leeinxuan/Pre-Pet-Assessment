@@ -1,11 +1,15 @@
 import { rabbitAssets } from "./assets";
-import { rabbitArrivalMealSceneLayout, rabbitArrivalMealSupplyImageSizes } from "./feeding";
+import { rabbitFeeding } from "./feeding";
 import { getRabbitBreedChallengeScenarios } from "./breed-challenges";
 import { rabbitJourney } from "./journey";
 import { rabbitLayout } from "./layout";
 import { rabbitPreparation } from "./preparation";
 import { rabbitReport } from "./report";
 import { rabbitLifeScenarios } from "./scenarios";
+import { rabbitCopy } from "./copy";
+import { rabbitHomeReadiness } from "./home-readiness";
+import { rabbitMasteredCareThemes } from "./mastered-care-themes";
+import { rabbitCareReviewAdditionalNotes } from "./care-review-notes";
 
 /**
  * 兔子不進行品種細選；固定 selection id 為 rabbit。
@@ -29,7 +33,11 @@ export const rabbitConfig = {
   report: rabbitReport,
   assets: rabbitAssets,
   layout: rabbitLayout,
-  feeding: { arrivalMealSceneLayout: rabbitArrivalMealSceneLayout, arrivalMealSupplyImageSizes: rabbitArrivalMealSupplyImageSizes },
+  feeding: rabbitFeeding,
+  copy: rabbitCopy,
+  homeReadiness: rabbitHomeReadiness,
+  masteredCareThemes: rabbitMasteredCareThemes,
+  careReviewAdditionalNotes: rabbitCareReviewAdditionalNotes,
 } as const;
 
-export { rabbitAssets, rabbitJourney, rabbitLayout, rabbitPreparation, rabbitReport, rabbitLifeScenarios, getRabbitBreedChallengeScenarios, rabbitArrivalMealSceneLayout, rabbitArrivalMealSupplyImageSizes };
+export { rabbitAssets, rabbitJourney, rabbitLayout, rabbitPreparation, rabbitReport, rabbitLifeScenarios, getRabbitBreedChallengeScenarios, rabbitFeeding };

@@ -616,7 +616,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   min-height: 100svh;
   padding: 0;
   display: block;
-  background: #2f291f url("/assets/welcome/prep-room.png") center / cover no-repeat;
+  background: #2f291f url("/assets/welcome/prep-room.webp") center / cover no-repeat;
 }
 .welcome::before,
 .welcome::after { display: block; content: ""; position: absolute; inset: 0; pointer-events: none; }
@@ -1452,7 +1452,7 @@ html, body { overflow-x: clip; }
   padding: 0;
   overflow: clip;
   display: block;
-  background: #2f291f url("/assets/welcome/prep-room.png") center / cover no-repeat;
+  background: #2f291f url("/assets/welcome/prep-room.webp") center / cover no-repeat;
 }
 .welcome::before,
 .welcome::after {

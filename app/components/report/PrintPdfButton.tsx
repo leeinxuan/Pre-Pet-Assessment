@@ -1,1 +1,1 @@
-export { AssessmentReport as PrintPdfButton } from "./ProfileReportComponents";
+export { AssessmentReport as PrintPdfButton } from "./AssessmentReport";
