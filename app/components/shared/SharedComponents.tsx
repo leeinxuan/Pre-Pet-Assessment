@@ -150,7 +150,11 @@ export function StageRail({
         label,
         status: testMode
           ? (index === preparationTask && step === 2 ? "current" : "completed")
-          : step > 2 && index <= preparationReached ? "completed" : statusAt(index, preparationTask, preparationReached),
+          : step < 2
+            ? "locked"
+            : step > 2 && index <= preparationReached
+              ? "completed"
+              : statusAt(index, preparationTask, preparationReached),
         onClick: () => onPreparationTask(index),
       })),
     },
@@ -428,10 +432,11 @@ export const temporaryExpenseReserveNote = "實際費用會依症狀、檢查項
 
 export function formatTemporaryExpenseAmount(expense: Pick<ExpenseRecord, "amount" | "maxAmount" | "maxAmountOpenEnded">) {
   if (typeof expense.maxAmount === "number") {
-    const upper = `${money.format(expense.maxAmount)}${expense.maxAmountOpenEnded ? "+" : ""}`;
+    // 臨時性支出都是預留額度；各筆上限後一律標示「+」，避免被誤讀為固定支出。
+    const upper = `${money.format(expense.maxAmount)}+`;
     return `NT$ ${money.format(expense.amount)}～${upper}`;
   }
-  return `NT$ ${money.format(expense.amount)}`;
+  return `NT$ ${money.format(expense.amount)}+`;
 }
 
 export function formatTemporaryExpenseReserve(expenses: Pick<ExpenseRecord, "amount" | "maxAmount" | "maxAmountOpenEnded">[]) {
@@ -565,7 +570,7 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
           <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
           <div className="expense-modal-summary-reserve"><small>{expenseLabels.temporaryMedical}</small>{temporaryExpenses.length > 0
             ? <><b>{formatTemporaryExpenseReserve(temporaryExpenses)}</b><small>{temporaryExpenseReserveNote}</small></>
-            : <small>完成對應情境後顯示費用細項。</small>}</div>
+            : <b>NT$ 0</b>}</div>
         </div>
         <div className="expense-groups">
           <section className="expense-group expense-group--initial">
@@ -582,9 +587,9 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
             </div>
           </section>
           <section className="expense-group"><h3>{expenseLabels.monthlyBasic}<span>NT$ {money.format(totalFor(monthlyExpenses))}{expenseLabels.monthlySuffix}</span></h3>{renderItems(monthlyExpenses)}</section>
-          <section className="expense-group"><h3>{expenseLabels.temporaryMedical}{temporaryExpenses.length > 0 && <span>{formatTemporaryExpenseReserve(temporaryExpenses)}</span>}</h3>{temporaryExpenses.length > 0
+          <section className="expense-group"><h3>{expenseLabels.temporaryMedical}<span>{temporaryExpenses.length > 0 ? formatTemporaryExpenseReserve(temporaryExpenses) : "NT$ 0"}</span></h3>{temporaryExpenses.length > 0
             ? <><p className="expense-temporary-reserve-note">{temporaryExpenseReserveNote}</p>{renderItems(temporaryExpenses, true)}</>
-            : <p className="expense-temporary-reserve-note">完成對應情境後顯示費用細項。</p>}</section>
+            : null}</section>
         </div>
         <button className="primary" onClick={onClose}>{expenseLabels.closeDetails}</button>
       </section>
@@ -619,7 +624,7 @@ function CoinFlightAnimation({ expense, triggerRef }: {
     toast.className = "coin-toast-overlay";
     toast.innerHTML = `
       <div class="coin-toast-card" role="status" aria-live="polite">
-        <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(10,50,120,0.10)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#8dc8ea"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.28)"/><rect x="1" y="20" width="90" height="4" fill="rgba(10,60,140,0.07)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#1a60a8" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#1a60a8" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(10,80,180,0.14)" stroke="#1a60a8" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#0a2e6e">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#0e3d80">100</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="7" font-weight="700" text-anchor="end" fill="#0e3d80">100</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#1a60a8" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#1a60a8" opacity="0.7">&#10022;</text></svg>
+        <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(10,50,120,0.10)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#8dc8ea"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.28)"/><rect x="1" y="20" width="90" height="4" fill="rgba(10,60,140,0.07)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#1a60a8" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#1a60a8" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(10,80,180,0.14)" stroke="#1a60a8" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#0a2e6e">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#0e3d80">1000</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" text-anchor="end" fill="#0e3d80">1000</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#1a60a8" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#1a60a8" opacity="0.7">&#10022;</text></svg>
         <div class="coin-toast-body">
           <b>${title}</b>
           <span>${expense.name}</span>

@@ -26,6 +26,7 @@ export function VideoScenarioActivity({
   onChoose,
   onCorrectComplete,
   onCorrectFeedbackShown,
+  onCorrectExpenseSequence,
   deferExpensesUntilFeedback = false,
   onReplay,
   continueImmediately = false,
@@ -37,12 +38,14 @@ export function VideoScenarioActivity({
   onChoose: (choice: ScenarioChoice) => void;
   onCorrectComplete: () => void;
   onCorrectFeedbackShown?: (scenario: Scenario, choice: ScenarioChoice) => void;
+  /** 健康／高齡題在答對當下先播放費用卡，再顯示正確回饋。 */
+  onCorrectExpenseSequence?: (scenario: Scenario, choice: ScenarioChoice) => Promise<void>;
   /** 指定費用須在「做得很好」畫面呈現後才登錄。 */
   deferExpensesUntilFeedback?: boolean;
   onReplay?: () => void;
   continueImmediately?: boolean;
 }) {
-  const [mode, setMode] = useState<"question" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
+  const [mode, setMode] = useState<"question" | "animating" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
   const sceneMedia = scenario.sceneMedia ?? { type: "placeholder" as const };
@@ -61,7 +64,12 @@ export function VideoScenarioActivity({
     }
     setVideoFailed(false);
     setVideoFinished(false);
-    setMode(choice.result === "correct" ? "positive" : "incorrect");
+    if (choice.result !== "correct" || !onCorrectExpenseSequence) {
+      setMode(choice.result === "correct" ? "positive" : "incorrect");
+      return;
+    }
+    setMode("animating");
+    void onCorrectExpenseSequence(scenario, choice).then(() => setMode("positive"));
   }
 
   // Effect 在正確回饋畫面提交後才執行，避免費用動畫早於「做得很好」。
@@ -132,7 +140,7 @@ export function VideoScenarioActivity({
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (
-          <section className="video-scenario-options"><h2>你會怎麼做？</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</section>
+          <section className="video-scenario-options"><h2>{mode === "animating" ? "正在加入本次照顧費用…" : "你會怎麼做？"}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} disabled={mode === "animating"} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</section>
         )}
       </div>
     </section>

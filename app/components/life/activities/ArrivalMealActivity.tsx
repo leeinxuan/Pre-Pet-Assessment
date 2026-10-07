@@ -69,14 +69,16 @@ export function ArrivalMealActivity({
   petName,
   species = "dog",
   onChange,
-  onAddExpense,
+  expenseIds,
+  onPlayExpenseSequence,
   onContinue,
 }: {
   activity: LifeActivityState;
   petName: string;
   species?: string;
   onChange: (patch: Partial<LifeActivityState>) => void;
-  onAddExpense: (id: string) => void;
+  expenseIds?: readonly string[];
+  onPlayExpenseSequence?: (ids: readonly string[]) => Promise<void>;
   onContinue: () => void;
 }) {
   const speciesConfig = getSpeciesConfig(species);
@@ -84,6 +86,9 @@ export function ArrivalMealActivity({
   const arrivalMealSceneLayout = feeding.arrivalMealSceneLayout;
   const arrivalMealSupplyImageSizes = feeding.arrivalMealSupplyImageSizes;
   const hasRecordedMeal = useRef(false);
+  const expenseIdsRef = useRef(expenseIds);
+  const playExpenseSequenceRef = useRef(onPlayExpenseSequence);
+  const [expenseSequenceComplete, setExpenseSequenceComplete] = useState(false);
   const [foodWarning, setFoodWarning] = useState<{ title: string; text: string } | null>(null);
   const [unsafeFoodIds, setUnsafeFoodIds] = useState<string[]>([]);
   const choiceItems = feeding.interaction === "choice" ? feeding.choices : [];
@@ -98,8 +103,13 @@ export function ArrivalMealActivity({
   useEffect(() => {
     if (!complete || hasRecordedMeal.current) return;
     hasRecordedMeal.current = true;
-    feeding.recurringExpenseIds.forEach((expenseId) => onAddExpense(expenseId));
-  }, [complete, feeding.recurringExpenseIds, onAddExpense]);
+    let active = true;
+    void (async () => {
+      await playExpenseSequenceRef.current?.(expenseIdsRef.current ?? []);
+      if (active) setExpenseSequenceComplete(true);
+    })();
+    return () => { active = false; };
+  }, [complete]);
   useEffect(() => {
     const delay = feeding.interaction === "scene" ? feeding.readyPetDelayMs : undefined;
     if (!complete || delay === undefined) return;
@@ -124,7 +134,6 @@ export function ArrivalMealActivity({
     const isNewSafeChoice = item.result !== "incorrect" && !activity.hamsterMealSelected.includes(id);
     if (isNewSafeChoice) {
       onChange({ hamsterMealSelected: [...activity.hamsterMealSelected, id], hamsterMealFeedbackId: id });
-      if ("expenseIds" in item && item.expenseIds) item.expenseIds.forEach(onAddExpense);
       return;
     }
     onChange({ hamsterMealFeedbackId: id });
@@ -167,10 +176,8 @@ export function ArrivalMealActivity({
       <div className="arrival-meal-footer">
         {feeding.interaction === "choice" && choiceFeedback && <p className={`guided-activity-feedback ${choiceFeedback.result}`} role="status">{interpolatePetName(choiceFeedback.feedback, petName)}</p>}
         <p className="arrival-meal-completion-message" role="status">{complete ? feeding.completionMessage : "\u00a0"}</p>
-        <button className="primary" disabled={!complete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
+        <button className="primary" disabled={!complete || !expenseSequenceComplete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
       </div>
     </section>
   );
 }
-
-

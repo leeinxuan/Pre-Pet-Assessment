@@ -1,23 +1,17 @@
 import type { LifeActivityState, ReportPracticeItemConfig } from "../../game-types";
+import { isReportPracticeItemComplete as selectReportPracticeItemCompletion } from "./report-practice-selectors";
 
-type SpeciesPracticeConfig = { arrivalMeal: ReportPracticeItemConfig; additionalPracticeItems?: readonly ReportPracticeItemConfig[] };
+/** 第一餐需求由各物種 feeding.ts 推導，避免在報告層維護第二份食材清單。 */
+export const reportPracticeRegistry = {
+  arrivalMeal: { id: "arrival-meal", label: "已完成到家第一餐", completionSelector: "arrival-meal" },
+} as const satisfies Record<string, ReportPracticeItemConfig>;
 
-export const reportPracticeRegistry: Record<string, SpeciesPracticeConfig> = {
-  dog: { arrivalMeal: { id: "arrival-meal", label: "已完成到家第一餐", completionSelector: "arrival-meal", requiredActivityIds: ["food", "water"] } },
-  cat: { arrivalMeal: { id: "arrival-meal", label: "已完成到家第一餐", completionSelector: "arrival-meal", requiredActivityIds: ["food", "water"] } },
-  rabbit: { arrivalMeal: { id: "arrival-meal", label: "已完成到家第一餐", completionSelector: "arrival-meal", requiredActivityIds: ["food", "water", "veggie"] } },
-  bird: { arrivalMeal: { id: "arrival-meal", label: "已完成到家第一餐", completionSelector: "arrival-meal", requiredActivityIds: ["food", "water", "veggie"] } },
-  hamster: { arrivalMeal: { id: "arrival-meal", label: "已完成到家第一餐", completionSelector: "arrival-meal", requiredActivityIds: ["hamster-pellet", "fresh-water"] } },
-};
-
-export function getReportPracticeItems(species: string): readonly ReportPracticeItemConfig[] {
-  const config = reportPracticeRegistry[species] ?? reportPracticeRegistry.dog;
-  return [config.arrivalMeal, ...(config.additionalPracticeItems ?? [])];
+export function getReportPracticeItems(): readonly ReportPracticeItemConfig[] {
+  return [reportPracticeRegistry.arrivalMeal];
 }
 
-export function isReportPracticeItemComplete(item: ReportPracticeItemConfig, activity: LifeActivityState): boolean {
-  if (item.completionSelector === "cat-litter") return activity.catInspectionSteps.includes("litter-complete");
-  return (item.requiredActivityIds ?? []).every((id) => id === "food" ? activity.arrivalMealFoodReady : id === "water" ? activity.arrivalMealWaterReady : id === "veggie" ? activity.arrivalMealVeggieReady : activity.hamsterMealSelected.includes(id));
+export function isReportPracticeItemComplete(item: ReportPracticeItemConfig, species: string, activity: LifeActivityState): boolean {
+  return selectReportPracticeItemCompletion(item, species, activity);
 }
 
 const discussionSummaryOverrides: Record<string, Record<string, { confirmed: string; needsConfirmation: string }>> = {

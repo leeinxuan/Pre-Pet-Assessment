@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { getExpenseForSpecies, isTemporaryReserveExpense } from "../../../data/shared/expenses";
+import { useEffect, useState } from "react";
 import { getDailyBehaviorScenarioIds, getLifeScenariosForSpecies, getScenarioPresentation } from "../../../data/species/journey";
 import type { Scenario, ScenarioAnswer, ScenarioChoice, ScenarioResult } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
@@ -16,18 +15,11 @@ import {
   useVideoMetadataPreload,
 } from "./scenario-ui";
 
-function choiceHasTemporaryReserveExpense(choice: ScenarioChoice, species: string) {
-  return (choice.expenseIds ?? []).some((id) => {
-    const expense = getExpenseForSpecies(id, species);
-    return Boolean(expense && isTemporaryReserveExpense(expense));
-  });
-}
-
 export function DailyBehaviorActivityMulti({
   answers,
   petName,
   onChooseMultiple,
-  onCorrectFeedbackShown,
+  onCorrectExpenseSequence,
   onContinue,
   onReplay,
   continueImmediately = false,
@@ -38,7 +30,8 @@ export function DailyBehaviorActivityMulti({
   answers: Record<string, ScenarioAnswer>;
   petName: string;
   onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
-  onCorrectFeedbackShown?: (scenario: Scenario, choices: ScenarioChoice[]) => void;
+  /** 正確選項全部完成時，先等待活動費用卡動畫，再顯示正確回饋。 */
+  onCorrectExpenseSequence?: (scenario: Scenario, choices: ScenarioChoice[]) => Promise<void>;
   onContinue: () => void;
   onReplay?: () => void;
   continueImmediately?: boolean;
@@ -52,7 +45,7 @@ export function DailyBehaviorActivityMulti({
     .filter((entry): entry is Scenario => Boolean(entry));
   const firstUnfinished = scenarios.findIndex((entry) => answers[entry.id]?.finalResult !== "correct");
   const [currentIndex, setCurrentIndex] = useState(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
-  const [mode, setMode] = useState<"question" | "incorrect" | "positive">(
+  const [mode, setMode] = useState<"question" | "animating" | "incorrect" | "positive">(
     firstUnfinished === -1 ? "positive" : "question",
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -60,7 +53,6 @@ export function DailyBehaviorActivityMulti({
   const [retryCopy, setRetryCopy] = useState<{ title: string; explanation: string; suggestion?: string } | null>(null);
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
-  const feedbackExpenseShownFor = useRef("");
   const scenario = scenarios[currentIndex];
   const presentation = getScenarioPresentation(species, scenario?.id ?? "");
   const behaviorVideoSource = presentation.sceneVideo?.src;
@@ -70,17 +62,6 @@ export function DailyBehaviorActivityMulti({
   useVideoMetadataPreload(behaviorVideoSource);
   useVideoMetadataPreload(nextPresentation?.sceneVideo?.src);
   useVideoMetadataPreload(correctFeedbackVideo);
-
-  // 臨時性預留費用必須先讓使用者看到正確回饋，再登錄到共用費用明細。
-  useEffect(() => {
-    if (mode !== "positive" || !scenario) return;
-    const selectedChoices = scenario.choices.filter((choice) => selectedIds.includes(choice.id));
-    if (!selectedChoices.some((choice) => choiceHasTemporaryReserveExpense(choice, species))) return;
-    const key = `${scenario.id}:${selectedChoices.map((choice) => choice.id).join(",")}`;
-    if (feedbackExpenseShownFor.current === key) return;
-    feedbackExpenseShownFor.current = key;
-    onCorrectFeedbackShown?.(scenario, selectedChoices);
-  }, [mode, onCorrectFeedbackShown, scenario, selectedIds, species]);
 
   function moveToNext() {
     if (currentIndex === scenarios.length - 1) {
@@ -138,7 +119,12 @@ export function DailyBehaviorActivityMulti({
       onChooseMultiple(scenario, selectedChoices, "correct");
       setVideoFailed(false);
       setVideoFinished(false);
-      setMode("positive");
+      if (!onCorrectExpenseSequence) {
+        setMode("positive");
+        return;
+      }
+      setMode("animating");
+      void onCorrectExpenseSequence(scenario, selectedChoices).then(() => setMode("positive"));
     }
   }
 
@@ -211,14 +197,14 @@ export function DailyBehaviorActivityMulti({
           <div className="daily-behavior-question-row">
             <h2>{scenario.questionText ?? "此刻需要完成哪些事？（複選）"}</h2>
             <p className="daily-behavior-live-hint visible daily-behavior-progress-hint" role="status">
-              已找到 {correctSelectedCount} / {correctChoiceIds.length} 個合適做法
+              {mode === "animating" ? "正在加入本次照顧費用…" : `已找到 ${correctSelectedCount} / ${correctChoiceIds.length} 個合適做法`}
             </p>
           </div>
           <div className="choice-grid">
             {scenario.choices.map((choice) => {
               const selected = selectedIds.includes(choice.id);
               return (
-                <ScenarioOptionCard key={choice.id} type="multiple" selected={selected} onClick={() => toggleChoice(choice.id)}>
+                <ScenarioOptionCard key={choice.id} type="multiple" selected={selected} disabled={mode === "animating"} onClick={() => toggleChoice(choice.id)}>
                   {withPetName(choice.text, petName)}
                 </ScenarioOptionCard>
               );

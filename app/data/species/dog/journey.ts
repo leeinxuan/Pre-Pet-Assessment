@@ -14,13 +14,15 @@ export const dogJourneyItems: JourneyItem[] = [
   { id: "senior", type: "scenario", timeLabel: "逐漸進入高齡", title: "小狗逐漸老去", scenarioId: "growing-old", stageId: "life-change", stageLabel: "生活變化" },
 ];
 
+/** 犬隻日常照護三題的固定識別碼；重做時選項與答題紀錄保持一致。 */
+export const dogDailyBehaviorScenarioIds = ["behavior-barking", "behavior-chewing", "behavior-toileting"] as const;
+
 /** 情境題本體仍由 life-data 逐題遷移；本檔已是旅程順序的唯一來源。 */
 export const dogJourney = {
   items: dogJourneyItems,
+  dailyBehaviorScenarioIds: dogDailyBehaviorScenarioIds,
   activity: "walking" as const,
 } as const;
-
-export const dogDailyBehaviorScenarioIds = ["behavior-barking", "behavior-chewing", "behavior-toileting"] as const;
 
 export const dogScenarioPresentation: SpeciesScenarioPresentationConfig = {
   defaults: { defaultPetName: "小狗", knowledgeTitle: "狗狗小知識", correctFeedbackMedia: { type: "video", src: scenarioMedia.correctPrimary } },

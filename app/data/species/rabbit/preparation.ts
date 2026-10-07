@@ -30,8 +30,8 @@ export const rabbitTrunkItems: TrunkItem[] = [
   { id: "anti-slip-liner", label: "防滑墊（籠內鋪底）", kind: "supply", image: rabbitAssets.preparation.antiSlipLiner, preparedLabel: "已準備", expenseIds: ["rabbit-anti-slip-mat"], description: "外出籠底部鋪防滑墊，可避免兔子在車輛晃動時滑倒受傷。", placement: { x: 45, y: 65, width: 26, layer: 4 } },
   { id: "hay-in-carrier", label: "少量牧草（籠內放置）", kind: "supply", image: rabbitAssets.preparation.hay, preparedLabel: "已準備", description: "途中提供少量牧草，讓兔子可以進食與磨牙，也有助穩定情緒。", placement: { x: 53, y: 70, width: 12, layer: 6 } },
   { id: "cooling-pack", label: "保冷袋／冰袋（夏季必備）", kind: "supply", image: rabbitAssets.preparation.coolingPack, preparedLabel: "已準備", expenseIds: ["rabbit-cooling-pack"], description: "兔子非常怕熱，夏季外出需準備安全的降溫措施。", placement: { x: 28, y: 67, width: 15, layer: 5 } },
-  { id: "id-card", visualClassName: "id", label: "身分證", kind: "document", image: rabbitAssets.preparation.idCard, preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
-  { id: "adoption-documents", visualClassName: "documents", label: "領養文件", kind: "document", image: rabbitAssets.preparation.documents, preparedLabel: "已攜帶", description: "如有租屋，須提供房東許可之證明。", placement: { x: 23, y: 32, width: 23, layer: 3 } },
+  { id: "id-card", visualClassName: "id", visualRole: "identity-card", label: "身分證", kind: "document", image: rabbitAssets.preparation.idCard, preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
+  { id: "adoption-documents", visualClassName: "documents", visualRole: "document-folder", label: "領養文件", kind: "document", image: rabbitAssets.preparation.documents, preparedLabel: "已攜帶", description: "如有租屋，須提供房東許可之證明。", placement: { x: 23, y: 32, width: 23, layer: 3 } },
 ];
 
 /** 兔子房間的階段與背景只由資料設定，避免共用房間元件混入物種字串或素材路徑。 */

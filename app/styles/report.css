@@ -234,6 +234,11 @@
 .pdf-export-stage .care-a4-money dt { font-size: 10.5px !important; }
 .pdf-export-stage .care-a4-money dd { font-size: 13px !important; }
 .pdf-export-stage .care-a4-money p { margin-top: 2mm !important; font-size: 10px !important; }
+.pdf-export-stage .care-a4-expense-cards { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 3.5mm !important; }
+.pdf-export-stage .care-a4-expense-card--reserve > strong { white-space: nowrap !important; font-size: 13px !important; }
+.pdf-export-stage .care-a4-expense-summary-lines dd { justify-self: end !important; text-align: right !important; }
+.pdf-export-stage .care-a4-daily-time li { grid-template-columns: minmax(0, 1fr) 46mm !important; }
+.pdf-export-stage .care-a4-daily-time li b { width: 46mm !important; font-size: 10px !important; white-space: pre !important; word-break: keep-all !important; }
 .pdf-export-stage .care-a4-commitment { display: grid !important; grid-template-columns: 7mm 1fr !important; margin-top: 6mm !important; padding: 4mm !important; }
 .pdf-export-stage .care-print-profile .care-a4-header aside { display: none !important; }
 .pdf-export-stage .care-print-profile .care-a4-header > div { max-width: 100% !important; }

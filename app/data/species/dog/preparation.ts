@@ -16,6 +16,7 @@ export const dogRoomItems: RoomItem[] = [
 ];
 
 export const dogHazards: HazardItem[] = [
+  { id: "slippery-floor", label: "光滑地板", icon: "▱", placement: { x: 50, y: 84, width: 78, layer: 4 }, mobilePlacement: { x: 50, y: 82, width: 86 }, danger: "幼犬骨骼尚未發育完全，光滑地板容易滑倒，長期可能影響關節發育。", handling: "鋪設防滑墊，讓活動與休息區保持止滑。" },
   { id: "small-parts", label: "小物品", icon: "●", image: "/assets/dog/room/small-items.png", placement: { x: 40, y: 75, width: 12, layer: 5 }, mobilePlacement: { x: 80, y: 55, width: 16 }, danger: "容易被誤吞，可能造成噎住或腸胃阻塞。", handling: "收進小狗無法取得的抽屜或收納盒。" },
   { id: "chocolate", label: "巧克力", icon: "🍫", image: "/assets/shared/chocolate.png", placement: { x: 89, y: 78, width: 10, layer: 5 }, mobilePlacement: { x: 89, y: 78, width: 16 }, danger: "含有不適合狗狗的成分，可能危害健康。", handling: "放進有門的高處櫃子。" },
   { id: "chemicals", label: "一般清潔劑", icon: "🧴", image: "/assets/dog/room/detergent.png", placement: { x: 62, y: 64, width: 10, layer: 5 }, mobilePlacement: { x: 55, y: 65, width: 15 }, danger: "一般清潔劑可能含有刺激性或不適合寵物接觸的成分。", handling: "應收在牠碰不到的地方；日常清潔請選擇寵物專用清潔用品。" },
@@ -23,8 +24,8 @@ export const dogHazards: HazardItem[] = [
 ];
 
 export const dogDepartureTrunkItems: TrunkItem[] = [
-  { id: "id", label: "身分證", kind: "document", image: "/assets/car/id-card.png", preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
-  { id: "documents", label: "飼養文件", kind: "document", image: "/assets/car/adoption-documents.png", preparedLabel: "已攜帶", description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。", placement: { x: 22, y: 32, width: 24, layer: 3 } },
+  { id: "id", label: "身分證", kind: "document", visualRole: "identity-card", image: "/assets/car/id-card.png", preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
+  { id: "documents", label: "飼養文件", kind: "document", visualRole: "document-folder", image: "/assets/car/adoption-documents.png", preparedLabel: "已攜帶", description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。", placement: { x: 22, y: 32, width: 24, layer: 3 } },
   { id: "carrier", label: "運輸籠", kind: "supply", image: "/assets/car/carrier.png", visualScale: 1.5, preparedLabel: "已準備", description: "讓小狗在移動途中有安全固定的空間。", expenseIds: ["carrier-kit"], placement: { x: 51, y: 60, width: 34, layer: 5 } },
   { id: "pee-pad", label: "尿墊", kind: "supply", image: "/assets/car/pee-pad.png", preparedLabel: "已準備", description: "接回途中可降低排泄與清潔壓力。", expenseIds: ["toilet"], reusedExpenseIds: ["toilet"], placement: { x: 49, y: 66, width: 20, layer: 6 } },
   { id: "water-kit", label: "水碗", kind: "supply", image: "/assets/car/water-bottle.webp", preparedLabel: "已準備", description: "必要時補充飲水，避免長時間缺水。", expenseIds: ["water-kit"], placement: { x: 55, y: 67, width: 27, layer: 6 } },
@@ -33,6 +34,22 @@ export const dogDepartureTrunkItems: TrunkItem[] = [
 ];
 
 /** 犬隻房間、危險物、接回與餵食的共用資料。 */
-export const dogRoomScene: RoomSceneConfig = { background: "/assets/dog/room/empty-room.png", mobileBackground: "/assets/dog/room/empty-room-mobile.png", backgroundAlt: "空的寵物生活房間", desktopBackgroundClass: "room-scene-background--dog", mobileBackgroundClass: "room-scene-background--dog-mobile", backgroundStyle: { objectFit: "contain", objectPosition: "center center" }, doorplate: { image: sharedAssets.nameplate, alt: "小狗名字門牌" } };
+export const dogRoomFlow = {
+  initialBackground: "/assets/dog/room/empty-room-hazards.webp",
+  initialMobileBackground: "/assets/dog/room/empty-room-mobile-hazards.webp",
+  safeBackground: "/assets/dog/room/empty-room.png",
+  safeMobileBackground: "/assets/dog/room/empty-room-mobile.png",
+  floorHazardId: "slippery-floor",
+  floorHotspot: {
+    desktop: { x: 50, y: 84, width: 78, height: 27 },
+    mobile: { x: 50, y: 82, width: 86, height: 29 },
+  },
+  copy: {
+    hazardInstruction: "在把{petName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。",
+    completeInstruction: "空間已整理完成。請點擊下方準備用品，將它們放進生活空間。",
+  },
+} as const;
+
+export const dogRoomScene: RoomSceneConfig = { backgroundAlt: "空的寵物生活房間", desktopBackgroundClass: "room-scene-background--dog", mobileBackgroundClass: "room-scene-background--dog-mobile", backgroundStyle: { objectFit: "contain", objectPosition: "center center" }, doorplate: { image: sharedAssets.nameplate, alt: "小狗名字門牌" } };
 export const dogDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.png", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: "/assets/car/adoption-documents.png", documentFolderAlt: "飼養文件夾" };
-export const dogPreparation = { roomItems: dogRoomItems, hazards: dogHazards, trunkItems: dogDepartureTrunkItems, roomScene: dogRoomScene, departureScene: dogDepartureScene } as const;
+export const dogPreparation = { roomItems: dogRoomItems, hazards: dogHazards, trunkItems: dogDepartureTrunkItems, roomFlow: dogRoomFlow, roomScene: dogRoomScene, departureScene: dogDepartureScene } as const;

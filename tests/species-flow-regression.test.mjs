@@ -52,11 +52,6 @@ test("five species preserve first-meal completion and recurring-expense contract
     const feeding = await source(`app/data/species/${species}/feeding.ts`);
     assert.deepEqual(quotedArray(feeding, "recurringExpenseIds"), expected.recurringExpenses, `${species} recurring meal expenses changed`);
 
-    const reportStart = reportRegistry.indexOf(`  ${species}:`);
-    const reportEnd = reportRegistry.indexOf("\n  ", reportStart + 3);
-    const reportSection = reportRegistry.slice(reportStart, reportEnd === -1 ? undefined : reportEnd);
-    assert.deepEqual(quotedArray(reportSection, "requiredActivityIds"), expected.requiredMealSupplies, `${species} report completion rule changed`);
-
     if (species === "hamster") {
       assert.match(feeding, /interaction:\s*"choice"/, "hamster keeps its choice-based first meal");
     } else {
@@ -64,6 +59,43 @@ test("five species preserve first-meal completion and recurring-expense contract
       assert.deepEqual(quotedArray(feeding, "requiredSupplies"), expected.requiredMealSupplies, `${species} required meal supplies changed`);
       assert.match(feeding, /unsafeFoods:\s*\[/, `${species} keeps unsafe-food feedback`);
     }
+  }
+  const practiceRegistrySection = reportRegistry.slice(0, reportRegistry.indexOf("const discussionSummaryOverrides"));
+  assert.doesNotMatch(practiceRegistrySection, /requiredActivityIds|dog:|cat:|rabbit:|bird:|hamster:/, "report registry must not duplicate feeding completion requirements");
+  assert.match(practiceRegistrySection, /completionSelector:\s*"arrival-meal"/);
+});
+
+test("report completion selectors own activity-state details and derive meals from feeding data", async () => {
+  const [report, masteredSelectors, practiceSelectors] = await Promise.all([
+    source("app/components/report/AssessmentReport.tsx"),
+    source("app/data/shared/mastered-care-selectors.ts"),
+    source("app/data/species/report-practice-selectors.ts"),
+  ]);
+  assert.doesNotMatch(report, /walkingComplete|catInspectionSteps|rabbitGroomingState|hamsterInspectionCompleted|birdCageInspectionSteps/);
+  assert.match(report, /isMasteredCareLifeStateComplete\(source, lifeActivity\)/);
+  assert.match(masteredSelectors, /masteredCareCompletionSelectors/);
+  assert.match(practiceSelectors, /getSpeciesConfig\(species\)\.feeding/);
+  assert.match(practiceSelectors, /feeding\.requiredSupplies/);
+  assert.match(practiceSelectors, /feeding\.choices/);
+});
+
+test("species-scoped expense lookup never falls back to another species", async () => {
+  const expenses = await source("app/data/shared/expenses.ts");
+  assert.match(expenses, /if \(species !== undefined\)[\s\S]*return speciesCatalog\?\.\[id\];/);
+  assert.match(expenses, /return expenseCatalog\[id\];/);
+  assert.doesNotMatch(expenses, /speciesCatalog\?\.\[id\] \?\? expenseCatalog\[id\]/);
+});
+
+test("departure document visuals use data roles instead of document ids", async () => {
+  const preparationComponent = await source("app/components/preparation/PreparationComponents.tsx");
+  assert.match(preparationComponent, /item\.visualRole === "document-folder"/);
+  assert.match(preparationComponent, /item\.visualRole === "identity-card"/);
+  assert.doesNotMatch(preparationComponent, /item\.id === "documents"|item\.id === "id"|item\.id === "id-card"/);
+
+  for (const species of ["dog", "rabbit", "bird", "hamster"]) {
+    const preparation = await source(`app/data/species/${species}/preparation.ts`);
+    assert.match(preparation, /visualRole: "document-folder"/, `${species} must declare its document-folder visual`);
+    assert.match(preparation, /visualRole: "identity-card"/, `${species} must declare its identity-card visual`);
   }
 });
 
@@ -116,10 +148,15 @@ test("scenario media selection stays out of shared scenario UI", async () => {
   assert.match(dogScenarios, /correctFeedbackMedia:\s*\{ type: "video"/);
   assert.match(dogBreedChallenges, /scenarioMedia\.dog\.shedding/);
   assert.match(dogBreedChallenges, /scenarioMedia\.dog\.rainyWalk/);
+  assert.match(journeyRegistry, /getSpeciesConfig\(species\)\.scenarioPresentation/);
+  assert.doesNotMatch(journeyRegistry, /if \(species ===|species === "cat"|species === "rabbit"|species === "bird"|species === "hamster"/);
   for (const species of Object.keys(speciesFlows)) {
-    const journey = await source(`app/data/species/${species}/journey.ts`);
+    const [journey, speciesConfig] = await Promise.all([
+      source(`app/data/species/${species}/journey.ts`),
+      source(`app/data/species/${species}/index.ts`),
+    ]);
     assert.match(journey, new RegExp(`export const ${species}ScenarioPresentation`));
-    assert.match(journeyRegistry, new RegExp(`${species}: ${species}ScenarioPresentation`));
+    assert.match(speciesConfig, new RegExp(`scenarioPresentation: ${species}ScenarioPresentation`));
     if (species !== "dog") {
       assert.match(journey, /correctFeedbackMedia:\s*\{ type: "placeholder" \}/, `${species} must not borrow dog feedback video`);
       assert.doesNotMatch(journey, /scenarioMedia\.dog\./, `${species} must not borrow dog question video`);
@@ -158,6 +195,32 @@ test("replay reset strategies retain the activity state fields they clear", asyn
     const section = registry.slice(start, end === -1 ? registry.indexOf("default:", start) : end);
     for (const field of fields) assert.match(section, new RegExp(`\\b${field}\\s*:`), `${resetKey} must reset ${field}`);
   }
+});
+
+test("formal readiness and report components read the registered species data", async () => {
+  const [preparation, report] = await Promise.all([
+    source("app/components/preparation/PreparationComponents.tsx"),
+    source("app/components/report/AssessmentReport.tsx"),
+  ]);
+  assert.match(preparation, /getSpeciesConfig\(species\)\.homeReadiness/);
+  assert.doesNotMatch(preparation, /getHomeReadinessConfig/);
+  assert.match(report, /speciesConfig\.homeReadiness/);
+  assert.match(report, /speciesConfig\.careReviewAdditionalNotes/);
+  assert.match(report, /speciesConfig\.masteredCareThemes/);
+  assert.doesNotMatch(report, /getHomeReadinessConfig|getCareReviewAdditionalNotes|getMasteredCareThemes/);
+});
+
+test("legacy scenario entry is isolated from the formal journey", async () => {
+  const [page, lifeJourney, compatibilityEntry, legacyImplementation] = await Promise.all([
+    source("app/page.tsx"),
+    source("app/components/life/LifeJourneyComponents.tsx"),
+    source("app/components/life/ScenarioComponents.tsx"),
+    source("app/components/life/legacy/ScenarioComponents.tsx"),
+  ]);
+  assert.doesNotMatch(`${page}\n${lifeJourney}`, /legacy-scenarios|ScenarioComponents/);
+  assert.match(compatibilityEntry, /@deprecated/);
+  assert.match(compatibilityEntry, /from "\.\/legacy\/ScenarioComponents"/);
+  assert.match(legacyImplementation, /legacy-scenarios/);
 });
 
 test("large flow screens remain behind dynamic import boundaries", async () => {

@@ -1,15 +1,15 @@
 import { birdAssets } from "./assets";
 import { birdFeeding } from "./feeding";
 import { getBirdChallengeScenarios } from "./breed-challenges";
-import { birdJourney } from "./journey";
+import { birdJourney, birdScenarioPresentation } from "./journey";
 import { birdLayout } from "./layout";
 import { birdPreparation } from "./preparation";
 import { birdReport } from "./report";
-import { birdLifeScenarios } from "./scenarios";
+import { birdActivityScenarios, birdLifeScenarios } from "./scenarios";
 import { birdCopy } from "./copy";
 import { birdHomeReadiness } from "./home-readiness";
 import { birdMasteredCareThemes } from "./mastered-care-themes";
 import { birdCareReviewAdditionalNotes } from "./care-review-notes";
 export const birdSelection = { skipBreedPage: true, breeds: [{ id: "bird", species: "bird", label: "鸚鵡", icon: "🦜", image: birdAssets.selection.bird, size: "small", shortDescription: "鸚鵡對空氣品質、環境變化與社交互動很敏感；不同物種的壽命與食性差異也很大。" }] } as const;
-export const birdConfig = { id: "bird" as const, selection: birdSelection, preparation: birdPreparation, journey: birdJourney, scenarios: birdLifeScenarios, breedChallenges: getBirdChallengeScenarios, report: birdReport, assets: birdAssets, layout: birdLayout, feeding: birdFeeding, copy: birdCopy, homeReadiness: birdHomeReadiness, masteredCareThemes: birdMasteredCareThemes, careReviewAdditionalNotes: birdCareReviewAdditionalNotes } as const;
+export const birdConfig = { id: "bird" as const, selection: birdSelection, preparation: birdPreparation, journey: birdJourney, scenarios: birdLifeScenarios, getLifeScenarios: () => birdLifeScenarios, getReportScenarios: () => [...birdLifeScenarios, ...Object.values(birdActivityScenarios)], scenarioPresentation: birdScenarioPresentation, breedChallenges: getBirdChallengeScenarios, report: birdReport, assets: birdAssets, layout: birdLayout, feeding: birdFeeding, copy: birdCopy, homeReadiness: birdHomeReadiness, masteredCareThemes: birdMasteredCareThemes, careReviewAdditionalNotes: birdCareReviewAdditionalNotes } as const;
 export { birdAssets, birdJourney, birdLayout, birdPreparation, birdReport, birdLifeScenarios, getBirdChallengeScenarios, birdFeeding };

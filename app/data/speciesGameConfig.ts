@@ -21,6 +21,7 @@ export const speciesGameConfig: Record<SpeciesId, SpeciesGameConfig> = {
     id: "dog", copy: dogConfig.copy, roomItems: dogConfig.preparation.roomItems,
     hazards: dogConfig.preparation.hazards, trunkItems: dogConfig.preparation.trunkItems,
     report: dogConfig.report,
+    roomFlow: dogConfig.preparation.roomFlow as SpeciesGameConfig["roomFlow"],
   },
   cat: {
     id: "cat", copy: catConfig.copy, roomItems: catConfig.preparation.roomItems,

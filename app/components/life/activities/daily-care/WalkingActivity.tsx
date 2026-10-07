@@ -103,13 +103,15 @@ export function WalkingActivity({
   activity,
   petName,
   onChange,
-  onAddExpense,
+  expenseIds,
+  onPlayExpenseSequence,
   onContinue,
 }: {
   activity: LifeActivityState;
   petName: string;
   onChange: (patch: Partial<LifeActivityState>) => void;
-  onAddExpense: (id: string) => void;
+  expenseIds?: readonly string[];
+  onPlayExpenseSequence?: (ids: readonly string[]) => Promise<void>;
   onContinue: () => void;
 }) {
   const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
@@ -119,6 +121,7 @@ export function WalkingActivity({
   const [position, setPosition] = useState(0);
   const [moving, setMoving] = useState(false);
   const [message, setMessage] = useState("");
+  const cleanupSequenceRunningRef = useRef(false);
   const completingSceneRef = useRef<number | null>(null);
   const forwardAnimationFrameRef = useRef<number | null>(null);
   const forwardHoldTimerRef = useRef<number | null>(null);
@@ -176,7 +179,6 @@ export function WalkingActivity({
 
   function prepare(id: string) {
     if (prepared.includes(id)) return;
-    if (id === "bag") onAddExpense("monthly-waste-bags");
     onChange({ walkingPreparedItems: [...prepared, id] });
     setMessage("");
   }
@@ -338,12 +340,16 @@ export function WalkingActivity({
     setDraggedBag(null);
   }
 
-  function cleanupPoop() {
+  async function cleanupPoop() {
+    if (cleanupSequenceRunningRef.current || activity.walkingPoopCleaned) return;
+    cleanupSequenceRunningRef.current = true;
     stopForward();
     draggingBagRef.current = false;
     setDraggedBag(null);
     onChange({ walkingPoopCleaned: true });
+    await onPlayExpenseSequence?.(expenseIds ?? []);
     setMessage("已清理完成，繼續陪牠往前走。");
+    cleanupSequenceRunningRef.current = false;
   }
 
   const renderWalkingEventCard = (className = "") => walkingEventMessage ? (

@@ -1,11 +1,11 @@
 import { rabbitAssets } from "./assets";
 import { rabbitFeeding } from "./feeding";
 import { getRabbitBreedChallengeScenarios } from "./breed-challenges";
-import { rabbitJourney } from "./journey";
+import { rabbitJourney, rabbitScenarioPresentation } from "./journey";
 import { rabbitLayout } from "./layout";
 import { rabbitPreparation } from "./preparation";
 import { rabbitReport } from "./report";
-import { rabbitLifeScenarios } from "./scenarios";
+import { rabbitActivityScenarios, rabbitLifeScenarios } from "./scenarios";
 import { rabbitCopy } from "./copy";
 import { rabbitHomeReadiness } from "./home-readiness";
 import { rabbitMasteredCareThemes } from "./mastered-care-themes";
@@ -29,6 +29,9 @@ export const rabbitConfig = {
   preparation: rabbitPreparation,
   journey: rabbitJourney,
   scenarios: rabbitLifeScenarios,
+  getLifeScenarios: () => rabbitLifeScenarios,
+  getReportScenarios: () => [...rabbitLifeScenarios, ...Object.values(rabbitActivityScenarios)],
+  scenarioPresentation: rabbitScenarioPresentation,
   breedChallenges: getRabbitBreedChallengeScenarios,
   report: rabbitReport,
   assets: rabbitAssets,

@@ -26,8 +26,8 @@ export const hamsterTrunkItems: TrunkItem[] = [
   { id: "carrier", label: "防逃運輸容器", kind: "supply", image: "/assets/car/hamster-carrier.webp", visualScale: 1, description: "擅長啃咬與鑽縫隙，需選金屬或硬質材料。", preparedLabel: "已準備", expenseIds: ["hamster-carrier"], placement: { x: 51, y: 60, width: 34, layer: 5 } },
   { id: "bedding-in-carrier", label: "容器內墊料", kind: "supply", description: "運輸容器內放入{petName}熟悉氣味的墊料，有助穩定情緒。", preparedLabel: "已準備", placement: { x: 46, y: 69, width: 20, layer: 6 } },
   { id: "hideout-in-carrier", label: "小型躲藏物", kind: "supply", description: "提供可躲藏的空間，讓{petName}在移動過程中感到安心。", preparedLabel: "已準備", placement: { x: 55, y: 54, width: 17, layer: 6 } },
-  { id: "id-card", visualClassName: "id", label: "身分證", kind: "document", image: "/assets/car/id-card.png", description: "辦理認養與核對身分時使用。", preparedLabel: "已攜帶", placement: { x: 20, y: 36, width: 15, layer: 4 } },
-  { id: "adoption-documents", visualClassName: "documents", label: "領養文件", kind: "document", image: "/assets/car/adoption-documents.png", description: "如有租屋，須提供房東許可之證明。", preparedLabel: "已攜帶", placement: { x: 23, y: 32, width: 23, layer: 3 } },
+  { id: "id-card", visualClassName: "id", visualRole: "identity-card", label: "身分證", kind: "document", image: "/assets/car/id-card.png", description: "辦理認養與核對身分時使用。", preparedLabel: "已攜帶", placement: { x: 20, y: 36, width: 15, layer: 4 } },
+  { id: "adoption-documents", visualClassName: "documents", visualRole: "document-folder", label: "領養文件", kind: "document", image: "/assets/car/adoption-documents.png", description: "如有租屋，須提供房東許可之證明。", preparedLabel: "已攜帶", placement: { x: 23, y: 32, width: 23, layer: 3 } },
 ];
 
 export const hamsterRoomFlow = {

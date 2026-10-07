@@ -1,11 +1,11 @@
 import { catAssets } from "./assets";
 import { catFeeding } from "./feeding";
 import { catHazards, catRoomItems } from "./preparation";
-import { catJourney } from "./journey";
+import { catJourney, catScenarioPresentation } from "./journey";
 import { catLayout } from "./layout";
 import { catPreparation } from "./preparation";
 import { catReport } from "./report";
-import { catLifeScenarios } from "./scenarios";
+import { catLifeScenarios, getCatLifeScenarios } from "./scenarios";
 import { getCatBreedChallengeScenarios } from "./breed-challenges";
 import { catSelection } from "./selection";
 import { catCopy } from "./copy";
@@ -19,6 +19,9 @@ export const catConfig = {
   preparation: { roomItems: catRoomItems, hazards: catHazards, ...catPreparation },
   journey: catJourney,
   scenarios: catLifeScenarios,
+  getLifeScenarios: getCatLifeScenarios,
+  getReportScenarios: getCatLifeScenarios,
+  scenarioPresentation: catScenarioPresentation,
   breedChallenges: getCatBreedChallengeScenarios,
   report: catReport,
   assets: catAssets,

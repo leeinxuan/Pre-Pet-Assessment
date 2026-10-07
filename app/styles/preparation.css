@@ -212,7 +212,7 @@
   /* 手機版房間物品位置：由 layout.ts 的 mobile placement CSS 變數提供。 */
   .room-scene .placed-supply { left: var(--mobile-room-item-x) !important; top: var(--mobile-room-item-y) !important; width: var(--mobile-room-item-width) !important; }
   .room-scene .room-hazard { left: var(--mobile-room-hazard-x) !important; top: var(--mobile-room-hazard-y) !important; width: var(--mobile-room-hazard-width) !important; }
-  .room-scene .rabbit-slippery-floor-hotspot { left: var(--mobile-room-hotspot-x) !important; top: var(--mobile-room-hotspot-y) !important; width: var(--mobile-room-hotspot-width) !important; height: var(--mobile-room-hotspot-height) !important; }
+  .room-scene .room-floor-hazard-hotspot { left: var(--mobile-room-hotspot-x) !important; top: var(--mobile-room-hotspot-y) !important; width: var(--mobile-room-hotspot-width) !important; height: var(--mobile-room-hotspot-height) !important; }
   .room-flow-scene--custom-aspect { width: min(100%, 390px); aspect-ratio: var(--room-flow-aspect-ratio); justify-self: center; }
   .room-flow-return { top: 11px; left: 11px; width: 36px; height: 36px; font-size: 21px; }
   .room-scene .pet-doorplate { left: var(--mobile-doorplate-x) !important; top: var(--mobile-doorplate-y) !important; width: var(--mobile-doorplate-width) !important; min-width: 0; }
@@ -271,7 +271,7 @@
 .room-preparation { min-height: 540px; }
 .room-preparation-layout { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 18px; align-items: start; }
 .room-supply-shelf { min-height: 470px; overflow: hidden; padding: 17px; border: 1px solid var(--line); border-radius: 20px; background: white; }
-.room-interaction-column { min-width: 0; }
+.room-interaction-column { position: relative; min-width: 0; }
 .room-scene { position: relative; width: 100%; aspect-ratio: 2558 / 1444; overflow: hidden; border: 1px solid #d8bd8c; border-radius: 20px; background: #dbc7a4; box-shadow: 0 12px 35px rgba(70, 53, 26, .1); }
 .room-scene:not(.room-scene-ready) .room-object { visibility: hidden; }
 .room-scene:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
@@ -281,6 +281,7 @@
 /* 犬隻原圖與桌機舞台同為 2558:1444；保留完整畫面，不額外放大裁切。 */
 .room-scene-background--dog { object-fit: contain; object-position: center center; background: #dbc7a4; }
 .room-scene-background--portrait { object-fit: contain; background: #f8f0df; }
+.room-scene--floor-safe .room-scene-background { animation: roomBackgroundCrossfade .3s ease both; }
 .room-object { position: absolute; z-index: 2; height: auto; padding: 0; border: 0; background: transparent; cursor: pointer; transform: translate(-50%, -50%); filter: drop-shadow(0 5px 5px rgba(65, 45, 21, .2)); }
 .room-object img { display: block; width: 100%; height: auto; max-height: 100%; object-fit: contain; }
 .room-object span { position: absolute; left: 50%; bottom: -17px; max-width: 120px; padding: 2px 6px; border-radius: 999px; background: rgba(255, 253, 247, .92); color: var(--ink); font-size: 9px; font-weight: 900; white-space: nowrap; transform: translateX(-50%); opacity: 0; transition: opacity .2s; }
@@ -293,9 +294,10 @@
 .room-hazard span { top: -19px; bottom: auto; opacity: 1; transform: translateX(-50%); }
 .room-hazard img { transform-origin: center; animation: hazardPulse 2.4s ease-in-out infinite; }
 .room-hazard.dismissing { pointer-events: none; animation: hazardDismiss .26s ease forwards; }
-.rabbit-slippery-floor-hotspot { position: absolute; z-index: 4; box-sizing: border-box; padding: 0; border: 2px dashed rgba(180, 119, 42, .75); border-radius: 18px; background: rgba(255, 239, 193, .18); color: #725022; cursor: pointer; transition: background .18s ease, box-shadow .18s ease; transform: translate(-50%, -50%); }
-.rabbit-slippery-floor-hotspot span { position: absolute; left: 50%; top: 50%; padding: 5px 10px; border: 1px solid rgba(180,119,42,.32); border-radius: 999px; background: rgba(255,252,243,.94); box-shadow: 0 4px 12px rgba(96,62,21,.12); color: #725022; font-size: 12px; font-weight: 900; white-space: nowrap; transform: translate(-50%, -50%); }
-.rabbit-slippery-floor-hotspot:hover, .rabbit-slippery-floor-hotspot:focus-visible { background: rgba(255, 229, 158, .3); box-shadow: 0 0 0 5px rgba(224, 164, 52, .17); outline: none; }
+.room-floor-hazard-hotspot { position: absolute; z-index: 4; box-sizing: border-box; padding: 0; border: 2px dashed rgba(180, 119, 42, .82); border-radius: 18px; background: rgba(255, 229, 158, .12); color: #725022; cursor: pointer; transition: background .18s ease, box-shadow .18s ease; transform: translate(-50%, -50%); }
+.room-floor-hazard-hotspot span { position: absolute; left: 50%; top: 50%; padding: 5px 10px; border: 1px solid rgba(180,119,42,.32); border-radius: 999px; background: rgba(255,252,243,.94); box-shadow: 0 4px 12px rgba(96,62,21,.12); color: #725022; font-size: 12px; font-weight: 900; white-space: nowrap; transform: translate(-50%, -50%); }
+.room-floor-hazard-hotspot:hover { background: rgba(255, 229, 158, .28); box-shadow: inset 0 0 0 2px rgba(255, 250, 229, .46); }
+.room-floor-hazard-hotspot:focus-visible { outline: 3px solid rgba(212,154,36,.7); outline-offset: -3px; }
 .room-flow-scene--custom-aspect { width: min(100%, 480px); aspect-ratio: var(--room-flow-aspect-ratio); justify-self: center; }
 .room-flow-entry { pointer-events: auto; border-radius: 12px; }
 .room-flow-entry:disabled { cursor: not-allowed; filter: saturate(.7) opacity(.72); }
@@ -309,6 +311,7 @@
 @keyframes hazardPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 @keyframes hazardDismiss { to { opacity: 0; transform: translate(-50%, -60%) scale(.72); } }
 @keyframes roomDropPop { 0% { opacity: 0; transform: translate(-50%, -75%) scale(.72); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes roomBackgroundCrossfade { from { opacity: 0; } to { opacity: 1; } }
 .room-hazard-alert { animation: roomAlertIn .22s ease both; }
 @keyframes roomAlertIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 .task-message { margin-top: 16px; padding: 14px 17px; border-radius: 13px; background: #fff1c9; color: #76591c; line-height: 1.6; font-weight: 800; font-size: 13px; }
@@ -364,7 +367,10 @@
 }
 
 @media (max-width: 720px) {
-  .room-phase-progress { display: grid; grid-template-columns: 1fr; gap: 7px; }
+  .room-phase-progress { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .room-phase-progress li { min-width: 0; gap: 4px; padding: 8px 7px; font-size: 10px; line-height: 1.25; }
+  .room-phase-progress li span { flex: 0 0 20px; width: 20px; height: 20px; font-size: 10px; }
+  .room-phase-progress li b { margin-left: auto; font-size: 10px; white-space: nowrap; }
   .room-preparation { min-height: 430px; }
   .room-preparation .room-supply-shelf { min-height: 445px; }
   .room-actions,
@@ -373,6 +379,7 @@
   .room-check-message { max-width: none; }
   .room-object span { display: none; }
   .room-hazard span { display: block; top: -15px; font-size: 8px; }
+  .room-hazard-alert { position: static; width: auto; max-height: none; margin: 0 0 10px; padding: 11px 13px; }
   .hazard-grid { grid-template-columns: 1fr 1fr; }
   .hazard-grid button { min-height: 115px; }
   .trunk-shelf > div { grid-template-columns: repeat(2, 1fr); }
@@ -380,6 +387,15 @@
   .trunk-body { min-height: 390px; padding: 20px 14px; }
   .trunk-body > div { grid-template-columns: repeat(3, 1fr); }
   .trunk-feedback ul { grid-template-columns: 1fr; }
+}
+
+.room-scene-background--dedicated-mobile,
+.room-scene-background--dedicated-mobile img { display: block; width: 100%; height: 100%; }
+.room-scene-background--dedicated-mobile img { object-fit: contain; object-position: center; }
+
+/* 犬隻的手機素材皆為 1:1，僅犬在手機依素材比例調整舞台。 */
+@media (max-width: 720px) {
+  .room-scene--dedicated-mobile-background { aspect-ratio: 1 / 1; }
 }
 
 

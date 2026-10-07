@@ -64,8 +64,13 @@
   .stage-layout { grid-template-columns: 1fr; }
   .station-rail { display: none; }
   .mobile-progress-nav { display: block; position: sticky; top: 0; z-index: 45; border-bottom: 1px solid var(--line); background: rgba(255,253,247,.98); box-shadow: 0 7px 20px rgba(70,53,26,.07); }
+  /* Some mobile browsers retain the details element's previous expanded
+     height after it closes. Clamp the closed shell itself, not only its body. */
+  .mobile-progress-nav:not([open]) { height: 52px; min-height: 52px; max-height: 52px; overflow: hidden; }
   .mobile-progress-nav summary { min-height: 52px; display: grid; grid-template-columns: max-content minmax(160px, 1fr) 26px; align-items: center; gap: 6px; padding: 8px 16px; cursor: pointer; list-style: none; }
   .mobile-progress-nav summary::-webkit-details-marker { display: none; }
+  /* 明確收合內容，避免部分手機瀏覽器保留空白的導覽高度。 */
+  .mobile-progress-nav:not([open]) > div { display: none; }
   .mobile-progress-copy { min-width: 0; max-width: 170px; display: block; }
   .mobile-progress-copy b { display: block; overflow: hidden; color: var(--ink); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
   .mobile-progress-toggle { width: 26px; height: 26px; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid #e4d8c5; border-radius: 50%; background: white; color: var(--gold-dark); box-shadow: 0 3px 10px rgba(70,53,26,.06); }
@@ -89,6 +94,7 @@
   .mobile-progress-nav .nav-children { margin-left: 27px; }
   /* ≤ 768px：縮小 summary 尺寸，但保留三欄佈局（階段名稱｜進度點｜箭頭）。 */
   @media (max-width: 768px) {
+    .mobile-progress-nav:not([open]) { height: 44px; min-height: 44px; max-height: 44px; }
     .mobile-progress-nav summary { min-height: 44px; grid-template-columns: max-content minmax(80px, 1fr) 24px; gap: 6px; padding: 6px 12px; }
     .mobile-progress-copy { max-width: 120px; }
     .mobile-progress-copy b { font-size: 12px; }

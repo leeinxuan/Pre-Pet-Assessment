@@ -1,44 +1,24 @@
-import type { JourneyItem, Scenario, ScenarioPresentationConfig, SpeciesScenarioPresentationConfig } from "../../game-types";
-import { catDailyBehaviorScenarioIds, catJourneyItems, catScenarioPresentation } from "./cat/journey";
-import { getCatBreedChallengeScenarios } from "./cat/breed-challenges";
-import { catLifeScenarios, getCatLifeScenarios } from "./cat/scenarios";
-import { dogDailyBehaviorScenarioIds, dogJourneyItems, dogScenarioPresentation } from "./dog/journey";
-import { getDogBreedChallengeScenarios } from "./dog/breed-challenges";
-import { dogLifeScenarios, getDogLifeScenarios } from "./dog/scenarios";
-import { rabbitDailyBehaviorScenarioIds, rabbitJourneyItems, rabbitScenarioPresentation } from "./rabbit/journey";
-import { getRabbitBreedChallengeScenarios } from "./rabbit/breed-challenges";
-import { rabbitActivityScenarios, rabbitLifeScenarios } from "./rabbit/scenarios";
-import { birdDailyBehaviorScenarioIds, birdJourneyItems, birdScenarioPresentation } from "./bird/journey";
-import { getBirdChallengeScenarios } from "./bird/breed-challenges";
-import { birdActivityScenarios, birdLifeScenarios } from "./bird/scenarios";
-import { hamsterDailyBehaviorScenarioIds, hamsterJourneyItems, hamsterScenarioPresentation } from "./hamster/journey";
-import { hamsterLifeScenarios } from "./hamster/scenarios";
+import type { JourneyItem, Scenario, ScenarioPresentationConfig } from "../../game-types";
+import { getSpeciesConfig, getSpeciesConfigForBreed } from "./index";
 
-export { catJourneyItems, catLifeScenarios, dogJourneyItems, dogLifeScenarios, rabbitJourneyItems, rabbitLifeScenarios, birdJourneyItems, birdLifeScenarios };
+// 保留既有轉出，讓尚未遷移的 import 不會改變。
+export { catJourneyItems } from "./cat/journey";
+export { catLifeScenarios } from "./cat/scenarios";
+export { dogJourneyItems } from "./dog/journey";
+export { dogLifeScenarios } from "./dog/scenarios";
+export { rabbitJourneyItems } from "./rabbit/journey";
+export { rabbitLifeScenarios } from "./rabbit/scenarios";
+export { birdJourneyItems } from "./bird/journey";
+export { birdLifeScenarios } from "./bird/scenarios";
 
-const dailyBehaviorScenarioIdsBySpecies = {
-  dog: dogDailyBehaviorScenarioIds,
-  cat: catDailyBehaviorScenarioIds,
-  rabbit: rabbitDailyBehaviorScenarioIds,
-  bird: birdDailyBehaviorScenarioIds,
-  hamster: hamsterDailyBehaviorScenarioIds,
-} as const;
-
-const scenarioPresentationBySpecies: Record<string, SpeciesScenarioPresentationConfig> = {
-  dog: dogScenarioPresentation,
-  cat: catScenarioPresentation,
-  rabbit: rabbitScenarioPresentation,
-  bird: birdScenarioPresentation,
-  hamster: hamsterScenarioPresentation,
-};
-
+/** 共用旅程框架只讀取物種註冊表，不在此列舉物種或題目識別碼。 */
 export function getDailyBehaviorScenarioIds(species: string): readonly string[] {
-  return dailyBehaviorScenarioIdsBySpecies[species as keyof typeof dailyBehaviorScenarioIdsBySpecies] ?? dailyBehaviorScenarioIdsBySpecies.dog;
+  return getSpeciesConfig(species).journey.dailyBehaviorScenarioIds;
 }
 
 export function getScenarioPresentation(species: string, scenarioId: string): ScenarioPresentationConfig {
-  const config = scenarioPresentationBySpecies[species] ?? scenarioPresentationBySpecies.dog;
-  return { ...config.defaults, ...config.scenarios[scenarioId] } as ScenarioPresentationConfig;
+  const presentation = getSpeciesConfig(species).scenarioPresentation;
+  return { ...presentation.defaults, ...presentation.scenarios[scenarioId] } as ScenarioPresentationConfig;
 }
 
 /** 旅程畫面站點由資料中的階段識別決定，不依物種或陣列索引猜測。 */
@@ -50,36 +30,25 @@ export function getJourneyStepForItem(item: JourneyItem | undefined): number {
   return 4;
 }
 
-/** 共用旅程框架只透過此入口讀取物種資料，不在 UI 內分支題庫來源。 */
 export function getLifeScenariosForSpecies(species: string, breedId = ""): Scenario[] {
-  if (species === "cat") return getCatLifeScenarios(breedId);
-  if (species === "rabbit") return rabbitLifeScenarios;
-  if (species === "bird") return birdLifeScenarios;
-  if (species === "hamster") return hamsterLifeScenarios;
-  return getDogLifeScenarios(breedId);
+  return getSpeciesConfig(species).getLifeScenarios(breedId);
 }
 
 export function getBreedChallengeScenarios(breedId: string): Scenario[] {
-  if (breedId === "rabbit") return getRabbitBreedChallengeScenarios(breedId);
-  if (breedId === "bird") return getBirdChallengeScenarios();
-  return breedId === "mixed-cat" || breedId === "british-shorthair"
-    ? getCatBreedChallengeScenarios(breedId)
-    : getDogBreedChallengeScenarios(breedId);
+  const config = getSpeciesConfigForBreed(breedId);
+  if ("breedChallenges" in config) return config.breedChallenges(breedId);
+
+  // 舊呼叫若提供未註冊品種，仍維持原本的犬隻預設行為。
+  const fallback = getSpeciesConfigForBreed("");
+  return "breedChallenges" in fallback ? fallback.breedChallenges(breedId) : [];
 }
 
 export function getAllScenariosForSpecies(species: string, breedId: string): Scenario[] {
-  if (species === "rabbit") return [...rabbitLifeScenarios, ...Object.values(rabbitActivityScenarios)];
-  if (species === "bird") return [...birdLifeScenarios, ...Object.values(birdActivityScenarios)];
-  if (species === "hamster") return hamsterLifeScenarios;
-  return getLifeScenariosForSpecies(species, breedId);
+  return getSpeciesConfig(species).getReportScenarios(breedId);
 }
 
 export function getJourneyItemsForSpecies(species: string): JourneyItem[] {
-  const items = species === "cat" ? catJourneyItems
-    : species === "rabbit" ? rabbitJourneyItems
-      : species === "bird" ? birdJourneyItems
-        : species === "hamster" ? hamsterJourneyItems
-        : dogJourneyItems;
   // 品種資料與題庫仍保留供日後啟用；目前不納入可見流程、進度或匯出。
-  return items.filter((item) => item.stageId !== "breed" && item.type !== "breed-challenge" && item.type !== "bird-challenge");
+  return getSpeciesConfig(species).journey.items
+    .filter((item) => item.stageId !== "breed" && item.type !== "breed-challenge" && item.type !== "bird-challenge");
 }

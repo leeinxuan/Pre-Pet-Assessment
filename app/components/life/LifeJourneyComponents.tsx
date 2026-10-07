@@ -9,6 +9,7 @@ import {
   getLifeScenariosForSpecies,
 } from "../../data/species/journey";
 import { getJourneyActivityConfig, getJourneyActivityResetPatch } from "../../data/species/activity-registry";
+import { getSpeciesConfig } from "../../data/species";
 import {
   ArrivalMealActivity,
   BirdCageInspectionActivity,
@@ -44,6 +45,21 @@ function choiceHasTemporaryReserveExpense(choice: ScenarioChoice, species: strin
   });
 }
 
+const directRoomExpenseIds = new Set([
+  "cat-litter-monthly",
+  "bird-cleaning-monthly",
+  "hamster-sand-monthly",
+  "hamster-bedding-monthly",
+  "hamster-gnaw-monthly",
+  "rabbit-litter-monthly",
+  // 狗狗清潔耗材在散步撿便完成時才加入，不能跟第一餐一起觸發。
+  "dog-clean-monthly",
+]);
+
+function arrivalMealExpenseIdsForSpecies(species: string) {
+  return getSpeciesConfig(species).feeding.recurringExpenseIds.filter((id) => !directRoomExpenseIds.has(id));
+}
+
 
 
 export function LifeJourney({
@@ -67,6 +83,7 @@ export function LifeJourney({
   onCompleteItem,
   onAddExpense,
   onAddExpenseGroup,
+  onPlayExpenseSequence,
   onStageChange,
   onComplete,
 }: {
@@ -92,6 +109,7 @@ export function LifeJourney({
   onCompleteItem: (id: string) => void;
   onAddExpense: (id: string, triggerMeta?: ExpenseTriggerMeta) => void;
   onAddExpenseGroup: (ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) => void;
+  onPlayExpenseSequence: (ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) => Promise<void>;
   onStageChange: (step: number) => void;
   onBack: () => void;
   onComplete: () => void;
@@ -264,12 +282,12 @@ export function LifeJourney({
           answers={answers}
           petName={petName}
           onChooseMultiple={onChooseMultiple}
-          onCorrectFeedbackShown={(correctScenario, choices) => {
-            choices.flatMap((choice) => choice.expenseIds ?? []).forEach((expenseId) => onAddExpense(expenseId, {
+          onCorrectExpenseSequence={(correctScenario, choices) => {
+            return onPlayExpenseSequence(choices.flatMap((choice) => choice.expenseIds ?? []), {
               speciesId: species,
               stageId: correctScenario.stageId,
               sourceScenarioId: correctScenario.id,
-            }));
+            });
           }}
           onContinue={continueJourney}
           scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : getDailyBehaviorScenarioIds(species)}
@@ -290,7 +308,8 @@ export function LifeJourney({
           activity={activity}
           petName={petName}
           onChange={onActivityChange}
-          onAddExpense={onAddExpense}
+          expenseIds={["dog-clean-monthly"]}
+          onPlayExpenseSequence={onPlayExpenseSequence}
           onContinue={continueJourney}
         />
       ) : isArrivalMealActivity ? (
@@ -299,7 +318,8 @@ export function LifeJourney({
           petName={petName}
           species={species}
           onChange={onActivityChange}
-          onAddExpense={onAddExpense}
+          expenseIds={arrivalMealExpenseIdsForSpecies(species)}
+          onPlayExpenseSequence={onPlayExpenseSequence}
           onContinue={continueJourney}
         />
       ) : isBreedChallengeActivity ? (
@@ -344,10 +364,14 @@ export function LifeJourney({
               expenseIds?.forEach((expenseId) => onAddExpense(expenseId, triggerMeta));
             }
           }}
-          deferExpensesUntilFeedback={
-            activityConfig?.deferItemExpenses === true
-            || scenario.choices.some((choice) => choiceHasTemporaryReserveExpense(choice, species))
-          }
+          onCorrectExpenseSequence={scenario.choices.some((choice) => choiceHasTemporaryReserveExpense(choice, species))
+            ? (correctScenario, choice) => onPlayExpenseSequence(choice.expenseIds ?? [], {
+              speciesId: species,
+              stageId: item.stageId ?? correctScenario.stageId,
+              sourceScenarioId: correctScenario.id,
+            })
+            : undefined}
+          deferExpensesUntilFeedback={activityConfig?.deferItemExpenses === true}
           {...replayCorrectProps}
         />
       ) : scenario && (showArrivalMeal ? (
@@ -356,7 +380,8 @@ export function LifeJourney({
           petName={petName}
           species={species}
           onChange={onActivityChange}
-          onAddExpense={onAddExpense}
+          expenseIds={arrivalMealExpenseIdsForSpecies(species)}
+          onPlayExpenseSequence={onPlayExpenseSequence}
           onContinue={continueJourney}
         />
       ) : (

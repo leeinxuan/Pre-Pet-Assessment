@@ -501,14 +501,16 @@ docs/asset-map.md
 
 1. `README.md`
 2. `docs/AI_PROJECT_GUIDE.md`
-3. `docs/species-game-architecture.md`
-4. `app/page.tsx`
-5. `app/game-types.ts`
-6. `app/data/species/index.ts`
-7. 依任務讀對應物種資料：
+3. `docs/AI程式碼修改準則.md`
+4. 新增物種時：`docs/新物種程式實作準則.md`
+5. `docs/species-game-architecture.md`
+6. `app/page.tsx`
+7. `app/game-types.ts`
+8. `app/data/species/index.ts`
+9. 依任務讀對應物種資料：
    - 犬版：`app/data/species/dog/`
    - 貓版：`app/data/species/cat/`
-8. 依任務讀對應元件：
+10. 依任務讀對應元件：
    - 選擇：`app/components/selection/`
    - 準備：`app/components/preparation/`
    - 生活：`app/components/life/`
@@ -667,7 +669,7 @@ corepack pnpm run lint
 如果要把這份專案交給另一個 AI，可以直接使用以下提示：
 
 ```txt
-請先閱讀 README.md、docs/AI_PROJECT_GUIDE.md、docs/species-game-architecture.md、app/page.tsx、app/data/species/index.ts。
+請先閱讀 README.md、docs/AI_PROJECT_GUIDE.md、docs/AI程式碼修改準則.md；若任務是新增物種，還必須閱讀 docs/新物種程式實作準則.md。接著閱讀 docs/species-game-architecture.md、app/page.tsx、app/data/species/index.ts。
 
 這是一個 Vinext / Vite / React / TypeScript 的飼養前評估互動網站。主流程由 app/page.tsx 控制，內容透過 app/data/species/ 下的物種設定切換。不要重寫整個網站，也不要刪除犬版既有流程。任何新增物種或內容都應走共用資料設定，而不是複製頁面或在元件中散落條件判斷。
 

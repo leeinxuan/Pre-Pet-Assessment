@@ -21,7 +21,7 @@ export const speciesConfigs = {
     roomItems: dogConfig.preparation.roomItems,
     hazards: dogConfig.preparation.hazards,
     trunkItems: dogConfig.preparation.trunkItems,
-    roomFlow: undefined,
+    roomFlow: dogConfig.preparation.roomFlow as unknown as RoomFlowConfig,
   },
   cat: {
     ...catConfig,
@@ -63,11 +63,14 @@ export const speciesConfigs = {
 export type SpeciesConfig = (typeof speciesConfigs)[SpeciesId];
 
 export function getSpeciesConfig(species: string | undefined): SpeciesConfig {
-  if (species === "cat") return speciesConfigs.cat;
-  if (species === "rabbit") return speciesConfigs.rabbit;
-  if (species === "bird") return speciesConfigs.bird;
-  if (species === "hamster") return speciesConfigs.hamster;
-  return speciesConfigs.dog;
+  return speciesConfigs[species as SpeciesId] ?? speciesConfigs.dog;
+}
+
+/** 由已註冊的品種資料找回所屬物種，供品種題等共用流程使用。 */
+export function getSpeciesConfigForBreed(breedId: string): SpeciesConfig {
+  return (Object.values(speciesConfigs) as SpeciesConfig[])
+    .find((config) => config.selection.breeds.some((breed) => breed.id === breedId))
+    ?? speciesConfigs.dog;
 }
 
 /** 共用元件讀取正式註冊表提供的物種文案。 */

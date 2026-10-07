@@ -127,6 +127,9 @@ export default function Home() {
   const [testNextSignal, setTestNextSignal] = useState(0);
   const [testNextTargetIndex, setTestNextTargetIndex] = useState<number | null>(null);
   const costToastTimerRef = useRef<number | null>(null);
+  // 費用動畫可能在同一個互動中連續加入多筆資料；以 ref 保持同步去重，
+  // 不必等待 React render 才能知道上一張費用卡是否已寫入。
+  const expensesRef = useRef<ExpenseRecord[]>([]);
   const committedSelectionRef = useRef<{ category: string; breed: string } | null>(null);
 
   useEffect(() => {
@@ -231,23 +234,30 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
+  function showExpenseCard(expense: ExpenseRecord, duration = 1900) {
+    if (costToastTimerRef.current !== null) window.clearTimeout(costToastTimerRef.current);
+    setLatestExpense(expense);
+    costToastTimerRef.current = window.setTimeout(() => {
+      setLatestExpense((active) => active?.id === expense.id ? null : active);
+      costToastTimerRef.current = null;
+    }, duration);
+  }
+
+  function appendExpense(expense: ExpenseRecord) {
+    if (expensesRef.current.some((item) => item.id === expense.id)) return false;
+    const nextExpenses = [...expensesRef.current, expense];
+    expensesRef.current = nextExpenses;
+    setExpenses(nextExpenses);
+    return true;
+  }
+
   function addExpenseById(id: string, triggerMeta?: ExpenseTriggerMeta) {
     const expense = getExpenseForSpecies(id, category);
-    if (!expense) return;
+    if (!expense) return false;
     const sizedExpense = { ...expense, ...triggerMeta };
-    setExpenses((current) => {
-      if (current.some((item) => item.id === id)) return current;
-      if (costToastTimerRef.current !== null) {
-        window.clearTimeout(costToastTimerRef.current);
-        costToastTimerRef.current = null;
-      }
-      setLatestExpense(sizedExpense);
-      costToastTimerRef.current = window.setTimeout(() => {
-        setLatestExpense((active) => active?.id === id ? null : active);
-        costToastTimerRef.current = null;
-      }, 1900);
-      return [...current, sizedExpense];
-    });
+    if (!appendExpense(sizedExpense)) return false;
+    showExpenseCard(sizedExpense);
+    return true;
   }
 
   /** 同一個旅程節點新增一組既有費用，明細仍以原本 expenseId 個別去重。 */
@@ -259,26 +269,71 @@ export default function Home() {
 
     if (!catalogExpenses.length) return;
 
-    setExpenses((current) => {
-      const additions = catalogExpenses.filter((expense) => !current.some((item) => item.id === expense.id));
-      if (!additions.length) return current;
-
-      if (costToastTimerRef.current !== null) window.clearTimeout(costToastTimerRef.current);
-      const groupExpense: ExpenseRecord = {
-        id: `arrival-expense-group:${additions.map((item) => item.id).join("+")}`,
-        name: "到家後必要支出",
-        amount: additions.reduce((sum, item) => sum + item.amount, 0),
-        category: "到家後必要支出",
-        stage: "寵物到家後",
-        recurring: false,
-      };
-      setLatestExpense(groupExpense);
-      costToastTimerRef.current = window.setTimeout(() => {
-        setLatestExpense((active) => active?.id === groupExpense.id ? null : active);
-        costToastTimerRef.current = null;
-      }, 1900);
-      return [...current, ...additions];
+    const additions = catalogExpenses.filter((expense) => appendExpense(expense));
+    if (!additions.length) return;
+    showExpenseCard({
+      id: `arrival-expense-group:${additions.map((item) => item.id).join("+")}`,
+      name: "到家後必要支出",
+      amount: additions.reduce((sum, item) => sum + item.amount, 0),
+      category: "到家後必要支出",
+      stage: "寵物到家後",
+      recurring: false,
     });
+  }
+
+  /**
+   * 活動中的費用卡需在動作完成當下出現；多筆費用依企劃合計為一張卡，
+   * 呼叫端 await 此函式後，才能顯示答對回饋或切換下一畫面。
+   */
+  async function playExpenseSequenceByIds(ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) {
+    const uniqueIds = Array.from(new Set(ids));
+    const additions = uniqueIds
+      .map((id) => getExpenseForSpecies(id, category))
+      .filter((expense): expense is ExpenseRecord => Boolean(expense))
+      .map((expense) => ({ ...expense, ...triggerMeta }))
+      .filter((expense) => !expensesRef.current.some((item) => item.id === expense.id));
+
+    if (!additions.length) return;
+
+    additions.forEach(appendExpense);
+
+    if (additions.length === 1) {
+      showExpenseCard(additions[0]);
+      await new Promise<void>((resolve) => window.setTimeout(resolve, 2100));
+      return;
+    }
+
+    const isMedicalReserve = additions.every((expense) => isTemporaryReserveExpense(expense));
+    const isRabbitMeal = additions.every((expense) =>
+      ["rabbit-hay-monthly", "rabbit-pellet-monthly", "rabbit-veggies-monthly"].includes(expense.id),
+    );
+    const hasMaximum = additions.some((expense) => typeof expense.maxAmount === "number");
+
+    const totalExpense: ExpenseRecord = isMedicalReserve
+      ? {
+          id: `activity-expense-total:${additions.map((item) => item.id).join("+")}`,
+          name: "醫療備用金（建議預留）",
+          amount: additions.reduce((sum, expense) => sum + expense.amount, 0),
+          maxAmount: hasMaximum
+            ? additions.reduce((sum, expense) => sum + (expense.maxAmount ?? expense.amount), 0)
+            : undefined,
+          maxAmountOpenEnded: additions.some((expense) => expense.maxAmountOpenEnded),
+          category: "臨時／醫療支出",
+          stage: additions[0].stage,
+          recurring: false,
+          fromEmergency: true,
+        }
+      : {
+          id: `activity-expense-total:${additions.map((item) => item.id).join("+")}`,
+          name: isRabbitMeal ? "每月飲食費用" : "本次費用加總",
+          amount: additions.reduce((sum, expense) => sum + expense.amount, 0),
+          category: isRabbitMeal ? "每月基本支出" : "活動費用",
+          stage: additions[0].stage,
+          recurring: isRabbitMeal,
+        };
+
+    showExpenseCard(totalExpense);
+    await new Promise<void>((resolve) => window.setTimeout(resolve, 2100));
   }
 
   function addRoomItem(id: string) {
@@ -395,15 +450,8 @@ export default function Home() {
           },
       };
     });
-    if (result === "correct") {
-      choices
-        .flatMap((choice) => choice.expenseIds ?? [])
-        .filter((expenseId) => {
-          const expense = getExpenseForSpecies(expenseId, category);
-          return !isTemporaryReserveExpense(expense ?? { category: "", fromEmergency: false });
-        })
-        .forEach((expenseId) => addExpenseById(expenseId));
-    }
+    // 多選活動的費用由活動元件在所有正確選項完成的當下依序播放，
+    // 不能在這裡直接寫入，否則會跳過費用卡動畫。
   }
 
   function resetAllGameData(nextSelection?: { category: string; breed: string }, options?: { preserveTestMode?: boolean }) {
@@ -424,6 +472,7 @@ export default function Home() {
     setTrunkSelected([]);
     setTrunkPassed(false);
     setExpenses([]);
+    expensesRef.current = [];
     setLatestExpense(null);
     if (costToastTimerRef.current !== null) {
       window.clearTimeout(costToastTimerRef.current);
@@ -568,6 +617,7 @@ export default function Home() {
         onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}
         onAddExpense={addExpenseById}
         onAddExpenseGroup={addExpenseGroupByIds}
+        onPlayExpenseSequence={playExpenseSequenceByIds}
         onStageChange={(nextStep) => { setStep(nextStep); setFurthestStep((current) => Math.max(current, nextStep)); setIntroOpen(false); }}
         onBack={() => { setStep(2); setPreparationTask(2); setIntroOpen(false); }}
         onComplete={() => {

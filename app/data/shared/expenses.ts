@@ -28,10 +28,16 @@ export const expenseCatalog: Record<string, ExpenseRecord> = {
 
 /** 依目前物種取費用，避免同一 ID 的犬貓說明互相覆蓋。 */
 export function getExpenseForSpecies(id: string, species?: string): ExpenseRecord | undefined {
-  const speciesCatalog = species === "dog" || species === "cat" || species === "rabbit" || species === "bird" || species === "hamster"
-    ? expenseCatalogBySpecies[species]
-    : undefined;
-  return speciesCatalog?.[id] ?? expenseCatalog[id];
+  // 已指定物種時，查不到即代表該物種沒有這筆費用；不能退回其他物種的扁平目錄。
+  if (species !== undefined) {
+    const speciesCatalog = species === "dog" || species === "cat" || species === "rabbit" || species === "bird" || species === "hamster"
+      ? expenseCatalogBySpecies[species]
+      : undefined;
+    return speciesCatalog?.[id];
+  }
+
+  // 僅供尚未遷移的 legacy 呼叫使用；正式流程都必須傳入目前物種。
+  return expenseCatalog[id];
 }
 
 /** 臨時性預留費用只會在對應題目的正確回饋出現後才登錄。 */

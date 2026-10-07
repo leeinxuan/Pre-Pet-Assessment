@@ -19,7 +19,7 @@ export const birdRoomItems: RoomItem[] = [
   { id: "bird-water-bowl", label: "飲水器", icon: "💧", image: birdAssets.room.water, placement: { x: 77, y: 42, width: 30, layer: 3 }, required: true, need: "飲食", expenseId: "bird-water-bowl", description: "每天換水並清洗容器；避免過深容器造成跌落風險。" },
   { id: "bird-chew-toy", label: "天然啃咬玩具", icon: "✦", image: birdAssets.room.toy, placement: { x: 68, y: 25, width: 35, layer: 4 }, required: false, need: "活動", expenseId: "bird-chew-toy", description: "木材、麻繩等天然材質可提供安全啃咬與紓壓。" },
   { id: "bird-climbing-toy", label: "攀爬玩具", icon: "⌁", image: birdAssets.room.climbingToy, placement: { x: 12, y: 48, width: 40, layer: 4 }, required: false, need: "活動", expenseId: "bird-climbing-toy", description: "增加籠內活動與探索機會，定期輪換更有新鮮感。" },
-  { id: "bird-feces-tray", label: "籠底墊料", icon: "▤", image: birdAssets.room.tray, placement: { x: 50, y: 79, width: 28, layer: 3 }, required: true, need: "清潔", expenseId: "bird-feces-tray", description: "每天更換墊料，才能觀察糞便並維持環境衛生；可使用報紙、餐巾紙、紙棉等材質，避免使用有香氣的產品。" },
+  { id: "bird-feces-tray", label: "籠底墊料", icon: "▤", image: birdAssets.room.tray, placement: { x: 50, y: 79, width: 28, layer: 3 }, required: true, need: "清潔", expenseIds: ["bird-feces-tray", "bird-cleaning-monthly"], description: "每天更換墊料，才能觀察糞便並維持環境衛生；可使用報紙、餐巾紙、紙棉等材質，避免使用有香氣的產品。" },
   { id: "bird-thermometer", label: "溫度計", icon: "℃", image: birdAssets.room.thermometer, placement: { x: 38, y: 23, width: 20, layer: 4 }, required: false, need: "安全", expenseId: "bird-thermometer", description: "鳥對溫度變化敏感，需要具體數據協助調整環境。" },
 ];
 
@@ -37,8 +37,8 @@ export const birdTrunkItems: TrunkItem[] = [
   { id: "cover-cloth", label: "遮光布／透氣布", kind: "supply", image: birdAssets.preparation.cover, preparedLabel: "已準備", description: "覆蓋外出籠可減少視覺刺激與緊迫。", expenseIds: ["bird-cover-cloth"], placement: { x: 45, y: 56, width: 22, layer: 6 } },
   { id: "species-food", label: "少量熟悉飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", description: "途中備少量符合食性的熟悉飼料。", expenseIds: ["bird-starter-food"], placement: { x: 28, y: 63, width: 16, layer: 6 } },
   { id: "water-supply", label: "防翻飲水容器", kind: "supply", image: birdAssets.preparation.water, preparedLabel: "已準備", description: "長途移動準備適量飲水，安全停靠時補充。", placement: { x: 57, y: 66, width: 12, layer: 6 } },
-  { id: "id-card", visualClassName: "id", label: "身分證", kind: "document", image: birdAssets.preparation.idCard, preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
-  { id: "adoption-documents", visualClassName: "documents", label: "領養文件", kind: "document", image: birdAssets.preparation.documents, preparedLabel: "已攜帶", description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。", placement: { x: 23, y: 32, width: 23, layer: 3 } },
+  { id: "id-card", visualClassName: "id", visualRole: "identity-card", label: "身分證", kind: "document", image: birdAssets.preparation.idCard, preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
+  { id: "adoption-documents", visualClassName: "documents", visualRole: "document-folder", label: "領養文件", kind: "document", image: birdAssets.preparation.documents, preparedLabel: "已攜帶", description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。", placement: { x: 23, y: 32, width: 23, layer: 3 } },
 ];
 export const birdRoomFlow = {
   initialBackground: birdAssets.room.background,

@@ -363,7 +363,6 @@ export type ReportPracticeItemConfig = {
   id: string;
   label: string;
   completionSelector: "arrival-meal" | "cat-litter";
-  requiredActivityIds?: readonly string[];
 };
 
 export type LifeActivityState = {
@@ -491,6 +490,8 @@ export type TrunkItem = {
   id: string;
   label: string;
   kind: "document" | "supply";
+  /** 文件在後車廂場景中的視覺用途；共用元件不可依穩定 id 判斷。 */
+  visualRole?: "document-folder" | "identity-card";
   image?: string;
   /**
    * 圖片尺寸等共用視覺規則使用的 class key；不可取代互動、狀態或費用的穩定 id。

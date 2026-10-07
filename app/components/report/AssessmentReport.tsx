@@ -5,9 +5,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { money } from "../../data/shared/expenses";
-import { getHomeReadinessConfig, type HomeReadinessTextBlock, type HomeReadinessTextSegment } from "../../data/shared/home-readiness";
-import { getCareReviewAdditionalNotes } from "../../data/shared/care-review-notes";
-import { getMasteredCareThemes, type MasteredCareSource } from "../../data/shared/mastered-care-themes";
+import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
+import type { MasteredCareSource } from "../../data/shared/mastered-care-types";
+import { isMasteredCareLifeStateComplete } from "../../data/shared/mastered-care-selectors";
 import { interpolatePetName, petNameFallback } from "../../data/shared/pet-text";
 import { getAllScenariosForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
@@ -16,12 +16,10 @@ import type { CareMember, ExpenseRecord, LifeActivityState, Profile, Scenario, S
 import type { SharedDiscussionTopic } from "../../shared-result-types";
 import {
   ExpenseDetails,
-  formatTemporaryExpenseAmount,
   formatTemporaryExpenseReserve,
   getInitialPreparationBreakdown,
   getInitialPreparationTotal,
   getMonthlyBasicTotal,
-  getMonthlyBasicExpenses,
   getTemporaryExpenses,
   mergeDefaultVisibleExpenses,
   temporaryExpenseReserveNote,
@@ -104,8 +102,8 @@ export function AssessmentReport({
   const additionalNotesTriggerRef = useRef<HTMLButtonElement>(null);
   const additionalNotesModalRef = useRef<HTMLElement>(null);
   const speciesConfig = getSpeciesConfig(species);
-  const homeReadinessConfig = getHomeReadinessConfig(species);
-  const careReviewAdditionalNotes = getCareReviewAdditionalNotes(species);
+  const homeReadinessConfig = speciesConfig.homeReadiness;
+  const careReviewAdditionalNotes = speciesConfig.careReviewAdditionalNotes;
   const selectedHousing = homeReadinessConfig.housingChoices.find((choice) => choice.id === homeReadiness.housing);
   const homeReadinessComplete = Boolean(selectedHousing && homeReadiness.housingReminderAcknowledged && homeReadinessConfig.cards.every((card) => homeReadiness.acknowledgedCardIds.includes(card.id)));
   useEffect(() => {
@@ -143,15 +141,12 @@ export function AssessmentReport({
   const initialPreparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyBasicTotal = getMonthlyBasicTotal(visibleExpenses);
   const initialPreparationBreakdown = getInitialPreparationBreakdown(visibleExpenses);
-  const oneTimePreparationItems = [
-    ...initialPreparationBreakdown.environment.items,
-    ...initialPreparationBreakdown.departure.items,
-  ];
-  const oneTimePreparationTotal = initialPreparationBreakdown.environment.total + initialPreparationBreakdown.departure.total;
-  const monthlyExpenses = getMonthlyBasicExpenses(visibleExpenses);
   const temporaryExpenses = getTemporaryExpenses(visibleExpenses);
+  const temporaryExpenseTotalLabel = temporaryExpenses.length
+    ? formatTemporaryExpenseReserve(temporaryExpenses).replace(/^建議預留\s*/, "")
+    : "NT$ 0";
   const reportScenarios = getAllScenariosForSpecies(species, breed);
-  const practiceItems = getReportPracticeItems(species).map((item) => ({ label: item.label, complete: isReportPracticeItemComplete(item, lifeActivity) }));
+  const practiceItems = getReportPracticeItems().map((item) => ({ label: item.label, complete: isReportPracticeItemComplete(item, species, lifeActivity) }));
   const arrivalMealComplete = practiceItems.find((item) => item.label === "已完成到家第一餐")?.complete ?? false;
   const requiredRoom = speciesConfig.roomItems.filter((item) => item.required);
   const roomCompletion = Math.round((roomReady.filter((id) => requiredRoom.some((item) => item.id === id)).length / requiredRoom.length) * 100);
@@ -196,13 +191,9 @@ export function AssessmentReport({
     if (source.kind === "trunk-preparation") return trunkPassed;
     if (source.kind === "arrival-meal") return arrivalMealComplete;
     if (source.kind === "scenario") return source.scenarioIds.every((scenarioId) => answers[scenarioId]?.finalResult === "correct");
-    if (source.key === "walkingComplete") return lifeActivity.walkingComplete;
-    if (source.key === "cat-litter-complete") return lifeActivity.catInspectionSteps.includes("litter-complete");
-    if (source.key === "rabbit-grooming-complete") return lifeActivity.rabbitGroomingState === "interaction-complete";
-    if (source.key === "hamster-inspection-complete") return lifeActivity.hamsterInspectionCompleted.length === 2;
-    return (source.requiredStepIds ?? []).every((stepId) => lifeActivity.birdCageInspectionSteps.includes(stepId));
+    return isMasteredCareLifeStateComplete(source, lifeActivity);
   };
-  const visibleMasteredCareThemes = getMasteredCareThemes(species)
+  const visibleMasteredCareThemes = speciesConfig.masteredCareThemes
     .filter((theme) => theme.sources.every(completedSource))
     .sort((left, right) => left.order - right.order);
   const knowledgeModal = activeKnowledge && typeof document !== "undefined"
@@ -353,25 +344,20 @@ export function AssessmentReport({
           <div className="care-a4-expense-cards">
             <section className="care-a4-expense-card">
               <h3>初期準備金</h3><strong>NT$ {money.format(initialPreparationTotal)}</strong>
-              <div className="care-a4-initial-groups">
-                <section className="care-a4-initial-group">
-                  <h4>一次性準備費 <span>NT$ {money.format(oneTimePreparationTotal)}</span></h4>
-                  {oneTimePreparationItems.length ? <dl className="care-a4-expense-lines">{oneTimePreparationItems.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}</dd></div>)}</dl> : <p>目前尚未登記項目</p>}
-                </section>
-                <section className="care-a4-initial-group">
-                  <h4>{initialPreparationBreakdown.afterArrival.label} <span>NT$ {money.format(initialPreparationBreakdown.afterArrival.total)}</span></h4>
-                  {initialPreparationBreakdown.afterArrival.items.length ? <dl className="care-a4-expense-lines">{initialPreparationBreakdown.afterArrival.items.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}</dd></div>)}</dl> : <p>目前尚未登記項目</p>}
-                </section>
-              </div>
+              <p className="care-a4-expense-summary-copy">第一次需要準備的總金額，包含：</p>
+              <dl className="care-a4-expense-summary-lines">
+                <div><dt>{initialPreparationBreakdown.afterArrival.label}</dt><dd>NT$ {money.format(initialPreparationBreakdown.afterArrival.total)}</dd></div>
+                <div><dt>{initialPreparationBreakdown.environment.label}</dt><dd>NT$ {money.format(initialPreparationBreakdown.environment.total)}</dd></div>
+                <div><dt>{initialPreparationBreakdown.departure.label}</dt><dd>NT$ {money.format(initialPreparationBreakdown.departure.total)}</dd></div>
+              </dl>
             </section>
             <section className="care-a4-expense-card">
               <h3>每月預估支出</h3><strong>NT$ {money.format(monthlyBasicTotal)}／月</strong>
-              <div>{monthlyExpenses.length ? <dl className="care-a4-expense-lines">{monthlyExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>NT$ {money.format(item.amount)}／月</dd></div>)}</dl> : <p>目前尚未登記項目</p>}</div>
+              <p className="care-a4-expense-summary-copy">{monthlyBasicTotal > 0 ? "每月基本照護的固定支出總額。" : "目前尚未登記項目"}</p>
             </section>
             <section className="care-a4-expense-card care-a4-expense-card--reserve">
-              <h3>臨時性支出預留</h3>{temporaryExpenses.length > 0
-                ? <><strong>{formatTemporaryExpenseReserve(temporaryExpenses)}</strong><p>{temporaryExpenseReserveNote}</p><div><dl className="care-a4-expense-lines">{temporaryExpenses.map((item) => <div key={item.id}><dt>{item.name}</dt><dd>{formatTemporaryExpenseAmount(item)}</dd></div>)}</dl></div></>
-                : <p>完成對應情境後顯示費用細項。</p>}
+              <h3>臨時性支出</h3><strong>{temporaryExpenseTotalLabel}</strong>
+              <p className="care-a4-expense-summary-copy">{temporaryExpenses.length > 0 ? temporaryExpenseReserveNote : "目前尚未登記項目"}</p>
             </section>
           </div>
         </section>
@@ -389,8 +375,8 @@ export function AssessmentReport({
         </footer>
       </article>
 
-      {discussionTopics.length > 0 && (
-        <article className="care-a4-sheet care-a4-sheet--followup" aria-label="伴日子知識點複習摘要 A4">
+      {discussionTopics.map((topic, index) => (
+        <article key={topic.id} className="care-a4-sheet care-a4-sheet--followup" aria-label={`伴日子知識點複習摘要 A4：${index + 1}`}>
           <header className="care-a4-header care-a4-header--compact">
             <div>
               <p>伴日子新手村</p>
@@ -399,19 +385,17 @@ export function AssessmentReport({
             </div>
           </header>
           <section className="care-a4-discussion care-a4-discussion--cards" aria-label="知識點複習摘要">
-            {discussionTopics.map((topic) => (
-              <article key={topic.id} className="care-a4-discussion-card">
-                <h2>{topic.topic}</h2>
-                <p><b>情境：</b>{topic.summary ?? topic.title}</p>
-                <div>
-                  <b>建議複習：</b>
-                  <ul>{topic.knowledgePoints.slice(0, 4).map((point) => <li key={point}>{point}</li>)}</ul>
-                </div>
-              </article>
-            ))}
+            <article className="care-a4-discussion-card">
+              <h2>{topic.topic}</h2>
+              <p><b>情境：</b>{topic.summary ?? topic.title}</p>
+              <div>
+                <b>建議複習：</b>
+                <ul>{topic.knowledgePoints.slice(0, 4).map((point) => <li key={point}><HomeReadinessReviewText segments={[{ text: point }]} petName={petName} /></li>)}</ul>
+              </div>
+            </article>
           </section>
         </article>
-      )}
+      ))}
 
       <section className="care-review-page" aria-label="你的飼養觀念回顧">
         <header className="care-review-hero">

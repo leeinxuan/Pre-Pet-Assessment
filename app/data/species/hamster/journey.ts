@@ -14,7 +14,7 @@ export const hamsterJourneyItems: JourneyItem[] = [
 
 export const hamsterDailyBehaviorScenarioIds = ["hamster-nocturnal", "hamster-picky-eating"] as const;
 export const hamsterScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "芝麻", knowledgeTitle: "狗狗小知識", correctFeedbackMedia: { type: "placeholder" } },
+  defaults: { defaultPetName: "芝麻", knowledgeTitle: "倉鼠小知識", correctFeedbackMedia: { type: "placeholder" } },
   scenarios: {},
 };
 export const hamsterJourney = { items: hamsterJourneyItems, dailyBehaviorScenarioIds: hamsterDailyBehaviorScenarioIds } as const;

@@ -481,7 +481,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 
 @media (max-width: 720px) {
   .journey-map-eight { grid-template-columns: 1fr 1fr; }
-  .cost-bar { top: 56px; right: 12px; padding: 0; }
+  .cost-bar { top: 56px; right: 12px; z-index: 50; padding: 0; }
   .bill-trigger { width: 46px; height: 46px; justify-content: center; padding: 0; border-radius: 50%; }
   .bill-trigger em { display: none; }
   .coin-toast-card { max-width: calc(100vw - 32px); padding: 40px 44px 36px; gap: 8px; }
@@ -782,7 +782,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .home-readiness-question h2, .home-readiness-checklist h2 { margin: 0; font-size: clamp(24px, 3vw, 34px); line-height: 1.32; }
 .home-readiness-choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
 .home-readiness-choice-grid button { display: grid; gap: 14px; min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); color: var(--ink); font: inherit; font-weight: 900; line-height: 1.5; text-align: left; cursor: pointer; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
-.home-readiness-choice-media { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid rgba(168,101,9,.2); border-radius: 11px; background: var(--cream); }
+.home-readiness-choice-media { display: block; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid rgba(168,101,9,.2); border-radius: 11px; background: var(--cream); }
+.home-readiness-choice-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .home-readiness-choice-label { display: block; min-width: 0; font-size: 18px; overflow-wrap: anywhere; }
 .home-readiness-choice-grid button:hover, .home-readiness-choice-grid button.selected { border-color: var(--gold-dark); background: #fff7e7; transform: translateY(-2px); }
 .home-readiness-choice-grid button:active { transform: translateY(1px); }
@@ -803,6 +804,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .home-readiness-progress button span { display: grid; flex: 0 0 24px; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: var(--cream); color: var(--gold-dark); font-size: 12px; font-weight: 950; }.home-readiness-progress button.is-complete span { background: #dcefe0; color: #3c7446; }.home-readiness-progress button b { min-width: 0; overflow-wrap: anywhere; }
 .home-readiness-commitment-card { display: grid; gap: 17px; max-width: 760px; margin-top: 16px; padding: clamp(22px, 4vw, 34px); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: 20px; background: #fff; box-shadow: 0 12px 30px rgba(70,53,26,.06); animation: stageIn .22s ease both; }
 .home-readiness-commitment-card h3 { margin: 0; color: var(--ink); font-size: clamp(21px, 2.5vw, 28px); line-height: 1.45; }.home-readiness-commitment-copy { color: var(--muted); font-weight: 700; line-height: 1.8; }.home-readiness-commitment-copy p { margin: 0; }.home-readiness-commitment-copy ul { display: grid; gap: 10px; margin: 0; padding-left: 1.3rem; }.home-readiness-commitment-card .primary { justify-self: start; margin-top: 2px; }.home-readiness-reviewed { margin: 0; color: #426246; font-size: 14px; font-weight: 850; }.home-readiness-completion { display: flex; align-items: flex-start; gap: 14px; max-width: 760px; margin-top: 16px; padding: 22px 24px; border: 1px solid rgba(83,125,88,.28); border-radius: 20px; background: var(--mint-soft); color: #426246; }.home-readiness-completion > span { display: grid; flex: 0 0 30px; width: 30px; height: 30px; place-items: center; border-radius: 50%; background: #dcefe0; font-weight: 950; }.home-readiness-completion .life-stage-label { margin: 0 0 5px; color: #426246; }.home-readiness-completion p:last-child { margin: 0; font-size: 16px; font-weight: 850; line-height: 1.7; }
+@media (min-width: 721px) { .home-readiness-completion { width: 100%; max-width: none; } }
 @media (max-width: 720px) { .home-readiness-workbench { grid-template-columns: 1fr; }.home-readiness-context { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }.home-readiness-context .preparation-asset-placeholder { min-height: 132px; }.home-readiness-choice-grid, .home-readiness-progress { grid-template-columns: 1fr; }.home-readiness-reminder-step .primary, .home-readiness-commitment-card .primary { width: 100%; justify-content: center; }.care-guide-official-link { width: 100%; } }
 
 @media (max-width: 720px) {
@@ -856,6 +858,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-a4-expense-card h3 { margin: 0; color: #4f6e54; font-size: 13px; font-weight: 950; }
 .care-a4-expense-card > strong { display: block; margin-top: 2mm; color: var(--ink); font-size: 17px; font-weight: 950; line-height: 1.2; white-space: nowrap; }
 .care-a4-expense-card > div { margin-top: 3mm; }
+.care-a4-expense-card .care-a4-expense-summary-copy { margin: 5mm 0 0 !important; color: #537057; font-size: 10px; font-weight: 800; line-height: 1.45; }
+.care-a4-expense-summary-lines { display: grid; gap: 0; margin: 3mm 0 0; }
+.care-a4-expense-summary-lines div { display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 2mm; padding: 2mm 0; border-bottom: 1px solid rgba(79, 110, 84, .2); }
+.care-a4-expense-summary-lines div:last-child { border-bottom: 0; }
+.care-a4-expense-summary-lines dt { color: #537057; font-size: 10px; font-weight: 900; }
+.care-a4-expense-summary-lines dd { margin: 0; color: var(--ink); font-size: 11px; font-weight: 950; white-space: nowrap; }
 .care-a4-initial-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5mm; }
 .care-a4-initial-group { min-width: 0; padding: 2.5mm; border: 1px solid rgba(79, 110, 84, .22); border-radius: 9px; background: rgba(255,255,255,.56); }
 .care-a4-initial-group h4 { display: flex; justify-content: space-between; gap: 2mm; margin: 0; color: #4f6e54; font-size: 10.5px; font-weight: 950; }
@@ -1744,6 +1752,11 @@ html, body { overflow-x: clip; }
   .care-a4-expense-card h3 { margin: 0 !important; font-size: 12px !important; }
   .care-a4-expense-card > strong { margin-top: 2mm !important; font-size: 15px !important; }
   .care-a4-expense-card > div { margin-top: 2.5mm !important; }
+  .care-a4-expense-card .care-a4-expense-summary-copy { margin-top: 4mm !important; font-size: 10px !important; }
+  .care-a4-expense-summary-lines { margin-top: 2.5mm !important; }
+  .care-a4-expense-summary-lines div { padding: 1.7mm 0 !important; }
+  .care-a4-expense-summary-lines dt { font-size: 9.5px !important; }
+  .care-a4-expense-summary-lines dd { font-size: 10px !important; }
   .care-a4-initial-groups { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 2mm !important; }
   .care-a4-initial-group { padding: 2mm !important; }
   .care-a4-initial-group h4 { font-size: 9.5px !important; }
