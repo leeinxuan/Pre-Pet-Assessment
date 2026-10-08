@@ -14,7 +14,7 @@
 
 1. 歡迎頁
 2. 選擇寵物
-   - 選擇物種
+   - 選擇物種（犬、貓、兔、鸚鵡、倉鼠）
    - 選擇品種／外觀類型
    - 替寵物取名
    - 過往飼養經驗
@@ -230,20 +230,43 @@ http://localhost:3000/
 ```txt
 app/
   page.tsx                         # 全站主流程與跨階段狀態
-  game-types.ts                    # 共用型別
-  data/                            # 物種、情境、費用、報告資料
-  components/                      # 依流程拆分的 React 元件
-  styles/                          # 分區 CSS
-  globals.css                      # 全域樣式入口
+  game-types.ts                    # 共用型別（SpeciesId、JourneyItemType 等）
+  data/
+    species/
+      index.ts                     # 物種設定唯一入口（getSpeciesConfig 等）
+      activity-registry.ts         # 各物種 journey activity 分派表
+      journey.ts                   # 共用旅程資料型別與工具
+      breed-challenges.ts          # 共用品種挑戰工具
+      species-config.ts            # 物種設定型別定義
+      report-practice-registry.ts  # 報告練習題登記表
+      report-practice-selectors.ts # 報告練習題選取器
+      dog/                         # 犬版物種資料
+      cat/                         # 貓版物種資料
+      rabbit/                      # 兔版物種資料
+      bird/                        # 鸚鵡版物種資料
+      hamster/                     # 倉鼠版物種資料
+    shared/                        # 跨物種共用資料
+  components/
+    shared/SharedComponents.tsx    # 共用 UI（StageRail、CostBar、SpeciesStep 等）
+    preparation/                   # 飼養前準備元件
+    life/                          # 飼養生活元件（旅程、活動）
+    report/                        # 報告元件
+    acquisition/                   # 取得寵物元件
+  globals.css
 
 public/
   assets/                          # 圖片、影片與公開素材
 
 docs/
   AI_PROJECT_GUIDE.md              # 本文件
-  species-game-architecture.md     # 犬貓共用架構與貓版規格
-  cat-game-planning.md             # 貓版規劃
-  asset-map.md                     # 素材對照表
+  AI程式碼修改準則.md               # AI 修改程式碼時的規範
+  新物種企劃撰寫準則.md             # 新物種企劃 md 的撰寫格式與規範
+  新物種程式實作準則.md             # 把企劃 md 實作成程式碼的規格
+  dog-game-planning.md             # 犬版遊戲企劃
+  cat-game-planning.md             # 貓版遊戲企劃
+  rabbit-game-planning.md          # 兔版遊戲企劃
+  bird-game-planning.md            # 鸚鵡版遊戲企劃
+  hamster-game-planning.md         # 倉鼠版遊戲企劃
 
 db/
   schema.ts                        # Drizzle schema
@@ -259,8 +282,8 @@ app/api/results/
 
 `app/page.tsx` 是目前最重要的協調層。它保存：
 
-- 玩家選擇的物種：目前變數名是 `category`
-- 玩家選擇的品種／外觀類型：目前變數名是 `breed`
+- 玩家選擇的物種：目前變數名是 `category`（概念上等同 `species`）
+- 玩家選擇的品種／外觀類型：目前變數名是 `breed`（概念上等同 `selectionId`）
 - 寵物名字：`petName`
 - 房間用品完成狀態：`roomReady`
 - 危害物收妥狀態：`hazardsReady`
@@ -274,11 +297,11 @@ app/api/results/
 雖然目前變數仍使用 `category` 與 `breed`，但概念上應理解為：
 
 ```ts
-category = species
+category = species   // "dog" | "cat" | "rabbit" | "bird" | "hamster"
 breed = selectionId
 ```
 
-犬版的 `breed` 是犬種；貓版的 `breed` 實際上是外觀類型，例如橘貓、虎斑貓。接手 AI 不應把橘貓／虎斑貓描述成固定生物學品種，也不應推導固定性格或疾病風險。
+接手 AI 不應把任何外觀類型（如橘貓、虎斑貓）描述成固定生物學品種，也不應推導固定性格或疾病風險。
 
 ### 6.2 物種設定入口
 
@@ -291,27 +314,33 @@ app/data/species/index.ts
 主要函式：
 
 ```ts
-getSpeciesConfig(species)
-getSpeciesCopy(species)
-getBreedForSpecies(species, breedId)
+getSpeciesConfig(species)             // 回傳指定物種設定；未知物種 fallback 為 dog
+getSpeciesCopy(species)               // 取得物種文案
+getBreedForSpecies(species, breedId)  // 依物種找品種資料
+getSpeciesConfigForBreed(breedId)     // 依品種 id 反查物種設定
 ```
 
-目前 `getSpeciesConfig` 會依 `species === "cat"` 回傳貓設定，其他情況預設回傳犬設定。這讓舊流程在沒有選物種時仍能維持犬版 fallback。
-
-物種資料分流：
+五個物種（dog、cat、rabbit、bird、hamster）均已完整實作並註冊到 `speciesConfigs`。各物種資料分別位於：
 
 ```txt
 app/data/species/dog/
 app/data/species/cat/
+app/data/species/rabbit/
+app/data/species/bird/
+app/data/species/hamster/
 ```
 
-犬貓共用方向記錄在：
+各資料夾均包含：`index.ts`、`assets.ts`、`copy.ts`、`expenses.ts`、`feeding.ts`、`home-readiness.ts`、`journey.ts`、`layout.ts`、`preparation.ts`、`report.ts`、`scenarios.ts`、`selection.ts`、`breed-challenges.ts`、`care-review-notes.ts`、`mastered-care-themes.ts`。
+
+### 6.3 Activity 分派入口
+
+各物種的 journey 活動對應關係集中在：
 
 ```txt
-docs/species-game-architecture.md
+app/data/species/activity-registry.ts
 ```
 
-如果要新增第三種動物，不要複製整個頁面流程；應新增一個物種設定，讓既有共用元件讀取新資料。
+`journeyActivityRegistry` 記錄每個物種每個旅程 itemId 對應的 `activityKey`、`scenarioId`、`transition`、`resetKey`。新增或修改活動的分派邏輯應從此入口下手，不在元件中散落 `species === "xxx"` 條件。
 
 ## 7. 主要元件職責
 
@@ -319,68 +348,67 @@ docs/species-game-architecture.md
 
 ```txt
 app/components/shared/SharedComponents.tsx
-app/components/layout/StageRail.tsx
-app/components/layout/CostBar.tsx
+app/components/layout/StageRail.tsx  （相容入口）
+app/components/layout/CostBar.tsx    （相容入口）
 ```
 
-負責歡迎頁、物種選擇、進度側欄、費用列與共用小元件。`StageRail` 不能只為單一物種硬寫流程，因為犬貓應共用同一套站點。
+負責歡迎頁、物種選擇、進度側欄、費用列與共用小元件。`StageRail` 不能只為單一物種硬寫流程，因為五個物種共用同一套站點。
 
 ### 7.2 飼養前準備
 
 ```txt
-app/components/preparation/
+app/components/preparation/PreparationComponents.tsx  （主實作）
 ```
 
-重要元件：
-
-- `RoomPreparation`
-- `CarTrunkPreparation`
-- `RoomScene`
-- `RoomSupplyShelf`
-- `DepartureCarScene`
-- `DepartureSupplyShelf`
-- `DoorplateNameInput`
-
-房間關卡讓玩家選擇必要用品並收妥危害物。出發關卡讓玩家把接回家用品放入後車廂。用品、危害、圖片、費用應來自物種設定，不應在元件中散落犬貓條件。
+房間關卡讓玩家選擇必要用品並收妥危害物。出發關卡讓玩家把接回家用品放入後車廂。用品、危害、圖片、費用應來自物種設定，不在元件中散落條件。
 
 ### 7.3 飼養生活
 
 ```txt
-app/components/life/
-app/components/life/activities/
+app/components/life/LifeJourneyComponents.tsx         # 旅程外框（主實作）
+app/components/life/activities/                       # 各類活動元件
+  ArrivalMealActivity.tsx                             # 第一餐食物拖曳互動（共用）
+  BreedChallengeActivity.tsx                          # 品種挑戰
+  BusyCareActivity.tsx                                # 忙碌照護
+  DailyBehaviorActivity.tsx                           # 日常行為情境（單選）
+  DailyBehaviorActivityMulti.tsx                      # 日常行為情境（複選）
+  FeedingActivity.tsx                                 # 餵食活動
+  RabbitCarrySortActivity.tsx                         # 兔版抱兔排序
+  VideoScenarioActivity.tsx                           # 影片情境活動
+  WarningSignalActivity.tsx                           # 警示訊號活動
+  daily-care/
+    WalkingActivity.tsx                               # 犬版散步
+    CatDailyInspectionActivity.tsx                    # 貓版砂盆巡視
+    RabbitDailyCheckActivity.tsx                      # 兔版日常檢查
+    BirdCageInspectionActivity.tsx                    # 鸚鵡鳥籠巡視
+    GuidedActivities.tsx                              # 通用引導式活動框架
+app/components/life/legacy/                           # 舊情境題（僅相容，正式旅程不使用）
 ```
 
-重要元件：
-
-- `ArrivalTransitionVideo`
-- `LifeJourney`
-- `ScenarioQuestion`
-- `ScenarioFeedback`
-- `VideoScenario`
-- `WalkingActivity`
-- `FeedingActivity`
-- `DailyBehaviorActivity`
-- `BusyCareActivity`
-- `WarningSignalActivity`
-
-生活旅程依 `JourneyItem.type` 分派不同玩法。常見型別包含：
+生活旅程依 `JourneyItem.type` 與 `journeyActivityRegistry` 的 `activityKey` 分派不同玩法。目前所有 `JourneyItemType` 包含：
 
 ```ts
-"scenario"
-"walking"
-"daily-inspection"
-"breed-challenge"
-"body-language"
-"body-care"
-"senior-room"
+"scenario"             // 影片情境選擇題
+"walking"              // 犬版散步
+"daily-inspection"     // 貓版砂盆巡視
+"arrival-meal"         // 第一餐食物拖曳（共用）
+"guided-inspection"    // 通用引導式巡視
+"rabbit-carry-sort"    // 兔版抱兔排序
+"rabbit-daily-check"   // 兔版日常檢查
+"bird-cage-inspection" // 鸚鵡鳥籠巡視
+"bird-challenge"       // 鸚鵡挑戰
+"breed-challenge"      // 品種挑戰
+"body-language"        // 身體語言解讀
+"body-care"            // 身體照護
+"senior-room"          // 高齡環境調整
 ```
-
-犬版每日活動是散步。貓版每日活動是砂盆巡視／清潔。兩者應共用「旅程進度與完成」外框，但內部互動可以是不同元件。
 
 ### 7.4 報告與取得寵物
 
 ```txt
-app/components/report/
+app/components/report/AssessmentReport.tsx
+app/components/report/ProfileForms.tsx
+app/components/report/PdfExportControls.tsx
 app/components/acquisition/PetAcquisitionPage.tsx
 ```
 
@@ -392,54 +420,60 @@ app/components/acquisition/PetAcquisitionPage.tsx
 
 ```txt
 app/data/shared/
-  app-flow.ts
-  breed-challenges.ts
-  expenses.ts
-  legacy-scenarios.ts
-  life-activity.ts
-  report.ts
-  scenario-feedback.ts
-  types.ts
+  app-flow.ts                      # 站點流程定義
+  types.ts                         # 共用型別（SpeciesId 等）
+  species-config-types.ts          # 物種設定型別
+  expenses.ts                      # 費用定義（expense id、金額、類型）
+  life-activity.ts                 # 生活活動初始狀態
+  legacy-scenarios.ts              # 舊情境題（相容用，不進正式旅程）
+  scenario-feedback.ts             # 情境回饋資料
+  scenario-media.ts                # 情境影片／媒體對照
+  breed-challenges.ts              # 共用品種挑戰工具
+  home-readiness.ts / -builder.ts / -state.ts / -types.ts   # 居家準備度
+  care-review-notes.ts / -builder.ts / -types.ts            # 照顧回顧備註
+  mastered-care-themes.ts / -builder.ts / -selectors.ts / -types.ts  # 已掌握照護主題
+  content-meta.ts                  # 內容後設資料
+  pet-sources.ts                   # 寵物來源資料
+  pet-text.ts                      # 寵物共用文案
+  report.ts                        # 報告共用資料
+  assets.ts                        # 共用素材路徑
 ```
 
 `expenses.ts` 管理費用與按體型調整的金額。加入新費用時，要使用唯一 expense id，避免重複計算。
 
 `life-activity.ts` 提供生活互動初始狀態。新增生活活動時，要同步更新 `LifeActivityState` 與初始值。
 
-### 8.2 犬版資料
+### 8.2 各物種資料
+
+五個物種資料夾結構相同，主要檔案包含：
+
+| 檔案 | 用途 |
+|---|---|
+| `index.ts` | 組裝並匯出 `{species}Config` |
+| `assets.ts` | 素材路徑 |
+| `copy.ts` | 物種文案（通稱、說明等） |
+| `expenses.ts` | 物種費用設定 |
+| `feeding.ts` | 第一餐食物選項 |
+| `home-readiness.ts` | 居家準備度問題 |
+| `journey.ts` | 生活旅程 items |
+| `layout.ts` | 房間布局設定 |
+| `preparation.ts` | 用品、危害、出發行李 |
+| `report.ts` | 報告文案與設定 |
+| `scenarios.ts` | 情境題 |
+| `selection.ts` | 品種／外觀類型選項 |
+| `breed-challenges.ts` | 品種挑戰題 |
+| `care-review-notes.ts` | 照顧回顧備註 |
+| `mastered-care-themes.ts` | 已掌握照護主題 |
+
+犬版另有 `walking.ts`（散步場景）；倉鼠版另有 `activities.ts`（倉鼠專屬活動）。
+
+### 8.3 活動分派
 
 ```txt
-app/data/species/dog/
-  assets.ts
-  breed-challenges.ts
-  index.ts
-  journey.ts
-  layout.ts
-  preparation.ts
-  report.ts
-  scenarios.ts
-  selection.ts
-  walking.ts
+app/data/species/activity-registry.ts
 ```
 
-犬版是目前基準流程。除非任務明確要求，接手 AI 不應任意修改犬版既有題目 id、費用 id、旅程 id 或素材路徑。
-
-### 8.3 貓版資料
-
-```txt
-app/data/species/cat/
-  assets.ts
-  breed-challenges.ts
-  index.ts
-  journey.ts
-  layout.ts
-  preparation.ts
-  report.ts
-  scenarios.ts
-  selection.ts
-```
-
-貓版要維持與犬版相同站點數與報告結構，但內容替換為貓照護知識。貓版醫療相關內容只能描述「觀察、紀錄、聯絡獸醫」，不能提供診斷或用藥指示。
+`journeyActivityRegistry` 是各物種旅程 item 活動分派的唯一入口（見 6.3 節）。修改活動分派邏輯時，只改此檔；不在元件中加 `species === "xxx"` 條件。
 
 ## 9. API 與資料庫
 
@@ -484,13 +518,10 @@ public/assets/
 ```txt
 public/assets/dog/
 public/assets/cat/
+public/assets/rabbit/
+public/assets/bird/
+public/assets/hamster/
 public/assets/welcome/
-```
-
-4. 更新：
-
-```txt
-docs/asset-map.md
 ```
 
 不可讓 `<img>` 或 `<video>` 指向不存在的檔案。若正式素材尚未到位，應使用文字佔位或既有安全 fallback，並在資料檔加上清楚 TODO。
@@ -499,23 +530,16 @@ docs/asset-map.md
 
 新的 AI 若要安全接手，建議依序讀：
 
-1. `README.md`
-2. `docs/AI_PROJECT_GUIDE.md`
-3. `docs/AI程式碼修改準則.md`
-4. 新增物種時：`docs/新物種程式實作準則.md`
-5. `docs/species-game-architecture.md`
-6. `app/page.tsx`
-7. `app/game-types.ts`
-8. `app/data/species/index.ts`
-9. 依任務讀對應物種資料：
-   - 犬版：`app/data/species/dog/`
-   - 貓版：`app/data/species/cat/`
-10. 依任務讀對應元件：
-   - 選擇：`app/components/selection/`
-   - 準備：`app/components/preparation/`
-   - 生活：`app/components/life/`
-   - 報告：`app/components/report/`
-9. `docs/asset-map.md`
+1. `docs/AI_PROJECT_GUIDE.md`（本文件）
+2. `docs/AI程式碼修改準則.md`
+3. 若任務涉及物種內容：`docs/{species}-game-planning.md`
+4. 若任務是新增物種：`docs/新物種程式實作準則.md` 與 `docs/新物種企劃撰寫準則.md`
+5. `app/page.tsx`
+6. `app/game-types.ts`
+7. `app/data/species/index.ts`
+8. `app/data/species/activity-registry.ts`
+9. 依任務讀對應物種資料夾：`app/data/species/{species}/`
+10. `app/components/README.md` 與任務相關的正式元件
 
 不要一開始就大規模重寫。先建立資料流心智模型，再做小步增量修改。
 
@@ -526,21 +550,19 @@ docs/asset-map.md
 先找物種資料：
 
 ```txt
-app/data/species/dog/scenarios.ts
-app/data/species/cat/scenarios.ts
+app/data/species/{species}/scenarios.ts
 ```
 
-或品種／外觀類型挑戰：
+或品種挑戰：
 
 ```txt
-app/data/species/dog/breed-challenges.ts
-app/data/species/cat/breed-challenges.ts
+app/data/species/{species}/breed-challenges.ts
 ```
 
 注意事項：
 
 - 儘量不要改既有 scenario id。
-- 若新增選項有費用效果，確認 `expenseIds` 存在於 `app/data/shared/expenses.ts`。
+- 若新增選項有費用效果，確認 `expenseIds` 存在於該物種 `expenses.ts`。
 - 醫療內容不可提供診斷或用藥。
 
 ### 12.2 新增用品或危害物
@@ -548,8 +570,7 @@ app/data/species/cat/breed-challenges.ts
 改：
 
 ```txt
-app/data/species/dog/preparation.ts
-app/data/species/cat/preparation.ts
+app/data/species/{species}/preparation.ts
 ```
 
 同時確認：
@@ -557,24 +578,23 @@ app/data/species/cat/preparation.ts
 - 圖片路徑存在於 `public/assets/...`
 - 位置座標在桌機與手機都合理
 - 必要用品的 `required` 設定正確
-- 費用 id 有定義
-- `docs/asset-map.md` 有更新
+- 費用 id 有定義於該物種 `expenses.ts`
 
 ### 12.3 修改生活旅程順序
 
 改：
 
 ```txt
-app/data/species/dog/journey.ts
-app/data/species/cat/journey.ts
+app/data/species/{species}/journey.ts
 ```
 
-同時檢查 `LifeJourney` 是否支援該 `JourneyItem.type`。若新增 type，要同步更新：
+同時檢查 `journeyActivityRegistry`（`activity-registry.ts`）是否包含對應 itemId。若新增活動 type，要同步更新：
 
 ```txt
 app/game-types.ts
 app/components/life/LifeJourneyComponents.tsx
 app/data/shared/life-activity.ts
+app/data/species/activity-registry.ts
 ```
 
 ### 12.4 修改報告內容
@@ -582,39 +602,32 @@ app/data/shared/life-activity.ts
 改：
 
 ```txt
-app/data/species/dog/report.ts
-app/data/species/cat/report.ts
-app/components/report/ProfileReportComponents.tsx
+app/data/species/{species}/report.ts
+app/components/report/AssessmentReport.tsx
 ```
 
 報告應維持同一個結構，只依物種替換文案、清單、費用與情境回顧。
 
-### 12.5 新增一個物種
+### 12.5 修改第一餐食物選項
 
-不要複製整套頁面。應新增：
-
-```txt
-app/data/species/new-species/
-```
-
-並更新：
+改：
 
 ```txt
-app/data/species/index.ts
-app/data/shared/types.ts
-app/game-types.ts
+app/data/species/{species}/feeding.ts
 ```
 
-新物種應提供：
+確認正確食物的 expenseIds 在物種 `expenses.ts` 中有定義。
 
-- selection
-- preparation
-- journey
-- scenarios
-- breed-challenges 或等價挑戰
-- report
-- assets
-- layout
+### 12.6 新增一個物種
+
+目前五個物種（犬、貓、兔、鸚鵡、倉鼠）均已完整實作。若要新增第六種，不要複製整套頁面，應：
+
+1. 先閱讀 `docs/新物種程式實作準則.md` 與 `docs/新物種企劃撰寫準則.md`。
+2. 新增 `app/data/species/new-species/`，包含所有標準檔案。
+3. 更新 `app/data/species/index.ts` 的 `speciesConfigs`。
+4. 更新 `app/data/species/activity-registry.ts`。
+5. 更新 `app/data/shared/types.ts` 的 `SpeciesId`。
+6. 更新 `app/game-types.ts`（若有新 JourneyItemType）。
 
 ## 13. 驗收方式
 
@@ -633,45 +646,50 @@ corepack pnpm run lint
 
 人工檢查流程：
 
-1. 從歡迎頁開始跑一次犬版。
-2. 從歡迎頁開始跑一次貓版。
-3. 確認選擇、準備、生活、報告、取得寵物都能前進。
-4. 確認費用列不重複加總。
-5. 確認報告能反映玩家作答與準備狀態。
-6. 確認手機尺寸下文字、按鈕、圖片沒有重疊。
+1. 從歡迎頁跑一次犬版。
+2. 從歡迎頁跑一次貓版。
+3. 從歡迎頁跑一次兔版。
+4. 從歡迎頁跑一次鸚鵡版。
+5. 從歡迎頁跑一次倉鼠版。
+6. 確認選擇、準備、生活、報告、取得寵物都能前進。
+7. 確認費用列不重複加總。
+8. 確認報告能反映玩家作答與準備狀態。
+9. 確認手機尺寸下文字、按鈕、圖片沒有重疊。
 
 ## 14. 不可破壞的約束
 
 - 不要任意改 scenario id、journey id、expense id。
-- 不要刪除犬版既有資料與素材。
-- 不要把犬貓邏輯硬寫成大量散落的 `species === "cat"` 條件。
+- 不要刪除任何物種既有資料與素材。
+- 不要把物種邏輯硬寫成大量散落的 `species === "xxx"` 條件；物種差異應透過資料設定處理。
 - 不要讓不存在的素材路徑進入 `<img>` 或 `<video>`。
-- 不要把橘貓、虎斑貓描述成固定品種、固定性格或固定疾病風險。
+- 不要把任何外觀類型（橘貓、虎斑貓等）描述成固定品種、固定性格或固定疾病風險。
 - 不要提供醫療診斷、用藥建議或無來源的健康結論。
 - 不要將整個流程改成全新頁面；應保留共用流程並替換資料。
 - 不要覆寫使用者或其他 AI 已在工作區留下的無關變更。
+- 不要把新物種正式內容寫入 legacy 資料夾或 `shared/legacy-scenarios.ts`。
 
 ## 15. 目前架構的實際狀態
 
-這個專案已經有一部分從單一犬版，演進到犬貓共用架構：
+這個專案已完成五物種（犬、貓、兔、鸚鵡、倉鼠）的共用架構建置：
 
-- `app/data/species/index.ts` 已是物種設定入口。
-- `JourneyItemType` 已包含 `daily-inspection`。
-- `LifeActivityState` 已包含 `catInspectionSteps`。
-- 貓版資料與素材目錄已存在。
-- 部分舊命名仍保留，例如 `category`、`breed`、`hasPreviousDog`。
-- `speciesConfigs` 目前仍保留 flat aliases，例如 `breeds`、`roomItems`、`hazards`、`trunkItems`，用來支援尚未完全遷移的共用元件。
+- `app/data/species/index.ts` 是物種設定唯一入口，五個物種均已完整註冊。
+- `app/data/species/activity-registry.ts` 是 journey 活動分派的唯一入口，五個物種均已設定。
+- `SpeciesId` 型別為 `"dog" | "cat" | "rabbit" | "bird" | "hamster"`。
+- `JourneyItemType` 涵蓋所有物種活動，包含 `rabbit-carry-sort`、`rabbit-daily-check`、`bird-cage-inspection`、`bird-challenge`。
+- 各物種資料夾均包含完整的 `feeding.ts`、`home-readiness.ts`、`care-review-notes.ts`、`mastered-care-themes.ts`。
+- 部分舊命名仍保留，例如 `category`（代替 `species`）、`breed`（代替 `selectionId`）。
+- `speciesConfigs` 保留 flat aliases（`breeds`、`roomItems`、`hazards`、`trunkItems`），用來支援尚未完全遷移的共用元件。
 
-因此接手 AI 應採取「增量整理」策略：先讓現有功能穩定運作，再逐步把舊命名與 flat aliases 收斂到更清楚的 `species`／`selectionId`／nested config。
+接手 AI 應採取「增量整理」策略：先讓現有功能穩定運作，再逐步把舊命名收斂到更清楚的 `species`／`selectionId`。
 
 ## 16. 建議給另一個 AI 的工作提示
 
 如果要把這份專案交給另一個 AI，可以直接使用以下提示：
 
 ```txt
-請先閱讀 README.md、docs/AI_PROJECT_GUIDE.md、docs/AI程式碼修改準則.md；若任務是新增物種，還必須閱讀 docs/新物種程式實作準則.md。接著閱讀 docs/species-game-architecture.md、app/page.tsx、app/data/species/index.ts。
+請先閱讀 docs/AI_PROJECT_GUIDE.md、docs/AI程式碼修改準則.md；若任務涉及物種內容，也請閱讀對應的 docs/{species}-game-planning.md；若任務是新增物種，還必須閱讀 docs/新物種程式實作準則.md 與 docs/新物種企劃撰寫準則.md。接著閱讀 app/page.tsx、app/game-types.ts、app/data/species/index.ts、app/data/species/activity-registry.ts。
 
-這是一個 Vinext / Vite / React / TypeScript 的飼養前評估互動網站。主流程由 app/page.tsx 控制，內容透過 app/data/species/ 下的物種設定切換。不要重寫整個網站，也不要刪除犬版既有流程。任何新增物種或內容都應走共用資料設定，而不是複製頁面或在元件中散落條件判斷。
+這是一個 Vinext / Vite / React / TypeScript 的飼養前評估互動網站，目前已支援犬、貓、兔、鸚鵡、倉鼠五個物種。主流程由 app/page.tsx 控制，內容透過 app/data/species/ 下的物種設定切換，活動分派透過 app/data/species/activity-registry.ts。不要重寫整個網站，也不要刪除任何物種既有流程。任何修改都應走共用資料設定，不在元件中散落物種條件判斷。
 
 修改前先確認 git status，避免覆寫使用者既有變更。修改後至少執行 corepack pnpm run build；若任務涉及流程或資料，請再執行 corepack pnpm test 與 corepack pnpm run lint。
 ```

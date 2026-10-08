@@ -52,7 +52,7 @@ const directRoomExpenseIds = new Set([
   "hamster-bedding-monthly",
   "hamster-gnaw-monthly",
   "rabbit-litter-monthly",
-  // 狗狗清潔耗材在散步撿便完成時才加入，不能跟第一餐一起觸發。
+  // 狗狗清潔耗材在散步前選取撿便袋時加入，不能跟第一餐一起觸發。
   "dog-clean-monthly",
 ]);
 

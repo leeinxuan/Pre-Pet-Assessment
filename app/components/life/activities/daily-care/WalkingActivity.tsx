@@ -121,7 +121,7 @@ export function WalkingActivity({
   const [position, setPosition] = useState(0);
   const [moving, setMoving] = useState(false);
   const [message, setMessage] = useState("");
-  const cleanupSequenceRunningRef = useRef(false);
+  const bagExpenseSequenceStartedRef = useRef(false);
   const completingSceneRef = useRef<number | null>(null);
   const forwardAnimationFrameRef = useRef<number | null>(null);
   const forwardHoldTimerRef = useRef<number | null>(null);
@@ -177,10 +177,17 @@ export function WalkingActivity({
     if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
   }, []);
 
-  function prepare(id: string) {
+  async function prepare(id: string) {
     if (prepared.includes(id)) return;
     onChange({ walkingPreparedItems: [...prepared, id] });
     setMessage("");
+
+    // 每月清潔耗材的費用在散步前「選取撿便袋」時即時加入，
+    // 不等待後段路上清理排泄物的拖曳互動。
+    if (id === "bag" && !bagExpenseSequenceStartedRef.current) {
+      bagExpenseSequenceStartedRef.current = true;
+      await onPlayExpenseSequence?.(expenseIds ?? []);
+    }
   }
 
   function startWalk() {
@@ -340,16 +347,13 @@ export function WalkingActivity({
     setDraggedBag(null);
   }
 
-  async function cleanupPoop() {
-    if (cleanupSequenceRunningRef.current || activity.walkingPoopCleaned) return;
-    cleanupSequenceRunningRef.current = true;
+  function cleanupPoop() {
+    if (activity.walkingPoopCleaned) return;
     stopForward();
     draggingBagRef.current = false;
     setDraggedBag(null);
     onChange({ walkingPoopCleaned: true });
-    await onPlayExpenseSequence?.(expenseIds ?? []);
     setMessage("已清理完成，繼續陪牠往前走。");
-    cleanupSequenceRunningRef.current = false;
   }
 
   const renderWalkingEventCard = (className = "") => walkingEventMessage ? (
