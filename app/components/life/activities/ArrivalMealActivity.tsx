@@ -176,7 +176,7 @@ export function ArrivalMealActivity({
       <div className="arrival-meal-footer">
         {feeding.interaction === "choice" && choiceFeedback && <p className={`guided-activity-feedback ${choiceFeedback.result}`} role="status">{interpolatePetName(choiceFeedback.feedback, petName)}</p>}
         <p className="arrival-meal-completion-message" role="status">{complete ? feeding.completionMessage : "\u00a0"}</p>
-        <button className="primary" disabled={!complete || !expenseSequenceComplete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
+        <button className="primary arrival-meal-continue-button" disabled={!complete || !expenseSequenceComplete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
       </div>
     </section>
   );

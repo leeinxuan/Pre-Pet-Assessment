@@ -39,6 +39,7 @@
 .arrival-meal-supplies--choice + .arrival-meal-scene .scene-media-placeholder p { max-width: min(100%, 420px); overflow-wrap: anywhere; }
 .arrival-meal-activity .arrival-meal-footer { display: grid; gap: 14px; }
 .arrival-meal-activity .arrival-meal-footer .primary { justify-self: end; }
+.arrival-meal-activity .arrival-meal-footer .arrival-meal-continue-button { margin-bottom: 10px; }
 .guided-inspection-completion { grid-template-columns: minmax(0, 1fr); min-height: 0; max-width: 1160px; margin: 0 auto; }
 .guided-inspection-completion .daily-behavior-positive-copy { min-height: 0; align-items: center; padding: clamp(38px, 5vw, 68px); text-align: center; }
 .guided-inspection-completion .daily-behavior-positive-copy > p { max-width: 860px; }

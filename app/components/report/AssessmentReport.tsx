@@ -63,6 +63,34 @@ function knowledgePointsForScenario(scenario: Scenario, petName: string, species
   return Array.from(new Set(rawPoints.flatMap((point) => point.split("\n")).map((point) => personalizeReportText(point.trim(), petName, species)).filter(Boolean))).slice(0, 6);
 }
 
+/**
+ * PDF 匯出以固定 A4 畫布擷取。將較短的複習卡放進同一頁，避免每一題
+ * 都留下大段空白；估算高度接近一張 A4 可用內容區時才另起新頁。
+ */
+function groupDiscussionTopicsForPdf(topics: SharedDiscussionTopic[]) {
+  const availableHeight = 202;
+  const pages: SharedDiscussionTopic[][] = [];
+  let currentPage: SharedDiscussionTopic[] = [];
+  let currentHeight = 0;
+
+  for (const topic of topics) {
+    const textLength = [topic.title, topic.topic, topic.summary ?? "", ...topic.knowledgePoints.slice(0, 4)].join("").length;
+    // Header 與卡片留白約佔 35mm；其餘以每行約 48 個中文字估算，
+    // 保守保留空間，避免固定畫布擷取時截掉下一張卡片。
+    const estimatedHeight = 35 + Math.ceil(textLength / 48) * 4.8;
+    if (currentPage.length > 0 && currentHeight + estimatedHeight > availableHeight) {
+      pages.push(currentPage);
+      currentPage = [];
+      currentHeight = 0;
+    }
+    currentPage.push(topic);
+    currentHeight += estimatedHeight;
+  }
+
+  if (currentPage.length) pages.push(currentPage);
+  return pages;
+}
+
 export function AssessmentReport({
   petName,
   breed,
@@ -183,6 +211,7 @@ export function AssessmentReport({
       summary: personalizeReportText(getReportDiscussionSummaryOverride(species, scenario.id, Boolean(answers[scenario.id]?.discussionFlags?.includes("helper-details-to-confirm"))) ?? scenario.reportSummary ?? scenario.choices.find((choice) => choice.result === "correct")?.explanation ?? scenario.title, petName, species),
       knowledgePoints: knowledgePointsForScenario(scenario, petName, species),
     }));
+  const discussionTopicPages = groupDiscussionTopicsForPdf(discussionTopics);
   const activeDiscussion = discussionTopics.find((topic) => topic.id === activeDiscussionId);
   const activeKnowledge = activeDiscussion;
   const completedSource = (source: MasteredCareSource) => {
@@ -375,8 +404,8 @@ export function AssessmentReport({
         </footer>
       </article>
 
-      {discussionTopics.map((topic, index) => (
-        <article key={topic.id} className="care-a4-sheet care-a4-sheet--followup" aria-label={`伴日子知識點複習摘要 A4：${index + 1}`}>
+      {discussionTopicPages.map((topics, index) => (
+        <article key={topics.map((topic) => topic.id).join("-")} className="care-a4-sheet care-a4-sheet--followup" aria-label={`伴日子知識點複習摘要 A4：${index + 1}`}>
           <header className="care-a4-header care-a4-header--compact">
             <div>
               <p>伴日子新手村</p>
@@ -385,14 +414,14 @@ export function AssessmentReport({
             </div>
           </header>
           <section className="care-a4-discussion care-a4-discussion--cards" aria-label="知識點複習摘要">
-            <article className="care-a4-discussion-card">
+            {topics.map((topic) => <article key={topic.id} className="care-a4-discussion-card">
               <h2>{topic.topic}</h2>
               <p><b>情境：</b>{topic.summary ?? topic.title}</p>
               <div>
                 <b>建議複習：</b>
                 <ul>{topic.knowledgePoints.slice(0, 4).map((point) => <li key={point}><HomeReadinessReviewText segments={[{ text: point }]} petName={petName} /></li>)}</ul>
               </div>
-            </article>
+            </article>)}
           </section>
         </article>
       ))}

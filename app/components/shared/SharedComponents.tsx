@@ -428,7 +428,7 @@ const expenseLabels = {
   addedPrefix: "\u65b0\u589e\uff1a",
 } as const;
 
-export const temporaryExpenseReserveNote = "實際費用會依症狀、檢查項目、治療方式與醫院而異。";
+export const temporaryExpenseReserveNote = "實際費用依症狀、檢查項目、治療方式以各院所收費為準。";
 
 export function formatTemporaryExpenseAmount(expense: Pick<ExpenseRecord, "amount" | "maxAmount" | "maxAmountOpenEnded">) {
   if (typeof expense.maxAmount === "number") {
@@ -619,7 +619,6 @@ function CoinFlightAnimation({ expense, triggerRef }: {
       ? formatTemporaryExpenseAmount(expense)
       : `+NT$ ${money.format(expense.amount)}${isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}`;
     const title = isTemporaryReserve ? "臨時性支出預留已更新" : "已加入準備清單";
-    const reserveTotalLabel = isTemporaryReserve ? `<small>臨時性支出預留已更新</small>` : "";
     const toast = document.createElement("div");
     toast.className = "coin-toast-overlay";
     toast.innerHTML = `
@@ -629,7 +628,6 @@ function CoinFlightAnimation({ expense, triggerRef }: {
           <b>${title}</b>
           <span>${expense.name}</span>
           <em>${amountLabel}</em>
-          ${reserveTotalLabel}
         </div>
       </div>`;
     document.body.appendChild(toast);
