@@ -1,14 +1,3 @@
-export const hamsterFirstMeal = {
-  title: "{petName} 的第一餐，你準備了什麼？",
-  items: [
-    { id: "hamster-pellet", label: "倉鼠專用綜合飼料（定量）", result: "correct", feedback: "✅ 正確！倉鼠需要均衡的綜合飼料；每天固定餵食量，不要因為「碗空了」就補充，因為牠可能把食物藏進頰囊或巢穴了。", expenseIds: ["hamster-pellet-monthly"] },
-    { id: "fresh-water", label: "乾淨飲水（飲水器）", result: "correct", feedback: "✅ 必要！每天確認飲水器正常出水，並提供乾淨飲水。" },
-    { id: "sunflower-seeds", label: "葵瓜子（一大把）", result: "caution", feedback: "▲ 少量可以，但不能當主食！倉鼠特別喜歡葵瓜子，但容易只吃這個忽略其他成分，造成挑食和營養不均。每天固定少量作為點心即可，不可讓牠想吃多少就吃多少。" },
-    { id: "onion", label: "洋蔥", result: "incorrect", feedback: "❌ 有毒！蔥、蒜、洋蔥對倉鼠有毒，絕對不可餵食。廚房常見食材，請務必放置在{petName}無法取得的地方。" },
-    { id: "citrus-fruit", label: "柑橘類水果", result: "incorrect", feedback: "❌ 不適合！柑橘類水果的酸性可能刺激倉鼠消化道，不建議餵食。水果類食物整體須謹慎，含糖量高的種類尤其要避免或極少量給予。" },
-  ],
-} as const;
-
 /** docs/hamster-game-planning.md §5.3.2 的兩段式早晨清潔流程。 */
 export const hamsterMorningCheck = {
   introTitle: "早晨巡視——每天替 {petName} 確認一次",

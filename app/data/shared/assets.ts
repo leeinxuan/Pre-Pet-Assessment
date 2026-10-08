@@ -2,7 +2,7 @@
 export const sharedAssets = {
   nameplate: "/assets/shared/nameplate.webp",
   housing: {
-    tenant: "/assets/shared/tenant.png",
-    homeowner: "/assets/shared/homeownership.png",
+    tenant: "/assets/shared/tenant.webp",
+    homeowner: "/assets/shared/homeownership.webp",
   },
 } as const;
