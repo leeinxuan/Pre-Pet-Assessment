@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getExpenseForSpecies, isTemporaryReserveExpense } from "../../data/shared/expenses";
 import {
   getDailyBehaviorScenarioIds,
   getJourneyItemsForSpecies,
@@ -37,13 +36,6 @@ import type {
   ScenarioChoice,
   ScenarioResult,
 } from "../../game-types";
-
-function choiceHasTemporaryReserveExpense(choice: ScenarioChoice, species: string) {
-  return (choice.expenseIds ?? []).some((id) => {
-    const expense = getExpenseForSpecies(id, species);
-    return Boolean(expense && isTemporaryReserveExpense(expense));
-  });
-}
 
 const directRoomExpenseIds = new Set([
   "cat-litter-monthly",
@@ -133,6 +125,7 @@ export function LifeJourney({
   const [activityNextSignal, setActivityNextSignal] = useState(0);
   const isBusyCareActivity = activityKey === "busy-care";
   const isVideoFeedbackScenario = activityKey === "video-scenario";
+  const isHealthOrSeniorActivity = /(?:sick|health|senior)/.test(item.id);
   const [arrivalMealOpen, setArrivalMealOpen] = useState(false);
   // 兔子的第一餐是明確的 journey item；犬貓則沿用既有的到家後直接開啟方式。
   const showArrivalMeal = activityConfig?.transition === "arrival-meal" && answer?.finalResult === "correct" && arrivalMealOpen;
@@ -289,6 +282,7 @@ export function LifeJourney({
               sourceScenarioId: correctScenario.id,
             });
           }}
+          triggerExpenseOnFeedback={species === "rabbit" || isHealthOrSeniorActivity}
           onContinue={continueJourney}
           scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : getDailyBehaviorScenarioIds(species)}
           species={species}
@@ -364,13 +358,14 @@ export function LifeJourney({
               expenseIds?.forEach((expenseId) => onAddExpense(expenseId, triggerMeta));
             }
           }}
-          onCorrectExpenseSequence={scenario.choices.some((choice) => choiceHasTemporaryReserveExpense(choice, species))
+          onCorrectExpenseSequence={isHealthOrSeniorActivity
             ? (correctScenario, choice) => onPlayExpenseSequence(choice.expenseIds ?? [], {
               speciesId: species,
               stageId: item.stageId ?? correctScenario.stageId,
               sourceScenarioId: correctScenario.id,
             })
             : undefined}
+          triggerExpenseOnFeedback={isHealthOrSeniorActivity}
           deferExpensesUntilFeedback={activityConfig?.deferItemExpenses === true}
           {...replayCorrectProps}
         />

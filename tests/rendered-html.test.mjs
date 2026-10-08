@@ -90,8 +90,8 @@ test("contains the five-unit journey and current project-owned artwork", async (
   for (const id of ["bed", "toy", "water-bowl", "food-bowl", "toilet", "cleaner", "food"]) {
     assert.match(roomData, new RegExp(`id: "${id}"`));
   }
-  assert.match(dogPreparation, /background: "\/assets\/dog\/room\/empty-room\.png"/);
-  assert.match(dogPreparation, /mobileBackground: "\/assets\/dog\/room\/empty-room-mobile\.png"/);
+  assert.match(dogPreparation, /safeBackground: "\/assets\/dog\/room\/empty-room\.png"/);
+  assert.match(dogPreparation, /safeMobileBackground: "\/assets\/dog\/room\/empty-room-mobile\.png"/);
   assert.match(dogPreparation, /doorplate: \{ image: sharedAssets\.nameplate/);
   assert.match(dogPreparation, /id: "toilet"[\s\S]*?x: 15, y: 85, width: 20, layer: 1/);
   assert.match(dogPreparation, /id: "water-bowl"[\s\S]*?x: 32, y: 90, width: 12, layer: 3/);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getDailyBehaviorScenarioIds, getLifeScenariosForSpecies, getScenarioPresentation } from "../../../data/species/journey";
 import type { Scenario, ScenarioAnswer, ScenarioChoice, ScenarioResult } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
@@ -20,6 +20,7 @@ export function DailyBehaviorActivityMulti({
   petName,
   onChooseMultiple,
   onCorrectExpenseSequence,
+  triggerExpenseOnFeedback = false,
   onContinue,
   onReplay,
   continueImmediately = false,
@@ -30,8 +31,10 @@ export function DailyBehaviorActivityMulti({
   answers: Record<string, ScenarioAnswer>;
   petName: string;
   onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
-  /** 正確選項全部完成時，先等待活動費用卡動畫，再顯示正確回饋。 */
+  /** 正確選項全部完成時播放活動費用卡。 */
   onCorrectExpenseSequence?: (scenario: Scenario, choices: ScenarioChoice[]) => Promise<void>;
+  /** 費用卡要在「做得很好」頁面出現，而非作答選項畫面。 */
+  triggerExpenseOnFeedback?: boolean;
   onContinue: () => void;
   onReplay?: () => void;
   continueImmediately?: boolean;
@@ -53,6 +56,8 @@ export function DailyBehaviorActivityMulti({
   const [retryCopy, setRetryCopy] = useState<{ title: string; explanation: string; suggestion?: string } | null>(null);
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
+  const expenseSequenceShownFor = useRef("");
+  const [expenseSequenceComplete, setExpenseSequenceComplete] = useState(true);
   const scenario = scenarios[currentIndex];
   const presentation = getScenarioPresentation(species, scenario?.id ?? "");
   const behaviorVideoSource = presentation.sceneVideo?.src;
@@ -75,12 +80,23 @@ export function DailyBehaviorActivityMulti({
     setMode("question");
     setVideoFailed(false);
     setVideoFinished(false);
+    setExpenseSequenceComplete(true);
   }
 
   // 測試模式的外部前進訊號必須同步到本元件的題目狀態。
   useEffect(() => {
     if (testNextSignal > 0) moveToNext(); // eslint-disable-line react-hooks/set-state-in-effect
   }, [testNextSignal]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!triggerExpenseOnFeedback || mode !== "positive" || !onCorrectExpenseSequence || !scenario) return;
+    const selectedChoices = scenario.choices.filter((choice) => selectedIds.includes(choice.id));
+    if (selectedChoices.length === 0) return;
+    const key = `${scenario.id}:${selectedChoices.map((choice) => choice.id).join(",")}`;
+    if (expenseSequenceShownFor.current === key) return;
+    expenseSequenceShownFor.current = key;
+    void onCorrectExpenseSequence(scenario, selectedChoices).finally(() => setExpenseSequenceComplete(true));
+  }, [mode, onCorrectExpenseSequence, scenario, selectedIds, triggerExpenseOnFeedback]);
 
   if (!scenario) return null;
 
@@ -123,6 +139,11 @@ export function DailyBehaviorActivityMulti({
         setMode("positive");
         return;
       }
+      if (triggerExpenseOnFeedback) {
+        setExpenseSequenceComplete(false);
+        setMode("positive");
+        return;
+      }
       setMode("animating");
       void onCorrectExpenseSequence(scenario, selectedChoices).then(() => setMode("positive"));
     }
@@ -162,6 +183,8 @@ export function DailyBehaviorActivityMulti({
         onReplay={onReplay}
         onContinue={moveToNext}
         continueImmediately={continueImmediately}
+        continueDisabled={triggerExpenseOnFeedback && !expenseSequenceComplete}
+        continueHint={triggerExpenseOnFeedback && !expenseSequenceComplete ? "正在加入本次照顧費用…" : undefined}
       />
     );
   }

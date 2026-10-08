@@ -27,6 +27,7 @@ export function VideoScenarioActivity({
   onCorrectComplete,
   onCorrectFeedbackShown,
   onCorrectExpenseSequence,
+  triggerExpenseOnFeedback = false,
   deferExpensesUntilFeedback = false,
   onReplay,
   continueImmediately = false,
@@ -38,8 +39,10 @@ export function VideoScenarioActivity({
   onChoose: (choice: ScenarioChoice) => void;
   onCorrectComplete: () => void;
   onCorrectFeedbackShown?: (scenario: Scenario, choice: ScenarioChoice) => void;
-  /** 健康／高齡題在答對當下先播放費用卡，再顯示正確回饋。 */
+  /** 指定活動要播放的費用卡。 */
   onCorrectExpenseSequence?: (scenario: Scenario, choice: ScenarioChoice) => Promise<void>;
+  /** 費用卡要在「做得很好」頁面出現，而非作答選項畫面。 */
+  triggerExpenseOnFeedback?: boolean;
   /** 指定費用須在「做得很好」畫面呈現後才登錄。 */
   deferExpensesUntilFeedback?: boolean;
   onReplay?: () => void;
@@ -56,6 +59,8 @@ export function VideoScenarioActivity({
   useVideoMetadataPreload(correctFeedbackVideo);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const feedbackExpenseShownFor = useRef("");
+  const expenseSequenceShownFor = useRef("");
+  const [expenseSequenceComplete, setExpenseSequenceComplete] = useState(true);
 
   function choose(choice: ScenarioChoice) {
     onChoose(choice);
@@ -66,6 +71,11 @@ export function VideoScenarioActivity({
     setVideoFinished(false);
     if (choice.result !== "correct" || !onCorrectExpenseSequence) {
       setMode(choice.result === "correct" ? "positive" : "incorrect");
+      return;
+    }
+    if (triggerExpenseOnFeedback) {
+      setExpenseSequenceComplete(false);
+      setMode("positive");
       return;
     }
     setMode("animating");
@@ -80,6 +90,14 @@ export function VideoScenarioActivity({
     feedbackExpenseShownFor.current = key;
     onCorrectFeedbackShown?.(scenario, selectedChoice);
   }, [deferExpensesUntilFeedback, mode, onCorrectFeedbackShown, scenario, selectedChoice]);
+
+  useEffect(() => {
+    if (!triggerExpenseOnFeedback || mode !== "positive" || selectedChoice?.result !== "correct" || !onCorrectExpenseSequence) return;
+    const key = `${scenario.id}:${selectedChoice.id}`;
+    if (expenseSequenceShownFor.current === key) return;
+    expenseSequenceShownFor.current = key;
+    void onCorrectExpenseSequence(scenario, selectedChoice).finally(() => setExpenseSequenceComplete(true));
+  }, [mode, onCorrectExpenseSequence, scenario, selectedChoice, triggerExpenseOnFeedback]);
 
   if (mode === "positive" && selectedChoice) {
     // 通用品種流程不再顯示獨立「品種小知識」卡；健康題的內容由題目資料
@@ -113,6 +131,8 @@ export function VideoScenarioActivity({
         onReplay={onReplay}
         onContinue={onCorrectComplete}
         continueImmediately={continueImmediately}
+        continueDisabled={triggerExpenseOnFeedback && !expenseSequenceComplete}
+        continueHint={triggerExpenseOnFeedback && !expenseSequenceComplete ? "正在加入本次照顧費用…" : undefined}
       />
     );
   }
