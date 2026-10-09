@@ -7,8 +7,9 @@ import { catLitterRescueConfig } from "../../../../data/species/cat/journey";
 import { catAssets } from "../../../../data/species/cat/assets";
 import { catReport } from "../../../../data/species/cat/report";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
+import { ActivityIntroPage } from "../activity-ui";
 
-export function CatDailyInspectionActivity({ petName, selected, onChange, onContinue }: { petName: string; selected: string[]; onChange: (selected: string[]) => void; onContinue: () => void }) {
+export function CatDailyInspectionActivity({ activity, petName, selected, onChange, onActivityChange, onContinue }: { activity: { catInspectionIntroStarted: boolean }; petName: string; selected: string[]; onChange: (selected: string[]) => void; onActivityChange: (patch: { catInspectionIntroStarted: boolean }) => void; onContinue: () => void }) {
   const litterBoxRef = useRef<HTMLDivElement>(null);
   const binRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -29,6 +30,12 @@ export function CatDailyInspectionActivity({ petName, selected, onChange, onCont
     if (binCloseTimerRef.current !== null) window.clearTimeout(binCloseTimerRef.current);
   }, []);
   const [wastePositions] = useState(() => catLitterRescueConfig.wasteItems.map((item) => ({ ...item })));
+  if (!activity.catInspectionIntroStarted) return <ActivityIntroPage
+    config={catLitterRescueConfig.intro}
+    petName={petName}
+    species="cat"
+    onStart={() => onActivityChange({ catInspectionIntroStarted: true })}
+  />;
   const complete = selected.includes("litter-complete");
   const displayPetName = petName || "貓咪";
   const wasteItems = wastePositions;
@@ -165,8 +172,8 @@ export function CatDailyInspectionActivity({ petName, selected, onChange, onCont
         <div ref={litterBoxRef} className={`cat-rescue-litter-box${litterFilled ? " is-filled" : ""}${backupInstalled ? " is-backup" : ""}${stageIndex === 0 ? " is-scoop-target" : ""}`}><img draggable={false} src={backupInstalled ? catAssets.daily.replacementLitterBox : litterFilled ? catAssets.daily.cleanLitterBox : catAssets.daily.dirtyLitterBox} alt={backupInstalled ? "更換完成的貓砂盆" : litterFilled ? "乾淨的貓砂盆" : "髒的貓砂盆"} /></div>
         {wasteItems.map((item) => revealedWaste.includes(item.id) && !selected.includes(`litter-waste:${item.id}`) && carryingWaste !== item.id ? <img key={item.id} draggable={false} className="cat-rescue-waste" style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }} src={item.kind === "poop" ? catAssets.daily.catPoop : catAssets.daily.urineClump} alt={`拖曳${item.label}到垃圾桶`} onPointerDown={(event) => startWasteDrag(event, item.id)} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} /> : null)}
         <div ref={binRef} className={`cat-rescue-bin${isBinOpen ? " is-drop-target" : ""}`} style={{ left: `${catLitterRescueConfig.bin.x}%`, top: `${catLitterRescueConfig.bin.y}%`, width: `${catLitterRescueConfig.bin.size}%`, height: `${catLitterRescueConfig.bin.size}%` }} aria-label="垃圾桶"><img src={isBinOpen ? catAssets.daily.trashBinOpen : catAssets.daily.trashBin} alt={isBinOpen ? "開啟的垃圾桶" : "垃圾桶"} /></div>
-        <div className="cat-rescue-controls">
-          {(stageIndex === 0 || stageIndex === 2) ? <div className="cat-rescue-tool-card"><button type="button" className={`cat-rescue-scoop-tool${dragging ? " is-dragging" : ""} is-prompt`} onPointerDown={startDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} aria-label="拖曳貓砂鏟到貓砂盆"><img draggable={false} src={catAssets.daily.litterScoop} alt="貓砂鏟" /></button></div> : stageIndex === 4 ? <div className="cat-rescue-tool-card"><button type="button" className="cat-rescue-action-icon" onPointerDown={startLitterDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} aria-label="拖曳乾淨貓砂到貓砂盆"><img draggable={false} src={catAssets.room.litter} alt="補充新的貓砂" /></button></div> : stageIndex === 5 && !backupInstalled ? <div className="cat-rescue-choice-card"><b className="cat-rescue-replacement-label">替換貓砂盆</b><button type="button" className="cat-rescue-action-icon" onClick={installBackup} aria-label="更換新的貓砂盆"><img draggable={false} src={catAssets.daily.replacementLitterBoxIcon} alt="更換新的貓砂盆" /></button></div> : null}
+      <div className="cat-rescue-controls">
+          {(stageIndex === 0 || stageIndex === 2) ? <div className="cat-rescue-tool-card"><button type="button" className={`cat-rescue-scoop-tool${dragging ? " is-dragging" : ""} is-prompt`} onPointerDown={startDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} aria-label="拖曳貓砂鏟到貓砂盆"><img draggable={false} src={catAssets.daily.litterScoop} alt="貓砂鏟" /></button></div> : stageIndex === 4 ? <div className="cat-rescue-tool-card"><button type="button" className="cat-rescue-action-icon" onPointerDown={startLitterDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} aria-label="拖曳乾淨貓砂到貓砂盆"><img draggable={false} src={catAssets.room.litter} alt="補充新的貓砂" /></button></div> : stageIndex === 5 && !backupInstalled ? <div className="cat-rescue-choice-card"><b className="cat-rescue-replacement-label">點擊替換貓砂盆</b><button type="button" className="cat-rescue-action-icon" onClick={installBackup} aria-label="更換新的貓砂盆"><img draggable={false} src={catAssets.daily.replacementLitterBoxIcon} alt="更換新的貓砂盆" /></button></div> : null}
         </div>
       </div>
       {backupInstalled && <div className="cat-rescue-finish-action"><button type="button" className="primary" onClick={finishCleaning}>完成清潔 <span>→</span></button></div>}
@@ -174,4 +181,3 @@ export function CatDailyInspectionActivity({ petName, selected, onChange, onCont
     {dragging && dragPoint && <div className="cat-rescue-drag-ghost" style={{ left: dragPoint.x, top: dragPoint.y }} aria-hidden="true"><img src={carryingWaste ? wasteItems.find((item) => item.id === carryingWaste)?.kind === "poop" ? catAssets.daily.catPoop : catAssets.daily.urineClump : stageIndex === 4 ? catAssets.room.litter : catAssets.daily.litterScoop} alt="" /></div>}
   </section>;
 }
-

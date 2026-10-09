@@ -46,6 +46,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
   const feedbackShown = activity.rabbitCarryFeedbackShown;
   const attempts = activity.rabbitCarryAttempts ?? 0;
   const isCompletionState = complete || answerRevealed;
+  const isLockedAfterFailures = attempts >= 3 && !answerRevealed;
 
   useEffect(() => {
     const wasCompletionState = previousCompletionStateRef.current;
@@ -68,7 +69,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
   }, [complete, feedbackShown, attempts]);
 
   const move = (from: number, insertAt: number) => {
-    if (isCompletionState || from < 0 || insertAt < 0 || from >= order.length || insertAt > order.length) return;
+    if (isCompletionState || isLockedAfterFailures || from < 0 || insertAt < 0 || from >= order.length || insertAt > order.length) return;
     const next = [...order];
     const [moved] = next.splice(from, 1);
     const destination = from < insertAt ? insertAt - 1 : insertAt;
@@ -76,15 +77,15 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
     onChange({ rabbitCarryOrder: next });
   };
   const check = () => {
-    if (isCompletionState || submittedRef.current) return;
+    if (isCompletionState || isLockedAfterFailures || submittedRef.current) return;
     submittedRef.current = true;
     const incorrectIndex = order.findIndex((value, index) => value !== String(index));
     if (incorrectIndex !== -1) {
       const nextAttempts = attempts + 1;
       onChoose(scenario, scenario.choices[0]);
       if (nextAttempts >= 3) {
-        onChange({ rabbitCarryAttempts: nextAttempts, rabbitCarryAnswerRevealed: true, rabbitCarryOrder: ["0", "1", "2", "3", "4"] });
-        setMessage("");
+        onChange({ rabbitCarryAttempts: nextAttempts });
+        setMessage("已嘗試 3 次，現在可以查看正確方式。 ");
         return;
       }
       onChange({ rabbitCarryAttempts: nextAttempts });
@@ -95,18 +96,23 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
     onChoose(scenario, scenario.choices[1]);
   };
 
+  function revealCorrectWay() {
+    if (!isLockedAfterFailures) return;
+    onChange({ rabbitCarryAnswerRevealed: true, rabbitCarryOrder: ["0", "1", "2", "3", "4"] });
+    setMessage("");
+  }
+
   if (feedbackShown) return <div ref={feedbackRef} tabIndex={-1} className="activity-feedback-focus"><RabbitActivityFeedback scenario={scenario} petName={petName} onReplay={onReplay} onContinue={onContinue} /></div>;
   return (
     <section ref={activityRef} tabIndex={-1} className={`rabbit-activity rabbit-carry-activity ${isCompletionState ? "is-completion-state" : ""}`} aria-labelledby="rabbit-carry-title">
       <header><p>日常照護</p><h1 id="rabbit-carry-title">{withPetName(scenario.title, petName)}</h1>{!isCompletionState && <span className="rabbit-carry-description">{withPetName(scenario.description, petName)}</span>}</header>
       <div className="rabbit-activity-panel">
-        {answerRevealed && scenario.activityRevealNotice && <p className="rabbit-carry-reveal-notice" role="status">{withPetName(scenario.activityRevealNotice, petName)}</p>}
-        <h2 className={isCompletionState ? "rabbit-carry-completion-title" : undefined}>{withPetName(isCompletionState ? scenario.activityCompletionTitle ?? scenario.questionText ?? "" : scenario.questionText ?? "", petName)}</h2>
+        <h2 className={isCompletionState ? "rabbit-carry-completion-title" : undefined}>{withPetName(answerRevealed ? scenario.activityRevealNotice ?? "" : complete ? scenario.activityCompletionTitle ?? scenario.questionText ?? "" : scenario.questionText ?? "", petName)}</h2>
         <ol className="rabbit-sort-list rabbit-drag-sort-list">
           {order.map((value, index) => (
             <li key={value} data-rabbit-step={index}
               onPointerDown={(event) => {
-                if (isCompletionState || (event.target as HTMLElement).closest("button")) return;
+                if (isCompletionState || isLockedAfterFailures || (event.target as HTMLElement).closest("button")) return;
                 event.preventDefault();
                 event.currentTarget.setPointerCapture(event.pointerId);
                 setDraggedIndex(index);
@@ -139,11 +145,10 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
             </li>
           ))}
         </ol>
-        {attempts > 0 && !answerRevealed && <p className="sort-attempts" role="status">還有 <strong>{Math.max(0, 3 - attempts)}</strong> 次可嘗試</p>}
+        {attempts > 0 && !answerRevealed && <p className="sort-attempts" role="status">{isLockedAfterFailures ? <>已達 <strong>3</strong> 次嘗試</> : <>還有 <strong>{Math.max(0, 3 - attempts)}</strong> 次可嘗試</>}</p>}
         {message && !isCompletionState && <p className="rabbit-activity-message" role="status">{message}</p>}
-        {isCompletionState ? <button type="button" className="primary" onClick={() => onChange({ rabbitCarryFeedbackShown: true })}>我知道正確做法了 <span>→</span></button> : <button type="button" className="primary" onClick={check}>確認順序 <span>→</span></button>}
+        {isCompletionState ? <button type="button" className="primary" onClick={() => onChange({ rabbitCarryFeedbackShown: true })}>我知道正確做法了 <span>→</span></button> : isLockedAfterFailures ? <button type="button" className="rabbit-carry-reveal-button" onClick={revealCorrectWay}>查看正確方式 <span>→</span></button> : <button type="button" className="primary" onClick={check}>確認順序 <span>→</span></button>}
       </div>
     </section>
   );
 }
-

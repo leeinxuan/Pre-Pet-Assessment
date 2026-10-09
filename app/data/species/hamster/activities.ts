@@ -1,12 +1,23 @@
+import type { ActivityIntroConfig } from "../../../game-types";
+import { hamsterAssets } from "./assets";
+
 /** docs/hamster-game-planning.md §5.3.2 的兩段式早晨清潔流程。 */
 export const hamsterMorningCheck = {
-  introTitle: "早晨巡視——每天替 {petName} 確認一次",
-  introParagraphs: [
-    "倉鼠是夜行性動物，牠最活躍的時候是你熟睡的時候。等你早上醒來，就是一天一次確認{petName}一切安好的最佳時機。",
-    "{petName}會固定選擇同一個角落作為廁所——每天清那個角落的髒墊料，是維持衛生最輕鬆有效的方式，也是許多新手不知道要做的日常任務。砂浴是牠維持毛髮健康的方式，定期篩除結塊的沙讓牠隨時都能有效沙浴。",
-    "這兩件清潔工作，就是每天早晨為 {petName} 做的最重要的事。",
-  ],
-  startLabel: "開始早晨巡視 →",
+  intro: {
+    eyebrow: "日常照護",
+    title: "早晨巡視——每天替 {petName} 確認一次",
+    paragraphs: [
+      "倉鼠是**夜行性動物**，**早晨**是一天一次確認 {petName} 一切安好的最佳時機。",
+      "{petName} 有**固定的廁所角落**——**每天清**那個角落的髒墊料，是維持衛生最有效的方式。**砂浴盆**也要**定期篩除結塊**，讓牠隨時都能正常使用。",
+      "這兩件事，就是每天早晨為 {petName} 做的最重要的照顧。",
+    ],
+    startLabel: "開始今天的清潔 →",
+    visualAssets: {
+      character: hamsterAssets.feeding.happy,
+      tool: hamsterAssets.dailyInspection.bedding,
+      collector: hamsterAssets.dailyInspection.sandBath,
+    },
+  } satisfies ActivityIntroConfig,
   steps: {
     toilet: {
       id: "toilet-corner",

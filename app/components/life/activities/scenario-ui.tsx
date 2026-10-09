@@ -45,16 +45,16 @@ export function SceneMediaPlaceholder({ title }: { title: string }) {
 }
 
 /** 共用提醒圖示：兔子餵食的「注意」與禁止操作都使用同一種非責備式警示。 */
-function otherCorrectChoices(scenario: Scenario, choice: ScenarioChoice, petName: string) {
+function otherCorrectChoices(scenario: Scenario, choice: ScenarioChoice, petName: string, species?: string) {
   if (choice.result !== "correct") return [];
   return scenario.choices
     .filter((entry) => entry.result === "correct" && entry.id !== choice.id)
     .slice(0, 2)
-    .map((entry) => withPetName(entry.text, petName));
+    .map((entry) => withPetName(entry.text, petName, species));
 }
 
-export function OtherCorrectTips({ scenario, choice, petName }: { scenario: Scenario; choice: ScenarioChoice; petName: string }) {
-  const tips = otherCorrectChoices(scenario, choice, petName);
+export function OtherCorrectTips({ scenario, choice, petName, species }: { scenario: Scenario; choice: ScenarioChoice; petName: string; species?: string }) {
+  const tips = otherCorrectChoices(scenario, choice, petName, species);
   if (tips.length === 0) return null;
   return <div className="other-correct-tips"><b>也可以這樣做</b><ul>{tips.map((tip) => <li key={tip}>{tip}</li>)}</ul></div>;
 }
@@ -358,14 +358,14 @@ function ScenarioFeedback({
       <CorrectFeedbackLayout
         variant="single"
         videoSrc={feedbackMedia.type === "video" ? feedbackMedia.src : ""}
-        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
+        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
         videoFailed={feedbackVideoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={<p>{plainFeedbackText(withPetName(choice.explanation, petName))}</p>}
+        intro={<p>{plainFeedbackText(withPetName(choice.explanation, petName, species))}</p>}
         correctItems={scenario.learningPoints}
         knowledgeTitle={scenario.knowledgeTitle ?? "狗狗小知識"}
-        suggestion={choice.suggestion ? <p>{plainFeedbackText(withPetName(choice.suggestion, petName))}</p> : null}
-        otherTips={<OtherCorrectTips scenario={scenario} choice={choice} petName={petName} />}
+        suggestion={choice.suggestion ? <p>{plainFeedbackText(withPetName(choice.suggestion, petName, species))}</p> : null}
+        otherTips={<OtherCorrectTips scenario={scenario} choice={choice} petName={petName} species={species} />}
         onVideoEnded={() => setFeedbackVideoFinished(true)}
         onVideoError={() => { setFeedbackVideoFailed(true); setFeedbackVideoFinished(true); }}
         onReplay={onReplay}
@@ -376,17 +376,17 @@ function ScenarioFeedback({
   }
   return (
     <section className={`scenario-feedback ${choice.result}`} aria-live="polite">
-      <div className="feedback-title"><span>{labels[choice.result].icon}</span><div><small>{scenario.timeLabel}</small><h2>{withPetName(choice.feedbackTitle, petName)}</h2></div></div>
-      <IncorrectExplanation text={withPetName(choice.explanation, petName)} />
-      <OtherCorrectTips scenario={scenario} choice={choice} petName={petName} />
-      {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整：</b><p>{withPetName(choice.suggestion, petName)}</p></div>}
+      <div className="feedback-title"><span>{labels[choice.result].icon}</span><div><small>{scenario.timeLabel}</small><h2>{withPetName(choice.feedbackTitle, petName, species)}</h2></div></div>
+      <IncorrectExplanation text={withPetName(choice.explanation, petName, species)} />
+      <OtherCorrectTips scenario={scenario} choice={choice} petName={petName} species={species} />
+      {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整：</b><p>{withPetName(choice.suggestion, petName, species)}</p></div>}
       <div className="feedback-expense">
         <b>本次費用變化</b>
         {expenseChanges.length
           ? expenseChanges.map((expense) => <span key={expense.id}>{expense.name} ＋NT$ {money.format(expense.amount)}{expense.recurring ? "／月" : ""}（同一事件只登記一次）</span>)
           : <span>本次選擇沒有新增費用。</span>}
       </div>
-      {scenario.reminder && <div className="law-reminder"><span>i</span><p><b>生活裡的責任提醒</b>{withPetName(scenario.reminder, petName)}</p></div>}
+      {scenario.reminder && <div className="law-reminder"><span>i</span><p><b>生活裡的責任提醒</b>{withPetName(scenario.reminder, petName, species)}</p></div>}
       <div className="feedback-actions">
         {choice.result === "incorrect" && <button className="secondary" onClick={onRetry}>重新想一次</button>}
         {(!requiresRetry || choice.result !== "incorrect") && <button className="primary" onClick={onContinue}>{scenario.continueLabel ?? labels[choice.result].button} <span>→</span></button>}
@@ -435,8 +435,8 @@ export function ScenarioCard({
       <article className="scene-card">
         <div className="scene-copy">
           <p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p>
-          <h1>{withPetName(scenario.title, petName)}</h1>
-          <p>{withPetName(scenario.description, petName)}</p>
+          <h1>{withPetName(scenario.title, petName, species)}</h1>
+          <p>{withPetName(scenario.description, petName, species)}</p>
           {scenario.supportChoice && (
             <div className={`support-link ${hasBackup ? "ready" : "missing"}`}>
               <span>{hasBackup ? "✓" : "!"}</span>
@@ -449,7 +449,7 @@ export function ScenarioCard({
             sceneVideoFailed
               ? <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>
               : <VideoWithToggle className="scene-video" src={sceneMedia.src} loop ariaLabel={sceneMedia.ariaLabel} onError={() => setFailedSceneVideoFor(scenario.id)} />
-          ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} />}
+          ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} />}
           <p>{scenario.timeLabel}</p>
         </div>
       </article>
@@ -459,7 +459,7 @@ export function ScenarioCard({
           {scenario.choices.filter((choice) => choice.id !== "assigned-helper" || hasBackup).map((choice) => {
             const text = choice.id === "assigned-helper"
               ? `請${backupNames.join("或")}依照事先安排的分工，協助今晚的餵食與活動。`
-              : withPetName(choice.text, petName);
+              : withPetName(choice.text, petName, species);
             return <ScenarioOptionCard key={choice.id} onClick={() => onChoose(choice)}>{text}</ScenarioOptionCard>;
           })}
         </div>

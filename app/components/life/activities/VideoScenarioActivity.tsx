@@ -22,6 +22,7 @@ export function VideoScenarioActivity({
   scenario,
   answer,
   petName,
+  species = "dog",
   breed,
   onChoose,
   onCorrectComplete,
@@ -35,6 +36,7 @@ export function VideoScenarioActivity({
   scenario: Scenario;
   answer?: ScenarioAnswer;
   petName: string;
+  species?: string;
   breed: string;
   onChoose: (choice: ScenarioChoice) => void;
   onCorrectComplete: () => void;
@@ -110,22 +112,22 @@ export function VideoScenarioActivity({
         variant="single"
         title={completionFeedback?.title}
         videoSrc={correctFeedbackVideo ?? ""}
-        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
+        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={completionFeedback ? <p>{renderKnowledgeText(withPetName(completionFeedback.encouragement, petName))}</p> : <p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
-        breedHighlight={breedKnowledge ? <BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={`${breedLabelForId(breed)}小知識`} /> : null}
-        correctItems={completionFeedback ? undefined : scenario.learningPoints?.map((point) => withPetName(point, petName))}
-        knowledgeContent={completionFeedback?.knowledgeContent.map((content) => ({ ...content, text: withPetName(content.text, petName) }))}
+        intro={completionFeedback ? <p>{renderKnowledgeText(withPetName(completionFeedback.encouragement, petName, species))}</p> : <p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName, species))}</p>}
+        breedHighlight={breedKnowledge ? <BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName, species)} label={`${breedLabelForId(breed, species)}小知識`} /> : null}
+        correctItems={completionFeedback ? undefined : scenario.learningPoints?.map((point) => withPetName(point, petName, species))}
+        knowledgeContent={completionFeedback?.knowledgeContent.map((content) => ({ ...content, text: withPetName(content.text, petName, species) }))}
         knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "照護小知識"}
         suggestion={completionFeedback?.reminder ? (
-          <p>{renderKnowledgeText(withPetName(completionFeedback.reminder, petName))}</p>
+          <p>{renderKnowledgeText(withPetName(completionFeedback.reminder, petName, species))}</p>
         ) : followupSuggestion ? (
-          <p>{plainFeedbackText(withPetName(followupSuggestion, petName))}</p>
+          <p>{plainFeedbackText(withPetName(followupSuggestion, petName, species))}</p>
         ) : !completionFeedback && !breedKnowledge && selectedChoice.suggestion ? (
-          <p>{plainFeedbackText(withPetName(withBreedName(selectedChoice.suggestion, breed), petName))}</p>
+          <p>{plainFeedbackText(withPetName(withBreedName(selectedChoice.suggestion, breed, species), petName, species))}</p>
         ) : null}
-        otherTips={completionFeedback ? null : <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} />}
+        otherTips={completionFeedback ? null : <OtherCorrectTips scenario={scenario} choice={selectedChoice} petName={petName} species={species} />}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
         onReplay={onReplay}
@@ -139,7 +141,7 @@ export function VideoScenarioActivity({
 
   return (
     <section className="video-scenario-activity">
-      <div className="video-scenario-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(withBreedName(scenario.title, breed), petName)}</h1><p>{withPetName(withBreedName(scenario.description, breed), petName)}</p></div>
+      <div className="video-scenario-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(withBreedName(scenario.title, breed, species), petName, species)}</h1><p>{withPetName(withBreedName(scenario.description, breed, species), petName, species)}</p></div>
       <div className="video-scenario-layout">
         <div className="video-scenario-visual">
           {source ? (
@@ -149,18 +151,18 @@ export function VideoScenarioActivity({
               ariaLabel={sceneMedia.type === "video" ? sceneMedia.ariaLabel : scenario.title}
               onError={() => setVideoFailed(true)}
             />
-          ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} />}
+          ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} />}
           {videoFailed && <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>}
         </div>
         {mode === "incorrect" && selectedChoice ? (
           <section className="video-scenario-retry" aria-live="polite">
             <h2>這個做法可能不太適合</h2>
-            <IncorrectExplanation text={withPetName(withBreedName(selectedChoice.explanation, breed), petName)} />
-            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(withBreedName(selectedChoice.suggestion, breed), petName)}</p></div>}
+            <IncorrectExplanation text={withPetName(withBreedName(selectedChoice.explanation, breed, species), petName, species)} />
+            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(withBreedName(selectedChoice.suggestion, breed, species), petName, species)}</p></div>}
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (
-          <section className="video-scenario-options"><h2>{mode === "animating" ? "正在加入本次照顧費用…" : "你會怎麼做？"}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} disabled={mode === "animating"} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</section>
+          <section className="video-scenario-options"><h2>{mode === "animating" ? "正在加入本次照顧費用…" : "你會怎麼做？"}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} disabled={mode === "animating"} onClick={() => choose(choice)}>{withPetName(choice.text, petName, species)}</ScenarioOptionCard>)}</section>
         )}
       </div>
     </section>

@@ -36,23 +36,23 @@ function dailyCareDurationLabel(value: string) {
   return value.replace(/^每日約需安排\s*/, "");
 }
 
-function homeReadinessText(segments: HomeReadinessTextSegment[], petName: string) {
-  return segments.map((segment) => interpolatePetName(segment.text, petName)).join("");
+function homeReadinessText(segments: HomeReadinessTextSegment[], petName: string, species?: string) {
+  return segments.map((segment) => interpolatePetName(segment.text, petName, species)).join("");
 }
 
-function HomeReadinessReviewText({ segments, petName }: { segments: HomeReadinessTextSegment[]; petName: string }) {
+function HomeReadinessReviewText({ segments, petName, species }: { segments: HomeReadinessTextSegment[]; petName: string; species?: string }) {
   return <>{segments.map((segment, index) => {
-    const parts = interpolatePetName(segment.text, petName).split("**");
+    const parts = interpolatePetName(segment.text, petName, species).split("**");
     return <span key={`${segment.text}-${index}`}>{parts.map((part, partIndex) => (segment.emphasis || partIndex % 2 === 1)
       ? <strong className="home-readiness-emphasis" key={`${part}-${partIndex}`}>{part}</strong>
       : part)}</span>;
   })}</>;
 }
 
-function CareReviewRichText({ blocks, petName }: { blocks: HomeReadinessTextBlock[]; petName: string }) {
+function CareReviewRichText({ blocks, petName, species }: { blocks: HomeReadinessTextBlock[]; petName: string; species?: string }) {
   const paragraphs = blocks.filter((block) => block.type === "paragraph");
   const items = blocks.filter((block) => block.type === "item");
-  return <>{paragraphs.map((block, index) => <p key={`paragraph-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} /></p>)}{items.length > 0 && <ul>{items.map((block, index) => <li key={`item-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} /></li>)}</ul>}</>;
+  return <>{paragraphs.map((block, index) => <p key={`paragraph-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} species={species} /></p>)}{items.length > 0 && <ul>{items.map((block, index) => <li key={`item-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} species={species} /></li>)}</ul>}</>;
 }
 
 function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {
@@ -261,8 +261,8 @@ export function AssessmentReport({
         <section ref={additionalNotesModalRef} className="knowledge-modal care-review-notes-modal" role="dialog" aria-modal="true" aria-labelledby="care-review-notes-modal-title" tabIndex={-1}>
           <button type="button" className="knowledge-modal-close" onClick={() => setActiveAdditionalNoteIndex(null)} aria-label="關閉照顧路上的提醒">×</button>
           <p className="life-stage-label">照顧路上的提醒</p>
-          <h2 id="care-review-notes-modal-title"><HomeReadinessReviewText segments={activeAdditionalNote.title} petName={petName} /></h2>
-          <div className="care-review-notes-modal-content"><CareReviewRichText blocks={activeAdditionalNote.content} petName={petName} /></div>
+          <h2 id="care-review-notes-modal-title"><HomeReadinessReviewText segments={activeAdditionalNote.title} petName={petName} species={species} /></h2>
+          <div className="care-review-notes-modal-content"><CareReviewRichText blocks={activeAdditionalNote.content} petName={petName} species={species} /></div>
           <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveAdditionalNoteIndex(null)}>關閉</button>
         </section>
       </div>,
@@ -332,7 +332,7 @@ export function AssessmentReport({
           <aside className="care-breed-card">
             <span className="care-breed-copy">
               <b>{selectedBreed?.label ?? (petName || petNameFallback(species))}</b>
-              {petName.trim() && <small>{petName}</small>}
+              <small>{petName.trim() || petNameFallback(species)}</small>
             </span>
             {selectedBreed?.image && <img src={selectedBreed.image} alt={selectedBreed.label} />}
           </aside>
@@ -340,7 +340,7 @@ export function AssessmentReport({
 
         <section className={`care-a4-home-readiness ${homeReadinessComplete ? "is-complete" : "is-pending"}`} aria-labelledby="care-a4-home-readiness-title">
           <h2 id="care-a4-home-readiness-title">家庭與居住確認</h2>
-          {homeReadinessComplete && selectedHousing ? <><p className="care-a4-home-readiness-status">已確認</p><p>{selectedHousing.label}；<HomeReadinessReviewText segments={selectedHousing.reviewSummary} petName={petName} /></p></> : <><p className="care-a4-home-readiness-status">尚未確認</p><p><HomeReadinessReviewText segments={homeReadinessConfig.pendingReviewSummary} petName={petName} /></p></>}
+          {homeReadinessComplete && selectedHousing ? <><p className="care-a4-home-readiness-status">已確認</p><p>{selectedHousing.label}；<HomeReadinessReviewText segments={selectedHousing.reviewSummary} petName={petName} species={species} /></p></> : <><p className="care-a4-home-readiness-status">尚未確認</p><p><HomeReadinessReviewText segments={homeReadinessConfig.pendingReviewSummary} petName={petName} species={species} /></p></>}
         </section>
 
         <section className="care-a4-checklists" aria-labelledby="care-a4-checklist-title">
@@ -419,7 +419,7 @@ export function AssessmentReport({
               <p><b>情境：</b>{topic.summary ?? topic.title}</p>
               <div>
                 <b>建議複習：</b>
-                <ul>{topic.knowledgePoints.slice(0, 4).map((point) => <li key={point}><HomeReadinessReviewText segments={[{ text: point }]} petName={petName} /></li>)}</ul>
+                <ul>{topic.knowledgePoints.slice(0, 4).map((point) => <li key={point}><HomeReadinessReviewText segments={[{ text: point }]} petName={petName} species={species} /></li>)}</ul>
               </div>
             </article>)}
           </section>
@@ -444,7 +444,7 @@ export function AssessmentReport({
           {visibleMasteredCareThemes.length ? <div className="care-review-mastered-theme-grid">
             {visibleMasteredCareThemes.map((theme) => <article key={theme.id}>
               <span aria-hidden="true">✓</span>
-              <div><b>{theme.title}</b><p><HomeReadinessReviewText segments={[{ text: theme.summary }]} petName={petName} /></p></div>
+              <div><b>{theme.title}</b><p><HomeReadinessReviewText segments={[{ text: theme.summary }]} petName={petName} species={species} /></p></div>
             </article>)}
           </div> : <p className="care-review-empty">完成並答對情境題後，這裡會整理你已建立的照顧觀念。</p>}
         </section>
@@ -456,7 +456,7 @@ export function AssessmentReport({
           </div> : <div className="care-review-all-clear"><span aria-hidden="true">✓</span><p>你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。</p></div>}
         </section>
 
-        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true">◌</span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true">◌</span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} /></p></div><button type="button" className="discussion-info-button" onClick={(event) => { additionalNotesTriggerRef.current = event.currentTarget; setActiveAdditionalNoteIndex(index); }} aria-label={`查看「${homeReadinessText(note.title, petName)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
+        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true">◌</span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true">◌</span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} species={species} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} species={species} /></p></div><button type="button" className="discussion-info-button" onClick={(event) => { additionalNotesTriggerRef.current = event.currentTarget; setActiveAdditionalNoteIndex(index); }} aria-label={`查看「${homeReadinessText(note.title, petName, species)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
 
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>

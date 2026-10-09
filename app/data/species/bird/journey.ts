@@ -1,4 +1,5 @@
-import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
+import type { ActivityIntroConfig, JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
+import { birdAssets } from "./assets";
 
 export const birdJourneyItems: JourneyItem[] = [
   { id: "bird-arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "bird-arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
@@ -20,5 +21,23 @@ export const birdScenarioPresentation: SpeciesScenarioPresentationConfig = {
     "bird-senior-care": {},
   },
 };
-export const birdCageInspectionConfig = { targetStamps: 4, steps: ["tray-clean", "feces-observed", "health-observed", "social-time"] as const } as const;
+export const birdCageInspectionConfig = {
+  intro: {
+    eyebrow: "日常照護",
+    title: "{petName} 看起來沒事，不代表牠真的沒事",
+    paragraphs: [
+      "鳥類演化出了強大的**隱藏病徵能力**——就算生病，也會盡力維持正常外表。等到 {petName} 明顯**嗜睡**或**澎毛**，往往代表病情**已相當嚴重**。",
+      "**每天主動觀察**是最好的預防方式。**糞便的狀態**、**羽毛的光澤**、**眼睛是否清亮**——這些細節只有每天看著牠的你才能發現異常。",
+      "今天的巡視，就是你和 {petName} 之間的默契。",
+    ],
+    startLabel: "開始今日巡視 →",
+    visualAssets: {
+      character: birdAssets.dailyGame.birdCloseup,
+      tool: birdAssets.dailyGame.magnifier,
+      collector: birdAssets.dailyGame.beddingDirty,
+    },
+  } satisfies ActivityIntroConfig,
+  targetStamps: 4,
+  steps: ["tray-clean", "feces-observed", "health-observed", "social-time"] as const,
+} as const;
 export const birdJourney = { items: birdJourneyItems, dailyBehaviorScenarioIds: birdDailyBehaviorScenarioIds, cageInspection: birdCageInspectionConfig, activity: "bird-cage-inspection" as const } as const;

@@ -347,6 +347,19 @@ export type JourneyActivityKey =
   | "walking" | "cat-inspection" | "rabbit-carry-sort" | "rabbit-daily-check"
   | "bird-cage-inspection" | "hamster-inspection" | "breed-challenge" | "busy-care";
 
+/** 核心互動開始前的純說明頁資料；各物種只提供需要的內容與既有素材。 */
+export type ActivityIntroConfig = {
+  eyebrow: string;
+  title: string;
+  paragraphs: readonly string[];
+  startLabel: string;
+  visualAssets?: {
+    character?: string;
+    tool?: string;
+    collector?: string;
+  };
+};
+
 export type JourneyActivityConfig = {
   itemId: string;
   scenarioId?: string;
@@ -376,6 +389,8 @@ export type LifeActivityState = {
   walkingPoopCleaned: boolean;
   walkingComplete: boolean;
   catInspectionSteps: string[];
+  /** 貓砂盆互動前導說明已閱讀；重玩此活動時回到前導頁。 */
+  catInspectionIntroStarted: boolean;
   sickTimePassComplete: boolean;
   bodyCareParts: string[];
   seniorAdjustments: string[];
@@ -399,6 +414,8 @@ export type LifeActivityState = {
     attempts: number;
   }>;
   birdCageInspectionSteps: string[];
+  /** 鸚鵡鳥籠巡視前導說明已閱讀；重玩此活動時回到前導頁。 */
+  birdCageInspectionIntroStarted: boolean;
   /** 同一輪鳥籠巡視的四個健康觀察結果；重新開卡或重新 render 時不得重抽。 */
   birdCageInspectionStates: Record<string, "normal" | "warning">;
   hamsterMealSelected: string[];

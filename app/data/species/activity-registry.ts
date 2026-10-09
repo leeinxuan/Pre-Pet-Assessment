@@ -63,10 +63,10 @@ export function getJourneyActivityConfig(species: string, itemId: string): Journ
 export function getJourneyActivityResetPatch(resetKey: string | undefined): Partial<LifeActivityState> | undefined {
   switch (resetKey) {
     case "walking": return { walkingPreparedItems: [], walkingSceneIndex: 0, walkingMinutes: 0, walkingPoopCleaned: false, walkingComplete: false, catInspectionSteps: [] };
-    case "cat-inspection": return { catInspectionSteps: [] };
+    case "cat-inspection": return { catInspectionSteps: [], catInspectionIntroStarted: false };
     case "rabbit-carry-sort": return { rabbitCarryOrder: [], rabbitCarryComplete: false, rabbitCarryAttempts: 0, rabbitCarryAnswerRevealed: false, rabbitCarryFeedbackShown: false };
     case "rabbit-daily-check": return { rabbitDailyCheckSteps: [], rabbitGroomingIntroStarted: false, rabbitGroomingState: rabbitGroomingConfig.initialState, rabbitGroomingObservations: {}, rabbitGroomingInspection: {} };
-    case "bird-cage-inspection": return { birdCageInspectionSteps: [], birdCageInspectionStates: {} };
+    case "bird-cage-inspection": return { birdCageInspectionSteps: [], birdCageInspectionIntroStarted: false, birdCageInspectionStates: {} };
     case "hamster-first-meal": return { hamsterMealSelected: [], hamsterMealFeedbackId: "" };
     case "hamster-inspection": return { hamsterInspectionStarted: false, hamsterInspectionStates: {}, hamsterInspectionCompleted: [], hamsterInspectionFeedback: {} };
     default: return undefined;

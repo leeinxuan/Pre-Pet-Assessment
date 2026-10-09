@@ -9,6 +9,7 @@ import { hamsterMorningCheck } from "../../../../data/species/hamster/activities
 import { hamsterReport } from "../../../../data/species/hamster/report";
 import { interpolatePetName } from "../../../../data/shared/pet-text";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
+import { ActivityIntroPage } from "../activity-ui";
 
 type Change = (patch: Partial<LifeActivityState>) => void;
 
@@ -78,11 +79,12 @@ export function GuidedInspection({ activity, petName, onChange, onContinue }: {
     setSandHint("再拖遠一點，讓篩網完整劃過砂浴盆。");
   }
 
-  if (!activity.hamsterInspectionStarted) return <section className="guided-activity guided-activity-intro hamster-morning-inspection">
-    <h1>{render(config.introTitle)}</h1>
-    {config.introParagraphs.map((paragraph) => <p key={paragraph}>{render(paragraph)}</p>)}
-    <button type="button" className="primary" onClick={() => onChange({ hamsterInspectionStarted: true })}>{config.startLabel}</button>
-  </section>;
+  if (!activity.hamsterInspectionStarted) return <ActivityIntroPage
+    config={config.intro}
+    petName={petName}
+    species="hamster"
+    onStart={() => onChange({ hamsterInspectionStarted: true })}
+  />;
 
   if (toiletComplete && sandBathComplete) return <DailyCareCompletion
     title={render(config.completion.title)}
@@ -128,4 +130,3 @@ export function GuidedInspection({ activity, petName, onChange, onContinue }: {
     {toiletComplete && <p className="hamster-morning-step-note">{render(sandBathStep.completion)}</p>}
   </section>;
 }
-

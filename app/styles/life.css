@@ -720,14 +720,14 @@
 .bird-cage-message { min-height: 3.4em; margin-bottom: 0; }
 .bird-cage-scene { position: relative; min-height: 520px; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(145deg, #fbf4e5, #e7f0e6); isolation: isolate; }
 .bird-cage-background { position: absolute; z-index: -1; inset: 78px 0 0; width: 100%; height: calc(100% - 78px); object-fit: contain; }
-.bird-cage-scene.is-social-stage .bird-cage-background { top: 126px; height: calc(100% - 126px); }
+.bird-cage-scene.is-social-stage .bird-cage-background { top: 70px; height: calc(100% - 70px); }
 .bird-cage-asset-fallback { display: grid; place-items: center; }
 .bird-cage-main-hotspot { position: absolute; z-index: 2; border: 0; border-radius: 22px; padding: 0; background: transparent; cursor: pointer; }
 .bird-cage-main-hotspot:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 .bird-cage-main-hotspot--tray { left: 35%; bottom: 7%; width: 30%; height: 13%; }
 .bird-cage-main-hotspot--lock { left: 51%; top: 30%; width: 19%; height: 35%; }
 .bird-cage-main-hotspot.is-opening { cursor: wait; }
-.bird-cage-scene-prompt { position: absolute; z-index: 5; left: 50%; top: 14px; display: grid; width: min(680px, calc(100% - 32px)); height: 52px; margin: 0; place-items: center; padding: 7px 12px; border-radius: 999px; background: rgba(255,253,247,.94); color: var(--ink); font-size: 13px; font-weight: 900; line-height: 1.45; text-align: center; box-shadow: 0 5px 14px rgba(70,53,26,.14); box-sizing: border-box; transform: translateX(-50%); pointer-events: none; }
+.bird-cage-scene-prompt { position: absolute; z-index: 5; left: 50%; top: 14px; display: block; width: fit-content; max-width: min(680px, calc(100% - 36px)); min-height: 40px; margin: 0; padding: 9px 14px; border-radius: 999px; background: rgba(255,253,247,.94); color: var(--ink); font-size: 13px; font-weight: 900; line-height: 1.45; text-align: center; box-shadow: 0 5px 14px rgba(70,53,26,.14); box-sizing: border-box; pointer-events: none; transform: translateX(-50%); }
 .bird-cage-scene-prompt--lock { top: 14px; }
 .bird-replacement-tray { position: absolute; z-index: 4; left: 5%; bottom: 7%; display: grid; width: min(170px, 25%); justify-items: center; gap: 4px; border: 0; padding: 0; background: transparent; color: var(--ink); font: inherit; font-weight: 900; cursor: pointer; }
 .bird-replacement-tray img { display: block; width: 100%; height: auto; aspect-ratio: 14 / 9; object-fit: contain; filter: drop-shadow(0 8px 12px rgba(70,53,26,.2)); animation: birdBeddingPrompt 1.3s ease-in-out infinite; }
@@ -746,11 +746,11 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
 .bird-cage-scene.is-health-inspection .bird-cage-background { object-fit: contain; background: #faf1dd; }
 .bird-cage-scene.is-health-transition .bird-cage-background { animation: birdHealthExit .4s ease-in both; }
 .bird-health-points button { position: absolute; display: grid; width: 44px; min-width: 44px; height: 44px; min-height: 44px; place-items: center; pointer-events: auto; border: 2px solid rgba(117,91,50,.58); border-radius: 999px; background: rgba(255,253,247,.84); box-shadow: 0 5px 13px rgba(70,53,26,.16); color: var(--ink); font: inherit; cursor: pointer; }
-.bird-health-points button::after { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); content: ""; }.bird-health-points button > span { font-size: 15px; line-height: 1; }.bird-health-points button small { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }.bird-health-points button.is-observed { opacity: .48; }.bird-health-points button.is-observed::after { display: none; }.bird-health-points button:nth-child(1) { left: 61%; top: 18%; }.bird-health-points button:nth-child(2) { left: 34%; top: 42%; }.bird-health-points button:nth-child(3) { left: 50%; top: 73%; }.bird-health-points button:nth-child(4) { left: 52%; top: 51%; }
+.bird-health-points button::after { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); content: ""; }.bird-health-points button > span { font-size: 15px; line-height: 1; }.bird-health-points button small { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }.bird-health-points button.is-observed { opacity: .48; }.bird-health-points button.is-observed::after { display: none; }.bird-health-points button:nth-child(1) { left: 61%; top: 33%; }.bird-health-points button:nth-child(2) { left: 38%; top: 60%; }.bird-health-points button:nth-child(3) { left: 50%; top: 85%; }.bird-health-points button:nth-child(4) { left: 70%; top: 60%; }
 .bird-cage-lock { position: absolute; z-index: 3; left: 50%; top: 50%; display: grid; justify-items: center; gap: 9px; width: 156px; border: 0; background: transparent; color: var(--ink); font: inherit; font-weight: 900; cursor: pointer; transform: translate(-50%, -50%); }.bird-cage-lock:disabled { cursor: wait; }.bird-cage-lock-image { display: block; width: 120px; height: 120px; aspect-ratio: 1; border: 4px solid rgba(255,253,247,.9); border-radius: 50%; object-fit: cover; box-shadow: 0 8px 18px rgba(70,53,26,.2); animation: birdLatchPrompt 1.5s ease-in-out infinite; }.bird-cage-lock.is-opening .bird-cage-lock-image { animation: none; opacity: .65; }.bird-cage-lock span { padding: 6px 10px; border-radius: 999px; background: rgba(255,253,247,.92); font-size: 12px; }
-.bird-magnifier-hint { position: fixed; z-index: 99; width: 34px; height: 34px; object-fit: contain; pointer-events: none; transform: translate(8px, 8px); filter: drop-shadow(0 3px 4px rgba(70,53,26,.28)); }
-.bird-social-progress { position: absolute; z-index: 5; left: 50%; top: 74px; display: grid; width: min(280px, calc(100% - 48px)); gap: 5px; color: var(--ink); font-size: 13px; font-weight: 900; text-align: center; transform: translateX(-50%); pointer-events: none; }.bird-social-progress i { display: block; height: 8px; overflow: hidden; border-radius: 999px; background: rgba(255,253,247,.92); box-shadow: inset 0 0 0 1px rgba(117,91,50,.25); }.bird-social-progress b { display: block; height: 100%; border-radius: inherit; background: var(--accent); transition: width .2s ease; }
-.bird-social-pet { position: absolute; z-index: 3; inset: 0; display: grid; place-items: center; width: 100%; border: 0; padding: 0; background: rgba(255,253,247,.3); cursor: pointer; }.bird-social-pet-image { display: block; width: min(100%, 760px); max-height: calc(100% - 28px); aspect-ratio: 4 / 3; border-radius: 28px; object-fit: contain; filter: drop-shadow(0 12px 16px rgba(70,53,26,.16)); transition: transform .2s ease; }.bird-social-pet.is-petted .bird-social-pet-image { animation: birdSocialBounce .5s ease both; }.bird-social-pet-prompt { position: absolute; bottom: 6%; padding: 8px 12px; border-radius: 999px; background: rgba(255,253,247,.94); color: var(--ink); font-size: 13px; font-weight: 900; box-shadow: 0 5px 14px rgba(70,53,26,.14); }.bird-social-hearts { position: absolute; left: 50%; top: 26%; color: #dc7b86; font-size: 30px; letter-spacing: 12px; transform: translateX(-50%); animation: birdHeartsRise .65s ease-out both; }
+.activity-magnifier-hint { position: fixed; z-index: 99; width: 34px; height: 34px; object-fit: contain; pointer-events: none; transform: translate(8px, 8px); filter: drop-shadow(0 3px 4px rgba(70,53,26,.28)); }
+.bird-social-progress { justify-self: center; display: grid; grid-template-columns: auto minmax(160px, 1fr) auto; align-items: center; width: min(430px, calc(100% - 36px)); gap: 10px; padding: 9px 12px; border: 1px solid rgba(225, 209, 181, .82); border-radius: 18px; background: rgba(255,253,247,.9); box-shadow: 0 8px 18px rgba(61,44,22,.1); box-sizing: border-box; color: var(--muted); font-size: 13px; font-weight: 900; pointer-events: none; }.bird-social-progress b { color: var(--gold-dark); white-space: nowrap; }.bird-social-progress div { height: 12px; overflow: hidden; border-radius: 999px; background: #eee3cc; box-shadow: inset 0 0 0 1px rgba(124,94,44,.12); }.bird-social-progress div span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e0a01d, #85bd9b); transition: width .35s ease; }.bird-social-progress small { white-space: nowrap; }
+.bird-social-pet { --bird-social-image-width: min(50%, 520px); --bird-social-image-offset-x: 0px; --bird-social-image-offset-y: 0px; position: absolute; z-index: 3; inset: 0; display: grid; width: 100%; border: 0; padding: 72px 16px 16px; place-items: center; background: rgba(255,253,247,.3); cursor: pointer; box-sizing: border-box; }.bird-social-pet-image { display: block; width: var(--bird-social-image-width); height: auto; max-width: 100%; max-height: 100%; aspect-ratio: auto; border-radius: 28px; object-fit: contain; filter: drop-shadow(0 12px 16px rgba(70,53,26,.16)); translate: var(--bird-social-image-offset-x) var(--bird-social-image-offset-y); transition: transform .2s ease; }.bird-social-pet.is-petted .bird-social-pet-image { animation: birdSocialBounce .5s ease both; }.bird-social-pet-prompt { position: absolute; bottom: 6%; padding: 8px 12px; border-radius: 999px; background: rgba(255,253,247,.94); color: var(--ink); font-size: 13px; font-weight: 900; box-shadow: 0 5px 14px rgba(70,53,26,.14); }.bird-social-hearts { position: absolute; left: 50%; top: 32%; color: #dc7b86; font-size: 30px; letter-spacing: 12px; transform: translateX(-50%); animation: birdHeartsRise .65s ease-out both; }
 .bird-observation-card { position: absolute; z-index: 5; left: 50%; top: 50%; display: grid; width: min(440px, calc(100% - 40px)); max-height: calc(100% - 36px); gap: 10px; overflow: auto; border: 1px solid var(--line); border-radius: 24px; padding: 18px; background: rgba(255,253,247,.98); color: var(--ink); box-shadow: 0 16px 40px rgba(70,53,26,.26); transform: translate(-50%, -50%); }.bird-observation-image { display: block; width: min(100%, 280px); height: auto; aspect-ratio: 1; justify-self: center; border-radius: 20px; object-fit: cover; }.bird-observation-card h2 { margin: 0; font-size: 22px; }.bird-observation-card p { margin: 0; line-height: 1.7; }.bird-observation-emergency, .bird-observation-incorrect { border-radius: 12px; padding: 9px 10px; background: #fff0eb; color: #a4432c; font-weight: 900; }.bird-observation-correct { border-radius: 12px; padding: 9px 10px; background: var(--mint-soft); color: #426c50; font-weight: 900; }.bird-observation-question { font-weight: 900; }.bird-observation-choices { display: grid; gap: 8px; }.bird-observation-card .bird-observation-choices button { justify-self: stretch; min-height: 44px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 14px; background: white; text-align: left; transition: border-color .2s ease, background .2s ease, transform .2s ease; }.bird-observation-card .bird-observation-choices button:hover { border-color: var(--accent); background: #fff9ed; }.bird-observation-card .bird-observation-choices button:focus-visible { outline: 3px solid rgba(212,154,36,.42); outline-offset: 2px; }.bird-observation-card dl { display: grid; gap: 6px; margin: 0; }.bird-observation-card dl div { display: grid; grid-template-columns: 7em minmax(0, 1fr); gap: 8px; padding: 7px 9px; border-radius: 10px; background: #faf1dd; font-size: 14px; }.bird-observation-card dt { font-weight: 900; }.bird-observation-card dd { margin: 0; }.bird-observation-card > button { justify-self: end; border: 0; border-radius: 999px; padding: 9px 14px; background: var(--mint-soft); color: var(--ink); font: inherit; font-weight: 900; cursor: pointer; }
 .bird-cage-scene.is-health-inspection .bird-observation-card { left: 22px; right: auto; width: min(360px, calc(50% - 34px)); transform: translateY(-50%); }
 .bird-observation-comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -766,8 +766,9 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
   .bird-feces-sample { bottom: 9%; }.bird-feces-sample-image { width: 80px; height: 80px; }
   .bird-cage-health-perch { bottom: 17%; width: min(62%, 280px); }.bird-cage-health-bird { bottom: 23%; width: min(42%, 188px); }
   .bird-health-points { width: min(calc(100% - 24px), 450px); }.bird-health-points button { width: 44px; height: 44px; }.bird-health-points button:nth-child(1) { left: 61%; top: 18%; }.bird-health-points button:nth-child(2) { left: 34%; top: 42%; }.bird-health-points button:nth-child(3) { left: 50%; top: 73%; }.bird-health-points button:nth-child(4) { left: 52%; top: 51%; }
-  .bird-cage-lock-image { width: 96px; height: 96px; }.bird-social-pet-image { width: 100%; max-width: 100%; border-radius: 20px; }.bird-social-pet-prompt { bottom: 4%; font-size: 12px; }
-  .bird-cage-scene-prompt { top: 12px; font-size: 12px; }
+  .bird-cage-lock-image { width: 96px; height: 96px; }.bird-social-pet { --bird-social-image-width: min(82%, 360px); padding: 88px 12px 12px; }.bird-social-pet-image { height: auto; max-width: 100%; max-height: 100%; border-radius: 20px; }.bird-social-pet-prompt { bottom: 4%; font-size: 12px; }
+  .bird-cage-scene-prompt { left: 50%; top: 12px; max-width: calc(100% - 24px); font-size: 12px; transform: translateX(-50%); }
+  .bird-social-progress { width: calc(100% - 24px); grid-template-columns: 1fr auto; gap: 7px; padding: 8px 10px; }.bird-social-progress b { grid-column: 1 / -1; }
   .bird-observation-card { top: auto; bottom: 0; width: 100%; max-height: min(84%, 440px); border-radius: 22px 22px 0 0; padding: 16px; transform: translateX(-50%); animation: birdObservationSlide .24s ease-out both; }.bird-observation-card dl div { grid-template-columns: 1fr; gap: 2px; }.bird-observation-card button { min-height: 44px; }
   .bird-cage-scene.is-health-inspection .bird-observation-card { left: 50%; right: auto; width: 100%; transform: translateX(-50%); }
   .bird-observation-comparison-grid { grid-template-columns: 1fr; }
@@ -1217,6 +1218,7 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
 .rabbit-activity > header p { margin: 0 0 8px; color: var(--gold-dark); font-size: 14px; font-weight: 800; }
 .rabbit-activity > header h1 { margin: 0 0 10px; font-size: clamp(30px, 4vw, 46px); }
 .rabbit-activity > header span { color: var(--ink-soft); line-height: 1.75; }
+.rabbit-grooming-activity > header .rabbit-grooming-scene-description { max-width: 820px; margin: 0 0 14px; color: var(--muted); font-size: 16px; line-height: 1.75; }
 .rabbit-activity-grid { display: grid; grid-template-columns: minmax(280px, .92fr) minmax(360px, 1.08fr); overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: white; }
 .rabbit-activity-media { display: flex; min-height: 410px; flex-direction: column; justify-content: center; gap: 14px; padding: clamp(28px, 5vw, 54px); background: linear-gradient(145deg, #f6eedc, #e8f0e4); color: var(--ink); }
 .rabbit-activity-media span { color: var(--gold-dark); font-size: 13px; font-weight: 800; }
@@ -1235,8 +1237,10 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
 .rabbit-carry-activity .rabbit-activity-panel { padding: 0; }
 .rabbit-carry-activity { scroll-margin-top: 20px; }
 .rabbit-carry-description { white-space: pre-line; }
-.rabbit-carry-reveal-notice { margin: 0 0 7px !important; color: #607661 !important; font-size: 14px !important; font-weight: 800; line-height: 1.65 !important; }
 .rabbit-carry-completion-title { margin-bottom: 18px !important; color: var(--ink); }
+.rabbit-carry-reveal-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; padding: 12px 18px; border: 1px solid #70a99a; border-radius: 12px; background: #e0f1eb; color: #245f54; font: inherit; font-weight: 900; cursor: pointer; box-shadow: 0 3px 0 #9bcfc0; }
+.rabbit-carry-reveal-button:hover { background: #cce9df; transform: translateY(-1px); }
+.rabbit-carry-reveal-button:focus-visible { outline: 3px solid rgba(51, 133, 116, .38); outline-offset: 3px; }
 .rabbit-drag-sort-list li { grid-template-columns: 30px minmax(180px, .7fr) minmax(0, 1.3fr) auto; min-height: 156px; cursor: grab; touch-action: none; transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease; }
 .rabbit-drag-sort-list li:active { cursor: grabbing; }
 .rabbit-drag-sort-list li.is-dragging { opacity: .52; transform: scale(.985); box-shadow: 0 12px 24px rgba(70, 48, 24, .14); }
@@ -1296,7 +1300,7 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
 .rabbit-grooming-progress li.active span { border-color: var(--gold); background: var(--gold); color: #fff; }
 .rabbit-grooming-progress li.done { color: #42734c; }
 .rabbit-grooming-progress li.done span { border-color: #83ae8a; background: var(--mint-soft); }
-.rabbit-grooming-scene { position: relative; display: grid; min-height: 440px; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, #fbf4e7, #eaf3e8); }
+.rabbit-grooming-scene { position: relative; display: grid; min-height: 440px; padding-top: 70px; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, #fbf4e7, #eaf3e8); box-sizing: border-box; }
 .rabbit-grooming-character { position: relative; width: min(70%, 390px); max-height: 335px; }
 .rabbit-grooming-character > img { display: block; width: 100%; max-height: 335px; object-fit: contain; }
 .rabbit-grooming-scene.asset-unavailable::after { content: "素材暫時無法顯示，仍可依熱區完成操作"; color: var(--ink-soft); font-weight: 800; }
@@ -1316,17 +1320,17 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
 .rabbit-grooming-guideline.is-dragging { opacity: .28; }
 @keyframes rabbit-grooming-arrow-float { 0%, 100% { margin-top: 0; } 50% { margin-top: -7px; } }
 @keyframes rabbit-grooming-arrow-shadow { 0%, 100% { opacity: .56; transform: translate(-50%, -50%) scale(1); } 50% { opacity: .28; transform: translate(-50%, -50%) scale(.75); } }
-.rabbit-grooming-brush { position: absolute; z-index: 2; bottom: 22px; left: 6%; width: 194px; height: 152px; padding: 7px; border: 1px solid rgba(196, 143, 62, .62); border-radius: 20px; background: rgba(255, 248, 231, .96); box-shadow: 0 8px 20px rgba(76, 56, 31, .12); cursor: grab; touch-action: none; }
+.rabbit-grooming-brush { position: absolute; z-index: 2; bottom: 22px; left: 6%; width: 164px; height: 132px; border: 0; padding: 0; background: transparent; box-shadow: none; cursor: grab; touch-action: none; }
 .rabbit-grooming-brush img { width: 100%; height: 100%; object-fit: contain; }
 .rabbit-grooming-brush:hover { transform: translateY(-2px); }
 .rabbit-grooming-brush:active { cursor: grabbing; transform: scale(.98); }
 .rabbit-grooming-brush:focus-visible, .rabbit-anatomy-hitbox:focus-visible { outline: 3px solid var(--gold-dark); outline-offset: 3px; }
-.rabbit-grooming-instruction { position: absolute; z-index: 2; bottom: 28px; left: 50%; margin: 0; max-width: 42%; color: var(--ink-soft); font-weight: 800; text-align: center; transform: translateX(-50%); }
+.rabbit-grooming-scene-prompt { position: absolute; z-index: 6; top: 14px; left: 50%; width: fit-content; max-width: min(680px, calc(100% - 36px)); min-height: 40px; margin: 0; padding: 9px 14px; border-radius: 999px; background: rgba(255,253,247,.94); box-sizing: border-box; color: var(--ink); font-size: 13px; font-weight: 900; line-height: 1.45; text-align: center; white-space: pre-line; transform: translateX(-50%); box-shadow: 0 5px 14px rgba(70,53,26,.14); pointer-events: none; }
 .rabbit-fur-collector { position: absolute; right: 18px; bottom: 12px; display: grid; justify-items: center; width: 204px; color: var(--ink-soft); font-size: 14px; font-weight: 800; line-height: 1.4; text-align: center; }
 .rabbit-fur-collector img { width: 180px; height: 180px; object-fit: contain; }
 .rabbit-fur-collector small { margin-bottom: 4px; color: var(--gold-dark); font-size: 13px; font-weight: 900; white-space: nowrap; }
 .rabbit-fur-collector span { white-space: nowrap; }
-.rabbit-grooming-caution { position: absolute; z-index: 4; top: 18px; left: 18px; display: grid; gap: 3px; max-width: 245px; margin: 0; padding: 11px 14px; border: 1px solid #e2a55c; border-radius: 13px; background: #fff5e7; color: #8f5118; font-size: 13px; line-height: 1.55; }
+.rabbit-grooming-caution { position: absolute; z-index: 4; top: 76px; left: 18px; display: grid; gap: 3px; max-width: 245px; margin: 0; padding: 11px 14px; border: 1px solid #e2a55c; border-radius: 13px; background: #fff5e7; color: #8f5118; font-size: 13px; line-height: 1.55; }
 .rabbit-grooming-caution b { color: #b56720; }
 .rabbit-anatomy-hitbox { position: absolute; z-index: 2; display: block; border: 1.5px dashed rgba(196, 143, 62, .82); border-radius: 50%; background: rgba(255, 231, 165, .12); box-shadow: 0 0 0 5px rgba(255, 238, 190, .16); cursor: pointer; animation: rabbit-check-pulse 1.7s ease-in-out infinite; touch-action: manipulation; }
 .rabbit-anatomy-hitbox:hover { background: rgba(255, 231, 165, .26); }
@@ -1337,7 +1341,12 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
 .rabbit-nail-hitbox { bottom: -1%; left: 20%; width: 60%; height: 30%; }
 .rabbit-grooming-drag-ghost { position: fixed; z-index: 9999; width: 78px; height: 68px; transform: translate(-50%, -50%) rotate(-8deg); pointer-events: none; }
 .rabbit-grooming-drag-ghost img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 8px rgba(72, 52, 30, .24)); }
-.rabbit-grooming-transition { display: grid; min-height: 260px; place-items: center; margin: 12px 0; padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: #fffaf0; color: var(--ink); font-size: clamp(20px, 3vw, 30px); font-weight: 900; line-height: 1.55; text-align: center; animation: rabbit-grooming-enter .45s ease both; }
+.rabbit-grooming-transition { display: flex; align-items: center; justify-content: center; gap: 18px; min-height: 260px; margin: 12px 0; padding: 34px; border: 1px solid #b9d6bd; border-radius: 22px; background: radial-gradient(circle at 15% 16%, rgba(255,255,255,.9), transparent 28%), linear-gradient(135deg, #f9f4e8, #edf6ed); color: var(--ink); text-align: left; box-shadow: 0 12px 28px rgba(74, 101, 70, .11); animation: rabbit-grooming-enter .45s ease both; }
+.rabbit-grooming-transition > span { display: grid; width: 58px; height: 58px; flex: 0 0 auto; place-items: center; border: 1px solid #9bc49f; border-radius: 50%; background: #e0f0df; color: #4d7d56; font-size: 29px; font-weight: 900; box-shadow: 0 6px 12px rgba(76, 125, 84, .14); }
+.rabbit-grooming-transition > div { display: grid; gap: 5px; }
+.rabbit-grooming-transition p { margin: 0; color: #5b8061; font-size: 13px; font-weight: 900; letter-spacing: .06em; }
+.rabbit-grooming-transition strong { font-size: clamp(21px, 3vw, 30px); line-height: 1.35; }
+.rabbit-grooming-transition small { color: var(--ink-soft); font-size: 15px; line-height: 1.7; }
 @keyframes rabbit-grooming-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 /* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
  * macrostructure: Narrative Workflow · tone: warm-practical · anchor hue: existing gold
@@ -1462,8 +1471,8 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
   .rabbit-fur-collector { right: 2px; bottom: 6px; width: 148px; font-size: 11px; }
   .rabbit-fur-collector img { width: 128px; height: 128px; }
   .rabbit-fur-collector small { font-size: 10px; }
-  .rabbit-grooming-instruction { bottom: 18px; max-width: 40%; font-size: 12px; }
-  .rabbit-grooming-caution { top: 12px; left: 12px; max-width: min(210px, calc(100% - 24px)); font-size: 11px; }
+  .rabbit-grooming-scene-prompt { top: 12px; max-width: calc(100% - 24px); font-size: 12px; }
+  .rabbit-grooming-caution { top: 70px; left: 12px; max-width: min(210px, calc(100% - 24px)); font-size: 11px; }
   .rabbit-grooming-scene.has-observation { min-height: 590px; align-items: start; padding-top: 22px; }
   .rabbit-grooming-scene.has-observation .rabbit-grooming-character { width: min(66%, 300px); }
   .rabbit-grooming-observation { top: auto; right: 12px; bottom: 14px; left: 12px; width: auto; max-width: none; padding: 16px; }
@@ -1507,10 +1516,16 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
   grid-area: observation;
   width: min(100%, 350px);
   max-width: none;
-  max-height: none;
+  height: 400px;
+  max-height: 100%;
   margin: 0;
-  overflow: visible;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
+.rabbit-grooming-scene.has-observation .rabbit-grooming-observation::-webkit-scrollbar { width: 9px; }
+.rabbit-grooming-scene.has-observation .rabbit-grooming-observation::-webkit-scrollbar-track { margin: 12px 0; border-radius: 999px; background: rgba(218, 201, 166, .3); }
+.rabbit-grooming-scene.has-observation .rabbit-grooming-observation::-webkit-scrollbar-thumb { border: 2px solid transparent; border-radius: 999px; background: #c9a861; background-clip: padding-box; }
 .rabbit-grooming-scene.has-observation .rabbit-grooming-observation::before { display: none; }
 
 @container rabbit-grooming (max-width: 760px) {
@@ -1523,5 +1538,5 @@ button.bird-dirty-bedding--aside { right: 8%; bottom: 15%; border: 0; padding: 0
     padding: 22px 16px 18px;
   }
   .rabbit-grooming-scene.has-observation .rabbit-grooming-character { width: min(72%, 340px); }
-  .rabbit-grooming-scene.has-observation .rabbit-grooming-observation { width: min(100%, 520px); margin: 0 auto; }
+  .rabbit-grooming-scene.has-observation .rabbit-grooming-observation { width: min(100%, 520px); height: min(420px, 65svh); margin: 0 auto; }
 }

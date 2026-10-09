@@ -26,7 +26,9 @@ export const hamsterAssets = {
     },
   },
   feeding: {
+    background: "/assets/hamster/room/bg-bedding.webp",
     pellet: "/assets/hamster/feeding/pellet.webp",
+    inventoryWaterBottle: "/assets/shared/waterbottle.png",
     sunflowerSeeds: "/assets/hamster/feeding/sunflower-seeds.webp",
     onion: "/assets/hamster/feeding/onion.webp",
     citrusFruit: "/assets/hamster/feeding/citrus-fruit.webp",
@@ -37,6 +39,8 @@ export const hamsterAssets = {
   },
   preparation: {
     carrier: "/assets/car/hamster-carrier.webp",
+    bedding: "/assets/hamster/room/bedding.webp",
+    hideoutInCarrier: "/assets/hamster/room/hideout-in-carrier.png",
     idCard: "/assets/car/id-card.png",
     adoptionDocuments: "/assets/car/adoption-documents.png",
     trunkBackground: "/assets/car/car-trunk.png",

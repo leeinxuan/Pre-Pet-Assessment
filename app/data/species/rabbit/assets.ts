@@ -45,6 +45,7 @@ export const rabbitAssets = {
     carrier: "/assets/car/rabbit-carrier.webp",
     antiSlipLiner: "/assets/car/anti-slip-liner.png",
     hay: rabbitHayAsset,
+    waterSupply: "/assets/car/water-supply.png",
     idCard: "/assets/car/id-card.png",
     documents: "/assets/car/adoption-documents.png",
     coolingPack: "/assets/car/cooling-pack.png",

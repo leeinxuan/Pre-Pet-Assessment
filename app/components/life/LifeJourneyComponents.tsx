@@ -291,9 +291,11 @@ export function LifeJourney({
         />
       ) : isDailyInspectionActivity ? (
         <CatDailyInspectionActivity
+          activity={activity}
           petName={petName}
           selected={activity.catInspectionSteps}
           onChange={(catInspectionSteps) => onActivityChange({ catInspectionSteps })}
+          onActivityChange={onActivityChange}
           onContinue={continueJourney}
         />
       ) : isWalkingActivity ? (
@@ -333,6 +335,7 @@ export function LifeJourney({
           scenario={scenario}
           answer={answer}
           petName={petName}
+          species={species}
           members={members}
           onMembersChange={onMembersChange}
           onChoose={choose}
@@ -346,6 +349,7 @@ export function LifeJourney({
           scenario={scenario}
           answer={answer}
           petName={petName}
+          species={species}
           breed={breed}
           onChoose={choose}
           onCorrectComplete={continueScenario}

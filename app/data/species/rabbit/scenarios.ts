@@ -4,9 +4,7 @@ import { rabbitReport } from "./report";
 
 const rabbitKnowledge = {
   arrival: ["**躲藏**是兔子面對陌生環境的正常**壓力反應**，不是失敗，也不需要急著安慰。", "先**保持安靜、靜靜等待**，讓牠用自己的節奏探索新家，慢慢建立**信任**。"],
-  stomp: ["**跺腳**通常代表緊張或感受到威脅；先降低刺激，不要強迫抱起。", "熟悉的墊料或毛巾能幫助牠在環境改變時建立**安全感**。"],
   heat: ["兔子最適環境約為 **15～25℃**；超過 **28℃** 就要積極留意高溫風險。", "冷氣與可自由選擇的**陶板涼感墊**，是安全的夏日降溫安排。"],
-  shedding: ["換毛期要**規律梳毛並觀察排便**；食入太多毛髮可能影響腸胃。", "兔子**不適合洗澡**，日常清潔以梳毛與局部微濕擦拭為主。"],
   health: [
     "兔子較常見需要留意的健康問題包括：**排便量減少或無排便**、**食慾下降**、**活動力降低**。",
     "也要留意**流口水**（嘴巴至頸部濕）、**眼周濕潤**或有分泌物；**大量脫毛**、**走路不穩**或身體僵硬；**呼吸急促**或腹部腫脹。",
@@ -31,21 +29,8 @@ export const rabbitLifeScenarios: Scenario[] = [
     ],
   },
   {
-    id: "rabbit-stomp", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 跺腳了！",
-    description: "你費力地把新買的書架搬進 `{petName}` 的活動空間。才剛放好，你就聽見牠用力連續跺著後腳，警戒地盯著這個不速之客。", topic: "兔子跺腳與壓力訊號",
-    reportSummary: "兔子跺腳代表緊張或不安；應保持安靜、不強迫互動，並用熟悉氣味協助適應。", artIndex: 1,
-    multipleChoice: true, requiredCorrectOptionIds: ["rabbit-stomp-quiet", "rabbit-stomp-familiar"], wrongOptionIds: ["rabbit-stomp-pickup", "rabbit-stomp-welcome"],
-    correctSummary: ["保持安靜，讓牠有時間熟悉新氣味。", "在附近放熟悉的舊毛巾或墊料。"], learningPoints: rabbitKnowledge.stomp, knowledgeTitle: "兔子小知識",
-    choices: [
-      { id: "rabbit-stomp-quiet", text: "保持安靜，給 {petName} 時間習慣新傢俱的氣味", result: "correct", ...positive, explanation: "跺腳代表緊張或不安；讓牠自主熟悉比較安全。" },
-      { id: "rabbit-stomp-pickup", text: "把 {petName} 抱起來安慰牠", result: "incorrect", ...incorrect, explanation: "正在緊張的兔子被突然抱起，可能更害怕。", suggestion: "先降低刺激，讓牠自己面對與退避。" },
-      { id: "rabbit-stomp-familiar", text: "在新傢俱旁放 {petName} 熟悉的舊毛巾或墊料", result: "correct", ...positive, explanation: "熟悉的氣味有助於建立安全感。" },
-      { id: "rabbit-stomp-welcome", text: "牠在歡迎新傢俱，不用理會", result: "incorrect", ...incorrect, explanation: "跺腳是負面訊號，代表緊張或感受到威脅。", suggestion: "用安靜與熟悉氣味協助牠慢慢適應。" },
-    ],
-  },
-  {
     id: "rabbit-heatstroke-prevention", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "夏天到了，怎麼幫 {petName} 避暑？",
-    description: "台灣夏天氣溫超過 33℃，你家沒有全天開冷氣的習慣。你決定幫 {petName} 做好環境準備。", topic: "兔子高溫預防",
+    description: "外面艷陽高照，室內溫度計已經爬到 33℃。{petName} 趴平在地板上，耳朵攤開，呼吸看起來比平常快了一點。你平常沒有全天開冷氣的習慣——但現在，你決定幫牠做好環境準備。", topic: "兔子高溫預防",
     reportSummary: "兔子怕熱；夏季應維持涼爽室內環境並提供可自主使用的陶板涼感墊。", artIndex: 2,
     multipleChoice: true, requiredCorrectOptionIds: ["rabbit-heat-air", "rabbit-heat-mat"], wrongOptionIds: ["rabbit-heat-balcony", "rabbit-heat-spray"],
     correctSummary: ["維持室內冷氣或風扇，讓環境保持涼爽。", "在活動區放置陶板涼感墊。"], learningPoints: rabbitKnowledge.heat, knowledgeTitle: "兔子小知識",
@@ -63,30 +48,6 @@ export const rabbitLifeScenarios: Scenario[] = [
       { id: "rabbit-heat-air", text: "確保室內有冷氣或風扇，維持溫度在 25℃ 以下", result: "correct", ...positive, explanation: "兔子最適溫度是 15–25℃，超過 28℃ 就需開始關注高溫徵兆。冷氣是夏天最有效的保護方式。", expenseIds: ["rabbit-ac-monthly"] },
       { id: "rabbit-heat-mat", text: "在 {petName} 的活動區放一塊陶板涼感墊", result: "correct", ...positive, explanation: "陶板散熱效果好，讓兔子可以自由選擇趴在上面降溫，是安全且有效的輔助散熱方式。" },
       { id: "rabbit-heat-spray", text: "用噴霧瓶對 {petName} 噴水幫牠降溫", result: "incorrect", ...incorrect, explanation: "兔子不適合弄濕，直接噴水可能增加緊迫並引發感冒。輔助散熱應用稍涼的毛巾輕敷耳朵或腳掌，而非全身噴水。" },
-    ],
-  },
-  {
-    id: "rabbit-heatstroke-emergency", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "牠看起來不太對勁",
-    description: "你回家發現 `{petName}` 躺在籠子角落，呼吸比平時急促，食慾也下降了。你的第一反應是？", topic: "兔子高溫緊急應對",
-    reportSummary: "出現高溫警訊時，應立刻移到冷氣房並密切觀察；持續惡化要立即就醫。", artIndex: 2,
-    choices: [
-      { id: "rabbit-heat-wait", text: "天氣這麼熱很正常，等晚上涼了再看", result: "incorrect", ...incorrect, explanation: "呼吸急促加上食慾下降是危急警訊，不能等待。", suggestion: "立刻移到涼爽環境並評估就醫。" },
-      { id: "rabbit-heat-emergency-correct", text: "立刻移到冷氣房，開冷氣，密切觀察，若持續惡化立即就醫", result: "correct", ...positive, explanation: "先改善環境溫度；症狀未改善時需立刻就醫。" },
-      { id: "rabbit-heat-ice", text: "用毛巾沾冰水敷全身，幫牠快速降溫", result: "incorrect", ...incorrect, explanation: "不應冰水或大面積弄濕；這會增加緊迫。", suggestion: "以冷氣房降溫為主，必要時儘速就醫。" },
-      { id: "rabbit-heat-force-water", text: "強迫餵水，補充水分幫助降溫", result: "incorrect", ...incorrect, explanation: "強迫灌水可能造成緊迫。", suggestion: "提供乾淨飲水，先改善環境溫度並觀察就醫。" },
-    ],
-  },
-  {
-    id: "rabbit-shedding", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "換毛期大量脫毛",
-    description: "今天早上一打開 `{petName}` 的活動空間，你就被嚇了一跳——地板上毛到處都是，就連水碗旁邊也飄著幾根。牠坐在角落用嘴巴理毛，每梳一下就掉下一撮。", topic: "兔子換毛期照護",
-    reportSummary: "換毛期應規律梳毛並觀察排便；不以洗澡處理大量掉毛。", artIndex: 3,
-    multipleChoice: true, requiredCorrectOptionIds: ["rabbit-shed-brush", "rabbit-shed-poop"], wrongOptionIds: ["rabbit-shed-vet", "rabbit-shed-bath"],
-    correctSummary: ["每天幫牠梳毛，清除脫落毛髮。", "觀察排便數量與外觀。"], learningPoints: rabbitKnowledge.shedding, knowledgeTitle: "兔子小知識",
-    choices: [
-      { id: "rabbit-shed-brush", text: "每天幫 {petName} 梳毛，清除脫落毛髮", result: "correct", ...positive, explanation: "可降低兔子自行理毛時食入過多毛髮的風險。" },
-      { id: "rabbit-shed-vet", text: "立刻帶去看獸醫，一定是生病了", result: "incorrect", ...incorrect, explanation: "成兔每年可能有正常換毛期；若同時食慾下降、皮膚異常或精神差，再就醫確認。", suggestion: "先規律梳毛並觀察食慾、精神與排便。" },
-      { id: "rabbit-shed-poop", text: "觀察排便是否正常，留意數量和外觀", result: "correct", ...positive, explanation: "排便是確認消化道是否受換毛期影響的重要指標。" },
-      { id: "rabbit-shed-bath", text: "幫 {petName} 洗個澡，讓牠清爽", result: "incorrect", ...incorrect, explanation: "兔子不適合洗澡，也不適合乾洗粉。", suggestion: "日常護理以梳毛為主。" },
     ],
   },
   {
@@ -116,7 +77,7 @@ export const rabbitLifeScenarios: Scenario[] = [
   },
   {
     id: "rabbit-bath", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 好髒，幫牠洗個澡？",
-    description: "{petName} 身上有些氣味，尾根的毛也有點髒。你心想：「幫牠洗個澡吧。」", topic: "兔子日常清潔",
+    description: "你蹲下來摸 {petName}，發現牠身上有一股悶悶的氣味，尾根附近的毛也結成一小塊、有點髒污。你直覺地想：「這樣不行，要幫牠好好洗個澡才行。」", topic: "兔子日常清潔",
     reportSummary: "兔子不適合洗澡；日常清潔以梳毛、局部微濕擦拭及必要時諮詢兔科獸醫為主。", artIndex: 3,
     multipleChoice: true, requiredCorrectOptionIds: ["rabbit-bath-brush", "rabbit-bath-wipe", "rabbit-bath-vet"], wrongOptionIds: ["rabbit-bath-tub", "rabbit-bath-powder"],
     correctSummary: ["用梳子梳毛。", "用微濕毛巾局部清潔。", "無法處理的污染先諮詢兔科獸醫。"],
@@ -134,7 +95,7 @@ export const rabbitLifeScenarios: Scenario[] = [
       ],
     },
     choices: [
-      { id: "rabbit-bath-powder", text: "用寵物乾洗粉幫牠清潔，這樣不用弄濕就能除臭", result: "incorrect", ...incorrect, explanation: "聽起來方便，但兔子不適合使用寵物乾洗粉——農業部指南明確指出這點，成分可能刺激兔子皮膚或被舔食吸收。" },
+      { id: "rabbit-bath-powder", text: "用寵物乾洗粉幫牠清潔，這樣不用弄濕就能除臭", result: "incorrect", ...incorrect, explanation: "聽起來方便，但兔子不適合使用寵物乾洗粉，成分可能刺激兔子皮膚或被舔食吸收。" },
       { id: "rabbit-bath-brush", text: "用梳子幫 {petName} 梳毛，這是日常清潔的基本方式", result: "correct", ...positive, explanation: "正確！梳毛是兔子日常護理的核心，換毛期尤其重要，也能降低因自行理毛吞入過多毛髮的風險。" },
       { id: "rabbit-bath-tub", text: "用少量溫水輕輕清洗尾根髒污，洗完立刻用毛巾擦乾再吹乾", result: "incorrect", ...incorrect, explanation: "即使是局部、動作輕柔，把兔子放入水中仍會造成極大緊迫，可能引發休克。正確做法是用**微濕毛巾**小範圍輕擦，不讓皮膚真正浸濕。" },
       { id: "rabbit-bath-wipe", text: "尾根的髒污用稍微濕潤的毛巾輕輕擦拭，不需要整隻弄濕", result: "correct", ...positive, explanation: "正確！局部污漬用微濕毛巾小範圍輕擦是安全的做法，不需弄濕全身。" },
@@ -245,7 +206,7 @@ export const rabbitCarrySortSteps = [
 export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily-check", Scenario> = {
   "rabbit-carry-sort": {
     id: "rabbit-carry-sort", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護",
-    title: "和{petName} 成為好朋友吧！", description: "{petName} 已經到家一段時間了，跟你越來越熟悉。\n\n今天，你想試著第一次把牠抱起來。你慢慢靠近，{petName} 停下來看著你，鬍鬚輕輕一動。", topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
+    title: "和{petName} 成為好朋友吧！", description: "{petName} 已經到家一段時間了，跟你越來越熟悉。\n今天，你想試著第一次把牠抱起來。你慢慢靠近，{petName} 停下來看著你，鬍鬚輕輕一動。", topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
     questionText: "請把這 5 個動作拖曳到正確的順序，安全地抱起 {petName}。",
     activityCompletionTitle: "你已學會安全抱起 {petName} 的方式！",
     activityRevealNotice: "不用擔心，抱兔子確實需要練習～我們一起看看正確的步驟吧！",

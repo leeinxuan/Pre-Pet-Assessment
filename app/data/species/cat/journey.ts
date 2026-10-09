@@ -1,5 +1,6 @@
-import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
+import type { ActivityIntroConfig, JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 import { arrivalRequiredExpenseIdsBySpecies } from "../../shared/expenses";
+import { catAssets } from "./assets";
 
 /** 貓咪旅程順序；LitterInspectionActivity 是唯一專屬玩法元件。 */
 export const catJourneyItems: JourneyItem[] = [
@@ -20,6 +21,21 @@ export const catDailyBehaviorScenarioIds = ["cat-night-energy-care", "cat-scratc
  * 每日清潔互動的命中區全部集中於此，不與犬隻散步資料共用。
  */
 export const catLitterRescueConfig = {
+  intro: {
+    eyebrow: "日常照護",
+    title: "每天清砂盆，是給 {petName} 最基本的照顧",
+    paragraphs: [
+      "貓咪對砂盆的乾淨程度**非常敏感**。砂盆太髒，牠可能**忍著不上**，或改去其他地方排泄——而貓咪一旦養成在外排泄的習慣，就**很難改正**。",
+      "**每天鏟砂**、**確認砂量**，**每週換上備用盆**——動作不多，但少了哪一樣，{petName} 都能感覺到。",
+      "{petName} 的廁所，今天靠你了！",
+    ],
+    startLabel: "開始今天的清潔 →",
+    visualAssets: {
+      character: catAssets.feeding.happyCat,
+      tool: catAssets.daily.litterScoop,
+      collector: catAssets.daily.trashBin,
+    },
+  } satisfies ActivityIntroConfig,
   // 相容舊版儲存紀錄；現行 CatDailyInspectionActivity 不再使用印章／輪次流程。
   targetStamps: 3,
   enableWeeklyWash: false,

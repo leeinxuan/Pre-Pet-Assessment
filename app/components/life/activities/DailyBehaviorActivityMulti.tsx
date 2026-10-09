@@ -158,26 +158,26 @@ export function DailyBehaviorActivityMulti({
   if (mode === "positive") {
     const completionFeedback = scenario.completionFeedback;
     const completionIntro = completionFeedback?.encouragement
-      ? withPetName(completionFeedback.encouragement, petName)
-      : withPetName(presentation.completionIntro ?? "你選到了這個情境中幾個合適的照顧方式：", displayPetName);
+      ? withPetName(completionFeedback.encouragement, petName, species)
+      : withPetName(presentation.completionIntro ?? "你選到了這個情境中幾個合適的照顧方式：", displayPetName, species);
     return (
       <CorrectFeedbackLayout
         variant="multiple"
         title={completionFeedback?.title}
         videoSrc={correctFeedbackVideo ?? ""}
-        mediaPlaceholder={presentation.correctFeedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
+        mediaPlaceholder={presentation.correctFeedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{renderKnowledgeText(completionIntro)}</p>}
         // 貓咪小知識中的「貓咪」是泛稱，不能被玩家名稱取代；只有明確的 {petName} 佔位符才套用名字。
         correctItems={completionFeedback ? undefined : learningPoints.map((item) => presentation.preserveGenericAnimalTerms
           ? item.replaceAll("{petName}", displayPetName)
-          : withPetName(item, petName))}
-        knowledgeContent={completionFeedback?.knowledgeContent.map((content) => ({ ...content, text: withPetName(content.text, petName) }))}
+          : withPetName(item, petName, species))}
+        knowledgeContent={completionFeedback?.knowledgeContent.map((content) => ({ ...content, text: withPetName(content.text, petName, species) }))}
         knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? presentation.knowledgeTitle}
         suggestion={completionFeedback?.reminder
-          ? <p>{renderKnowledgeText(withPetName(completionFeedback.reminder, petName))}</p>
-          : scenario.completionNotice ? <p>{plainFeedbackText(withPetName(scenario.completionNotice, petName))}</p> : null}
+          ? <p>{renderKnowledgeText(withPetName(completionFeedback.reminder, petName, species))}</p>
+          : scenario.completionNotice ? <p>{plainFeedbackText(withPetName(scenario.completionNotice, petName, species))}</p> : null}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
         onReplay={onReplay}
@@ -193,8 +193,8 @@ export function DailyBehaviorActivityMulti({
     <section className="daily-behavior-activity">
       <div className="daily-behavior-head">
         <p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p>
-        <h1>{withPetName(scenario.title, petName)}</h1>
-        <p>{withPetName(scenario.description, petName)}</p>
+        <h1>{withPetName(scenario.title, petName, species)}</h1>
+        <p>{withPetName(scenario.description, petName, species)}</p>
       </div>
       <div className="daily-behavior-video">
         {behaviorVideoSource ? (
@@ -205,15 +205,15 @@ export function DailyBehaviorActivityMulti({
             onError={() => setVideoFailed(true)}
           />
         ) : (
-          <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} />
+          <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} />
         )}
         {videoFailed && <div className="scene-video-fallback" role="status">影片暫時無法播放，請直接完成右側互動。</div>}
       </div>
       {mode === "incorrect" && incorrectOptionId && retryCopy ? (
         <section className="daily-behavior-retry" aria-live="polite">
           <h2>{retryCopy.title}</h2>
-          <IncorrectExplanation text={withPetName(retryCopy.explanation, petName)} />
-          {retryCopy.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(retryCopy.suggestion, petName)}</p></div>}
+          <IncorrectExplanation text={withPetName(retryCopy.explanation, petName, species)} />
+          {retryCopy.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(retryCopy.suggestion, petName, species)}</p></div>}
           <button type="button" className="secondary" onClick={retry}>重新想一次</button>
         </section>
       ) : <section className="reflection daily-behavior-choices">
@@ -228,7 +228,7 @@ export function DailyBehaviorActivityMulti({
               const selected = selectedIds.includes(choice.id);
               return (
                 <ScenarioOptionCard key={choice.id} type="multiple" selected={selected} disabled={mode === "animating"} onClick={() => toggleChoice(choice.id)}>
-                  {withPetName(choice.text, petName)}
+                  {withPetName(choice.text, petName, species)}
                 </ScenarioOptionCard>
               );
             })}

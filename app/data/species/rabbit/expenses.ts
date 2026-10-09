@@ -13,6 +13,7 @@ export const rabbitExpenses: Record<string, ExpenseRecord> = {
   "rabbit-fence-pen": { id: "rabbit-fence-pen", name: "圍片／柵欄", amount: 1500, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "限制兔子活動範圍，同時提供安全的自由活動空間" },
   "rabbit-hay-initial": { id: "rabbit-hay-initial", name: "牧草（初期備量）", amount: 600, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "兔子最重要的主食，入住前需備妥足量；之後每月持續補充（見每月基本支出）" },
   "rabbit-carrier": { id: "rabbit-carrier", name: "安全外出籠／提袋", amount: 1800, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "通風良好、兔子能站立轉身；外出就醫、移動時使用" },
+  "rabbit-water-for-trip": { id: "rabbit-water-for-trip", name: "飲水容器（防翻）", amount: 100, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "長途或夏季移動時準備適量飲水；抵達後務必確認兔子有喝水" },
   "rabbit-cooling-pack": { id: "rabbit-cooling-pack", name: "保冷袋／冰袋", amount: 400, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "夏季外出時放於外出籠旁降溫；兔子體溫調節能力差" },
   "rabbit-arrival-checkup": { id: "rabbit-arrival-checkup", name: "到家後首次健康檢查", amount: 2000, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "確認健康狀況，建立第一份醫療紀錄；兔子常隱藏不適，早期檢查非常重要" },
   "rabbit-hay-monthly": { id: "rabbit-hay-monthly", name: "每月牧草與基本飲食費", amount: 1200, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "無限量牧草為最重要的每日食物，佔飲食 80% 以上；依體型與品牌浮動" },

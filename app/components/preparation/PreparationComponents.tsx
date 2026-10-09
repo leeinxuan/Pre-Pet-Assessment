@@ -30,8 +30,9 @@ function HomeReadinessRichText({ blocks, replaceName }: { blocks: HomeReadinessT
 export function HomeReadinessActivity({ species = "dog", petName, state, onChange, onBack, onNext }: {
   species?: string; petName: string; state: HomeReadinessState; onChange: (state: HomeReadinessState) => void; onBack: () => void; onNext: () => void;
 }) {
-  const config = getSpeciesConfig(species).homeReadiness;
-  const displayName = petName.trim() || "牠";
+  const speciesConfig = getSpeciesConfig(species);
+  const config = speciesConfig.homeReadiness;
+  const displayName = petName.trim() || speciesConfig.copy.animalNameFallback;
   const arrivalLead = petName.trim()
     ? `${displayName} 快要來了！佈置家之前，我們先確認一件重要的事……`
     : "牠快要來了！佈置家之前，我們先確認一件重要的事……";
@@ -238,7 +239,7 @@ export function RoomPreparation({
     : (isSceneSafe ? roomScene.safeBackground ?? roomBackground : roomScene.mobileBackground ?? roomBackground);
   // 只有犬隻目前提供獨立手機背景；用 picture 在素材層切換，避免影響其他頁面的 CSS。
   const usesDedicatedMobileRoomBackground = Boolean(!insideView && (roomFlow?.initialMobileBackground || roomFlow?.safeMobileBackground));
-  const displayName = petName.trim() || "牠";
+  const displayName = petName.trim() || speciesConfig.copy.animalNameFallback;
   const roomInstruction = roomFlow
     ? !hazardsCleared
       ? (roomFlow.copy.hazardInstruction ?? "在把{petName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。").replaceAll("{petName}", displayName)
@@ -368,7 +369,7 @@ export function RoomPreparation({
         </section>
 
         <div className="room-interaction-column">
-          {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已收起</h2><p><b>為什麼危險：</b>{activeHazard.danger}</p><p><b>建議如何處理：</b>{activeHazard.handling}</p></section>}
+          {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已收起</h2><p><b>為什麼危險：</b>{activeHazard.danger.replaceAll("{petName}", displayName)}</p><p><b>建議如何處理：</b>{activeHazard.handling.replaceAll("{petName}", displayName)}</p></section>}
           <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${usesDedicatedMobileRoomBackground ? "room-scene--dedicated-mobile-background" : ""} ${floorHazardComplete ? "room-scene--floor-safe" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${interiorUsesOwnAspectRatio ? "room-flow-scene--custom-aspect" : ""} ${roomSceneReady ? "room-scene-ready" : ""}`} style={interiorUsesOwnAspectRatio ? { "--room-flow-aspect-ratio": roomFlow?.interiorBackgroundAspectRatio } as CSSProperties : undefined} role="group" aria-label="寵物生活空間">
             {roomBackground ? usesDedicatedMobileRoomBackground ? <picture className="room-scene-background room-scene-background--dedicated-mobile">
               <source media="(max-width: 720px)" srcSet={mobileRoomBackground} />
@@ -395,7 +396,7 @@ export function RoomPreparation({
             {insideView && <button type="button" className="room-flow-return" aria-label="返回整個房間" onClick={() => setInsideRoomView(false)}>←</button>}
             {!hasInteriorRoomFlow && roomScene.doorplate && <div className="pet-doorplate" style={roomDoorplatePlacementStyle(doorplatePlacement)}>
               <img src={roomScene.doorplate.image} alt={roomScene.doorplate.alt} />
-              <span className="pet-doorplate-name">{petName}</span>
+              <span className="pet-doorplate-name">{displayName}</span>
             </div>}
           </div>
 
@@ -438,6 +439,7 @@ export function CareMemberSetup({ members, onChange, onBack, onNext }: { members
 
 export function CarTrunkPreparation({ selected, petName, species = "dog", onSelect, onBack, onReplay, onNext, reviewing = false }: { selected: string[]; petName: string; breed: string; species?: string; onSelect: (id: string) => void; onBack: () => void; onReplay: () => void; onNext: () => void; reviewing?: boolean }) {
   const speciesConfig = getSpeciesConfig(species);
+  const displayName = petName.trim() || speciesConfig.copy.animalNameFallback;
   const activeTrunkItems = speciesConfig.trunkItems;
   const departureScene = speciesConfig.preparation.departureScene;
   const [exitingItems, setExitingItems] = useState<string[]>([]);
@@ -471,7 +473,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
             {row.map((item) => {
               const itemSelected = selected.includes(item.id);
-              const note = { label: item.label, note: item.description };
+              const note = { label: item.label, note: item.description.replaceAll("{petName}", displayName) };
               const price = expensePriceText(item.expenseIds ?? [], species);
               const reusedExpense = (item.reusedExpenseIds?.length ?? 0) > 0;
               const hidePriceForReusedItem = departureScene.hidePriceForReusedItemIds?.includes(item.id);

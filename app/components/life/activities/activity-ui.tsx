@@ -1,11 +1,12 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- Activity intro artwork keeps existing CSS-controlled dimensions. */
-import { interpolatePetName } from "../../../data/shared/pet-text";
+import { interpolatePetName, petNameFallback } from "../../../data/shared/pet-text";
+import type { ActivityIntroConfig } from "../../../game-types";
 
-export function withPetName(text: string, petName: string) {
-  const displayName = petName.trim() || "牠";
-  const withPlaceholders = interpolatePetName(text, displayName);
+export function withPetName(text: string, petName: string, species?: string) {
+  const displayName = petName.trim() || petNameFallback(species);
+  const withPlaceholders = interpolatePetName(text, displayName, species);
   if (!petName.trim()) return withPlaceholders;
   return withPlaceholders
     .replaceAll("豆豆", displayName)
@@ -26,24 +27,26 @@ export function renderKnowledgeText(text: string) {
 }
 
 /** 可由各活動資料帶入的純說明前導頁，避免活動專屬頁面與內容散落在互動元件中。 */
-export function ActivityIntroPage({ eyebrow, title, paragraphs, actionLabel, visualAssets, onStart }: { eyebrow: string; title: string; paragraphs: readonly string[]; actionLabel: string; visualAssets?: { character: string; tool: string; collector: string }; onStart: () => void }) {
+export function ActivityIntroPage({ config, petName, species, onStart }: { config: ActivityIntroConfig; petName: string; species: string; onStart: () => void }) {
+  const { eyebrow, title, paragraphs, startLabel: actionLabel, visualAssets } = config;
   return <section className="activity-intro-page" aria-labelledby="activity-intro-title">
     <div className="activity-intro-page-card">
       {visualAssets && <div className="activity-intro-page-visual" aria-hidden="true">
-        <img className="activity-intro-page-pet" src={visualAssets.character} alt="" />
-        <img className="activity-intro-page-tool" src={visualAssets.tool} alt="" />
-        <img className="activity-intro-page-collector" src={visualAssets.collector} alt="" />
+        {visualAssets.character && <img className="activity-intro-page-pet" src={visualAssets.character} alt="" />}
+        {visualAssets.tool && <img className="activity-intro-page-tool" src={visualAssets.tool} alt="" />}
+        {visualAssets.collector && <img className="activity-intro-page-collector" src={visualAssets.collector} alt="" />}
       </div>}
       <div className="activity-intro-page-content">
         <p className="life-stage-label">{eyebrow}</p>
-        <h1 id="activity-intro-title">{title}</h1>
+        <h1 id="activity-intro-title">{withPetName(title, petName, species)}</h1>
         <div className="activity-intro-page-copy">
-          {paragraphs.map((paragraph, index) => <p key={`${paragraph}-${index}`}>{renderKnowledgeText(paragraph)}</p>)}
+          {paragraphs.map((paragraph, index) => <p key={`${paragraph}-${index}`}>{renderKnowledgeText(withPetName(paragraph, petName, species))}</p>)}
         </div>
-        <button type="button" className="primary" onClick={onStart}>{actionLabel}</button>
+        <button type="button" className="primary" onClick={() => {
+          onStart();
+          window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+        }}>{actionLabel}</button>
       </div>
     </div>
   </section>;
 }
-
-

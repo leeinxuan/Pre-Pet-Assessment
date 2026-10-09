@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Existing layered busy-care scene uses native images for exact positioning. */
 
 import { useState } from "react";
+import { petNameFallback } from "../../../data/shared/pet-text";
 import type { BusyCareChecklistQuestion, BusyCareImageScene, CareMember, Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
 import {
@@ -28,6 +29,7 @@ export function BusyCareActivity({
   scenario,
   answer,
   petName,
+  species = "dog",
   members,
   onMembersChange,
   onChoose,
@@ -39,6 +41,7 @@ export function BusyCareActivity({
   scenario: Scenario;
   answer?: ScenarioAnswer;
   petName: string;
+  species?: string;
   members: CareMember[];
   onMembersChange: (members: CareMember[]) => void;
   onChoose: (choice: ScenarioChoice) => void;
@@ -60,7 +63,7 @@ export function BusyCareActivity({
     feedbackMedia: { type: "placeholder" as const },
   };
   const animalName = presentation.animalName;
-  const displayPetName = petName || animalName;
+  const displayPetName = petName.trim() || petNameFallback(species);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   const busyCompletion = scenario.busyCareCompletion;
   const familySupportChoice = scenario.choices.find((choice) => choice.isSupportChoice);
@@ -129,23 +132,23 @@ export function BusyCareActivity({
         variant="single"
         title={completionTitle}
         videoSrc={presentation.feedbackMedia.type === "video" ? presentation.feedbackMedia.src : ""}
-        mediaPlaceholder={presentation.feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} /> : undefined}
+        mediaPlaceholder={presentation.feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{encouragement
-          ? renderKnowledgeText(withPetName(encouragement, petName))
+          ? renderKnowledgeText(withPetName(encouragement, petName, species))
           : helperName.trim() && selectedChoice.id === familySupportChoice?.id
             ? `你確認了${helperName.trim()}的交接內容與緊急聯絡方式。這樣的交接才能讓${displayPetName}在你忙碌時仍獲得穩定照顧。`
-            : plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
+            : plainFeedbackText(withPetName(selectedChoice.explanation, petName, species))}</p>}
         otherTips={busyCompletion && <div className="busy-care-completion-content">
           <section className="busy-care-warm-note busy-care-energy-reflection">
-            <b className="busy-care-slogan">{renderKnowledgeText(withPetName(busyCompletion.reflectionText, petName))}</b>
+            <b className="busy-care-slogan">{renderKnowledgeText(withPetName(busyCompletion.reflectionText, petName, species))}</b>
             <p className="busy-care-reflection-title"><span aria-hidden="true">💡</span>{busyCompletion.reflectionTitle}</p>
-            {busyCompletion.reflectionContent.map((content, index) => <p key={`${content}-${index}`}>{renderKnowledgeText(withPetName(content, petName))}</p>)}
+            {busyCompletion.reflectionContent.map((content, index) => <p key={`${content}-${index}`}>{renderKnowledgeText(withPetName(content, petName, species))}</p>)}
           </section>
           {busyCompletion.showKnowledgeCard !== false && busyCompletion.knowledgeTitle && busyCompletion.knowledgeContent && (
             <KnowledgeCard title={busyCompletion.knowledgeTitle} className="busy-care-knowledge-card">
-              {busyCompletion.knowledgeContent.map((content, index) => <p key={`${content}-${index}`}>{renderKnowledgeText(withPetName(content, petName))}</p>)}
+              {busyCompletion.knowledgeContent.map((content, index) => <p key={`${content}-${index}`}>{renderKnowledgeText(withPetName(content, petName, species))}</p>)}
             </KnowledgeCard>
           )}
           {busyCompletion.showCareTime !== false && busyCompletion.careTimeTitle && busyCompletion.careTimeItems && <section className="busy-care-care-time" aria-label={busyCompletion.careTimeTitle}>
@@ -154,7 +157,7 @@ export function BusyCareActivity({
           </section>}
         </div>}
         otherTipsBeforeSuggestion
-        suggestion={busyCompletion?.additionalAdvice?.length ? <div className="busy-care-additional-advice">{busyCompletion.additionalAdvice.map((advice, index) => <p key={`${advice}-${index}`}>{renderKnowledgeText(withPetName(advice, petName))}</p>)}</div> : null}
+        suggestion={busyCompletion?.additionalAdvice?.length ? <div className="busy-care-additional-advice">{busyCompletion.additionalAdvice.map((advice, index) => <p key={`${advice}-${index}`}>{renderKnowledgeText(withPetName(advice, petName, species))}</p>)}</div> : null}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
         onReplay={onReplay}
@@ -166,11 +169,11 @@ export function BusyCareActivity({
 
   return (
     <section className="busy-care-activity">
-      <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(scenario.title, petName)}</h1><p>{withPetName(scenario.description, petName)}</p></div>
+      <div className="busy-care-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(scenario.title, petName, species)}</h1><p>{withPetName(scenario.description, petName, species)}</p></div>
       <div className="busy-care-layout">
         <div className="busy-care-room" aria-label={`${animalName}在房間中等待照顧的情境`}>
           {presentation.sceneMedia.type === "placeholder" ? (
-            <SceneMediaPlaceholder title={withPetName(scenario.title, petName)} />
+            <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} />
           ) : presentation.sceneMedia.type === "video" && !sceneVideoFailed ? (
             <VideoWithToggle className="busy-care-room-video" src={presentation.sceneMedia.src} loop ariaLabel={presentation.sceneMedia.ariaLabel} onError={() => setSceneVideoFailed(true)} />
           ) : (
@@ -215,12 +218,12 @@ export function BusyCareActivity({
         ) : mode === "incorrect" && selectedChoice ? (
           <section className="busy-care-feedback incorrect busy-care-feedback--standard" aria-live="polite">
             <h2>這個做法可能不太適合</h2>
-            <IncorrectExplanation text={withPetName(selectedChoice.explanation, petName)} />
-            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
+            <IncorrectExplanation text={withPetName(selectedChoice.explanation, petName, species)} />
+            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName, species)}</p></div>}
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (
-          <section className="busy-care-options"><h2>{withPetName(scenario.questionText ?? "你會怎麼安排？", petName)}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</section>
+          <section className="busy-care-options"><h2>{withPetName(scenario.questionText ?? "你會怎麼安排？", petName, species)}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName, species)}</ScenarioOptionCard>)}</section>
         )}
       </div>
     </section>
