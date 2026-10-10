@@ -18,6 +18,7 @@ import {
   CatDailyInspectionActivity,
   DailyBehaviorActivityMulti,
   GuidedInspection,
+  GeckoHealthInspectionActivity,
   RabbitCarrySortActivity,
   RabbitDailyCheckActivity,
   ScenarioCard,
@@ -118,6 +119,9 @@ export function LifeJourney({
   const isRabbitCarrySortActivity = activityKey === "rabbit-carry-sort";
   const isRabbitDailyCheckActivity = activityKey === "rabbit-daily-check";
   const isBirdCageInspectionActivity = activityKey === "bird-cage-inspection";
+  const isGeckoHealthInspectionActivity = activityKey === "gecko-health-inspection";
+  const speciesJourney = getSpeciesConfig(species).journey;
+  const geckoHealthInspectionConfig = "geckoHealthInspection" in speciesJourney ? speciesJourney.geckoHealthInspection : undefined;
   const isArrivalMealActivity = activityKey === "arrival-meal";
   const isWalkingActivity = activityKey === "walking";
   const isBreedChallengeActivity = activityKey === "breed-challenge";
@@ -125,7 +129,6 @@ export function LifeJourney({
   const [activityNextSignal, setActivityNextSignal] = useState(0);
   const isBusyCareActivity = activityKey === "busy-care";
   const isVideoFeedbackScenario = activityKey === "video-scenario";
-  const isHealthOrSeniorActivity = /(?:sick|health|senior)/.test(item.id);
   const [arrivalMealOpen, setArrivalMealOpen] = useState(false);
   // 兔子的第一餐是明確的 journey item；犬貓則沿用既有的到家後直接開啟方式。
   const showArrivalMeal = activityConfig?.transition === "arrival-meal" && answer?.finalResult === "correct" && arrivalMealOpen;
@@ -252,6 +255,15 @@ export function LifeJourney({
         />
       ) : activityKey === "hamster-inspection" ? (
         <GuidedInspection activity={activity} petName={petName} onChange={onActivityChange} onContinue={continueJourney} />
+      ) : isGeckoHealthInspectionActivity && geckoHealthInspectionConfig ? (
+        <GeckoHealthInspectionActivity
+          config={geckoHealthInspectionConfig}
+          activity={activity}
+          petName={petName}
+          species={species}
+          onChange={onActivityChange}
+          onContinue={continueJourney}
+        />
       ) : isRabbitDailyCheckActivity ? (
         <RabbitDailyCheckActivity
           activity={activity}
@@ -282,7 +294,7 @@ export function LifeJourney({
               sourceScenarioId: correctScenario.id,
             });
           }}
-          triggerExpenseOnFeedback={species === "rabbit" || isHealthOrSeniorActivity}
+          triggerExpenseOnFeedback={activityConfig?.triggerExpenseOnFeedback === true}
           onContinue={continueJourney}
           scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : getDailyBehaviorScenarioIds(species)}
           species={species}
@@ -362,14 +374,14 @@ export function LifeJourney({
               expenseIds?.forEach((expenseId) => onAddExpense(expenseId, triggerMeta));
             }
           }}
-          onCorrectExpenseSequence={isHealthOrSeniorActivity
+          onCorrectExpenseSequence={activityConfig?.triggerExpenseOnFeedback
             ? (correctScenario, choice) => onPlayExpenseSequence(choice.expenseIds ?? [], {
               speciesId: species,
               stageId: item.stageId ?? correctScenario.stageId,
               sourceScenarioId: correctScenario.id,
             })
             : undefined}
-          triggerExpenseOnFeedback={isHealthOrSeniorActivity}
+          triggerExpenseOnFeedback={activityConfig?.triggerExpenseOnFeedback === true}
           deferExpensesUntilFeedback={activityConfig?.deferItemExpenses === true}
           {...replayCorrectProps}
         />

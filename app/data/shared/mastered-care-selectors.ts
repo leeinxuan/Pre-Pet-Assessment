@@ -14,6 +14,8 @@ export const masteredCareCompletionSelectors: Record<LifeStateSource["key"], Lif
   "rabbit-grooming-complete": (activity) => activity.rabbitGroomingState === "interaction-complete",
   "bird-cage-inspection-complete": (activity, source) => (source.requiredStepIds ?? []).every((stepId) => activity.birdCageInspectionSteps.includes(stepId)),
   "hamster-inspection-complete": (activity) => activity.hamsterInspectionCompleted.length === 2,
+  "gecko-health-inspection-complete": (activity, source) =>
+    (source.requiredStepIds ?? []).every((stepId) => activity.geckoHealthInspectionCompleted.includes(stepId)),
 };
 
 export function isMasteredCareLifeStateComplete(source: LifeStateSource, activity: LifeActivityState) {

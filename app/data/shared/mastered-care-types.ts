@@ -4,7 +4,7 @@ export type MasteredCareSource =
   | { kind: "trunk-preparation" }
   | { kind: "arrival-meal" }
   | { kind: "scenario"; scenarioIds: readonly string[] }
-  | { kind: "life-state"; key: "walkingComplete" | "cat-litter-complete" | "rabbit-grooming-complete" | "bird-cage-inspection-complete" | "hamster-inspection-complete"; requiredStepIds?: readonly string[] };
+  | { kind: "life-state"; key: "walkingComplete" | "cat-litter-complete" | "rabbit-grooming-complete" | "bird-cage-inspection-complete" | "hamster-inspection-complete" | "gecko-health-inspection-complete"; requiredStepIds?: readonly string[] };
 
 export type MasteredCareTheme = {
   id: string;

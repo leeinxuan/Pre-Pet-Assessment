@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-const speciesIds = ["dog", "cat", "rabbit", "bird", "hamster"];
+const speciesIds = ["dog", "cat", "rabbit", "bird", "hamster", "gecko"];
 const root = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, root), "utf8");
 
-test("all five species expose the complete canonical data contract", async () => {
+test("all registered species expose the complete canonical data contract", async () => {
   for (const species of speciesIds) {
     const base = `app/data/species/${species}/`;
     const requiredFiles = [
@@ -60,7 +60,7 @@ test("literal expense ids referenced by species flows exist in that species cata
       source(`${base}journey.ts`),
       source(`${base}scenarios.ts`),
     ]);
-    const catalogIds = new Set([...expenses.matchAll(/\bid:\s*"([^"]+)"/g)].map((match) => match[1]));
+    const catalogIds = new Set([...expenses.matchAll(/(?:\bid:\s*|initial\()"([^"]+)"/g)].map((match) => match[1]));
     const referencedIds = new Set();
     for (const data of flowSources) {
       for (const match of data.matchAll(/(?:expenseId|expenseIds|recurringExpenseIds)\s*:\s*(?:"([^"]+)"|\[([^\]]*)\])/gs)) {
@@ -89,14 +89,14 @@ test("species report support data is available through canonical files", async (
 });
 
 test("dog and cat use the shared carrier while hamster uses its dedicated carrier", async () => {
-  const [dog, cat, hamster] = await Promise.all([
+  const [dog, cat, hamsterAssets] = await Promise.all([
     source("app/data/species/dog/preparation.ts"),
     source("app/data/species/cat/assets.ts"),
-    source("app/data/species/hamster/preparation.ts"),
+    source("app/data/species/hamster/assets.ts"),
   ]);
   assert.match(dog, /\/assets\/car\/carrier\.png/);
   assert.match(cat, /carrier:\s*"\/assets\/car\/carrier\.png"/);
-  assert.match(hamster, /\/assets\/car\/hamster-carrier\.webp/);
+  assert.match(hamsterAssets, /\/assets\/car\/hamster-carrier\.webp/);
   await Promise.all([
     access(new URL("public/assets/car/carrier.png", root)),
     access(new URL("public/assets/car/hamster-carrier.webp", root)),

@@ -141,7 +141,7 @@ export function VideoScenarioActivity({
 
   return (
     <section className="video-scenario-activity">
-      <div className="video-scenario-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(withBreedName(scenario.title, breed, species), petName, species)}</h1><p>{withPetName(withBreedName(scenario.description, breed, species), petName, species)}</p></div>
+      <div className="video-scenario-heading"><p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p><h1>{withPetName(withBreedName(scenario.title, breed, species), petName, species)}</h1><p>{renderKnowledgeText(withPetName(withBreedName(scenario.description, breed, species), petName, species))}</p></div>
       <div className="video-scenario-layout">
         <div className="video-scenario-visual">
           {source ? (

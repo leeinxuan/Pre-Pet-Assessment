@@ -194,7 +194,7 @@ export function DailyBehaviorActivityMulti({
       <div className="daily-behavior-head">
         <p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p>
         <h1>{withPetName(scenario.title, petName, species)}</h1>
-        <p>{withPetName(scenario.description, petName, species)}</p>
+        <p>{renderKnowledgeText(withPetName(scenario.description, petName, species))}</p>
       </div>
       <div className="daily-behavior-video">
         {behaviorVideoSource ? (

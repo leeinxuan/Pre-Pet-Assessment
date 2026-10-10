@@ -341,18 +341,24 @@ export function SpeciesStep({
         <section className="partner-selection-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.selectionTitle} />
           <div className="category-grid species-page-grid">
-            {categories.map((item) => (
-              <button
-                key={item.id}
-                className={category === item.id ? "selected" : ""}
-                onClick={() => item.active && chooseCategory(item.id)}
-                disabled={!item.active}
-                aria-label={item.active ? `選擇${item.label}` : `${item.label}，陸續開放`}
-              >
-                {item.image ? <img className="partner-card-image" src={item.image} alt="" /> : <span>{item.icon}</span>}<b>{item.label}</b>
-                <small>{item.active ? "點擊選擇" : "陸續開放"}</small>
-              </button>
-            ))}
+            {categories.map((item) => {
+              const selectionConfig = getSpeciesConfig(item.id).selection;
+              const categoryImage = "categoryImage" in selectionConfig && typeof selectionConfig.categoryImage === "string"
+                ? selectionConfig.categoryImage
+                : item.image;
+              return (
+                <button
+                  key={item.id}
+                  className={category === item.id ? "selected" : ""}
+                  onClick={() => item.active && chooseCategory(item.id)}
+                  disabled={!item.active}
+                  aria-label={item.active ? `選擇${item.label}` : `${item.label}，陸續開放`}
+                >
+                  {categoryImage ? <img className="partner-card-image" src={categoryImage} alt="" /> : <span>{item.icon}</span>}<b>{item.label}</b>
+                  <small>{item.active ? "點擊選擇" : "陸續開放"}</small>
+                </button>
+              );
+            })}
           </div>
         </section>
       ) : visibleSelectionPage === "name" ? (
@@ -389,13 +395,13 @@ export function SpeciesStep({
           <div className="experience-dogs" aria-label="從過去的陪伴經驗走向新的生命">
             <article className="experience-dog-card experience-dog-card--past">
               <span>過去熟悉的生活</span>
-              {selectedSpecies ? <img src={selectedSpecies.image} alt={`以前的${speciesConfig.copy.animalName}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">🐾</span>}
+              {selectedSpecies?.image ? <img src={selectedSpecies.image} alt={`以前的${speciesConfig.copy.animalName}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">🐾</span>}
               <div><h2>{oldPetName || `以前的${speciesConfig.copy.animalName}`}</h2></div>
             </article>
             <div className="experience-arrow" aria-hidden="true"><i>→</i></div>
             <article className="experience-dog-card experience-dog-card--next">
               <span>準備迎接的新生活</span>
-              {selectedSpecies ? <img src={selectedSpecies.image} alt={`這次想迎接的${speciesConfig.copy.animalName}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">🐾</span>}
+              {selectedSpecies?.image ? <img src={selectedSpecies.image} alt={`這次想迎接的${speciesConfig.copy.animalName}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">🐾</span>}
               <div><h2>{petName || `新的${speciesConfig.copy.animalName}`}</h2></div>
             </article>
           </div>

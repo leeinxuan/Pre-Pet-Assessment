@@ -15,7 +15,7 @@ export type ExpenseRecord = {
   /** 供共用費用明細、摘要與匯出使用的簡短用途說明。 */
   description?: string;
   /** 共用 expense id 在不同物種有不同官方說明時，由寫入 store 前解析。 */
-  descriptionBySpecies?: Partial<Record<"dog" | "cat" | "rabbit" | "bird" | "hamster", string>>;
+  descriptionBySpecies?: Partial<Record<"dog" | "cat" | "rabbit" | "bird" | "hamster" | "gecko", string>>;
   /** 由 journey 觸發時保留來源，供共用明細、摘要與匯出追溯。 */
   speciesId?: string;
   stageId?: string;
@@ -114,9 +114,9 @@ export type RoomSceneConfig = {
 
 /** 出發前準備畫面中與物種素材相關的設定。 */
 export type DepartureSceneConfig = {
-  trunkBackground: string;
+  trunkBackground?: string;
   trunkBackgroundAlt: string;
-  documentFolderImage: string;
+  documentFolderImage?: string;
   documentFolderAlt: string;
   hidePriceForReusedItemIds?: readonly string[];
 };
@@ -323,6 +323,7 @@ export type JourneyItemType =
   | "rabbit-carry-sort"
   | "rabbit-daily-check"
   | "bird-cage-inspection"
+  | "gecko-health-inspection"
   | "bird-challenge"
   | "breed-challenge"
   | "body-language"
@@ -345,7 +346,7 @@ export type JourneyItem = {
 export type JourneyActivityKey =
   | "scenario" | "video-scenario" | "arrival-meal" | "daily-behavior" | "daily-behavior-single"
   | "walking" | "cat-inspection" | "rabbit-carry-sort" | "rabbit-daily-check"
-  | "bird-cage-inspection" | "hamster-inspection" | "breed-challenge" | "busy-care";
+  | "bird-cage-inspection" | "hamster-inspection" | "gecko-health-inspection" | "breed-challenge" | "busy-care";
 
 /** 核心互動開始前的純說明頁資料；各物種只提供需要的內容與既有素材。 */
 export type ActivityIntroConfig = {
@@ -368,8 +369,38 @@ export type JourneyActivityConfig = {
   transition?: "arrival-meal" | "time-pass" | "busy-care";
   /** 答對後原本由 journey item 費用在回饋確認時寫入。 */
   deferItemExpenses?: boolean;
+  /** 是否在正確回饋顯示時播放 expense 動畫，而非作答當下。 */
+  triggerExpenseOnFeedback?: boolean;
   /** 下一步會依此鍵搬移重玩 state 重設策略。 */
   resetKey?: string;
+};
+
+/** 資料驅動的守宮每日巡視；畫面與狀態機不包含任何物種文案。 */
+export type GeckoHealthInspectionPoint = {
+  id: string;
+  label: string;
+  instruction: string;
+  detail: string;
+  choices?: readonly { id: string; text: string; normalIsCorrect: boolean }[];
+  normalFeedback?: string;
+  warningFeedback?: string;
+  completionLabel?: string;
+};
+
+export type GeckoHealthInspectionConfig = {
+  intro: ActivityIntroConfig;
+  title: string;
+  description: string;
+  steps: readonly GeckoHealthInspectionPoint[];
+  completion: {
+    title: string;
+    subtitle: string;
+    description: string;
+    reflectionTitle: string;
+    reflection: string;
+    careTitle: string;
+    continueLabel: string;
+  };
 };
 
 export type ReportPracticeItemConfig = {
@@ -424,6 +455,10 @@ export type LifeActivityState = {
   hamsterInspectionStates: Record<string, "normal" | "warning">;
   hamsterInspectionCompleted: string[];
   hamsterInspectionFeedback: Record<string, "question" | "incorrect" | "correct">;
+  geckoHealthInspectionStarted: boolean;
+  geckoHealthInspectionStates: Record<string, "normal" | "warning">;
+  geckoHealthInspectionCompleted: string[];
+  geckoHealthInspectionFeedback: Record<string, "question" | "incorrect" | "correct">;
 };
 
 export type Profile = {

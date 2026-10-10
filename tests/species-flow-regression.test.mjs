@@ -27,9 +27,13 @@ const speciesFlows = {
     activities: { "bird-arrival": "video-scenario", "bird-first-meal": "arrival-meal", "bird-daily-care": "daily-behavior", "bird-daily-inspection": "bird-cage-inspection", "bird-challenge": "breed-challenge", "bird-busy-care": "busy-care", "bird-sick": "video-scenario", "bird-senior": "daily-behavior-single" },
   },
   hamster: {
-    requiredMealSupplies: ["hamster-pellet", "fresh-water"],
+    requiredMealSupplies: ["food", "water"],
     recurringExpenses: ["hamster-pellet-monthly"],
     activities: { "hamster-arrival": "video-scenario", "hamster-first-meal": "arrival-meal", "hamster-daily-care": "daily-behavior", "hamster-solitary": "video-scenario", "hamster-cage-check": "hamster-inspection", "hamster-busy-care": "busy-care", "hamster-health": "video-scenario", "hamster-senior": "video-scenario" },
+  },
+  gecko: {
+    recurringExpenses: ["gecko-food-monthly"],
+    activities: { "gecko-arrival": "video-scenario", "gecko-first-meal": "arrival-meal", "gecko-daily-care": "daily-behavior", "gecko-health-inspection": "gecko-health-inspection", "gecko-busy-care": "busy-care", "gecko-sick": "video-scenario", "gecko-senior": "video-scenario" },
   },
 };
 
@@ -46,14 +50,14 @@ function registrySection(registry, species, nextSpecies) {
   return registry.slice(start, end);
 }
 
-test("five species preserve first-meal completion and recurring-expense contracts", async () => {
+test("registered species preserve first-meal completion and recurring-expense contracts", async () => {
   const reportRegistry = await source("app/data/species/report-practice-registry.ts");
   for (const [species, expected] of Object.entries(speciesFlows)) {
     const feeding = await source(`app/data/species/${species}/feeding.ts`);
     assert.deepEqual(quotedArray(feeding, "recurringExpenseIds"), expected.recurringExpenses, `${species} recurring meal expenses changed`);
 
-    if (species === "hamster") {
-      assert.match(feeding, /interaction:\s*"choice"/, "hamster keeps its choice-based first meal");
+    if (species === "gecko") {
+      assert.match(feeding, /interaction:\s*"choice"/, "gecko keeps its choice-based first meal");
     } else {
       assert.match(feeding, /interaction:\s*"scene"/, `${species} keeps its scene-based first meal`);
       assert.deepEqual(quotedArray(feeding, "requiredSupplies"), expected.requiredMealSupplies, `${species} required meal supplies changed`);
@@ -92,14 +96,14 @@ test("departure document visuals use data roles instead of document ids", async 
   assert.match(preparationComponent, /item\.visualRole === "identity-card"/);
   assert.doesNotMatch(preparationComponent, /item\.id === "documents"|item\.id === "id"|item\.id === "id-card"/);
 
-  for (const species of ["dog", "rabbit", "bird", "hamster"]) {
+  for (const species of ["dog", "rabbit", "bird", "hamster", "gecko"]) {
     const preparation = await source(`app/data/species/${species}/preparation.ts`);
     assert.match(preparation, /visualRole: "document-folder"/, `${species} must declare its document-folder visual`);
     assert.match(preparation, /visualRole: "identity-card"/, `${species} must declare its identity-card visual`);
   }
 });
 
-test("five species preserve journey component dispatch", async () => {
+test("registered species preserve journey component dispatch", async () => {
   const registry = await source("app/data/species/activity-registry.ts");
   const speciesIds = Object.keys(speciesFlows);
   speciesIds.forEach((species, index) => {
@@ -187,6 +191,7 @@ test("replay reset strategies retain the activity state fields they clear", asyn
     "bird-cage-inspection": ["birdCageInspectionSteps", "birdCageInspectionStates"],
     "hamster-first-meal": ["hamsterMealSelected", "hamsterMealFeedbackId"],
     "hamster-inspection": ["hamsterInspectionStarted", "hamsterInspectionStates", "hamsterInspectionCompleted", "hamsterInspectionFeedback"],
+    "gecko-health-inspection": ["geckoHealthInspectionStarted", "geckoHealthInspectionStates", "geckoHealthInspectionCompleted", "geckoHealthInspectionFeedback"],
   };
   for (const [resetKey, fields] of Object.entries(resetContracts)) {
     const start = registry.indexOf(`case "${resetKey}"`);
@@ -202,7 +207,8 @@ test("formal readiness and report components read the registered species data", 
     source("app/components/preparation/PreparationComponents.tsx"),
     source("app/components/report/AssessmentReport.tsx"),
   ]);
-  assert.match(preparation, /getSpeciesConfig\(species\)\.homeReadiness/);
+  assert.match(preparation, /const speciesConfig = getSpeciesConfig\(species\)/);
+  assert.match(preparation, /speciesConfig\.homeReadiness/);
   assert.doesNotMatch(preparation, /getHomeReadinessConfig/);
   assert.match(report, /speciesConfig\.homeReadiness/);
   assert.match(report, /speciesConfig\.careReviewAdditionalNotes/);

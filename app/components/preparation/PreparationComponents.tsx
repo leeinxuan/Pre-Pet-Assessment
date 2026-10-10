@@ -220,7 +220,7 @@ export function RoomPreparation({
   const roomFlow = speciesConfig.roomFlow;
   const [insideRoomView, setInsideRoomView] = useState(false);
   const floorHazardComplete = Boolean(roomFlow && (roomFlow.safeWhenAllHazards ? hazardsCleared : securedHazards.includes(roomFlow.floorHazardId)));
-  const hasInteriorRoomFlow = Boolean(roomFlow?.fenceItemId && roomFlow.interiorItemId && roomFlow.interiorBackground && roomFlow.interiorSafeBackground);
+  const hasInteriorRoomFlow = Boolean(roomFlow?.hasInteriorView ?? (roomFlow?.fenceItemId && roomFlow.interiorItemId && roomFlow.interiorBackground && roomFlow.interiorSafeBackground));
   const fencePlaced = Boolean(roomFlow?.fenceItemId && selectedItems.includes(roomFlow.fenceItemId));
   const entryRequiredItemIds = roomFlow?.entryRequiredItemIds ?? (roomFlow?.fenceItemId ? [roomFlow.fenceItemId] : []);
   const entryReady = Boolean(hasInteriorRoomFlow && entryRequiredItemIds.every((id) => selectedItems.includes(id)));
@@ -488,8 +488,8 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
       </aside>
 
       <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">
-        <img className="car-trunk-background" src={departureScene.trunkBackground} alt={departureScene.trunkBackgroundAlt} />
-        {documents.some((item) => selected.includes(item.id) && item.visualRole === "document-folder") && <div className="car-document-folder complete"><img src={departureScene.documentFolderImage} alt={departureScene.documentFolderAlt} /></div>}
+        {departureScene.trunkBackground ? <img className="car-trunk-background" src={departureScene.trunkBackground} alt={departureScene.trunkBackgroundAlt} /> : <div className="car-trunk-background preparation-asset-placeholder" role="img" aria-label="接回家場景素材待補">素材待補</div>}
+        {documents.some((item) => selected.includes(item.id) && item.visualRole === "document-folder") && <div className="car-document-folder complete">{departureScene.documentFolderImage ? <img src={departureScene.documentFolderImage} alt={departureScene.documentFolderAlt} /> : <span className="preparation-asset-placeholder">文件夾素材待補</span>}</div>}
         {documents.filter((item) => selected.includes(item.id) && item.image && item.visualRole === "identity-card").map((item) => <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`已放入文件夾的${item.label}`} />)}
         {supplies.filter((item) => selected.includes(item.id)).map((item) => item.image ? <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`後車廂內的${item.label}`} /> : <div key={item.id} className={`placed-car-item placed-car-${item.id} preparation-asset-placeholder`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} role="img" aria-label={`已準備${item.label}，素材待補`}>{item.label}</div>)}
       </section>

@@ -35,4 +35,8 @@ export const initialLifeActivityState: LifeActivityState = {
   hamsterInspectionStates: {},
   hamsterInspectionCompleted: [],
   hamsterInspectionFeedback: {},
+  geckoHealthInspectionStarted: false,
+  geckoHealthInspectionStates: {},
+  geckoHealthInspectionCompleted: [],
+  geckoHealthInspectionFeedback: {},
 };

@@ -126,8 +126,8 @@
 | 階段 | 當前背景 | 觸發操作 | 切換至 |
 |---|---|---|---|
 | 危險物品移除中（初始，含牆縫） | gecko-room | 點擊牆縫/管道熱區 | gecko-room-sealed（牆縫封閉版本） |
-| 危險物品移除中（牆縫已封） | gecko-room-sealed | 其餘所有危險物品全部移除完成 | gecko-safe-room |
-| 放置爬蟲缸 / 點擊進入 | gecko-safe-room | 點擊已放置的爬蟲缸 | bg-gecko-terrarium-interior |
+| 危險物品移除中（牆縫已封） | gecko-room-sealed | 其餘所有危險物品全部移除完成 | gecko-room-sealed |
+| 放置爬蟲缸 / 點擊進入 | gecko-room-sealed | 點擊已放置的爬蟲缸 | bg-gecko-terrarium-interior |
 | 爬蟲缸內部 | bg-gecko-terrarium-interior | 點擊左上角返回鍵 icon | gecko-safe-room |
 
 #### 4.1.1 危險物品（hazards，應移除）

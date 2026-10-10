@@ -1,2 +1,2 @@
 /** Shared species identifiers used by shared UI and data configuration. */
-export type SpeciesId = "dog" | "cat" | "rabbit" | "bird" | "hamster";
+export type SpeciesId = "dog" | "cat" | "rabbit" | "bird" | "hamster" | "gecko";

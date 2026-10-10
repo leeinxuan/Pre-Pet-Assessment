@@ -5,6 +5,7 @@ import { catHomeReadiness } from "../species/cat/home-readiness";
 import { rabbitHomeReadiness } from "../species/rabbit/home-readiness";
 import { birdHomeReadiness } from "../species/bird/home-readiness";
 import { hamsterHomeReadiness } from "../species/hamster/home-readiness";
+import { geckoHomeReadiness } from "../species/gecko/home-readiness";
 
 export type { HomeReadinessCard, HomeReadinessConfig, HomeReadinessHousingChoice, HomeReadinessTextBlock, HomeReadinessTextSegment } from "./home-readiness-types";
 
@@ -15,6 +16,7 @@ export const homeReadinessBySpecies: Record<SpeciesId, HomeReadinessConfig> = {
   rabbit: rabbitHomeReadiness,
   bird: birdHomeReadiness,
   hamster: hamsterHomeReadiness,
+  gecko: geckoHomeReadiness,
 };
 
 export function getHomeReadinessConfig(species: string): HomeReadinessConfig {
@@ -22,5 +24,6 @@ export function getHomeReadinessConfig(species: string): HomeReadinessConfig {
   if (species === "rabbit") return homeReadinessBySpecies.rabbit;
   if (species === "bird") return homeReadinessBySpecies.bird;
   if (species === "hamster") return homeReadinessBySpecies.hamster;
+  if (species === "gecko") return homeReadinessBySpecies.gecko;
   return homeReadinessBySpecies.dog;
 }

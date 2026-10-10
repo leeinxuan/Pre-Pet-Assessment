@@ -1,0 +1,30 @@
+/* 倉鼠早晨巡視：固定廁所角落點清潔與砂浴盆篩沙。 */
+.hamster-morning-inspection { max-width: 1100px; margin: 0 auto; }
+.hamster-morning-progress { display: flex; justify-content: center; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.hamster-morning-progress li { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; font-weight: 850; }
+.hamster-morning-progress li span { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; font-size: 13px; }
+.hamster-morning-progress li.is-current, .hamster-morning-progress li.is-complete { color: #4f8058; }
+.hamster-morning-progress li.is-current span { border-color: #76a77d; background: #eff7ed; }
+.hamster-morning-progress li.is-complete span { border-color: #76a77d; background: #76a77d; color: #fff; }
+.hamster-morning-scene { position: relative; display: grid; min-height: clamp(380px, 48vw, 510px); place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(145deg, #fff9eb, #eef5e8); }
+.hamster-morning-background { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.hamster-toilet-corner { position: absolute; right: 13%; bottom: 12%; display: grid; justify-items: center; gap: 7px; width: min(25%, 180px); padding: 8px; border: 0; border-radius: 18px; background: rgba(255, 253, 246, .9); color: var(--ink); font: inherit; font-weight: 900; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.hamster-toilet-corner:hover, .hamster-toilet-corner:focus-visible { transform: translateY(-4px); box-shadow: 0 12px 26px rgba(71, 52, 30, .19); }
+.hamster-toilet-corner:disabled { cursor: wait; }
+.hamster-toilet-corner img { width: 100%; max-height: 96px; object-fit: contain; }
+.hamster-toilet-corner span { font-size: 13px; line-height: 1.45; }
+.hamster-morning-scene.is-removing .hamster-toilet-corner { animation: hamster-bedding-lift .46s ease both; }
+.hamster-fresh-bedding { position: absolute; right: 14%; bottom: 12%; padding: 9px 13px; border-radius: 999px; background: #e8f4e6; color: #44714a; font-size: 13px; font-weight: 900; animation: hamster-fresh-in .22s ease both; }
+.hamster-morning-sand-stage { display: grid; gap: 14px; }
+.hamster-morning-completion-note, .hamster-morning-step-note { padding: 14px 18px; border-radius: 16px; background: #fff3d9; color: #705327; font-weight: 750; line-height: 1.75; }
+.hamster-morning-scene--sand { min-height: clamp(340px, 42vw, 440px); }
+.hamster-sand-bath-image { width: min(72%, 430px); max-height: 78%; object-fit: contain; }
+.hamster-sand-clump { position: absolute; z-index: 1; width: 22px; height: 16px; border-radius: 50% 46% 42% 52%; background: #92714e; box-shadow: 0 2px 0 rgba(72, 47, 24, .25); transition: opacity .25s ease, transform .25s ease; }
+.hamster-sand-clump--one { left: 36%; top: 49%; }.hamster-sand-clump--two { left: 51%; top: 56%; }.hamster-sand-clump--three { left: 64%; top: 48%; }
+.hamster-sand-clump.is-sifted { opacity: 0; transform: translateY(-14px) scale(.65); }
+.hamster-sand-sieve { position: absolute; z-index: 2; top: 42%; display: grid; place-items: center; width: 82px; height: 82px; padding: 5px; border: 2px solid #ad8350; border-radius: 50%; background: #fff9eb; color: #76532e; cursor: grab; touch-action: none; transform: translateX(-50%); box-shadow: 0 8px 18px rgba(81, 59, 29, .18); }
+.hamster-sand-sieve:active { cursor: grabbing; }.hamster-sand-sieve span { font-size: 38px; line-height: .8; }.hamster-sand-sieve small { font-size: 12px; font-weight: 900; }
+.hamster-sand-drag-hint { position: absolute; right: 18px; bottom: 16px; left: 18px; z-index: 3; margin: 0; padding: 9px 13px; border-radius: 999px; background: rgba(255, 253, 246, .92); color: var(--muted); font-size: 13px; font-weight: 800; text-align: center; }
+@keyframes hamster-bedding-lift { to { opacity: 0; transform: translateY(-34px) scale(.82); } }
+@keyframes hamster-fresh-in { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: scale(1); } }
+@media (max-width: 700px) { .hamster-morning-progress { align-items: flex-start; gap: 8px; } .hamster-morning-progress li { align-items: flex-start; font-size: 12px; } .hamster-morning-progress li span { flex: 0 0 26px; width: 26px; height: 26px; } .hamster-morning-scene { min-height: 350px; } .hamster-toilet-corner { right: 8%; bottom: 9%; width: 34%; } .hamster-toilet-corner span { font-size: 12px; } .hamster-sand-bath-image { width: 90%; } .hamster-sand-sieve { width: 70px; height: 70px; } }

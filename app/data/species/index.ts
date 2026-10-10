@@ -3,6 +3,7 @@ import { catConfig } from "./cat/index";
 import { rabbitConfig } from "./rabbit/index";
 import { birdConfig } from "./bird/index";
 import { hamsterConfig } from "./hamster/index";
+import { geckoConfig } from "./gecko/index";
 import type { SpeciesId } from "../shared/types";
 import type { RoomFlowConfig } from "../shared/species-config-types";
 
@@ -59,6 +60,15 @@ export const speciesConfigs = {
     trunkItems: hamsterConfig.preparation.trunkItems,
     roomFlow: hamsterConfig.preparation.roomFlow as unknown as RoomFlowConfig,
   },
+  gecko: {
+    ...geckoConfig,
+    copy: geckoConfig.copy,
+    breeds: geckoConfig.selection.breeds,
+    roomItems: geckoConfig.preparation.roomItems,
+    hazards: geckoConfig.preparation.hazards,
+    trunkItems: geckoConfig.preparation.trunkItems,
+    roomFlow: geckoConfig.preparation.roomFlow as unknown as RoomFlowConfig,
+  },
 } as const;
 export type SpeciesConfig = (typeof speciesConfigs)[SpeciesId];
 
@@ -82,4 +92,4 @@ export function getBreedForSpecies(species: string | undefined, breedId: string 
   return getSpeciesConfig(species).selection.breeds.find((breed) => breed.id === breedId);
 }
 
-export { dogConfig, catConfig, rabbitConfig, birdConfig, hamsterConfig };
+export { dogConfig, catConfig, rabbitConfig, birdConfig, hamsterConfig, geckoConfig };

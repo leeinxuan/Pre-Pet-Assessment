@@ -12,6 +12,8 @@
 
 這五個元件在旅程中屬於相同層級：每個物種各自保留不同的互動狀態機，但都由共用旅程依活動註冊設定分派。
 
+物種專屬的互動樣式應放在對應活動旁（例如 `daily-care/HamsterMorningInspectionActivity.css`），再由 `app/globals.css` 依既有順序載入。共用版面、按鈕與響應式規則則維持在 `app/styles/`，不要建立全域的 `dog.css` 或 `cat.css`。
+
 ## 其他活動檔案
 
 - `ArrivalMealActivity.tsx`：五物種到家第一餐。

@@ -5,6 +5,7 @@ import { catCareReviewAdditionalNotes } from "../species/cat/care-review-notes";
 import { rabbitCareReviewAdditionalNotes } from "../species/rabbit/care-review-notes";
 import { birdCareReviewAdditionalNotes } from "../species/bird/care-review-notes";
 import { hamsterCareReviewAdditionalNotes } from "../species/hamster/care-review-notes";
+import { geckoCareReviewAdditionalNotes } from "../species/gecko/care-review-notes";
 
 export type { CareReviewAdditionalNote } from "./care-review-note-types";
 
@@ -15,6 +16,7 @@ export const careReviewAdditionalNotes: Record<SpeciesId, CareReviewAdditionalNo
   rabbit: rabbitCareReviewAdditionalNotes,
   bird: birdCareReviewAdditionalNotes,
   hamster: hamsterCareReviewAdditionalNotes,
+  gecko: geckoCareReviewAdditionalNotes,
 };
 
 export function getCareReviewAdditionalNotes(species: string): CareReviewAdditionalNote[] {
@@ -22,5 +24,6 @@ export function getCareReviewAdditionalNotes(species: string): CareReviewAdditio
   if (species === "rabbit") return careReviewAdditionalNotes.rabbit;
   if (species === "bird") return careReviewAdditionalNotes.bird;
   if (species === "hamster") return careReviewAdditionalNotes.hamster;
+  if (species === "gecko") return careReviewAdditionalNotes.gecko;
   return careReviewAdditionalNotes.dog;
 }

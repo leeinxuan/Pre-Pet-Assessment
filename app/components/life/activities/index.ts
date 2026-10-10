@@ -5,6 +5,7 @@ export { BusyCareActivity } from "./BusyCareActivity";
 export { CatDailyInspectionActivity } from "./daily-care/CatDailyInspectionActivity";
 export { DailyBehaviorActivityMulti } from "./DailyBehaviorActivityMulti";
 export { GuidedInspection } from "./daily-care/GuidedActivities";
+export { GeckoHealthInspectionActivity } from "./daily-care/GeckoHealthInspectionActivity";
 export {
   ArrivalTransitionVideo,
   BusyCareTransition,
