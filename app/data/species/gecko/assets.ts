@@ -1,10 +1,48 @@
-/**
- * 守宮素材入口。素材尚未交付前刻意不填任何 URL；共用元件會顯示「素材待補」
- * 佔位，避免引用不存在檔案或暫借其他物種素材。
- */
 export const geckoAssets = {
-  selection: { gecko: "/assets/species/reptile.png" },
-  room: { initial: undefined, sealed: undefined, safe: undefined, terrariumInterior: undefined },
-  preparation: { trunkBackground: "/assets/car/car-trunk.png", documents: undefined },
-  feeding: { scene: undefined, gecko: undefined },
+  selection: {
+    gecko: "/assets/species/reptile.png",
+  },
+  room: {
+    initial: "/assets/gecko/room/gecko-room.png",
+    sealed: "/assets/gecko/room/gecko-room-sealed.png",
+    terrariumInterior: "/assets/gecko/room/bg-gecko-terrarium-interior.png",
+    terrariumSubstrate: "/assets/gecko/room/bg-gecko-terrarium-substrate.png",
+    terrariumHeatMat: "/assets/gecko/room/bg-gecko-terrarium-heat-mat.png",
+    terrarium: "/assets/gecko/room/gecko-terrarium.png",
+    terrariumFront: "/assets/gecko/room/gecko-terrarium-front.png",
+    feederInsects: "/assets/gecko/room/first-feeder-insects.png",
+    feederInsectsFront: "/assets/gecko/room/first-feeder-insects-front.png",
+    calciumSupplement: "/assets/gecko/room/calcium-and-vitamin-supplement.png",
+    safeSubstrate: "/assets/gecko/room/safe-substrate.png",
+    heatMat: "/assets/gecko/room/heat-mat.png",
+    thermometerHygrometer: "/assets/gecko/room/thermometer-hygrometer.png",
+    thermometerHygrometerCool: "/assets/gecko/room/thermometer-hygrometer-cool.png",
+    thermometerHygrometerWarm: "/assets/gecko/room/thermometer-hygrometer-warm.png",
+    warmHide: "/assets/gecko/room/warm-hide.png",
+    coolHide: "/assets/gecko/room/cool-hide.png",
+    moistHide: "/assets/gecko/room/moist-hide.png",
+    shallowWaterDish: "/assets/gecko/room/shallow-water-dish.png",
+    calciumDish: "/assets/gecko/room/calcium-dish.png",
+    insecticideSpray: "/assets/gecko/room/insecticide-spray.png",
+    essentialOilDiffuser: "/assets/gecko/room/essential-oil-diffuser.png",
+    looseSandSubstrate: "/assets/gecko/room/loose-sand-substrate.png",
+  },
+  preparation: {
+    trunkBackground: "/assets/car/car-trunk.png",
+    transportBox: "/assets/car/gecko-transport-box.png",
+    heatPack: "/assets/car/hand-warmer-or-heat-pack.png",
+    documents: "/assets/car/adoption-documents.png",
+    idCard: "/assets/car/id-card.png",
+  },
+  feeding: {
+    geckoWaiting: "/assets/gecko/feeding/gecko-unhappy.png",
+    geckoReady: "/assets/gecko/feeding/gecko-happy.png",
+    liveInsect: "/assets/gecko/feeding/gecko-live-insect.png",
+    calciumDustedInsect: "/assets/gecko/feeding/gecko-live-insect-calcium.png",
+    fullWaterDish: "/assets/gecko/feeding/shallow-water-dish-full.png",
+    waterBottle: "/assets/shared/waterbottle.png",
+    fruitVegetable: "/assets/gecko/feeding/fruit-vegetable.png",
+    humanFood: "/assets/gecko/feeding/human-food.png",
+    wildCaughtInsect: "/assets/gecko/feeding/wild-caught-insect.png",
+  },
 } as const;

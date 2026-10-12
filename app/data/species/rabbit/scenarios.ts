@@ -126,9 +126,9 @@ export const rabbitLifeScenarios: Scenario[] = [
     ],
     choices: [
       { id: "seek-help", text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}", result: "correct", isSupportChoice: true, ...positive, explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。" },
-      { id: "rabbit-extra-hay", text: "出門前多放一份牧草，讓 {petName} 自己撐到晚上", result: "incorrect", ...incorrect, explanation: "多放牧草仍無法取代傍晚的飲水更換、便盆清理和糞便觀察。兔子的糞便狀況每天都需要確認，12 小時無進食就是危急訊號。確定要晚歸時，應先安排可信任的人代為照顧。（R4 危急警訊）" },
-      { id: "rabbit-neighbor-glance", text: "請鄰居幫忙「看一下」就好，不用特別交代", result: "incorrect", ...incorrect, explanation: "只是「看一下」可能遺漏牧草補充、便盆清理與糞便觀察，也不知道要注意什麼警訊。請照顧的人需要知道具體的照顧內容和緊急時如何聯絡你。（R2；R4）" },
-      { id: "rabbit-hold-till-return", text: "等晚上回家再一次處理，平常兔子也能撐幾小時", result: "incorrect", ...incorrect, explanation: "把傍晚的牧草補充、飲水和便盆清理全部延後，加上一整天沒有人觀察糞便狀況，可能在你不知情時發生問題。確定晚歸時，應事先安排合適的人接手照顧。（R4）" },
+      { id: "rabbit-extra-hay", text: "出門前多放一份牧草，讓 {petName} 自己撐到晚上", result: "incorrect", ...incorrect, explanation: "多放牧草仍無法取代傍晚的飲水更換、便盆清理和糞便觀察。兔子的糞便狀況每天都需要確認，12 小時無進食就是危急訊號。確定要晚歸時，應先安排可信任的人代為照顧。" },
+      { id: "rabbit-neighbor-glance", text: "請鄰居幫忙「看一下」就好，不用特別交代", result: "incorrect", ...incorrect, explanation: "只是「看一下」可能遺漏牧草補充、便盆清理與糞便觀察，也不知道要注意什麼警訊。請照顧的人需要知道具體的照顧內容和緊急時如何聯絡你。" },
+      { id: "rabbit-hold-till-return", text: "等晚上回家再一次處理，平常兔子也能撐幾小時", result: "incorrect", ...incorrect, explanation: "把傍晚的牧草補充、飲水和便盆清理全部延後，加上一整天沒有人觀察糞便狀況，可能在你不知情時發生問題。確定晚歸時，應事先安排合適的人接手照顧。" },
     ],
   },
   {

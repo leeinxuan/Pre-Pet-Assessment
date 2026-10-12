@@ -63,8 +63,19 @@ export type ArrivalMealSceneAssets = {
   mobileBackground: string;
   pet: { waiting: string; ready: string };
   water: { empty: string; ready: string };
-  food: { empty: string; ready: string };
-  veggie?: { ready: string; alt: string };
+  /**
+   * `empty` can be omitted for food that should not appear in the scene until
+   * the player has selected it (for example live feeder insects).
+   */
+  food: {
+    empty?: string;
+    ready: string;
+    alt?: string;
+    /** A data-provided visual variant when another required supply is ready. */
+    readyOverrides?: Array<{ when: ArrivalMealSupply["stateKey"]; image: string; alt?: string }>;
+  };
+  /** The third supply slot is deliberately generic; individual species name it in `supplies`. */
+  veggie?: { empty?: string; ready: string; alt: string };
 };
 
 export type ArrivalMealChoice = {
@@ -536,6 +547,14 @@ export type HazardItem = {
   image?: string;
   placement: { x: number; y: number; width: number; layer: number };
   mobilePlacement?: { x: number; y: number; width: number };
+  /**
+   * A background-only hazard can expose a labelled hit target without adding a
+   * separate sprite. Geometry remains in the species data.
+   */
+  hotspot?: {
+    desktop: { x: number; y: number; width: number; height: number };
+    mobile: { x: number; y: number; width: number; height: number };
+  };
   danger: string;
   handling: string;
 };

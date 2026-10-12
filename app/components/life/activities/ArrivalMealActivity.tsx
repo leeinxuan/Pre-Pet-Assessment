@@ -99,6 +99,23 @@ export function ArrivalMealActivity({
   const choiceComplete = requiredChoices.every((item) => activity.hamsterMealSelected.includes(item.id));
   const choiceFeedback = choiceItems.find((item) => item.id === activity.hamsterMealFeedbackId);
   const complete = feeding.interaction === "choice" ? choiceComplete : sceneComplete;
+  const supplyReady = (key: "food" | "water" | "veggie") => key === "food"
+    ? activity.arrivalMealFoodReady
+    : key === "water"
+      ? activity.arrivalMealWaterReady
+      : activity.arrivalMealVeggieReady;
+  const foodReadyOverride = feeding.interaction !== "choice" && activity.arrivalMealFoodReady
+    ? feeding.scene.food.readyOverrides?.find((override) => supplyReady(override.when))
+    : undefined;
+  const foodSceneAsset = feeding.interaction !== "choice"
+    ? (activity.arrivalMealFoodReady ? foodReadyOverride?.image ?? feeding.scene.food.ready : feeding.scene.food.empty)
+    : undefined;
+  const foodSceneAlt = feeding.interaction !== "choice"
+    ? (activity.arrivalMealFoodReady ? foodReadyOverride?.alt ?? feeding.scene.food.alt ?? "準備好的主食" : "主食等待放入")
+    : "";
+  const veggieSceneAsset = feeding.interaction !== "choice" && feeding.scene.veggie
+    ? (activity.arrivalMealVeggieReady ? feeding.scene.veggie.ready : feeding.scene.veggie.empty)
+    : undefined;
   const [readyPetDisplayed, setReadyPetDisplayed] = useState(false);
   useEffect(() => {
     if (!complete || hasRecordedMeal.current) return;
@@ -171,8 +188,8 @@ export function ArrivalMealActivity({
         </div>}
         <img className="arrival-meal-dog" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "pet")} src={complete && (feeding.readyPetDelayMs === undefined || readyPetDisplayed) ? feeding.scene.pet.ready : feeding.scene.pet.waiting} alt={complete ? `${petName || feeding.animalName}安心地待在房間裡` : `${petName || feeding.animalName}還在等待晚餐與飲水`} />
         <img className="arrival-meal-water" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "water")} src={activity.arrivalMealWaterReady ? feeding.scene.water.ready : feeding.scene.water.empty} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />
-        <img className="arrival-meal-food" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "food")} src={activity.arrivalMealFoodReady ? feeding.scene.food.ready : feeding.scene.food.empty} alt={activity.arrivalMealFoodReady ? "裝好主食的食碗" : "空食碗"} />
-        {feeding.scene.veggie && activity.arrivalMealVeggieReady && <img className="arrival-meal-veggie" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "veggie")} src={feeding.scene.veggie.ready} alt={feeding.scene.veggie.alt} />}
+        {foodSceneAsset && <img className="arrival-meal-food" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "food")} src={foodSceneAsset} alt={foodSceneAlt} />}
+        {veggieSceneAsset && feeding.scene.veggie && <img className="arrival-meal-veggie" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "veggie")} src={veggieSceneAsset} alt={activity.arrivalMealVeggieReady ? feeding.scene.veggie.alt : "空的補鈣碟"} />}
         </>}
       </div>
       <div className="arrival-meal-footer">

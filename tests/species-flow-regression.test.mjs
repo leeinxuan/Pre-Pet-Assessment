@@ -32,6 +32,7 @@ const speciesFlows = {
     activities: { "hamster-arrival": "video-scenario", "hamster-first-meal": "arrival-meal", "hamster-daily-care": "daily-behavior", "hamster-solitary": "video-scenario", "hamster-cage-check": "hamster-inspection", "hamster-busy-care": "busy-care", "hamster-health": "video-scenario", "hamster-senior": "video-scenario" },
   },
   gecko: {
+    requiredMealSupplies: ["food", "veggie", "water"],
     recurringExpenses: ["gecko-food-monthly"],
     activities: { "gecko-arrival": "video-scenario", "gecko-first-meal": "arrival-meal", "gecko-daily-care": "daily-behavior", "gecko-health-inspection": "gecko-health-inspection", "gecko-busy-care": "busy-care", "gecko-sick": "video-scenario", "gecko-senior": "video-scenario" },
   },
@@ -56,13 +57,9 @@ test("registered species preserve first-meal completion and recurring-expense co
     const feeding = await source(`app/data/species/${species}/feeding.ts`);
     assert.deepEqual(quotedArray(feeding, "recurringExpenseIds"), expected.recurringExpenses, `${species} recurring meal expenses changed`);
 
-    if (species === "gecko") {
-      assert.match(feeding, /interaction:\s*"choice"/, "gecko keeps its choice-based first meal");
-    } else {
-      assert.match(feeding, /interaction:\s*"scene"/, `${species} keeps its scene-based first meal`);
-      assert.deepEqual(quotedArray(feeding, "requiredSupplies"), expected.requiredMealSupplies, `${species} required meal supplies changed`);
-      assert.match(feeding, /unsafeFoods:\s*\[/, `${species} keeps unsafe-food feedback`);
-    }
+    assert.match(feeding, /interaction:\s*"scene"/, `${species} keeps its scene-based first meal`);
+    assert.deepEqual(quotedArray(feeding, "requiredSupplies"), expected.requiredMealSupplies, `${species} required meal supplies changed`);
+    assert.match(feeding, /unsafeFoods:\s*\[/, `${species} keeps unsafe-food feedback`);
   }
   const practiceRegistrySection = reportRegistry.slice(0, reportRegistry.indexOf("const discussionSummaryOverrides"));
   assert.doesNotMatch(practiceRegistrySection, /requiredActivityIds|dog:|cat:|rabbit:|bird:|hamster:/, "report registry must not duplicate feeding completion requirements");

@@ -251,9 +251,20 @@ SOUND: quiet room tone, slow calm breathing, a faint purr; music: tender, heartw
 
 片段放進 `public/assets/cat/pet-journey/clips/`，Claude 依「保留」秒數剪接，補 ♻️ 柴犬原片，用溶接輸出 1280×720 到 `public/assets/cat/pet-journey/<影片名>.mp4`。
 
+## 實際流程（2026-10 更新：Flow 改用 Google Vids Omni）
+
+1. **首幀**：ChatGPT（一個物種一個對話）上傳 圖1=`cat-room-ref.webp`、圖2=`public/assets/cat/feeding/orange-cat-happy.png`（需要人物／砂盆時圖3 = 參考圖），貼上對應指令 → 1536×1024 → 下載 → `ffmpeg crop=1536:864,scale=1280:720` 存到 `scripts/cat/start-frames/<影片>-s<n>.png`（原圖 `.orig.png`）。每張約 2–2.5 分鐘、不能排隊。
+2. **動態片段**：Vids →「製作 AI 影片」(Omni, 720p, 8s)。上傳首幀 → 提示詞以 `Use this image as the exact first frame and animate it.` 開頭，內含 `Locked static camera, no zoom, no pan, no cuts`、`SOUND:`、`No human voices, no speech`；避免出現 TV／screen 字眼。生成後選畫布片段 → 點「取代」（有時要點兩次，確認畫布已變）→ 檔案 → 下載 → MP4。下載檔為 1920×1080 含音訊，右下有浮水印。
+3. **模型會亂變形**（例如躲藏箱被打開）：改成兩段短片＋溶接，或在首幀就放好最終狀態。
+4. **拼接**：`python3 scripts/cat/splice.py OUT.mp4 [--xf 0.25] SRC:START:DUR ...`（統一縮放 1280×720@30fps，影音交叉淡化）。♻️ 鏡頭直接取柴犬原片的秒數。
+5. **檢查**：`ffmpeg -vf "fps=1,scale=320:-1,tile=4x2"` 做 contact sheet 目視確認。
+
+單鏡頭影片 → `public/assets/cat/pet-journey/clips/`；多鏡頭片段 → 同資料夾 `<影片>-s<n>.mp4`；成品 → `public/assets/cat/pet-journey/<影片>.mp4`。
+
 ## 進度追蹤
 
 | 影片 | 首幀 | Flow 片段 | 成品 |
 |---|---|---|---|
 | ① correct-answer | ✅ | — | — |
-| 其餘 12 支 | — | — | — |
+| 單鏡頭 7 支（first-day、correct-answer×2、night-energy、scratching、climbing、sick） | ✅ | ✅ | ✅ |
+| arrival-transition、busy-day-transition、time-passes-aging、busy-daily-care、senior-life | ✅ | ✅ | ✅（待使用者目視確認） |

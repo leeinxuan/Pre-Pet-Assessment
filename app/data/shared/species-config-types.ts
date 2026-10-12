@@ -31,6 +31,12 @@ export type RoomFlowConfig = {
   interiorBackground?: string; interiorSafeBackground?: string;
   /** 需要先放置入口用品、再進入內部佈置的物種，可在素材尚未就緒時保留流程。 */
   hasInteriorView?: boolean;
+  /** Data-driven cumulative interior backgrounds, evaluated in declaration order. */
+  interiorBackgroundStates?: Array<{ whenItemIds: readonly string[]; background: string }>;
+  /** Items which alter the composited background but do not have a separate scene sprite. */
+  hiddenPlacedItemIds?: readonly string[];
+  /** Interior supplies remain unavailable until this required item is placed. */
+  interiorUnlockItemId?: string;
   interiorBackgroundAspectRatio?: "match-room" | string; floorHazardId: string; safeWhenAllHazards?: boolean;
   fenceItemId?: string; interiorItemId?: string; outsideItemIds?: string[]; entryRequiredItemIds?: string[];
   floorHotspot: { desktop: { x: number; y: number; width: number; height: number }; mobile: { x: number; y: number; width: number; height: number } };
