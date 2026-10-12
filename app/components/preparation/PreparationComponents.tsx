@@ -394,7 +394,7 @@ export function RoomPreparation({
               ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(roomFlow.floorHotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span>{item.label}</span></button>
               : <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}>{item.image ? <img src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-hidden="true">{item.icon}</span>}<span>{item.label}</span></button>)}
             {insideView && <button type="button" className="room-flow-return" aria-label="返回整個房間" onClick={() => setInsideRoomView(false)}>←</button>}
-            {!hasInteriorRoomFlow && roomScene.doorplate && <div className="pet-doorplate" style={roomDoorplatePlacementStyle(doorplatePlacement)}>
+            {!insideView && roomScene.doorplate && <div className="pet-doorplate" style={roomDoorplatePlacementStyle(doorplatePlacement)}>
               <img src={roomScene.doorplate.image} alt={roomScene.doorplate.alt} />
               <span className="pet-doorplate-name">{displayName}</span>
             </div>}

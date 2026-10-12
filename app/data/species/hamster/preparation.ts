@@ -1,4 +1,5 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
+import { sharedAssets } from "../../shared/assets";
 import { hamsterAssets } from "./assets";
 
 export const hamsterHazards: HazardItem[] = [
@@ -51,6 +52,6 @@ export const hamsterRoomFlow = {
   },
 } as const;
 
-export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置" };
+export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "倉鼠名字名牌" } };
 export const hamsterDepartureScene: DepartureSceneConfig = { trunkBackground: hamsterAssets.preparation.trunkBackground, trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: hamsterAssets.preparation.adoptionDocuments, documentFolderAlt: "飼養文件夾" };
 export const hamsterPreparation = { roomItems: hamsterRoomItems, hazards: hamsterHazards, trunkItems: hamsterTrunkItems, roomFlow: hamsterRoomFlow, roomScene: hamsterRoomScene, departureScene: hamsterDepartureScene } as const;

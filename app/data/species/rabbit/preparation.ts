@@ -1,4 +1,5 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
+import { sharedAssets } from "../../shared/assets";
 import { rabbitAssets } from "./assets";
 
 /** 兔子房間用品與素材由此資料設定提供，共用房間元件只負責渲染與流程控制。 */
@@ -56,6 +57,6 @@ export const rabbitRoomFlow = {
   },
 } as const;
 
-export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部" };
+export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌" } };
 export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.png", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: rabbitAssets.preparation.documents, documentFolderAlt: "飼養文件夾", hidePriceForReusedItemIds: ["anti-slip-liner"] };
 export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow, roomScene: rabbitRoomScene, departureScene: rabbitDepartureScene } as const;

@@ -1,4 +1,5 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
+import { sharedAssets } from "../../shared/assets";
 import { geckoAssets } from "./assets";
 
 export const geckoHazards: HazardItem[] = [
@@ -36,6 +37,6 @@ export const geckoRoomFlow = {
   copy: { hazardInstruction: "在把{petName}帶回家前，先收好環境中的危險物品並封閉所有縫隙。", fenceInstruction: "先放置爬蟲專用玻璃缸，為 {petName} 準備安全空間。", fencePlacedInstruction: "玻璃缸放好了！點進去佈置缸內環境吧。", interiorInstruction: "把守宮需要的用品一件一件放入缸內。", entryLabel: "查看爬蟲缸內部配置" },
 } as const;
 
-export const geckoRoomScene: RoomSceneConfig = { backgroundAlt: "守宮生活空間素材待補", interiorBackgroundAlt: "守宮爬蟲缸內部素材待補" };
+export const geckoRoomScene: RoomSceneConfig = { backgroundAlt: "守宮生活空間素材待補", interiorBackgroundAlt: "守宮爬蟲缸內部素材待補", doorplate: { image: sharedAssets.nameplate, alt: "守宮名字名牌" } };
 export const geckoDepartureScene: DepartureSceneConfig = { trunkBackground: geckoAssets.preparation.trunkBackground, trunkBackgroundAlt: "接回守宮場景素材待補", documentFolderImage: geckoAssets.preparation.documents, documentFolderAlt: "飼養文件夾素材待補" };
 export const geckoPreparation = { roomItems: geckoRoomItems, hazards: geckoHazards, trunkItems: geckoTrunkItems, roomFlow: geckoRoomFlow, roomScene: geckoRoomScene, departureScene: geckoDepartureScene } as const;
