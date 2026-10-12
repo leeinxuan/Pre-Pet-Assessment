@@ -260,6 +260,13 @@ export default function Home() {
     return true;
   }
 
+  /** 資料指定為預留費用時直接寫入明細，不播放費用卡或金幣動畫。 */
+  function addExpenseSilentlyById(id: string, triggerMeta?: ExpenseTriggerMeta) {
+    const expense = getExpenseForSpecies(id, category);
+    if (!expense) return false;
+    return appendExpense({ ...expense, ...triggerMeta });
+  }
+
   /** 同一個旅程節點新增一組既有費用，明細仍以原本 expenseId 個別去重。 */
   function addExpenseGroupByIds(ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) {
     const catalogExpenses = ids
@@ -616,6 +623,7 @@ export default function Home() {
         onActivityChange={(patch) => setLifeActivity((current) => ({ ...current, ...patch }))}
         onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}
         onAddExpense={addExpenseById}
+        onAddExpenseSilently={addExpenseSilentlyById}
         onAddExpenseGroup={addExpenseGroupByIds}
         onPlayExpenseSequence={playExpenseSequenceByIds}
         onStageChange={(nextStep) => { setStep(nextStep); setFurthestStep((current) => Math.max(current, nextStep)); setIntroOpen(false); }}

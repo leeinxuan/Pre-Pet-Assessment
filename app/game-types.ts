@@ -144,6 +144,8 @@ export type ScenarioChoice = {
   explanation: string;
   suggestion?: string;
   expenseIds?: string[];
+  /** 正確作答時直接登錄、但不顯示費用卡動畫的預留費用。 */
+  silentExpenseIds?: string[];
   effects?: {
     trust?: number;
     wellbeing?: number;

@@ -75,6 +75,7 @@ export function LifeJourney({
   onActivityChange,
   onCompleteItem,
   onAddExpense,
+  onAddExpenseSilently,
   onAddExpenseGroup,
   onPlayExpenseSequence,
   onStageChange,
@@ -101,6 +102,7 @@ export function LifeJourney({
   onActivityChange: (patch: Partial<LifeActivityState>) => void;
   onCompleteItem: (id: string) => void;
   onAddExpense: (id: string, triggerMeta?: ExpenseTriggerMeta) => void;
+  onAddExpenseSilently: (id: string, triggerMeta?: ExpenseTriggerMeta) => void;
   onAddExpenseGroup: (ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) => void;
   onPlayExpenseSequence: (ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) => Promise<void>;
   onStageChange: (step: number) => void;
@@ -373,6 +375,7 @@ export function LifeJourney({
             } else {
               expenseIds?.forEach((expenseId) => onAddExpense(expenseId, triggerMeta));
             }
+            choice.silentExpenseIds?.forEach((expenseId) => onAddExpenseSilently(expenseId, triggerMeta));
           }}
           onCorrectExpenseSequence={activityConfig?.triggerExpenseOnFeedback
             ? (correctScenario, choice) => onPlayExpenseSequence(choice.expenseIds ?? [], {

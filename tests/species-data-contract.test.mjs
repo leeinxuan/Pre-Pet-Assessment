@@ -63,7 +63,7 @@ test("literal expense ids referenced by species flows exist in that species cata
     const catalogIds = new Set([...expenses.matchAll(/(?:\bid:\s*|initial\()"([^"]+)"/g)].map((match) => match[1]));
     const referencedIds = new Set();
     for (const data of flowSources) {
-      for (const match of data.matchAll(/(?:expenseId|expenseIds|recurringExpenseIds)\s*:\s*(?:"([^"]+)"|\[([^\]]*)\])/gs)) {
+      for (const match of data.matchAll(/(?:expenseId|expenseIds|silentExpenseIds|recurringExpenseIds)\s*:\s*(?:"([^"]+)"|\[([^\]]*)\])/gs)) {
         if (match[1]) referencedIds.add(match[1]);
         for (const literal of (match[2] ?? "").matchAll(/"([^"]+)"/g)) referencedIds.add(literal[1]);
       }

@@ -23,7 +23,7 @@ export const rabbitLifeScenarios: Scenario[] = [
     learningPoints: rabbitKnowledge.arrival, knowledgeTitle: "兔子小知識",
     choices: [
       { id: "rabbit-pull-out", text: "把 {petName} 從箱子裡抱出來，讓牠熟悉環境", result: "incorrect", ...incorrect, explanation: "躲藏是正常壓力反應；強迫出來只會增加緊迫，甚至引發休克。", suggestion: "保持安靜，讓牠自己決定何時出來探索。" },
-      { id: "rabbit-quiet-explore", text: "保持安靜，讓牠自己決定何時出來", result: "correct", ...positive, explanation: "兔子需要時間適應新環境；主動探索是建立信任的第一步。", expenseIds: ["rabbit-arrival-checkup"] },
+      { id: "rabbit-quiet-explore", text: "保持安靜，讓牠自己決定何時出來", result: "correct", ...positive, explanation: "兔子需要時間適應新環境；主動探索是建立信任的第一步。", expenseIds: ["rabbit-arrival-checkup"], silentExpenseIds: ["rabbit-sterilization-male", "rabbit-sterilization-female"] },
       { id: "rabbit-call-loudly", text: "大聲叫牠的名字，讓牠認識你", result: "incorrect", ...incorrect, explanation: "兔子聽覺敏銳，突然的大聲會造成驚嚇。", suggestion: "放慢動作、降低音量，讓牠慢慢習慣你的存在。" },
       { id: "rabbit-food-lure", text: "把玩具和零食放在箱口，引牠出來", result: "incorrect", ...incorrect, explanation: "用食物引誘可能讓牠在害怕與想吃之間更緊迫。", suggestion: "不施壓，讓牠在安全感足夠時自然探索。" },
     ],

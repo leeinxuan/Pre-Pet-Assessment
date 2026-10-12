@@ -19,6 +19,6 @@ export const birdExpenses: Record<string, ExpenseRecord> = {
   "bird-cleaning-monthly": { id: "bird-cleaning-monthly", name: "每月清潔耗材費", amount: 300, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "糞尿托盤墊料每日更換；定期徹底清洗消毒籠舍；使用確認對鳥無害的清潔劑" },
   "bird-mild-sick": { id: "bird-mild-sick", name: "輕症就診（輕微糞便異常／輕度羽毛問題）", amount: 1000, maxAmount: 2500, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "一般門診含診察與短期藥費；輕微糞便異常、輕度羽毛問題等症狀輕微未達抽血標準；鳥科獸醫資源稀少，須事先確認診所" },
   "bird-moderate-sick": { id: "bird-moderate-sick", name: "急症檢查（澎毛精神極差／消化異常）", amount: 2500, maxAmount: 6000, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "門診含血液常規或影像檢查與藥費；澎毛、精神低落持續超過一天；鳥類血量少，採血技術難度高" },
-  "bird-hospitalization": { id: "bird-hospitalization", name: "住院與手術費用", amount: 6000, maxAmount: 50000, maxAmountOpenEnded: true, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "含麻醉、住院護理與手術費；需住院觀察或手術（如難產取蛋、腫瘤切除）；鳥類麻醉風險高，須有異寵麻醉資格的獸醫執行" },
+  "bird-hospitalization": { id: "bird-hospitalization", name: "住院與手術費用", amount: 6000, maxAmount: 50000, maxAmountOpenEnded: true, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "含麻醉、住院護理與手術費；鳥類麻醉風險高，須有異寵麻醉資格的獸醫執行" },
   "bird-senior-room": { id: "bird-senior-room", name: "高齡環境調整用品", amount: 1200, category: "高齡用品", stage: "生活變化", recurring: false, fromEmergency: false, description: "降低棲木高度防跌落、增加保暖設備（暖燈、布巾）、減少環境干擾" },
 };
