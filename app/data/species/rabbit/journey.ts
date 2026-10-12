@@ -55,7 +55,7 @@ export const rabbitGroomingConfig = {
     footpad: rabbitGroomingAsset("rabbit-grooming-footpad.webp"),
     inspection: rabbitGroomingAsset("rabbit-inspection-front.webp"),
     brush: rabbitGroomingAsset("grooming-brush.webp"),
-    magnifier: "/assets/shared/magnifier.png",
+    magnifier: "/assets/shared/magnifier.webp",
     furBallEmpty: rabbitGroomingAsset("fur-ball-empty.webp"),
     furBallStep1: rabbitGroomingAsset("fur-ball-step1.webp"),
     furBallStep2: rabbitGroomingAsset("fur-ball-step2.webp"),

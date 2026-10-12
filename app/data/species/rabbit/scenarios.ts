@@ -187,7 +187,7 @@ export const rabbitLifeScenarios: Scenario[] = [
 /** 規劃文件 D-1：順序即為正解；操作元件只讀取動作與對應提示。 */
 const rabbitHoldStepAssets = {
   approach: "/assets/rabbit/pet-journey/rabbit-hold-step-1-approach.webp",
-  handSniff: "/assets/rabbit/pet-journey/rabbit-hold-step-2-hand-sniff.png",
+  handSniff: "/assets/rabbit/pet-journey/rabbit-hold-step-2-hand-sniff.webp",
   headStroke: "/assets/rabbit/pet-journey/rabbit-hold-step-3-head-stroke.webp",
   supportChestHindquarters: "/assets/rabbit/pet-journey/rabbit-hold-step-4-support-chest-hindquarters.webp",
   holdClose: "/assets/rabbit/pet-journey/rabbit-hold-step-5-hold-close.webp",

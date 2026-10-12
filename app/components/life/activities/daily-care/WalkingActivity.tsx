@@ -371,7 +371,7 @@ export function WalkingActivity({
             onPointerCancel={cancelDraggingBag}
             aria-label="拖曳撿便袋清理排泄物"
           >
-            <img src={dogDailyAsset("poop-bag-1.png")} alt="" />
+            <img src={dogDailyAsset("poop-bag-1.webp")} alt="" />
           </button>
           <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
         </div>
@@ -480,7 +480,7 @@ export function WalkingActivity({
             {draggedBag && (
               <img
                 className="walking-drag-bag-ghost"
-                src={dogDailyAsset("poop-bag-1.png")}
+                src={dogDailyAsset("poop-bag-1.webp")}
                 alt=""
                 aria-hidden="true"
                 style={{ left: draggedBag.x, top: draggedBag.y }}
@@ -488,7 +488,7 @@ export function WalkingActivity({
             )}
             <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position, isMobileWalkingLayout)}>
               <img
-                src={activity.walkingPoopCleaned ? dogShibaWalkingAsset("walker-dog-bag.png") : needsCleanup ? dogShibaWalkingAsset("walker-and-dog-poop.png") : dogShibaWalkingAsset("walker-and-dog.png")}
+                src={activity.walkingPoopCleaned ? dogShibaWalkingAsset("walker-dog-bag.webp") : needsCleanup ? dogShibaWalkingAsset("walker-and-dog-poop.webp") : dogShibaWalkingAsset("walker-and-dog.webp")}
                 alt={`正在和${petName}散步的人物與小狗`}
               />
             </div>
@@ -499,7 +499,7 @@ export function WalkingActivity({
                 style={isMobileWalkingLayout ? mobilePoopStyle : desktopPoopStyle}
                 aria-hidden="true"
               >
-                <img src={dogDailyAsset("poop.png")} alt="" />
+                <img src={dogDailyAsset("poop.webp")} alt="" />
               </div>
             )}
             {renderWalkingEventCard("walking-event-card--desktop")}

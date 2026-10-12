@@ -1,7 +1,7 @@
 # 橘貓影片｜首幀鎖定流程（ChatGPT 換貓 → Flow 轉影片）
 
 > 仿 `scripts/dog/mixed-frames-workflow.md`，但**全部統一成同一種畫風**：以 `scripts/cat/cat-room-ref.webp`（貓咪客廳）＋橘貓為準。
-> 外觀參考：`public/assets/cat/feeding/orange-cat-happy.png`
+> 外觀參考：`public/assets/cat/feeding/orange-cat-happy.webp`
 > 柴犬參考畫面（姿勢／構圖參考）：`scripts/dog/shiba-ref-frames/<影片名>-s<鏡頭>.png`
 > 首幀存放：`scripts/cat/start-frames/<影片名>-s<鏡頭>.png`（1280×720）；Flow 片段存放：`public/assets/cat/pet-journey/clips/`
 > 成品輸出：`public/assets/cat/pet-journey/<影片名>.mp4`
@@ -253,7 +253,7 @@ SOUND: quiet room tone, slow calm breathing, a faint purr; music: tender, heartw
 
 ## 實際流程（2026-10 更新：Flow 改用 Google Vids Omni）
 
-1. **首幀**：ChatGPT（一個物種一個對話）上傳 圖1=`cat-room-ref.webp`、圖2=`public/assets/cat/feeding/orange-cat-happy.png`（需要人物／砂盆時圖3 = 參考圖），貼上對應指令 → 1536×1024 → 下載 → `ffmpeg crop=1536:864,scale=1280:720` 存到 `scripts/cat/start-frames/<影片>-s<n>.png`（原圖 `.orig.png`）。每張約 2–2.5 分鐘、不能排隊。
+1. **首幀**：ChatGPT（一個物種一個對話）上傳 圖1=`cat-room-ref.webp`、圖2=`public/assets/cat/feeding/orange-cat-happy.webp`（需要人物／砂盆時圖3 = 參考圖），貼上對應指令 → 1536×1024 → 下載 → `ffmpeg crop=1536:864,scale=1280:720` 存到 `scripts/cat/start-frames/<影片>-s<n>.png`（原圖 `.orig.png`）。每張約 2–2.5 分鐘、不能排隊。
 2. **動態片段**：Vids →「製作 AI 影片」(Omni, 720p, 8s)。上傳首幀 → 提示詞以 `Use this image as the exact first frame and animate it.` 開頭，內含 `Locked static camera, no zoom, no pan, no cuts`、`SOUND:`、`No human voices, no speech`；避免出現 TV／screen 字眼。生成後選畫布片段 → 點「取代」（有時要點兩次，確認畫布已變）→ 檔案 → 下載 → MP4。下載檔為 1920×1080 含音訊，右下有浮水印。
 3. **模型會亂變形**（例如躲藏箱被打開）：改成兩段短片＋溶接，或在首幀就放好最終狀態。
 4. **拼接**：`python3 scripts/cat/splice.py OUT.mp4 [--xf 0.25] SRC:START:DUR ...`（統一縮放 1280×720@30fps，影音交叉淡化）。♻️ 鏡頭直接取柴犬原片的秒數。

@@ -2,7 +2,7 @@
 
 > 取代 `mixed-video-prompts.md` 的純文字生成方式。每段 Flow prompt 都含 `SOUND:`（該鏡頭的音效與配樂），並要加上【Flow 通用音訊結尾】。
 > 參考畫面：`scripts/dog/shiba-ref-frames/`（`<影片名>-s1.png`、`-s2.png`…，依柴犬版鏡頭順序編號）
-> 米克斯外觀參考：`public/assets/dog/selection/mixed-breed.png`
+> 米克斯外觀參考：`public/assets/dog/selection/mixed-breed.webp`
 
 ---
 

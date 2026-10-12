@@ -49,10 +49,10 @@ test("contains the five-unit journey and current project-owned artwork", async (
     access(new URL("../public/og.png", import.meta.url)),
     ...["hero-life-preview", "lifetime-costs", "scenario-grid", "prep-room"].map((name) => access(new URL(`../public/assets/welcome/${name}.webp`, import.meta.url))),
     access(new URL("../public/assets/dog/pet-journey/shiba/arrival-transition.mp4", import.meta.url)),
-    access(new URL("../public/assets/dog/pet-journey/shiba/shiba-dog.png", import.meta.url)),
-    ...["car-trunk", "id-card", "adoption-documents", "carrier", "pee-pad", "leash"].map((name) => access(new URL(`../public/assets/car/${name}.png`, import.meta.url))),
+    access(new URL("../public/assets/dog/pet-journey/shiba/shiba-dog.webp", import.meta.url)),
+    ...["car-trunk", "id-card", "adoption-documents", "carrier", "pee-pad", "leash"].map((name) => access(new URL(`../public/assets/car/${name}.webp`, import.meta.url))),
     ...["hamster-carrier", "water-bottle"].map((name) => access(new URL(`../public/assets/car/${name}.webp`, import.meta.url))),
-    ...["empty-room", "empty-room-mobile", "pee-pad", "water-bowl", "cleaner", "food-bowl", "toy", "pet-bed", "food", "small-items", "detergent", "wire"].map((name) => access(new URL(`../public/assets/dog/room/${name}.png`, import.meta.url))),
+    ...["empty-room", "empty-room-mobile", "pee-pad", "water-bowl", "cleaner", "food-bowl", "toy", "pet-bed", "food", "small-items", "detergent", "wire"].map((name) => access(new URL(`../public/assets/dog/room/${name}.webp`, import.meta.url))),
     access(new URL("../public/assets/shared/nameplate.webp", import.meta.url)),
   ]);
 
@@ -90,8 +90,8 @@ test("contains the five-unit journey and current project-owned artwork", async (
   for (const id of ["bed", "toy", "water-bowl", "food-bowl", "toilet", "cleaner", "food"]) {
     assert.match(roomData, new RegExp(`id: "${id}"`));
   }
-  assert.match(dogPreparation, /safeBackground: "\/assets\/dog\/room\/empty-room\.png"/);
-  assert.match(dogPreparation, /safeMobileBackground: "\/assets\/dog\/room\/empty-room-mobile\.png"/);
+  assert.match(dogPreparation, /safeBackground: "\/assets\/dog\/room\/empty-room\.webp"/);
+  assert.match(dogPreparation, /safeMobileBackground: "\/assets\/dog\/room\/empty-room-mobile\.webp"/);
   assert.match(dogPreparation, /doorplate: \{ image: sharedAssets\.nameplate/);
   assert.match(dogPreparation, /id: "toilet"[\s\S]*?x: 15, y: 85, width: 20, layer: 1/);
   assert.match(dogPreparation, /id: "water-bowl"[\s\S]*?x: 32, y: 90, width: 12, layer: 3/);
@@ -103,9 +103,9 @@ test("contains the five-unit journey and current project-owned artwork", async (
   const trunkSection = preparation.slice(preparation.indexOf("export function CarTrunkPreparation"));
   assert.doesNotMatch(trunkSection, /species\s*===|isDog|isCat|isRabbit|isBird|isHamster/);
   assert.doesNotMatch(trunkSection, /draggable|onDragStart|onDragOver|onDrop/);
-  assert.match(dogPreparation, /trunkBackground: "\/assets\/car\/car-trunk\.png"/);
-  assert.match(dogPreparation, /documentFolderImage: "\/assets\/car\/adoption-documents\.png"/);
-  assert.match(dogPreparation, /id: "carrier"[\s\S]*image: "\/assets\/car\/carrier\.png"/);
+  assert.match(dogPreparation, /trunkBackground: "\/assets\/car\/car-trunk\.webp"/);
+  assert.match(dogPreparation, /documentFolderImage: "\/assets\/car\/adoption-documents\.webp"/);
+  assert.match(dogPreparation, /id: "carrier"[\s\S]*image: "\/assets\/car\/carrier\.webp"/);
   assert.equal((dogPreparation.match(/kind: "document"/g) ?? []).length, 2);
   assert.equal((dogPreparation.match(/kind: "supply"/g) ?? []).length, 5);
   assert.match(dogPreparation, /expenseIds: \["carrier-kit"\]/);

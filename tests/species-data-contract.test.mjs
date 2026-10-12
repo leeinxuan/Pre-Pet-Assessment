@@ -94,11 +94,11 @@ test("dog and cat use the shared carrier while hamster uses its dedicated carrie
     source("app/data/species/cat/assets.ts"),
     source("app/data/species/hamster/assets.ts"),
   ]);
-  assert.match(dog, /\/assets\/car\/carrier\.png/);
-  assert.match(cat, /carrier:\s*"\/assets\/car\/carrier\.png"/);
+  assert.match(dog, /\/assets\/car\/carrier\.webp/);
+  assert.match(cat, /carrier:\s*"\/assets\/car\/carrier\.webp"/);
   assert.match(hamsterAssets, /\/assets\/car\/hamster-carrier\.webp/);
   await Promise.all([
-    access(new URL("public/assets/car/carrier.png", root)),
+    access(new URL("public/assets/car/carrier.webp", root)),
     access(new URL("public/assets/car/hamster-carrier.webp", root)),
   ]);
 });

@@ -9,7 +9,7 @@
 ## 視覺基準
 
 ### 米克斯外觀（必須一致）
-參考圖：`public/assets/dog/selection/mixed-breed.png`
+參考圖：`public/assets/dog/selection/mixed-breed.webp`
 
 - **毛色**：背部黑色，臉頰/眼眶上方/腿部/腹側為棕褐色（tan），胸口有小塊白毛
 - **體型**：中型犬，身形修長有力
@@ -40,7 +40,7 @@
 ### 畫風分類
 
 #### A. 寵物靜態圖片風格（pet-journey/mixed/*.png）
-參考圖：`public/assets/dog/pet-journey/shiba/shiba-dog.png`
+參考圖：`public/assets/dog/pet-journey/shiba/shiba-dog.webp`
 
 - **風格關鍵字**：`cartoon illustration, bold black outlines, flat colors, minimal shading, clean lines`
 - 色彩以平塗為主，幾乎無漸層
