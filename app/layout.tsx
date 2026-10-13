@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "伴日子新手村",
     description: "沿著真實時間軸，預演領養前準備、日常照顧、健康事件與生活變化。",
     type: "website",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "準飼主與柴犬在家中安靜相處" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "飼主與寵物未來的生活空間" }],
   },
   twitter: {
     card: "summary_large_image",

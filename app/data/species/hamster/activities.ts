@@ -1,8 +1,9 @@
 import type { ActivityIntroConfig } from "../../../game-types";
 import { hamsterAssets } from "./assets";
 
-/** docs/hamster-game-planning.md §5.3.2 的兩段式早晨清潔流程。 */
-export const hamsterMorningCheck = {
+/** docs/hamster-game-planning.md §5.3.2 的倉鼠清潔日常狀態機資料。 */
+export const hamsterCageCheck = {
+  sceneDescription: "今天早上，你走近 {petName} 的籠子，牠剛結束一夜的探索，正窩在熟悉的墊料裡休息。先花幾分鐘整理牠最常使用的角落和砂浴盆，讓牠醒來後有個乾淨舒適的小家吧。",
   intro: {
     eyebrow: "日常照護",
     title: "早晨巡視——每天替 {petName} 確認一次",
@@ -13,27 +14,47 @@ export const hamsterMorningCheck = {
     ],
     startLabel: "開始今天的清潔 →",
     visualAssets: {
+      // CageCheckActivity 尚未提供角色圖；沿用倉鼠既有角色素材，不使用其他物種暫代。
       character: hamsterAssets.feeding.happy,
-      tool: hamsterAssets.dailyInspection.bedding,
-      collector: hamsterAssets.dailyInspection.sandBath,
+      tool: hamsterAssets.cageCheckActivity.scoop,
+      collector: hamsterAssets.cageCheckActivity.sandBathMess,
     },
   } satisfies ActivityIntroConfig,
-  steps: {
-    toilet: {
+  progressSteps: [
+    {
       id: "toilet-corner",
       label: "廁所角落點清潔",
-      prompt: "找到 {petName} 的廁所角落，清掉髒的墊料！",
-      completion: "{petName} 會固定選擇同一個角落作為廁所——這是倉鼠的天性。每天清那個角落的髒墊料，比整籠換墊省事多了，也讓牠對環境氣味感到安心。",
+      prompt: "找找看 {petName} 今天在哪裡上廁所了！",
+      completion: "倉鼠有個聰明的習慣——牠會固定選同一個角落當廁所，讓自己的窩保持整潔。每天只要清那個角落，不需要整籠大換，牠就能住在熟悉又舒適的環境裡。",
     },
-    sandBath: {
-      id: "sand-bath",
-      label: "砂浴盆篩沙清潔",
-      prompt: "篩掉砂浴盆裡的結塊廢沙！",
-      completion: "砂浴是 {petName} 清潔毛髮的方式，使用過的沙會結塊或混入雜質。定期篩除結塊就好，不需要整盆換新——讓牠隨時都有乾淨的沙可以用。",
+    {
+      id: "sift-sand",
+      label: "撈出砂浴盆雜質",
+      prompt: "用漏勺篩掉 {petName} 在砂浴盆裡留下的糞便和結塊！",
+      completion: "細孔漏勺的孔洞比浴沙顆粒小，可以讓細沙通過、只留下糞便和結塊。烘焙用的小型茶葉濾網就很好用。",
     },
+    {
+      id: "settle-sand",
+      label: "水平搖晃砂盆",
+      prompt: "輕輕左右搖晃砂盆，讓細碎的粉塵沉到底部！",
+      completion: "篩完後一定要水平輕輕搖晃，讓剩餘的細碎粉塵沉到底部——否則 {petName} 下次打滾挖掘時會直接吸入粉塵，影響牠的呼吸道。",
+    },
+  ] as const,
+  interaction: {
+    // 固定廁所角落，讓每日清潔流程與畫面位置一致。
+    toiletCorner: "top-right",
+    siftPassesRequired: 3,
+    shakeProgressTarget: 100,
+    // 持續拖曳五秒可填滿；秒數不顯示給玩家。
+    shakeDurationMs: 5000,
+    cleanCornerHint: "這裡還乾淨，再找找看",
+    refillHint: "點擊剛清出的角落，補上乾淨的新墊料。",
+    siftHint: "按住漏勺，從砂盆一端拖曳到另一端。",
+    shakeHint: "在砂盆上左右拖曳，讓細碎粉塵沉到底部。",
+    shakeCompleteHint: "太好了！砂浴盆已經平整又乾淨，{petName} 可以舒服地使用了！",
   },
   completion: {
-    title: "早晨巡視完成！{petName} 的小小家整理好了",
+    title: "清潔完成！{petName} 的小小家整理好了",
     subtitle: "你清理了廁所角落的髒墊料，也篩好了砂浴盆。",
     description: "倉鼠的健康很難從外表立刻看出來——牠靠著這兩個乾淨的空間，每天維持身體的整潔與舒適。",
     reflectionTitle: "每天的小動作，是對 {petName} 最具體的照顧",

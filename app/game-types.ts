@@ -309,6 +309,13 @@ export type SpeciesScenarioPresentationConfig = {
   scenarios: Record<string, Partial<ScenarioPresentationConfig>>;
 };
 
+/** Optional journey transition videos supplied by a species data module. */
+export type JourneyTransitionMedia = {
+  arrival?: string;
+  timePass?: string;
+  busyCare?: string;
+};
+
 export type ScenarioAnswer = {
   scenarioId: string;
   firstChoiceId: string;
@@ -388,23 +395,88 @@ export type JourneyActivityConfig = {
   resetKey?: string;
 };
 
-/** 資料驅動的守宮每日巡視；畫面與狀態機不包含任何物種文案。 */
-export type GeckoHealthInspectionPoint = {
+export type GeckoHealthDisplayState = "normal" | "warning" | "shedding" | "stuck-shed";
+export type GeckoTemperatureState = "too-cold" | "too-hot" | "in-range";
+
+export type GeckoHealthInspectionChoice = {
+  id: string;
+  text: string;
+  correctStates: readonly GeckoHealthDisplayState[];
+};
+
+export type GeckoHealthInspectionState = {
+  image: string;
+  imageAlt: string;
+  detail: string;
+  correctFeedback: string;
+  incorrectFeedback: string;
+};
+
+export type GeckoHealthJudgement = {
   id: string;
   label: string;
   instruction: string;
-  detail: string;
-  choices?: readonly { id: string; text: string; normalIsCorrect: boolean }[];
-  normalFeedback?: string;
-  warningFeedback?: string;
-  completionLabel?: string;
+  prompt: string;
+  choices: readonly GeckoHealthInspectionChoice[];
+  states: Partial<Record<GeckoHealthDisplayState, GeckoHealthInspectionState>>;
+  comparison?: {
+    title: string;
+    image: string;
+    imageAlt: string;
+    description: string;
+    actionLabel: string;
+  };
+};
+
+export type GeckoBodyInspectionPoint = GeckoHealthJudgement & {
+  hotspot: { x: number; y: number };
 };
 
 export type GeckoHealthInspectionConfig = {
   intro: ActivityIntroConfig;
   title: string;
   description: string;
-  steps: readonly GeckoHealthInspectionPoint[];
+  progress: readonly { id: "temperature" | "water" | "feces" | "body"; label: string }[];
+  scene: {
+    background: string;
+    body: string;
+    bodyAlt: string;
+    magnifier: string;
+  };
+  temperature: {
+    instruction: string;
+    warmLabel: string;
+    coolLabel: string;
+    controllerLabel: string;
+    warmThermometer: string;
+    coolThermometer: string;
+    controllerImage: string;
+    presets: Record<GeckoTemperatureState, readonly { warm: number; cool: number }[]>;
+    target: { warmMin: number; warmMax: number; coolMin: number; coolMax: number };
+    adjustment: { warm: number; cool: number };
+    confirmLabel: string;
+    successFeedback: Record<GeckoTemperatureState, string>;
+    fixedWarning: string;
+    continueLabel: string;
+  };
+  water: {
+    instruction: string;
+    dirtyImage: string;
+    dirtyImageAlt: string;
+    cleanImage: string;
+    cleanImageAlt: string;
+    detail: string;
+    fillLabel: string;
+    successFeedback: string;
+    fixedWarning: string;
+    continueLabel: string;
+  };
+  feces: GeckoHealthJudgement;
+  body: {
+    instruction: string;
+    prompt: string;
+    points: readonly GeckoBodyInspectionPoint[];
+  };
   completion: {
     title: string;
     subtitle: string;
@@ -465,11 +537,13 @@ export type LifeActivityState = {
   hamsterMealSelected: string[];
   hamsterMealFeedbackId: string;
   hamsterInspectionStarted: boolean;
-  hamsterInspectionStates: Record<string, "normal" | "warning">;
+  /** 倉鼠清潔活動的隨機髒污角落與各操作累積進度；重 render 時不可重抽或歸零。 */
+  hamsterInspectionStates: Record<string, string | number>;
   hamsterInspectionCompleted: string[];
   hamsterInspectionFeedback: Record<string, "question" | "incorrect" | "correct">;
   geckoHealthInspectionStarted: boolean;
-  geckoHealthInspectionStates: Record<string, "normal" | "warning">;
+  /** 同一局的隨機觀察狀態、溫度讀值與知識卡進度；重新 render 或答錯時不得重抽。 */
+  geckoHealthInspectionStates: Record<string, string | number | boolean>;
   geckoHealthInspectionCompleted: string[];
   geckoHealthInspectionFeedback: Record<string, "question" | "incorrect" | "correct">;
 };

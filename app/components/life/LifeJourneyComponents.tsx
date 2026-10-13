@@ -233,7 +233,7 @@ export function LifeJourney({
     : {};
 
   if (timePassOpen && activityConfig?.transition === "time-pass") {
-    return <TimePassTransition onComplete={() => {
+    return <TimePassTransition species={species} onComplete={() => {
       onActivityChange({ sickTimePassComplete: true });
       setTimePassOpen(false);
       selectItem(index + 1);
@@ -241,7 +241,7 @@ export function LifeJourney({
   }
 
   if (activityConfig?.transition === "busy-care" && busyCareTransitionIndex !== index) {
-    return <BusyCareTransition onComplete={() => setBusyCareTransitionIndex(index)} />;
+    return <BusyCareTransition species={species} onComplete={() => setBusyCareTransitionIndex(index)} />;
   }
 
   return (

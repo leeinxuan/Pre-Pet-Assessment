@@ -268,3 +268,42 @@ SOUND: quiet room tone, slow calm breathing, a faint purr; music: tender, heartw
 | ① correct-answer | ✅ | — | — |
 | 單鏡頭 7 支（first-day、correct-answer×2、night-energy、scratching、climbing、sick） | ✅ | ✅ | ✅ |
 | arrival-transition、busy-day-transition、time-passes-aging、busy-daily-care、senior-life | ✅ | ✅ | ✅（待使用者目視確認） |
+
+## 多鏡頭影片補充規則（第二輪修正後）
+
+- **同一間客廳**：每張 ChatGPT 起始畫面都以 `cat-room-master.png` 當第 1 張圖，確保家具/位置/風格在所有影片一致。
+- **貓咪**：第 2 張圖用 orange cat 參考圖；**老貓** = faded dull cream-orange fur, washed-out grey-brown stripes, frosted white-grey muzzle and chin, long grey-white whiskers, slightly cloudy tired eyes, thin body with visible shoulder bones, ears pointed。避免使用 "ears drooping"（會造成耳朵變形）。
+- **主人**：第 3 張圖用同一張女生參考圖（棕色馬尾、粉色針織毛衣、藍色牛仔褲、白襪，no hoodie, no bag）。
+- **逗貓棒**：一定由主人手持，prompt 明寫 "held by her hand, never hanging from the ceiling"。
+- **回憶鏡頭**：prompt 加 "warm faded vintage old-photo look, sepia tone, soft grain"；現在的鏡頭用正常色調。
+- **情緒**：悲傷用姿勢描述（head low、ears pointed、eyes half closed），主人 "not smiling, sad and wistful"。
+- **Vids 被拒（這項要求似乎違反相關條款）**：改用較遠景、手放在背上而非「摟抱/親吻」，或換成別的鏡頭。
+- **操作 lesson**：ChatGPT 輸入框先點 (850,750) 再 type；type 與 Enter 必須分開，中間截圖確認文字已進入輸入框。下載後確認檔名是新的（避免撿到舊檔）。
+- **Vids 取代**：選取畫布後，第一次點「取代」可能只顯示 tooltip，需確認畫布內容已換成新片段（有時會出現「取代」確認列）。
+- 啟用腳本：`newframe.sh NAME`（最新 PNG → start-frames/NAME.png 1280x720）、`newclip.sh NAME`（最新 MP4 → clips/NAME.mp4 + 縮圖）、`splice.py OUT --xf 0.4 SRC:START:DUR ...`（交叉淡化合成）。
+
+## 第三輪修正（arrival-transition 回家後分鏡、長度上限）
+- 每支影片最長 15 秒。
+- arrival-transition 回家後分鏡：s7 主人在貓的家放下提籠 → s8 貓咪走出提籠（近景）→ s9 貓咪坐姿近景（左側留白）；最後以 ffmpeg drawtext 疊上「歡迎回家」（淡入）。
+- 檔案：start-frames/arrival-transition-s7~s9.png、clips/arrival-transition-s7~s9.mp4。
+- 注意：ChatGPT 圖片檢視器右上的下載鈕在 (1353,27)，開啟檢視器前該位置是「分享」，誤點會建立公開連結，務必先確認檢視器已開啟。
+
+## 第四輪：單鏡頭影片改用完整家具房間
+- first-day、night-energy、sick 改以 cat-room-master 為首幀背景重生（start-frames/first-day-v2、night-energy-v2、sick-v2）。
+- 舊版備份在 scripts/cat/_backup/_old_*.mp4。
+
+## 第五輪：sick / night-energy 重做
+
+- sick：起始畫面 `sick-v3.png`（貓咪趴低、毛亂，貓屋就在貓咪右側一隻貓長的距離）。提示詞強調「鏡頭像三腳架完全固定、貓屋/碗/家具位置與大小不變」，避免推近造成貓屋瞬移。動作：虛弱嗅碗→轉頭→蹣跚走進貓屋。
+- night-energy：起始畫面 `night-energy-v3.png`（夜間客廳，咖啡桌上有杯子、書、盆栽、面紙盒，貓蹲在桌旁屁股扭動）。動作：撲老鼠→繞地毯狂奔→跳沙發→跳上咖啡桌→掃落桌上物品→跳下繼續亂竄。
+- 舊版備份：`_backup/_old2_sick.mp4`、`_backup/_old2_night-energy.mp4`。
+- 「歡迎回家」圓潤粉彩字：ChatGPT 產綠幕文字圖 → PIL 去背成透明 PNG → ffmpeg overlay + alpha fade（不要用 -shortest）。
+- ChatGPT 若遺失參考圖：用 device_stage_files 後對「附加相片」的 file input 重新 file_upload，提示詞改用 "Using the two attached images …"。
+
+### night-energy 最終做法（兩鏡接合）
+- Vids 影片模型會在物品被掃落後讓桌子消失、偶爾出現第二隻貓，單靠提示詞「桌面要空」會讓整張桌子不見。
+- 解法：前半段 `_backup/_old3_night-energy.mp4` 的 0–5.4s（貓跳上桌、掃落物品）＋後半段 `clips/night-energy-b.mp4`（起始畫面 `night-energy-v4.png`：桌面清空、物品散落地毯、貓從桌上跳下），用 `splice.py --xf 0.4` 接成 13s。
+- 驗收時務必逐格檢查：只有一隻貓、桌子全程存在。
+
+### night-energy 結尾修正（2026-10-13）
+- 結尾不用定格：以 ChatGPT 生成「貓坐在空桌上、物品散落地上」的畫面 `night-energy-v5.png`，Vids 生成 8 秒「貓靜靜坐著」的 `clips/night-energy-c.mp4`，接在前半段（跳上桌掃落物品的前 5.0s）後面，`splice.py --xf 0.5`，總長約 12.5s，結尾聲音再淡出 1.2s。

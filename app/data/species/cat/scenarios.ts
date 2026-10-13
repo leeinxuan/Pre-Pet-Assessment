@@ -15,8 +15,8 @@ export const catLifeScenarios: Scenario[] = [
     topic: "貓咪適應新家與安全感",
     reportSummary: "貓咪到家第一天應先進安靜安全的小房間，關好門窗，讓牠自行走出外出籠並用自己的速度探索。",
     artIndex: 0,
-    sceneMedia: { type: "placeholder" },
-    correctFeedbackMedia: { type: "placeholder" },
+    sceneMedia: { type: "video", src: catAssets.petJourney.firstDay, ariaLabel: "貓咪到家第一天情境影片" },
+    correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctPrimary, ariaLabel: "貓咪答對回饋影片" },
     requiresRetry: true,
     continueLabel: "繼續",
     completionFeedback: {
@@ -72,7 +72,7 @@ export const catLifeScenarios: Scenario[] = [
     wrongOptionIds: ["cat-scratch-trim-natural"],
     correctSummary: ["在常抓位置提供穩固抓板或抓柱。", "抓對地方時給鼓勵，並調整家具保護與動線。", "整理危險攀爬路線，確認門窗與紗窗穩固。"],
     learningPoints: [
-      "提供**位置合適、穩固**的抓板是比阻止更有效的做法；**去爪、磨牙或剃鬍鬚**不應作為處理抓磨的方式。",
+      "提供**位置適合、穩固**的抓板是比阻止更有效的做法；**去爪、磨牙或剁腳趾**不應作為處理抓磨的方式。",
     ],
     choices: [
       { id: "cat-scratch-board", text: "準備穩固抓板或抓柱，放在牠常抓或常經過的位置", result: "correct", ...positive, explanation: "抓板提供自然抓磨出口；位置合適才容易替代家具。" },
@@ -118,8 +118,8 @@ export const catLifeScenarios: Scenario[] = [
     artIndex: 5,
     busyCarePresentation: {
       animalName: "貓咪",
-      sceneMedia: { type: "image-layers", backgroundSrc: catAssets.life.safeRoom, backgroundAlt: "居家房間場景", characterSrc: catAssets.life.mixedCat, characterAlt: "{petName}在房間裡等待照顧" },
-      feedbackMedia: { type: "placeholder" },
+      sceneMedia: { type: "video", src: catAssets.petJourney.busyDailyCare, ariaLabel: "貓咪等待日常照顧情境影片", fallback: { type: "image-layers", backgroundSrc: catAssets.life.safeRoom, backgroundAlt: "居家房間場景", characterSrc: catAssets.life.mixedCat, characterAlt: "{petName}在房間裡等待照顧" } },
+      feedbackMedia: { type: "video", src: catAssets.petJourney.correctPrimary },
     },
     busyCareCompletion: {
       title: "做得很好！",
@@ -155,8 +155,8 @@ export const catLifeScenarios: Scenario[] = [
     topic: "貓咪健康觀察與就醫判斷",
     reportSummary: "貓咪出現食慾、飲水、尿便、活動量或躲藏等明顯改變時，應記錄時間與觀察到的狀況並聯絡獸醫；不要自行判定原因或自行給藥。",
     artIndex: 3,
-    sceneMedia: { type: "placeholder" },
-    correctFeedbackMedia: { type: "placeholder" },
+    sceneMedia: { type: "video", src: catAssets.petJourney.sick, ariaLabel: "貓咪身體不適情境影片" },
+    correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctSecondary, ariaLabel: "貓咪答對回饋影片" },
     requiresRetry: true,
     completionFeedback: {
       title: "做得很好！",
@@ -164,12 +164,12 @@ export const catLifeScenarios: Scenario[] = [
       knowledgeTitle: "貓咪小知識",
       knowledgeContent: [
         { type: "paragraph", text: "貓咪常見需要留意的健康問題：" },
-        { type: "item", text: "**泌尿道問題**（尤其公貓）：排尿減少、頻繁出入砂盆、哭叫、血尿——尿道阻塞是急症，立即就醫" },
-        { type: "item", text: "**腸胃問題**：嘔吐或腹瀉超過一天，或混有血絲" },
-        { type: "item", text: "**牙周病**：口臭、進食遲疑、抓嘴為早期徵兆，定期口腔檢查可預防" },
-        { type: "item", text: "**上呼吸道感染**（FHV / 卡里西病毒）：流鼻水、打噴嚏、眼分泌物增多" },
-        { type: "item", text: "**貓傳染病**（FeLV / FIV）：多年可能無症狀，有流浪或收容所背景的貓應確認篩檢" },
-        { type: "item", text: "**慢性腎臟病**（高齡貓）：飲水增加、食慾下降、體重減輕，定期抽血可早期發現" },
+        { type: "item", text: "**泌尿道異常**（尤其公貓）：排尿減少、頻繁出入砂盆、哭叫、血尿——尿道阻塞是急症，立即就醫。" },
+        { type: "item", text: "**腸胃異常**：嘔吐或腹瀉超過一天，或混有血絲——持續出現應就醫。" },
+        { type: "item", text: "**口腔異味與進食異常**：口臭、進食遲疑、抓嘴——定期口腔檢查可及早發現。" },
+        { type: "item", text: "**呼吸道症狀**：流鼻水、打噴嚏、眼分泌物增多——持續出現應就醫。" },
+        { type: "item", text: "**傳染病篩檢**：有流浪或收容所背景的貓，應確認傳染病篩檢狀態——多年可能無症狀。" },
+        { type: "item", text: "**飲水增加、食慾下降、體重減輕**：高齡貓尤其需要定期抽血追蹤。" },
       ],
       reminder: "食慾、飲水、尿便、活動與躲藏的改變都是重要警訊；多項同時出現時，準備外出籠並盡速聯絡獸醫，不要自行給藥。",
     },
@@ -191,8 +191,8 @@ export const catLifeScenarios: Scenario[] = [
     topic: "高齡貓環境與健康照顧",
     reportSummary: "高齡貓需要同步調整如廁、活動、休息與健康追蹤：增設合適砂盆與地墊、階梯式設施、保暖休息處，並定期健檢與記錄變化。",
     artIndex: 1,
-    sceneMedia: { type: "placeholder" },
-    correctFeedbackMedia: { type: "placeholder" },
+    sceneMedia: { type: "video", src: catAssets.petJourney.seniorLife, ariaLabel: "高齡貓日常照護情境影片" },
+    correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctSecondary, ariaLabel: "貓咪答對回饋影片" },
     requiresRetry: true,
     completionFeedback: {
       title: "做得很好！",

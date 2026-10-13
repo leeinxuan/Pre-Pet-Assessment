@@ -55,14 +55,19 @@ export const catJourney = {
   items: catJourneyItems,
   dailyBehaviorScenarioIds: catDailyBehaviorScenarioIds,
   litterInspection: catLitterRescueConfig,
+  transitionMedia: {
+    arrival: catAssets.petJourney.arrivalTransition,
+    timePass: catAssets.petJourney.timePassesAging,
+    busyCare: catAssets.petJourney.busyDayTransition,
+  },
   activity: "litter-inspection" as const,
 } as const;
 
 export const catScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "貓咪", knowledgeTitle: "貓咪小知識", preserveGenericAnimalTerms: true, correctFeedbackMedia: { type: "placeholder" } },
+  defaults: { defaultPetName: "貓咪", knowledgeTitle: "貓咪小知識", preserveGenericAnimalTerms: true, correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctPrimary } },
   scenarios: {
-    "cat-night-energy-care": { completionIntro: "你已經找到合適的做法。規律遊戲與安全玩具，能讓{petName}的精力有合適出口。" },
-    "cat-scratching-care": { completionIntro: "你已經找到合適的做法。提供抓板與安全高處，能讓{petName}用自然方式活動。" },
-    "cat-climbing-care": { completionIntro: "你已經找到合適的做法。提供安全的垂直活動空間、收好易碎物，並確認門窗與紗窗穩固，能讓{petName}安心探索。" },
+    "cat-night-energy-care": { sceneVideo: { src: catAssets.petJourney.nightEnergy, ariaLabel: "貓咪夜間活動情境影片" }, completionIntro: "你已經找到合適的做法。規律遊戲與安全玩具，能讓{petName}的精力有合適出口。" },
+    "cat-scratching-care": { sceneVideo: { src: catAssets.petJourney.scratching, ariaLabel: "貓咪抓磨情境影片" }, completionIntro: "你已經找到合適的做法。提供抓板與安全高處，能讓{petName}用自然方式活動。" },
+    "cat-climbing-care": { sceneVideo: { src: catAssets.petJourney.climbing, ariaLabel: "貓咪攀爬情境影片" }, completionIntro: "你已經找到合適的做法。提供安全的垂直活動空間、收好易碎物，並確認門窗與紗窗穩固，能讓{petName}安心探索。" },
   },
 };

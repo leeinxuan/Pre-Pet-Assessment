@@ -3,10 +3,10 @@ import { incorrect, positive } from "../../shared/scenario-feedback";
 import { birdReport } from "./report";
 
 const knowledge = {
-  arrival: ["新環境的陌生氣味、聲音與視覺刺激都可能引發緊迫；遮光布能提供<mark>封閉感與安全感</mark>。", "多數鳥需要 <mark>1～2 週</mark> 才能在新環境真正放鬆。"],
+  arrival: ["鸚鵡對新環境的不適應往往不像狗那樣明顯哭鬧，而是**反常地安靜**——澎毛、縮身、對刺激無反應，這些都是緊迫的訊號，不是「個性文靜」。**遮光布**能提供封閉感，幫助牠在適應期第一階段穩定下來。多數鸚鵡需要 **1–2 週**才能在新環境真正放鬆，不要用「快點熟悉」的心態催促牠。"],
   puff: ["澎毛要和<mark>食慾、呼吸、站棲</mark>等狀態一起判斷。", "鳥常隱藏病徵；異常持續或惡化時，應聯繫<mark>熟悉鳥類的獸醫師</mark>。"],
   molt: ["正常換羽通常是<mark>連續且對稱</mark>的；不對稱裸皮區需提高警覺。", "新生羽毛可能有血管，看到血管毛時<mark>不要拉扯</mark>。"],
-  health: ["鳥很會<mark>隱藏病徵</mark>；看起來還好，不代表沒有問題。", "建立每日觀察與<mark>鳥類獸醫年度健檢</mark>，才能提早發現變化。"],
+  health: ["鸚鵡常見需要留意的健康問題：", "**呼吸困難**：張口呼吸、尾羽隨呼吸上下擺動——屬於急症，需立即就醫。", "**澎毛、精神低落、食慾消失**：多項警訊同時出現，病情通常已相當嚴重——需當天就醫。", "**產蛋困難**：雌鳥無法正常站立或移動——需緊急就醫。", "**消化異常**：反覆嘔吐、糞便明顯改變、體重持續下降——持續超過一天應就醫確認。", "**拔毛或過度理羽**：出現裸皮、羽毛凌亂稀疏——需就醫評估。"],
   senior: ["高齡鳥的照護重點是「安全 + 舒適 + 密切觀察」。降低跌落風險、提高健檢頻率、維持穩定溫度、諮詢飲食調整——這些都是讓 {petName} 在老年期維持生活品質的方法。每隻鳥的老化速度不同，鳥類獸醫師的定期評估是最可靠的依據。如果 {petName} 正經歷無法復原的痛苦，安樂死也是由獸醫師專業評估的醫療選項，這是照護責任的一部分。"],
 };
 
@@ -30,13 +30,13 @@ export const birdLifeScenarios: Scenario[] = [
     { id: "bird-molt-vet", text: "這一定是生病了，立刻就醫", result: "partial", ...incorrect, explanation: "成鳥每年有一到兩次季節性換羽；先觀察對稱性、食慾精神與脫羽部位，再判斷是否需要就醫。", suggestion: "若不對稱大面積脫羽、皮膚損傷或精神食慾異常，應聯繫鳥類獸醫。" },
     { id: "bird-molt-supplement", text: "先買羽毛生長補品給牠吃", result: "incorrect", ...incorrect, explanation: "未經獸醫評估自行補充，可能不適合該物種。", suggestion: "擔心異常時先諮詢鳥類獸醫。" },
   ] },
-  { id: "bird-picky-eating", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 只挑牠喜歡的吃，怎麼辦？", description: "你發現 {petName} 總是把葵花籽和花生先挑光，其他飼料留在碗裡。你想幫牠吃得更均衡。", topic: "鸚鵡挑食與定量餵食", reportSummary: "以定量餵食、訓練獎勵與覓食玩具協助鸚鵡建立均衡飲食。", artIndex: 1, multipleChoice: true, requiredCorrectOptionIds: ["bird-picky-portion", "bird-picky-reward", "bird-picky-forage"], wrongOptionIds: ["bird-picky-favorite"], correctSummary: ["每天定量提供飼料。", "將喜好食物留作訓練獎勵。", "把食物藏在覓食玩具中。"], learningPoints: ["鸚鵡偏愛高油脂種子，長期只吃喜好食物容易造成**肥胖**與**營養失衡**。", "**定量餵食**、**訓練獎勵**和**覓食玩具**可同時改善挑食與無聊。"], knowledgeTitle: "鸚鵡小知識", choices: [
+  { id: "bird-picky-eating", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 只挑牠喜歡的吃，怎麼辦？", description: "你發現 {petName} 總是把葵花籽和花生先挑光，其他飼料留在碗裡。你想幫牠吃得更均衡。", topic: "鸚鵡挑食與定量餵食", reportSummary: "以定量餵食、訓練獎勵與覓食玩具協助鸚鵡建立均衡飲食。", artIndex: 1, multipleChoice: true, requiredCorrectOptionIds: ["bird-picky-portion", "bird-picky-reward", "bird-picky-forage"], wrongOptionIds: ["bird-picky-favorite"], correctSummary: ["每天定量提供飼料。", "將喜好食物留作訓練獎勵。", "把食物藏在覓食玩具中。"], learningPoints: ["鸚鵡是出了名的**挑食高手**，天生偏愛高油脂種子（葵花籽、花生），長期只吃這些容易導致**肥胖**和**營養失衡**。解法是**定量提供飼料**，讓鳥在限制量內自然嘗試多元食物；並把最愛的零食**單獨留作訓練獎勵**。**覓食玩具**（把食物藏起來讓鳥自己找）也是一舉兩得的好方法——同時解決挑食和無聊兩個問題。"], knowledgeTitle: "鸚鵡小知識", choices: [
     { id: "bird-picky-favorite", text: "把 {petName} 不喜歡的種子挑掉，只留牠愛吃的", result: "incorrect", ...incorrect, explanation: "葵花籽和花生含油量極高，長期只吃喜好食物會導致肥胖和營養失衡。" },
     { id: "bird-picky-portion", text: "每天定量提供飼料，不讓碗裡隨時都有充足食物", result: "correct", ...positive, explanation: "在有限食物量內，牠會開始嘗試不同種子，而不是只等最愛的食物。" },
     { id: "bird-picky-reward", text: "將 {petName} 最愛的食物單獨留出，作為訓練互動的獎勵零食", result: "correct", ...positive, explanation: "把高誘因食物作為訓練獎勵，能讓互動更有效，同時維持多元飲食。" },
     { id: "bird-picky-forage", text: "把食物藏在覓食玩具裡，讓 {petName} 自己探索取食", result: "correct", ...positive, explanation: "覓食玩具增加探索刺激，也讓進食行為更接近自然狀態。" },
   ] },
-  { id: "bird-stereotypy", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 一直重複做同一件事", description: "你發現 {petName} 這幾天每天早上都在籠子同一個位置來回踱步，動作單一且持續，跟平時的活潑好動完全不同。", topic: "鸚鵡刻板行為", reportSummary: "刻板行為需從互動與環境豐富化尋找成因，而非只阻斷表面行為。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-stereotypy-social", "bird-stereotypy-enrichment"], wrongOptionIds: ["bird-stereotypy-remove", "bird-stereotypy-vet"], correctSummary: ["確認籠外互動時間是否足夠。", "輪換籠內玩具，增加豐富化設施。"], learningPoints: ["固定路線踱步、重複啄同一點是常見**壓力指標**。", "**環境豐富化**與足夠的**籠外社交時間**，是預防刻板行為的關鍵。"], knowledgeTitle: "鸚鵡小知識", choices: [
+  { id: "bird-stereotypy", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 一直重複做同一件事", description: "你發現 {petName} 這幾天每天早上都在籠子同一個位置來回踱步，動作單一且持續，跟平時的活潑好動完全不同。", topic: "鸚鵡刻板行為", reportSummary: "刻板行為需從互動與環境豐富化尋找成因，而非只阻斷表面行為。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-stereotypy-social", "bird-stereotypy-enrichment"], wrongOptionIds: ["bird-stereotypy-remove", "bird-stereotypy-vet"], correctSummary: ["確認籠外互動時間是否足夠。", "輪換籠內玩具，增加豐富化設施。"], learningPoints: ["**刻板行為**（固定路線踱步、重複啄同一點）是鸚鵡在籠養環境中常見的**壓力指標**。野生鸚鵡每天飛行覓食、與群體互動，籠養環境無法完全複製這些刺激——**環境豐富化**（玩具輪換、覓食訓練）和充足的**籠外社交時間**，是預防刻板行為的關鍵。"], knowledgeTitle: "鸚鵡小知識", choices: [
     { id: "bird-stereotypy-remove", text: "把 {petName} 踱步的那段棲木移掉，讓牠沒辦法繼續重複這個動作", result: "incorrect", ...incorrect, explanation: "移除棲木沒有解決壓力或社交需求不足的成因，行為可能轉移成其他形式。" },
     { id: "bird-stereotypy-social", text: "確認 {petName} 每天是否有足夠的籠外互動時間", result: "correct", ...positive, explanation: "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。" },
     { id: "bird-stereotypy-enrichment", text: "嘗試輪換籠內玩具，增加新的豐富化設施", result: "correct", ...positive, explanation: "定期輪換能增加探索刺激、緩解刻板行為。" },
@@ -47,7 +47,7 @@ export const birdLifeScenarios: Scenario[] = [
     encouragement: "你沒有只想著「讓牠閉嘴」，而是找根本原因，做得很好！充足的互動和豐富化才能減少**呼喚型**的過度鳴叫，但**例行型**的叫聲是天性——不需要，也不可能完全消除。",
     knowledgeTitle: "鸚鵡小知識",
     knowledgeContent: [
-      { type: "paragraph", text: "鸚鵡的鳴叫分成幾種類型：**呼喚型**（缺乏互動）、**無聊型**（環境刺激不足）、**發情型**（荷爾蒙影響）、**例行型**（日出日落天性）。**呼喚型**和**無聊型**可以透過足夠的籠外互動和**豐富化玩具**大幅減少；**例行型**則需要接受，並學習辨識——這也是養鸚顡的日常功課。" },
+      { type: "paragraph", text: "鸚鵡的鳴叫分成幾種類型：**呼喚型**（缺乏互動）、**無聊型**（環境刺激不足）、**發情型**（荷爾蒙影響）、**例行型**（日出日落天性）。**呼喚型**和**無聊型**可以透過足夠的籠外互動和**豐富化玩具**大幅減少；**例行型**則需要接受，並學習辨識——這也是養鸚鵡的日常功課。" },
     ],
     reminder: "你有想過 {petName} 的鳴叫是否可能影響鄰居嗎？提前評估你的居住環境與鄰里關係，積極學習行為引導，是對 {petName} 和周遭鄰里都負責的方式。",
   }, choices: [
@@ -88,12 +88,12 @@ export const birdLifeScenarios: Scenario[] = [
     encouragement: "你在明確症狀出現時，立刻做出正確判斷，做得很好！鳥類就醫資源比犬貓稀少，建議平時就先找好熟悉鳥類的獸醫，緊急時才不會臨時找不到。",
     knowledgeTitle: "鸚鵡小知識",
     knowledgeContent: [
-      { type: "paragraph", text: "鸚鵡常見的緊急警訊（出現時請當天聯繫鳥類獸醫）：" },
-      { type: "item", text: "**呼吸困難**（張口呼吸、尾羽隨呼吸上下擺動）：屬於急症" },
-      { type: "item", text: "**澎毛＋精神低落＋食慾消失**（如本題情境）：多項警訊同時出現，病情通常已相當嚴重" },
-      { type: "item", text: "**產蛋困難**（雌鳥無法正常站立或移動）：可能為難產，需緊急就醫" },
-      { type: "item", text: "**消化異常**（反覆嘔吐、糞便明顯改變、體重持續下降）：持續超過一天應就醫確認" },
-      { type: "item", text: "**拔毛或過度理羽**（出現裸皮、羽毛凌亂稀疏）：可能源於壓力、寄生蟲或疾病，需就醫評估" },
+      { type: "paragraph", text: "鸚鵡常見需要留意的健康問題：" },
+      { type: "item", text: "**呼吸困難**：張口呼吸、尾羽隨呼吸上下擺動——屬於急症，需立即就醫。" },
+      { type: "item", text: "**澎毛、精神低落、食慾消失**：多項警訊同時出現，病情通常已相當嚴重——需當天就醫。" },
+      { type: "item", text: "**產蛋困難**：雌鳥無法正常站立或移動——需緊急就醫。" },
+      { type: "item", text: "**消化異常**：反覆嘔吐、糞便明顯改變、體重持續下降——持續超過一天應就醫確認。" },
+      { type: "item", text: "**拔毛或過度理羽**：出現裸皮、羽毛凌亂稀疏——需就醫評估。" },
     ],
     reminder: "澎毛、精神低落、不進食這三個警訊一起出現，不要觀望，請當天就聯繫鳥類獸醫。台灣熟悉鳥類醫療的獸醫數量有限，建議平時就先查好。",
   }, choices: [

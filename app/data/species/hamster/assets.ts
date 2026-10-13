@@ -45,9 +45,15 @@ export const hamsterAssets = {
     adoptionDocuments: "/assets/car/adoption-documents.webp",
     trunkBackground: "/assets/car/car-trunk.webp",
   },
-  dailyInspection: {
-    cageInterior: "/assets/hamster/room/bg-cage-interior.webp",
-    bedding: "/assets/hamster/room/bedding.webp",
-    sandBath: "/assets/hamster/room/sand-bath-box.webp",
+  cageCheckActivity: {
+    floorView: "/assets/hamster/CageCheckActivity/cage-floor-view.webp",
+    dirtyBedding: "/assets/hamster/CageCheckActivity/bedding-dirty-main.webp",
+    cleanBedding: "/assets/hamster/CageCheckActivity/bedding-clean.webp",
+    droppings: "/assets/hamster/CageCheckActivity/droppings.webp",
+    sandBathMess: "/assets/hamster/CageCheckActivity/sand-bath-mess.webp",
+    sandBathDirty: "/assets/hamster/CageCheckActivity/sand-bath-dirty.webp",
+    sandBathClean: "/assets/hamster/CageCheckActivity/sand-bath-clean.webp",
+    scoop: "/assets/hamster/CageCheckActivity/tool-scoop.webp",
+    sandSieve: "/assets/hamster/CageCheckActivity/tool-sand-sieve.webp",
   },
 } as const;

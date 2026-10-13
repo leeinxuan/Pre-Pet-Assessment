@@ -3,10 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getSpeciesConfig } from "../../../data/species";
 import { dogAssets } from "../../../data/species/dog/assets";
+import type { JourneyTransitionMedia } from "../../../game-types";
 
 const dogShibaAsset = (fileName: string) => `${dogAssets.life.shibaRoot}/${fileName}`;
-const arrivalVideoSource = dogShibaAsset("arrival-transition.mp4");
-const busyCareTransitionSource = dogAssets.life.busyCareTransition;
+
+function transitionMediaFor(species: string): JourneyTransitionMedia | undefined {
+  return (getSpeciesConfig(species).journey as { transitionMedia?: JourneyTransitionMedia }).transitionMedia;
+}
 
 export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onContinue: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -83,6 +86,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
   }
 
   const animalLabel = getSpeciesConfig(species).copy.animalName;
+  const arrivalVideoSource = transitionMediaFor(species)?.arrival ?? dogShibaAsset("arrival-transition.mp4");
 
   return (
     <section className="arrival-video-screen" aria-label="接回家影片過場">
@@ -105,10 +109,11 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
   );
 }
 
-export function TimePassTransition({ onComplete }: { onComplete: () => void }) {
+export function TimePassTransition({ onComplete, species = "dog" }: { onComplete: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
   const hasFinished = useRef(false);
+  const timePassVideoSource = transitionMediaFor(species)?.timePass ?? dogShibaAsset("time-passes-aging.mp4");
 
   useEffect(() => {
     const video = videoRef.current;
@@ -131,14 +136,15 @@ export function TimePassTransition({ onComplete }: { onComplete: () => void }) {
 
   return (
     <section className="time-pass-transition" aria-label="時間流逝過場動畫">
-      <video ref={videoRef} src={dogShibaAsset("time-passes-aging.mp4")} autoPlay playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      <video ref={videoRef} src={timePassVideoSource} autoPlay playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
       {needsManualPlay && <button type="button" className="time-pass-play" onClick={playManually}>播放影片</button>}
     </section>
   );
 }
 
-export function BusyCareTransition({ onComplete }: { onComplete: () => void }) {
+export function BusyCareTransition({ onComplete, species = "dog" }: { onComplete: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const busyCareTransitionSource = transitionMediaFor(species)?.busyCare ?? dogAssets.life.busyCareTransition;
 
   useEffect(() => {
     const video = videoRef.current;

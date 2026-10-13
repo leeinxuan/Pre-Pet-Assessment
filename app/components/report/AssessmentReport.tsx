@@ -472,7 +472,7 @@ export function AssessmentReport({
         </section>
         <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-official-title">
           <div><span aria-hidden="true">↗</span><h2 id="care-guide-official-title">農業部寵物飼養與照顧指南</h2><p>想再深入了解更詳細的飼養需求、照護方式與相關規範嗎？這裡整理了農業部的官方知識庫，提供更完整的資訊供你查閱。</p></div>
-          <a className="secondary care-guide-official-link" href="https://animal.moa.gov.tw/Frontend/Know/PageTabList?TabID=31B05CB460072264BF30B852D5842398#tab1" target="_blank" rel="noopener noreferrer">查看官方指南 <span>↗</span></a>
+          <a className="secondary care-guide-official-link" href="https://pet-care-guide-six.vercel.app/" target="_blank" rel="noopener noreferrer">查看官方指南 <span>↗</span></a>
         </section>
       </section>
 

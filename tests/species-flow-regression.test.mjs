@@ -158,8 +158,16 @@ test("scenario media selection stays out of shared scenario UI", async () => {
     ]);
     assert.match(journey, new RegExp(`export const ${species}ScenarioPresentation`));
     assert.match(speciesConfig, new RegExp(`scenarioPresentation: ${species}ScenarioPresentation`));
-    if (species !== "dog") {
+    if (species === "cat") {
+      assert.match(
+        journey,
+        /catAssets\.petJourney\.correctPrimary/,
+        "cat must use its own feedback video",
+      );
+    } else if (species !== "dog") {
       assert.match(journey, /correctFeedbackMedia:\s*\{ type: "placeholder" \}/, `${species} must not borrow dog feedback video`);
+    }
+    if (species !== "dog") {
       assert.doesNotMatch(journey, /scenarioMedia\.dog\./, `${species} must not borrow dog question video`);
     }
   }
