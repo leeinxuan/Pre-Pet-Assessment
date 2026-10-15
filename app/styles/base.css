@@ -22,7 +22,10 @@ html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Huninn", "jf open 粉圓", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 16px; }
 button, input, select, textarea { font: inherit; }
 button { color: inherit; }
-button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(212, 154, 36, .38); outline-offset: 3px; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible, summary:focus-visible, [role="button"]:focus-visible { outline: 3px solid rgba(212, 154, 36, .68); outline-offset: 3px; }
+.skip-link { position: fixed; z-index: 100; top: 12px; left: 12px; padding: 10px 14px; border-radius: 10px; background: var(--ink); color: #fff; font-weight: 900; text-decoration: none; transform: translateY(-160%); transition: transform .18s ease; }
+.skip-link:focus { transform: translateY(0); }
+.app-shell:focus-visible { outline: 3px solid rgba(212, 154, 36, .68); outline-offset: -3px; }
 .app-shell { min-height: 100vh; background: radial-gradient(circle at 12% 4%, rgba(234, 220, 189, .42), transparent 28%), var(--paper); }
 .brand { border: 0; background: none; display: inline-flex; align-items: center; gap: 12px; font-weight: 900; font-size: 17px; cursor: pointer; }
 .brand.static { cursor: default; }
@@ -382,11 +385,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .expense-groups ul { list-style: none; padding: 0; margin: 0; }
 .expense-groups li { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px solid #eee8dc; }
 .expense-groups li:last-child { border-bottom: 0; }
-.expense-groups li > span { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
-.expense-groups li > span b { overflow-wrap: anywhere; }
+.expense-groups .expense-line-copy { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+.expense-groups .expense-line-copy > b { overflow-wrap: anywhere; }
 .expense-groups small, .expense-groups p { color: var(--muted); font-size: 11px; }
-.expense-groups li > span small { margin-top: 3px; line-height: 1.55; overflow-wrap: anywhere; }
-.expense-groups strong { flex: 0 0 auto; padding-top: 1px; font-size: 12px; white-space: nowrap; color: var(--gold-dark); }
+.expense-groups .expense-line-description { display: block; max-width: 100%; margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+.expense-groups .expense-line-description .knowledge-emphasis { display: inline; padding: 0; color: var(--gold-dark); font-size: inherit; line-height: inherit; white-space: normal; overflow-wrap: anywhere; }
+.expense-groups .expense-line-amount { flex: 0 0 auto; max-width: 42%; padding-top: 1px; color: var(--gold-dark); font-size: 12px; line-height: 1.45; text-align: right; white-space: nowrap; }
 .expense-groups h3 span { font-size: 12px; }
 .expense-group .expense-temporary-reserve-note { margin: -2px 0 9px; color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.5; }
 .expense-reserve-note { background: #f4ead0 !important; }
@@ -719,7 +723,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-review-topic-grid article > div { display: grid; flex: 1; min-width: 0; gap: 4px; }
 .care-review-topic-grid b { color: #433926; }
 .care-review-topic-grid p { margin: 0; color: #70644e; font-size: 14px; font-weight: 750; line-height: 1.55; }
-.care-review-mastered-theme-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin-top: 19px; }
+.care-review-mastered-groups { display: grid; gap: 24px; margin-top: 22px; }
+.care-review-mastered-group + .care-review-mastered-group { padding-top: 23px; border-top: 1px solid rgba(94,116,86,.2); }
+.care-review-mastered-group > h3 { margin: 0; color: #4c603f; font-size: clamp(18px, 2.2vw, 22px); line-height: 1.4; }
+.care-review-mastered-theme-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin-top: 10px; }
 .care-review-mastered-theme-grid article { display: flex; align-items: flex-start; gap: 11px; min-width: 0; padding: 14px 2px; border-bottom: 1px solid rgba(94,116,86,.16); background: transparent; }
 .care-review-mastered-theme-grid article > span { display: grid; flex: 0 0 auto; width: 27px; height: 27px; place-items: center; border-radius: 50%; background: #dcefe0; color: #3c7446; font-weight: 900; }
 .care-review-mastered-theme-grid article.is-pending > span { background: #f3eee4; color: #907c5d; }.care-review-mastered-theme-grid article.is-pending b { color: #6d604b; }
@@ -864,6 +871,15 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-a4-expense-summary-lines div:last-child { border-bottom: 0; }
 .care-a4-expense-summary-lines dt { color: #537057; font-size: 10px; font-weight: 900; }
 .care-a4-expense-summary-lines dd { margin: 0; color: var(--ink); font-size: 11px; font-weight: 950; white-space: nowrap; }
+.care-a4-after-arrival-expenses { grid-column: 1 / -1; min-width: 0; padding: 3mm 4mm; border: 1px solid #e3d6bf; border-radius: 12px; background: #fffaf0; }
+.care-a4-after-arrival-expenses > h3 { margin: 0 0 2mm; color: var(--gold-dark); font-size: 12px; }
+.care-a4-after-arrival-expenses ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 5mm; margin: 0; padding: 0; list-style: none; }
+.care-a4-after-arrival-expenses li { display: flex; min-width: 0; align-items: flex-start; justify-content: space-between; gap: 3mm; padding: 2mm 0; border-top: 1px solid rgba(168,101,9,.16); }
+.care-a4-after-arrival-expenses li > div { min-width: 0; }
+.care-a4-after-arrival-expenses li b { color: var(--ink); font-size: 10.5px; }
+.care-a4-after-arrival-expenses li p { margin: 1mm 0 0; color: #70644e; font-size: 9.5px; font-weight: 750; line-height: 1.45; overflow-wrap: anywhere; }
+.care-a4-after-arrival-expenses li p .home-readiness-emphasis { color: var(--gold-dark); font-size: inherit; }
+.care-a4-after-arrival-expenses li > strong { flex: 0 0 auto; color: var(--gold-dark); font-size: 10px; white-space: nowrap; }
 .care-a4-initial-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5mm; }
 .care-a4-initial-group { min-width: 0; padding: 2.5mm; border: 1px solid rgba(79, 110, 84, .22); border-radius: 9px; background: rgba(255,255,255,.56); }
 .care-a4-initial-group h4 { display: flex; justify-content: space-between; gap: 2mm; margin: 0; color: #4f6e54; font-size: 10.5px; font-weight: 950; }
@@ -1656,6 +1672,13 @@ html, body { overflow-x: clip; }
 .care-a4-expense-card dl { gap: 7px; margin-top: 9px; }
 .care-a4-expense-card dt,
 .care-a4-expense-card dd { font-size: 12px; }
+.care-a4-after-arrival-expenses { padding: 13px 16px; }
+.care-a4-after-arrival-expenses > h3 { margin-bottom: 8px; font-size: 15px; }
+.care-a4-after-arrival-expenses ul { gap: 0 20px; }
+.care-a4-after-arrival-expenses li { gap: 12px; padding: 9px 0; }
+.care-a4-after-arrival-expenses li b { font-size: 13px; }
+.care-a4-after-arrival-expenses li p { margin-top: 4px; font-size: 12px; }
+.care-a4-after-arrival-expenses li > strong { font-size: 12px; }
 .care-a4-money-types,
 .care-a4-money-summary { padding: 16px; }
 .care-a4-money h3 { font-size: 13px; }
@@ -1782,6 +1805,13 @@ html, body { overflow-x: clip; }
   }
   .care-a4-expense-card dt,
   .care-a4-expense-card dd { font-size: 9.2px !important; }
+  .care-a4-after-arrival-expenses { padding: 2.5mm 3mm !important; }
+  .care-a4-after-arrival-expenses > h3 { margin-bottom: 1.5mm !important; font-size: 11px !important; }
+  .care-a4-after-arrival-expenses ul { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0 4mm !important; }
+  .care-a4-after-arrival-expenses li { gap: 2mm !important; padding: 1.5mm 0 !important; }
+  .care-a4-after-arrival-expenses li b { font-size: 9.5px !important; }
+  .care-a4-after-arrival-expenses li p { margin-top: .8mm !important; font-size: 8.6px !important; line-height: 1.35 !important; }
+  .care-a4-after-arrival-expenses li > strong { font-size: 9px !important; }
   .care-a4-money ul { gap: 1.5mm !important; font-size: 11px !important; }
   .care-a4-money-note { font-size: 9.8px !important; }
   .care-a4-money dl { gap: 1.6mm !important; }

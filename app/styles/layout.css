@@ -17,14 +17,14 @@
 .nav-main-button, .nav-child button { width: 100%; display: grid; align-items: center; text-align: left; border: 0; background: none; color: inherit; cursor: pointer; }
 .nav-main-button { grid-template-columns: 34px minmax(0, 1fr); gap: 9px; padding: 10px 9px; border-radius: 13px; }
 .nav-main.current > .nav-main-button { color: var(--ink); background: white; box-shadow: 0 5px 18px rgba(70,53,26,.07); }
-.nav-main.completed > .nav-main-button { color: #668268; }
-.nav-main.locked > .nav-main-button { color: #aaa093; cursor: pointer; }
+.nav-main.completed > .nav-main-button { color: #54735a; }
+.nav-main.locked > .nav-main-button { color: #71695e; cursor: not-allowed; }
 .nav-main-button span { width: 28px; height: 28px; border: 1px solid currentColor; display: grid; place-items: center; border-radius: 50%; font-size: 11px; font-weight: 900; }
 .nav-main-button em, .nav-child em { min-width: 0; font-style: normal; font-weight: 850; line-height: 1.35; }
 .nav-main-button em { font-size: 13px; }
 .nav-children { margin: 5px 0 7px 24px; padding-left: 13px; }
 .nav-child { position: relative; }
-.nav-child button { grid-template-columns: 24px minmax(0, 1fr); gap: 7px; padding: 8px 3px; color: #aaa093; }
+.nav-child button { grid-template-columns: 24px minmax(0, 1fr); gap: 7px; padding: 8px 3px; color: #71695e; }
 .nav-main.locked > .nav-main-button:hover,
 .nav-main.locked > .nav-main-button:focus-visible,
 .nav-child.locked button:hover,
@@ -33,7 +33,7 @@
 .nav-child em { font-size: 11px; }
 .nav-child.current button { color: var(--gold-dark); }
 .nav-child.current button span { border-color: var(--gold); background: var(--gold); color: white; }
-.nav-child.completed button { color: #668268; }
+.nav-child.completed button { color: #54735a; }
 .nav-child.completed button span { border-color: #8ba98d; background: var(--mint-soft); }
 .mobile-progress-nav { display: none; }
 .stage { min-width: 0; }
@@ -53,7 +53,7 @@
 .step-heading h1 { font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(36px, 4vw, 55px); letter-spacing: -.025em; margin: 0 0 15px; line-height: 1.18; }
 .step-heading > p:last-child { max-width: 690px; margin: 0; color: var(--muted); line-height: 1.8; }
 .partner-picker { max-width: 1180px; }
-.partner-progress { width: min(420px, 100%); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin: 0 0 42px; color: #aaa093; font-size: 13px; font-weight: 800; }
+.partner-progress { width: min(420px, 100%); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin: 0 0 42px; color: #71695e; font-size: 13px; font-weight: 800; }
 .partner-progress span { display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: color .25s ease; }
 .partner-progress span i { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-style: normal; }
 .partner-progress span.active { color: var(--gold-dark); }
@@ -80,10 +80,10 @@
   .mobile-progress-step { position: relative; height: 11px; display: grid; place-items: center; color: #cfc8bc; }
   .mobile-progress-step::after { content: ""; position: absolute; z-index: 0; top: 5px; left: calc(50% + 5px); width: calc(100% - 10px); height: 2px; border-radius: 999px; background: #ded8ce; }
   .mobile-progress-step:last-child::after { display: none; }
-  .mobile-progress-step.completed { color: #729275; }
-  .mobile-progress-step.completed::after { background: #9fbaa1; }
+  .mobile-progress-step.completed { color: #54735a; }
+  .mobile-progress-step.completed::after { background: #7e9f83; }
   .mobile-progress-step i { position: relative; z-index: 1; width: 8px; height: 8px; border: 2px solid currentColor; border-radius: 50%; background: #fffdf7; }
-  .mobile-progress-step.completed i { background: #729275; }
+  .mobile-progress-step.completed i { background: #54735a; }
   .mobile-progress-step.current { color: var(--gold-dark); }
   .mobile-progress-step.current i { width: 10px; height: 10px; border-color: #fff9e8; background: var(--gold); box-shadow: 0 0 0 3px rgba(211,154,34,.2), 0 0 11px 3px rgba(211,154,34,.38); }
   /* progress track 的輔助文字（aria 用）不顯示在視覺上。 */

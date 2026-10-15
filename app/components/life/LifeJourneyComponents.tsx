@@ -10,6 +10,12 @@ import {
 import { getJourneyActivityConfig, getJourneyActivityResetPatch } from "../../data/species/activity-registry";
 import { getSpeciesConfig } from "../../data/species";
 import {
+  canReplayJourneyItem,
+  isRevisitingJourneyItem,
+  type JourneyReplayRequest,
+  type JourneyReplayState,
+} from "./journey-replay";
+import {
   ArrivalMealActivity,
   BirdCageInspectionActivity,
   BreedChallengeActivity,
@@ -62,7 +68,7 @@ export function LifeJourney({
   species = "dog",
   answers,
   activity,
-  completedIds,
+  replayState,
   backupNames,
   members,
   testSkipSignal = 0,
@@ -71,6 +77,7 @@ export function LifeJourney({
   onChoose,
   onMarkScenarioForReview,
   onChooseMultiple,
+  onStartReplay,
   onMembersChange,
   onActivityChange,
   onCompleteItem,
@@ -87,7 +94,8 @@ export function LifeJourney({
   species?: string;
   answers: Record<string, ScenarioAnswer>;
   activity: LifeActivityState;
-  completedIds: string[];
+  /** 共用的回訪／重新作答狀態，由頂層導覽事件維護。 */
+  replayState: JourneyReplayState;
   expenses: ExpenseRecord[];
   backupNames: string[];
   members: CareMember[];
@@ -98,6 +106,7 @@ export function LifeJourney({
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
   onMarkScenarioForReview: (scenario: Scenario, flag: string) => void;
   onChooseMultiple: (scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) => void;
+  onStartReplay: (request: JourneyReplayRequest) => void;
   onMembersChange: (members: CareMember[]) => void;
   onActivityChange: (patch: Partial<LifeActivityState>) => void;
   onCompleteItem: (id: string) => void;
@@ -139,7 +148,6 @@ export function LifeJourney({
   const [busyCareTransitionIndex, setBusyCareTransitionIndex] = useState<number | null>(null);
   const [resetSignal, setResetSignal] = useState(0);
   const [resetItemId, setResetItemId] = useState<string | null>(null);
-  const [replayInProgress, setReplayInProgress] = useState(false);
   // 測試模式由頂層切換 index；這裡只清除元件內暫存畫面，不能寫入任何答題或完成資料。
   useEffect(() => {
     if (testSkipSignal === 0) return;
@@ -147,13 +155,11 @@ export function LifeJourney({
     setTimePassOpen(false);
     setArrivalMealOpen(false);
     setBusyCareTransitionIndex(null);
-    setReplayInProgress(false);
   }, [testSkipSignal]);
 
   function selectItem(next: number) {
     const nextScenarioId = activeJourneyItems[next].scenarioId;
     setFeedbackOpen(Boolean(nextScenarioId && answers[nextScenarioId]));
-    setReplayInProgress(false);
     onIndex(next);
     onStageChange(getJourneyStepForItem(activeJourneyItems[next]));
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -213,24 +219,23 @@ export function LifeJourney({
     setFeedbackOpen(true);
   }
 
-  function resetCurrentQuestion() {
+  /** 「再玩一次」：只把目前題目退回未作答狀態，快照與還原由共用 replay 狀態處理。 */
+  function replayCurrentQuestion(scenarioId?: string) {
+    const scenarioIds = scenarioId ? [scenarioId] : scenario ? [scenario.id] : [];
+    onStartReplay({ itemId: item.id, scenarioIds, activityPatch: getJourneyActivityResetPatch(activityConfig?.resetKey) });
     setFeedbackOpen(false);
     setArrivalMealOpen(false);
     setTimePassOpen(false);
-    const resetPatch = getJourneyActivityResetPatch(activityConfig?.resetKey);
-    if (resetPatch) onActivityChange(resetPatch);
-    setReplayInProgress(true);
     setResetItemId(item.id);
     setResetSignal((current) => current + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  const isReviewingCompletedItem = completedIds.includes(item.id);
-  const canResetCurrent = isReviewingCompletedItem && !replayInProgress;
+  const isRevisitingItem = isRevisitingJourneyItem(replayState, item.id);
+  const canReplayCurrent = canReplayJourneyItem(replayState, item.id);
   const currentResetSignal = resetItemId === item.id ? resetSignal : 0;
-  const replayCorrectProps = isReviewingCompletedItem
-    ? { onReplay: resetCurrentQuestion, continueImmediately: true }
-    : {};
+  const replayCorrectProps = { onReplay: canReplayCurrent ? () => replayCurrentQuestion() : undefined, continueImmediately: isRevisitingItem };
+  const replaySubQuestion = canReplayCurrent ? (scenarioId: string) => replayCurrentQuestion(scenarioId) : undefined;
 
   if (timePassOpen && activityConfig?.transition === "time-pass") {
     return <TimePassTransition species={species} onComplete={() => {
@@ -245,7 +250,7 @@ export function LifeJourney({
   }
 
   return (
-    <div className={`content-wrap life-journey-page ${canResetCurrent ? "is-reviewing" : ""}`}>
+    <div className={`content-wrap life-journey-page ${canReplayCurrent ? "is-reviewing" : ""}`}>
       {isRabbitCarrySortActivity ? (
         <RabbitCarrySortActivity
           activity={activity}
@@ -273,7 +278,6 @@ export function LifeJourney({
           onChange={onActivityChange}
           onChoose={onChoose}
           onContinue={continueJourney}
-          {...replayCorrectProps}
         />
       ) : isBirdCageInspectionActivity ? (
         <BirdCageInspectionActivity
@@ -301,7 +305,8 @@ export function LifeJourney({
           scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : getDailyBehaviorScenarioIds(species)}
           species={species}
           testNextSignal={activityNextSignal}
-          {...replayCorrectProps}
+          onReplay={replaySubQuestion}
+          continueImmediately={isRevisitingItem}
         />
       ) : isDailyInspectionActivity ? (
         <CatDailyInspectionActivity
@@ -341,7 +346,8 @@ export function LifeJourney({
           onChoose={onChoose}
           onContinue={continueJourney}
           testNextSignal={activityNextSignal}
-          {...replayCorrectProps}
+          onReplay={replaySubQuestion}
+          continueImmediately={isRevisitingItem}
         />
       ) : isBusyCareActivity && scenario ? (
         <BusyCareActivity

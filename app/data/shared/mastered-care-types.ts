@@ -10,6 +10,7 @@ export type MasteredCareTheme = {
   id: string;
   title: string;
   summary: string;
+  category: "preparation" | "care-life";
   order: number;
   sources: readonly MasteredCareSource[];
 };

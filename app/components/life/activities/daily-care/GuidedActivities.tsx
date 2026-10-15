@@ -151,6 +151,18 @@ export function GuidedInspection({ activity, petName, onChange, onContinue }: {
     mergeStates({ shakeProgress: Math.round(shakeProgressRef.current), statusMessage: config.interaction.shakeHint });
   }
 
+  function completeKeyboardCleaning(tool: DragKind) {
+    if (tool === "scoop" && !dirtyCornerIsScooped) {
+      mergeStates({ toiletScooped: "yes", statusMessage: config.interaction.refillHint });
+    }
+    if (tool === "sieve" && !siftComplete) {
+      const nextPasses = Math.min(config.interaction.siftPassesRequired, sievePasses + 1);
+      mergeStates({ sievePasses: nextPasses, statusMessage: nextPasses === config.interaction.siftPassesRequired ? "✅ 雜質清理完成" : `已篩出一部分雜質（${nextPasses} / ${config.interaction.siftPassesRequired}）` });
+      if (nextPasses === config.interaction.siftPassesRequired) completeStep(steps[1].id);
+    }
+    if (tool === "shake" && !shakeComplete) finishShakeProgress();
+  }
+
   if (!activity.hamsterInspectionStarted) return <ActivityIntroPage config={config.intro} petName={petName} species="hamster" onStart={startActivity} />;
   if (complete) return <DailyCareCompletion title={render(config.completion.title)} summary={render(config.completion.subtitle)} detail={render(config.completion.description)} reflectionTitle={render(config.completion.reflectionTitle)} reflection={render(config.completion.reflection)} dailyCareBreakdown={hamsterReport.dailyCareBreakdown} careTimeTitle={config.completion.careTitle} continueLabel={config.completion.continueLabel} onContinue={onContinue} />;
 
@@ -166,7 +178,6 @@ export function GuidedInspection({ activity, petName, onChange, onContinue }: {
           : config.interaction.shakeHint;
   const ghostImage = dragging === "scoop" ? hamsterAssets.cageCheckActivity.scoop : dragging === "sieve" ? hamsterAssets.cageCheckActivity.sandSieve : null;
   const sandBathStyle = { "--hamster-sand-offset": `${shakeOffset}px` } as CSSProperties;
-
   return <section className="guided-activity hamster-cage-check" aria-label={`${displayPetName}的清潔日常`}>
     <header className="guided-activity-heading hamster-cage-check-heading"><p className="life-stage-label">日常照護</p><h1>{displayPetName} 的清潔日常</h1><p className="hamster-cage-check-message">{render(config.sceneDescription)}</p></header>
     <ol className="rabbit-grooming-progress hamster-cage-check-progress" aria-label="清潔日常進度">
@@ -180,25 +191,25 @@ export function GuidedInspection({ activity, petName, onChange, onContinue }: {
       if (dragging === "sieve") finishSieveDrag(event);
       if (dragging === "shake") finishShakeDrag();
     }} onPointerCancel={() => { setDragging(null); dragStart.current = null; setDragPoint(null); setShakeOffset(0); mergeStates({ shakeProgress: Math.round(shakeProgressRef.current) }); }}>
-      <p className="hamster-cage-check-prompt">{render(promptText)}</p>
-      {siftAcknowledged && <div className="hamster-shake-progress" aria-label="砂浴盆整理進度"><b>搖晃進度</b><div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}><span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} /></div></div>}
+      {(!siftAcknowledged || shakeComplete) && <p className="hamster-cage-check-prompt" role={shakeComplete ? "status" : undefined}>{render(promptText)}</p>}
+      {siftAcknowledged && !shakeComplete && <div className="hamster-shake-progress" aria-label="砂浴盆整理進度"><b>搖晃進度</b><div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}><span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} /></div></div>}
       {!toiletSummaryAcknowledged ? <>
         <img className="hamster-cage-floor" src={hamsterAssets.cageCheckActivity.floorView} alt={`${displayPetName}的籠具底部`} />
         {!toiletComplete && <span className={`hamster-dirty-bedding is-top-right ${dirtyCornerIsScooped ? "is-scooped" : ""}`} aria-hidden="true"><img src={hamsterAssets.cageCheckActivity.dirtyBedding} alt="" /></span>}
-        {dirtyCornerIsScooped && !toiletComplete && <button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--bedding" onClick={refillToiletCorner} aria-label="補上乾淨墊料"><img src={hamsterAssets.cageCheckActivity.cleanBedding} alt="乾淨的新墊料" /><span>點擊補上新墊料</span></button>}
+        {dirtyCornerIsScooped && !toiletComplete && <button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--bedding" onClick={refillToiletCorner} aria-label="補上乾淨墊料"><img src={hamsterAssets.cageCheckActivity.beddingPackage} alt="" /><span>點擊補上新墊料</span></button>}
         {toiletComplete && <span className="hamster-filled-bedding is-top-right" aria-hidden="true"><img src={hamsterAssets.cageCheckActivity.cleanBedding} alt="" /></span>}
-        {!dirtyCornerIsScooped && <button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--scoop" onPointerDown={(event) => startDrag("scoop", event)} aria-label="拖曳小鏟子到髒污角落"><img src={hamsterAssets.cageCheckActivity.scoop} alt="小鏟子" /><span>拖曳小鏟子</span></button>}
+        {!dirtyCornerIsScooped && <button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--scoop" onPointerDown={(event) => startDrag("scoop", event)} onClick={(event) => { if (event.detail === 0) completeKeyboardCleaning("scoop"); }} aria-label="清理髒污角落"><img src={hamsterAssets.cageCheckActivity.scoop} alt="" /><span>拖曳小鏟子</span></button>}
         {toiletComplete && toiletFeedbackVisible && <section className="hamster-cage-check-note hamster-cage-check-note--scene" aria-live="polite"><span className="hamster-cage-check-note-icon" aria-hidden="true">✓</span><p>{renderKnowledgeText(render(steps[0].completion))}</p><button type="button" className="primary" onClick={() => { mergeStates({ statusMessage: "" }); setFeedback(steps[0].id, "correct"); }}>繼續清理砂浴盆 →</button></section>}
       </> : <>
-        <div className={`hamster-sand-bath-stage ${siftAcknowledged ? "is-ready-to-shake" : ""} ${shakeComplete ? "is-clean" : ""}`} onPointerDown={(event) => siftAcknowledged && !shakeComplete && startDrag("shake", event)}>
+        <div className={`hamster-sand-bath-stage ${siftAcknowledged ? "is-ready-to-shake" : ""} ${shakeComplete ? "is-clean" : ""}`} role={siftAcknowledged && !shakeComplete ? "button" : undefined} tabIndex={siftAcknowledged && !shakeComplete ? 0 : undefined} aria-label={siftAcknowledged && !shakeComplete ? "完成水平搖晃砂浴盆" : undefined} onPointerDown={(event) => siftAcknowledged && !shakeComplete && startDrag("shake", event)} onKeyDown={(event) => { if ((event.key === "Enter" || event.key === " ") && siftAcknowledged && !shakeComplete) { event.preventDefault(); completeKeyboardCleaning("shake"); } }}>
           <img
             className="hamster-sand-bath"
             style={sandBathStyle}
             src={shakeComplete ? hamsterAssets.cageCheckActivity.sandBathClean : hamsterAssets.cageCheckActivity.sandBathMess}
             alt={shakeComplete ? "清潔完成的砂浴盆" : "需要清理的砂浴盆"}
           />
-          {!siftComplete && <>{Array.from({ length: config.interaction.siftPassesRequired }).map((_, index) => <span className={`hamster-sand-debris hamster-sand-debris--${index + 1} ${sievePasses > index ? "is-removed" : ""}`} key={index} aria-hidden="true"><img src={index === 1 ? hamsterAssets.cageCheckActivity.sandBathDirty : hamsterAssets.cageCheckActivity.droppings} alt="" /></span>)}<button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--sieve" onPointerDown={(event) => startDrag("sieve", event)} aria-label="拖曳細孔漏勺篩除砂浴盆雜質"><img src={hamsterAssets.cageCheckActivity.sandSieve} alt="細孔漏勺" /><span>拖曳細孔漏勺</span></button></>}
-          {siftAcknowledged && !shakeComplete && <span className="hamster-sand-shake-label" aria-hidden="true">按住左右拖曳砂浴盆</span>}
+          {!siftComplete && <>{Array.from({ length: config.interaction.siftPassesRequired }).map((_, index) => <span className={`hamster-sand-debris hamster-sand-debris--${index + 1} ${sievePasses > index ? "is-removed" : ""}`} key={index} aria-hidden="true"><img src={index === 1 ? hamsterAssets.cageCheckActivity.sandBathDirty : hamsterAssets.cageCheckActivity.droppings} alt="" /></span>)}<button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--sieve" onPointerDown={(event) => startDrag("sieve", event)} onClick={(event) => { if (event.detail === 0) completeKeyboardCleaning("sieve"); }} aria-label="篩除砂浴盆雜質"><img src={hamsterAssets.cageCheckActivity.sandSieve} alt="" /><span>拖曳細孔漏勺</span></button></>}
+          {siftAcknowledged && !shakeComplete && <span className="hamster-sand-shake-label" aria-hidden="true">按住左右拖曳砂浴盆，讓細碎粉塵沉到底部</span>}
         </div>
         {siftComplete && !siftAcknowledged && <section className="hamster-cage-check-note hamster-cage-check-note--compact hamster-cage-check-note--scene" aria-live="polite"><span className="hamster-cage-check-note-icon" aria-hidden="true">✓</span><p>{renderKnowledgeText(render(steps[1].completion))}</p><button type="button" className="primary" onClick={() => mergeStates({ siftAcknowledged: "yes", statusMessage: "" })}>開始水平搖晃 →</button></section>}
         {shakeComplete && <button type="button" className="primary hamster-cage-check-finish" onClick={() => mergeStates({ cleaningFinished: "yes" })}>完成清潔 →</button>}

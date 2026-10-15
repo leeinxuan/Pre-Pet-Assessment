@@ -36,7 +36,7 @@ export function DailyBehaviorActivityMulti({
   /** 費用卡要在「做得很好」頁面出現，而非作答選項畫面。 */
   triggerExpenseOnFeedback?: boolean;
   onContinue: () => void;
-  onReplay?: () => void;
+  onReplay?: (scenarioId: string) => void;
   continueImmediately?: boolean;
   scenarioIds?: readonly string[];
   species?: string;
@@ -180,7 +180,7 @@ export function DailyBehaviorActivityMulti({
           : scenario.completionNotice ? <p>{plainFeedbackText(withPetName(scenario.completionNotice, petName, species))}</p> : null}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
-        onReplay={onReplay}
+        onReplay={onReplay ? () => onReplay(scenario.id) : undefined}
         onContinue={moveToNext}
         continueImmediately={continueImmediately}
         continueDisabled={triggerExpenseOnFeedback && !expenseSequenceComplete}

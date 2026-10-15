@@ -76,10 +76,10 @@ test("contains the five-unit journey and current project-owned artwork", async (
   assert.match(roomSection, /Math\.ceil\(activeRoomItems\.length \/ 2\)/);
   assert.match(roomSection, /activeRoomItems\.slice\(index \* 2, index \* 2 \+ 2\)/);
   assert.match(roomSection, /room-supply-row--\$\{row\.length\}/);
-  assert.match(roomSection, /room-hazard-alert/);
-  assert.match(roomSection, /activeHazard\.label\}已收起/);
-  assert.match(roomSection, /為什麼危險/);
-  assert.match(roomSection, /建議如何處理/);
+  assert.match(preparation, /room-hazard-alert/);
+  assert.match(preparation, /hazard\.label\}已收起/);
+  assert.match(preparation, /為什麼危險/);
+  assert.match(preparation, /建議如何處理/);
   assert.match(roomSection, /room-actions-right[\s\S]*roomCheckMessage[\s\S]*完成房間檢查，準備出發/);
   assert.doesNotMatch(roomSection, /species\s*===|isDog|isCat|isRabbit|isBird|isHamster/);
   assert.doesNotMatch(roomSection, /draggable|onDragStart|onDragOver|onDrop/);
@@ -145,7 +145,7 @@ test("contains the five-unit journey and current project-owned artwork", async (
   assert.match(css, /font-family: "Huninn"/);
   assert.match(css, /\.cost-bar/);
   assert.match(css, /\.room-supply-row \{ display: flex/);
-  assert.match(css, /\.room-hazard-alert \{ position: absolute/);
+  assert.match(css, /\.room-hazard-alert \{ position: absolute; left: 16px; top: 16px/);
   assert.match(css, /\.car-trunk-scene/);
   assert.match(css, /prep-room\.webp/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);

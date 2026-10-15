@@ -35,7 +35,7 @@
 .walking-prep-list button:hover, .walking-prep-list button:focus-visible { border-color: var(--gold); background: #fff8e7; transform: translateY(-3px); }
 .walking-prep-list button.prepared { border-color: rgba(119, 155, 122, .65); background: #edf6e9; opacity: .78; }
 .walking-prep-list button.prepared::after { content: "✓"; position: absolute; top: 94px; right: calc(50% - 54px); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #9fc9a5; color: white; font-weight: 900; box-shadow: 0 7px 14px rgba(73, 104, 73, .22); pointer-events: none; }
-.walking-prep-list img { width: 108px; height: 108px; object-fit: contain; }
+.walking-prep-list img { width: 108px; height: 108px; object-fit: contain; transform: scale(var(--walking-prep-image-scale, 1)); }
 .walking-prep-list small { max-width: 150px; color: var(--muted); font-size: 12px; font-weight: 800; line-height: 1.55; text-align: center; }
 .walking-prep-card { display: flex; flex-direction: column; justify-content: center; gap: 14px; padding: 28px; }
 .walking-prep-card h2 { margin: 0; font-size: 25px; }

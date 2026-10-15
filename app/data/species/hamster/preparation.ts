@@ -22,8 +22,6 @@ export const hamsterRoomItems: RoomItem[] = [
 ];
 
 export const hamsterTrunkItems: TrunkItem[] = [
-  { id: "id-card", visualClassName: "id", visualRole: "identity-card", label: "身分證", kind: "document", image: hamsterAssets.preparation.idCard, description: "辦理認養與核對身分時使用。", preparedLabel: "已攜帶", placement: { x: 20, y: 36, width: 15, layer: 4 } },
-  { id: "adoption-documents", visualClassName: "documents", visualRole: "document-folder", label: "領養文件", kind: "document", image: hamsterAssets.preparation.adoptionDocuments, description: "如有租屋，須提供房東許可之證明。", preparedLabel: "已攜帶", placement: { x: 23, y: 32, width: 23, layer: 3 } },
   { id: "carrier", label: "防逃運輸容器", kind: "supply", image: hamsterAssets.preparation.carrier, visualScale: 1, description: "擅長啃咬與鑽縫隙，需選金屬或硬質材料。", preparedLabel: "已準備", expenseIds: ["hamster-carrier"], placement: { x: 45, y: 60, width: 20, layer: 5 } },
   { id: "bedding-in-carrier", label: "容器內墊料", kind: "supply", image: hamsterAssets.preparation.bedding, description: "運輸容器內放入{petName}熟悉氣味的墊料，有助穩定情緒。", preparedLabel: "已準備", placement: { x: 50, y: 69, width: 12, layer: 6 } },
   { id: "hideout-in-carrier", label: "小型躲藏物", kind: "supply", image: hamsterAssets.preparation.hideoutInCarrier, description: "提供可躲藏的空間，讓{petName}在移動過程中感到安心。", preparedLabel: "已準備", placement: { x: 30, y: 66, width: 12, layer: 4 } },
@@ -38,6 +36,7 @@ export const hamsterRoomFlow = {
   floorHazardId: "direct-sunlight-spot",
   fenceItemId: "hamster-cage",
   interiorItemId: "bedding",
+  interiorRequiredItemIds: ["bedding", "exercise-wheel", "water-bottle", "food-bowl", "hideout", "sand-bath-box"],
   outsideItemIds: ["hamster-cage", "pellet"],
   entryRequiredItemIds: ["hamster-cage", "pellet"],
   floorHotspot: { desktop: { x: 84, y: 50, width: 27, height: 32 }, mobile: { x: 74, y: 50, width: 27, height: 32 } },
@@ -53,5 +52,5 @@ export const hamsterRoomFlow = {
 } as const;
 
 export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "倉鼠名字名牌" } };
-export const hamsterDepartureScene: DepartureSceneConfig = { trunkBackground: hamsterAssets.preparation.trunkBackground, trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: hamsterAssets.preparation.adoptionDocuments, documentFolderAlt: "飼養文件夾" };
+export const hamsterDepartureScene: DepartureSceneConfig = { trunkBackground: hamsterAssets.preparation.trunkBackground, trunkBackgroundAlt: "打開的汽車後車廂" };
 export const hamsterPreparation = { roomItems: hamsterRoomItems, hazards: hamsterHazards, trunkItems: hamsterTrunkItems, roomFlow: hamsterRoomFlow, roomScene: hamsterRoomScene, departureScene: hamsterDepartureScene } as const;

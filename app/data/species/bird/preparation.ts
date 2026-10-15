@@ -34,8 +34,6 @@ export const birdHazards: HazardItem[] = [
 ];
 
 export const birdTrunkItems: TrunkItem[] = [
-  { id: "id-card", visualClassName: "id", visualRole: "identity-card", label: "身分證", kind: "document", image: birdAssets.preparation.idCard, preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
-  { id: "adoption-documents", visualClassName: "documents", visualRole: "document-folder", label: "領養文件", kind: "document", image: birdAssets.preparation.documents, preparedLabel: "已攜帶", description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。", placement: { x: 23, y: 32, width: 23, layer: 3 } },
   { id: "bird-carrier", label: "外出籠／運輸箱", kind: "supply", image: birdAssets.preparation.carrier, visualScale: 1, preparedLabel: "已準備", description: "鳥必須在通風、堅固且間隙安全的外出籠中運送。", expenseIds: ["bird-carrier"], placement: { x: 45, y: 61, width: 25, layer: 5 } },
   { id: "cover-cloth", label: "遮光布／透氣布", kind: "supply", image: birdAssets.preparation.cover, preparedLabel: "已準備", description: "覆蓋外出籠可減少視覺刺激與緊迫。", expenseIds: ["bird-cover-cloth"], placement: { x: 45, y: 56, width: 22, layer: 6 } },
   { id: "species-food", label: "少量熟悉飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", description: "途中備少量符合食性的熟悉飼料，從家中現有存糧取用即可。", placement: { x: 28, y: 63, width: 16, layer: 6 } },
@@ -52,6 +50,7 @@ export const birdRoomFlow = {
   safeWhenAllHazards: true,
   fenceItemId: "bird-cage",
   interiorItemId: "bird-feces-tray",
+  interiorRequiredItemIds: ["perch-set", "bird-food-bowl", "bird-water-bowl", "bird-feces-tray"],
   outsideItemIds: ["bird-cage", "food-initial"],
   entryRequiredItemIds: ["bird-cage", "food-initial"],
   floorHotspot: { desktop: { x: 0, y: 0, width: 0, height: 0 }, mobile: { x: 0, y: 0, width: 0, height: 0 } },
@@ -66,5 +65,5 @@ export const birdRoomFlow = {
 } as const;
 
 export const birdRoomScene: RoomSceneConfig = { backgroundAlt: "鳥兒生活空間", interiorBackgroundAlt: "鳥籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "鸚鵡名字名牌" } };
-export const birdDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: birdAssets.preparation.documents, documentFolderAlt: "飼養文件夾" };
+export const birdDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂" };
 export const birdPreparation = { roomItems: birdRoomItems, hazards: birdHazards, trunkItems: birdTrunkItems, roomFlow: birdRoomFlow, roomScene: birdRoomScene, departureScene: birdDepartureScene } as const;

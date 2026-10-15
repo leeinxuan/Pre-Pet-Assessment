@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getSpeciesConfig } from "../../../data/species";
+import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
 import { dogAssets } from "../../../data/species/dog/assets";
 import type { JourneyTransitionMedia } from "../../../game-types";
 
@@ -18,6 +19,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
   const endTimeoutRef = useRef<number | null>(null);
   const onContinueRef = useRef(onContinue);
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     onContinueRef.current = onContinue;
@@ -34,9 +36,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reducedMotion) {
+    if (prefersReducedMotion) {
       video.pause();
       video.currentTime = 0;
       startTimeoutRef.current = window.setTimeout(showFinalFrame, 180);
@@ -60,7 +60,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
       if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
       if (endTimeoutRef.current !== null) window.clearTimeout(endTimeoutRef.current);
     };
-  }, [showFinalFrame]);
+  }, [prefersReducedMotion, showFinalFrame]);
 
   function handlePlaying() {
     if (startTimeoutRef.current !== null) {
@@ -93,7 +93,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
       <video
         ref={videoRef}
         src={arrivalVideoSource}
-        autoPlay
+        autoPlay={!prefersReducedMotion}
         playsInline
         preload="auto"
         aria-label={`${animalLabel}搭乘外出籠抵達新家的過場動畫`}
@@ -113,19 +113,24 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
   const videoRef = useRef<HTMLVideoElement>(null);
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
   const hasFinished = useRef(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const timePassVideoSource = transitionMediaFor(species)?.timePass ?? dogShibaAsset("time-passes-aging.mp4");
+
+  const finish = useCallback(() => {
+    if (hasFinished.current) return;
+    hasFinished.current = true;
+    onComplete();
+  }, [onComplete]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    if (prefersReducedMotion) {
+      const timer = window.setTimeout(finish, 180);
+      return () => window.clearTimeout(timer);
+    }
     video.play().catch(() => setNeedsManualPlay(true));
-  }, []);
-
-  function finish() {
-    if (hasFinished.current) return;
-    hasFinished.current = true;
-    onComplete();
-  }
+  }, [finish, prefersReducedMotion]);
 
   function playManually() {
     const video = videoRef.current;
@@ -136,7 +141,7 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 
   return (
     <section className="time-pass-transition" aria-label="時間流逝過場動畫">
-      <video ref={videoRef} src={timePassVideoSource} autoPlay playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      <video ref={videoRef} src={timePassVideoSource} autoPlay={!prefersReducedMotion} playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
       {needsManualPlay && <button type="button" className="time-pass-play" onClick={playManually}>播放影片</button>}
     </section>
   );
@@ -144,20 +149,25 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 
 export function BusyCareTransition({ onComplete, species = "dog" }: { onComplete: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const busyCareTransitionSource = transitionMediaFor(species)?.busyCare ?? dogAssets.life.busyCareTransition;
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    if (prefersReducedMotion) {
+      const timer = window.setTimeout(onComplete, 180);
+      return () => window.clearTimeout(timer);
+    }
     video.play().catch(onComplete);
-  }, [onComplete]);
+  }, [onComplete, prefersReducedMotion]);
 
   return (
     <section className="arrival-video-screen busy-care-transition" aria-label="疲憊忙碌的日子過場影片">
       <video
         ref={videoRef}
         src={busyCareTransitionSource}
-        autoPlay
+        autoPlay={!prefersReducedMotion}
         playsInline
         preload="auto"
         onEnded={onComplete}

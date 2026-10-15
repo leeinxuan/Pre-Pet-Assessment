@@ -10,6 +10,7 @@ import { rabbitCopy } from "./copy";
 import { rabbitHomeReadiness } from "./home-readiness";
 import { rabbitMasteredCareThemes } from "./mastered-care-themes";
 import { rabbitCareReviewAdditionalNotes } from "./care-review-notes";
+import { rabbitAcquisition } from "./acquisition";
 
 /**
  * 兔子不進行品種細選；固定 selection id 為 rabbit。
@@ -41,6 +42,7 @@ export const rabbitConfig = {
   homeReadiness: rabbitHomeReadiness,
   masteredCareThemes: rabbitMasteredCareThemes,
   careReviewAdditionalNotes: rabbitCareReviewAdditionalNotes,
+  acquisition: rabbitAcquisition,
 } as const;
 
 export { rabbitAssets, rabbitJourney, rabbitLayout, rabbitPreparation, rabbitReport, rabbitLifeScenarios, getRabbitBreedChallengeScenarios, rabbitFeeding };

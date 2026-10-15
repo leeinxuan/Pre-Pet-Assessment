@@ -5,9 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import { dogAssets } from "../../../../data/species/dog/assets";
 import { dogReport } from "../../../../data/species/dog/report";
-import { dogShibaWalkingAsset, walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../../../data/species/dog/walking";
+import { dogShibaWalkingAsset, walkingLawCopy, walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../../../data/species/dog/walking";
 import type { LifeActivityState } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
+import { renderKnowledgeText } from "../activity-ui";
 
 const dogDailyAsset = (fileName: string) => `${dogAssets.daily.root}/${fileName}`;
 
@@ -126,6 +127,7 @@ export function WalkingActivity({
   const forwardAnimationFrameRef = useRef<number | null>(null);
   const forwardHoldTimerRef = useRef<number | null>(null);
   const forwardLastFrameRef = useRef<number | null>(null);
+  const keyboardMoveTimerRef = useRef<number | null>(null);
   const sceneRef = useRef<HTMLDivElement | null>(null);
   const poopTargetRef = useRef<HTMLDivElement | null>(null);
   const draggingBagRef = useRef(false);
@@ -175,6 +177,7 @@ export function WalkingActivity({
   useEffect(() => () => {
     if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
     if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
+    if (keyboardMoveTimerRef.current !== null) window.clearTimeout(keyboardMoveTimerRef.current);
   }, []);
 
   async function prepare(id: string) {
@@ -273,6 +276,17 @@ export function WalkingActivity({
     }, 220);
   }
 
+  function moveForwardByKeyboard() {
+    // 原本的指標操作包含「按住」的連續移動；鍵盤則以一次按鍵前進一小步，
+    // 讓 Enter 與 Space 有可預期、可重複的等價操作。
+    advanceWalk(walkingStep);
+    if (keyboardMoveTimerRef.current !== null) window.clearTimeout(keyboardMoveTimerRef.current);
+    keyboardMoveTimerRef.current = window.setTimeout(() => {
+      keyboardMoveTimerRef.current = null;
+      setMoving(false);
+    }, 180);
+  }
+
   const draggedBagSize = 74;
 
   function getDraggedBagPosition(event: ReactPointerEvent<HTMLButtonElement>) {
@@ -361,19 +375,22 @@ export function WalkingActivity({
       <b>{walkingEventMessage.title}</b>
       <p>{walkingEventMessage.body}</p>
       {needsCleanup && (
-        <div className="walking-drag-row">
-          <button
-            type="button"
-            className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}`}
-            onPointerDown={startDraggingBag}
-            onPointerMove={dragBag}
-            onPointerUp={finishDraggingBag}
-            onPointerCancel={cancelDraggingBag}
-            aria-label="拖曳撿便袋清理排泄物"
-          >
-            <img src={dogDailyAsset("poop-bag-1.webp")} alt="" />
-          </button>
-          <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
+        <div className="walking-cleanup-controls">
+          <div className="walking-drag-row">
+            <button
+              type="button"
+              className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}`}
+              onPointerDown={startDraggingBag}
+              onPointerMove={dragBag}
+              onPointerUp={finishDraggingBag}
+              onPointerCancel={cancelDraggingBag}
+              onClick={(event) => { if (event.detail === 0) cleanupPoop(); }}
+              aria-label="使用撿便袋清理排泄物"
+            >
+              <img src={dogDailyAsset("poop-bag-1.webp")} alt="" />
+            </button>
+            <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
+          </div>
         </div>
       )}
     </div>
@@ -406,11 +423,11 @@ export function WalkingActivity({
             <h2 id="walking-safety-title">你會用哪一種方式陪牠散步？</h2>
             <div className="walking-safety-grid">
               <button type="button" onClick={() => setSafetyStep("correct")}>
-                <img src={dogShibaWalkingAsset("leash-choice.webp")} alt="飼主使用胸背與牽繩，保持鬆繩讓柴犬嗅聞環境" />
+                <img src={dogShibaWalkingAsset("leash-choice.webp")} alt="" />
                 <span><b>繫好牽繩，保持鬆弛</b><small>讓狗狗在可控距離內嗅聞、探索環境。</small></span>
               </button>
               <button type="button" onClick={() => setSafetyStep("law")}>
-                <img src={dogShibaWalkingAsset("off-leash-choice.webp")} alt="沒有牽繩的柴犬離飼主一段距離自行探索" />
+                <img src={dogShibaWalkingAsset("off-leash-choice.webp")} alt="" />
                 <span><b>不繫牽繩，讓牠自己走</b><small>讓狗狗自由自在探索，飼主在後方跟著。</small></span>
               </button>
             </div>
@@ -418,17 +435,15 @@ export function WalkingActivity({
         ) : safetyStep === "law" ? (
           <section className="walking-law-feedback" aria-live="polite">
             <span aria-hidden="true">!</span>
-            <div><p className="life-stage-label">外出安全與法規提醒</p><h2>自由探索，也需要有能立即保護牠的距離</h2></div>
-            <p>《動物保護法》第 20 條要求寵物出入公共場所時須有人伴同；各縣市也可能以自治規範要求使用牽繩、箱籠或其他適當防護措施。外出前應查明所在地規定。</p>
-            <p>即使在沒有明確禁止的地點，牽繩仍能降低走失、突然衝向車道、驚嚇他人或與其他動物衝突的風險。保持牽繩鬆弛，狗狗仍然可以嗅聞和探索。</p>
+            <div><p className="life-stage-label">{walkingLawCopy.incorrect.eyebrow}</p><h2>{walkingLawCopy.incorrect.title}</h2></div>
+            {walkingLawCopy.incorrect.paragraphs.map((paragraph) => <p key={paragraph}>{renderKnowledgeText(paragraph)}</p>)}
             <button type="button" className="secondary" onClick={() => setSafetyStep("question")}>回去重新選擇</button>
           </section>
         ) : safetyStep === "correct" ? (
           <section className="walking-law-feedback walking-law-feedback--correct" aria-live="polite">
             <span aria-hidden="true">✓</span>
-            <div><p className="life-stage-label">你選得很好</p><h2>牽繩不是限制探索，而是讓探索更安全</h2></div>
-            <p>繫好合適的胸背帶或項圈並保持牽繩鬆弛，狗狗仍然可以嗅聞、觀察環境；遇到車輛、陌生動物或突然受驚時，你也能及時控制距離，降低走失與衝突風險。</p>
-            <p>《動物保護法》第 20 條要求寵物出入公共場所時須有人伴同，各縣市也可能要求使用牽繩、箱籠或其他適當防護措施。因此另一個「不繫牽繩」的選項，即使看似自由，也不是安全的散步方式。</p>
+            <div><p className="life-stage-label">{walkingLawCopy.correct.eyebrow}</p><h2>{walkingLawCopy.correct.title}</h2></div>
+            {walkingLawCopy.correct.paragraphs.map((paragraph) => <p key={paragraph}>{renderKnowledgeText(paragraph)}</p>)}
             <button type="button" className="primary" onClick={() => setSafetyStep("prepared")}>繼續準備散步用品 <span>→</span></button>
           </section>
         ) : (
@@ -441,7 +456,11 @@ export function WalkingActivity({
                 const done = prepared.includes(item.id);
                 return (
                   <button type="button" key={item.id} className={done ? "prepared" : ""} aria-pressed={done} onClick={() => prepare(item.id)}>
-                    <img src={item.image} alt={item.label} />
+                    <img
+                      src={item.image}
+                      alt=""
+                      style={{ "--walking-prep-image-scale": item.imageScale } as CSSProperties}
+                    />
                     <b>{item.label}</b>
                     <small>{walkingPrepNotes[item.id]}</small>
                   </button>
@@ -465,8 +484,8 @@ export function WalkingActivity({
           <div
             className={`walking-scene ${moving ? "is-moving" : ""}`}
             ref={sceneRef}
-            tabIndex={0}
-            aria-label="散步場景，按往前走按鈕前進"
+            role="group"
+            aria-label="散步場景"
           >
             <div className="walking-progress walking-progress-overlay" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
               <b>散步進度</b>
@@ -519,6 +538,11 @@ export function WalkingActivity({
               onPointerCancel={() => stopForward()}
               onPointerLeave={() => stopForward()}
               onLostPointerCapture={() => stopForward()}
+              onKeyDown={(event) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
+                event.preventDefault();
+                moveForwardByKeyboard();
+              }}
               aria-label="往前走"
             >
               <span className="walking-forward-orb" aria-hidden="true">

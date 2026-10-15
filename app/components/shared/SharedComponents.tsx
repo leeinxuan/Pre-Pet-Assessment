@@ -10,6 +10,7 @@ import { getJourneyItemsForSpecies } from "../../data/species/journey";
 import { getSpeciesConfig } from "../../data/species/index";
 import { interpolatePetName } from "../../data/shared/pet-text";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
+import { useDialogFocus } from "./useDialogFocus";
 
 export function StepHeading({ title, body }: { title: string; body?: string }) {
   return <div className="step-heading"><h1>{title}</h1>{body && <p>{body}</p>}</div>;
@@ -69,6 +70,12 @@ function statusAt(index: number, current: number, reached: number): NavigationSt
   if (index === current) return "current";
   if (index <= reached) return "completed";
   return "locked";
+}
+
+function navigationStatusText(status: NavigationStatus) {
+  if (status === "completed") return "已完成";
+  if (status === "current") return "目前位置";
+  return "尚未解鎖";
 }
 
 export function StageRail({
@@ -194,17 +201,29 @@ export function StageRail({
   function renderNavigation() {
     return (
       <nav className="station-navigation">
+        <p className="sr-only">每個關卡按鈕都會標示目前位置、已完成或尚未解鎖狀態。</p>
         {testMode && <p className="test-mode-badge">測試模式・關卡已解鎖</p>}
         {navigation.map((item) => (
           <div className={`nav-main ${item.status}`} key={item.id}>
-            <button className="nav-main-button" disabled={item.status === "locked"} onClick={item.onClick} aria-current={item.status === "current" ? "step" : undefined}>
+            <button
+              className="nav-main-button"
+              disabled={item.status === "locked"}
+              onClick={item.onClick}
+              aria-current={item.status === "current" ? "step" : undefined}
+              aria-label={`${item.number} ${item.label}，${navigationStatusText(item.status)}`}
+            >
               <span>{item.status === "completed" ? "✓" : item.number}</span><em>{item.label}</em>
             </button>
             {item.children && (
               <div className="nav-children">
                 {item.children.map((child, childIndex) => (
                   <div className={`nav-child ${child.status}`} key={child.id}>
-                    <button disabled={child.status === "locked"} onClick={child.onClick} aria-current={child.status === "current" ? "step" : undefined}>
+                    <button
+                      disabled={child.status === "locked"}
+                      onClick={child.onClick}
+                      aria-current={child.status === "current" ? "step" : undefined}
+                      aria-label={`${childIndex + 1} ${child.label}，${navigationStatusText(child.status)}`}
+                    >
                       <span>{child.status === "completed" ? "✓" : childIndex + 1}</span><em>{child.label}</em>
                     </button>
                   </div>
@@ -553,6 +572,8 @@ function detailGroupForExpense(item: ExpenseRecord): ExpenseDetailGroup {
 }
 
 export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses: ExpenseRecord[]; breed: string; species?: string; onClose: () => void }) {
+  const modalRef = useRef<HTMLElement>(null);
+  useDialogFocus({ isOpen: true, dialogRef: modalRef, onClose });
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const preparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyTotal = getMonthlyBasicTotal(visibleExpenses);
@@ -563,13 +584,16 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
   const monthlyExpenses = grouped.find((entry) => entry.group === expenseLabels.monthlyBasic)?.items ?? [];
   const temporaryExpenses = getTemporaryExpenses(visibleExpenses);
   const totalFor = (items: ExpenseRecord[]) => items.reduce((sum, item) => sum + item.amount, 0);
+  const renderExpenseDescription = (description: string) => description.split("**").map((part, index) => index % 2 === 1
+    ? <strong className="knowledge-emphasis" key={`${part}-${index}`}>{part}</strong>
+    : <span key={`${part}-${index}`}>{part}</span>);
   const renderItems = (items: ExpenseRecord[], showReserveAmount = false) => items.length ? (
-    <ul>{items.map((item) => <li key={item.id}><span><b>{item.name}</b>{item.description && <small>{item.description}</small>}</span><strong>{showReserveAmount ? formatTemporaryExpenseAmount(item) : `NT$ ${money.format(item.amount)}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
+    <ul>{items.map((item) => <li key={item.id}><span className="expense-line-copy"><b>{item.name}</b>{item.description && <small className="expense-line-description">{renderExpenseDescription(item.description)}</small>}</span><strong className="expense-line-amount">{showReserveAmount ? formatTemporaryExpenseAmount(item) : `NT$ ${money.format(item.amount)}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
   ) : <p>{expenseLabels.noGroupExpenses}</p>;
 
   return (
     <div className="expense-modal-backdrop" role="presentation" onMouseDown={onClose}>
-      <section className="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-title" onMouseDown={(event) => event.stopPropagation()}>
+      <section ref={modalRef} className="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-title" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}>
         <div className="expense-modal-head"><div><p className="eyebrow">{expenseLabels.detailEyebrow}</p><h2 id="expense-title">{expenseLabels.detailTitle}</h2></div><button onClick={onClose} aria-label={expenseLabels.closeDetails}>x</button></div>
         <div className="expense-modal-summary" aria-label="費用摘要">
           <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}</b></div>

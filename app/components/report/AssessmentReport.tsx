@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Report artwork is consumed by the capture/export flow and must retain native image rendering. */
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { money } from "../../data/shared/expenses";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
@@ -26,6 +26,7 @@ import {
 } from "../shared/SharedComponents";
 import type { HomeReadinessState } from "../../data/shared/home-readiness-state";
 import { PdfDownloadButton } from "./PdfExportControls";
+import { useDialogFocus } from "../shared/useDialogFocus";
 
 function personalizeReportText(text: string, petName: string, species?: string) {
   return interpolatePetName(text, petName, species);
@@ -127,44 +128,29 @@ export function AssessmentReport({
   const [expenseDetailsOpen, setExpenseDetailsOpen] = useState(false);
   const [dailyCareDetailsOpen, setDailyCareDetailsOpen] = useState(false);
   const [activeAdditionalNoteIndex, setActiveAdditionalNoteIndex] = useState<number | null>(null);
-  const additionalNotesTriggerRef = useRef<HTMLButtonElement>(null);
+  const knowledgeModalRef = useRef<HTMLElement>(null);
+  const dailyCareModalRef = useRef<HTMLElement>(null);
   const additionalNotesModalRef = useRef<HTMLElement>(null);
   const speciesConfig = getSpeciesConfig(species);
   const homeReadinessConfig = speciesConfig.homeReadiness;
   const careReviewAdditionalNotes = speciesConfig.careReviewAdditionalNotes;
   const selectedHousing = homeReadinessConfig.housingChoices.find((choice) => choice.id === homeReadiness.housing);
   const homeReadinessComplete = Boolean(selectedHousing && homeReadiness.housingReminderAcknowledged && homeReadinessConfig.cards.every((card) => homeReadiness.acknowledgedCardIds.includes(card.id)));
-  useEffect(() => {
-    if (!activeDiscussionId && !dailyCareDetailsOpen && activeAdditionalNoteIndex === null) return;
-    const previousOverflow = document.body.style.overflow;
-    const additionalNotesTrigger = additionalNotesTriggerRef.current;
-    document.body.style.overflow = "hidden";
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setActiveDiscussionId("");
-        setDailyCareDetailsOpen(false);
-        setActiveAdditionalNoteIndex(null);
-      }
-    };
-    const trapAdditionalNotesFocus = (event: KeyboardEvent) => {
-      if (activeAdditionalNoteIndex === null || event.key !== "Tab") return;
-      const focusable = additionalNotesModalRef.current?.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-      if (!focusable?.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    window.addEventListener("keydown", closeOnEscape);
-    window.addEventListener("keydown", trapAdditionalNotesFocus);
-    if (activeAdditionalNoteIndex !== null) window.setTimeout(() => additionalNotesModalRef.current?.querySelector<HTMLElement>("button")?.focus(), 0);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
-      window.removeEventListener("keydown", trapAdditionalNotesFocus);
-      if (activeAdditionalNoteIndex !== null) additionalNotesTrigger?.focus();
-    };
-  }, [activeDiscussionId, dailyCareDetailsOpen, activeAdditionalNoteIndex]);
+  useDialogFocus({
+    isOpen: Boolean(activeDiscussionId),
+    dialogRef: knowledgeModalRef,
+    onClose: () => setActiveDiscussionId(""),
+  });
+  useDialogFocus({
+    isOpen: dailyCareDetailsOpen,
+    dialogRef: dailyCareModalRef,
+    onClose: () => setDailyCareDetailsOpen(false),
+  });
+  useDialogFocus({
+    isOpen: activeAdditionalNoteIndex !== null,
+    dialogRef: additionalNotesModalRef,
+    onClose: () => setActiveAdditionalNoteIndex(null),
+  });
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const initialPreparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyBasicTotal = getMonthlyBasicTotal(visibleExpenses);
@@ -225,15 +211,21 @@ export function AssessmentReport({
   const visibleMasteredCareThemes = speciesConfig.masteredCareThemes
     .filter((theme) => theme.sources.every(completedSource))
     .sort((left, right) => left.order - right.order);
+  const masteredCareGroups = ([
+    { category: "preparation", label: "飼養前準備" },
+    { category: "care-life", label: "飼養生活" },
+  ] as const)
+    .map((group) => ({ ...group, themes: visibleMasteredCareThemes.filter((theme) => theme.category === group.category) }))
+    .filter((group) => group.themes.length > 0);
   const knowledgeModal = activeKnowledge && typeof document !== "undefined"
     ? createPortal(
       <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
-        <section className="knowledge-modal" role="dialog" aria-modal="true" aria-labelledby="knowledge-modal-title">
+        <section ref={knowledgeModalRef} className="knowledge-modal" role="dialog" aria-modal="true" aria-labelledby="knowledge-modal-title" tabIndex={-1}>
           <button type="button" className="knowledge-modal-close" onClick={() => setActiveDiscussionId("")} aria-label="關閉知識點">×</button>
           <p className="life-stage-label">{activeKnowledge.topic}</p>
           <h2 id="knowledge-modal-title">{activeKnowledge.title}</h2>
           <p>回顧這一題較合適的照護知識點：</p>
-          <ul>{activeKnowledge.knowledgePoints.map((point) => <li key={point}>{point}</li>)}</ul>
+          <ul>{activeKnowledge.knowledgePoints.map((point) => <li key={point}><HomeReadinessReviewText segments={[{ text: point }]} petName={petName} species={species} /></li>)}</ul>
           <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveDiscussionId("")}>我知道了</button>
         </section>
       </div>,
@@ -243,7 +235,7 @@ export function AssessmentReport({
   const dailyCareModal = dailyCareDetailsOpen && typeof document !== "undefined"
     ? createPortal(
       <div className="knowledge-modal-backdrop daily-care-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setDailyCareDetailsOpen(false); }}>
-        <section className="knowledge-modal daily-care-modal" role="dialog" aria-modal="true" aria-labelledby="daily-care-modal-title">
+        <section ref={dailyCareModalRef} className="knowledge-modal daily-care-modal" role="dialog" aria-modal="true" aria-labelledby="daily-care-modal-title" tabIndex={-1}>
           <button type="button" className="knowledge-modal-close" onClick={() => setDailyCareDetailsOpen(false)} aria-label="關閉每日照護細項">×</button>
           <h2 id="daily-care-modal-title">每天留給牠的照護時間</h2>
           <p className="daily-care-modal-intro">{speciesConfig.report.dailyCareTimeNote}</p>
@@ -355,7 +347,7 @@ export function AssessmentReport({
 
         <section className="care-a4-table-section" aria-labelledby="care-a4-table-title">
           <h2 id="care-a4-table-title">日常照護提醒</h2>
-          <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b>{situation}</b><p>{advice}</p></div>)}</div>
+          <div className="care-a4-table">{handlingRows.map(([situation, advice]) => <div key={situation}><b><HomeReadinessReviewText segments={[{ text: situation }]} petName={petName} species={species} /></b><p><HomeReadinessReviewText segments={[{ text: advice }]} petName={petName} species={species} /></p></div>)}</div>
         </section>
 
       </article>
@@ -389,6 +381,13 @@ export function AssessmentReport({
               <p className="care-a4-expense-summary-copy">{temporaryExpenses.length > 0 ? temporaryExpenseReserveNote : "目前尚未登記項目"}</p>
             </section>
           </div>
+          {initialPreparationBreakdown.afterArrival.items.length > 0 && <section className="care-a4-after-arrival-expenses" aria-labelledby="care-a4-after-arrival-title">
+            <h3 id="care-a4-after-arrival-title">{initialPreparationBreakdown.afterArrival.label}</h3>
+            <ul>{initialPreparationBreakdown.afterArrival.items.map((item) => <li key={item.id}>
+              <div><b>{item.name}</b>{item.description && <p><HomeReadinessReviewText segments={[{ text: item.description }]} petName={petName} species={species} /></p>}</div>
+              <strong>NT$ {money.format(item.amount)}</strong>
+            </li>)}</ul>
+          </section>}
         </section>
 
         <section className="care-a4-daily-time" aria-label="每日投入時間">
@@ -441,11 +440,16 @@ export function AssessmentReport({
 
         <section className="care-review-section care-review-mastered" aria-labelledby="mastered-care-title">
           <header><span aria-hidden="true">✓</span><div><h2 id="mastered-care-title">你已建立的照顧觀念</h2><p>這些是你在情境中已經掌握、可以帶進真實生活的照顧方向。</p></div></header>
-          {visibleMasteredCareThemes.length ? <div className="care-review-mastered-theme-grid">
-            {visibleMasteredCareThemes.map((theme) => <article key={theme.id}>
-              <span aria-hidden="true">✓</span>
-              <div><b>{theme.title}</b><p><HomeReadinessReviewText segments={[{ text: theme.summary }]} petName={petName} species={species} /></p></div>
-            </article>)}
+          {masteredCareGroups.length ? <div className="care-review-mastered-groups">
+            {masteredCareGroups.map((group) => <section key={group.category} className="care-review-mastered-group" aria-labelledby={`mastered-${group.category}-title`}>
+              <h3 id={`mastered-${group.category}-title`}>{group.label}</h3>
+              <div className="care-review-mastered-theme-grid">
+                {group.themes.map((theme) => <article key={theme.id}>
+                  <span aria-hidden="true">✓</span>
+                  <div><b>{theme.title}</b><p><HomeReadinessReviewText segments={[{ text: theme.summary }]} petName={petName} species={species} /></p></div>
+                </article>)}
+              </div>
+            </section>)}
           </div> : <p className="care-review-empty">完成並答對情境題後，這裡會整理你已建立的照顧觀念。</p>}
         </section>
 
@@ -456,7 +460,7 @@ export function AssessmentReport({
           </div> : <div className="care-review-all-clear"><span aria-hidden="true">✓</span><p>你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。</p></div>}
         </section>
 
-        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true">◌</span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true">◌</span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} species={species} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} species={species} /></p></div><button type="button" className="discussion-info-button" onClick={(event) => { additionalNotesTriggerRef.current = event.currentTarget; setActiveAdditionalNoteIndex(index); }} aria-label={`查看「${homeReadinessText(note.title, petName, species)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
+        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true">◌</span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true">◌</span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} species={species} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} species={species} /></p></div><button type="button" className="discussion-info-button" onClick={() => setActiveAdditionalNoteIndex(index)} aria-label={`查看「${homeReadinessText(note.title, petName, species)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
 
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>

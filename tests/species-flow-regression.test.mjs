@@ -93,10 +93,14 @@ test("departure document visuals use data roles instead of document ids", async 
   assert.match(preparationComponent, /item\.visualRole === "identity-card"/);
   assert.doesNotMatch(preparationComponent, /item\.id === "documents"|item\.id === "id"|item\.id === "id-card"/);
 
-  for (const species of ["dog", "rabbit", "bird", "hamster", "gecko"]) {
+  const dogPreparation = await source("app/data/species/dog/preparation.ts");
+  assert.match(dogPreparation, /visualRole: "document-folder"/, "dog and cat must retain the document-folder visual");
+  assert.match(dogPreparation, /visualRole: "identity-card"/, "dog and cat must retain the identity-card visual");
+
+  for (const species of ["rabbit", "bird", "hamster", "gecko"]) {
     const preparation = await source(`app/data/species/${species}/preparation.ts`);
-    assert.match(preparation, /visualRole: "document-folder"/, `${species} must declare its document-folder visual`);
-    assert.match(preparation, /visualRole: "identity-card"/, `${species} must declare its identity-card visual`);
+    assert.doesNotMatch(preparation, /visualRole: "document-folder"/, `${species} must not retain a document-folder visual`);
+    assert.doesNotMatch(preparation, /visualRole: "identity-card"/, `${species} must not retain an identity-card visual`);
   }
 });
 
@@ -207,6 +211,37 @@ test("replay reset strategies retain the activity state fields they clear", asyn
   }
 });
 
+test("choice feedback replay clears only the active scenario answer", async () => {
+  const [page, journey, replay, daily, breed] = await Promise.all([
+    source("app/page.tsx"),
+    source("app/components/life/LifeJourneyComponents.tsx"),
+    source("app/components/life/journey-replay.ts"),
+    source("app/components/life/activities/DailyBehaviorActivityMulti.tsx"),
+    source("app/components/life/activities/BreedChallengeActivity.tsx"),
+  ]);
+  // 回訪判斷：只有進入前已完成的節點才算回訪，且未在重新作答中才顯示按鈕。
+  assert.match(replay, /revisitedItemId: itemId && completedIds\.includes\(itemId\) \? itemId : null/);
+  assert.match(replay, /isRevisitingJourneyItem\(state, itemId\) && !isReplayingJourneyItem\(state, itemId\)/);
+  assert.match(replay, /delete next\[id\]/);
+  // 所有旅程導覽都經過共用入口，先還原快照再判斷回訪。
+  assert.match(page, /const \[journeyReplay, setJourneyReplay\] = useState<JourneyReplayState>\(initialJourneyReplayState\)/);
+  assert.match(page, /enterJourneyReplayItem\(activeItem\?\.id\)/);
+  assert.match(page, /enterJourneyReplayItem\(targetItem\?\.id\)/);
+  assert.match(page, /enterJourneyReplayItem\(getJourneyItemsForSpecies\(category\)\[nextIndex\]\?\.id\)/);
+  assert.match(page, /restoreReplayAnswers\(current, session\)/);
+  // 重新作答期間不得新增費用或成員。
+  for (const fn of ["addExpenseById", "addExpenseSilentlyById", "addExpenseGroupByIds", "playExpenseSequenceByIds", "updateMembers"]) {
+    assert.match(page, new RegExp(`function ${fn}\\([^)]*\\) \\{\\n(?:\\s*//[^\\n]*\\n)?\\s*if \\(isReplayingJourney\\(\\)\\) return`));
+  }
+  // 按鈕的 click 事件不可被當成題目 ID 傳入。
+  assert.match(journey, /onReplay: canReplayCurrent \? \(\) => replayCurrentQuestion\(\) : undefined/);
+  assert.match(journey, /onStartReplay\(\{ itemId: item\.id, scenarioIds, activityPatch: getJourneyActivityResetPatch\(activityConfig\?\.resetKey\) \}\)/);
+  assert.match(journey, /window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\)/);
+  assert.match(daily, /onReplay=\{onReplay \? \(\) => onReplay\(scenario\.id\)/);
+  assert.match(breed, /onReplay=\{onReplay \? \(\) => onReplay\(scenario\.id\)/);
+  assert.doesNotMatch(journey, /setJourneyCompleted|setExpenses|onResetScenarioAnswers/);
+});
+
 test("formal readiness and report components read the registered species data", async () => {
   const [preparation, report] = await Promise.all([
     source("app/components/preparation/PreparationComponents.tsx"),
@@ -264,7 +299,8 @@ test("test-mode next signal cannot leak into the following journey item", async 
   ]);
   assert.match(page, /setTestNextTargetIndex\(journeyIndex\)/);
   assert.match(page, /testNextSignal=\{testNextTargetIndex === journeyIndex \? testNextSignal : 0\}/);
-  assert.match(page, /onIndex=\{\(nextIndex\) => \{ setTestNextTargetIndex\(null\); setJourneyIndex\(nextIndex\); \}\}/);
+  assert.match(page, /onIndex=\{selectJourneyIndex\}/);
+  assert.match(page, /function selectJourneyIndex\(nextIndex: number\) \{\n\s*setTestNextTargetIndex\(null\);/);
   assert.match(lifeJourney, /transition === "busy-care" && busyCareTransitionIndex !== index[\s\S]*setBusyCareTransitionIndex\(index\)[\s\S]*return/);
   assert.match(lifeJourney, /timePassOpen && activityConfig\?\.transition === "time-pass"[\s\S]*sickTimePassComplete: true[\s\S]*selectItem\(index \+ 1\)/);
   assert.doesNotMatch(lifeJourney, /stageForIndex|species === "hamster"/);

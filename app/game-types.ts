@@ -128,7 +128,7 @@ export type DepartureSceneConfig = {
   trunkBackground?: string;
   trunkBackgroundAlt: string;
   documentFolderImage?: string;
-  documentFolderAlt: string;
+  documentFolderAlt?: string;
   hidePriceForReusedItemIds?: readonly string[];
 };
 

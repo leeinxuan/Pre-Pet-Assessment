@@ -200,6 +200,7 @@
   background: radial-gradient(circle at 35% 45%, #725025 0 22%, transparent 23%), radial-gradient(circle at 61% 50%, #5a3b1d 0 28%, transparent 29%), #6b4721;
   border-radius: 44% 56% 50% 48%;
 }
+.cat-rescue-waste img { display: block; width: 100%; height: auto; object-fit: contain; }
 .cat-rescue-bin {
   position: absolute;
   z-index: 3;

@@ -1,15 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { officialPetSources } from "../../data/shared/pet-sources";
+import { getSpeciesConfig } from "../../data/species";
 import { contentLastUpdated } from "../../data/shared/content-meta";
 import { ProfileSupplementForm } from "../report/ProfileForms";
 import type { Profile } from "../../game-types";
+import { useDialogFocus } from "../shared/useDialogFocus";
 
 export function PetAcquisitionPage({ profile, petName, breed, species, onProfileChange, onBack, onReset }: { profile: Profile; petName: string; breed: string; species: string; onProfileChange: (profile: Profile) => void; onBack: () => void; onReset: () => void }) {
   const [shareMessage, setShareMessage] = useState("");
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [profileEdited, setProfileEdited] = useState(false);
+  const profileModalRef = useRef<HTMLElement>(null);
+  const acquisition = getSpeciesConfig(species).acquisition;
+  const visibleSources = officialPetSources.filter((source) => acquisition.sourceIds.includes(source.id));
+
+  useDialogFocus({ isOpen: profileModalOpen, dialogRef: profileModalRef, onClose: () => setProfileModalOpen(false) });
 
   async function shareWithOthers() {
     const url = new URL("/", window.location.href).toString();
@@ -42,7 +49,7 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
     {profileEdited && <p className="official-profile-complete" role="status">已整理真實生活條件，可於聯繫前下載使用。</p>}
 
     <main className="official-acquisition-list" aria-label="官方取得管道">
-      {officialPetSources.map((source) => <section className="official-acquisition-panel" key={source.id} aria-labelledby={`${source.id}-title`}>
+      {visibleSources.map((source) => <section className="official-acquisition-panel" key={source.id} aria-labelledby={`${source.id}-title`}>
         <div className="official-acquisition-panel-copy">
           <p className="official-acquisition-category">{source.category}</p>
           <h2 id={`${source.id}-title`}>{source.title}</h2>
@@ -53,7 +60,9 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
         </a>
       </section>)}
     </main>
-    <p className="official-acquisition-reminder">無論選擇領養或購買，都請確認來源合法，並保留相關文件與健康紀錄。</p>
+    <p className="official-acquisition-reminder">{acquisition.reminder.map((segment, index) => segment.emphasis
+      ? <strong className="home-readiness-emphasis" key={`${segment.text}-${index}`}>{segment.text}</strong>
+      : <span key={`${segment.text}-${index}`}>{segment.text}</span>)}</p>
 
     <div className="nav-buttons official-acquisition-footer-actions">
       <button className="secondary" type="button" onClick={onBack}>← 返回飼養觀念回顧</button>
@@ -73,6 +82,6 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
       </div>
       <p>最後更新：{contentLastUpdated}</p>
     </footer>
-    {profileModalOpen && <div className="profile-modal-backdrop" role="presentation" onMouseDown={() => setProfileModalOpen(false)}><section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-supplement-title" onMouseDown={(event) => event.stopPropagation()}><button type="button" className="profile-modal-close" aria-label="關閉真實生活條件表單" onClick={() => setProfileModalOpen(false)}>×</button><ProfileSupplementForm embedded profile={profile} petName={petName} breed={breed} species={species} onChange={(nextProfile) => { setProfileEdited(true); onProfileChange(nextProfile); }} onBack={() => undefined} onReset={() => undefined} /></section></div>}
+    {profileModalOpen && <div className="profile-modal-backdrop" role="presentation" onMouseDown={() => setProfileModalOpen(false)}><section ref={profileModalRef} className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-supplement-title" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}><button type="button" className="profile-modal-close" aria-label="關閉真實生活條件表單" onClick={() => setProfileModalOpen(false)}>×</button><ProfileSupplementForm embedded profile={profile} petName={petName} breed={breed} species={species} onChange={(nextProfile) => { setProfileEdited(true); onProfileChange(nextProfile); }} onBack={() => undefined} onReset={() => undefined} /></section></div>}
   </div>;
 }

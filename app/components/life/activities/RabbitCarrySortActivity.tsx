@@ -141,7 +141,10 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
             >
               <span>{index + 1}</span><div className="rabbit-step-image-slot"><img src={rabbitCarrySortSteps[Number(value)].image} alt="" draggable={false} /></div>
               <p>{withPetName(rabbitCarrySortSteps[Number(value)].text, petName)}</p>
-              {isCompletionState ? <small>正確動作</small> : <small className="sort-drag-label">按住拖曳排序</small>}
+              {isCompletionState ? <small>正確動作</small> : <div className="rabbit-sort-keyboard-controls" aria-label={`調整第 ${index + 1} 個步驟的位置`}>
+                <button type="button" aria-label={`將「${withPetName(rabbitCarrySortSteps[Number(value)].text, petName)}」上移`} disabled={index === 0} onClick={() => move(index, index - 1)}>↑</button>
+                <button type="button" aria-label={`將「${withPetName(rabbitCarrySortSteps[Number(value)].text, petName)}」下移`} disabled={index === order.length - 1} onClick={() => move(index, index + 2)}>↓</button>
+              </div>}
             </li>
           ))}
         </ol>

@@ -112,8 +112,6 @@ export const geckoRoomItems: RoomItem[] = [
 ];
 
 export const geckoTrunkItems: TrunkItem[] = [
-  { id: "id-card", visualClassName: "id", visualRole: "identity-card", label: "身分證", kind: "document", image: geckoAssets.preparation.idCard, description: "辦理認養與核對身分時使用。", preparedLabel: "已攜帶", placement: { x: 20, y: 35, width: 15, layer: 4 } },
-  { id: "ownership-docs", visualClassName: "documents", visualRole: "document-folder", label: "飼養文件", kind: "document", image: geckoAssets.preparation.documents, description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。", preparedLabel: "已攜帶", placement: { x: 24, y: 32, width: 20, layer: 3 } },
   { id: "gecko-transport-box", label: "爬蟲專用運輸盒（附通氣孔）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "選用可遮光的小型塑膠盒或布袋，減少視覺刺激。", preparedLabel: "已準備", expenseIds: ["gecko-transport-box"], placement: { x: 48, y: 60, width: 20, layer: 5 } },
   { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "低於 20°C 時放在運輸盒外層保溫，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 66, y: 62, width: 12, layer: 4 } },
 ];
@@ -134,6 +132,7 @@ export const geckoRoomFlow = {
   floorHazardId: "openings",
   fenceItemId: "gecko-terrarium",
   interiorItemId: "safe-substrate",
+  interiorRequiredItemIds: ["safe-substrate", "heat-mat", "thermometer-hygrometer", "warm-hide", "cool-hide", "moist-hide", "shallow-water-dish", "calcium-dish"],
   outsideItemIds: ["gecko-terrarium", "first-feeder-insects", "calcium-and-vitamin-supplement"],
   entryRequiredItemIds: ["gecko-terrarium", "first-feeder-insects", "calcium-and-vitamin-supplement"],
   floorHotspot: { desktop: { x: 0, y: 0, width: 0, height: 0 }, mobile: { x: 0, y: 0, width: 0, height: 0 } },
@@ -156,8 +155,6 @@ export const geckoRoomScene: RoomSceneConfig = {
 export const geckoDepartureScene: DepartureSceneConfig = {
   trunkBackground: geckoAssets.preparation.trunkBackground,
   trunkBackgroundAlt: "打開的汽車後車廂",
-  documentFolderImage: geckoAssets.preparation.documents,
-  documentFolderAlt: "飼養文件夾",
 };
 export const geckoPreparation = {
   roomItems: geckoRoomItems,

@@ -307,3 +307,33 @@ SOUND: quiet room tone, slow calm breathing, a faint purr; music: tender, heartw
 
 ### night-energy 結尾修正（2026-10-13）
 - 結尾不用定格：以 ChatGPT 生成「貓坐在空桌上、物品散落地上」的畫面 `night-energy-v5.png`，Vids 生成 8 秒「貓靜靜坐著」的 `clips/night-energy-c.mp4`，接在前半段（跳上桌掃落物品的前 5.0s）後面，`splice.py --xf 0.5`，總長約 12.5s，結尾聲音再淡出 1.2s。
+
+## Round 6 – unified background music (multi-shot videos)
+Problem: spliced videos had a different generated soundtrack per shot. A short loop of one shot's audio was rejected (loop too obvious), and one bed over the whole video also masks natural SFX shots (e.g. busy-daily-care: typing + sigh).
+Method:
+1. Vids → 音樂 → 生成歌曲 (Lyria 3.5), 完整 + 樂器伴奏, prompt asks for a steady, no-drops, no-vocal cozy bed. Insert (2:38), duplicate scenes (場景 → 複製場景) so the timeline is ≥ 64 s.
+2. Right panel 音效 → 所有音軌 → expand each scene's 影片 → tick 靜音 (wait ~2 s between clicks, the UI lags). Export MP4 → `Downloads/貓咪.mp4` → `ffmpeg -vn` → `scripts/cat/music/lyria-bed.wav` (64 s, continuous, no loop).
+3. `scripts/cat/mix_music.py VIDEO AUDIO_SRC OUT BED_START KEEP_END` keeps the ORIGINAL audio for 0..KEEP_END (SFX shot) and crossfades (0.8 s) into one continuous slice of the bed; a different BED_START per video; level matched to the original loudness; 1.2 s fade-out.
+Applied: arrival-transition keep 0–4.5 s (bed @0), night-energy keep 0–5 (bed @16), busy-daily-care keep 0–5 (bed @32), senior-life keep 0–5 (bed @48). Previous versions in `_backup` (`_old_*_mixed-music` = original per-shot audio, `_old_*_looped-bed` = rejected loop version).
+
+### Round 6b – music matched to each scene's mood
+One shared calm bed did not fit every scene, so each video got its own Lyria track (prompts in Vids 生成歌曲, instrumental, steady, no drops). Export per track: delete the old music bar, generate, 插入, export MP4, `ffmpeg -vn` → `scripts/cat/music/*-bed.wav` (music starts after a silent lead-in; find with `silencedetect`, slice from just after it). Mix with `mix_music.py … --bed music/X-bed.wav --db N`.
+- arrival-transition: calm warm bed (lyria-bed.wav) over the WHOLE video (drive there → drive home, one track, keep 0).
+- night-energy: playful pizzicato/marimba (night-bed.wav), whole video.
+- busy-daily-care: original typing/sigh 0–5 s, then gentle tired-but-caring piano/guitar (busy-bed.wav).
+- senior-life: slow nostalgic solo piano + strings (senior-bed.wav), whole video.
+Previous versions: `_backup/_old_*_music-v1.mp4`.
+
+## Round 7 – sound effects + climbing rebuilt as "cup shatters"
+- SFX are procedural (no downloads): `scripts/cat/sfx.py` (kit: thud, paw_step, tap, shatter, clatter, bowl_clink, whoosh, rustle, purr, sigh, chime/sparkle, creak, car_bed, room_tone) and `scripts/cat/add_sfx.py` (per-video cue sheets `CUES`, time in seconds). Usage: `add_sfx.py NAME VIDEO OUT [BASE_AUDIO KEEP_END|none]` — default layers SFX over the video's existing music; busy-daily-care keeps only its first 3.7 s of original audio (typing/sigh) and the second half is SFX only; climbing has no music (`none`).
+- climbing: frame at 6.0 s of the old video → ChatGPT "shatter the cup" (`start-frames/climbing-broken.png`) → Vids Omni 8 s (locked camera, cat looks down then at camera) → insert as new scene → export, cut 8 s with ffmpeg → `xfade` 0.2 s after the original's first 5.35 s (cat pushing the cup) → 13.2 s, shatter SFX at the cut (5.25 s). Old version: `_backup/_old_climbing_intact-cup.mp4`.
+- Backups: `_old_*_music-only.mp4` = the matched-music versions before SFX.
+
+## Round 8 (climbing 原音 / arrival 字幕重放)
+- climbing.mp4：不再用合成音效。影片＝原版 0–5.35 s + 0.2 s 淡入 + 新「杯子摔碎」鏡頭；音訊＝原版 Veo 背景音樂與真實碎裂聲（約 5.2–6.5 s）延伸到 13.2 s。合成版備份為 `_backup/_old_climbing_synth-sfx.mp4`。
+- arrival-transition.mp4：最後一幕重新用 `start-frames/arrival-final-src.png`（無字乾淨畫面）在 Vids 生成 8 s（`arrival-final-shot.mp4`），接在原片 10.3 s 後（0.1 s 淡入）；「歡迎回家」用 ChatGPT 綠幕圖去背（`start-frames/arrival-welcome-text.png`），縮成寬 460 px，放在 x=154,y=72（左上中間，離左邊 12%，不遮貓），10.6–11.0 s 淡入。音訊沿用原本（音樂＋音效）。舊版備份為 `_backup/_old_arrival-transition_text-left.mp4`。
+
+## Round 9 (climbing 音訊再改)
+- 背景音樂：回到原版 Veo 音樂（不循環），只用 0–5.4 s，4.5–5.4 s 淡出；碎裂聲改用 CC0 真實音效 `sfx-cc0/glass_breaking.wav`（OpenGameArt, Till Behrend），在 5.25 s 疊上（-3 dB）。其後安靜到 13.2 s。
+- Vids Lyria 無法生成純音效（第一次被拒、第二次只得到音樂），所以改下載 CC0。
+- 備份：`_old_climbing_lyria-bed-no-sfx.mp4`、`_old_climbing_orig-audio.mp4`、`_old_climbing_synth-sfx.mp4`。

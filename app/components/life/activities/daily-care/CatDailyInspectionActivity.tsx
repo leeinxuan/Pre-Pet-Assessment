@@ -10,8 +10,8 @@ import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage } from "../activity-ui";
 
 export function CatDailyInspectionActivity({ activity, petName, selected, onChange, onActivityChange, onContinue }: { activity: { catInspectionIntroStarted: boolean }; petName: string; selected: string[]; onChange: (selected: string[]) => void; onActivityChange: (patch: { catInspectionIntroStarted: boolean }) => void; onContinue: () => void }) {
-  const litterBoxRef = useRef<HTMLDivElement>(null);
-  const binRef = useRef<HTMLDivElement>(null);
+  const litterBoxRef = useRef<HTMLButtonElement>(null);
+  const binRef = useRef<HTMLButtonElement>(null);
   const [dragging, setDragging] = useState(false);
   const draggingRef = useRef(false);
   const activeDragRef = useRef<string | null>(null);
@@ -24,6 +24,7 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
   const binCloseTimerRef = useRef<number | null>(null);
   const [litterFilled, setLitterFilled] = useState(false);
   const [backupInstalled, setBackupInstalled] = useState(false);
+  const [keyboardSelectedStage, setKeyboardSelectedStage] = useState<number | null>(null);
   const completionCommittedRef = useRef(false);
   const scoopCountRef = useRef(0);
   useEffect(() => () => {
@@ -93,7 +94,7 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
     if (scoopCountRef.current > 0) scoopHasLeftBoxRef.current = true;
     beginPointerDrag(event, "scoop");
   }
-  function startWasteDrag(event: ReactPointerEvent<HTMLImageElement>, wasteId: string) {
+  function startWasteDrag(event: ReactPointerEvent<HTMLButtonElement>, wasteId: string) {
     const expectedWasteId = stageIndex === 1 ? urineWaste?.id : stageIndex === 3 ? poopWaste?.id : undefined;
     if (!expectedWasteId || wasteId !== expectedWasteId || selected.includes(`litter-waste:${wasteId}`)) return;
     beginPointerDrag(event, wasteId);
@@ -151,6 +152,47 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
     if (!litterFilled || backupInstalled) return;
     setBackupInstalled(true);
   }
+
+  function selectKeyboardTool() {
+    if (stageIndex > 4) return;
+    setKeyboardSelectedStage(stageIndex);
+    window.requestAnimationFrame(() => (stageIndex === 1 || stageIndex === 3 ? binRef.current : litterBoxRef.current)?.focus());
+  }
+
+  function selectWasteByKeyboard(wasteId: string) {
+    const expectedWasteId = stageIndex === 1 ? urineWaste?.id : stageIndex === 3 ? poopWaste?.id : undefined;
+    if (!expectedWasteId || wasteId !== expectedWasteId) return;
+    setKeyboardSelectedStage(stageIndex);
+    window.requestAnimationFrame(() => binRef.current?.focus());
+  }
+
+  function completeKeyboardStage() {
+    if (keyboardSelectedStage !== stageIndex) return;
+    const waste = stageIndex === 0 ? urineWaste : stageIndex === 2 ? poopWaste : undefined;
+    const wasteToDiscard = stageIndex === 1 ? urineWaste : stageIndex === 3 ? poopWaste : undefined;
+
+    if (waste) {
+      setRevealedWaste((current) => current.includes(waste.id) ? current : [...current, waste.id]);
+    } else if (wasteToDiscard) {
+      holdBinOpenForDiscard();
+      onChange([...selected, `litter-waste:${wasteToDiscard.id}`]);
+    } else if (stageIndex === 4) {
+      setLitterFilled(true);
+    }
+    setKeyboardSelectedStage(null);
+  }
+
+  const keyboardStep = stageIndex === 0
+    ? { select: "選取貓砂鏟", action: "鏟出尿團" }
+    : stageIndex === 1
+      ? { select: "選取尿團", action: "放入垃圾桶" }
+      : stageIndex === 2
+        ? { select: "選取貓砂鏟", action: "鏟出便便" }
+        : stageIndex === 3
+          ? { select: "選取便便", action: "放入垃圾桶" }
+          : stageIndex === 4
+            ? { select: "選取乾淨貓砂", action: "補進貓砂盆" }
+            : null;
   function finishCleaning() {
     if (!backupInstalled || completionCommittedRef.current || complete) return;
     completionCommittedRef.current = true;
@@ -169,11 +211,11 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
     <div className="cat-rescue-layout">
       <div className="cat-rescue-scene" aria-label="貓砂盆清潔互動場景">
         <div className={`cat-rescue-event-card${stageHelper && !stageInstruction ? " is-helper-only" : ""}`}><b>目前步驟</b>{stageInstruction && <p>{stageInstruction}</p>}{stageHelper && <small>{stageHelper}</small>}</div>
-        <div ref={litterBoxRef} className={`cat-rescue-litter-box${litterFilled ? " is-filled" : ""}${backupInstalled ? " is-backup" : ""}${stageIndex === 0 ? " is-scoop-target" : ""}`}><img draggable={false} src={backupInstalled ? catAssets.daily.replacementLitterBox : litterFilled ? catAssets.daily.cleanLitterBox : catAssets.daily.dirtyLitterBox} alt={backupInstalled ? "更換完成的貓砂盆" : litterFilled ? "乾淨的貓砂盆" : "髒的貓砂盆"} /></div>
-        {wasteItems.map((item) => revealedWaste.includes(item.id) && !selected.includes(`litter-waste:${item.id}`) && carryingWaste !== item.id ? <img key={item.id} draggable={false} className="cat-rescue-waste" style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }} src={item.kind === "poop" ? catAssets.daily.catPoop : catAssets.daily.urineClump} alt={`拖曳${item.label}到垃圾桶`} onPointerDown={(event) => startWasteDrag(event, item.id)} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} /> : null)}
-        <div ref={binRef} className={`cat-rescue-bin${isBinOpen ? " is-drop-target" : ""}`} style={{ left: `${catLitterRescueConfig.bin.x}%`, top: `${catLitterRescueConfig.bin.y}%`, width: `${catLitterRescueConfig.bin.size}%`, height: `${catLitterRescueConfig.bin.size}%` }} aria-label="垃圾桶"><img src={isBinOpen ? catAssets.daily.trashBinOpen : catAssets.daily.trashBin} alt={isBinOpen ? "開啟的垃圾桶" : "垃圾桶"} /></div>
+        <button ref={litterBoxRef} type="button" className={`cat-rescue-litter-box${litterFilled ? " is-filled" : ""}${backupInstalled ? " is-backup" : ""}${stageIndex === 0 ? " is-scoop-target" : ""}`} aria-label={keyboardStep?.action ?? "貓砂盆"} aria-disabled={keyboardSelectedStage !== stageIndex} onClick={(event) => { if (event.detail === 0) completeKeyboardStage(); }}><img draggable={false} src={backupInstalled ? catAssets.daily.replacementLitterBox : litterFilled ? catAssets.daily.cleanLitterBox : catAssets.daily.dirtyLitterBox} alt="" /></button>
+        {wasteItems.map((item) => revealedWaste.includes(item.id) && !selected.includes(`litter-waste:${item.id}`) && carryingWaste !== item.id ? <button type="button" key={item.id} className="cat-rescue-waste" style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }} aria-label={`選取${item.label}`} onPointerDown={(event) => startWasteDrag(event, item.id)} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} onClick={(event) => { if (event.detail === 0) selectWasteByKeyboard(item.id); }}><img draggable={false} src={item.kind === "poop" ? catAssets.daily.catPoop : catAssets.daily.urineClump} alt="" /></button> : null)}
+        <button ref={binRef} type="button" className={`cat-rescue-bin${isBinOpen ? " is-drop-target" : ""}`} style={{ left: `${catLitterRescueConfig.bin.x}%`, top: `${catLitterRescueConfig.bin.y}%`, width: `${catLitterRescueConfig.bin.size}%`, height: `${catLitterRescueConfig.bin.size}%` }} aria-label={keyboardStep?.action ?? "垃圾桶"} aria-disabled={keyboardSelectedStage !== stageIndex} onClick={(event) => { if (event.detail === 0) completeKeyboardStage(); }}><img src={isBinOpen ? catAssets.daily.trashBinOpen : catAssets.daily.trashBin} alt="" /></button>
       <div className="cat-rescue-controls">
-          {(stageIndex === 0 || stageIndex === 2) ? <div className="cat-rescue-tool-card"><button type="button" className={`cat-rescue-scoop-tool${dragging ? " is-dragging" : ""} is-prompt`} onPointerDown={startDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} aria-label="拖曳貓砂鏟到貓砂盆"><img draggable={false} src={catAssets.daily.litterScoop} alt="貓砂鏟" /></button></div> : stageIndex === 4 ? <div className="cat-rescue-tool-card"><button type="button" className="cat-rescue-action-icon" onPointerDown={startLitterDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} aria-label="拖曳乾淨貓砂到貓砂盆"><img draggable={false} src={catAssets.room.litter} alt="補充新的貓砂" /></button></div> : stageIndex === 5 && !backupInstalled ? <div className="cat-rescue-choice-card"><b className="cat-rescue-replacement-label">點擊替換貓砂盆</b><button type="button" className="cat-rescue-action-icon" onClick={installBackup} aria-label="更換新的貓砂盆"><img draggable={false} src={catAssets.daily.replacementLitterBoxIcon} alt="更換新的貓砂盆" /></button></div> : null}
+          {(stageIndex === 0 || stageIndex === 2) ? <div className="cat-rescue-tool-card"><button type="button" className={`cat-rescue-scoop-tool${dragging ? " is-dragging" : ""} is-prompt`} onPointerDown={startDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} onClick={(event) => { if (event.detail === 0) selectKeyboardTool(); }} aria-label={keyboardStep?.select ?? "選取貓砂鏟"}><img draggable={false} src={catAssets.daily.litterScoop} alt="" /></button></div> : stageIndex === 4 ? <div className="cat-rescue-tool-card"><button type="button" className="cat-rescue-action-icon" onPointerDown={startLitterDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} onClick={(event) => { if (event.detail === 0) selectKeyboardTool(); }} aria-label={keyboardStep?.select ?? "選取乾淨貓砂"}><img draggable={false} src={catAssets.room.litter} alt="" /></button></div> : stageIndex === 5 && !backupInstalled ? <div className="cat-rescue-choice-card"><b className="cat-rescue-replacement-label">點擊替換貓砂盆</b><button type="button" className="cat-rescue-action-icon" onClick={installBackup} aria-label="更換新的貓砂盆"><img draggable={false} src={catAssets.daily.replacementLitterBoxIcon} alt="" /></button></div> : null}
         </div>
       </div>
       {backupInstalled && <div className="cat-rescue-finish-action"><button type="button" className="primary" onClick={finishCleaning}>完成清潔 <span>→</span></button></div>}

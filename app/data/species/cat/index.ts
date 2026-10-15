@@ -12,6 +12,7 @@ import { catCopy } from "./copy";
 import { catHomeReadiness } from "./home-readiness";
 import { catMasteredCareThemes } from "./mastered-care-themes";
 import { catCareReviewAdditionalNotes } from "./care-review-notes";
+import { catAcquisition } from "./acquisition";
 
 export const catConfig = {
   id: "cat" as const,
@@ -31,6 +32,7 @@ export const catConfig = {
   homeReadiness: catHomeReadiness,
   masteredCareThemes: catMasteredCareThemes,
   careReviewAdditionalNotes: catCareReviewAdditionalNotes,
+  acquisition: catAcquisition,
 } as const;
 
 export { catAssets, catJourney, catLayout, catPreparation, catReport, catSelection, catLifeScenarios, getCatBreedChallengeScenarios, catFeeding };

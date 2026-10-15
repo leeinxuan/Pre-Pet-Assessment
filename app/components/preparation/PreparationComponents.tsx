@@ -173,6 +173,17 @@ function RoomItemVisual({ item, scene = false }: { item: RoomItem; scene?: boole
   return <span className={`preparation-asset-placeholder ${scene ? "preparation-asset-placeholder--scene" : ""}`} role="img" aria-label={`${item.label}素材待補`}>素材待補</span>;
 }
 
+function HazardInfoPanel({ hazard, petName, onClose }: { hazard: HazardItem; petName: string; onClose: () => void }) {
+  return (
+    <section className="room-hazard-alert" role="dialog" aria-modal="false" aria-labelledby={`hazard-info-${hazard.id}`}>
+      <button type="button" className="room-hazard-alert-close" onClick={onClose} aria-label={`關閉${hazard.label}說明`}>×</button>
+      <h2 id={`hazard-info-${hazard.id}`}>{hazard.label}已收起</h2>
+      <p><b>為什麼危險：</b>{hazard.danger.replaceAll("{petName}", petName)}</p>
+      <p><b>建議如何處理：</b>{hazard.handling.replaceAll("{petName}", petName)}</p>
+    </section>
+  );
+}
+
 export function RoomPreparation({
   selectedItems,
   securedHazards,
@@ -226,6 +237,17 @@ export function RoomPreparation({
   const entryReady = Boolean(hasInteriorRoomFlow && entryRequiredItemIds.every((id) => selectedItems.includes(id)));
   const outsideItemIds = roomFlow?.outsideItemIds ?? (roomFlow?.fenceItemId ? [roomFlow.fenceItemId] : []);
   const insideView = Boolean(hasInteriorRoomFlow && entryReady && insideRoomView);
+  const interiorRequiredItemIds = roomFlow?.interiorRequiredItemIds
+    ?? requiredRoomItems.filter((item) => !outsideItemIds.includes(item.id)).map((item) => item.id);
+  const interiorItemsComplete = interiorRequiredItemIds.length > 0
+    && interiorRequiredItemIds.every((id) => selectedItems.includes(id));
+  const shouldPromptInteriorEntry = Boolean(
+    hasInteriorRoomFlow
+    && fencePlaced
+    && entryReady
+    && !insideView
+    && !interiorItemsComplete,
+  );
   const interiorUsesOwnAspectRatio = Boolean(insideView && roomFlow?.interiorBackgroundAspectRatio && roomFlow.interiorBackgroundAspectRatio !== "match-room");
   const interiorItemId = roomFlow?.interiorItemId;
   const interiorItemPlaced = Boolean(interiorItemId && selectedItems.includes(interiorItemId));
@@ -311,7 +333,12 @@ export function RoomPreparation({
 
   function secureHazard(id: string) {
     const hazard = activeHazards.find((item) => item.id === id);
-    if (!hazard || securedHazards.includes(id) || dismissingHazard) return;
+    if (!hazard) return;
+    if (securedHazards.includes(id)) {
+      setActiveHazardInfo(id);
+      return;
+    }
+    if (dismissingHazard) return;
     setDismissingHazard(id);
     setRoomCheckMessage("");
     window.setTimeout(() => {
@@ -319,7 +346,6 @@ export function RoomPreparation({
       setDismissingHazard(null);
       setActiveHazardInfo(id);
     }, 260);
-    window.setTimeout(() => setActiveHazardInfo((current) => current === id ? null : current), 4260);
   }
 
   function getRoomCheckMessages() {
@@ -385,8 +411,8 @@ export function RoomPreparation({
         </section>
 
         <div className="room-interaction-column">
-          {activeHazard && <section className="room-hazard-alert" role="status" aria-live="polite"><h2>{activeHazard.label}已收起</h2><p><b>為什麼危險：</b>{activeHazard.danger.replaceAll("{petName}", displayName)}</p><p><b>建議如何處理：</b>{activeHazard.handling.replaceAll("{petName}", displayName)}</p></section>}
           <div ref={roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${usesDedicatedMobileRoomBackground ? "room-scene--dedicated-mobile-background" : ""} ${floorHazardComplete ? "room-scene--floor-safe" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${interiorUsesOwnAspectRatio ? "room-flow-scene--custom-aspect" : ""} ${roomSceneReady ? "room-scene-ready" : ""}`} style={interiorUsesOwnAspectRatio ? { "--room-flow-aspect-ratio": roomFlow?.interiorBackgroundAspectRatio } as CSSProperties : undefined} role="group" aria-label="寵物生活空間">
+            {activeHazard && <HazardInfoPanel hazard={activeHazard} petName={displayName} onClose={() => setActiveHazardInfo(null)} />}
             {roomBackground ? usesDedicatedMobileRoomBackground ? <picture className="room-scene-background room-scene-background--dedicated-mobile">
               <source media="(max-width: 720px)" srcSet={mobileRoomBackground} />
               <img src={roomBackground} alt={roomScene.backgroundAlt} style={roomScene.backgroundStyle} />
@@ -402,7 +428,11 @@ export function RoomPreparation({
               style={roomScene.backgroundStyle}
             /></> : <div className="preparation-asset-placeholder hamster-room-background-placeholder" role="img" aria-label={insideView ? "倉鼠籠內背景素材待補" : "倉鼠房間背景素材待補"}>素材待補</div>}
             {visiblePlacedItems.map((item) => hasInteriorRoomFlow && item.id === roomFlow?.fenceItemId
-              ? <button key={item.id} type="button" className="room-object placed-supply auto-room-object placed-room-item--entry room-flow-entry" style={roomItemPlacementStyle(item)} aria-label={entryReady ? roomFlow?.copy.entryLabel ?? "查看內部配置" : (roomFlow?.copy.fencePlacedInstruction ?? "請先完成入口用品。").replaceAll("{petName}", displayName)} disabled={!entryReady} onClick={() => setInsideRoomView(true)}><RoomItemVisual item={item} scene /><span>{item.label}</span></button>
+              ? <button key={item.id} type="button" className={`room-object placed-supply auto-room-object placed-room-item--entry room-flow-entry ${shouldPromptInteriorEntry ? "is-interior-entry-prompt" : ""}`} style={roomItemPlacementStyle(item)} aria-label={entryReady ? `${roomFlow?.copy.entryLabel ?? "查看內部配置"}${shouldPromptInteriorEntry ? "，點擊進入內部繼續佈置" : ""}` : (roomFlow?.copy.fencePlacedInstruction ?? "請先完成入口用品。").replaceAll("{petName}", displayName)} disabled={!entryReady} onClick={() => setInsideRoomView(true)}>
+                <RoomItemVisual item={item} scene />
+                <span>{item.label}</span>
+                {shouldPromptInteriorEntry && <i className={`room-interior-entry-hand room-interior-entry-hand--${(item.mobilePlacement?.x ?? item.placement?.x ?? 50) >= 50 ? "left" : "right"}`} aria-hidden="true">{(item.mobilePlacement?.x ?? item.placement?.x ?? 50) >= 50 ? "👉" : "👈"}</i>}
+              </button>
               : item.sceneParts?.length
                 ? item.sceneParts.map((part) => <div key={`${item.id}-${part.id}`} className={`room-object room-object-part placed-supply auto-room-object placed-room-item--${item.id}`} style={roomScenePartPlacementStyle(part)}><img src={part.image} alt={`房間中已配置的${item.label}`} /></div>)
                 : <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
@@ -417,7 +447,18 @@ export function RoomPreparation({
               <span className="pet-doorplate-name">{displayName}</span>
             </div>}
           </div>
-
+          {securedHazards.length > 0 && <div className="room-hazard-review-list" aria-label="已處理的危險物品說明">
+            <span className="room-hazard-review-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" focusable="false">
+                <path d="M5 9h22v4H5zM7 13h18l-1.5 13h-15zM12 17h8" />
+              </svg>
+            </span>
+            <div className="room-hazard-review-items">
+              {activeHazards.filter((hazard) => securedHazards.includes(hazard.id)).map((hazard) => (
+                <button type="button" key={hazard.id} onClick={() => setActiveHazardInfo(hazard.id)}>{hazard.label}</button>
+              ))}
+            </div>
+          </div>}
         </div>
       </div>
       <div className="room-actions">
@@ -430,6 +471,8 @@ export function RoomPreparation({
 
 export function CareMemberSetup({ members, onChange, onBack, onNext }: { members: CareMember[]; onChange: (members: CareMember[]) => void; onBack: () => void; onNext: () => void }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const memberFormRef = useRef<HTMLDivElement>(null);
+  const errorSummaryRef = useRef<HTMLParagraphElement>(null);
   const primary = members.find((member) => member.isPlayer);
   const valid = Boolean(primary?.name.trim() && primary.age && primary.age >= 1 && primary.age <= 120 && members.filter((member) => !member.isPlayer).every((member) => member.name.trim() && (member.age === null || (member.age >= 1 && member.age <= 120))));
 
@@ -443,12 +486,19 @@ export function CareMemberSetup({ members, onChange, onBack, onNext }: { members
       if (!member.isPlayer && member.age !== null && (member.age < 1 || member.age > 120)) nextErrors[`${member.id}-age`] = "年齡如有填寫，請輸入 1～120 歲。";
     });
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) onNext();
+    if (Object.keys(nextErrors).length === 0) {
+      onNext();
+      return;
+    }
+    window.setTimeout(() => {
+      const firstInvalid = memberFormRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+      (firstInvalid ?? errorSummaryRef.current)?.focus();
+    }, 0);
   }
 
   return <div className="content-wrap preparation-page">
     <StepHeading title="設定主要飼養者與共同照護者" body="先填寫主要飼養者；若確實有人可以一起照護，再新增共同照護者即可。" />
-    <div className="member-grid">{members.map((member) => <article className="member-card" key={member.id}><div className="member-card-head"><span>{member.isPlayer ? "主" : "協"}</span><div><b>{member.isPlayer ? "主要飼養者" : "共同照護者"}</b><small>{member.isPlayer ? "名稱與年齡必填" : "名稱必填，年齡選填"}</small></div>{!member.isPlayer && <button type="button" onClick={() => onChange(members.filter((item) => item.id !== member.id))}>移除</button>}</div><label>名稱或稱呼<input value={member.name} placeholder={member.isPlayer ? "例：小美" : "例：媽媽"} onChange={(event) => updateMember(member.id, { name: event.target.value })} /></label>{errors[`${member.id}-name`] && <p className="field-error">{errors[`${member.id}-name`]}</p>}<label>年齡{!member.isPlayer && <small>（選填）</small>}<input type="number" inputMode="numeric" min="1" max="120" value={member.age ?? ""} placeholder="例：35" onChange={(event) => updateMember(member.id, { age: event.target.value ? Number(event.target.value) : null })} /></label>{errors[`${member.id}-age`] && <p className="field-error">{errors[`${member.id}-age`]}</p>}</article>)}</div>
+    <div ref={memberFormRef} className="member-grid">{Object.keys(errors).length > 0 && <p ref={errorSummaryRef} className="field-error" role="alert" tabIndex={-1}>請先完成或修正標示的成員資料。</p>}{members.map((member) => <article className="member-card" key={member.id}><div className="member-card-head"><span>{member.isPlayer ? "主" : "協"}</span><div><b>{member.isPlayer ? "主要飼養者" : "共同照護者"}</b><small>{member.isPlayer ? "名稱與年齡必填" : "名稱必填，年齡選填"}</small></div>{!member.isPlayer && <button type="button" onClick={() => onChange(members.filter((item) => item.id !== member.id))}>移除</button>}</div><label>名稱或稱呼<input value={member.name} placeholder={member.isPlayer ? "例：小美" : "例：媽媽"} aria-invalid={Boolean(errors[`${member.id}-name`])} onChange={(event) => updateMember(member.id, { name: event.target.value })} /></label>{errors[`${member.id}-name`] && <p className="field-error" role="alert">{errors[`${member.id}-name`]}</p>}<label>年齡{!member.isPlayer && <small>（選填）</small>}<input type="number" inputMode="numeric" min="1" max="120" value={member.age ?? ""} placeholder="例：35" aria-invalid={Boolean(errors[`${member.id}-age`])} onChange={(event) => updateMember(member.id, { age: event.target.value ? Number(event.target.value) : null })} /></label>{errors[`${member.id}-age`] && <p className="field-error" role="alert">{errors[`${member.id}-age`]}</p>}</article>)}</div>
     <button type="button" className="add-member-button" onClick={addMember} disabled={members.length >= 6}>＋新增共同照護者 <small>{members.length - 1} / 5</small></button>
     <div className={`task-message ${valid ? "success" : ""}`}>{valid ? "照顧成員資料已完成，可以整理出發用品。" : "請先完成主要照顧者資料；共同照護者只需填寫真實存在的人選。"}</div>
     <NavButtons onBack={onBack} onNext={validate} nextLabel="成員完成，準備出發" />

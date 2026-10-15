@@ -26,8 +26,6 @@ export const rabbitHazards: HazardItem[] = [
 ];
 
 export const rabbitTrunkItems: TrunkItem[] = [
-  { id: "id-card", visualClassName: "id", visualRole: "identity-card", label: "身分證", kind: "document", image: rabbitAssets.preparation.idCard, preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
-  { id: "adoption-documents", visualClassName: "documents", visualRole: "document-folder", label: "領養文件", kind: "document", image: rabbitAssets.preparation.documents, preparedLabel: "已攜帶", description: "如有租屋，須提供房東許可之證明。", placement: { x: 23, y: 32, width: 23, layer: 3 } },
   { id: "carrier", label: "安全外出籠／提袋", kind: "supply", image: rabbitAssets.preparation.carrier, visualScale: 1.3, preparedLabel: "已準備", expenseIds: ["rabbit-carrier"], description: "兔子必須在適當外出籠或提袋中運送，不可散放；籠內要能讓牠自然站立。", placement: { x: 45, y: 61, width: 25, layer: 5 } },
   // 可裁剪已在房間準備的防滑墊；沿用同一費用 ID，expense store 會自動去重。
   { id: "anti-slip-liner", label: "防滑墊（籠內鋪底）", kind: "supply", image: rabbitAssets.preparation.antiSlipLiner, preparedLabel: "已準備", expenseIds: ["rabbit-anti-slip-mat"], description: "外出籠底部鋪防滑墊，可避免兔子在車輛晃動時滑倒受傷。", placement: { x: 45, y: 65, width: 26, layer: 4 } },
@@ -46,6 +44,7 @@ export const rabbitRoomFlow = {
   floorHazardId: "slippery-floor",
   fenceItemId: "fence-pen",
   interiorItemId: "anti-slip-mat",
+  interiorRequiredItemIds: ["hay-rack", "heavy-water-bowl", "litter-box", "hiding-box", "anti-slip-mat"],
   floorHotspot: {
     desktop: { x: 49, y: 82, width: 78, height: 27 },
     mobile: { x: 49, y: 81, width: 84, height: 29 },
@@ -58,5 +57,5 @@ export const rabbitRoomFlow = {
 } as const;
 
 export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌" } };
-export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: rabbitAssets.preparation.documents, documentFolderAlt: "飼養文件夾", hidePriceForReusedItemIds: ["anti-slip-liner"] };
+export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂", hidePriceForReusedItemIds: ["anti-slip-liner"] };
 export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow, roomScene: rabbitRoomScene, departureScene: rabbitDepartureScene } as const;

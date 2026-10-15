@@ -46,8 +46,6 @@ export const rabbitAssets = {
     antiSlipLiner: "/assets/car/anti-slip-liner.webp",
     hay: rabbitHayAsset,
     waterSupply: "/assets/car/water-supply.webp",
-    idCard: "/assets/car/id-card.webp",
-    documents: "/assets/car/adoption-documents.webp",
     coolingPack: "/assets/car/cooling-pack.webp",
   },
   daily: { checkBackground: "/assets/cat/room/cat-safe-room.webp" },

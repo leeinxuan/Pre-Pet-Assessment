@@ -17,10 +17,11 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
   const completed = activity.rabbitDailyCheckSteps;
   const state = activity.rabbitGroomingState || rabbitGroomingConfig.initialState;
   const [draggingBrush, setDraggingBrush] = useState(false);
+  const [keyboardBrushSelectedFor, setKeyboardBrushSelectedFor] = useState<string | null>(null);
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
   const [magnifierPosition, setMagnifierPosition] = useState<{ x: number; y: number } | null>(null);
   const [observation, setObservation] = useState<{ key: keyof typeof rabbitGroomingConfig.observations; displayState: "normal" | "warning"; status: RabbitObservationStatus } | null>(null);
-  const brushTargetRef = useRef<HTMLDivElement>(null);
+  const brushTargetRef = useRef<HTMLButtonElement>(null);
   const groomingSteps = rabbitGroomingConfig.groomingSteps;
   const current = groomingSteps.find((step) => step.stateId === state)
     ?? (state === "part-1-footpad-observation" ? groomingSteps.find((step) => step.id === "groom-footpad") : undefined);
@@ -77,6 +78,17 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     if (!overTarget) return;
     add(current.id); setState(current.completeStateId);
   };
+  const finishBrushByKeyboard = () => {
+    if (!current || !isBrushStep || keyboardBrushSelectedFor !== current.id) return;
+    add(current.id);
+    setKeyboardBrushSelectedFor(null);
+    setState(current.completeStateId);
+  };
+  const selectBrushByKeyboard = () => {
+    if (!current || !isBrushStep) return;
+    setKeyboardBrushSelectedFor(current.id);
+    window.requestAnimationFrame(() => brushTargetRef.current?.focus());
+  };
   if (!activity.rabbitGroomingIntroStarted) return <ActivityIntroPage
     config={rabbitGroomingConfig.intro}
     petName={petName}
@@ -96,14 +108,14 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
         {!observation && <p className="rabbit-grooming-scene-prompt">{isInspection ? "點擊嘴部與前腳，完成外觀檢查。" : current?.instruction ?? "請依照提示完成保養。"}</p>}
         {current?.id === "groom-hind-tail" && <aside className="rabbit-grooming-caution"><b>特別注意！</b><span>{current.caution}</span></aside>}
         <div className="rabbit-grooming-character"><img src={rabbitGroomingConfig.assets[characterKey]} alt={petName || "兔兔"} onError={(event) => { event.currentTarget.style.display = "none"; event.currentTarget.parentElement?.classList.add("asset-unavailable"); }} />
-          {!isInspection && current && (current.id === "groom-footpad" ? <button type="button" data-grooming-step={current.id} className="rabbit-anatomy-hitbox rabbit-footpad-hitbox" aria-label="檢查兔子足底" disabled={Boolean(observation) || completed.includes("groom-footpad")} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => { setMagnifierPosition(null); setState("part-1-footpad-observation"); openObservation("footpad"); }} /> : <div ref={brushTargetRef} data-grooming-step={current.id} className={`rabbit-grooming-guideline ${draggingBrush ? "is-dragging" : ""}`} aria-label={current.label} />)}
+          {!isInspection && current && (current.id === "groom-footpad" ? <button type="button" data-grooming-step={current.id} className="rabbit-anatomy-hitbox rabbit-footpad-hitbox" aria-label="檢查兔子足底" disabled={Boolean(observation) || completed.includes("groom-footpad")} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => { setMagnifierPosition(null); setState("part-1-footpad-observation"); openObservation("footpad"); }} /> : <button ref={brushTargetRef} type="button" data-grooming-step={current.id} className={`rabbit-grooming-guideline ${draggingBrush ? "is-dragging" : ""}`} aria-label={`梳理${current.label}`} aria-disabled={keyboardBrushSelectedFor !== current.id} onClick={(event) => { if (event.detail === 0) finishBrushByKeyboard(); }} />)}
           {isInspection && <>
             <button type="button" className={`rabbit-anatomy-hitbox rabbit-incisor-hitbox ${completed.includes("inspect-incisor") ? "done" : ""}`} aria-label="檢查兔子門齒" disabled={Boolean(observation) || completed.includes("inspect-incisor")} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => { setMagnifierPosition(null); setState("part-2-incisor-observation"); openObservation("incisor"); }} />
             <button type="button" className={`rabbit-anatomy-hitbox rabbit-nail-hitbox ${completed.includes("inspect-nail") ? "done" : ""}`} aria-label="檢查兔子指甲" disabled={Boolean(observation) || !completed.includes("inspect-incisor") || completed.includes("inspect-nail")} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => { setMagnifierPosition(null); setState("part-2-nail-observation"); openObservation("nail"); }} />
           </>}
         </div>
         {firstPart && <aside className="rabbit-fur-collector" aria-label={`毛球收集進度 ${furCollectionProgress}%`}><small>毛球收集進度 {furCollectionProgress}%</small><img src={rabbitGroomingConfig.assets[furBallKey]} alt="收集到的毛球" onError={(event) => { event.currentTarget.style.display = "none"; }} /><span>毛球收集罐</span></aside>}
-      {isBrushStep && current && <button type="button" className="rabbit-grooming-brush" onDragStart={(event) => event.preventDefault()} onPointerDown={(event) => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingBrush(true); setPoint({ x: event.clientX, y: event.clientY }); }} onPointerUp={(event) => { finishBrush(event); event.stopPropagation(); }}><img draggable={false} src={rabbitGroomingConfig.assets.brush} alt="可拖曳的梳子" onError={(event) => { event.currentTarget.style.display = "none"; }} /></button>}
+      {isBrushStep && current && <button type="button" className="rabbit-grooming-brush" onDragStart={(event) => event.preventDefault()} onPointerDown={(event) => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingBrush(true); setPoint({ x: event.clientX, y: event.clientY }); }} onPointerUp={(event) => { finishBrush(event); event.stopPropagation(); }} onClick={(event) => { if (event.detail === 0) selectBrushByKeyboard(); }} aria-label="選取梳子"><img draggable={false} src={rabbitGroomingConfig.assets.brush} alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} /></button>}
       {observation && observationData && <section className={`rabbit-grooming-observation rabbit-grooming-observation-${observation.key} is-${observation.status}`} role="dialog" aria-labelledby="rabbit-grooming-observation-title" aria-live="polite">
         <img src={observation.status === "comparison" || observation.displayState === "warning" ? observationData.warningImage : observationData.normalImage} alt={observationData.title} onError={(event) => { event.currentTarget.style.display = "none"; }} />
         <h2 id="rabbit-grooming-observation-title">{observation.status === "comparison" ? observationData.abnormalTitle : observationData.title}</h2>

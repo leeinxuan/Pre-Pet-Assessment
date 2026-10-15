@@ -8,10 +8,30 @@ const dogShibaWalkingRoot = "/assets/dog/walking/shiba";
 export const dogShibaWalkingAsset = (fileName: string) => `${dogShibaWalkingRoot}/${fileName}`;
 
 export const walkingPrepItems = [
-  { id: "leash", label: "牽繩／胸背帶", image: "/assets/car/leash.webp" },
-  { id: "bag", label: "撿便袋", image: "/assets/dog/walking/poop-bag-1.webp" },
-  { id: "water", label: "水", image: "/assets/car/water-bottle.webp" },
+  { id: "leash", label: "牽繩／胸背帶", image: "/assets/car/leash.webp", imageScale: 1 },
+  { id: "bag", label: "撿便袋", image: "/assets/dog/walking/poop-bag-1.webp", imageScale: 1 },
+  { id: "water", label: "水", image: "/assets/car/water-bottle.webp", imageScale: 2 },
 ] as const;
+
+/** §5.3.2 外出安全與法規；互動畫面由犬隻資料提供，避免在共用元件硬寫文案。 */
+export const walkingLawCopy = {
+  incorrect: {
+    eyebrow: "外出安全與法規提醒",
+    title: "自由探索，也需要有能立即保護牠的距離",
+    paragraphs: [
+      "《動物保護法》第 20 條要求寵物出入公共場所或公眾得出入之場所時須有人伴同；各縣市**依動物保護自治條例**，在**公共場所或公眾得出入之場所**要求使用牽繩、箱籠或其他適當防護措施。外出前應查明所在地規定。",
+      "即使在沒有明確禁止的地點，牽繩仍能降低走失、突然衝向車道、驚嚇他人或與其他動物衝突的風險。保持牽繩鬆弛，狗狗仍然可以嗅聞和探索。",
+    ],
+  },
+  correct: {
+    eyebrow: "你選得很好",
+    title: "牽繩不是限制探索，而是讓探索更安全",
+    paragraphs: [
+      "繫好合適的胸背帶或項圈並保持牽繩鬆弛，狗狗仍然可以嗅聞、觀察環境；遇到車輛、陌生動物或突然受驚時，你也能及時控制距離，降低走失與衝突風險。",
+      "《動物保護法》第 20 條要求寵物出入公共場所或公眾得出入之場所時須有人伴同，各縣市**依動物保護自治條例**要求在**公共場所或公眾得出入之場所**使用牽繩、箱籠或其他適當防護措施。因此另一個「不繫牽繩」的選項，即使看似自由，也不是安全的散步方式。",
+    ],
+  },
+} as const;
 
 export const walkingScenes = [
   { title: "家門口往人行道", image: "/assets/dog/walking/door-to-sidewalk.webp", mobileImage: "/assets/dog/walking/door-to-sidewalk-mobile.webp", poopEvent: false },

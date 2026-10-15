@@ -82,7 +82,5 @@ export const birdAssets = {
     cover: "/assets/car/bird-cover-cloth.webp",
     food: birdSeedMixAsset,
     water: "/assets/car/water-supply.webp",
-    idCard: "/assets/car/id-card.webp",
-    documents: "/assets/car/adoption-documents.webp",
   },
 } as const;

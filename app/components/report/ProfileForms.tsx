@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Profile photo previews must preserve the existing native image behavior. */
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { getSpeciesConfig } from "../../data/species/index";
 import type { Profile } from "../../game-types";
 import { NavButtons } from "../shared/SharedComponents";
@@ -51,6 +51,8 @@ export function ProfileForm({
   onNext: () => void;
 }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const panelRef = useRef<HTMLElement>(null);
+  const errorSummaryRef = useRef<HTMLParagraphElement>(null);
   const titles = ["時間與身分", "居住與同住者", "經驗與動機", "預算與支援"];
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) => onChange({ ...profile, [key]: value });
   const clamp = (raw: string, max: number) => raw === "" ? "" : String(Math.min(max, Math.max(0, Number(raw.replace(/\D/g, "")) || 0)));
@@ -85,11 +87,45 @@ export function ProfileForm({
       if (profile.backupSupport === null) next.backupSupport = "請選擇是否有外部支援。";
     }
     setErrors(next);
-    return Object.keys(next).length === 0;
+    return next;
+  }
+
+  function focusFirstInvalidField(nextErrors: Record<string, string>) {
+    const firstKey = Object.keys(nextErrors)[0];
+    const selectors: Record<string, string> = {
+      age: "#real-age",
+      role: ".identity-options button",
+      roleOther: 'input[aria-label="其他身分"]',
+      hoursAway: 'input[name="hours-away"]',
+      careHours: 'input[name="care-hours"]',
+      housing: ".housing-options button",
+      landlordConsent: ".landlord-options button",
+      hasHousemates: ".housemate-presence-options button",
+      housematesConsent: ".housemate-details .housemate-presence-options button",
+      experience: ".experience-options button",
+      reasons: ".reason-options button",
+      reasonOther: 'input[name="reason-other"]',
+      monthlyBudget: 'input[name="monthly-budget"]',
+      emergencyFund: ".housing-options button",
+      backupSupport: ".housing-options button",
+    };
+    window.setTimeout(() => {
+      const housingOptionButtons = panelRef.current?.querySelectorAll<HTMLElement>(".housing-options button");
+      const field = firstKey === "emergencyFund"
+        ? housingOptionButtons?.[0]
+        : firstKey === "backupSupport"
+          ? housingOptionButtons?.[2]
+          : firstKey ? panelRef.current?.querySelector<HTMLElement>(selectors[firstKey]) : null;
+      (field ?? errorSummaryRef.current)?.focus();
+    }, 0);
   }
 
   function nextPage() {
-    if (!validate(page)) return;
+    const nextErrors = validate(page);
+    if (Object.keys(nextErrors).length > 0) {
+      focusFirstInvalidField(nextErrors);
+      return;
+    }
     if (page < titles.length - 1) {
       onPage(page + 1);
       setErrors({});
@@ -108,24 +144,25 @@ export function ProfileForm({
     <div className="content-wrap profile-wizard">
       <div className="profile-bridge">你已經陪牠走過一段模擬生活。現在讓我們把遊戲中的經驗放回你的真實生活中，看看哪些部分已經準備好，哪些還需要確認。</div>
       <div className="profile-wizard-head"><div><h1>{titles[page]}</h1><p>沒有理想答案，請依照現在的生活狀況填寫。</p></div></div>
-      <section className="profile-panel" key={page}>
+      <section ref={panelRef} className="profile-panel" key={page}>
+        {Object.keys(errors).length > 0 && <p ref={errorSummaryRef} className="field-error" role="alert" tabIndex={-1}>請先完成或修正標示的欄位。</p>}
         {page === 0 && <>
-          <div className="inline-number-field"><label htmlFor="real-age">年齡</label><input id="real-age" type="number" min="1" max="120" placeholder="例：20" value={profile.age} onChange={(event) => update("age", clamp(event.target.value, 120))} /><span>歲</span></div>{errors.age && <p className="field-error">{errors.age}</p>}
-          <fieldset><legend>身分類型</legend><div className="identity-options">{[["學生", "▣"], ["上班族", "♟"], ["退休", "◎"], ["其他", "•••"]].map(([value, icon]) => <div key={value}><OptionButton label={value} icon={icon} selected={profile.role === value} onClick={() => update("role", value)} />{value === "其他" && <input aria-label="其他身分" disabled={profile.role !== "其他"} placeholder="請說明" value={profile.roleOther} onChange={(event) => update("roleOther", event.target.value)} />}</div>)}</div>{errors.role && <p className="field-error">{errors.role}</p>}{errors.roleOther && <p className="field-error">{errors.roleOther}</p>}</fieldset>
-          <fieldset><legend>每天的時間</legend><div className="profile-time-grid"><label>每天離家時間<span>每日 <input type="number" min="0" max="24" value={profile.hoursAway} onChange={(event) => update("hoursAway", clamp(event.target.value, 24))} /> 小時</span></label><label>每天能投入照顧時間<span>每日 <input type="number" min="0" max="24" value={profile.careHours} onChange={(event) => update("careHours", clamp(event.target.value, 24))} /> 小時</span></label></div>{errors.hoursAway && <p className="field-error">{errors.hoursAway}</p>}{errors.careHours && <p className="field-error">{errors.careHours}</p>}</fieldset>
+          <div className="inline-number-field"><label htmlFor="real-age">年齡</label><input id="real-age" type="number" min="1" max="120" placeholder="例：20" value={profile.age} aria-invalid={Boolean(errors.age)} onChange={(event) => update("age", clamp(event.target.value, 120))} /><span>歲</span></div>{errors.age && <p className="field-error" role="alert">{errors.age}</p>}
+          <fieldset><legend>身分類型</legend><div className="identity-options">{[["學生", "▣"], ["上班族", "♟"], ["退休", "◎"], ["其他", "•••"]].map(([value, icon]) => <div key={value}><OptionButton label={value} icon={icon} selected={profile.role === value} onClick={() => update("role", value)} />{value === "其他" && <input aria-label="其他身分" disabled={profile.role !== "其他"} placeholder="請說明" value={profile.roleOther} aria-invalid={Boolean(errors.roleOther)} onChange={(event) => update("roleOther", event.target.value)} />}</div>)}</div>{errors.role && <p className="field-error" role="alert">{errors.role}</p>}{errors.roleOther && <p className="field-error" role="alert">{errors.roleOther}</p>}</fieldset>
+          <fieldset><legend>每天的時間</legend><div className="profile-time-grid"><label>每天離家時間<span>每日 <input name="hours-away" type="number" min="0" max="24" value={profile.hoursAway} aria-invalid={Boolean(errors.hoursAway)} onChange={(event) => update("hoursAway", clamp(event.target.value, 24))} /> 小時</span></label><label>每天能投入照顧時間<span>每日 <input name="care-hours" type="number" min="0" max="24" value={profile.careHours} aria-invalid={Boolean(errors.careHours)} onChange={(event) => update("careHours", clamp(event.target.value, 24))} /> 小時</span></label></div>{errors.hoursAway && <p className="field-error" role="alert">{errors.hoursAway}</p>}{errors.careHours && <p className="field-error" role="alert">{errors.careHours}</p>}</fieldset>
         </>}
         {page === 1 && <>
-          <fieldset><legend>居住類型</legend><div className="housing-options">{["自有住宅", "租屋"].map((value) => <OptionButton key={value} label={value} selected={profile.housing === value} onClick={() => update("housing", value)} simple />)}</div>{errors.housing && <p className="field-error">{errors.housing}</p>}{profile.housing === "租屋" && <div className="landlord-options">{["房東已同意", "尚未取得同意", "不同意"].map((value) => <OptionButton key={value} label={value} selected={profile.landlordConsent === value} onClick={() => update("landlordConsent", value)} />)}</div>}{errors.landlordConsent && <p className="field-error">{errors.landlordConsent}</p>}</fieldset>
-          <fieldset><legend>是否有同住者？</legend><div className="housemate-presence-options"><OptionButton label="有" selected={profile.hasHousemates === true} onClick={() => update("hasHousemates", true)} /><OptionButton label="無" selected={profile.hasHousemates === false} onClick={() => update("hasHousemates", false)} /></div>{errors.hasHousemates && <p className="field-error">{errors.hasHousemates}</p>}{profile.hasHousemates === true && <div className="housemate-details"><h2>所有同住者是否知情並同意？</h2><div className="housemate-presence-options"><OptionButton label="同意" selected={profile.housematesConsent === true} onClick={() => update("housematesConsent", true)} /><OptionButton label="尚未同意" selected={profile.housematesConsent === false} onClick={() => update("housematesConsent", false)} /></div>{errors.housematesConsent && <p className="field-error">{errors.housematesConsent}</p>}</div>}</fieldset>
+          <fieldset><legend>居住類型</legend><div className="housing-options">{["自有住宅", "租屋"].map((value) => <OptionButton key={value} label={value} selected={profile.housing === value} onClick={() => update("housing", value)} simple />)}</div>{errors.housing && <p className="field-error" role="alert">{errors.housing}</p>}{profile.housing === "租屋" && <div className="landlord-options">{["房東已同意", "尚未取得同意", "不同意"].map((value) => <OptionButton key={value} label={value} selected={profile.landlordConsent === value} onClick={() => update("landlordConsent", value)} />)}</div>}{errors.landlordConsent && <p className="field-error" role="alert">{errors.landlordConsent}</p>}</fieldset>
+          <fieldset><legend>是否有同住者？</legend><div className="housemate-presence-options"><OptionButton label="有" selected={profile.hasHousemates === true} onClick={() => update("hasHousemates", true)} /><OptionButton label="無" selected={profile.hasHousemates === false} onClick={() => update("hasHousemates", false)} /></div>{errors.hasHousemates && <p className="field-error" role="alert">{errors.hasHousemates}</p>}{profile.hasHousemates === true && <div className="housemate-details"><h2>所有同住者是否知情並同意？</h2><div className="housemate-presence-options"><OptionButton label="同意" selected={profile.housematesConsent === true} onClick={() => update("housematesConsent", true)} /><OptionButton label="尚未同意" selected={profile.housematesConsent === false} onClick={() => update("housematesConsent", false)} /></div>{errors.housematesConsent && <p className="field-error" role="alert">{errors.housematesConsent}</p>}</div>}</fieldset>
         </>}
         {page === 2 && <>
-          <fieldset><legend>過去及目前的飼養經驗</legend><div className="experience-options">{["首次飼養", "有飼養經驗"].map((value) => <OptionButton key={value} label={value} selected={profile.experience === value} onClick={() => update("experience", value)} />)}</div>{errors.experience && <p className="field-error">{errors.experience}</p>}{profile.experience === "有飼養經驗" && <div className="experience-detail open"><label className="experience-note">過去飼養經驗<input placeholder="例：曾照顧犬隻 5 年" value={profile.pastPets} onChange={(event) => update("pastPets", event.target.value)} /></label><label className="experience-note">目前家中寵物<input placeholder="例：目前有一隻貓" value={profile.currentPets} onChange={(event) => update("currentPets", event.target.value)} /></label></div>}</fieldset>
-          <fieldset><legend>飼養動機 <small>可複選</small></legend><div className="reason-options">{["陪伴與情緒支持", "喜愛動物", "家庭共同決定", "提供動物一個家", "生活夥伴", "其他"].map((reason) => <OptionButton key={reason} label={reason} selected={profile.reasons.includes(reason)} onClick={() => toggleReason(reason)} />)}</div>{errors.reasons && <p className="field-error">{errors.reasons}</p>}{profile.reasons.includes("其他") && <label className="conditional-input">其他動機<input placeholder="請說明" value={profile.reasonOther} onChange={(event) => update("reasonOther", event.target.value)} /></label>}{errors.reasonOther && <p className="field-error">{errors.reasonOther}</p>}</fieldset>
+          <fieldset><legend>過去及目前的飼養經驗</legend><div className="experience-options">{["首次飼養", "有飼養經驗"].map((value) => <OptionButton key={value} label={value} selected={profile.experience === value} onClick={() => update("experience", value)} />)}</div>{errors.experience && <p className="field-error" role="alert">{errors.experience}</p>}{profile.experience === "有飼養經驗" && <div className="experience-detail open"><label className="experience-note">過去飼養經驗<input placeholder="例：曾照顧犬隻 5 年" value={profile.pastPets} onChange={(event) => update("pastPets", event.target.value)} /></label><label className="experience-note">目前家中寵物<input placeholder="例：目前有一隻貓" value={profile.currentPets} onChange={(event) => update("currentPets", event.target.value)} /></label></div>}</fieldset>
+          <fieldset><legend>飼養動機 <small>可複選</small></legend><div className="reason-options">{["陪伴與情緒支持", "喜愛動物", "家庭共同決定", "提供動物一個家", "生活夥伴", "其他"].map((reason) => <OptionButton key={reason} label={reason} selected={profile.reasons.includes(reason)} onClick={() => toggleReason(reason)} />)}</div>{errors.reasons && <p className="field-error" role="alert">{errors.reasons}</p>}{profile.reasons.includes("其他") && <label className="conditional-input">其他動機<input name="reason-other" placeholder="請說明" value={profile.reasonOther} aria-invalid={Boolean(errors.reasonOther)} onChange={(event) => update("reasonOther", event.target.value)} /></label>}{errors.reasonOther && <p className="field-error" role="alert">{errors.reasonOther}</p>}</fieldset>
         </>}
         {page === 3 && <>
-          <fieldset><legend>每月可負擔預算</legend><div className="budget-profile-input"><span>NT$</span><input type="number" min="0" step="500" placeholder="例：5000" value={profile.monthlyBudget} onChange={(event) => update("monthlyBudget", clamp(event.target.value, 999999))} /><small>不含大型突發醫療費用</small></div>{errors.monthlyBudget && <p className="field-error">{errors.monthlyBudget}</p>}</fieldset>
-          <fieldset><legend>是否有緊急預備金？</legend><div className="housing-options"><OptionButton label="有" selected={profile.emergencyFund === true} onClick={() => update("emergencyFund", true)} /><OptionButton label="目前沒有" selected={profile.emergencyFund === false} onClick={() => update("emergencyFund", false)} /></div>{errors.emergencyFund && <p className="field-error">{errors.emergencyFund}</p>}</fieldset>
-          <fieldset><legend>忙碌、出差或生病時，是否有人能協助？</legend><div className="housing-options"><OptionButton label="有可靠支援" selected={profile.backupSupport === true} onClick={() => update("backupSupport", true)} /><OptionButton label="目前沒有" selected={profile.backupSupport === false} onClick={() => update("backupSupport", false)} /></div>{errors.backupSupport && <p className="field-error">{errors.backupSupport}</p>}</fieldset>
+          <fieldset><legend>每月可負擔預算</legend><div className="budget-profile-input"><span>NT$</span><input name="monthly-budget" type="number" min="0" step="500" placeholder="例：5000" value={profile.monthlyBudget} aria-invalid={Boolean(errors.monthlyBudget)} onChange={(event) => update("monthlyBudget", clamp(event.target.value, 999999))} /><small>不含大型突發醫療費用</small></div>{errors.monthlyBudget && <p className="field-error" role="alert">{errors.monthlyBudget}</p>}</fieldset>
+          <fieldset><legend>是否有緊急預備金？</legend><div className="housing-options"><OptionButton label="有" selected={profile.emergencyFund === true} onClick={() => update("emergencyFund", true)} /><OptionButton label="目前沒有" selected={profile.emergencyFund === false} onClick={() => update("emergencyFund", false)} /></div>{errors.emergencyFund && <p className="field-error" role="alert">{errors.emergencyFund}</p>}</fieldset>
+          <fieldset><legend>忙碌、出差或生病時，是否有人能協助？</legend><div className="housing-options"><OptionButton label="有可靠支援" selected={profile.backupSupport === true} onClick={() => update("backupSupport", true)} /><OptionButton label="目前沒有" selected={profile.backupSupport === false} onClick={() => update("backupSupport", false)} /></div>{errors.backupSupport && <p className="field-error" role="alert">{errors.backupSupport}</p>}</fieldset>
         </>}
       </section>
       <NavButtons onBack={backPage} onNext={nextPage} nextLabel={page === titles.length - 1 ? "產生我的評估報告" : "下一步"} />

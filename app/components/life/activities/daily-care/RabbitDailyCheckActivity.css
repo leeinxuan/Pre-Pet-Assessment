@@ -34,7 +34,7 @@
 .rabbit-grooming-character { position: relative; width: min(70%, 390px); max-height: 335px; }
 .rabbit-grooming-character > img { display: block; width: 100%; max-height: 335px; object-fit: contain; }
 .rabbit-grooming-scene.asset-unavailable::after { content: "素材暫時無法顯示，仍可依熱區完成操作"; color: var(--ink-soft); font-weight: 800; }
-.rabbit-grooming-guideline { position: absolute; z-index: 1; pointer-events: none; transition: opacity .18s ease; }
+.rabbit-grooming-guideline { position: absolute; z-index: 1; padding: 0; border: 0; background: transparent; cursor: pointer; transition: opacity .18s ease; }
 .rabbit-grooming-guideline::before, .rabbit-grooming-guideline::after { position: absolute; content: ""; pointer-events: none; }
 .rabbit-grooming-guideline[data-grooming-step="groom-head-ears"] { top: 9%; left: 30%; width: 32%; height: 22%; }
 .rabbit-grooming-guideline[data-grooming-step="groom-back-sides"] { top: 42%; left: 25%; width: 48%; height: 24%; }

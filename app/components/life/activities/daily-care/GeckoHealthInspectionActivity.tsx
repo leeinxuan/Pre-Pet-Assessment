@@ -165,18 +165,18 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   };
 
   return (
-    <section className="gecko-health-inspection" aria-label={renderText(config.title)}>
-      <header className="gecko-health-header">
+    <section className="life-activity gecko-health-inspection" aria-label={renderText(config.title)}>
+      <div className="activity-heading">
         <p className="life-stage-label">日常照護</p>
         <h1>{render(config.title)}</h1>
-        <p>{render(config.description)}</p>
-      </header>
+        <p className="gecko-health-message">{render(config.description)}</p>
+      </div>
 
-      <ol className="rabbit-grooming-progress gecko-health-progress" aria-label="每日巡視進度">
+      <ol className="rabbit-grooming-progress" aria-label="每日巡視進度">
         {config.progress.map((step, index) => {
           const stepComplete = step.id === "body" ? bodyComplete : completed.includes(step.id);
           return (
-            <li key={step.id} className={stepComplete ? "is-complete" : step.id === activeStage ? "is-current" : ""}>
+            <li key={step.id} className={stepComplete ? "done" : step.id === activeStage ? "active" : ""}>
               <span>{stepComplete ? "✓" : index + 1}</span>
               {step.label}
             </li>

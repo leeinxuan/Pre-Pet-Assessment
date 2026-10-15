@@ -7,6 +7,16 @@ export type OfficialPetSource = {
   linkLabel: string;
 };
 
+export type PetAcquisitionReminderSegment = {
+  text: string;
+  emphasis?: boolean;
+};
+
+export type PetAcquisitionConfig = {
+  sourceIds: readonly OfficialPetSource["id"][];
+  reminder: readonly PetAcquisitionReminderSegment[];
+};
+
 /** 取得寵物頁僅提供農業部寵物登記管理資訊網的官方查詢入口。 */
 export const officialPetSources: OfficialPetSource[] = [
   {

@@ -30,7 +30,7 @@ export function BreedChallengeActivity({
   answers: Record<string, ScenarioAnswer>;
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
   onContinue: () => void;
-  onReplay?: () => void;
+  onReplay?: (scenarioId: string) => void;
   continueImmediately?: boolean;
   testNextSignal?: number;
 }) {
@@ -84,7 +84,7 @@ export function BreedChallengeActivity({
         intro={<p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
         breedHighlight={<BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={`${breedLabel}小知識`} />}
         onVideoError={() => setFeedbackVideoFailed(true)}
-        onReplay={onReplay}
+        onReplay={onReplay ? () => onReplay(scenario.id) : undefined}
         onContinue={moveToNext}
         continueImmediately={continueImmediately}
       />

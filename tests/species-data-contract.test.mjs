@@ -11,14 +11,26 @@ test("all registered species expose the complete canonical data contract", async
     const base = `app/data/species/${species}/`;
     const requiredFiles = [
       "index.ts", "copy.ts", "feeding.ts", "journey.ts", "preparation.ts", "report.ts",
-      "home-readiness.ts", "mastered-care-themes.ts", "care-review-notes.ts", "expenses.ts",
+      "home-readiness.ts", "mastered-care-themes.ts", "care-review-notes.ts", "expenses.ts", "acquisition.ts",
     ];
     await Promise.all(requiredFiles.map((file) => access(new URL(`${base}${file}`, root))));
 
     const index = await source(`${base}index.ts`);
-    for (const field of ["copy", "feeding", "journey", "preparation", "report", "homeReadiness", "masteredCareThemes", "careReviewAdditionalNotes"]) {
+    for (const field of ["copy", "feeding", "journey", "preparation", "report", "homeReadiness", "masteredCareThemes", "careReviewAdditionalNotes", "acquisition"]) {
       assert.match(index, new RegExp(`\\b${field}\\s*:`), `${species} config must register ${field}`);
     }
+  }
+});
+
+test("acquisition sources keep the legal business lookup only for dog and cat", async () => {
+  for (const species of speciesIds) {
+    const acquisition = await source(`app/data/species/${species}/acquisition.ts`);
+    if (species === "dog" || species === "cat") {
+      assert.match(acquisition, /"legal-pet-businesses"/, `${species} must keep the legal pet business lookup`);
+    } else {
+      assert.doesNotMatch(acquisition, /"legal-pet-businesses"/, `${species} must not show the dog/cat legal pet business lookup`);
+    }
+    assert.match(acquisition, /來源方/, `${species} must use the shared source reminder`);
   }
 });
 
@@ -84,8 +96,20 @@ test("species report support data is available through canonical files", async (
     ]);
     assert.match(home, new RegExp(`export const ${species}HomeReadiness\\b`));
     assert.match(themes, new RegExp(`export const ${species}MasteredCareThemes\\b`));
+    assert.match(themes, /preparationThemes\(/, `${species} preparation themes must use the categorized shared builder`);
+    assert.match(themes, /category:\s*"care-life"/, `${species} care-life themes must declare their report category`);
     assert.match(notes, new RegExp(`export const ${species}CareReviewAdditionalNotes\\b`));
   }
+});
+
+test("cat required after-arrival expenses match the latest planning copy", async () => {
+  const expenses = await source("app/data/species/cat/expenses.ts");
+  assert.match(expenses, /到家後盡快安排，確認整體狀態與驅蟲需求；/);
+  assert.match(expenses, /晶片植入與寵物登記[\s\S]*規費金額，請以所在縣市（動保處或防疫所）最新規費公告為準/);
+  assert.match(expenses, /狂犬病疫苗[\s\S]*規費金額，請以所在縣市（動保處或防疫所）最新規費公告為準/);
+  assert.match(expenses, /可預防多種生殖系統疾病[\s\S]*\*\*母貓費用較高\*\*/);
+  assert.doesNotMatch(expenses, /米克斯建議加做 FeLV／FIV 篩檢/);
+  assert.doesNotMatch(expenses, /部分地方政府可免費辦理/);
 });
 
 test("dog and cat use the shared carrier while hamster uses its dedicated carrier", async () => {
@@ -101,4 +125,32 @@ test("dog and cat use the shared carrier while hamster uses its dedicated carrie
     access(new URL("public/assets/car/carrier.webp", root)),
     access(new URL("public/assets/car/hamster-carrier.webp", root)),
   ]);
+});
+
+test("only dog and cat departure preparation keeps identity and adoption documents", async () => {
+  const preparations = Object.fromEntries(await Promise.all(speciesIds.map(async (species) => [
+    species,
+    await source(`app/data/species/${species}/preparation.ts`),
+  ])));
+  assert.match(preparations.dog, /kind:\s*"document"/, "dog must retain departure documents");
+  assert.match(preparations.cat, /dogDepartureTrunkItems/, "cat must retain the shared dog and cat document items");
+  assert.doesNotMatch(preparations.cat, /item\.kind\s*!==\s*"document"/, "cat must not filter out departure documents");
+  for (const species of ["rabbit", "bird", "hamster", "gecko"]) {
+    assert.doesNotMatch(preparations[species], /kind:\s*"document"/, `${species} must not require departure documents`);
+    assert.doesNotMatch(preparations[species], /id-card|adoption-documents|ownership-docs/, `${species} must not retain document completion ids`);
+  }
+});
+
+test("shared intro and hazard panel follow the current interaction contract", async () => {
+  const [flow, preparation, guide] = await Promise.all([
+    source("app/data/shared/app-flow.ts"),
+    source("app/components/preparation/PreparationComponents.tsx"),
+    source("docs/新物種程式實作準則.md"),
+  ]);
+  assert.doesNotMatch(flow, /\\u8207\\u54c1\\u7a2e|與品種/);
+  assert.match(flow, /\\u5148\\u9078\\u5b9a\\u7269\\u7a2e\\uff0c/);
+  assert.match(preparation, /className="room-hazard-alert-close"/);
+  assert.match(preparation, /aria-label=\{`關閉\$\{hazard\.label\}說明`\}/);
+  assert.match(preparation, /setActiveHazardInfo\(id\)/);
+  assert.match(guide, /說明欄不可使用自動消失或計時關閉機制/);
 });

@@ -37,8 +37,10 @@ export type RoomFlowConfig = {
   hiddenPlacedItemIds?: readonly string[];
   /** Interior supplies remain unavailable until this required item is placed. */
   interiorUnlockItemId?: string;
+  /** Required supplies placed in the interior view; drives the shared entry prompt completion state. */
+  interiorRequiredItemIds?: readonly string[];
   interiorBackgroundAspectRatio?: "match-room" | string; floorHazardId: string; safeWhenAllHazards?: boolean;
-  fenceItemId?: string; interiorItemId?: string; outsideItemIds?: string[]; entryRequiredItemIds?: string[];
+  fenceItemId?: string; interiorItemId?: string; outsideItemIds?: readonly string[]; entryRequiredItemIds?: readonly string[];
   floorHotspot: { desktop: { x: number; y: number; width: number; height: number }; mobile: { x: number; y: number; width: number; height: number } };
   copy: { fenceInstruction?: string; fencePlacedInstruction?: string; entryReadyInstruction?: string; interiorInstruction?: string; completeInstruction?: string; hazardInstruction?: string; lockedInstruction?: string; entryLabel?: string };
 };

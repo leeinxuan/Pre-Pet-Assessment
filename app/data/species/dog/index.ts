@@ -11,6 +11,7 @@ import { dogCopy } from "./copy";
 import { dogHomeReadiness } from "./home-readiness";
 import { dogMasteredCareThemes } from "./mastered-care-themes";
 import { dogCareReviewAdditionalNotes } from "./care-review-notes";
+import { dogAcquisition } from "./acquisition";
 
 export const dogConfig = {
   id: "dog" as const,
@@ -30,6 +31,7 @@ export const dogConfig = {
   homeReadiness: dogHomeReadiness,
   masteredCareThemes: dogMasteredCareThemes,
   careReviewAdditionalNotes: dogCareReviewAdditionalNotes,
+  acquisition: dogAcquisition,
 } as const;
 
 export { dogAssets, dogJourney, dogLayout, dogPreparation, dogReport, dogSelection, dogLifeScenarios, getDogBreedChallengeScenarios, dogFeeding };

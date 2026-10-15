@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { money, getExpenseForSpecies } from "../../../data/shared/expenses";
 import { getSpeciesConfig } from "../../../data/species";
+import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
 import type { ExpenseRecord, Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
 
@@ -259,6 +260,9 @@ export function ScenarioOptionCard({
       disabled={disabled}
       onClick={onClick}
     >
+      {type === "multiple" && selected && <span className="scenario-option-selected-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false"><path d="m6.5 12.5 3.4 3.4 7.8-8" /></svg>
+      </span>}
       <p>{children}</p>
     </button>
   );
@@ -282,10 +286,18 @@ export function VideoWithToggle({
   onEnded?: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const playbackKey = `${src}:${autoPlay}`;
-  const [playback, setPlayback] = useState({ key: playbackKey, paused: !autoPlay });
-  const paused = playback.key === playbackKey ? playback.paused : !autoPlay;
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const shouldAutoPlay = autoPlay && !prefersReducedMotion;
+  const playbackKey = `${src}:${shouldAutoPlay}`;
+  const [playback, setPlayback] = useState({ key: playbackKey, paused: !shouldAutoPlay });
+  const paused = playback.key === playbackKey ? playback.paused : !shouldAutoPlay;
   const updatePaused = (nextPaused: boolean) => setPlayback({ key: playbackKey, paused: nextPaused });
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      videoRef.current?.pause();
+    }
+  }, [prefersReducedMotion]);
 
   function toggleVideo() {
     const video = videoRef.current;
@@ -304,7 +316,7 @@ export function VideoWithToggle({
         ref={videoRef}
         className={className}
         src={src}
-        autoPlay={autoPlay}
+        autoPlay={shouldAutoPlay}
         loop={loop}
         playsInline
         preload="metadata"

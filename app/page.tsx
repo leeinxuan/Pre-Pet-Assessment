@@ -8,6 +8,15 @@ import { initialHomeReadinessState } from "./data/shared/home-readiness-state";
 import { getSpeciesConfig } from "./data/species/index";
 import { getJourneyItemsForSpecies, getJourneyStepForItem } from "./data/species/journey";
 import { initialLifeActivityState } from "./data/shared/life-activity";
+import {
+  clearReplayAnswers,
+  enterJourneyItem,
+  initialJourneyReplayState,
+  restoreReplayAnswers,
+  startJourneyReplay,
+  type JourneyReplayRequest,
+  type JourneyReplayState,
+} from "./components/life/journey-replay";
 import type {
   CareMember,
   ExpenseRecord,
@@ -119,6 +128,7 @@ export default function Home() {
   const [petName, setPetName] = useState("");
   const [journeyIndex, setJourneyIndex] = useState(0);
   const [journeyCompleted, setJourneyCompleted] = useState<string[]>([]);
+  const [journeyReplay, setJourneyReplay] = useState<JourneyReplayState>(initialJourneyReplayState);
   const [lifeActivity, setLifeActivity] = useState<LifeActivityState>(initialLifeActivityState);
   const [scenarioAnswers, setScenarioAnswers] = useState<Record<string, ScenarioAnswer>>({});
   const [profile, setProfile] = useState<Profile>(initialProfile);
@@ -127,9 +137,13 @@ export default function Home() {
   const [testNextSignal, setTestNextSignal] = useState(0);
   const [testNextTargetIndex, setTestNextTargetIndex] = useState<number | null>(null);
   const costToastTimerRef = useRef<number | null>(null);
+  const mainContentRef = useRef<HTMLElement>(null);
+  const lastFlowFocusKeyRef = useRef<string | null>(null);
   // 費用動畫可能在同一個互動中連續加入多筆資料；以 ref 保持同步去重，
   // 不必等待 React render 才能知道上一張費用卡是否已寫入。
   const expensesRef = useRef<ExpenseRecord[]>([]);
+  // 重新作答期間同步封鎖費用與成員寫入；用 ref 讓 await 中的費用序列也讀到最新狀態。
+  const journeyReplayRef = useRef<JourneyReplayState>(initialJourneyReplayState);
   const committedSelectionRef = useRef<{ category: string; breed: string } | null>(null);
 
   useEffect(() => {
@@ -145,8 +159,81 @@ export default function Home() {
     return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
   }, [members]);
   const speciesConfig = getSpeciesConfig(category);
+  const flowFocusKey = step === 0
+    ? "welcome"
+    : introOpen
+      ? `intro:${step}`
+      : step === 2
+        ? `preparation:${preparationTask}`
+        : step >= 3 && step <= 6
+          ? `life:${lifePhase}:${journeyIndex}`
+          : `stage:${step}`;
+
+  useEffect(() => {
+    if (flowFocusKey === "welcome" || lastFlowFocusKeyRef.current === flowFocusKey) return;
+    lastFlowFocusKeyRef.current = flowFocusKey;
+
+    const main = mainContentRef.current;
+    if (!main) return;
+    let observer: MutationObserver | null = null;
+    let frame = 0;
+
+    const focusNewHeading = () => {
+      const heading = main.querySelector<HTMLElement>("h1");
+      if (!heading) return false;
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+      return true;
+    };
+
+    // Dynamic flows may briefly render their loading fallback. Observe only until
+    // the destination heading mounts, then move focus once to announce the new step.
+    frame = window.requestAnimationFrame(() => {
+      if (focusNewHeading()) return;
+      observer = new MutationObserver(() => {
+        if (focusNewHeading()) observer?.disconnect();
+      });
+      observer.observe(main, { childList: true, subtree: true });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
+  }, [flowFocusKey]);
   // 舊存檔或舊網址帶入已移除犬種時，render 直接安全回選擇頁；
   // 不在 effect 中補寫狀態，避免把舊資料帶進 journey 或產生級聯 render。
+
+  function updateJourneyReplay(next: JourneyReplayState) {
+    journeyReplayRef.current = next;
+    setJourneyReplay(next);
+  }
+
+  /** 任何旅程導覽都先結束重新作答並還原快照，再判斷目標題目是否為回訪。 */
+  function enterJourneyReplayItem(itemId: string | null | undefined) {
+    const session = journeyReplayRef.current.session;
+    if (session) {
+      setScenarioAnswers((current) => restoreReplayAnswers(current, session));
+      setLifeActivity((current) => ({ ...current, ...session.activity }));
+    }
+    updateJourneyReplay(enterJourneyItem(itemId, journeyCompleted));
+  }
+
+  /** 「再玩一次」只重設目前題目，原本答案與活動欄位留存為快照。 */
+  function startJourneyItemReplay(request: JourneyReplayRequest) {
+    if (journeyReplayRef.current.revisitedItemId !== request.itemId) return;
+    updateJourneyReplay(startJourneyReplay(journeyReplayRef.current, request, scenarioAnswers, lifeActivity));
+    setScenarioAnswers((current) => clearReplayAnswers(current, request.scenarioIds));
+    if (request.activityPatch) setLifeActivity((current) => ({ ...current, ...request.activityPatch }));
+  }
+
+  const isReplayingJourney = () => journeyReplayRef.current.session !== null;
+
+  function selectJourneyIndex(nextIndex: number) {
+    setTestNextTargetIndex(null);
+    enterJourneyReplayItem(getJourneyItemsForSpecies(category)[nextIndex]?.id);
+    setJourneyIndex(nextIndex);
+  }
 
   function goTo(next: number) {
     setStep(next);
@@ -158,6 +245,8 @@ export default function Home() {
   function goToStation(next: number) {
     if (next < 3 || next > 6) setTestNextTargetIndex(null);
     if (next >= 3 && next <= 6 && lifePhase === "complete") setLifePhase("life-journey");
+    const activeItem = next >= 3 && next <= 6 ? getJourneyItemsForSpecies(category)[journeyIndex] : undefined;
+    enterJourneyReplayItem(activeItem?.id);
     setStep(next);
     setIntroOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -170,7 +259,9 @@ export default function Home() {
       return starts;
     }, []);
     const journeyStart = stageStarts[stageIndex] ?? 0;
+    const targetItem = journeyItems[journeyStart];
     setTestNextTargetIndex(null);
+    enterJourneyReplayItem(targetItem?.id);
     if (lifePhase === "arrival-video" && stageIndex === 0) {
       setStep(3);
       setIntroOpen(false);
@@ -252,6 +343,7 @@ export default function Home() {
   }
 
   function addExpenseById(id: string, triggerMeta?: ExpenseTriggerMeta) {
+    if (isReplayingJourney()) return false;
     const expense = getExpenseForSpecies(id, category);
     if (!expense) return false;
     const sizedExpense = { ...expense, ...triggerMeta };
@@ -262,6 +354,7 @@ export default function Home() {
 
   /** 資料指定為預留費用時直接寫入明細，不播放費用卡或金幣動畫。 */
   function addExpenseSilentlyById(id: string, triggerMeta?: ExpenseTriggerMeta) {
+    if (isReplayingJourney()) return false;
     const expense = getExpenseForSpecies(id, category);
     if (!expense) return false;
     return appendExpense({ ...expense, ...triggerMeta });
@@ -269,6 +362,7 @@ export default function Home() {
 
   /** 同一個旅程節點新增一組既有費用，明細仍以原本 expenseId 個別去重。 */
   function addExpenseGroupByIds(ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) {
+    if (isReplayingJourney()) return;
     const catalogExpenses = ids
       .map((id) => getExpenseForSpecies(id, category))
       .filter((expense): expense is ExpenseRecord => Boolean(expense))
@@ -293,6 +387,7 @@ export default function Home() {
    * 呼叫端 await 此函式後，才能顯示答對回饋或切換下一畫面。
    */
   async function playExpenseSequenceByIds(ids: readonly string[], triggerMeta?: ExpenseTriggerMeta) {
+    if (isReplayingJourney()) return;
     const uniqueIds = Array.from(new Set(ids));
     const additions = uniqueIds
       .map((id) => getExpenseForSpecies(id, category))
@@ -356,6 +451,8 @@ export default function Home() {
   }
 
   function updateMembers(nextMembers: CareMember[]) {
+    // 重新作答只是練習，不能新增或改動照顧成員。
+    if (isReplayingJourney()) return;
     setMembers(nextMembers);
   }
 
@@ -489,6 +586,7 @@ export default function Home() {
     setPetName("");
     setJourneyIndex(0);
     setJourneyCompleted([]);
+    updateJourneyReplay(initialJourneyReplayState);
     setLifeActivity(initialLifeActivityState);
     setScenarioAnswers({});
     setProfile(initialProfile);
@@ -608,17 +706,18 @@ export default function Home() {
         species={category}
         answers={scenarioAnswers}
         activity={lifeActivity}
-        completedIds={journeyCompleted}
+        replayState={journeyReplay}
         expenses={expenses}
         backupNames={backupNames}
         members={members}
         roomReady={roomReady}
         testSkipSignal={testSkipSignal}
         testNextSignal={testNextTargetIndex === journeyIndex ? testNextSignal : 0}
-        onIndex={(nextIndex) => { setTestNextTargetIndex(null); setJourneyIndex(nextIndex); }}
+        onIndex={selectJourneyIndex}
         onChoose={answerScenario}
         onMarkScenarioForReview={markScenarioForReview}
         onChooseMultiple={answerScenarioMultiple}
+        onStartReplay={startJourneyItemReplay}
         onMembersChange={updateMembers}
         onActivityChange={(patch) => setLifeActivity((current) => ({ ...current, ...patch }))}
         onCompleteItem={(id) => setJourneyCompleted((current) => current.includes(id) ? current : [...current, id])}
@@ -631,6 +730,7 @@ export default function Home() {
         onComplete={() => {
           setTestNextTargetIndex(null);
           setLifePhase("complete");
+          enterJourneyReplayItem(null);
           setStep(7);
           setFurthestStep((current) => Math.max(current, 7));
           setIntroOpen(false);
@@ -640,8 +740,23 @@ export default function Home() {
     );
   }
 
+  const flowAnnouncement = step === 0
+    ? "歡迎頁"
+    : introOpen
+      ? `準備開始：${intros[step - 1]?.title ?? "下一個階段"}`
+      : step === 1
+        ? `目前步驟：${({ species: "選擇物種", breed: "選擇品種", name: "替牠取名", history: "過往經驗", transition: "新的開始" } as const)[selectionPage]}`
+        : step === 2
+          ? `目前步驟：${["家庭與居住確認", "布置生活空間", "出發前準備"][preparationTask] ?? "飼養前準備"}`
+          : step >= 3 && step <= 6
+            ? `目前步驟：飼養生活，第 ${journeyIndex + 1} 個情境`
+            : step === 7
+              ? "目前步驟：飼養觀念回顧"
+              : "目前步驟：取得寵物";
+
   return (
-    <main className="app-shell">
+    <main ref={mainContentRef} id="main-content" className="app-shell" tabIndex={-1}>
+      <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{flowAnnouncement}</p>
       {step === 0 && <Welcome onStart={startFreshJourney} onTestStart={startTestJourney} />}
 
       {step > 0 && !introOpen && (
@@ -664,7 +779,7 @@ export default function Home() {
             onPreparationTask={(task) => { changePreparationTask(task); goToStation(2); }}
             onLifeStage={goToLifeStage}
           />
-          <section className="stage" aria-live="polite">
+          <section className="stage">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} latestExpense={latestExpense} breed={breed} species={category} />}
             {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onSelectSpecies={selectSpeciesForJourney} onPetName={setPetName} hasPreviousPet={hasPreviousPet} oldPetName={oldPetName} onHasPreviousPet={(value) => { setHasPreviousPet(value); if (!value) setOldPetName(""); }} onOldPetName={setOldPetName} onNext={confirmSelectedJourney} />}
             <FlowLoadErrorBoundary resetKey={`${step}:${preparationTask}:${lifePhase}:${journeyIndex}`}>
@@ -690,7 +805,7 @@ export default function Home() {
           <div className="intro-orbit" aria-hidden="true"><IntroIcon step={step} /></div>
           <h1 className={step === 1 || step === 2 ? "intro-screen-title--light" : undefined}>{intros[step - 1].title}</h1>
           <p className="intro-body">{intros[step - 1].body}</p>
-          <button className="primary large" onClick={() => setIntroOpen(false)}>開始 <span>→</span></button>
+          <button type="button" className="primary large" onClick={() => setIntroOpen(false)}>開始 <span>→</span></button>
         </section>
       )}
     </main>
