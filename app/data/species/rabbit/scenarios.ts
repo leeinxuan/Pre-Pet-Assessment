@@ -21,7 +21,7 @@ const rabbitKnowledge = {
 export const rabbitLifeScenarios: Scenario[] = [
   {
     id: "rabbit-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "接回家", title: "第一天適應新家",
-    sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
+    sceneMedia: { type: "video", src: rabbitAssets.petJourney.firstDay, ariaLabel: "兔子第一天適應新家情境影片" }, correctFeedbackMedia: { type: "video", src: rabbitAssets.petJourney.correctPrimary, ariaLabel: "兔子答對回饋影片" },
     description: "等了這麼久，`{petName}` 終於到家了。牠走出外出籠後快速嗅了嗅，隨即衝進躲藏箱，縮在最裡面，只有鼻子偶爾微微顫動。\n\n你看著牠，不確定是不是該做點什麼。",
     questionText: "你會怎麼做？",
     topic: "兔子適應新家與安全感", reportSummary: "兔子剛到家躲藏是正常反應；應保持安靜，讓牠自己決定何時探索。", artIndex: 0,
@@ -35,6 +35,7 @@ export const rabbitLifeScenarios: Scenario[] = [
   },
   {
     id: "rabbit-heatstroke-prevention", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "夏天到了，怎麼幫 {petName} 避暑？",
+    sceneMedia: { type: "video", src: rabbitAssets.petJourney.summerHeat, ariaLabel: "兔子夏日避暑情境影片" }, correctFeedbackMedia: { type: "video", src: rabbitAssets.petJourney.correctPrimary, ariaLabel: "兔子答對回饋影片" },
     description: "外面艷陽高照，室內溫度計已經爬到 33℃。{petName} 趴平在地板上，耳朵攤開，呼吸看起來比平常快了一點。你平常沒有全天開冷氣的習慣——但現在，你決定幫牠做好環境準備。", topic: "兔子高溫預防",
     questionText: "下列哪些是正確的避暑做法？（複選）",
     reportSummary: "兔子怕熱；夏季應維持涼爽室內環境並提供可自主使用的陶板涼感墊。", artIndex: 2,
@@ -58,6 +59,7 @@ export const rabbitLifeScenarios: Scenario[] = [
   },
   {
     id: "rabbit-cecotropes", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 在吃什麼？！",
+    sceneMedia: { type: "video", src: rabbitAssets.petJourney.cecotropes, ariaLabel: "兔子食入盲腸便情境影片" }, correctFeedbackMedia: { type: "video", src: rabbitAssets.petJourney.correctPrimary, ariaLabel: "兔子答對回饋影片" },
     description: "你在旁邊看著 {petName} 吃東西，突然發現牠把嘴湊到屁股旁邊，吃了一種看起來像葡萄串、閃亮亮的柔軟東西。你嚇了一跳，以為牠在做什麼奇怪的事。", topic: "兔子的食糞行為",
     questionText: "你應該怎麼做？（複選）",
     reportSummary: "盲腸便是兔子正常且必要的營養來源；不應阻止牠自行食入。", artIndex: 3,
@@ -114,7 +116,22 @@ export const rabbitLifeScenarios: Scenario[] = [
     id: "rabbit-busy-care", stage: "當生活發生變化", stageId: "life-change", stageTitle: "當生活發生變化", timeLabel: "當生活發生變化", title: "臨時晚歸，{petName} 的照顧怎麼辦？",
     description: "今天臨時需要加班，預計晚上九點才能到家。{petName} 到了傍晚就該補充牧草、換水和清理便盆——而且每天觀察糞便狀況，是你必須親自確認的事。你開始想：這樣下去，今晚誰來照顧牠？", questionText: "你會怎麼做？", topic: "忙碌備援計畫",
     reportSummary: "兔子需要每日補草、換水、清便盆與觀察糞便；離家時應安排可信任的人每天協助照顧。", artIndex: 5,
-    busyCarePresentation: { animalName: "兔子", sceneMedia: { type: "placeholder" }, feedbackMedia: { type: "placeholder" } },
+    busyCarePresentation: {
+      animalName: "兔子",
+      sceneMedia: {
+        type: "video",
+        src: rabbitAssets.petJourney.busyDailyCare,
+        ariaLabel: "兔子等待日常照顧的情境影片",
+        fallback: {
+          type: "image-layers",
+          backgroundSrc: rabbitAssets.room.background,
+          backgroundAlt: "兔子的生活空間",
+          characterSrc: rabbitAssets.feeding.rabbitUnhappy,
+          characterAlt: "等待照顧的 {petName}",
+        },
+      },
+      feedbackMedia: { type: "video", src: rabbitAssets.petJourney.correctSecondary },
+    },
     busyCareCompletion: {
       title: "做得很好！",
       encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！",
@@ -141,7 +158,7 @@ export const rabbitLifeScenarios: Scenario[] = [
   },
   {
     id: "rabbit-health-emergency", stage: "當生活發生變化", stageId: "life-change", stageTitle: "健康狀況變化", timeLabel: "當生活發生變化", title: "排便量突然減少",
-    sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
+    sceneMedia: { type: "video", src: rabbitAssets.petJourney.sick, ariaLabel: "兔子健康異常情境影片" }, correctFeedbackMedia: { type: "video", src: rabbitAssets.petJourney.correctSecondary, ariaLabel: "兔子答對回饋影片" },
     description: "最近這兩天，你注意到 `{petName}` 活動力明顯下降，長時間蹲坐在角落不太移動，牧草架幾乎沒被碰過，便盆裡的糞粒也比平常少很多，而且嘴巴周圍有些濕濕的。", topic: "生活變化：排泄與食慾觀察",
     questionText: "根據這些觀察，你應該？",
     reportSummary: "排便量驟減與食慾下降是兔子重要危急警訊，應立刻聯繫兔科獸醫。", artIndex: 4,
@@ -169,7 +186,7 @@ export const rabbitLifeScenarios: Scenario[] = [
   },
   {
     id: "rabbit-senior-care", stage: "當生活發生變化", stageId: "life-change", stageTitle: "高齡照護", timeLabel: "當生活發生變化", title: "牠進入高齡期了，一起調整家的環境吧",
-    sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
+    sceneMedia: { type: "video", src: rabbitAssets.petJourney.seniorLife, ariaLabel: "高齡兔生活調整情境影片" }, correctFeedbackMedia: { type: "video", src: rabbitAssets.petJourney.correctSecondary, ariaLabel: "兔子答對回饋影片" },
     description: "`{petName}` 已經 6 歲了。這幾個月牠的步伐慢了下來，以前每天都會跳上窩邊看你，現在越來越少。昨天，你看著牠費力跨過便盆矮沿，決定重新看看牠的生活環境。", topic: "生活變化：高齡兔環境與健康照護",
     questionText: "你會怎麼做？",
     reportSummary: "高齡兔應提高健檢頻率、降低出入高度並增加軟質墊料；牧草與適當活動仍不可省略。", artIndex: 1,

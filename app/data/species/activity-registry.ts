@@ -34,8 +34,8 @@ export const journeyActivityRegistry: Record<string, SpeciesActivityRegistry> = 
     "rabbit-daily-care": activity("rabbit-daily-care", "daily-behavior", { resetKey: "daily-behavior", triggerExpenseOnFeedback: true }),
     "rabbit-daily-check": activity("rabbit-daily-check", "rabbit-daily-check", { resetKey: "rabbit-daily-check" }),
     "breed-challenge": activity("breed-challenge", "breed-challenge", { resetKey: "breed-challenge" }),
-    "rabbit-busy-care": activity("rabbit-busy-care", "busy-care", { resetKey: "busy-care" }),
-    "rabbit-health": video("rabbit-health", "rabbit-health-emergency", { triggerExpenseOnFeedback: true }), "rabbit-senior": video("rabbit-senior", "rabbit-senior-care", { triggerExpenseOnFeedback: true }),
+    "rabbit-busy-care": activity("rabbit-busy-care", "busy-care", { transition: "busy-care", resetKey: "busy-care" }),
+    "rabbit-health": video("rabbit-health", "rabbit-health-emergency", { transition: "time-pass", triggerExpenseOnFeedback: true }), "rabbit-senior": video("rabbit-senior", "rabbit-senior-care", { triggerExpenseOnFeedback: true }),
   },
   bird: {
     "bird-arrival": video("bird-arrival", "bird-arrival-adjustment"), "bird-first-meal": activity("bird-first-meal", "arrival-meal"),

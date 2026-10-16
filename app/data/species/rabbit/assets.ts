@@ -50,8 +50,8 @@ export const rabbitAssets = {
   },
   daily: {
     checkBackground: "/assets/cat/room/cat-safe-room.webp",
-    fecalPellets: "/assets/rabbit/pet-journey/Fecal pellets.png",
-    cecotropes: "/assets/rabbit/pet-journey/Cecotropes.png",
+    fecalPellets: "/assets/rabbit/pet-journey/Fecal pellets.webp",
+    cecotropes: "/assets/rabbit/pet-journey/Cecotropes.webp",
   },
   /** 寵物旅程情境影片（rabbit-frames-workflow.md 的 ①–⑪）。 */
   petJourney: {

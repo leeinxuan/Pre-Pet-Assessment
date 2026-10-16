@@ -1,4 +1,5 @@
 import type { ActivityIntroConfig, JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
+import { rabbitAssets } from "./assets";
 
 export const rabbitJourneyItems: JourneyItem[] = [
   { id: "rabbit-arrival", type: "scenario", timeLabel: "接回家", title: "第一天適應新家", scenarioId: "rabbit-arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
@@ -121,5 +122,10 @@ export const rabbitJourney = {
   items: rabbitJourneyItems,
   dailyBehaviorScenarioIds: rabbitDailyBehaviorScenarioIds,
   dailyCheck: rabbitDailyCheckConfig,
+  transitionMedia: {
+    arrival: rabbitAssets.petJourney.arrivalTransition,
+    timePass: rabbitAssets.petJourney.timePassesAging,
+    busyCare: rabbitAssets.petJourney.busyDayTransition,
+  },
   activity: "rabbit-daily-check" as const,
 } as const;

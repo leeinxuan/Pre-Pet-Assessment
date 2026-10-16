@@ -1,5 +1,6 @@
 # 兔子影片｜首幀鎖定流程（ChatGPT 生首幀 → Google Vids Omni 轉影片 → ffmpeg 拼接）
 
+> 通用規範（新物種請先看）：`scripts/pet-video-sop.md`。
 > 仿 `scripts/cat/cat-frames-workflow.md`（貓版已完整跑過一遍，操作細節與踩雷都以貓版為準），內容依兔子版遊戲內容（`docs/rabbit-game-planning.md`、`app/data/species/rabbit/scenarios.ts`、`journey.ts`）重新規劃。
 > 目前兔子版所有情境的影片位置都還是 `placeholder`，這份文件就是「要做哪幾支、首幀怎麼生、動作怎麼寫」的清單。
 >
@@ -419,6 +420,6 @@ SOUND: quiet room tone, slow calm breathing, a faint teeth-purr; music: tender, 
 - ⑤ sick v3：使用者覺得音效奇怪（時鐘滴答、呼吸、挪動）→ 完全拿掉，只留 `sick-bed.wav` 輕鋼琴（−4 dB，原檔已偏小聲）。
 
 ### ⑥ cecotropes 追加規則（2026-10 定稿）
-- 構圖改為「兔子背對鏡頭、低頭像在吃東西，地上放參考素材 `public/assets/rabbit/pet-journey/Cecotropes.png`」；提示詞**不要**說那是便便，只寫 the small item / brown item on the floor。圖 1 = `start-frames/busy-daily-care-s2.png`（直立耳兔，去掉涼感墊），圖 2 = Cecotropes.png；ChatGPT 一次兩張，選 C（`ck_C_raw.png`，crop Y=64）→ `start-frames/cecotropes-s1.png`。
+- 構圖改為「兔子背對鏡頭、低頭像在吃東西，地上放參考素材 `public/assets/rabbit/pet-journey/Cecotropes.webp`」；提示詞**不要**說那是便便，只寫 the small item / brown item on the floor。圖 1 = `start-frames/busy-daily-care-s2.png`（直立耳兔，去掉涼感墊），圖 2 = Cecotropes.webp；ChatGPT 一次兩張，選 C（`ck_C_raw.png`，crop Y=64）→ `start-frames/cecotropes-s1.png`。
 - Vids 匯出 `clips/cecotropes_vids_export.mp4`（片段位於 241–251 s），整段 10 s。聲音：不放音效，只有拇指琴 `summer-bed2.wav`（−3 dB）。成品 `cecotropes.mp4`，預覽 `_preview/rabbit_cecotropes_v1.mp4`。
 - ⑥ v2：音樂改為俏皮風（參考貓版 climbing.mp4：約 112 BPM、C 大調）→ `make_cecotropes_bed.py`（撥弦貝斯＋馬林巴旋律＋沙鈴，無其他音效），−2 dB，預覽 `_preview/rabbit_cecotropes_v2.mp4`。
