@@ -30,7 +30,7 @@ export const rabbitFeeding: FeedingConfig = {
   unsafeFoods: [
     { id: "rabbit-carrot", label: "整袋紅蘿蔔", image: rabbitAssets.feeding.carrotMain, title: "整袋紅蘿蔔不適合作為主食", text: "紅蘿蔔只能偶爾少量提供，含糖量偏高，不能替代每日 80% 以上的牧草。請以足量牧草為主，搭配合適的新鮮葉菜與乾淨飲水。", presentation: "caution" },
     { id: "rabbit-onion", label: "洋蔥", image: rabbitAssets.feeding.onion, title: "洋蔥不能給兔子吃", text: "洋蔥、大蒜與蔥類對兔子有毒，不能作為零食或安撫食物。請改提供足量牧草、合適的新鮮葉菜與乾淨飲水。" },
-    { id: "rabbit-macadamia", label: "夏威夷豆", image: rabbitAssets.feeding.macadamia, title: "夏威夷豆不能給兔子吃", text: "夏威夷豆對兔子有毒，可能引發肌肉無力與後肢麻痺。請改提供足量牧草、合適的新鮮葉菜與乾淨飲水。" },
+    { id: "rabbit-macadamia", label: "夏威夷豆", image: rabbitAssets.feeding.macadamia, title: "夏威夷豆不能給兔子吃", text: "堅果類（包含夏威夷豆）脂肪含量極高，不符合兔子的營養需求，長期或大量攝取可能造成消化負擔。" },
   ],
   scene: { desktopBackground: rabbitAssets.room.fenceInteriorWithMat, mobileBackground: rabbitAssets.room.fenceInteriorWithMat, pet: { waiting: rabbitAssets.feeding.rabbitUnhappy, ready: rabbitAssets.feeding.rabbitHappy }, water: { empty: rabbitAssets.feeding.waterBowlEmpty, ready: rabbitAssets.room.waterBowl }, food: { empty: rabbitAssets.feeding.hayRackEmpty, ready: rabbitAssets.feeding.hayRack }, veggie: { ready: rabbitAssets.feeding.leafyVeggie, alt: "已準備的新鮮葉菜" } },
   arrivalMealSceneLayout: rabbitArrivalMealSceneLayout, arrivalMealSupplyImageSizes: rabbitArrivalMealSupplyImageSizes,

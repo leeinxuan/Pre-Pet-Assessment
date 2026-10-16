@@ -1,5 +1,7 @@
 import type { Scenario } from "../../game-types";
 
+type LegacyScenarioSource = Omit<Scenario, "questionText"> & Partial<Pick<Scenario, "questionText">>;
+
 const positive = {
   feedbackTitle: "做得很好！",
   effects: { trust: 2, wellbeing: 2, support: 1 },
@@ -13,7 +15,7 @@ const incorrect = {
   effects: { trust: -1, wellbeing: -1, support: 0 },
 } as const;
 
-export const scenarios: Scenario[] = [
+const legacyScenarioSource: LegacyScenarioSource[] = [
   {
     id: "ride-home",
     stage: "接回家當天",
@@ -229,4 +231,10 @@ export const scenarios: Scenario[] = [
     ],
   },
 ];
+
+/** @deprecated 舊版題組仍補齊正式 Scenario 契約，避免遺漏選項區題目。 */
+export const scenarios: Scenario[] = legacyScenarioSource.map((scenario) => ({
+  ...scenario,
+  questionText: scenario.questionText ?? scenario.title,
+}));
 

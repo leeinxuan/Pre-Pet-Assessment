@@ -116,7 +116,7 @@ export function BreedChallengeActivity({
           </section>
         ) : (
           <section className="breed-challenge-options">
-            <h2>{scenario.questionText ?? "你會怎麼做？"}</h2>
+            <h2>{withPetName(scenario.questionText, petName)}</h2>
             <div>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</div>
           </section>
         )}

@@ -373,7 +373,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .expense-modal-summary > div { padding: 13px 14px; border: 1px solid var(--line); border-radius: 14px; background: white; }
 .expense-modal-summary small { display: block; color: var(--muted); font-size: 10px; font-weight: 900; }
 .expense-modal-summary b { display: block; margin-top: 5px; color: var(--ink); font-size: 15px; }
-.expense-modal-summary-reserve > small:last-child { margin-top: 5px; font-weight: 700; line-height: 1.45; }
+.expense-modal-summary-reserve > small:last-child { margin-top: 5px; line-height: 1.45; }
 .expense-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
 .expense-group { padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: white; }
 .expense-group--initial { grid-column: 1 / -1; padding: 20px; border-color: #cdb47a; background: #fffdf7; }
@@ -392,7 +392,17 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .expense-groups .expense-line-description .knowledge-emphasis { display: inline; padding: 0; color: var(--gold-dark); font-size: inherit; line-height: inherit; white-space: normal; overflow-wrap: anywhere; }
 .expense-groups .expense-line-amount { flex: 0 0 auto; max-width: 42%; padding-top: 1px; color: var(--gold-dark); font-size: 12px; line-height: 1.45; text-align: right; white-space: nowrap; }
 .expense-groups h3 span { font-size: 12px; }
-.expense-group .expense-temporary-reserve-note { margin: -2px 0 9px; color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.5; }
+.expense-temporary-reserve-note,
+.expense-temporary-reserve-note-emphasis,
+.expense-modal-summary .expense-temporary-reserve-note,
+.expense-groups .expense-temporary-reserve-note {
+  color: var(--gold-dark);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.55;
+}
+.care-a4-expense-card .expense-temporary-reserve-note-emphasis { color: #537057; }
+.expense-group .expense-temporary-reserve-note { margin: -2px 0 9px; }
 .expense-reserve-note { background: #f4ead0 !important; }
 .expense-reserve-note > b { display: block; color: #6d4c13; font-size: 16px; line-height: 1.45; }
 .expense-reserve-note > p { margin: 10px 0 0; color: #725f3d; font-size: 12px; font-weight: 750; line-height: 1.6; }
@@ -762,7 +772,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-cost-summary dd { flex: 0 0 auto; color: #3d563f; white-space: nowrap; }
 .care-time-summary { margin-top: 14px; }
 .care-time-summary b { font-size: 19px; }
-.care-expense-button { align-self: flex-start; margin-top: auto; min-height: 38px; padding: 8px 13px; font-size: 13px; }
+.care-expense-button { align-self: flex-start; margin-top: 16px; min-height: 38px; padding: 8px 13px; font-size: 13px; }
 .care-daily-detail-list { display: grid; gap: 0; margin: 14px 0 0; padding: 0; list-style: none; border-top: 1px solid rgba(117, 80, 13, .18); }
 .care-daily-detail-list li { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid rgba(117, 80, 13, .18); color: #655943; font-size: 13px; line-height: 1.5; }.care-daily-detail-list li b { margin: 0; color: #5c4828; font-size: 13px; }.care-daily-detail-list li span { text-align: right; }
 .care-guide-download { display: flex; justify-content: space-between; gap: 28px; align-items: center; padding: clamp(24px, 4vw, 36px); border: 1px solid #cdb47a; border-radius: 25px; background: linear-gradient(135deg, #fff5d9, #fffdf7); box-shadow: 0 18px 40px rgba(117,83,17,.1); }

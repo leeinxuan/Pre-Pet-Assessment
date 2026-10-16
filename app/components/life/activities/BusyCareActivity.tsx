@@ -223,7 +223,7 @@ export function BusyCareActivity({
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (
-          <section className="busy-care-options"><h2>{withPetName(scenario.questionText ?? "你會怎麼安排？", petName, species)}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName, species)}</ScenarioOptionCard>)}</section>
+          <section className="busy-care-options"><h2>{withPetName(scenario.questionText, petName, species)}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName, species)}</ScenarioOptionCard>)}</section>
         )}
       </div>
     </section>

@@ -48,5 +48,23 @@ export const rabbitAssets = {
     waterSupply: "/assets/car/water-supply.webp",
     coolingPack: "/assets/car/cooling-pack.webp",
   },
-  daily: { checkBackground: "/assets/cat/room/cat-safe-room.webp" },
+  daily: {
+    checkBackground: "/assets/cat/room/cat-safe-room.webp",
+    fecalPellets: "/assets/rabbit/pet-journey/Fecal pellets.png",
+    cecotropes: "/assets/rabbit/pet-journey/Cecotropes.png",
+  },
+  /** 寵物旅程情境影片（rabbit-frames-workflow.md 的 ①–⑪）。 */
+  petJourney: {
+    arrivalTransition: "/assets/rabbit/pet-journey/arrival-transition.mp4",
+    firstDay: "/assets/rabbit/pet-journey/first-day.mp4",
+    summerHeat: "/assets/rabbit/pet-journey/summer-heat.mp4",
+    sick: "/assets/rabbit/pet-journey/sick.mp4",
+    cecotropes: "/assets/rabbit/pet-journey/cecotropes.mp4",
+    busyDailyCare: "/assets/rabbit/pet-journey/busy-daily-care.mp4",
+    busyDayTransition: "/assets/rabbit/pet-journey/busy-day-transition.mp4",
+    seniorLife: "/assets/rabbit/pet-journey/senior-life.mp4",
+    timePassesAging: "/assets/rabbit/pet-journey/time-passes-aging.mp4",
+    correctPrimary: "/assets/rabbit/pet-journey/correct-answer.mp4",
+    correctSecondary: "/assets/rabbit/pet-journey/correct-answer2.mp4",
+  },
 } as const;

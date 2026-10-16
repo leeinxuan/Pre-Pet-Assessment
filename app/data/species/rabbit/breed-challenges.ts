@@ -5,6 +5,7 @@ export const rabbitBreedChallengeContent: Record<"rabbit", BreedChallengeQuestio
   rabbit: [
     {
       title: "等等……牠在吃什麼？",
+      questionText: "你認為這是什麼行為？",
       description: "你看見 `{petName}` 把嘴湊到屁股旁邊，吃了一種像葡萄串、柔軟又帶光澤的東西。",
       topic: "食糞行為（盲腸便）",
       reportSummary: "兔子的食糞行為屬正常生理需求；盲腸便含重要營養，通常會被立即食入。",
@@ -20,6 +21,7 @@ export const rabbitBreedChallengeContent: Record<"rabbit", BreedChallengeQuestio
     },
     {
       title: "一對兔子……會變成幾隻？",
+      questionText: "你會怎麼判斷這個安排？",
       description: "你的 `{petName}` 快 5 個月了，朋友想帶未絕育的公兔來玩一下，還說就 30 分鐘，沒事的。",
       topic: "繁殖力與絕育時機",
       reportSummary: "兔子繁殖力強，約 4～5 月齡就應諮詢獸醫評估絕育，以避免意外繁殖與相關健康風險。",
@@ -35,6 +37,7 @@ export const rabbitBreedChallengeContent: Record<"rabbit", BreedChallengeQuestio
     },
     {
       title: "兔子可以洗澡嗎？",
+      questionText: "你會怎麼幫 {petName} 清潔？",
       description: "`{petName}` 身上有一點味道，尾巴根部附近也有些髒污。你想幫牠好好清潔。",
       topic: "正確清潔方式（禁止洗澡）",
       reportSummary: "兔子不適合洗澡或使用乾洗粉；日常清潔以規律梳毛及局部微濕擦拭為主。",

@@ -219,6 +219,15 @@ S4: The old rabbit walks slowly across the floor with its head low, steps carefu
 SOUND: slow, soft uneven paw steps, quiet room tone; music: slow, nostalgic solo piano.
 ```
 
+**⑨ 追加規則（2026-10 定稿，只適用 time-passes-aging）**
+- 第 3 幀改為「成兔 + 飼主」：飼主蹲在地上輕撫成兔（飼主一律用核准角色當參考圖：outlined cartoon、棕色馬尾、粉色針織毛衣，在 ChatGPT 以「角色參考 + 房間底圖」編輯生成）。這段取 3 秒，整支約 10.4 秒。
+- 四幀首幀用**一個指令**在 ChatGPT 一次生完（四張一起回傳），再用下載「本系列全部」存檔。
+- **復古濾鏡（回憶感）：像舊報紙／褪色明信片的「低飽和暖棕褐、帶霧感」（參考：柴犬公園插畫的色調），不是鮮黃、也不是灰綠。** 只套在「過去」的鏡頭（幼兔、青年兔），到飼主撫摸那段約 3.6–6.0 秒線性淡回正常色，最後的老兔（現在）不上濾鏡。做法：影片先 split 成原片與濾鏡片，濾鏡片 `fade=t=out:st=3.6:d=2.4:alpha=1` 後 overlay 回原片，`-crf 24` 壓縮（顆粒太細 crf 18 會變 20MB）。濾鏡串：
+  `eq=saturation=0.6:contrast=0.88:brightness=0.02,colorchannelmixer=rr=0.98:rg=0.08:rb=0:gr=0.02:gg=0.96:gb=0:br=0:bg=0.02:bb=0.74,curves=all='0/0.09 1/0.93',noise=alls=7:allf=t,vignette=PI/5.5`
+  （重點：飽和度壓到約 0.6、對比降到約 0.88、黑位抬高（curves 0→0.09）做出霧感，藍色通道降到約 0.74；只降藍不降飽和會太黃（bb=0.62）、用 sepia 矩陣或綠色偏移會灰綠。）
+- **之後重做／新做 time-passes-aging 的首幀（幼兔、青年兔兩張）時，直接在 ChatGPT 生圖指令裡寫入復古色調，不再事後用 ffmpeg 加濾鏡**：在指令加上 `Overall color grade: faded vintage postcard look, low saturation, warm brownish-tan tint with a soft hazy low-contrast feel, slightly lifted blacks, like an old newspaper illustration (not bright yellow, not green).`，並移除該指令原本的 `no yellow or sepia filter`。只適用 time-passes-aging，其他影片不做。
+- 音樂：`scripts/rabbit/music/make_aging_bed.py` 本機合成鋼琴（前段活潑 C 大調 → 後段懷舊 A 小調），整支同一首、從 0 秒起，混音到平均約 −21 dB。
+
 ### ⑩ `busy-daily-care.mp4`（約 10 秒）
 - 對應：`rabbit-busy-care`（`busyCarePresentation.sceneMedia`）
 | 鏡頭 | 首幀 | 保留 | 做法 |
@@ -295,15 +304,15 @@ SOUND: quiet room tone, slow calm breathing, a faint teeth-purr; music: tender, 
 |---|---|---|---|---|---|
 | ① correct-answer | 題目 | 答對回饋 | ⬜ | ⬜ | ⬜ |
 | ② correct-answer2 | 題目 | 答對回饋 | ⬜ | ⬜ | ⬜ |
-| ③ first-day | 題目 | rabbit-arrival-adjustment | ⬜ | ⬜ | ⬜ |
-| ④ summer-heat | 題目 | rabbit-heatstroke-prevention | ⬜ | ⬜ | ⬜ |
-| ⑤ sick | 題目 | rabbit-health-emergency | ⬜ | ⬜ | ⬜ |
-| ⑥ cecotropes（選用） | 題目 | rabbit-cecotropes | ⬜ | ⬜ | ⬜ |
+| ③ first-day | 題目 | rabbit-arrival-adjustment | ✅ | ✅ | ✅ |
+| ④ summer-heat | 題目 | rabbit-heatstroke-prevention | ✅ | ✅ | ✅ |
+| ⑤ sick | 題目 | rabbit-health-emergency | ✅ | ✅ | ✅ |
+| ⑥ cecotropes（選用） | 題目 | rabbit-cecotropes | ✅ | ✅ | ✅ |
 | ⑦ arrival-transition | 過場 | 接回家過場 | ✅ | ✅ | ✅ |
 | ⑧ busy-day-transition | 過場 | 忙碌過場 | ✅ | ✅ | ✅ |
-| ⑨ time-passes-aging | 過場 | 老化過場 | ⬜ | ⬜ | ⬜ |
-| ⑩ busy-daily-care | 題目 | rabbit-busy-care | ⬜ | ⬜ | ⬜ |
-| ⑪ senior-life | 題目 | rabbit-senior-care | ⬜ | ⬜ | ⬜ |
+| ⑨ time-passes-aging | 過場 | 老化過場 | ✅ | ✅ | ✅ |
+| ⑩ busy-daily-care | 題目 | rabbit-busy-care | ✅ | ✅ | ✅ |
+| ⑪ senior-life | 題目 | rabbit-senior-care | ✅ | ✅ | ✅ |
 
 > 不做影片、以靜態圖處理的情境：`rabbit-bath`（洗澡是反面教材）、抱兔排序（已有 5 張步驟圖）、每週美容（已有互動素材）、兔子的考驗。
 
@@ -374,3 +383,42 @@ SOUND: quiet room tone, slow calm breathing, a faint teeth-purr; music: tender, 
 ### E. 交付
 1. 做完用 SendUserFile 傳預覽，並附一行重點；同時更新本檔進度表。
 2. 暫存檔（Downloads 內的 `*_gpt.png`、`未命名影片*.mp4`、`貓咪 (N).mp4`、`$HOME/tmpar`、`_backup` 內 `_*.png` 暫存圖）定期請使用者確認後清掉。
+
+## ⑩ busy-daily-care 追加規則（2026-10 定稿）
+
+- 便盆參考使用者附圖：奶油色盒身＋白色板條踏板；**踏板上乾淨、不要出現便便**（便便在踏板下方，畫面看不到）。
+- 乾草架「幾乎全空」（只剩光禿板條），食碗空；不要寫 "litter box is full of uncleaned droppings"。
+- 一次指令要 ChatGPT 輸出「分開的全尺寸圖片」，並寫 "NOT a collage, NOT stacked"；下載後先 Read 看過總表再送進 Vids。
+- 兔耳維持「長而直立」，不可垂耳。
+- Vids 動作 prompt 必須照分鏡表的時間軸寫（S2：兔子留在原地嗅空乾草架→看向門→慢慢低頭；S3：趴成一團、慢眨眼、小呼吸、耳朵下沉），不要讓兔子走進躲藏屋等表外動作。
+
+## ⑪ senior-life 追加規則（2026-10 定稿）
+
+- 老兔外觀：毛色褪成灰米色、口鼻與臉周灰白、耳朵稍低但仍長而直立；**身形要圓潤有營養，不能太瘦**（第一次寫 bony／visible shoulder blades 被評「沒營養」）。老態只靠毛色與臉部表現。
+- 圍欄必須是**正方形**（四邊等長、四角有立柱）。`fence-pen-in-room.webp` 本身是寬長方形，**不要拿它當圖 3 參考**；要用正方形的 `rabbit-pen-master.png` 當圍欄定義；鏡頭 3 若又變形，用「編輯上一版、只改圍欄為正方形」的單圖指令修正。
+- 下載單張 ChatGPT 圖時，檢視器的下載鍵可能下錯系列；改用 JS 對該張 blob 觸發 `<a download>`。ChatGPT 的「分享」鍵在右上，誤點會建立公開連結，之後要到分享連結管理刪掉。
+- Vids 輸入提示詞前，先用 JS 確認 `document.activeElement` 是提示詞輸入框再 cmd+a／Delete（焦點不對會把所有場景刪掉；可 cmd+z 還原）。
+- 成片：`splice.py` 取 S1 126:1.2、S2 144.5:3.0、S3 151:2.4、S4 161.5:3.2（xf 0.25，共 9.1 s），音樂 `music/senior-bed.wav`（`make_senior_bed.py`，Am→F→C→G→C 的緩慢鋼琴＋弦樂墊，db −5.1，平均 −21.2 dB）。
+
+### ③ first-day 追加規則（2026-10 定稿）
+- 首幀＝ChatGPT 一次兩張（A 低角度／B 兔子剛走出籠門），選 B；`fd_B_raw.png` 以 `crop=1536:864:0:20,scale=1280:720` → `start-frames/first-day-s1.png`。參考圖：`rabbit-pen-master.png`＋`rabbit-happy`＋`rabbit-carrier`（皆先轉 PNG 放 `_backup/_ref_*.png`）。
+- Vids：單一 10 秒片段（匯出 `clips/firstday_vids_export.mp4` 171–181 s），兔子 0–3.3 s 僵住聽聲、約 4 s 衝向躲藏屋、6 s 起只露鼻尖與一隻耳朵。直接整段使用（splice 171.0:10.0），音樂 `firstday-bed.wav`（`make_firstday_bed.py`）db −5.0，mean ≈ −21.1 dB。
+
+### ④ summer-heat 追加規則（2026-10 定稿）
+- 首幀＝ChatGPT 一次兩張（A 較高視角／B 低角度），選 A；`sh_A_raw.png` 以 `crop=1536:864:0:60,scale=1280:720` → `start-frames/summer-heat-s1.png`。涼感墊要完整留在畫面內（B 被裁掉一半，動畫會走出畫面）。
+- Vids 單一 10 秒片段（匯出 `clips/summer_vids_export.mp4` 181–191 s），整段使用。聲音＝純音效（`make_summer_sfx.py`：風扇底噪淡入、輕呼吸、踏墊、陶板輕敲、趴下）＋很輕的大調鋼琴/鈴音 `summer-bed.wav`（−13 dB 墊底）。**不要吸鼻聲**（兔子鼻子抖動沒有聲音）。
+- ④ v3：涼感墊太小兔子只能趴一半 → ChatGPT 重做首幀把墊子放大約 2 倍（`sh2_A_raw.png`，crop Y=50），Vids 提示明寫「整個身體（胸、腹、後腿、尾巴）都在墊子上」；匯出 `clips/summer_vids_export3.mp4` 201–211 s。音樂換成拇指琴五聲音階 `summer-bed2.wav`（`make_summer_bed2.py`），音效 `make_summer_sfx3.py`。
+
+④ summer-heat v4（兩段式）：S1 = `start-frames/summer-heat-s1.png` → `clips/summer_vids_export3.mp4` 201.0:4.9（起身走向大涼感墊）；S2 = `start-frames/summer-heat-s2.png`（兔子整個趴在墊上）→ `clips/summer_vids_export4.mp4` 211.0:5.1；`splice.py --xf 0.25`；音效 `make_summer_sfx4.py` + `summer-bed2.wav`(−12 dB)。成品 9.8 s。
+
+### ⑤ sick 追加規則（2026-10 定稿）
+- 首幀＝ChatGPT 一次兩張（A 高視角／B 較近低角度），選 B；`sk_B_raw.png` 以 `crop=1536:864:0:60,scale=1280:720` → `start-frames/sick-s1.png`（圖 1 = rabbit-pen-master 去掉涼感墊，圖 2 = `_ref_rabbit_happy.png`）。
+- Vids 單一 10 秒片段（匯出 `clips/sick_vids_export.mp4`，片段位於 221–231 s），整段使用：兔子縮著、呼吸、低頭靠近牧草再別開臉。
+- 聲音：純音效 `make_sick_sfx.py`（室內底噪、輕微時鐘滴答、慢呼吸、小幅挪動，無吸鼻聲）＋稀疏柔和鋼琴 `make_sick_bed.py`（F–Dm–Bb–C，−13 dB）。成品 `sick.mp4` 10 s，預覽 `_preview/rabbit_sick_v1.mp4`。
+- ⑤ sick v2（直立耳）：v1 的兔子是垂耳（圍欄主圖的兔子是垂耳，會把 ChatGPT 帶偏）。v2 改用 `start-frames/busy-daily-care-s2.png`（直立耳兔）當圖 1 → 去掉涼感墊、改成縮著、耳朵無力垂向背後（`sk2_A_raw.png`，crop Y=70 → `sick-s1.png`）；匯出 `clips/sick_vids_export2.mp4`（231–241 s）。⚠ 之後要畫直立耳兔，請用直立耳兔的畫面當底圖，不要用 `rabbit-pen-master.png`；summer-heat 的兔子也是垂耳。
+- ⑤ sick v3：使用者覺得音效奇怪（時鐘滴答、呼吸、挪動）→ 完全拿掉，只留 `sick-bed.wav` 輕鋼琴（−4 dB，原檔已偏小聲）。
+
+### ⑥ cecotropes 追加規則（2026-10 定稿）
+- 構圖改為「兔子背對鏡頭、低頭像在吃東西，地上放參考素材 `public/assets/rabbit/pet-journey/Cecotropes.png`」；提示詞**不要**說那是便便，只寫 the small item / brown item on the floor。圖 1 = `start-frames/busy-daily-care-s2.png`（直立耳兔，去掉涼感墊），圖 2 = Cecotropes.png；ChatGPT 一次兩張，選 C（`ck_C_raw.png`，crop Y=64）→ `start-frames/cecotropes-s1.png`。
+- Vids 匯出 `clips/cecotropes_vids_export.mp4`（片段位於 241–251 s），整段 10 s。聲音：不放音效，只有拇指琴 `summer-bed2.wav`（−3 dB）。成品 `cecotropes.mp4`，預覽 `_preview/rabbit_cecotropes_v1.mp4`。
+- ⑥ v2：音樂改為俏皮風（參考貓版 climbing.mp4：約 112 BPM、C 大調）→ `make_cecotropes_bed.py`（撥弦貝斯＋馬林巴旋律＋沙鈴，無其他音效），−2 dB，預覽 `_preview/rabbit_cecotropes_v2.mp4`。

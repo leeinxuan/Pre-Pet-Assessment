@@ -10,8 +10,10 @@ const knowledge = {
   senior: ["高齡鳥的照護重點是「安全 + 舒適 + 密切觀察」。降低跌落風險、提高健檢頻率、維持穩定溫度、諮詢飲食調整——這些都是讓 {petName} 在老年期維持生活品質的方法。每隻鳥的老化速度不同，鳥類獸醫師的定期評估是最可靠的依據。如果 {petName} 正經歷無法復原的痛苦，安樂死也是由獸醫師專業評估的醫療選項，這是照護責任的一部分。"],
 };
 
-export const birdLifeScenarios: Scenario[] = [
-{ id: "bird-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "一起生活的第一天", title: "第一天適應新家", description: "你把外出籠帶進房間，輕輕放在鳥籠旁邊。{petName} 縮在籠角，羽毛膨起，對你的靠近完全沒有反應——平常在店裡還會東張西望的牠，現在一動也不動。你心裡有點擔心，不確定自己應該做什麼。", topic: "新環境安置", reportSummary: "鳥剛到家應放在安靜固定位置，覆上遮光布並保留通風，讓牠慢慢適應。", artIndex: 0, learningPoints: knowledge.arrival, knowledgeTitle: "鳥類小知識", sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" }, choices: [
+type ScenarioQuestionSource = Omit<Scenario, "questionText"> & Partial<Pick<Scenario, "questionText">>;
+
+const birdLifeScenarioSource: ScenarioQuestionSource[] = [
+{ id: "bird-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "一起生活的第一天", title: "第一天適應新家", description: "你把外出籠帶進房間，輕輕放在鳥籠旁邊。{petName} 縮在籠角，羽毛膨起，對你的靠近完全沒有反應——平常在店裡還會東張西望的牠，現在一動也不動。你心裡有點擔心，不確定自己應該做什麼。", questionText: "你現在會怎麼做？", topic: "新環境安置", reportSummary: "鳥剛到家應放在安靜固定位置，覆上遮光布並保留通風，讓牠慢慢適應。", artIndex: 0, learningPoints: knowledge.arrival, knowledgeTitle: "鳥類小知識", sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" }, choices: [
     { id: "bird-arrival-cover", text: "把外出籠放在安靜的固定位置，蓋上遮光布，讓 {petName} 先靜下來", result: "correct", ...positive, explanation: "對！澎毛縮身、對刺激沒反應，正是鸚鵡在緊迫時的典型表現。遮光布能提供「封閉感」，減少視覺刺激，幫助 {petName} 在新環境的第一天逐漸平靜。", expenseIds: ["bird-arrival-checkup"] },
     { id: "bird-arrival-talk", text: "試著輕聲跟 {petName} 說話，讓牠知道你在", result: "incorrect", ...incorrect, explanation: "雖然出發點是好的，但此時 {petName} 處於高度警戒狀態，任何互動都可能加重緊迫感。最好的做法是保持安靜、減少刺激，讓牠自己慢慢平復。" },
     { id: "bird-arrival-move", text: "趕快把牠移進鳥籠，讓牠在新家待著比較快適應", result: "partial", ...incorrect, explanation: "環境轉換本身就是強烈壓力，現在強迫移動只會造成雙重緊迫。建議讓外出籠先放在鳥籠旁，讓 {petName} 在準備好時自行探索，不要催促。" },
@@ -119,6 +121,30 @@ export const birdLifeScenarios: Scenario[] = [
   ] },
 ];
 
-export const birdActivityScenarios: Record<"bird-cage-inspection", Scenario> = {
+const birdQuestionTexts: Record<(typeof birdLifeScenarioSource)[number]["id"], string> = {
+  "bird-arrival-adjustment": "你現在會怎麼做？",
+  "bird-puffing-feathers": "你應該怎麼做？（複選）",
+  "bird-molting-care": "你應該怎麼做？（複選）",
+  "bird-picky-eating": "你應該怎麼做？（複選）",
+  "bird-stereotypy": "你應該怎麼做？（複選）",
+  "bird-excessive-calling": "你應該怎麼做？（複選）",
+  "bird-busy-care": "你現在要先怎麼做？",
+  "bird-health-emergency": "你現在要先怎麼做？",
+  "bird-senior-care": "以下哪些是高齡鳥需要的照護調整？（複選）",
+};
+
+export const birdLifeScenarios: Scenario[] = birdLifeScenarioSource.map((scenario) => ({
+  ...scenario,
+  questionText: birdQuestionTexts[scenario.id],
+}));
+
+const birdActivityScenarioSource: Record<"bird-cage-inspection", ScenarioQuestionSource> = {
   "bird-cage-inspection": { id: "bird-cage-inspection", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "鳥籠日常巡視", description: "清潔托盤、觀察糞便與健康狀態，並安排籠外互動。", topic: "每日鳥籠巡視", reportSummary: "每天清潔糞便托盤、觀察排泄與健康，並安排安全籠外互動，是鳥類照護的基礎。", artIndex: 0, learningPoints: ["每天更換墊料，才能清楚觀察糞便量與狀態。", "澎毛、無法站棲木、張口呼吸是當天聯繫鳥類獸醫的警訊。"], knowledgeTitle: "鳥類日常照護", choices: [{ id: "bird-cage-complete", text: "完成鳥籠巡視", result: "correct", ...positive, explanation: "你完成了清潔、觀察與安全互動，替日常健康守住重要細節。" }] },
+};
+
+export const birdActivityScenarios: Record<"bird-cage-inspection", Scenario> = {
+  "bird-cage-inspection": {
+    ...birdActivityScenarioSource["bird-cage-inspection"],
+    questionText: "今天的鳥籠巡視完成了嗎？",
+  },
 };

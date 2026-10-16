@@ -14,7 +14,7 @@ const speciesFlows = {
   cat: {
     requiredMealSupplies: ["food", "water"],
     recurringExpenses: ["cat-food-monthly", "cat-litter-monthly"],
-    activities: { "cat-arrival": "video-scenario", "cat-daily-care": "daily-behavior", "cat-daily-inspection": "cat-inspection", "breed-challenge": "breed-challenge", "cat-busy-care": "busy-care", "cat-sick": "video-scenario", "cat-senior": "video-scenario" },
+    activities: { "cat-arrival": "video-scenario", "cat-daily-care": "daily-behavior", "cat-daily-inspection": "cat-inspection", "breed-challenge": "breed-challenge", "cat-busy-care": "busy-care", "cat-sick": "video-scenario", "cat-senior": "daily-behavior-single" },
   },
   rabbit: {
     requiredMealSupplies: ["food", "water", "veggie"],
@@ -119,6 +119,19 @@ test("registered species preserve journey component dispatch", async () => {
   });
 });
 
+test("cat senior care uses the shared multi-select flow and scenario question text", async () => {
+  const [registry, videoScenario, catScenarios] = await Promise.all([
+    source("app/data/species/activity-registry.ts"),
+    source("app/components/life/activities/VideoScenarioActivity.tsx"),
+    source("app/data/species/cat/scenarios.ts"),
+  ]);
+  assert.match(registry, /"cat-senior": activity\("cat-senior", "daily-behavior-single"/);
+  assert.match(videoScenario, /withPetName\(scenario\.questionText, petName, species\)/);
+  assert.doesNotMatch(videoScenario, /scenario\.questionText\s*\?\?/);
+  assert.match(catScenarios, /id:\s*"cat-growing-old"[\s\S]*?questionText:\s*"以下哪些做法能幫助 \{petName\} 在高齡期安心生活？（複選）"[\s\S]*?multipleChoice:\s*true/);
+  assert.match(catScenarios, /id:\s*"cat-busy-care"[\s\S]*?questionText:\s*"你會怎麼做？"[\s\S]*?id:\s*"seek-help"/);
+});
+
 test("daily-behavior activities receive the active species", async () => {
   const lifeJourney = await source("app/components/life/LifeJourneyComponents.tsx");
   const dailyBehaviorStart = lifeJourney.indexOf("<DailyBehaviorActivityMulti");
@@ -147,7 +160,8 @@ test("scenario media selection stays out of shared scenario UI", async () => {
   assert.match(videoScenario, /scenario\.correctFeedbackMedia/);
   assert.match(breedChallenge, /scenario\?\.sceneMedia/);
   assert.match(scenarioUi, /scenario\.requiresRetry/);
-  assert.match(scenarioUi, /scenario\.questionTitle/);
+  assert.match(scenarioUi, /scenario\.questionText/);
+  assert.match(dailyBehavior, /withPetName\(scenario\.questionText/);
   assert.match(scenarioUi, /scenario\.continueLabel/);
   assert.match(dogScenarios, /sceneMedia:\s*\{ type: "video"/);
   assert.match(dogScenarios, /correctFeedbackMedia:\s*\{ type: "video"/);

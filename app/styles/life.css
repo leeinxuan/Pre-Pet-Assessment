@@ -329,15 +329,20 @@
 .feedback-knowledge-title { display: flex; align-items: center; gap: 8px; color: var(--knowledge-title); font-size: 15px; font-weight: 800; }
 .feedback-knowledge-title > span[aria-hidden="true"] { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #ffe9a5; font-size: 17px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(194,139,20,.2); }
 .daily-behavior-correct-list { margin: 0 0 0; padding-left: 1.25rem; display: grid; gap: 8px; }
+.daily-behavior-correct-list--with-image { padding-left: 0; list-style: none; }
 .daily-behavior-correct-list li { line-height: 1.65; font-weight: 700; }
+.daily-behavior-correct-list .knowledge-item-with-image { display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: center; gap: 12px; min-height: 76px; }
+.knowledge-item-with-image img { width: 76px; height: 76px; object-fit: contain; }
+.knowledge-item-with-image > span { min-width: 0; }
 .feedback-knowledge-card .daily-behavior-correct-list { margin-top: 12px; }
 .knowledge-card p, .knowledge-card li { color: var(--knowledge-copy); font-size: 16px; font-weight: 600; line-height: 1.7; }
 .feedback-knowledge-card > p { margin: 12px 0 0; }
 .feedback-knowledge-card > p + p { margin-top: 18px; }
-.knowledge-card ul { margin-top: 12px; padding-left: 1.3rem; }
+.knowledge-card ul { margin-top: 12px; }
 .knowledge-card li + li { margin-top: 8px; }
 .knowledge-card p b, .knowledge-card li b { color: var(--knowledge-emphasis); font-weight: 800; }
 .knowledge-card .knowledge-emphasis { color: var(--knowledge-emphasis); font-weight: 800; }
+@media (max-width: 480px) { .daily-behavior-correct-list .knowledge-item-with-image { grid-template-columns: 62px minmax(0, 1fr); gap: 10px; min-height: 62px; } .knowledge-item-with-image img { width: 62px; height: 62px; } }
 .correct-feedback-layout--multiple .daily-behavior-correct-list li { padding-left: 2px; }
 .daily-behavior-positive-copy small { display: block; margin-top: 18px; color: #547257; line-height: 1.7; }
 .daily-behavior-positive-copy .primary, .busy-care-positive-copy .primary, .video-scenario-positive-copy .primary { align-self: flex-start; margin-top: 18px; }

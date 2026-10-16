@@ -107,7 +107,8 @@ test("cat required after-arrival expenses match the latest planning copy", async
   assert.match(expenses, /到家後盡快安排，確認整體狀態與驅蟲需求；/);
   assert.match(expenses, /晶片植入與寵物登記[\s\S]*規費金額，請以所在縣市（動保處或防疫所）最新規費公告為準/);
   assert.match(expenses, /狂犬病疫苗[\s\S]*規費金額，請以所在縣市（動保處或防疫所）最新規費公告為準/);
-  assert.match(expenses, /可預防多種生殖系統疾病[\s\S]*\*\*母貓費用較高\*\*/);
+  assert.match(expenses, /可預防多種生殖系統疾病[\s\S]*母貓費用較高/);
+  assert.doesNotMatch(expenses, /\*\*母貓費用較高\*\*/);
   assert.doesNotMatch(expenses, /米克斯建議加做 FeLV／FIV 篩檢/);
   assert.doesNotMatch(expenses, /部分地方政府可免費辦理/);
 });

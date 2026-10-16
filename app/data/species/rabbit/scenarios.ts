@@ -1,5 +1,6 @@
 import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
+import { rabbitAssets } from "./assets";
 import { rabbitReport } from "./report";
 
 const rabbitKnowledge = {
@@ -22,6 +23,7 @@ export const rabbitLifeScenarios: Scenario[] = [
     id: "rabbit-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "接回家", title: "第一天適應新家",
     sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
     description: "等了這麼久，`{petName}` 終於到家了。牠走出外出籠後快速嗅了嗅，隨即衝進躲藏箱，縮在最裡面，只有鼻子偶爾微微顫動。\n\n你看著牠，不確定是不是該做點什麼。",
+    questionText: "你會怎麼做？",
     topic: "兔子適應新家與安全感", reportSummary: "兔子剛到家躲藏是正常反應；應保持安靜，讓牠自己決定何時探索。", artIndex: 0,
     learningPoints: rabbitKnowledge.arrival, knowledgeTitle: "兔子小知識",
     choices: [
@@ -34,6 +36,7 @@ export const rabbitLifeScenarios: Scenario[] = [
   {
     id: "rabbit-heatstroke-prevention", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "夏天到了，怎麼幫 {petName} 避暑？",
     description: "外面艷陽高照，室內溫度計已經爬到 33℃。{petName} 趴平在地板上，耳朵攤開，呼吸看起來比平常快了一點。你平常沒有全天開冷氣的習慣——但現在，你決定幫牠做好環境準備。", topic: "兔子高溫預防",
+    questionText: "下列哪些是正確的避暑做法？（複選）",
     reportSummary: "兔子怕熱；夏季應維持涼爽室內環境並提供可自主使用的陶板涼感墊。", artIndex: 2,
     multipleChoice: true, requiredCorrectOptionIds: ["rabbit-heat-air", "rabbit-heat-mat"], wrongOptionIds: ["rabbit-heat-balcony", "rabbit-heat-spray"],
     correctSummary: ["維持室內冷氣或風扇，讓環境保持涼爽。", "在活動區放置陶板涼感墊。"], learningPoints: rabbitKnowledge.heat, knowledgeTitle: "兔子小知識",
@@ -56,6 +59,7 @@ export const rabbitLifeScenarios: Scenario[] = [
   {
     id: "rabbit-cecotropes", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 在吃什麼？！",
     description: "你在旁邊看著 {petName} 吃東西，突然發現牠把嘴湊到屁股旁邊，吃了一種看起來像葡萄串、閃亮亮的柔軟東西。你嚇了一跳，以為牠在做什麼奇怪的事。", topic: "兔子的食糞行為",
+    questionText: "你應該怎麼做？（複選）",
     reportSummary: "盲腸便是兔子正常且必要的營養來源；不應阻止牠自行食入。", artIndex: 3,
     multipleChoice: true, requiredCorrectOptionIds: ["rabbit-cecotropes-normal", "rabbit-cecotropes-nutrition"], wrongOptionIds: ["rabbit-cecotropes-vet", "rabbit-cecotropes-stop"],
     correctSummary: ["不去打擾，讓牠自行食入盲腸便。", "了解干預會影響牠的營養吸收，等牠自己吃完。"],
@@ -66,8 +70,8 @@ export const rabbitLifeScenarios: Scenario[] = [
       knowledgeTitle: "兔兔小知識",
       knowledgeContent: [
         { type: "paragraph", text: "兔子的糞便有兩種，完全不同的東西：" },
-        { type: "item", text: "**圓形硬糞**（清便盆的那種）：正常代謝廢物，每天清理" },
-        { type: "item", text: "**盲腸便（葡萄便）**：柔軟、成串、帶光澤，通常在清晨或傍晚排出並**立即食入**——這是正常本能，**不應阻止**" },
+        { type: "item", text: "**圓形硬糞**（清便盆的那種）：正常代謝廢物，每天清理", image: rabbitAssets.daily.fecalPellets, imageAlt: "圓形硬糞示意圖" },
+        { type: "item", text: "**盲腸便（葡萄便）**：柔軟、成串、帶光澤，通常在清晨或傍晚排出並**立即食入**——這是正常本能，**不應阻止**", image: rabbitAssets.daily.cecotropes, imageAlt: "盲腸便示意圖" },
         { type: "item", text: "若大量盲腸便長期出現在便盆中**未被食入**，可能反映**壓力**或**飲食問題**，需諮詢獸醫" },
       ],
     },
@@ -81,6 +85,7 @@ export const rabbitLifeScenarios: Scenario[] = [
   {
     id: "rabbit-bath", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 好髒，幫牠洗個澡？",
     description: "你蹲下來摸 {petName}，發現牠身上有一股悶悶的氣味，尾根附近的毛也結成一小塊、有點髒污。你直覺地想：「這樣不行，要幫牠好好洗個澡才行。」", topic: "兔子日常清潔",
+    questionText: "下列哪些是正確的清潔方式？（複選）",
     reportSummary: "兔子不適合洗澡；日常清潔以梳毛、局部微濕擦拭及必要時諮詢兔科獸醫為主。", artIndex: 3,
     multipleChoice: true, requiredCorrectOptionIds: ["rabbit-bath-brush", "rabbit-bath-wipe", "rabbit-bath-vet"], wrongOptionIds: ["rabbit-bath-tub", "rabbit-bath-powder"],
     correctSummary: ["用梳子梳毛。", "用微濕毛巾局部清潔。", "無法處理的污染先諮詢兔科獸醫。"],
@@ -93,8 +98,8 @@ export const rabbitLifeScenarios: Scenario[] = [
         { type: "paragraph", text: "兔子的日常清潔方式：" },
         { type: "item", text: "**梳毛**是核心，每天或換毛期每天多梳幾次，避免毛球吞入造成腸道問題" },
         { type: "item", text: "**局部污漬**（尾根、臀部）：用**微濕毛巾**小範圍輕擦，不需整隻弄濕" },
-        { type: "item", text: "**洗澡**：絕對禁止全身沖洗，**乾洗粉**農業部指南也明確不建議" },
-        { type: "item", text: "無法自行處理的髒污（如嚴重尾部污染）：應諮詢**兔科獸醫**評估，而非自行沖洗" },
+        { type: "item", text: "**洗澡**：絕對禁止全身沖洗，**乾洗粉**也不建議" },
+        { type: "item", text: "無法自行處理的髒污（如嚴重尾部污染）：應諮詢**熟悉兔子醫療的獸醫師**評估，而非自行沖洗" },
       ],
     },
     choices: [
@@ -166,6 +171,7 @@ export const rabbitLifeScenarios: Scenario[] = [
     id: "rabbit-senior-care", stage: "當生活發生變化", stageId: "life-change", stageTitle: "高齡照護", timeLabel: "當生活發生變化", title: "牠進入高齡期了，一起調整家的環境吧",
     sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" },
     description: "`{petName}` 已經 6 歲了。這幾個月牠的步伐慢了下來，以前每天都會跳上窩邊看你，現在越來越少。昨天，你看著牠費力跨過便盆矮沿，決定重新看看牠的生活環境。", topic: "生活變化：高齡兔環境與健康照護",
+    questionText: "你會怎麼做？",
     reportSummary: "高齡兔應提高健檢頻率、降低出入高度並增加軟質墊料；牧草與適當活動仍不可省略。", artIndex: 1,
     learningPoints: rabbitKnowledge.senior, knowledgeTitle: "兔子高齡照護小知識",
     completionFeedback: {
@@ -226,9 +232,9 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
       title: "<danger>請不要這樣抱兔兔</danger>",
       items: [
         { title: "<danger>從耳朵拎起</danger>", description: "耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。", imagePlaceholderLabel: "從耳朵拎起示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.webp", imageAlt: "從耳朵拎起兔子的錯誤抱法示意" },
-        { title: "<danger>讓牠腹部朝上</danger>", description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不安全。", imagePlaceholderLabel: "腹部朝上示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp", imageAlt: "讓兔子腹部朝上的錯誤抱法示意" },
+        { title: "<danger>讓牠腹部朝上</danger>", description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不代表牠不緊張或害怕。", imagePlaceholderLabel: "腹部朝上示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp", imageAlt: "讓兔子腹部朝上的錯誤抱法示意" },
       ],
-      footer: "<danger>從耳朵拎起</danger>或<danger>腹部朝上</danger>都可能造成嚴重傷害，永遠不要這樣做",
+      footer: "如果兔兔抗拒或退避，不要強迫互動",
     },
     choices: [
       { id: "rabbit-carry-incorrect", text: "需要重新思考順序", result: "incorrect", ...incorrect, explanation: "安全抱兔需要循序降低緊張感，確認每一步都完成後再往下。" },
@@ -237,7 +243,7 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
   },
   "rabbit-daily-check": {
     id: "rabbit-daily-check", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護",
-    title: "{petName} 的美容時間到了！", description: "完成梳毛、足底確認、門齒與指甲檢查，讓每週保養成為健康觀察的機會。", topic: "兔兔美容保養", reportSummary: "每週梳理後肢及尾根、確認足底、門齒與指甲，能及早發現健康變化。", artIndex: 0,
+    title: "{petName} 的美容時間到了！", description: "完成梳毛、足底確認、門齒與指甲檢查，讓每週保養成為健康觀察的機會。", questionText: "開始今天的美容保養吧。", topic: "兔兔美容保養", reportSummary: "每週梳理後肢及尾根、確認足底、門齒與指甲，能及早發現健康變化。", artIndex: 0,
     knowledgeTitle: "保養不只是好看，更是健康觀察的機會", learningPoints: ["每週幫 {petName} 梳毛時，可以觀察皮膚異常、脫毛區塊、足底紅腫或換毛量是否超乎尋常。", "門齒與指甲至少一週檢查一次；門齒過長不可自行剪牙，指甲偏長建議由獸醫或專業人員協助修剪。", "後肢及尾根周圍容易藏污和結毛，是最需要仔細梳理的區域。", "建議頻率：短毛兔每週梳毛 2–3 次、換毛期每日；長毛兔每日梳毛；每次梳毛時檢查足底。"],
     choices: [
       { id: "rabbit-daily-check-incorrect", text: "需要重新確認", result: "incorrect", ...incorrect, explanation: "這一項還沒完成。請依兔子的日常需求重新處理。" },

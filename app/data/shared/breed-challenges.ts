@@ -6,7 +6,8 @@ export type BreedChallengeQuestion = {
   sourceQuestionNumber?: number;
   title: string;
   description: string;
-  questionText?: string;
+  /** 選項區上方的問題文字；每題必須由物種資料提供。 */
+  questionText: string;
   sceneMedia?: ScenarioMediaConfig;
   topic: string;
   reportSummary: string;

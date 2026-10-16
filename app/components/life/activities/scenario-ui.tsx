@@ -171,7 +171,7 @@ export function CorrectFeedbackLayout({
   otherTips?: ReactNode;
   otherTipsBeforeSuggestion?: boolean;
   correctItems?: string[];
-  knowledgeContent?: Array<{ type: "paragraph" | "item"; text: string }>;
+  knowledgeContent?: Array<{ type: "paragraph" | "item"; text: string; image?: string; imageAlt?: string }>;
   knowledgeTitle?: string;
   mediaPlaceholder?: ReactNode;
   onReplay?: () => void;
@@ -198,8 +198,11 @@ export function CorrectFeedbackLayout({
         {knowledgeContent && knowledgeContent.length > 0 ? (
           <KnowledgeCard title={renderKnowledgeText(knowledgeTitle)}>
             {knowledgeContent.map((content, index) => content.type === "item" ? (
-              <ul className="daily-behavior-correct-list" key={`${content.text}-${index}`}>
-                <li>{renderKnowledgeText(content.text)}</li>
+              <ul className={`daily-behavior-correct-list${content.image ? " daily-behavior-correct-list--with-image" : ""}`} key={`${content.text}-${index}`}>
+                <li className={content.image ? "knowledge-item-with-image" : undefined}>
+                  {content.image && <img src={content.image} alt={content.imageAlt ?? ""} />}
+                  <span>{renderKnowledgeText(content.text)}</span>
+                </li>
               </ul>
             ) : (
               <p key={`${content.text}-${index}`}>{renderKnowledgeText(content.text)}</p>
@@ -466,7 +469,7 @@ export function ScenarioCard({
         </div>
       </article>
       <section className="reflection">
-        <h2>{scenario.questionTitle ?? "如果是你，會怎麼做？"}</h2>
+        <h2>{withPetName(scenario.questionText, petName, species)}</h2>
         <div className="choice-grid">
           {scenario.choices.filter((choice) => choice.id !== "assigned-helper" || hasBackup).map((choice) => {
             const text = choice.id === "assigned-helper"

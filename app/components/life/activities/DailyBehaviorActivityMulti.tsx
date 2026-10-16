@@ -60,12 +60,20 @@ export function DailyBehaviorActivityMulti({
   const [expenseSequenceComplete, setExpenseSequenceComplete] = useState(true);
   const scenario = scenarios[currentIndex];
   const presentation = getScenarioPresentation(species, scenario?.id ?? "");
-  const behaviorVideoSource = presentation.sceneVideo?.src;
-  const correctFeedbackVideo = presentation.correctFeedbackMedia.type === "video" ? presentation.correctFeedbackMedia.src : undefined;
+  // 複選題也可指定個別情境／回饋影片；未指定時才沿用物種日常題的共用設定。
+  const scenarioSceneMedia = scenario?.sceneMedia;
+  const behaviorVideoSource = scenarioSceneMedia?.type === "video" ? scenarioSceneMedia.src : presentation.sceneVideo?.src;
+  const behaviorVideoAriaLabel = scenarioSceneMedia?.type === "video"
+    ? scenarioSceneMedia.ariaLabel
+    : presentation.sceneVideo?.ariaLabel ?? "日常行為照顧影片";
+  const feedbackMedia = scenario?.correctFeedbackMedia ?? presentation.correctFeedbackMedia;
+  const correctFeedbackVideo = feedbackMedia.type === "video" ? feedbackMedia.src : undefined;
   const nextBehaviorScenario = scenarios[currentIndex + 1];
   const nextPresentation = nextBehaviorScenario ? getScenarioPresentation(species, nextBehaviorScenario.id) : undefined;
+  const nextSceneMedia = nextBehaviorScenario?.sceneMedia;
+  const nextBehaviorVideoSource = nextSceneMedia?.type === "video" ? nextSceneMedia.src : nextPresentation?.sceneVideo?.src;
   useVideoMetadataPreload(behaviorVideoSource);
-  useVideoMetadataPreload(nextPresentation?.sceneVideo?.src);
+  useVideoMetadataPreload(nextBehaviorVideoSource);
   useVideoMetadataPreload(correctFeedbackVideo);
 
   function moveToNext() {
@@ -165,7 +173,7 @@ export function DailyBehaviorActivityMulti({
         variant="multiple"
         title={completionFeedback?.title}
         videoSrc={correctFeedbackVideo ?? ""}
-        mediaPlaceholder={presentation.correctFeedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
+        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
         videoFailed={videoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         intro={<p>{renderKnowledgeText(completionIntro)}</p>}
@@ -201,7 +209,7 @@ export function DailyBehaviorActivityMulti({
           <VideoWithToggle
             src={behaviorVideoSource}
             loop
-            ariaLabel={presentation.sceneVideo?.ariaLabel ?? "日常行為照顧影片"}
+            ariaLabel={behaviorVideoAriaLabel}
             onError={() => setVideoFailed(true)}
           />
         ) : (
@@ -218,7 +226,7 @@ export function DailyBehaviorActivityMulti({
         </section>
       ) : <section className="reflection daily-behavior-choices">
           <div className="daily-behavior-question-row">
-            <h2>{scenario.questionText ?? "此刻需要完成哪些事？（複選）"}</h2>
+            <h2>{withPetName(scenario.questionText, petName, species)}</h2>
             <p className="daily-behavior-live-hint visible daily-behavior-progress-hint" role="status">
               {mode === "animating" ? "正在加入本次照顧費用…" : `已找到 ${correctSelectedCount} / ${correctChoiceIds.length} 個合適做法`}
             </p>

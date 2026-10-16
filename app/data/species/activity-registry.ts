@@ -25,7 +25,8 @@ export const journeyActivityRegistry: Record<string, SpeciesActivityRegistry> = 
     "cat-daily-inspection": activity("cat-daily-inspection", "cat-inspection", { resetKey: "cat-inspection" }),
     "breed-challenge": activity("breed-challenge", "breed-challenge", { resetKey: "breed-challenge" }),
     "cat-busy-care": activity("cat-busy-care", "busy-care", { transition: "busy-care", resetKey: "busy-care" }),
-    "cat-sick": video("cat-sick", "cat-illness-vet", { transition: "time-pass", triggerExpenseOnFeedback: true }), "cat-senior": video("cat-senior", "cat-growing-old", { triggerExpenseOnFeedback: true }),
+    "cat-sick": video("cat-sick", "cat-illness-vet", { transition: "time-pass", triggerExpenseOnFeedback: true }),
+    "cat-senior": activity("cat-senior", "daily-behavior-single", { resetKey: "daily-behavior", triggerExpenseOnFeedback: true }),
   },
   rabbit: {
     "rabbit-arrival": video("rabbit-arrival", "rabbit-arrival-adjustment"), "rabbit-first-meal": activity("rabbit-first-meal", "arrival-meal"),

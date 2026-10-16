@@ -162,7 +162,7 @@ export function VideoScenarioActivity({
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (
-          <section className="video-scenario-options"><h2>{mode === "animating" ? "正在加入本次照顧費用…" : "你會怎麼做？"}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} disabled={mode === "animating"} onClick={() => choose(choice)}>{withPetName(choice.text, petName, species)}</ScenarioOptionCard>)}</section>
+          <section className="video-scenario-options"><h2>{mode === "animating" ? "正在加入本次照顧費用…" : withPetName(scenario.questionText, petName, species)}</h2>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} disabled={mode === "animating"} onClick={() => choose(choice)}>{withPetName(choice.text, petName, species)}</ScenarioOptionCard>)}</section>
         )}
       </div>
     </section>

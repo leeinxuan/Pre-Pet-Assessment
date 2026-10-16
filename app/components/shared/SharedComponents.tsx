@@ -599,7 +599,7 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
           <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}</b></div>
           <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
           <div className="expense-modal-summary-reserve"><small>{expenseLabels.temporaryMedical}</small>{temporaryExpenses.length > 0
-            ? <><b>{formatTemporaryExpenseReserve(temporaryExpenses)}</b><small>{temporaryExpenseReserveNote}</small></>
+            ? <><b>{formatTemporaryExpenseReserve(temporaryExpenses)}</b><small className="expense-temporary-reserve-note">{temporaryExpenseReserveNote}</small></>
             : <b>NT$ 0</b>}</div>
         </div>
         <div className="expense-groups">

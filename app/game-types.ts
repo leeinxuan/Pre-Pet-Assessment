@@ -172,6 +172,9 @@ export type ScenarioCompletionFeedback = {
   knowledgeContent: Array<{
     type: "paragraph" | "item";
     text: string;
+    /** 知識卡條目可選的輔助圖，素材路徑由物種資料集中管理。 */
+    image?: string;
+    imageAlt?: string;
   }>;
   reminder?: string;
 };
@@ -245,10 +248,8 @@ export type Scenario = {
   timeLabel: string;
   title: string;
   description: string;
-  /** 題目資料指定時，供共用選項元件顯示的提問文字。 */
-  questionText?: string;
-  /** 共用情境頁的題目區標題。 */
-  questionTitle?: string;
+  /** 選項區上方的問題文字；每一題均由物種資料明確提供。 */
+  questionText: string;
   /** 題目場景媒體；沒有正式影片時明確使用 placeholder。 */
   sceneMedia?: ScenarioMediaConfig;
   /** 答對後的媒體；沒有物種專屬影片時明確使用 placeholder。 */
