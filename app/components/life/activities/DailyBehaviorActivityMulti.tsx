@@ -110,9 +110,7 @@ export function DailyBehaviorActivityMulti({
 
   const correctChoiceIds = scenario.requiredCorrectOptionIds ?? scenario.choices.filter((choice) => choice.result === "correct").map((choice) => choice.id);
   const wrongChoiceIds = scenario.wrongOptionIds ?? scenario.choices.filter((choice) => choice.result === "incorrect").map((choice) => choice.id);
-  const correctSummary = scenario.correctSummary ?? scenario.choices
-    .filter((choice) => correctChoiceIds.includes(choice.id))
-    .map((choice) => choice.text);
+  const correctSummary = scenario.correctSummary ?? [];
   const learningPoints = scenario.learningPoints ?? correctSummary;
   const correctSelectedCount = selectedIds.filter((id) => correctChoiceIds.includes(id)).length;
   const displayPetName = petName || presentation.defaultPetName;

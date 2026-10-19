@@ -310,7 +310,7 @@
   overflow: visible;
   border: 2px solid white;
   border-radius: 50%;
-  background: var(--gold);
+  background: rgba(212, 154, 36, .58);
   color: white;
   box-shadow: 0 0 0 6px rgba(212, 154, 36, .2), 0 8px 18px rgba(70, 53, 26, .22);
   font-weight: 900;
@@ -321,8 +321,13 @@
   animation: geckoHotspotPulse 1.5s ease-in-out infinite;
 }
 
+.gecko-body-hotspot.is-available:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow: 0 0 0 9px rgba(212, 154, 36, .16), 0 10px 22px rgba(70, 53, 26, .25);
+}
+
 .gecko-body-hotspot.is-complete {
-  background: var(--mint);
+  background: rgba(154, 185, 155, .68);
   box-shadow: 0 0 0 5px rgba(154, 185, 155, .2);
 }
 
@@ -330,6 +335,8 @@
   opacity: .72;
   cursor: default;
 }
+
+.gecko-body-hotspot.is-complete:disabled { opacity: 1; }
 
 .gecko-magnifier-cursor {
   position: absolute;

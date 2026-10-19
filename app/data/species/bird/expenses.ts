@@ -2,7 +2,7 @@ import type { ExpenseRecord } from "../../../game-types";
 
 /** §7 鸚鵡費用清單；金額與費用明細說明均以 bird-game-planning.md 為準。 */
 export const birdExpenses: Record<string, ExpenseRecord> = {
-  "bird-cage": { id: "bird-cage", name: "鳥籠", amount: 1500, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "B1 飼養環境；B4 鳥籠選擇" },
+  "bird-cage": { id: "bird-cage", name: "鳥籠", amount: 1500, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "應選用方形籠，白鐵金屬籠為佳；格柵間隙依鳥體型選擇，避免過大或過小" },
   "bird-perch-set": { id: "bird-perch-set", name: "棲木組", amount: 500, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "提供不同材質與粗細的棲木；寬度讓足趾環繞約 2/3 為佳" },
   "bird-food-bowl": { id: "bird-food-bowl", name: "食碗／食杯", amount: 200, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "依食性選擇適當容器；吸蜜性鳥類需專用碗具" },
   "bird-water-bowl": { id: "bird-water-bowl", name: "水碗／水杯", amount: 200, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "不使用過大過深容器；避免鳥跌落" },
@@ -13,7 +13,7 @@ export const birdExpenses: Record<string, ExpenseRecord> = {
   "bird-food-initial": { id: "bird-food-initial", name: "主食飼料（初期備量）", amount: 250, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "依食性選購一包初期存量（種子飼料、滋養丸或吸蜜粉）；到家第一天即可立刻餵食" },
   "bird-carrier": { id: "bird-carrier", name: "鳥用外出籠", amount: 1200, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "通風良好、材質堅固、內有棲木；縫隙不讓肢體探出" },
   "bird-cover-cloth": { id: "bird-cover-cloth", name: "遮光布", amount: 300, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "遮蔽籠具降低外界刺激，減少途中緊迫；也用於日常安靜休息" },
-  "bird-water-supply": { id: "bird-water-supply", name: "飲水容器（防翻）", amount: 150, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "長途移動準備適量飲水，安全停靠時補充" },
+  "bird-water-supply": { id: "bird-water-supply", name: "飲水容器", amount: 150, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "長途移動準備適量飲水，安全停靠時補充" },
   "bird-arrival-checkup": { id: "bird-arrival-checkup", name: "到家後首次健康檢查", amount: 1500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "鳥類常隱藏病徵，抵家後應找熟悉鳥類醫療的獸醫建立健康基準" },
   "bird-food-monthly": { id: "bird-food-monthly", name: "每月飼料費（主食＋鮮食）", amount: 800, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "專用飼料為主食，鮮食（蔬果）為輔；鮮食不建議甜度高的水果；不建議僅以單一飼料為全部食物" },
   "bird-cleaning-monthly": { id: "bird-cleaning-monthly", name: "每月清潔耗材費", amount: 300, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "糞尿托盤墊料每日更換；定期徹底清洗消毒籠舍；使用確認對鳥無害的清潔劑" },

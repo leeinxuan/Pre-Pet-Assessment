@@ -60,6 +60,7 @@ export const rabbitAssets = {
     summerHeat: "/assets/rabbit/pet-journey/summer-heat.mp4",
     sick: "/assets/rabbit/pet-journey/sick.mp4",
     cecotropes: "/assets/rabbit/pet-journey/cecotropes.mp4",
+    bath: "/assets/rabbit/pet-journey/bath.mp4",
     busyDailyCare: "/assets/rabbit/pet-journey/busy-daily-care.mp4",
     busyDayTransition: "/assets/rabbit/pet-journey/busy-day-transition.mp4",
     seniorLife: "/assets/rabbit/pet-journey/senior-life.mp4",

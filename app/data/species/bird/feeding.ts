@@ -28,8 +28,8 @@ export const birdFeeding: FeedingConfig = {
   interaction: "scene", requiredSupplies: ["food", "water", "veggie"],
   supplies: [{ stateKey: "food", label: "鸚鵡專用混合飼料", image: birdAssets.feeding.seedMix, alt: "鸚鵡專用混合飼料" }, { stateKey: "water", label: "飲水", image: birdAssets.feeding.waterBottle, alt: "飲水" }, { stateKey: "veggie", label: "新鮮蔬菜", image: birdAssets.feeding.freshVeggie, alt: "新鮮蔬菜" }],
   unsafeFoods: [
-    { id: "chocolate", label: "巧克力", image: birdAssets.feeding.chocolate, title: "巧克力不能給鳥吃", text: "巧克力中的成分可能傷害鳥類神經與心臟；即使少量也不能餵食。" },
-    { id: "avocado", label: "酪梨", image: birdAssets.feeding.avocado, title: "酪梨不能給鳥吃", text: "酪梨含 Persin，對大多數鳥類有毒，可能造成呼吸困難與虛弱。" },
+    { id: "chocolate", label: "巧克力", image: birdAssets.feeding.chocolate, title: "巧克力不能給鳥吃", text: "巧克力對鳥類具有毒性，即使少量也可能致命，絕對不可給鳥食用。" },
+    { id: "avocado", label: "酪梨", image: birdAssets.feeding.avocado, title: "酪梨不能給鳥吃", text: "酪梨對大多數鳥類有毒性，誤食可能危及生命。是廚房常見但對鳥類高度危險的食材，請勿讓鳥接觸。" },
     { id: "salty-snack", label: "洋芋片／鹹味零食", image: birdAssets.feeding.saltySnack, title: "鹹味零食不適合鳥", text: "高鈉調味食品會增加鳥類腎臟負擔，不能作為零食。" },
   ],
   scene: { desktopBackground: birdAssets.feeding.background, mobileBackground: birdAssets.feeding.background, pet: { waiting: birdAssets.feeding.unhappy, ready: birdAssets.feeding.happy }, water: { empty: birdAssets.feeding.emptyWaterBowl, ready: birdAssets.feeding.fullWaterBowl }, food: { empty: birdAssets.feeding.emptyFoodBowl, ready: birdAssets.feeding.fullFoodBowl }, veggie: { ready: birdAssets.feeding.freshVeggie, alt: "已準備的新鮮蔬菜" } },

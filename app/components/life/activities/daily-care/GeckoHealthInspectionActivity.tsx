@@ -13,6 +13,7 @@ import { getSpeciesConfig } from "../../../../data/species";
 import { interpolatePetName } from "../../../../data/shared/pet-text";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, renderKnowledgeText } from "../activity-ui";
+import { InspectionHotspot } from "../InspectionHotspot";
 
 type Change = (patch: Partial<LifeActivityState>) => void;
 type PointerPosition = { x: number; y: number } | null;
@@ -107,7 +108,9 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
       : !completed.includes("feces")
         ? "feces"
         : "body";
-  const activeBodyPoint = config.body.points.find((point) => !completed.includes(point.id));
+  const activeBodyPoint = config.body.requiresOrderedInspection
+    ? config.body.points.find((point) => !completed.includes(point.id))
+    : undefined;
   const activeJudgement = openId === config.feces.id
     ? config.feces
     : config.body.points.find((point) => point.id === openId);
@@ -286,12 +289,15 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
               <img className="gecko-body-image" src={config.scene.body} alt={config.scene.bodyAlt} />
               {config.body.points.map((point, index) => {
                 const pointComplete = completed.includes(point.id);
-                const isAvailable = point.id === activeBodyPoint?.id;
+                const isAvailable = !pointComplete && (!config.body.requiresOrderedInspection || point.id === activeBodyPoint?.id);
                 return (
-                  <button
+                  <InspectionHotspot
                     key={point.id}
                     type="button"
-                    className={`gecko-body-hotspot ${pointComplete ? "is-complete" : ""} ${isAvailable ? "is-current" : ""}`}
+                    className={`gecko-body-hotspot ${pointComplete ? "is-complete" : ""} ${isAvailable ? "is-available" : ""} ${config.body.requiresOrderedInspection && isAvailable ? "is-current" : ""}`}
+                    complete={pointComplete}
+                    showOrder={config.body.showPointNumbers}
+                    order={index + 1}
                     style={{ left: `${point.hotspot.x}%`, top: `${point.hotspot.y}%` }}
                     disabled={!isAvailable}
                     aria-label={pointComplete ? `${point.label}已完成` : point.instruction}
@@ -299,7 +305,6 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                     onPointerMove={isAvailable ? trackMagnifier : undefined}
                     onPointerLeave={() => setMagnifier(null)}
                   >
-                    {pointComplete ? "✓" : index + 1}
                     {isAvailable && magnifier && (
                       <img
                         className="gecko-magnifier-cursor"
@@ -308,7 +313,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                         style={{ left: magnifier.x, top: magnifier.y }}
                       />
                     )}
-                  </button>
+                  </InspectionHotspot>
                 );
               })}
             </div>

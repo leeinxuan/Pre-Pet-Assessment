@@ -38,6 +38,7 @@ export const birdCageInspectionConfig = {
     },
   } satisfies ActivityIntroConfig,
   targetStamps: 4,
+  bodyInspection: { requiresOrderedInspection: false, showPointNumbers: false },
   steps: ["tray-clean", "feces-observed", "health-observed", "social-time"] as const,
 } as const;
 export const birdJourney = { items: birdJourneyItems, dailyBehaviorScenarioIds: birdDailyBehaviorScenarioIds, cageInspection: birdCageInspectionConfig, activity: "bird-cage-inspection" as const } as const;

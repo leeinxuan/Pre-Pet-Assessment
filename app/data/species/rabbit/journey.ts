@@ -25,7 +25,7 @@ export const rabbitScenarioPresentation: SpeciesScenarioPresentationConfig = {
 };
 
 export const rabbitDailyCheckConfig = {
-  steps: ["groom-head-ears", "groom-back-sides", "groom-hind-tail", "groom-paws", "groom-teeth", "groom-nails"] as const,
+  steps: ["groom-head-ears", "groom-back-sides", "groom-hind-tail", "groom-paws", "groom-eating", "groom-nails"] as const,
 } as const;
 
 const rabbitGroomingAsset = (fileName: string) => `/assets/rabbit/weekly-grooming/${fileName}`;
@@ -39,7 +39,7 @@ export const rabbitGroomingConfig = {
     paragraphs: [
       "兔子**不能用水洗澡**——打濕或浸水會造成**極大緊迫**，甚至引發**休克**。梳毛才是 {petName} **最重要的日常護理**。",
       "定期梳理能清除脫落毛髮，避免 {petName} 自行理毛時吞入過多，引發危險的**腸阻塞**。**換毛期間**尤其需要**每天梳**。",
-      "今天你要梳理背部、尾根和後肢，並觀察**門齒**與**指甲**的狀態。如果過長，需要請獸醫協助處理。",
+      "今天你要梳理背部、尾根和後肢，並觀察**進食狀況**與**指甲**的狀態。如果有異常，需要請獸醫協助處理。",
     ],
     startLabel: "開始美容時間 →",
     visualAssets: {
@@ -70,7 +70,7 @@ export const rabbitGroomingConfig = {
   ],
   sceneDescriptions: {
     part1: "今天早上，你來到 {petName} 身邊，牠正安靜地整理著自己的毛髮。換毛期容易留下細小浮毛，先陪牠完成一趟溫柔的梳毛與足底檢查吧。",
-    part2: "梳毛完成後，{petName} 放鬆地待在你身旁。趁這個時候，再一起看看門齒與指甲的外觀，確認牠日常活動時也能舒舒服服。",
+    part2: "梳毛完成後，{petName} 放鬆地待在你身旁。趁這個時候，再一起觀察進食與指甲的狀況，確認牠日常活動時也能舒舒服服。",
   },
   observations: {
     footpad: {
@@ -83,23 +83,25 @@ export const rabbitGroomingConfig = {
       },
       correctFeedback: {
         normal: "✅ 正確！{petName} 的足底毛髮濃密均勻、沒有紅腫，今天狀況正常。每次梳毛時都記得一併確認。",
-        warning: "✅ 正確！你注意到 {petName} 的足底有毛髮稀疏或紅腫的跡象，這是需要留意的狀況。請盡快諮詢兔科獸醫。",
+        warning: "✅ 正確！你注意到 {petName} 的足底有毛髮稀疏或紅腫的跡象，這是需要留意的狀況。請盡快諮詢熟悉兔子醫療的獸醫師。",
       },
-      abnormalDescription: "足底毛髮脫落或出現紅腫，可能是**足底皮膚炎**的早期徵兆，常與地板材質不適合、過重或缺乏活動有關。若發現異狀，請盡快諮詢兔科獸醫。",
+      abnormalDescription: "足底毛髮脫落或出現紅腫，可能是**足底皮膚炎**的早期徵兆，常與地板材質不適合、過重或缺乏活動有關。若發現異狀，請盡快諮詢熟悉兔子醫療的獸醫師。",
+      correctSummary: "每次梳毛時應檢查足底是否有紅腫或脫毛，出現異狀代表可能是足底潰瘍，需盡快就醫，而非繼續觀察等待。",
     },
-    incisor: {
-      title: "門齒觀察", abnormalTitle: "門齒異常", normalImage: rabbitGroomingAsset("incisor-normal.webp"), warningImage: rabbitGroomingAsset("incisor-long.webp"),
-      question: "{petName} 的門齒看起來……？",
-      choices: [{ id: "normal", label: "正常，長度適中" }, { id: "warning", label: "偏長，需要注意" }],
+    eating: {
+      title: "進食觀察", abnormalTitle: "進食異常", normalImage: rabbitGroomingAsset("eating-normal.webp"), warningImage: rabbitGroomingAsset("eating-warning.webp"),
+      question: "觀察 {petName} 吃牧草的狀況，你覺得進食情形如何？",
+      choices: [{ id: "normal", label: "正常，進食順暢" }, { id: "warning", label: "吃草遲疑、掉食或嘴邊潮濕，需要注意" }],
       incorrectFeedback: {
-        normal: "再仔細看看——{petName} 的門齒目前長度正常、上下咬合對稱。正常門齒應短而整齊，不超出嘴唇太多。",
-        warning: "再仔細看看——{petName} 的門齒已經偏長，留意是否向外延伸、或上下咬合出現不對稱的情形。",
+        normal: "其實 {petName} 今天進食狀況正常。觀察吃草行為是最實際的方式：咀嚼靈活、牧草消耗正常，通常代表牙齒沒問題。",
+        warning: "仔細看——{petName} 吃草時遲疑、嘴邊潮濕，可能是門齒異常的訊號，發現這類狀況請盡快諮詢獸醫師，不可自行剪牙。",
       },
       correctFeedback: {
-        normal: "✅ 正確！{petName} 的門齒長度適中、上下咬合對稱，今天沒有異狀。繼續每週確認一次就好。",
-        warning: "✅ 正確！你發現 {petName} 的門齒偏長或咬合不對稱，需要盡快諮詢兔科獸醫。",
+        normal: "✅ 進食看起來順暢！咀嚼牧草是兔子最重要的磨牙方式。觀察吃草的樣子，是判斷牙齒狀況最實際的方法。",
+        warning: "✅ 觀察得很仔細！進食遲疑、掉食或嘴邊潮濕，可能是門齒過長的訊號。兔牙是空心的，必須由獸醫師處理，不可自行修剪。",
       },
-      abnormalDescription: "門齒明顯向外延伸、上下不對稱時，可能影響進食。請交由兔科獸醫評估，**不可自行剪牙**，以免傷到牙根。",
+      abnormalDescription: "觀察兔子吃牧草的狀況是判斷牙齒健康的最實際方式，若出現**遲疑、掉食或嘴邊潮濕**，應諮詢獸醫師，**不可自行修剪兔牙**。",
+      correctSummary: "觀察兔子吃牧草的狀況是判斷牙齒健康的最實際方式，若出現遲疑、掉食或嘴邊潮濕，應諮詢獸醫師，不可自行修剪兔牙。",
     },
     nail: {
       title: "指甲觀察", abnormalTitle: "指甲異常", normalImage: rabbitGroomingAsset("nail-normal.webp"), warningImage: rabbitGroomingAsset("nail-long.webp"),
@@ -114,6 +116,7 @@ export const rabbitGroomingConfig = {
         warning: "✅ 正確！你注意到 {petName} 的指甲偏長或呈鉤狀，建議請兔科獸醫或專業人員協助修剪。",
       },
       abnormalDescription: "指甲過長可能會呈現明顯鉤狀，甚至向趾墊方向捲曲。請請兔科獸醫或專業人員協助修剪，**避免自行修剪**，以免剪到血線造成出血。",
+      correctSummary: "兔子指甲每 4–6 週需觀察一次，過長時應請獸醫師或專業美容師修剪，不可自行處理以免剪到血管造成出血。",
     },
   },
 } as const;

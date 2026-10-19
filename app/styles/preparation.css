@@ -302,10 +302,17 @@
 .room-flow-entry { pointer-events: auto; border-radius: 12px; }
 .room-flow-entry:disabled { cursor: not-allowed; filter: saturate(.7) opacity(.72); }
 .room-flow-entry:not(:disabled):hover, .room-flow-entry:not(:disabled):focus-visible { filter: drop-shadow(0 0 12px rgba(218, 157, 37, .48)); outline: 3px solid rgba(212,154,36,.66); outline-offset: 5px; }
-.room-flow-entry.is-interior-entry-prompt { filter: drop-shadow(0 5px 5px rgba(65,45,21,.2)) drop-shadow(0 0 16px rgba(212,154,36,.72)); }
-.room-interior-entry-hand { --entry-hand-shift: 7px; position: absolute; z-index: 4; top: 50%; display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid rgba(212,154,36,.42); border-radius: 50%; background: rgba(255,250,232,.94); box-shadow: 0 5px 16px rgba(91,61,18,.2), 0 0 15px rgba(232,181,69,.34); font-style: normal; font-size: 24px; line-height: 1; pointer-events: none; transform: translate(0, -50%); animation: roomInteriorEntryHand 1.35s ease-in-out infinite; }
+.room-flow-entry.is-interior-entry-prompt { filter: drop-shadow(0 5px 5px rgba(65,45,21,.2)) drop-shadow(0 0 16px rgba(212,154,36,.72)); animation: roomInteriorEntryGlow 1.35s ease-in-out infinite; }
+.room-interior-entry-hand { --entry-hand-shift: 6px; position: absolute; z-index: 4; top: 50%; width: 42px; height: 42px; overflow: visible; color: #b87816; filter: drop-shadow(0 3px 4px rgba(105,67,16,.18)) drop-shadow(0 0 6px rgba(232,181,69,.34)); pointer-events: none; transform: translate(0, -50%); animation: roomInteriorEntryHand 1.35s ease-in-out infinite; }
+.room-interior-entry-hand path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.1; }
+.room-interior-entry-arrow-shape { transform-box: fill-box; transform-origin: center; }
+.room-interior-entry-hand .room-interior-entry-arrow-shape path { fill: #fffdf8; }
+.room-interior-entry-hand--right .room-interior-entry-arrow-shape { transform: scaleX(-1); }
 .room-interior-entry-hand--left { right: calc(100% + 10px); }
-.room-interior-entry-hand--right { --entry-hand-shift: -7px; left: calc(100% + 10px); }
+.room-interior-entry-hand--right { --entry-hand-shift: -6px; left: calc(100% + 10px); }
+.room-flow-entry .room-interior-entry-label { position: absolute; z-index: 4; top: calc(50% + 29px); bottom: auto; display: block; max-width: none; padding: 0; border-radius: 0; background: transparent; color: #fff; font-size: 11px; font-weight: 900; line-height: 1.2; white-space: nowrap; text-shadow: 0 2px 4px rgba(76,47,14,.72); pointer-events: none; opacity: 1; transition: none; }
+.room-flow-entry .room-interior-entry-label--left { right: calc(100% + 31px); left: auto; transform: translateX(50%); }
+.room-flow-entry .room-interior-entry-label--right { right: auto; left: calc(100% + 31px); transform: translateX(-50%); }
 .room-flow-return { position: absolute; z-index: 12; top: 16px; left: 16px; display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid rgba(133, 93, 35, .28); border-radius: 50%; background: rgba(255, 252, 245, .94); box-shadow: 0 5px 14px rgba(70,53,26,.16); color: #704d24; font-size: 24px; font-weight: 900; line-height: 1; cursor: pointer; }
 .room-flow-return:hover, .room-flow-return:focus-visible { background: #fff4d7; outline: 3px solid rgba(212,154,36,.55); outline-offset: 2px; }
 .room-hazard-alert { position: absolute; left: 16px; top: 16px; z-index: 20; box-sizing: border-box; width: min(390px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 13px 46px 13px 15px; border: 1px solid #e08942; border-radius: 15px; background: rgba(255, 248, 233, .94); color: #70421c; line-height: 1.55; box-shadow: 0 10px 28px rgba(71,43,18,.14); backdrop-filter: blur(3px); }
@@ -329,6 +336,10 @@
 @keyframes roomInteriorEntryHand {
   0%, 100% { transform: translate(0, -50%); }
   50% { transform: translate(var(--entry-hand-shift), -50%); }
+}
+@keyframes roomInteriorEntryGlow {
+  0%, 100% { filter: drop-shadow(0 5px 5px rgba(65,45,21,.2)) drop-shadow(0 0 12px rgba(212,154,36,.52)); }
+  50% { filter: drop-shadow(0 7px 7px rgba(65,45,21,.22)) drop-shadow(0 0 22px rgba(232,181,69,.84)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .room-flow-entry.is-interior-entry-prompt { filter: drop-shadow(0 0 14px rgba(212,154,36,.76)); outline: 3px solid rgba(212,154,36,.58); outline-offset: 4px; }

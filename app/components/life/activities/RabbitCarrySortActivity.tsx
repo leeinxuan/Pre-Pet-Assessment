@@ -19,7 +19,7 @@ function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { s
       title={completionFeedback?.title}
       intro={<p>{completionFeedback
         ? renderKnowledgeText(withPetName(completionFeedback.encouragement, petName))
-        : scenario.id === "rabbit-daily-check" ? `你完成了今天的保養——梳毛、足底確認、門齒與指甲檢查。定期梳毛，尤其是後肢及尾根周圍，能清除皮屑及脫落毛髮，減少${petName || "牠"}自行理毛時食入過多毛髮引發腸阻塞的機會。` : `你用循序、穩定的方式試著抱起${petName || "牠"}，也把牠的安全感放在前面。`}</p>}
+        : scenario.id === "rabbit-daily-check" ? `你完成了今天的保養——梳毛、足底確認、進食與指甲觀察。定期梳毛，尤其是後肢及尾根周圍，能清除皮屑及脫落毛髮，減少${petName || "牠"}自行理毛時食入過多毛髮引發腸阻塞的機會。` : `你用循序、穩定的方式試著抱起${petName || "牠"}，也把牠的安全感放在前面。`}</p>}
       knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "兔子小知識"}
       knowledgeContent={completionFeedback?.knowledgeContent}
       correctItems={completionFeedback ? undefined : scenario.id === "rabbit-carry-sort" ? scenario.learningPoints?.map((text) => withPetName(text, petName)) : scenario.learningPoints}

@@ -9,7 +9,7 @@ export const geckoHazards: HazardItem[] = [
     label: "殺蟲劑",
     icon: "⚠",
     image: geckoAssets.room.insecticideSpray,
-    placement: { x: 18, y: 30, width: 12, layer: 4 },
+    placement: { x: 25, y: 65, width: 9, layer: 4 },
     mobilePlacement: { x: 18, y: 30, width: 16 },
     danger: "對守宮具強烈毒性，微量吸入或皮膚接觸可能致命，且藥效會在環境中殘留。",
     handling: "請收入密閉櫃或搬至守宮無法接觸的空間。",
@@ -19,7 +19,7 @@ export const geckoHazards: HazardItem[] = [
     label: "精油擴香器",
     icon: "⚠",
     image: geckoAssets.room.essentialOilDiffuser,
-    placement: { x: 74, y: 26, width: 12, layer: 4 },
+    placement: { x: 55, y: 56, width: 12, layer: 4 },
     mobilePlacement: { x: 72, y: 26, width: 16 },
     danger: "精油揮發物對爬蟲類呼吸道有刺激性，長期暴露可能導致呼吸異常。",
     handling: "使用時請關閉爬蟲缸所在空間，保持通風。",
@@ -52,17 +52,17 @@ export const geckoHazards: HazardItem[] = [
 export const geckoRoomItems: RoomItem[] = [
   {
     id: "gecko-terrarium", label: "爬蟲專用玻璃缸", icon: "▣", image: geckoAssets.room.terrarium, sceneImage: geckoAssets.room.terrariumFront,
-    placement: { x: 56, y: 61, width: 38, layer: 2 }, mobilePlacement: { x: 56, y: 61, width: 52 }, required: true, need: "安全", expenseId: "gecko-terrarium",
+    placement: { x: 79, y: 43, width: 15, layer: 2 }, mobilePlacement: { x: 56, y: 61, width: 52 }, required: true, need: "安全", expenseId: "gecko-terrarium",
     description: "建議至少 60×45×30 cm，附緊固式網蓋，防止逃脫。",
   },
   {
     id: "first-feeder-insects", label: "首批活體餌料昆蟲及飼育容器", icon: "◉", image: geckoAssets.room.feederInsects, sceneImage: geckoAssets.room.feederInsectsFront,
-    placement: { x: 62, y: 71, width: 13, layer: 5 }, mobilePlacement: { x: 65, y: 70, width: 18 }, required: true, need: "飲食", expenseId: "gecko-feeder-insects-initial",
+    placement: { x: 57, y: 60, width: 10, layer: 5 }, mobilePlacement: { x: 65, y: 70, width: 18 }, required: true, need: "飲食", expenseId: "gecko-feeder-insects-initial",
     description: "適應穩定後開始餵食；餌料置於通氣飼育盒避免逃脫。",
   },
   {
     id: "calcium-and-vitamin-supplement", label: "鈣粉與綜合維他命粉", icon: "✦", image: geckoAssets.room.calciumSupplement,
-    placement: { x: 45, y: 70, width: 10, layer: 5 }, mobilePlacement: { x: 45, y: 71, width: 15 }, required: true, need: "飲食", expenseId: "gecko-supplements-initial",
+    placement: { x: 45, y: 63, width: 6, layer: 5 }, mobilePlacement: { x: 45, y: 71, width: 15 }, required: true, need: "飲食", expenseId: "gecko-supplements-initial",
     description: "每次餵食前以鈣粉沾裹昆蟲，定期輪替補充。",
   },
   {
@@ -86,34 +86,34 @@ export const geckoRoomItems: RoomItem[] = [
   },
   {
     id: "warm-hide", label: "暖側躲避屋", icon: "⌂", image: geckoAssets.room.warmHide,
-    placement: { x: 25, y: 55, width: 18, layer: 3 }, mobilePlacement: { x: 25, y: 57, width: 25 }, required: true, need: "休息", expenseId: "gecko-warm-hide",
+    placement: { x: 77, y: 65, width: 25, layer: 3 }, mobilePlacement: { x: 25, y: 57, width: 25 }, required: true, need: "休息", expenseId: "gecko-warm-hide",
     description: "放在加熱片正上方，讓守宮休息與消化。",
   },
   {
     id: "cool-hide", label: "涼側躲避屋", icon: "⌂", image: geckoAssets.room.coolHide,
-    placement: { x: 73, y: 56, width: 18, layer: 3 }, mobilePlacement: { x: 73, y: 58, width: 25 }, required: true, need: "休息", expenseId: "gecko-cool-hide",
+    placement: { x: 22, y: 70, width: 25, layer: 3 }, mobilePlacement: { x: 73, y: 58, width: 25 }, required: true, need: "休息", expenseId: "gecko-cool-hide",
     description: "讓守宮過熱時能快速退到陰涼處。",
   },
   {
     id: "moist-hide", label: "濕躲避屋（脫皮盒）", icon: "◒", image: geckoAssets.room.moistHide,
-    placement: { x: 51, y: 52, width: 17, layer: 3 }, mobilePlacement: { x: 51, y: 54, width: 24 }, required: true, need: "休息", expenseId: "gecko-moist-hide",
+    placement: { x: 51, y: 58, width: 25, layer: 3 }, mobilePlacement: { x: 51, y: 54, width: 24 }, required: true, need: "休息", expenseId: "gecko-moist-hide",
     description: "鋪濕潤椰子纖維或水苔，協助完整蛻皮。",
   },
   {
     id: "shallow-water-dish", label: "淺水碟", icon: "◡", image: geckoAssets.room.shallowWaterDish,
-    placement: { x: 67, y: 70, width: 10, layer: 6 }, mobilePlacement: { x: 67, y: 70, width: 15 }, required: true, need: "飲食", expenseId: "gecko-water-dish",
+    placement: { x: 60, y: 77, width: 15, layer: 6 }, mobilePlacement: { x: 67, y: 70, width: 15 }, required: true, need: "飲食", expenseId: "gecko-water-dish",
     description: "每日換新鮮水，水碟不可太深。",
   },
   {
     id: "calcium-dish", label: "補鈣碟", icon: "◌", image: geckoAssets.room.calciumDish,
-    placement: { x: 38, y: 69, width: 9, layer: 6 }, mobilePlacement: { x: 38, y: 70, width: 14 }, required: true, need: "飲食", expenseId: "gecko-calcium-dish",
+    placement: { x: 45, y: 77, width: 15, layer: 6 }, mobilePlacement: { x: 38, y: 70, width: 14 }, required: true, need: "飲食", expenseId: "gecko-calcium-dish",
     description: "常備一小碟無 D3 鈣粉，供守宮自行舔食。",
   },
 ];
 
 export const geckoTrunkItems: TrunkItem[] = [
   { id: "gecko-transport-box", label: "爬蟲專用運輸盒（附通氣孔）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "選用可遮光的小型塑膠盒或布袋，減少視覺刺激。", preparedLabel: "已準備", expenseIds: ["gecko-transport-box"], placement: { x: 48, y: 60, width: 20, layer: 5 } },
-  { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "低於 20°C 時放在運輸盒外層保溫，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 66, y: 62, width: 12, layer: 4 } },
+  { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "低於 20°C 時放在運輸盒外層保溫，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 35, y: 65, width: 12, layer: 6 } },
 ];
 
 export const geckoRoomFlow = {

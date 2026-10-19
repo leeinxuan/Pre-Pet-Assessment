@@ -11,7 +11,7 @@ export const birdRoomItems: RoomItem[] = [
     description: "不同高度與粗細的棲木能分散足部壓力。",
     // 籠內三張棲木分開定位；每筆均可獨立調整桌機／手機位置、尺寸與圖層。
     sceneParts: [
-      { id: "perch-1", image: birdAssets.room.perchParts[0], placement: { x: 30, y: 31, width: 42, layer: 5 }, mobilePlacement: { x: 31, y: 31, width: 42 } },
+      { id: "perch-1", image: birdAssets.room.perchParts[0], placement: { x: 30, y: 28, width: 42, layer: 5 }, mobilePlacement: { x: 31, y: 31, width: 42 } },
       { id: "perch-2", image: birdAssets.room.perchParts[1], placement: { x: 75, y: 60, width: 36, layer: 5 }, mobilePlacement: { x: 63, y: 51, width: 36 } },
       { id: "perch-3", image: birdAssets.room.perchParts[2], placement: { x: 40, y: 43, width: 38, layer: 5 }, mobilePlacement: { x: 35, y: 72, width: 38 } },
     ],
@@ -37,7 +37,7 @@ export const birdTrunkItems: TrunkItem[] = [
   { id: "bird-carrier", label: "外出籠／運輸箱", kind: "supply", image: birdAssets.preparation.carrier, visualScale: 1, preparedLabel: "已準備", description: "鳥必須在通風、堅固且間隙安全的外出籠中運送。", expenseIds: ["bird-carrier"], placement: { x: 45, y: 61, width: 25, layer: 5 } },
   { id: "cover-cloth", label: "遮光布／透氣布", kind: "supply", image: birdAssets.preparation.cover, preparedLabel: "已準備", description: "覆蓋外出籠可減少視覺刺激與緊迫。", expenseIds: ["bird-cover-cloth"], placement: { x: 45, y: 56, width: 22, layer: 6 } },
   { id: "species-food", label: "少量熟悉飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", description: "途中備少量符合食性的熟悉飼料，從家中現有存糧取用即可。", placement: { x: 28, y: 63, width: 16, layer: 6 } },
-  { id: "water-supply", label: "防翻飲水容器", kind: "supply", image: birdAssets.preparation.water, preparedLabel: "已準備", expenseIds: ["bird-water-supply"], description: "長途移動準備適量飲水，安全停靠時補充。", placement: { x: 57, y: 66, width: 12, layer: 6 } },
+  { id: "water-supply", label: "飲水容器", kind: "supply", image: birdAssets.preparation.water, preparedLabel: "已準備", expenseIds: ["bird-water-supply"], description: "長途移動準備適量飲水，安全停靠時補充。", placement: { x: 57, y: 66, width: 12, layer: 6 } },
 ];
 export const birdRoomFlow = {
   initialBackground: birdAssets.room.background,

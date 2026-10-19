@@ -57,10 +57,8 @@ function CareReviewRichText({ blocks, petName, species }: { blocks: HomeReadines
 }
 
 function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {
-  const correctChoices = scenario.choices.filter((choice) => choice.result === "correct");
-  const rawPoints = scenario.correctSummary?.length
-    ? scenario.correctSummary
-    : correctChoices.flatMap((choice) => [choice.text, choice.explanation, choice.suggestion ?? ""]);
+  // 複習內容以企劃指定的 correctSummary 為唯一來源；不可由選項或回饋拼接出另一版知識點。
+  const rawPoints = scenario.correctSummary ?? [];
   return Array.from(new Set(rawPoints.flatMap((point) => point.split("\n")).map((point) => personalizeReportText(point.trim(), petName, species)).filter(Boolean))).slice(0, 6);
 }
 

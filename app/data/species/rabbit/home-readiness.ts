@@ -11,7 +11,7 @@ const cards: HomeReadinessCard[] = [
     id: "household-consent",
     stepLabel: "同住者共識",
     title: [text("同住家人或室友是否 "), text("100% 同意", true), text("飼養？")],
-    body: [paragraph(text("{petName} 的日常"), text("氣味、排泄清理、作息", true), text("（夜間活動、啃咬等）會影響每一位同住者。若有人反對，可能在飼主不在時對寵物產生排斥，也可能讓"), text("照護責任落在不願承擔的人身上", true), text("。請在飼養前與所有同住者"), text("充分溝通", true), text("，達成"), text("真正的共識", true), text("。"))],
+    body: [paragraph(text("{petName} 的日常"), text("氣味、掉毛、作息", true), text("（夜間活動、啃咬等）會影響每一位同住者。若有人反對，可能在飼主不在時對寵物產生排斥，也可能讓"), text("照護責任落在不願承擔的人身上", true), text("。請在飼養前與所有同住者"), text("充分溝通", true), text("，達成"), text("真正的共識", true), text("。"))],
   },
   {
     id: "allergy-check",

@@ -12,7 +12,7 @@ export const masteredCareCompletionSelectors: Record<LifeStateSource["key"], Lif
   walkingComplete: (activity) => activity.walkingComplete,
   "cat-litter-complete": (activity) => activity.catInspectionSteps.includes("litter-complete"),
   "rabbit-grooming-complete": (activity) => activity.rabbitGroomingState === "interaction-complete",
-  "bird-cage-inspection-complete": (activity, source) => (source.requiredStepIds ?? []).every((stepId) => activity.birdCageInspectionSteps.includes(stepId)),
+  "bird-cage-inspection-complete": (activity) => activity.birdCageInspectionCompleted,
   "hamster-inspection-complete": (activity) => activity.hamsterInspectionCompleted.length === 2,
   "gecko-health-inspection-complete": (activity, source) =>
     (source.requiredStepIds ?? []).every((stepId) => activity.geckoHealthInspectionCompleted.includes(stepId)),

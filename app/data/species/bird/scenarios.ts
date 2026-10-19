@@ -1,150 +1,723 @@
 import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
 import { birdReport } from "./report";
-
-const knowledge = {
-  arrival: ["鸚鵡對新環境的不適應往往不像狗那樣明顯哭鬧，而是**反常地安靜**——澎毛、縮身、對刺激無反應，這些都是緊迫的訊號，不是「個性文靜」。**遮光布**能提供封閉感，幫助牠在適應期第一階段穩定下來。多數鸚鵡需要 **1–2 週**才能在新環境真正放鬆，不要用「快點熟悉」的心態催促牠。"],
-  puff: ["澎毛要和<mark>食慾、呼吸、站棲</mark>等狀態一起判斷。", "鳥常隱藏病徵；異常持續或惡化時，應聯繫<mark>熟悉鳥類的獸醫師</mark>。"],
-  molt: ["正常換羽通常是<mark>連續且對稱</mark>的；不對稱裸皮區需提高警覺。", "新生羽毛可能有血管，看到血管毛時<mark>不要拉扯</mark>。"],
-  health: ["鸚鵡常見需要留意的健康問題：", "**呼吸困難**：張口呼吸、尾羽隨呼吸上下擺動——屬於急症，需立即就醫。", "**澎毛、精神低落、食慾消失**：多項警訊同時出現，病情通常已相當嚴重——需當天就醫。", "**產蛋困難**：雌鳥無法正常站立或移動——需緊急就醫。", "**消化異常**：反覆嘔吐、糞便明顯改變、體重持續下降——持續超過一天應就醫確認。", "**拔毛或過度理羽**：出現裸皮、羽毛凌亂稀疏——需就醫評估。"],
-  senior: ["高齡鳥的照護重點是「安全 + 舒適 + 密切觀察」。降低跌落風險、提高健檢頻率、維持穩定溫度、諮詢飲食調整——這些都是讓 {petName} 在老年期維持生活品質的方法。每隻鳥的老化速度不同，鳥類獸醫師的定期評估是最可靠的依據。如果 {petName} 正經歷無法復原的痛苦，安樂死也是由獸醫師專業評估的醫療選項，這是照護責任的一部分。"],
-};
-
-type ScenarioQuestionSource = Omit<Scenario, "questionText"> & Partial<Pick<Scenario, "questionText">>;
-
-const birdLifeScenarioSource: ScenarioQuestionSource[] = [
-{ id: "bird-arrival-adjustment", stage: "接回家", stageId: "arrival", stageTitle: "適應新家與安全感", timeLabel: "一起生活的第一天", title: "第一天適應新家", description: "你把外出籠帶進房間，輕輕放在鳥籠旁邊。{petName} 縮在籠角，羽毛膨起，對你的靠近完全沒有反應——平常在店裡還會東張西望的牠，現在一動也不動。你心裡有點擔心，不確定自己應該做什麼。", questionText: "你現在會怎麼做？", topic: "新環境安置", reportSummary: "鳥剛到家應放在安靜固定位置，覆上遮光布並保留通風，讓牠慢慢適應。", artIndex: 0, learningPoints: knowledge.arrival, knowledgeTitle: "鳥類小知識", sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" }, choices: [
-    { id: "bird-arrival-cover", text: "把外出籠放在安靜的固定位置，蓋上遮光布，讓 {petName} 先靜下來", result: "correct", ...positive, explanation: "對！澎毛縮身、對刺激沒反應，正是鸚鵡在緊迫時的典型表現。遮光布能提供「封閉感」，減少視覺刺激，幫助 {petName} 在新環境的第一天逐漸平靜。", expenseIds: ["bird-arrival-checkup"] },
-    { id: "bird-arrival-talk", text: "試著輕聲跟 {petName} 說話，讓牠知道你在", result: "incorrect", ...incorrect, explanation: "雖然出發點是好的，但此時 {petName} 處於高度警戒狀態，任何互動都可能加重緊迫感。最好的做法是保持安靜、減少刺激，讓牠自己慢慢平復。" },
-    { id: "bird-arrival-move", text: "趕快把牠移進鳥籠，讓牠在新家待著比較快適應", result: "partial", ...incorrect, explanation: "環境轉換本身就是強烈壓力，現在強迫移動只會造成雙重緊迫。建議讓外出籠先放在鳥籠旁，讓 {petName} 在準備好時自行探索，不要催促。" },
-    { id: "bird-arrival-family", text: "邀請家人一起來看，讓 {petName} 早點認識大家", result: "incorrect", ...incorrect, explanation: "多人圍觀是極大的視覺與聽覺衝擊，可能讓原本就緊迫的 {petName} 更加不安。適應期應保持環境安靜、人員減少，讓牠有足夠的空間平復。" },
-  ] },
-  { id: "bird-puffing-feathers", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 羽毛一直膨起來", description: "今天 {petName} 的羽毛鬆鬆膨起，比平時圓了一圈，站在棲木上也沒什麼精神。你應該怎麼做？", topic: "澎毛與健康警訊", reportSummary: "澎毛時要同時觀察食慾、呼吸與站棲狀態，適度保暖並設定明確就醫時機。", artIndex: 1, multipleChoice: true, requiredCorrectOptionIds: ["bird-puff-observe", "bird-puff-warm", "bird-puff-record"], wrongOptionIds: ["bird-puff-wait"], correctSummary: ["觀察食慾、呼吸與站棲等其他症狀。", "確認環境溫度並適度保暖。", "記錄時間，異常持續或惡化即聯繫鳥類獸醫。"], learningPoints: knowledge.puff, knowledgeTitle: "鳥類小知識", choices: [
-    { id: "bird-puff-observe", text: "觀察是否同時有食慾下降、呼吸急促或無法站棲木", result: "correct", ...positive, explanation: "澎毛需搭配其他症狀一起判斷。" },
-    { id: "bird-puff-warm", text: "確認環境溫度，適度移到較溫暖的位置", result: "correct", ...positive, explanation: "澎毛可能代表寒冷或不適；保暖後仍要持續觀察。" },
-    { id: "bird-puff-wait", text: "上網查詢澎毛原因，找出最像的症狀後自行調整飼料或補充保健品", result: "incorrect", ...incorrect, explanation: "鳥類疾病症狀重疊性高，網路資料無法取代實際診斷；自行調整飲食或補充保健品也可能掩蓋或加重問題。", suggestion: "同步觀察其他警訊，必要時直接聯繫熟悉鳥類的獸醫師。" },
-    { id: "bird-puff-record", text: "記錄時間，24 小時未改善或惡化就聯繫鳥類獸醫", result: "correct", ...positive, explanation: "設定明確的就醫時機，是安全的應對節奏。" },
-  ] },
-  { id: "bird-molting-care", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 開始大量脫毛", description: "最近幾天，你發現籠子底部和周圍有很多羽毛，{petName} 在不停地理羽，偶爾還會用嘴咬羽毛。", topic: "換羽與過度理羽", reportSummary: "換羽時觀察對稱性、精神食慾與脫羽部位；不對稱裸皮或皮膚損傷需就醫評估。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-molt-symmetry", "bird-molt-appetite", "bird-molt-location"], wrongOptionIds: ["bird-molt-vet", "bird-molt-supplement"], correctSummary: ["觀察脫羽是否對稱。", "確認食慾和精神是否正常。", "觀察脫羽部位與皮膚狀況。"], learningPoints: knowledge.molt, knowledgeTitle: "鳥類小知識", choices: [
-    { id: "bird-molt-symmetry", text: "觀察脫羽是否對稱，兩側是否同時發生", result: "correct", ...positive, explanation: "正常換羽通常是連續且對稱的。" },
-    { id: "bird-molt-appetite", text: "確認 {petName} 的食慾和精神是否正常", result: "correct", ...positive, explanation: "換羽時仍應維持正常食慾與精神。" },
-    { id: "bird-molt-location", text: "確認脫羽是否在嘴喙可碰觸處，並留意皮膚損傷", result: "correct", ...positive, explanation: "可能是過度理羽或拔毛，需要評估壓力、寄生蟲或營養問題。" },
-    { id: "bird-molt-vet", text: "這一定是生病了，立刻就醫", result: "partial", ...incorrect, explanation: "成鳥每年有一到兩次季節性換羽；先觀察對稱性、食慾精神與脫羽部位，再判斷是否需要就醫。", suggestion: "若不對稱大面積脫羽、皮膚損傷或精神食慾異常，應聯繫鳥類獸醫。" },
-    { id: "bird-molt-supplement", text: "先買羽毛生長補品給牠吃", result: "incorrect", ...incorrect, explanation: "未經獸醫評估自行補充，可能不適合該物種。", suggestion: "擔心異常時先諮詢鳥類獸醫。" },
-  ] },
-  { id: "bird-picky-eating", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 只挑牠喜歡的吃，怎麼辦？", description: "你發現 {petName} 總是把葵花籽和花生先挑光，其他飼料留在碗裡。你想幫牠吃得更均衡。", topic: "鸚鵡挑食與定量餵食", reportSummary: "以定量餵食、訓練獎勵與覓食玩具協助鸚鵡建立均衡飲食。", artIndex: 1, multipleChoice: true, requiredCorrectOptionIds: ["bird-picky-portion", "bird-picky-reward", "bird-picky-forage"], wrongOptionIds: ["bird-picky-favorite"], correctSummary: ["每天定量提供飼料。", "將喜好食物留作訓練獎勵。", "把食物藏在覓食玩具中。"], learningPoints: ["鸚鵡是出了名的**挑食高手**，天生偏愛高油脂種子（葵花籽、花生），長期只吃這些容易導致**肥胖**和**營養失衡**。解法是**定量提供飼料**，讓鳥在限制量內自然嘗試多元食物；並把最愛的零食**單獨留作訓練獎勵**。**覓食玩具**（把食物藏起來讓鳥自己找）也是一舉兩得的好方法——同時解決挑食和無聊兩個問題。"], knowledgeTitle: "鸚鵡小知識", choices: [
-    { id: "bird-picky-favorite", text: "把 {petName} 不喜歡的種子挑掉，只留牠愛吃的", result: "incorrect", ...incorrect, explanation: "葵花籽和花生含油量極高，長期只吃喜好食物會導致肥胖和營養失衡。" },
-    { id: "bird-picky-portion", text: "每天定量提供飼料，不讓碗裡隨時都有充足食物", result: "correct", ...positive, explanation: "在有限食物量內，牠會開始嘗試不同種子，而不是只等最愛的食物。" },
-    { id: "bird-picky-reward", text: "將 {petName} 最愛的食物單獨留出，作為訓練互動的獎勵零食", result: "correct", ...positive, explanation: "把高誘因食物作為訓練獎勵，能讓互動更有效，同時維持多元飲食。" },
-    { id: "bird-picky-forage", text: "把食物藏在覓食玩具裡，讓 {petName} 自己探索取食", result: "correct", ...positive, explanation: "覓食玩具增加探索刺激，也讓進食行為更接近自然狀態。" },
-  ] },
-  { id: "bird-stereotypy", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 一直重複做同一件事", description: "你發現 {petName} 這幾天每天早上都在籠子同一個位置來回踱步，動作單一且持續，跟平時的活潑好動完全不同。", topic: "鸚鵡刻板行為", reportSummary: "刻板行為需從互動與環境豐富化尋找成因，而非只阻斷表面行為。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-stereotypy-social", "bird-stereotypy-enrichment"], wrongOptionIds: ["bird-stereotypy-remove", "bird-stereotypy-vet"], correctSummary: ["確認籠外互動時間是否足夠。", "輪換籠內玩具，增加豐富化設施。"], learningPoints: ["**刻板行為**（固定路線踱步、重複啄同一點）是鸚鵡在籠養環境中常見的**壓力指標**。野生鸚鵡每天飛行覓食、與群體互動，籠養環境無法完全複製這些刺激——**環境豐富化**（玩具輪換、覓食訓練）和充足的**籠外社交時間**，是預防刻板行為的關鍵。"], knowledgeTitle: "鸚鵡小知識", choices: [
-    { id: "bird-stereotypy-remove", text: "把 {petName} 踱步的那段棲木移掉，讓牠沒辦法繼續重複這個動作", result: "incorrect", ...incorrect, explanation: "移除棲木沒有解決壓力或社交需求不足的成因，行為可能轉移成其他形式。" },
-    { id: "bird-stereotypy-social", text: "確認 {petName} 每天是否有足夠的籠外互動時間", result: "correct", ...positive, explanation: "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。" },
-    { id: "bird-stereotypy-enrichment", text: "嘗試輪換籠內玩具，增加新的豐富化設施", result: "correct", ...positive, explanation: "定期輪換能增加探索刺激、緩解刻板行為。" },
-    { id: "bird-stereotypy-vet", text: "刻板行為代表 {petName} 生病了，立刻就醫", result: "incorrect", ...incorrect, explanation: "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫鳥類獸醫評估。" },
-  ] },
-  { id: "bird-excessive-calling", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "{petName} 一直叫，我到底該怎麼辦？", description: "{petName} 今天從日出開始就一直大叫。家人問：「這樣下去不行，到底怎麼讓牠安靜？」", topic: "鸚鵡鳴叫與互動需求", reportSummary: "先確認社交互動與環境刺激；不以大聲責罵或遮籠方式壓制鳴叫。", artIndex: 3, multipleChoice: true, requiredCorrectOptionIds: ["bird-call-interaction", "bird-call-enrichment", "bird-call-routine"], wrongOptionIds: ["bird-call-immediate-response", "bird-call-cover"], correctSummary: ["確認今天的籠外互動時間是否足夠。", "輪換籠內玩具或加入覓食玩具。", "接受例行性的鳴叫是天性，不需要每次都立刻回應。"], learningPoints: ["鸚鵡的鳴叫可能是社交呼喚、環境刺激或作息不穩的訊號。", "建立固定互動與睡眠節奏，比用責罵或遮籠壓制更能處理問題。"], knowledgeTitle: "鸚鵡小知識", completionFeedback: {
-    title: "做得很好！",
-    encouragement: "你沒有只想著「讓牠閉嘴」，而是找根本原因，做得很好！充足的互動和豐富化才能減少**呼喚型**的過度鳴叫，但**例行型**的叫聲是天性——不需要，也不可能完全消除。",
-    knowledgeTitle: "鸚鵡小知識",
-    knowledgeContent: [
-      { type: "paragraph", text: "鸚鵡的鳴叫分成幾種類型：**呼喚型**（缺乏互動）、**無聊型**（環境刺激不足）、**發情型**（荷爾蒙影響）、**例行型**（日出日落天性）。**呼喚型**和**無聊型**可以透過足夠的籠外互動和**豐富化玩具**大幅減少；**例行型**則需要接受，並學習辨識——這也是養鸚鵡的日常功課。" },
+export const birdLifeScenarios: Scenario[] = [
+  {
+    id: "bird-arrival-adjustment",
+    stage: "接回家",
+    stageId: "arrival",
+    stageTitle: "適應新家與安全感",
+    timeLabel: "一起生活的第一天",
+    title: "第一天適應新家",
+    description: "你把外出籠帶進房間，輕輕放在鳥籠旁邊。{petName} 縮在籠角，羽毛膨起，對你的靠近完全沒有反應——平常在店裡還會東張西望的牠，現在一動也不動。你心裡有點擔心，不確定自己應該做什麼。",
+    questionText: "你現在會怎麼做？",
+    topic: "新環境安置",
+    reportSummary: "鳥剛到家應放在安靜固定位置，覆上遮光布並保留通風，讓牠慢慢適應。",
+    artIndex: 0,
+    sceneMedia: {
+      type: "placeholder"
+    },
+    correctFeedbackMedia: {
+      type: "placeholder"
+    },
+    choices: [
+      {
+        id: "bird-arrival-cover",
+        text: "把外出籠放在安靜的固定位置，蓋上遮光布，讓 {petName} 先靜下來",
+        result: "correct",
+        ...positive,
+        explanation: "對！澎毛縮身、對刺激沒反應，正是鸚鵡在緊迫時的典型表現。遮光布能提供「封閉感」，減少視覺刺激，幫助 {petName} 在新環境的第一天逐漸平靜。",
+        expenseIds: [
+          "bird-arrival-checkup"
+        ]
+      },
+      {
+        id: "bird-arrival-talk",
+        text: "試著輕聲跟 {petName} 說話，讓牠知道你在",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "雖然出發點是好的，但此時 {petName} 處於高度警戒狀態，任何互動都可能加重緊迫感。最好的做法是保持安靜、減少刺激，讓牠自己慢慢平復。"
+      },
+      {
+        id: "bird-arrival-move",
+        text: "趕快把牠移進鳥籠，讓牠在新家待著比較快適應",
+        result: "partial",
+        ...incorrect,
+        explanation: "環境轉換本身就是強烈壓力，現在強迫移動只會造成雙重緊迫。建議讓外出籠先放在鳥籠旁，讓 {petName} 在準備好時自行探索，不要催促。"
+      },
+      {
+        id: "bird-arrival-family",
+        text: "邀請家人一起來看，讓 {petName} 早點認識大家",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "多人圍觀是極大的視覺與聽覺衝擊，可能讓原本就緊迫的 {petName} 更加不安。適應期應保持環境安靜、人員減少，讓牠有足夠的空間平復。"
+      },
     ],
-    reminder: "你有想過 {petName} 的鳴叫是否可能影響鄰居嗎？提前評估你的居住環境與鄰里關係，積極學習行為引導，是對 {petName} 和周遭鄰里都負責的方式。",
-  }, choices: [
-    { id: "bird-call-interaction", text: "確認今天 {petName} 的籠外互動時間是否足夠，可能是在呼喚你", result: "correct", ...positive, explanation: "鸚鵡最常見的過度鳴叫原因就是缺乏互動。先確認今天是否已給予足夠的籠外社交時間，「呼喚型」鳴叫可以透過充足陪伴大幅減少。" },
-    { id: "bird-call-enrichment", text: "輪換籠內玩具或加入覓食玩具，減少因無聊引發的鳴叫", result: "correct", ...positive, explanation: "固定玩具失去新鮮感後，無聊是鳴叫的常見原因之一。定期輪換玩具、加入覓食訓練能提供更多探索刺激。" },
-    { id: "bird-call-routine", text: "接受例行性的鳴叫是天性，不需要每次都立刻回應", result: "correct", ...positive, explanation: "鸚鵡在日出、日落或聽到其他鳥叫時鳴叫，是正常的例行行為。每次都立即回應反而可能強化牠的呼喚；應分辨例行鳴叫與需求鳴叫，並維持穩定的互動節奏。" },
-    { id: "bird-call-immediate-response", text: "每次牠一叫就立刻走進去陪牠", result: "incorrect", ...incorrect, explanation: "立刻回應每一次鳴叫，可能讓 {petName} 學會「只要叫就會有人來」，反而強化過度鳴叫。應先滿足固定的互動需求，再選擇安靜時主動陪伴。" },
-    { id: "bird-call-cover", text: "用布把整個籠子蓋起來讓牠安靜", result: "incorrect", ...incorrect, explanation: "強制遮籠無法解決鳴叫的原因，也可能打亂作息與安全感。遮光布只適合在需要休息的固定時段使用，不該作為壓制鳴叫的工具。" },
-  ] },
-  { id: "bird-busy-care", stage: "生活變化", stageId: "life-change", stageTitle: "當生活發生變化", timeLabel: "當生活發生變化", title: "臨時晚歸，誰來接手？", description: "今天臨時需要加班，預計到晚上才能回家。{petName} 的飼料和飲水需要補充確認、鳥籠需要清潔、每天的健康觀察也不能中斷。你開始想：今晚誰來照顧牠？", questionText: "你現在要先怎麼做？", topic: "忙碌備援計畫", reportSummary: "忙碌前要安排可信任協助者，並交接每日照護、鳥類獸醫與緊急聯絡方式。", artIndex: 0, learningPoints: ["鳥類每天需要新鮮飼料、乾淨飲水、清潔和健康觀察，這些事情沒有人做，就會累積問題。", "平時就要確認<mark>鳥類獸醫的聯絡方式</mark>，關鍵時刻才能立即行動。"], knowledgeTitle: "鳥類小知識", busyCarePresentation: {
-    animalName: "鸚鵡",
-    sceneMedia: { type: "placeholder" },
-    feedbackMedia: { type: "placeholder" },
-  }, busyCareCompletion: {
-    title: "做得很好！",
-    encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！",
-    reflectionText: "在 {petName} 的世界裡，你的聲音是牠最熟悉的安定。",
-    reflectionTitle: "留給自己的一個問題",
-    reflectionContent: ["忙完一天回到家，你還有餘力讓 {petName} 出籠活動、跟牠說說話嗎？就算只是短短幾分鐘？"],
-    showKnowledgeCard: false,
-    careTimeTitle: "每日照護時間",
-    careTimeItems: birdReport.dailyCareBreakdown,
-    showCareTime: false,
-    additionalAdvice: ["如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"],
-  }, busyCareChecklist: [
-    { id: "daily-care", prompt: "你已經向協助者說明 {petName} 每天的飼料補充、換水、籠具清潔、空氣安全注意事項與健康觀察安排了嗎？", correctAnswer: "yes", reviewHint: "每日飼料補充、換水、籠具清潔、空氣安全注意事項與健康觀察安排還需要先交接" },
-    { id: "support-confirmed", prompt: "我還沒有確認協助者在你忙碌時，是否真的有時間協助照顧 {petName}。", correctAnswer: "no", reviewHint: "協助者的時間還需要先確認" },
-    { id: "care-willing", prompt: "協助者願意依照你的交接方式照顧 {petName} 嗎？", correctAnswer: "yes", reviewHint: "協助者的意願還需要先確認" },
-    { id: "emergency-contact", prompt: "協助者知道 {petName} 出現異常或緊急狀況時怎麼聯絡你嗎？", correctAnswer: "yes", reviewHint: "緊急聯絡方式還需要補充確認" },
-  ], choices: [
-    { id: "seek-help", text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}", result: "correct", isSupportChoice: true, ...positive, explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。" },
-    { id: "bird-food-stockpile", text: "出門前多放一天份量的飼料和水，讓 {petName} 自己過", result: "incorrect", ...incorrect, explanation: "多放飼料和水仍無法取代鳥籠清潔、每日健康觀察與互動陪伴。鳥類健康狀況需要每天確認，晚歸前應先安排可信任的人代為照顧。" },
-    { id: "bird-leave-open", text: "把鳥籠的門打開，讓 {petName} 在家自由活動", result: "incorrect", ...incorrect, explanation: "讓鳥在無人看管的環境自由活動，可能接觸到電線、廚具蒸氣、有毒植物等危險，且無法觀察健康狀況。確定晚歸時，應先安排可信任的人代為照顧並告知注意事項。" },
-    { id: "bird-wait-return", text: "等晚上回家再一起補充和確認，平常也都是這樣", result: "incorrect", ...incorrect, explanation: "把飼料補充、飲水確認和健康觀察全部延後，可能無法及時發現當天的異常。確定晚歸時，應事先安排合適的人接手照顧。" },
-  ] },
-  { id: "bird-health-emergency", stage: "生活變化", stageId: "life-change", stageTitle: "健康狀況變化", timeLabel: "健康狀況變化", title: "{petName} 今天澎毛縮在角落", description: "你下班回家，發現 {petName} 澎著羽毛縮在鳥籠一角，對你的聲音沒什麼反應，飼料碗幾乎沒有動過。你腦中響起之前學到的：鳥類出現明顯症狀，往往代表病情已進展到相當嚴重的程度。", questionText: "你現在要先怎麼做？", topic: "健康突發事件", reportSummary: "鳥類出現澎毛、精神低落與不進食等明確警訊時，應當天聯繫鳥類獸醫。", artIndex: 1, learningPoints: knowledge.health, knowledgeTitle: "鳥類小知識", sceneMedia: { type: "placeholder" }, correctFeedbackMedia: { type: "placeholder" }, completionFeedback: {
-    title: "做得很好！",
-    encouragement: "你在明確症狀出現時，立刻做出正確判斷，做得很好！鳥類就醫資源比犬貓稀少，建議平時就先找好熟悉鳥類的獸醫，緊急時才不會臨時找不到。",
-    knowledgeTitle: "鸚鵡小知識",
-    knowledgeContent: [
-      { type: "paragraph", text: "鸚鵡常見需要留意的健康問題：" },
-      { type: "item", text: "**呼吸困難**：張口呼吸、尾羽隨呼吸上下擺動——屬於急症，需立即就醫。" },
-      { type: "item", text: "**澎毛、精神低落、食慾消失**：多項警訊同時出現，病情通常已相當嚴重——需當天就醫。" },
-      { type: "item", text: "**產蛋困難**：雌鳥無法正常站立或移動——需緊急就醫。" },
-      { type: "item", text: "**消化異常**：反覆嘔吐、糞便明顯改變、體重持續下降——持續超過一天應就醫確認。" },
-      { type: "item", text: "**拔毛或過度理羽**：出現裸皮、羽毛凌亂稀疏——需就醫評估。" },
+    correctSummary: ["鸚鵡剛到家時的澎毛縮身是緊迫訊號，正確做法是在外出籠上蓋遮光布放在安靜固定位置，讓牠以自己的速度適應，不可立刻移籠或邀人圍觀。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你已找到這個情境中合適的照顧方式，做得很好！",
+      knowledgeTitle: "鳥類小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "鸚鵡對新環境的不適應往往不像狗那樣明顯哭鬧，而是**反常地安靜**——澎毛、縮身、對刺激無反應，這些都是緊迫的訊號，不是「個性文靜」。"
+        },
+        {
+          type: "paragraph",
+          text: "**遮光布**能提供封閉感，幫助牠在適應期第一階段穩定下來。多數鸚鵡需要 **1–2 週**才能在新環境真正放鬆，不要用「快點熟悉」的心態催促牠。"
+        }
+      ]
+    }
+  },
+  {
+    id: "bird-puffing-feathers",
+    stage: "日常照護",
+    stageId: "daily",
+    stageTitle: "日常照護",
+    timeLabel: "日常照護",
+    title: "{petName} 羽毛一直膨起來",
+    description: "今天 {petName} 的羽毛鬆鬆膨起，比平時圓了一圈，站在棲木上也沒什麼精神。你應該怎麼做？",
+    questionText: "你應該怎麼做？（複選）",
+    topic: "澎毛與健康警訊",
+    reportSummary: "澎毛時要同時觀察食慾、呼吸與站棲狀態，適度保暖並設定明確就醫時機。",
+    artIndex: 1,
+    multipleChoice: true,
+    requiredCorrectOptionIds: [
+      "bird-puff-observe", "bird-puff-warm", "bird-puff-record"
     ],
-    reminder: "澎毛、精神低落、不進食這三個警訊一起出現，不要觀望，請當天就聯繫鳥類獸醫。台灣熟悉鳥類醫療的獸醫數量有限，建議平時就先查好。",
-  }, choices: [
-    { id: "bird-vet-now", text: "立刻聯繫鳥類獸醫，準備外出籠，今天就安排就診", result: "correct", ...positive, explanation: "澎毛＋精神低落＋不進食同時出現，是鳥類嚴重不適的明確警訊，需要當天就醫，不能等到隔天。", expenseIds: ["bird-mild-sick", "bird-moderate-sick", "bird-hospitalization"] },
-    { id: "bird-wait-tomorrow", text: "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生", result: "incorrect", ...incorrect, explanation: "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫鳥類獸醫。" },
-    { id: "bird-try-food", text: "先幫牠換上最喜歡的新鮮飼料，看看能不能刺激食慾", result: "incorrect", ...incorrect, explanation: "換飼料無法改善鳥類生病的根本原因，也可能讓你誤以為「還在吃就好」而延誤就醫。明顯症狀出現時應直接聯繫鳥類獸醫。" },
-    { id: "bird-search-online", text: "上網查看有沒有類似案例，找找在家可以處理的方法", result: "incorrect", ...incorrect, explanation: "網路資訊和他人案例不能取代鳥類獸醫的判斷；在家等待或嘗試的時間，可能讓病情進一步惡化。" },
-  ] },
-  { id: "bird-senior-care", stage: "生活變化", stageId: "life-change", stageTitle: "高齡照護", timeLabel: "逐漸進入高齡", title: "{petName} 慢慢變老了", description: "{petName} 跟你生活了很多年，牠的活動量慢慢減少，有時候站在低一點的棲木上，有時候理羽的時間更長了。你知道牠開始進入老年期了。", topic: "高齡鳥照護", reportSummary: "高齡鳥需降低跌落風險並提高健檢頻率，維持安全、舒適與密切觀察。", artIndex: 2, multipleChoice: true, requiredCorrectOptionIds: ["bird-senior-perch", "bird-senior-checkup"], wrongOptionIds: ["bird-senior-remove", "bird-senior-reduce-interaction"], correctSummary: ["將棲木調低，降低跌落風險。", "提高健檢頻率，從一年一次改為更頻繁。"], learningPoints: knowledge.senior, knowledgeTitle: "鳥類小知識", completionFeedback: {
-    title: "做得很好！",
-    encouragement: "你知道高齡照護不只是「讓牠安靜休息」，而是需要主動調整環境和加強醫療觀察，做得很好！",
-    knowledgeTitle: "長達 10 年至近 50 年的每日陪伴與生命承諾",
-    knowledgeContent: [
-      { type: "paragraph", text: "與 {petName} 在一起，是一份 **10 年以上**的承諾——有些物種甚至能陪你走過 **30、40 年**。" },
-      { type: "paragraph", text: "牠會隨著歲月老去，需要更多**陪伴**、**照護**與**醫療資源**。" },
-      { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到**生命盡頭**的準備嗎？" },
+    wrongOptionIds: [
+      "bird-puff-wait"
     ],
-  }, choices: [
-    { id: "bird-senior-perch", text: "將棲木調低，降低跌落風險", result: "correct", ...positive, explanation: "可保留一根較高棲木，讓牠自行選擇。", expenseIds: ["bird-senior-room"] },
-    { id: "bird-senior-checkup", text: "提高健檢頻率，從一年一次改為更頻繁", result: "correct", ...positive, explanation: "能及早發現老年常見的代謝與心血管問題。" },
-    { id: "bird-senior-remove", text: "高齡鳥不再需要豐富化設施，讓牠安靜休息就好", result: "incorrect", ...incorrect, explanation: "即使活動力下降，適合老年鳥的簡單啃咬玩具與低難度益智設施仍有助於心理健康，不應完全撤除所有刺激。", suggestion: "依活動能力調整豐富化，而非完全撤除。" },
-    { id: "bird-senior-reduce-interaction", text: "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息", result: "incorrect", ...incorrect, explanation: "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。", suggestion: "依個體狀況調整互動方式，而非直接縮短時間。" },
-  ] },
+    choices: [
+      {
+        id: "bird-puff-observe",
+        text: "觀察是否同時有食慾下降、呼吸急促或無法站棲木",
+        result: "correct",
+        ...positive,
+        explanation: "澎毛需搭配其他症狀一起判斷。"
+      },
+      {
+        id: "bird-puff-warm",
+        text: "確認環境溫度，適度移到較溫暖的位置",
+        result: "correct",
+        ...positive,
+        explanation: "澎毛可能代表寒冷或不適；保暖後仍要持續觀察。"
+      },
+      {
+        id: "bird-puff-wait",
+        text: "上網查詢澎毛原因，找出最像的症狀後自行調整飼料或補充保健品",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "鳥類疾病症狀重疊性高，網路資料無法取代實際診斷；自行調整飲食或補充保健品也可能掩蓋或加重問題。",
+        suggestion: "同步觀察其他警訊，必要時直接聯繫熟悉鳥類的獸醫師。"
+      },
+      {
+        id: "bird-puff-record",
+        text: "記錄時間，24 小時未改善或惡化就聯繫鳥類獸醫",
+        result: "correct",
+        ...positive,
+        explanation: "設定明確的就醫時機，是安全的應對節奏。"
+      },
+    ],
+    correctSummary: [
+      "觀察食慾、呼吸與站棲等其他症狀。", "確認環境溫度並適度保暖。", "記錄時間，異常持續或惡化即聯繫鳥類獸醫。"
+    ],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你已找到這個情境中合適的照顧方式，做得很好！",
+      knowledgeTitle: "鳥類小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "澎毛要和<mark>食慾、呼吸、站棲</mark>等狀態一起判斷。"
+        },
+        {
+          type: "paragraph",
+          text: "鳥常隱藏病徵；異常持續或惡化時，應聯繫<mark>熟悉鳥類的獸醫師</mark>。"
+        }
+      ]
+    }
+  },
+  {
+    id: "bird-molting-care",
+    stage: "日常照護",
+    stageId: "daily",
+    stageTitle: "日常照護",
+    timeLabel: "日常照護",
+    title: "{petName} 開始大量脫毛",
+    description: "最近幾天，你發現籠子底部和周圍有很多羽毛，{petName} 在不停地理羽，偶爾還會用嘴咬羽毛。",
+    questionText: "你應該怎麼做？（複選）",
+    topic: "換羽與過度理羽",
+    reportSummary: "換羽時觀察對稱性、精神食慾與脫羽部位；不對稱裸皮或皮膚損傷需就醫評估。",
+    artIndex: 2,
+    multipleChoice: true,
+    requiredCorrectOptionIds: [
+      "bird-molt-symmetry", "bird-molt-appetite", "bird-molt-location"
+    ],
+    wrongOptionIds: [
+      "bird-molt-vet", "bird-molt-supplement"
+    ],
+    choices: [
+      {
+        id: "bird-molt-symmetry",
+        text: "觀察脫羽是否對稱，兩側是否同時發生",
+        result: "correct",
+        ...positive,
+        explanation: "正常換羽通常是連續且對稱的。"
+      },
+      {
+        id: "bird-molt-appetite",
+        text: "確認 {petName} 的食慾和精神是否正常",
+        result: "correct",
+        ...positive,
+        explanation: "換羽時仍應維持正常食慾與精神。"
+      },
+      {
+        id: "bird-molt-location",
+        text: "確認脫羽是否在嘴喙可碰觸處，並留意皮膚損傷",
+        result: "correct",
+        ...positive,
+        explanation: "可能是過度理羽或拔毛，需要評估壓力、寄生蟲或營養問題。"
+      },
+      {
+        id: "bird-molt-vet",
+        text: "這一定是生病了，立刻就醫",
+        result: "partial",
+        ...incorrect,
+        explanation: "成鳥每年有一到兩次季節性換羽；先觀察對稱性、食慾精神與脫羽部位，再判斷是否需要就醫。",
+        suggestion: "若不對稱大面積脫羽、皮膚損傷或精神食慾異常，應聯繫鳥類獸醫。"
+      },
+      {
+        id: "bird-molt-supplement",
+        text: "先買羽毛生長補品給牠吃",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "未經獸醫評估自行補充，可能不適合該物種。",
+        suggestion: "擔心異常時先諮詢鳥類獸醫。"
+      },
+    ],
+    correctSummary: [
+      "觀察脫羽是否對稱。", "確認食慾和精神是否正常。", "觀察脫羽部位與皮膚狀況。"
+    ],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你已找到這個情境中合適的照顧方式，做得很好！",
+      knowledgeTitle: "鳥類小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "正常換羽通常是<mark>連續且對稱</mark>的；不對稱裸皮區需提高警覺。"
+        },
+        {
+          type: "paragraph",
+          text: "新生羽毛可能有血管，看到血管毛時<mark>不要拉扯</mark>。"
+        }
+      ]
+    }
+  },
+  {
+    id: "bird-picky-eating",
+    stage: "日常照護",
+    stageId: "daily",
+    stageTitle: "日常照護",
+    timeLabel: "日常照護",
+    title: "{petName} 只挑牠喜歡的吃，怎麼辦？",
+    description: "你發現 {petName} 總是把葵花籽和花生先挑光，其他飼料留在碗裡。你想幫牠吃得更均衡。",
+    questionText: "你應該怎麼做？（複選）",
+    topic: "鸚鵡挑食與定量餵食",
+    reportSummary: "以定量餵食、訓練獎勵與覓食玩具協助鸚鵡建立均衡飲食。",
+    artIndex: 1,
+    multipleChoice: true,
+    requiredCorrectOptionIds: [
+      "bird-picky-portion", "bird-picky-reward", "bird-picky-forage"
+    ],
+    wrongOptionIds: [
+      "bird-picky-favorite"
+    ],
+    choices: [
+      {
+        id: "bird-picky-favorite",
+        text: "把 {petName} 不喜歡的種子挑掉，只留牠愛吃的",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "葵花籽和花生含油量極高，長期只吃喜好食物會導致肥胖和營養失衡。"
+      },
+      {
+        id: "bird-picky-portion",
+        text: "每天定量提供飼料，不讓碗裡隨時都有充足食物",
+        result: "correct",
+        ...positive,
+        explanation: "在有限食物量內，牠會開始嘗試不同種子，而不是只等最愛的食物。"
+      },
+      {
+        id: "bird-picky-reward",
+        text: "將 {petName} 最愛的食物單獨留出，作為訓練互動的獎勵零食",
+        result: "correct",
+        ...positive,
+        explanation: "把高誘因食物作為訓練獎勵，能讓互動更有效，同時維持多元飲食。"
+      },
+      {
+        id: "bird-picky-forage",
+        text: "把食物藏在覓食玩具裡，讓 {petName} 自己探索取食",
+        result: "correct",
+        ...positive,
+        explanation: "覓食玩具增加探索刺激，也讓進食行為更接近自然狀態。"
+      },
+    ],
+    correctSummary: ["鸚鵡挑食應透過定量餵食、將喜好食物留作訓練獎勵、以及覓食玩具三個策略改善，不可只提供牠愛吃的高油脂種子，以免導致肥胖與營養失衡。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你已找到這個情境中合適的照顧方式，做得很好！",
+      knowledgeTitle: "鸚鵡小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "鸚鵡是出了名的**挑食高手**，天生偏愛高油脂種子（葵花籽、花生），長期只吃這些容易導致**肥胖**和**營養失衡**。解法是**定量提供飼料**，讓鳥在限制量內自然嘗試多元食物；並把最愛的零食**單獨留作訓練獎勵**。**覓食玩具**（把食物藏起來讓鳥自己找）也是一舉兩得的好方法——同時解決挑食和無聊兩個問題。"
+        }
+      ]
+    }
+  },
+  {
+    id: "bird-stereotypy",
+    stage: "日常照護",
+    stageId: "daily",
+    stageTitle: "日常照護",
+    timeLabel: "日常照護",
+    title: "{petName} 一直重複做同一件事",
+    description: "你發現 {petName} 這幾天每天早上都在籠子同一個位置來回踱步，動作單一且持續，跟平時的活潑好動完全不同。",
+    questionText: "你應該怎麼做？（複選）",
+    topic: "鸚鵡刻板行為",
+    reportSummary: "刻板行為需從互動與環境豐富化尋找成因，而非只阻斷表面行為。",
+    artIndex: 2,
+    multipleChoice: true,
+    requiredCorrectOptionIds: [
+      "bird-stereotypy-social", "bird-stereotypy-enrichment"
+    ],
+    wrongOptionIds: [
+      "bird-stereotypy-remove", "bird-stereotypy-vet"
+    ],
+    choices: [
+      {
+        id: "bird-stereotypy-remove",
+        text: "把 {petName} 踱步的那段棲木移掉，讓牠沒辦法繼續重複這個動作",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "移除棲木沒有解決壓力或社交需求不足的成因，行為可能轉移成其他形式。"
+      },
+      {
+        id: "bird-stereotypy-social",
+        text: "確認 {petName} 每天是否有足夠的籠外互動時間",
+        result: "correct",
+        ...positive,
+        explanation: "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。"
+      },
+      {
+        id: "bird-stereotypy-enrichment",
+        text: "嘗試輪換籠內玩具，增加新的豐富化設施",
+        result: "correct",
+        ...positive,
+        explanation: "定期輪換能增加探索刺激、緩解刻板行為。"
+      },
+      {
+        id: "bird-stereotypy-vet",
+        text: "刻板行為代表 {petName} 生病了，立刻就醫",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫鳥類獸醫評估。"
+      },
+    ],
+    correctSummary: ["鸚鵡刻板行為是壓力指標，應增加每日籠外互動時間並輪換豐富化玩具，不可只移除觸發物，若同時出現澎毛或食慾下降則應就醫。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你已找到這個情境中合適的照顧方式，做得很好！",
+      knowledgeTitle: "鸚鵡小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "**刻板行為**（固定路線踱步、重複啄同一點）是鸚鵡在籠養環境中常見的**壓力指標**。野生鸚鵡每天飛行覓食、與群體互動，籠養環境無法完全複製這些刺激——**環境豐富化**（玩具輪換、覓食訓練）和充足的**籠外社交時間**，是預防刻板行為的關鍵。"
+        }
+      ]
+    }
+  },
+  {
+    id: "bird-excessive-calling",
+    stage: "日常照護",
+    stageId: "daily",
+    stageTitle: "日常照護",
+    timeLabel: "日常照護",
+    title: "{petName} 一直叫，我到底該怎麼辦？",
+    description: "{petName} 今天從日出開始就一直大叫。家人問：「這樣下去不行，到底怎麼讓牠安靜？」",
+    questionText: "你應該怎麼做？（複選）",
+    topic: "鸚鵡鳴叫與互動需求",
+    reportSummary: "先確認社交互動與環境刺激；不以大聲責罵或遮籠方式壓制鳴叫。",
+    artIndex: 3,
+    multipleChoice: true,
+    requiredCorrectOptionIds: [
+      "bird-call-interaction", "bird-call-enrichment", "bird-call-routine"
+    ],
+    wrongOptionIds: [
+      "bird-call-immediate-response", "bird-call-cover"
+    ],
+    choices: [
+      {
+        id: "bird-call-interaction",
+        text: "確認今天 {petName} 的籠外互動時間是否足夠，可能是在呼喚你",
+        result: "correct",
+        ...positive,
+        explanation: "鸚鵡最常見的過度鳴叫原因就是缺乏互動。先確認今天是否已給予足夠的籠外社交時間，「呼喚型」鳴叫可以透過充足陪伴大幅減少。"
+      },
+      {
+        id: "bird-call-enrichment",
+        text: "輪換籠內玩具或加入覓食玩具，減少因無聊引發的鳴叫",
+        result: "correct",
+        ...positive,
+        explanation: "固定玩具失去新鮮感後，無聊是鳴叫的常見原因之一。定期輪換玩具、加入覓食訓練能提供更多探索刺激。"
+      },
+      {
+        id: "bird-call-routine",
+        text: "接受例行性的鳴叫是天性，不需要每次都立刻回應",
+        result: "correct",
+        ...positive,
+        explanation: "鸚鵡在日出、日落或聽到其他鳥叫時鳴叫，是正常的例行行為。每次都立即回應反而可能強化牠的呼喚；應分辨例行鳴叫與需求鳴叫，並維持穩定的互動節奏。"
+      },
+      {
+        id: "bird-call-immediate-response",
+        text: "每次牠一叫就立刻走進去陪牠",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "立刻回應每一次鳴叫，可能讓 {petName} 學會「只要叫就會有人來」，反而強化過度鳴叫。應先滿足固定的互動需求，再選擇安靜時主動陪伴。"
+      },
+      {
+        id: "bird-call-cover",
+        text: "用布把整個籠子蓋起來讓牠安靜",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "強制遮籠無法解決鳴叫的原因，也可能打亂作息與安全感。遮光布只適合在需要休息的固定時段使用，不該作為壓制鳴叫的工具。"
+      },
+    ],
+    correctSummary: ["鸚鵡過度鳴叫應先確認互動與豐富化是否足夠，例行性的叫聲是天性無法完全消除，不可每次立刻回應，也不可在白天長時間用布遮籠。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你沒有只想著「讓牠閉嘴」，而是找根本原因，做得很好！充足的互動和豐富化才能減少**呼喚型**的過度鳴叫，但**例行型**的叫聲是天性——不需要，也不可能完全消除。",
+      knowledgeTitle: "鸚鵡小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "鸚鵡的鳴叫分成幾種類型：**呼喚型**（缺乏互動）、**無聊型**（環境刺激不足）、**發情型**（荷爾蒙影響）、**例行型**（日出日落天性）。**呼喚型**和**無聊型**可以透過足夠的籠外互動和**豐富化玩具**大幅減少；**例行型**則需要接受，並學習辨識——這也是養鸚鵡的日常功課。"
+        },
+      ],
+      reminder: "你有想過 {petName} 的鳴叫是否可能影響鄰居嗎？鳴叫問題在公寓或樓層住宅中特別容易影響鄰居。提前學習行為引導技巧，是對 {petName} 和周遭鄰里都負責的方式。"
+    }
+  },
+  {
+    id: "bird-busy-care",
+    stage: "生活變化",
+    stageId: "life-change",
+    stageTitle: "當生活發生變化",
+    timeLabel: "當生活發生變化",
+    title: "臨時晚歸，誰來接手？",
+    description: "今天臨時需要加班，預計到晚上才能回家。{petName} 的飼料和飲水需要補充確認、鳥籠需要清潔、每天的健康觀察也不能中斷。你開始想：今晚誰來照顧牠？",
+    questionText: "你現在要先怎麼做？",
+    topic: "忙碌備援計畫",
+    reportSummary: "忙碌前要安排可信任協助者，並交接每日照護、鳥類獸醫與緊急聯絡方式。",
+    artIndex: 0,
+    busyCarePresentation: {
+      animalName: "鸚鵡",
+      sceneMedia: {
+        type: "placeholder"
+      },
+      feedbackMedia: {
+        type: "placeholder"
+      }
+    },
+    busyCareCompletion: {
+      title: "做得很好！",
+      encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！",
+      reflectionText: "在 {petName} 的世界裡，你的聲音是牠最熟悉的安定。",
+      reflectionTitle: "留給自己的一個問題",
+      reflectionContent: [
+        "忙完一天回到家，你還有餘力讓 {petName} 出籠活動、跟牠說說話嗎？就算只是短短幾分鐘？"
+      ],
+      showKnowledgeCard: false,
+      careTimeTitle: "每日照護時間",
+      careTimeItems: birdReport.dailyCareBreakdown,
+      showCareTime: false,
+      additionalAdvice: [
+        "如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
+      ]
+    },
+    busyCareChecklist: [
+      {
+        id: "daily-care",
+        prompt: "你已經向協助者說明 {petName} 每天的飼料補充、換水、籠具清潔、空氣安全注意事項與健康觀察安排了嗎？",
+        correctAnswer: "yes",
+        reviewHint: "每日飼料補充、換水、籠具清潔、空氣安全注意事項與健康觀察安排還需要先交接"
+      },
+      {
+        id: "support-confirmed",
+        prompt: "我還沒有確認協助者在你忙碌時，是否真的有時間協助照顧 {petName}。",
+        correctAnswer: "no",
+        reviewHint: "協助者的時間還需要先確認"
+      },
+      {
+        id: "care-willing",
+        prompt: "協助者願意依照你的交接方式照顧 {petName} 嗎？",
+        correctAnswer: "yes",
+        reviewHint: "協助者的意願還需要先確認"
+      },
+      {
+        id: "emergency-contact",
+        prompt: "協助者知道 {petName} 出現異常或緊急狀況時怎麼聯絡你嗎？",
+        correctAnswer: "yes",
+        reviewHint: "緊急聯絡方式還需要補充確認"
+      },
+    ],
+    choices: [
+      {
+        id: "seek-help",
+        text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}",
+        result: "correct",
+        isSupportChoice: true,
+        ...positive,
+        explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。"
+      },
+      {
+        id: "bird-food-stockpile",
+        text: "出門前多放一天份量的飼料和水，讓 {petName} 自己過",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "多放飼料和水仍無法取代鳥籠清潔、每日健康觀察與互動陪伴。鳥類健康狀況需要每天確認，晚歸前應先安排可信任的人代為照顧。"
+      },
+      {
+        id: "bird-leave-open",
+        text: "把鳥籠的門打開，讓 {petName} 在家自由活動",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "讓鳥在無人看管的環境自由活動，可能接觸到電線、廚具蒸氣、有毒植物等危險，且無法觀察健康狀況。確定晚歸時，應先安排可信任的人代為照顧並告知注意事項。"
+      },
+      {
+        id: "bird-wait-return",
+        text: "等晚上回家再一起補充和確認，平常也都是這樣",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "把飼料補充、飲水確認和健康觀察全部延後，可能無法及時發現當天的異常。確定晚歸時，應事先安排合適的人接手照顧。"
+      },
+    ],
+    correctSummary: ["確定晚歸時應立刻聯繫可信任的人代為照顧，完整交接飼料補充、換水、鳥籠清潔、健康觀察與緊急聯絡方式，也可事先了解附近的寵物旅館作為備援，多放飼料無法取代完整照護。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你已找到這個情境中合適的照顧方式，做得很好！",
+      knowledgeTitle: "鳥類小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "鳥類每天需要新鮮飼料、乾淨飲水、清潔和健康觀察，這些事情沒有人做，就會累積問題。"
+        },
+        {
+          type: "paragraph",
+          text: "平時就要確認**熟悉鳥類醫療的獸醫師的聯絡方式**，關鍵時刻才能立即行動。"
+        }
+      ]
+    }
+  },
+  {
+    id: "bird-health-emergency",
+    stage: "生活變化",
+    stageId: "life-change",
+    stageTitle: "健康狀況變化",
+    timeLabel: "健康狀況變化",
+    title: "{petName} 今天澎毛縮在角落",
+    description: "你下班回家，發現 {petName} 澎著羽毛縮在鳥籠一角，對你的聲音沒什麼反應，飼料碗幾乎沒有動過。你腦中響起之前學到的：鳥類出現明顯症狀，往往代表病情已進展到相當嚴重的程度。",
+    questionText: "你現在要先怎麼做？",
+    topic: "健康突發事件",
+    reportSummary: "鳥類出現澎毛、精神低落與不進食等明確警訊時，應當天聯繫鳥類獸醫。",
+    artIndex: 1,
+    sceneMedia: {
+      type: "placeholder"
+    },
+    correctFeedbackMedia: {
+      type: "placeholder"
+    },
+    choices: [
+      {
+        id: "bird-vet-now",
+        text: "立刻聯繫鳥類獸醫，準備外出籠，今天就安排就診",
+        result: "correct",
+        ...positive,
+        explanation: "澎毛＋精神低落＋不進食同時出現，是鳥類嚴重不適的明確警訊，需要當天就醫，不能等到隔天。",
+        expenseIds: [
+          "bird-mild-sick", "bird-moderate-sick", "bird-hospitalization"
+        ]
+      },
+      {
+        id: "bird-wait-tomorrow",
+        text: "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫鳥類獸醫。"
+      },
+      {
+        id: "bird-try-food",
+        text: "先幫牠換上最喜歡的新鮮飼料，看看能不能刺激食慾",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "換飼料無法改善鳥類生病的根本原因，也可能讓你誤以為「還在吃就好」而延誤就醫。明顯症狀出現時應直接聯繫鳥類獸醫。"
+      },
+      {
+        id: "bird-search-online",
+        text: "上網查看有沒有類似案例，找找在家可以處理的方法",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "網路資訊和他人案例不能取代鳥類獸醫的判斷；在家等待或嘗試的時間，可能讓病情進一步惡化。"
+      },
+    ],
+    correctSummary: ["鸚鵡同時出現澎毛、精神低落、食慾消失等警訊，代表病情已相當嚴重，需當天就醫，不可等待觀察或在家自行處理。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你在明確症狀出現時，立刻做出正確判斷，做得很好！鳥類就醫資源比犬貓稀少，建議平時就先找好熟悉鳥類的獸醫，緊急時才不會臨時找不到。",
+      knowledgeTitle: "鸚鵡小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "鸚鵡常見需要留意的健康問題："
+        },
+        {
+          type: "item",
+          text: "**呼吸困難**：張口呼吸、尾羽隨呼吸上下擺動——屬於急症，需立即就醫。"
+        },
+        {
+          type: "item",
+          text: "**澎毛、精神低落、食慾消失**：多項警訊同時出現，病情通常已相當嚴重——需當天就醫。"
+        },
+        {
+          type: "item",
+          text: "**產蛋困難**：雌鳥無法正常站立或移動——需緊急就醫。"
+        },
+        {
+          type: "item",
+          text: "**消化異常**：反覆嘔吐、糞便明顯改變、體重持續下降——持續超過一天應就醫確認。"
+        },
+        {
+          type: "item",
+          text: "**拔毛或過度理羽**：出現裸皮、羽毛凌亂稀疏——需就醫評估。"
+        },
+      ],
+      reminder: "澎毛、精神低落、不進食這三個警訊一起出現，不要觀望，請當天就聯繫鳥類獸醫。台灣熟悉鳥類醫療的獸醫數量有限，建議平時就先查好。"
+    }
+  },
+  {
+    id: "bird-senior-care",
+    stage: "生活變化",
+    stageId: "life-change",
+    stageTitle: "高齡照護",
+    timeLabel: "逐漸進入高齡",
+    title: "{petName} 慢慢變老了",
+    description: "{petName} 跟你生活了很多年，牠的活動量慢慢減少，有時候站在低一點的棲木上，有時候理羽的時間更長了。你知道牠開始進入老年期了。",
+    questionText: "以下哪些是高齡鳥需要的照護調整？（複選）",
+    topic: "高齡鳥照護",
+    reportSummary: "高齡鳥需降低跌落風險並提高健檢頻率，維持安全、舒適與密切觀察。",
+    artIndex: 2,
+    multipleChoice: true,
+    requiredCorrectOptionIds: [
+      "bird-senior-perch", "bird-senior-checkup"
+    ],
+    wrongOptionIds: [
+      "bird-senior-remove", "bird-senior-reduce-interaction"
+    ],
+    choices: [
+      {
+        id: "bird-senior-perch",
+        text: "將棲木調低，降低跌落風險",
+        result: "correct",
+        ...positive,
+        explanation: "可保留一根較高棲木，讓牠自行選擇。",
+        expenseIds: [
+          "bird-senior-room"
+        ]
+      },
+      {
+        id: "bird-senior-checkup",
+        text: "提高健檢頻率，從一年一次改為更頻繁",
+        result: "correct",
+        ...positive,
+        explanation: "能及早發現老年常見的代謝與心血管問題。"
+      },
+      {
+        id: "bird-senior-remove",
+        text: "高齡鳥不再需要豐富化設施，讓牠安靜休息就好",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "即使活動力下降，適合老年鳥的簡單啃咬玩具與低難度益智設施仍有助於心理健康，不應完全撤除所有刺激。",
+        suggestion: "依活動能力調整豐富化，而非完全撤除。"
+      },
+      {
+        id: "bird-senior-reduce-interaction",
+        text: "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
+        suggestion: "依個體狀況調整互動方式，而非直接縮短時間。"
+      },
+    ],
+    correctSummary: ["高齡鳥應降低棲木高度防跌落、提高健檢頻率至半年一次、並維持適合老年的豐富化設施，不可完全停止互動，應依個體狀況請鳥類獸醫師評估調整。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你知道高齡照護不只是「讓牠安靜休息」，而是需要主動調整環境和加強醫療觀察，做得很好！",
+      knowledgeTitle: "長達 10 年至近 50 年的每日陪伴與生命承諾",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "與 {petName} 在一起，是一份 **10 年以上**的承諾——有些物種甚至能陪你走過 **30、40 年**。"
+        },
+        {
+          type: "paragraph",
+          text: "牠會隨著歲月老去，需要更多**陪伴**、**照護**與**醫療資源**。"
+        },
+        {
+          type: "paragraph",
+          text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到**生命盡頭**的準備嗎？"
+        },
+      ]
+    }
+  },
 ];
-
-const birdQuestionTexts: Record<(typeof birdLifeScenarioSource)[number]["id"], string> = {
-  "bird-arrival-adjustment": "你現在會怎麼做？",
-  "bird-puffing-feathers": "你應該怎麼做？（複選）",
-  "bird-molting-care": "你應該怎麼做？（複選）",
-  "bird-picky-eating": "你應該怎麼做？（複選）",
-  "bird-stereotypy": "你應該怎麼做？（複選）",
-  "bird-excessive-calling": "你應該怎麼做？（複選）",
-  "bird-busy-care": "你現在要先怎麼做？",
-  "bird-health-emergency": "你現在要先怎麼做？",
-  "bird-senior-care": "以下哪些是高齡鳥需要的照護調整？（複選）",
-};
-
-export const birdLifeScenarios: Scenario[] = birdLifeScenarioSource.map((scenario) => ({
-  ...scenario,
-  questionText: birdQuestionTexts[scenario.id],
-}));
-
-const birdActivityScenarioSource: Record<"bird-cage-inspection", ScenarioQuestionSource> = {
-  "bird-cage-inspection": { id: "bird-cage-inspection", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "鳥籠日常巡視", description: "清潔托盤、觀察糞便與健康狀態，並安排籠外互動。", topic: "每日鳥籠巡視", reportSummary: "每天清潔糞便托盤、觀察排泄與健康，並安排安全籠外互動，是鳥類照護的基礎。", artIndex: 0, learningPoints: ["每天更換墊料，才能清楚觀察糞便量與狀態。", "澎毛、無法站棲木、張口呼吸是當天聯繫鳥類獸醫的警訊。"], knowledgeTitle: "鳥類日常照護", choices: [{ id: "bird-cage-complete", text: "完成鳥籠巡視", result: "correct", ...positive, explanation: "你完成了清潔、觀察與安全互動，替日常健康守住重要細節。" }] },
-};
-
 export const birdActivityScenarios: Record<"bird-cage-inspection", Scenario> = {
   "bird-cage-inspection": {
-    ...birdActivityScenarioSource["bird-cage-inspection"],
+    id: "bird-cage-inspection",
+    stage: "日常照護",
+    stageId: "daily",
+    stageTitle: "日常照護",
+    timeLabel: "日常照護",
+    title: "鳥籠日常巡視",
+    description: "清潔托盤、觀察糞便與健康狀態，並安排籠外互動。",
     questionText: "今天的鳥籠巡視完成了嗎？",
-  },
+    topic: "每日鳥籠巡視",
+    reportSummary: "每天清潔糞便托盤、觀察排泄與健康，並安排安全籠外互動，是鳥類照護的基礎。",
+    artIndex: 0,
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你已找到這個情境中合適的照顧方式，做得很好！",
+      knowledgeTitle: "鳥類日常照護",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "每天更換墊料，才能清楚觀察糞便量與狀態。"
+        },
+        {
+          type: "paragraph",
+          text: "澎毛、無法站棲木、張口呼吸是當天聯繫鳥類獸醫的警訊。"
+        }
+      ]
+    },
+    choices: [
+      {
+        id: "bird-cage-complete",
+        text: "完成鳥籠巡視",
+        result: "correct",
+        ...positive,
+        explanation: "你完成了清潔、觀察與安全互動，替日常健康守住重要細節。"
+      }
+    ]
+  }
 };

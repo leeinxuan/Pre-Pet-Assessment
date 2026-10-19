@@ -315,7 +315,7 @@ SOUND: quiet room tone, slow calm breathing, a faint teeth-purr; music: tender, 
 | ⑩ busy-daily-care | 題目 | rabbit-busy-care | ✅ | ✅ | ✅ |
 | ⑪ senior-life | 題目 | rabbit-senior-care | ✅ | ✅ | ✅ |
 
-> 不做影片、以靜態圖處理的情境：`rabbit-bath`（洗澡是反面教材）、抱兔排序（已有 5 張步驟圖）、每週美容（已有互動素材）、兔子的考驗。
+> 不做影片、以靜態圖處理的情境：抱兔排序（已有 5 張步驟圖）、每週美容（已有互動素材）、兔子的考驗。
 
 ---
 
@@ -423,3 +423,19 @@ SOUND: quiet room tone, slow calm breathing, a faint teeth-purr; music: tender, 
 - 構圖改為「兔子背對鏡頭、低頭像在吃東西，地上放參考素材 `public/assets/rabbit/pet-journey/Cecotropes.webp`」；提示詞**不要**說那是便便，只寫 the small item / brown item on the floor。圖 1 = `start-frames/busy-daily-care-s2.png`（直立耳兔，去掉涼感墊），圖 2 = Cecotropes.webp；ChatGPT 一次兩張，選 C（`ck_C_raw.png`，crop Y=64）→ `start-frames/cecotropes-s1.png`。
 - Vids 匯出 `clips/cecotropes_vids_export.mp4`（片段位於 241–251 s），整段 10 s。聲音：不放音效，只有拇指琴 `summer-bed2.wav`（−3 dB）。成品 `cecotropes.mp4`，預覽 `_preview/rabbit_cecotropes_v1.mp4`。
 - ⑥ v2：音樂改為俏皮風（參考貓版 climbing.mp4：約 112 BPM、C 大調）→ `make_cecotropes_bed.py`（撥弦貝斯＋馬林巴旋律＋沙鈴，無其他音效），−2 dB，預覽 `_preview/rabbit_cecotropes_v2.mp4`。
+
+### ⑦ rabbit-bath 追加規則（2026-10）
+- 題目「好髒，幫牠洗個澡？」的影片**不出現水／浴缸／人**（洗澡是反面教材）。畫面只表現「兔子回頭看自己屁股後面毛髮髒髒結塊，困惑地扭一下、舀不到，坐回去」。
+- 首幀：ChatGPT 一次兩張，選 B（`_backup/bt_B_raw.png`，crop Y=64）→ `start-frames/rabbit-bath-s1.png`（直立耳、3/4 背面、尾根毛髮髒結塊、灰色地板）。
+- Vids 匯出片段位於 251–261 s，整段 10 s。音樂：無音效，輕快 C 大調馬林巴＋撥弦（約 100 BPM）→ `music/make_bath_bed.py`，−1 dB，成品 `rabbit-bath.mp4`（均值 −18.2 dB），已加入 `assets.ts` `petJourney.bath`。
+- 避雷：Vids 側欄會殘留上一次的生成結果，**一定要先按送出並等到新預覽出現再按「插入」**，否則會插到舊片段（這次發生過一次，已 cmd+z 還原）。
+- ⑦ v2–v4：使用者要加音效。舔聲不對 → 刷刷聲 → 要「更乾、像梳毛」且**只在兔子頭轉向後面時才有聲音**（逐格確認頭轉過去約 4.8–7.4 s，之後回正）。v4：`make_bath_lick.py` 3.5–11 kHz 帶通噪音＋隨機閘控的毛刷顆粒感、快起音短尾、無殘響；只有 4.95–7.3 s 兩組各 4 下，其餘時間靜音。音樂 −3 dB、梳聲 −5 dB；影片串流 copy 自 v1。預覽 `_preview/rabbit_bath_v4.mp4`。**教訓：加動作音效前先逐格（fps=4）確認動作起訖，別憑 1.5 fps 縮圖估。**
+
+### v5 音訊調整（2026-10）
+- **busy-daily-care / busy-day-transition**：第一鏡（辦公室，與貓版是同一段素材）改為**保留貓版原音的打字聲**（取自 `public/assets/cat/pet-journey/*.mp4` 的 0–4.2 s／0–5.0 s），之後才 crossfade 進底樂；用 `scripts/cat/mix_music.py RABBIT_VIDEO CAT_VIDEO OUT 0 KEEP --bed … --xf …`（視訊取自兔版、音訊前段取自貓版）。⚠ 這兩支的底樂不能相同：busy-daily-care＝`make_care_bed.py`（A 小調獨奏鋼琴，已移除時鐘滴答；keep 4.2 s、−3 dB）；busy-day-transition＝新的 `make_busytrans_bed.py`（G 大調指彈吉他＋弦樂墊，溫暖回家感；keep 5.0 s、−1 dB）。
+- **sick**：背景音樂換成 `make_sick_bed2.py`（D 小調、約 46 BPM、低音 drone＋極稀疏柔音鋼琴、悶、帶磁帶式音高飄移，聽起來虛弱昏沉），−3 dB，無音效。
+- **senior-life**：加入撫摸兔子的聲音 `make_senior_pet.py`（低中頻柔和毛的摩擦，3 下慢速撫摸，6.2–8.95 s，對應最後一鏡飼主撫摸兔背），底樂仍是 `make_senior_bed.py`（−5.1 dB），撫摸聲 −4 dB。
+- 四支預覽：`_preview/rabbit_<name>_v5.mp4`。影片串流都是 copy，只換音軌；音軌重做時以 git 內的上一版作為視訊來源。
+
+### Vids 專案管理（2026-10-18 使用者要求）
+- 兔子這個 Vids 專案（時間軸 4:21、含大量空白場景）不再沿用。**新物種一律開新專案**；每支生成完立刻刪掉多餘的空白場景與不要的舊版片段（細節見 `scripts/pet-video-sop.md` §5.1）。

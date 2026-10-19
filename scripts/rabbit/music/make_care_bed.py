@@ -22,7 +22,7 @@ for t,m,v in [(0.3,57,.5),(1.9,60,.4),(3.4,64,.4),(4.6,62,.36),(5.8,57,.36),(7.0
 for t,ms in [(4.0,[45,52]),(8.0,[41,48])]:
     for j,m in enumerate(ms): note(m,t+j*0.08,4.0,.3,0.5)
 # faint clock tick, 1 per second
-for k in range(int(DUR)):
+for k in range(0):  # tick removed (typing SFX now plays first; no synthetic clock)
     n=int(SR*0.03); t=np.arange(n)/SR
     tick=rng.standard_normal(n)*np.exp(-t/0.004)*0.03
     b,a=butter(2,[1500/(SR/2),5000/(SR/2)],btype='band'); tick=lfilter(b,a,tick)

@@ -4,6 +4,13 @@
 import { interpolatePetName, petNameFallback } from "../../../data/shared/pet-text";
 import type { ActivityIntroConfig } from "../../../game-types";
 
+/** 外觀觀察題共用的作答狀態；返回僅回到同一個觀察題，不重新抽取素材狀態。 */
+export type ObservationAnswerStatus = "question" | "incorrect" | "correct";
+
+export function ObservationReturnButton({ onReturn }: { onReturn: () => void }) {
+  return <button type="button" className="knowledge-modal-confirm observation-return-button" onClick={onReturn}>返回</button>;
+}
+
 export function withPetName(text: string, petName: string, species?: string) {
   const displayName = petName.trim() || petNameFallback(species);
   const withPlaceholders = interpolatePetName(text, displayName, species);

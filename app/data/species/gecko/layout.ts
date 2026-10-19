@@ -14,12 +14,12 @@ export const geckoRoomDoorplatePlacement = {
 export const geckoThermometerSceneParts = {
   cool: {
     id: "cool-side",
-    placement: { x: 22, y: 34, width: 13, layer: 6 },
+    placement: { x: 22, y: 13, width: 23, layer: 6 },
     mobilePlacement: { x: 18, y: 32, width: 16 },
   },
   warm: {
     id: "warm-side",
-    placement: { x: 77, y: 34, width: 13, layer: 6 },
+    placement: { x: 77, y: 91, width: 23, layer: 6 },
     mobilePlacement: { x: 78, y: 32, width: 16 },
   },
 } as const;

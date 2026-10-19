@@ -360,6 +360,7 @@ function ScenarioFeedback({
 }) {
   const requiresRetry = scenario.requiresRetry === true;
   const feedbackMedia = scenario.correctFeedbackMedia ?? { type: "placeholder" as const };
+  const completionFeedback = scenario.completionFeedback;
   const [feedbackVideoFailed, setFeedbackVideoFailed] = useState(false);
   const [, setFeedbackVideoFinished] = useState(false);
   const labels = {
@@ -376,11 +377,15 @@ function ScenarioFeedback({
         mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
         videoFailed={feedbackVideoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
-        intro={<p>{plainFeedbackText(withPetName(choice.explanation, petName, species))}</p>}
-        correctItems={scenario.learningPoints}
-        knowledgeTitle={scenario.knowledgeTitle ?? "狗狗小知識"}
-        suggestion={choice.suggestion ? <p>{plainFeedbackText(withPetName(choice.suggestion, petName, species))}</p> : null}
-        otherTips={<OtherCorrectTips scenario={scenario} choice={choice} petName={petName} species={species} />}
+        title={completionFeedback?.title}
+        intro={<p>{completionFeedback ? renderKnowledgeText(withPetName(completionFeedback.encouragement, petName, species)) : plainFeedbackText(withPetName(choice.explanation, petName, species))}</p>}
+        correctItems={completionFeedback ? undefined : scenario.learningPoints}
+        knowledgeContent={completionFeedback?.knowledgeContent.map((content) => ({ ...content, text: withPetName(content.text, petName, species) }))}
+        knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "狗狗小知識"}
+        suggestion={completionFeedback?.reminder
+          ? <p>{renderKnowledgeText(withPetName(completionFeedback.reminder, petName, species))}</p>
+          : choice.suggestion ? <p>{plainFeedbackText(withPetName(choice.suggestion, petName, species))}</p> : null}
+        otherTips={completionFeedback ? null : <OtherCorrectTips scenario={scenario} choice={choice} petName={petName} species={species} />}
         onVideoEnded={() => setFeedbackVideoFinished(true)}
         onVideoError={() => { setFeedbackVideoFailed(true); setFeedbackVideoFinished(true); }}
         onReplay={onReplay}

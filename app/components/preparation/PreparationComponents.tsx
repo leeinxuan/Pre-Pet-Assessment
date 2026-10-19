@@ -27,6 +27,18 @@ function HomeReadinessRichText({ blocks, replaceName }: { blocks: HomeReadinessT
   return <>{paragraphs.map((block, index) => <p key={`paragraph-${index}`}>{renderHomeReadinessSegments(block.segments, replaceName)}</p>)}{listItems.length > 0 && <ul>{listItems.map((block, index) => <li key={`item-${index}`}>{renderHomeReadinessSegments(block.segments, replaceName)}</li>)}</ul>}</>;
 }
 
+/** 共用的籠舍／圍欄／爬蟲缸入口指示箭頭；以 SVG 保持各物種視覺一致。 */
+function InteriorEntryPointerIcon({ direction }: { direction: "left" | "right" }) {
+  return <>
+    <svg className={`room-interior-entry-hand room-interior-entry-hand--${direction}`} viewBox="0 0 28 28" focusable="false" aria-hidden="true">
+      <g className="room-interior-entry-arrow-shape">
+        <path d="M4.5 11.3H14V6.55L23.5 14 14 21.45V16.7H4.5Z" />
+      </g>
+    </svg>
+    <span className={`room-interior-entry-label room-interior-entry-label--${direction}`} aria-hidden="true">點擊佈置</span>
+  </>;
+}
+
 export function HomeReadinessActivity({ species = "dog", petName, state, onChange, onBack, onNext }: {
   species?: string; petName: string; state: HomeReadinessState; onChange: (state: HomeReadinessState) => void; onBack: () => void; onNext: () => void;
 }) {
@@ -431,7 +443,7 @@ export function RoomPreparation({
               ? <button key={item.id} type="button" className={`room-object placed-supply auto-room-object placed-room-item--entry room-flow-entry ${shouldPromptInteriorEntry ? "is-interior-entry-prompt" : ""}`} style={roomItemPlacementStyle(item)} aria-label={entryReady ? `${roomFlow?.copy.entryLabel ?? "查看內部配置"}${shouldPromptInteriorEntry ? "，點擊進入內部繼續佈置" : ""}` : (roomFlow?.copy.fencePlacedInstruction ?? "請先完成入口用品。").replaceAll("{petName}", displayName)} disabled={!entryReady} onClick={() => setInsideRoomView(true)}>
                 <RoomItemVisual item={item} scene />
                 <span>{item.label}</span>
-                {shouldPromptInteriorEntry && <i className={`room-interior-entry-hand room-interior-entry-hand--${(item.mobilePlacement?.x ?? item.placement?.x ?? 50) >= 50 ? "left" : "right"}`} aria-hidden="true">{(item.mobilePlacement?.x ?? item.placement?.x ?? 50) >= 50 ? "👉" : "👈"}</i>}
+                {shouldPromptInteriorEntry && <InteriorEntryPointerIcon direction={(item.mobilePlacement?.x ?? item.placement?.x ?? 50) >= 50 ? "left" : "right"} />}
               </button>
               : item.sceneParts?.length
                 ? item.sceneParts.map((part) => <div key={`${item.id}-${part.id}`} className={`room-object room-object-part placed-supply auto-room-object placed-room-item--${item.id}`} style={roomScenePartPlacementStyle(part)}><img src={part.image} alt={`房間中已配置的${item.label}`} /></div>)

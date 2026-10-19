@@ -9,6 +9,7 @@
 @import "./styles/preparation.css";
 @import "./components/life/activities/daily-care/WalkingActivity.css";
 @import "./components/life/activities/daily-care/CatDailyInspectionActivity.css";
+@import "./components/life/activities/ObservationCard.css";
 @import "./components/life/activities/daily-care/BirdCageInspectionActivity.css";
 @import "./components/life/activities/daily-care/RabbitDailyCheckActivity.css";
 @import "./styles/life.css";

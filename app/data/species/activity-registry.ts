@@ -76,7 +76,7 @@ export function getJourneyActivityResetPatch(resetKey: string | undefined): Part
     case "cat-inspection": return { catInspectionSteps: [], catInspectionIntroStarted: false };
     case "rabbit-carry-sort": return { rabbitCarryOrder: [], rabbitCarryComplete: false, rabbitCarryAttempts: 0, rabbitCarryAnswerRevealed: false, rabbitCarryFeedbackShown: false };
     case "rabbit-daily-check": return { rabbitDailyCheckSteps: [], rabbitGroomingIntroStarted: false, rabbitGroomingState: rabbitGroomingConfig.initialState, rabbitGroomingObservations: {}, rabbitGroomingInspection: {} };
-    case "bird-cage-inspection": return { birdCageInspectionSteps: [], birdCageInspectionIntroStarted: false, birdCageInspectionStates: {} };
+    case "bird-cage-inspection": return { birdCageInspectionSteps: [], birdCageInspectionIntroStarted: false, birdCageInspectionStates: {}, birdCageInspectionCompleted: false };
     case "hamster-first-meal": return { hamsterMealSelected: [], hamsterMealFeedbackId: "" };
     case "hamster-inspection": return { hamsterInspectionStarted: false, hamsterInspectionStates: {}, hamsterInspectionCompleted: [], hamsterInspectionFeedback: {} };
     case "gecko-health-inspection": return { geckoHealthInspectionStarted: false, geckoHealthInspectionStates: {}, geckoHealthInspectionCompleted: [], geckoHealthInspectionFeedback: {} };

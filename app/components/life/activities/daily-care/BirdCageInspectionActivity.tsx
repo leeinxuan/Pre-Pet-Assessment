@@ -11,7 +11,9 @@ import { birdActivityScenarios } from "../../../../data/species/bird/scenarios";
 import { interpolatePetName } from "../../../../data/shared/pet-text";
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
-import { ActivityIntroPage } from "../activity-ui";
+import { ActivityIntroPage, ObservationReturnButton, type ObservationAnswerStatus } from "../activity-ui";
+import { InspectionHotspot } from "../InspectionHotspot";
+import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 
 function BirdCageAsset({ src, alt, fallback, className, width, height }: { src: string; alt: string; fallback: string; className?: string; width: number; height: number }) {
   const [failed, setFailed] = useState(false);
@@ -40,7 +42,8 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   const add = (id: string) => addMany(id);
   const cleanComplete = has("tray-returned");
   const healthComplete = healthPoints.every(({ id }) => has(`health-${id}`));
-  const complete = cleanComplete && has("feces-observed") && healthComplete && has("social-time");
+  const { requiresOrderedInspection, showPointNumbers } = birdCageInspectionConfig.bodyInspection;
+  const inspectionReady = cleanComplete && has("feces-observed") && healthComplete && has("social-time");
   const currentStage = !cleanComplete ? 0 : !has("feces-observed") ? 1 : !healthComplete ? 2 : 3;
   const [message, setMessage] = useState("點擊鳥籠底部托盤，將它拉出。");
   const [activeObservation, setActiveObservation] = useState<"feces" | (typeof healthPoints)[number]["id"] | null>(null);
@@ -49,8 +52,8 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   const [socialCompleting, setSocialCompleting] = useState(false);
   const [showHearts, setShowHearts] = useState(false);
   const [healthTransition, setHealthTransition] = useState(false);
-  const [healthFeedback, setHealthFeedback] = useState<Record<string, "question" | "incorrect" | "correct">>({});
-  const [droppingFeedback, setDroppingFeedback] = useState<"question" | "incorrect" | "correct">("question");
+  const [healthFeedback, setHealthFeedback] = useState<Record<string, ObservationAnswerStatus>>({});
+  const [droppingFeedback, setDroppingFeedback] = useState<ObservationAnswerStatus>("question");
   const [showDroppingComparison, setShowDroppingComparison] = useState(false);
   const [showHealthComparison, setShowHealthComparison] = useState(false);
   const [magnifierPosition, setMagnifierPosition] = useState<{ x: number; y: number } | null>(null);
@@ -59,7 +62,10 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   const singTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const socialInteractionLock = useRef(false);
   const healthTransitionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const completionSubmissionLocked = useRef(false);
   const scenario = birdActivityScenarios["bird-cage-inspection"];
+  const completionChoice = scenario.choices[0];
+  const inspectionCompleteFeedback = completionChoice.explanation;
   const selectedDropping = droppingOptions.find(({ id }) => id === selectedDroppingId) ?? droppingOptions[0];
   const selectedHealthPoint = activeObservation === "feces" ? null : healthPoints.find(({ id }) => id === activeObservation);
   const [generatedHealthStates] = useState<Record<(typeof healthPoints)[number]["id"], "normal" | "warning">>(() => ({
@@ -168,17 +174,20 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
     heartTimer.current = setTimeout(() => setShowHearts(false), 650);
     const nextTouch = socialTouches + 1;
     add(`social-touch-${nextTouch}`);
-    if (nextTouch < 5) {
-      return;
-    }
+    if (nextTouch < 5) return;
+    add("social-time");
     setSocialCompleting(true);
-    singTimer.current = setTimeout(() => {
-      add("social-time");
-      onChoose(scenario, scenario.choices[0]);
-    }, 900);
+    singTimer.current = setTimeout(() => setSocialCompleting(false), 650);
   }
 
-  if (complete) return <DailyCareCompletion title={`${petName || "小啾"} 的健康，藏在這些細節裡`} summary={`你完成了今天的鳥籠巡視——清潔糞便托盤、觀察糞便、檢視健康狀態，還給了${petName || "小啾"}籠外互動的時間。`} detail="墊料每天換，才能清楚看到糞便量與狀態；水狀、顏色偏綠黑帶紅、量明顯減少，或澎毛、無法站棲木、張口呼吸，都是需要當天聯繫鳥類獸醫的訊號。" reflectionTitle={`每天陪${petName || "牠"}的時間，比你想的還要重要`} reflection="每天清潔、每天觀察、每天給予籠外互動時間缺一不可。高互動鳥類長期缺乏社交與刺激，可能出現拔毛或自傷等問題。" dailyCareBreakdown={birdReport.dailyCareBreakdown} onContinue={onContinue} />;
+  function finishInspection() {
+    if (!inspectionReady || activity.birdCageInspectionCompleted || completionSubmissionLocked.current) return;
+    completionSubmissionLocked.current = true;
+    onChange({ birdCageInspectionCompleted: true });
+    onChoose(scenario, completionChoice);
+  }
+
+  if (activity.birdCageInspectionCompleted) return <DailyCareCompletion title={`${petName || "小啾"} 的健康，藏在這些細節裡`} summary={`你完成了今天的鳥籠巡視——清潔糞便托盤、觀察糞便、檢視健康狀態，還給了${petName || "小啾"}籠外互動的時間。`} detail="墊料每天換，才能清楚看到糞便量與狀態；水狀、顏色偏綠黑帶紅、量明顯減少，或澎毛、無法站棲木、張口呼吸，都是需要當天聯繫鳥類獸醫的訊號。" reflectionTitle={`每天陪${petName || "牠"}的時間，比你想的還要重要`} reflection="每天清潔、每天觀察、每天給予籠外互動時間缺一不可。高互動鳥類長期缺乏社交與刺激，可能出現拔毛或自傷等問題。" dailyCareBreakdown={birdReport.dailyCareBreakdown} onContinue={onContinue} />;
 
   const isTrayInitial = !has("tray-out");
   const isTrayDirty = has("tray-out") && !has("tray-scraped");
@@ -205,26 +214,33 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
     })}</ol>
     <div className={`bird-cage-scene ${isTrayInitial || isTrayDirty ? "is-tray-stage" : ""} ${isHealthInspection ? "is-health-inspection" : ""} ${healthTransition ? "is-health-transition" : ""} ${has("cage-door-open") ? "is-door-open" : ""} ${has("bird-out") ? "is-social-stage" : ""}`}>
       <BirdCageAsset className="bird-cage-background" src={sceneSource} alt={isHealthInspection ? `${petName || "小啾"}的健康檢查畫面` : "鸚鵡鳥籠場景"} fallback="🪶" width={1600} height={900} />
-      <p className="bird-cage-scene-prompt">{message}</p>
+      <p className="bird-cage-scene-prompt">{inspectionReady ? inspectionCompleteFeedback : message}</p>
       {isTrayInitial && <button type="button" className="bird-cage-main-hotspot bird-cage-main-hotspot--tray" onClick={pullOutTray} aria-label="點擊鳥籠底部托盤將它拉出" />}
       {isTrayDirty && <button type="button" className="bird-replacement-tray" onClick={replaceBedding} aria-label="使用新的籠底托盤替換髒墊料"><BirdCageAsset src={birdAssets.room.tray} alt="新的籠底托盤" fallback="▤" width={280} height={180} /><span>點擊更換墊料</span></button>}
       {isTrayClean && <button type="button" className="bird-dirty-bedding bird-dirty-bedding--aside" onClick={observeDroppings} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} aria-label="觀察髒墊紙上的糞便">
         <BirdCageAsset src={birdAssets.dailyGame.beddingDirty} alt="可觀察的髒墊紙" fallback="▤" width={240} height={180} />
         <small>點擊觀察</small>
       </button>}
-      {isHealthInspection && <div className="bird-health-points" aria-label="健康巡視部位">{healthPoints.map((part) => <button type="button" key={part.id} className={has(`health-${part.id}`) ? "is-observed" : ""} disabled={has(`health-${part.id}`) || healthTransition} aria-label={`檢查${part.label}`} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => openHealthObservation(part.id)}><span aria-hidden="true">{has(`health-${part.id}`) ? "✓" : ""}</span><small>{part.label}</small></button>)}</div>}
+      {isHealthInspection && <div className="bird-health-points" aria-label="健康巡視部位">{healthPoints.map((part, index) => {
+        const pointComplete = has(`health-${part.id}`);
+        const firstIncomplete = healthPoints.find(({ id }) => !has(`health-${id}`));
+        const available = !pointComplete && (!requiresOrderedInspection || part.id === firstIncomplete?.id);
+        return <InspectionHotspot type="button" key={part.id} className={pointComplete ? "is-complete" : available ? "is-available" : ""} complete={pointComplete} showOrder={showPointNumbers} order={index + 1} disabled={!available || healthTransition} aria-label={pointComplete ? `${part.label}已完成` : `檢查${part.label}`} onPointerEnter={available ? showMagnifier : undefined} onPointerMove={available ? showMagnifier : undefined} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => openHealthObservation(part.id)}><small>{part.label}</small></InspectionHotspot>;
+      })}</div>}
       {isSocial && !has("cage-door-open") && <button type="button" className={`bird-cage-main-hotspot bird-cage-main-hotspot--lock ${doorOpening ? "is-opening" : ""}`} disabled={doorOpening} onClick={openDoor} aria-label="點擊鳥籠鎖扣開啟鳥籠" />}
       {has("bird-out") && <button type="button" className={`bird-social-pet ${showHearts ? "is-petted" : ""}`} onClick={petBird} disabled={socialCompleting} aria-label={`和${petName || "小啾"}互動`}>
         <BirdCageAsset className="bird-social-pet-image" src={socialImage} alt={`${petName || "小啾"}站在手上互動`} fallback="🦜" width={1200} height={900} />
         {showHearts && <span className="bird-social-hearts" aria-hidden="true">♥ ♥</span>}
       </button>}
-      {activeObservation && <section className="bird-observation-card" role="dialog" aria-modal="false" aria-live="polite" aria-label={activeObservation === "feces" ? "糞便觀察" : `${selectedHealthPoint?.label ?? "健康部位"}觀察`}>
+      {activeObservation && <ObservationCard className="bird-observation-card" label={activeObservation === "feces" ? "糞便觀察" : `${selectedHealthPoint?.label ?? "健康部位"}觀察`}>
         {activeObservation === "feces" && !showDroppingComparison ? <>
-          <BirdCageAsset className="bird-observation-image" src={selectedDropping.image} alt={selectedDropping.alt} fallback="● ● ●" width={280} height={280} />
-          {droppingFeedback === "correct" ? <p className="bird-observation-correct">{selectedDropping.feedback.correct}</p> : <>
-            {droppingFeedback === "incorrect" && <p className="bird-observation-incorrect">{selectedDropping.feedback.incorrect}</p>}
-            <p className="bird-observation-question">你覺得今天的糞便狀態如何？</p>
-            <div className="bird-observation-choices"><button type="button" onClick={() => answerDroppings("normal")}>看起來正常，今天沒問題</button><button type="button" onClick={() => answerDroppings("warning")}>有異常，需要留意</button></div>
+          <BirdCageAsset className="observation-card-image bird-observation-image" src={selectedDropping.image} alt={selectedDropping.alt} fallback="● ● ●" width={280} height={280} />
+          {droppingFeedback === "correct" ? <p className="observation-card-feedback observation-card-feedback--correct">{selectedDropping.feedback.correct}</p> : droppingFeedback === "incorrect" ? <>
+            <p className="observation-card-feedback observation-card-feedback--incorrect">{selectedDropping.feedback.incorrect}</p>
+            <ObservationReturnButton onReturn={() => setDroppingFeedback("question")} />
+          </> : <>
+            <p className="observation-card-question">你覺得今天的糞便狀態如何？</p>
+            <div className="observation-card-choices"><button type="button" onClick={() => answerDroppings("normal")}>看起來正常，今天沒問題</button><button type="button" onClick={() => answerDroppings("warning")}>有異常，需要留意</button></div>
           </>}
         </> : activeObservation === "feces" ? <>
           <h2>異常糞便狀態</h2>
@@ -233,22 +249,32 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
           </div>
         </> : selectedHealthPoint && showHealthComparison ? <>
           <h2>異常狀態</h2>
-          <section className="bird-observation-comparison"><BirdCageAsset src={selectedHealthPoint.images.abnormal} alt={`${selectedHealthPoint.label}異常狀態`} fallback="●" width={180} height={180} /><p>{selectedHealthPoint.abnormalDescription}</p></section>
+          <ObservationCardComparison><BirdCageAsset src={selectedHealthPoint.images.abnormal} alt={`${selectedHealthPoint.label}異常狀態`} fallback="●" width={180} height={180} /><p>{selectedHealthPoint.abnormalDescription}</p></ObservationCardComparison>
         </> : selectedHealthPoint && <>
-          <BirdCageAsset className="bird-observation-image" src={selectedHealthPoint.images[healthStates[selectedHealthPoint.id] === "normal" ? "normal" : "abnormal"]} alt={selectedHealthPoint.alt} fallback="●" width={280} height={280} />
-          <h2>{selectedHealthPoint.label}</h2>
-          {healthFeedback[selectedHealthPoint.id] === "correct" ? <p className="bird-observation-correct">{interpolatePetName(selectedHealthPoint.feedback[healthStates[selectedHealthPoint.id]].correct, petName || "小啾")}</p> : <>
-            {healthFeedback[selectedHealthPoint.id] === "incorrect" && <p className="bird-observation-incorrect">{interpolatePetName(selectedHealthPoint.feedback[healthStates[selectedHealthPoint.id]].incorrect, petName || "小啾")}</p>}
-            <p className="bird-observation-question">你覺得今天的狀態如何？</p>
-            <div className="bird-observation-choices"><button type="button" onClick={() => answerHealthPoint("normal")}>{selectedHealthPoint.choices.normal}</button><button type="button" onClick={() => answerHealthPoint("warning")}>{selectedHealthPoint.choices.warning}</button></div>
-          </>}
+          <ObservationCardFlow
+            status={healthFeedback[selectedHealthPoint.id] ?? "question"}
+            title={selectedHealthPoint.label}
+            image={<BirdCageAsset className="observation-card-image bird-observation-image" src={selectedHealthPoint.images[healthStates[selectedHealthPoint.id] === "normal" ? "normal" : "abnormal"]} alt={selectedHealthPoint.alt} fallback="●" width={280} height={280} />}
+            question="你覺得今天的狀態如何？"
+            choices={[{ id: "normal", label: selectedHealthPoint.choices.normal }, { id: "warning", label: selectedHealthPoint.choices.warning }]}
+            feedback={interpolatePetName(selectedHealthPoint.feedback[healthStates[selectedHealthPoint.id]][(healthFeedback[selectedHealthPoint.id] ?? "question") === "correct" ? "correct" : "incorrect"], petName || "小啾")}
+            onChoose={(choiceId) => answerHealthPoint(choiceId as "normal" | "warning")}
+            onReturn={() => setHealthFeedback((current) => ({ ...current, [selectedHealthPoint.id]: "question" }))}
+          />
         </>}
-        {activeObservation === "feces" && droppingFeedback === "correct" && !showDroppingComparison && <button type="button" onClick={() => setShowDroppingComparison(true)}>了解異常糞便</button>}
-        {selectedHealthPoint && healthFeedback[selectedHealthPoint.id] === "correct" && healthStates[selectedHealthPoint.id] === "normal" && !showHealthComparison && <button type="button" onClick={() => setShowHealthComparison(true)}>了解異常狀態</button>}
-        {((activeObservation === "feces" && showDroppingComparison) || (selectedHealthPoint && healthFeedback[selectedHealthPoint.id] === "correct" && (healthStates[selectedHealthPoint.id] === "warning" || showHealthComparison))) && <button type="button" onClick={closeObservation}>{activeObservation === "feces" ? "我記住了" : "我了解了"}</button>}
-      </section>}
+        {activeObservation === "feces" && droppingFeedback === "correct" && !showDroppingComparison && <button type="button" className="observation-card-action" onClick={() => setShowDroppingComparison(true)}>了解異常糞便</button>}
+        {selectedHealthPoint && healthFeedback[selectedHealthPoint.id] === "correct" && healthStates[selectedHealthPoint.id] === "normal" && !showHealthComparison && <button type="button" className="observation-card-action" onClick={() => setShowHealthComparison(true)}>了解異常狀態</button>}
+        {((activeObservation === "feces" && showDroppingComparison) || (selectedHealthPoint && healthFeedback[selectedHealthPoint.id] === "correct" && (healthStates[selectedHealthPoint.id] === "warning" || showHealthComparison))) && <button type="button" className="observation-card-action" onClick={closeObservation}>{activeObservation === "feces" ? "我記住了" : "我了解了"}</button>}
+      </ObservationCard>}
+      {inspectionReady && <button type="button" className="primary bird-cage-complete-button" onClick={finishInspection}>完成巡視 <span>→</span></button>}
       {magnifierPosition && <img className="activity-magnifier-hint" src={birdAssets.dailyGame.magnifier} alt="" aria-hidden="true" style={{ left: magnifierPosition.x, top: magnifierPosition.y }} />}
     </div>
-    {has("bird-out") && <div className="bird-social-progress" aria-label={`互動進度 ${socialTouches} / 5`}><b>互動進度</b><div aria-hidden="true"><span style={{ width: `${socialTouches * 20}%` }} /></div><small>{socialTouches} / 5</small></div>}
+    {has("bird-out") && !inspectionReady && <div className="bird-social-footer">
+      <div className="walking-progress bird-social-progress" aria-label={`互動進度 ${socialTouches} / 5`}>
+        <b>互動進度</b>
+        <div role="progressbar" aria-valuemin={0} aria-valuemax={5} aria-valuenow={socialTouches}><span style={{ width: `${socialTouches * 20}%` }} /></div>
+        <small>{socialTouches} / 5</small>
+      </div>
+    </div>}
   </section>;
 }

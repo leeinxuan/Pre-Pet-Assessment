@@ -2,7 +2,6 @@ import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
 import { catAssets } from "./assets";
 import { catReport } from "./report";
-
 export const catLifeScenarios: Scenario[] = [
   {
     id: "cat-arrival-adjustment",
@@ -16,25 +15,67 @@ export const catLifeScenarios: Scenario[] = [
     topic: "貓咪適應新家與安全感",
     reportSummary: "貓咪到家第一天應先進安靜安全的小房間，關好門窗，讓牠自行走出外出籠並用自己的速度探索。",
     artIndex: 0,
-    sceneMedia: { type: "video", src: catAssets.petJourney.firstDay, ariaLabel: "貓咪到家第一天情境影片" },
-    correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctPrimary, ariaLabel: "貓咪答對回饋影片" },
+    sceneMedia: {
+      type: "video",
+      src: catAssets.petJourney.firstDay,
+      ariaLabel: "貓咪到家第一天情境影片"
+    },
+    correctFeedbackMedia: {
+      type: "video",
+      src: catAssets.petJourney.correctPrimary,
+      ariaLabel: "貓咪答對回饋影片"
+    },
     requiresRetry: true,
     continueLabel: "繼續",
+    choices: [
+      {
+        id: "cat-pull-out",
+        text: "把牠抱出籠，讓牠快點認識新家",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "強迫離開外出籠可能讓貓更緊張，也可能引發防衛或躲藏。",
+        suggestion: "先準備新家中的安靜空間，讓牠自己決定何時探索。"
+      },
+      {
+        id: "cat-safe-room",
+        text: "關好門窗，放好食水與砂盆，打開外出籠讓牠自行探索",
+        result: "correct",
+        ...positive,
+        explanation: "保留退路並降低刺激，能幫助貓建立**安全感**。"
+      },
+      {
+        id: "cat-welcome-party",
+        text: "請家人圍過來叫牠，讓牠知道大家都歡迎牠",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "多人靠近、聲音與注視會提高剛到家的壓力。",
+        suggestion: "先限制人數與聲音，等牠穩定後再慢慢增加互動。"
+      },
+      {
+        id: "cat-sit-nearby",
+        text: "一進門就打開全屋，讓牠一次探索所有房間",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "一次面對整個陌生環境可能增加壓力，也讓牠難以找到可退回的地方。",
+        suggestion: "先在新家準備好的安靜空間適應，再依牠的狀態逐步開放探索範圍。"
+      },
+    ],
+    correctSummary: ["貓咪剛到家躲入外出籠是正常的壓力反應，正確做法是打開籠門讓牠自行探索，保持安靜、不強迫互動，讓牠用自己的速度建立安全感。"],
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你先替牠保留了慢慢適應的空間，這會讓第一次見面更安心。",
       knowledgeTitle: "貓咪小知識",
       knowledgeContent: [
-        { type: "item", text: "先讓牠保有**可退避的安全空間**，在安靜的小房間裡用自己的速度探索。" },
-        { type: "item", text: "關好門窗，準備食水與砂盆；不強迫互動，讓牠慢慢建立安全感。" },
-      ],
-    },
-    choices: [
-      { id: "cat-pull-out", text: "把牠抱出籠，讓牠快點認識新家", result: "incorrect", ...incorrect, explanation: "強迫離開外出籠可能讓貓更緊張，也可能引發防衛或躲藏。", suggestion: "先準備新家中的安靜空間，讓牠自己決定何時探索。" },
-      { id: "cat-safe-room", text: "關好門窗，放好食水與砂盆，打開外出籠讓牠自行探索", result: "correct", ...positive, explanation: "保留退路並降低刺激，能幫助貓建立**安全感**。" },
-      { id: "cat-welcome-party", text: "請家人圍過來叫牠，讓牠知道大家都歡迎牠", result: "incorrect", ...incorrect, explanation: "多人靠近、聲音與注視會提高剛到家的壓力。", suggestion: "先限制人數與聲音，等牠穩定後再慢慢增加互動。" },
-      { id: "cat-sit-nearby", text: "一進門就打開全屋，讓牠一次探索所有房間", result: "incorrect", ...incorrect, explanation: "一次面對整個陌生環境可能增加壓力，也讓牠難以找到可退回的地方。", suggestion: "先在新家準備好的安靜空間適應，再依牠的狀態逐步開放探索範圍。" },
-    ],
+        {
+          type: "item",
+          text: "先讓牠保有**可退避的安全空間**，在安靜的小房間裡用自己的速度探索。"
+        },
+        {
+          type: "item",
+          text: "關好門窗，準備食水與砂盆；不強迫互動，讓牠慢慢建立安全感。"
+        },
+      ]
+    }
   },
   {
     id: "cat-night-energy-care",
@@ -47,18 +88,55 @@ export const catLifeScenarios: Scenario[] = [
     reportSummary: "夜間精力旺盛時，應提供可實際捕捉的安全玩具、規律互動遊戲，並避免用手腳直接逗弄。",
     artIndex: 4,
     multipleChoice: true,
-    requiredCorrectOptionIds: ["cat-night-safe-toys", "cat-night-play-routine", "cat-night-hands"],
-    wrongOptionIds: ["cat-night-laser"],
-    correctSummary: ["提供安全玩具或益智漏食玩具。", "睡前安排短段逗貓棒遊戲。", "不用手腳直接逗弄，改用玩具保持安全距離。"],
-    learningPoints: [
-      "每天安排**逗貓棒互動**，結束前讓牠**成功捕捉**一次；避免單用雷射筆，也不用**手腳直接逗弄**。",
+    requiredCorrectOptionIds: [
+      "cat-night-safe-toys", "cat-night-play-routine", "cat-night-hands"
+    ],
+    wrongOptionIds: [
+      "cat-night-laser"
     ],
     choices: [
-      { id: "cat-night-laser", text: "用雷射筆讓牠一直追光點，累了自然會睡", result: "incorrect", ...incorrect, explanation: "不應使用雷射筆；它可能造成傷害，也沒有能讓貓實際捕捉的目標。", suggestion: "改用安全、可實際捕捉的實體玩具。" },
-      { id: "cat-night-safe-toys", text: "提供安全玩具或益智漏食玩具，讓牠有合適的活動出口", result: "correct", ...positive, explanation: "安全玩具能分散精力，降低無聊造成的撲咬或叫喚。" },
-      { id: "cat-night-play-routine", text: "睡前安排短段逗貓棒遊戲，讓牠追逐、捕捉後慢慢收尾", result: "correct", ...positive, explanation: "規律互動能滿足獵捕與活動需求，建立夜間節奏。" },
-      { id: "cat-night-hands", text: "不用手腳直接逗弄，改用玩具保持安全距離", result: "correct", ...positive, explanation: "讓牠追玩具而不是追人的手腳。" },
+      {
+        id: "cat-night-laser",
+        text: "用雷射筆讓牠一直追光點，累了自然會睡",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "不應使用雷射筆；它可能造成傷害，也沒有能讓貓實際捕捉的目標。",
+        suggestion: "改用安全、可實際捕捉的實體玩具。"
+      },
+      {
+        id: "cat-night-safe-toys",
+        text: "提供安全玩具或益智漏食玩具，讓牠有合適的活動出口",
+        result: "correct",
+        ...positive,
+        explanation: "安全玩具能分散精力，降低無聊造成的撲咬或叫喚。"
+      },
+      {
+        id: "cat-night-play-routine",
+        text: "睡前安排短段逗貓棒遊戲，讓牠追逐、捕捉後慢慢收尾",
+        result: "correct",
+        ...positive,
+        explanation: "規律互動能滿足獵捕與活動需求，建立夜間節奏。"
+      },
+      {
+        id: "cat-night-hands",
+        text: "不用手腳直接逗弄，改用玩具保持安全距離",
+        result: "correct",
+        ...positive,
+        explanation: "讓牠追玩具而不是追人的手腳。"
+      },
     ],
+    correctSummary: ["貓咪夜間精神旺盛是天性，應在睡前安排逗貓棒遊戲消耗精力，並以玩具取代手腳逗弄，不可使用雷射筆作為主要玩具。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你用安全且有收尾的互動安排，幫 {petName} 消耗精力也保護彼此，做得很好！",
+      knowledgeTitle: "貓咪小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "每天安排**逗貓棒互動**，結束前讓牠**成功捕捉**一次；避免單用雷射筆，也不用**手腳直接逗弄**。"
+        },
+      ]
+    }
   },
   {
     id: "cat-scratching-care",
@@ -71,18 +149,55 @@ export const catLifeScenarios: Scenario[] = [
     reportSummary: "貓咪抓沙發或家具時，應在合適位置提供抓板、抓柱、跳台等安全替代選擇並加以引導；抓磨是自然行為，不應用處罰或侵入性做法處理。",
     artIndex: 4,
     multipleChoice: true,
-    requiredCorrectOptionIds: ["cat-scratch-board", "cat-scratch-location", "cat-scratch-climbing"],
-    wrongOptionIds: ["cat-scratch-trim-natural"],
-    correctSummary: ["在常抓位置提供穩固抓板或抓柱。", "抓對地方時給鼓勵，並調整家具保護與動線。", "整理危險攀爬路線，確認門窗與紗窗穩固。"],
-    learningPoints: [
-      "提供**位置適合、穩固**的抓板是比阻止更有效的做法；**去爪、磨牙或剁腳趾**不應作為處理抓磨的方式。",
+    requiredCorrectOptionIds: [
+      "cat-scratch-board", "cat-scratch-location", "cat-scratch-climbing"
+    ],
+    wrongOptionIds: [
+      "cat-scratch-trim-natural"
     ],
     choices: [
-      { id: "cat-scratch-board", text: "準備穩固抓板或抓柱，放在牠常抓或常經過的位置", result: "correct", ...positive, explanation: "抓板提供自然抓磨出口；位置合適才容易替代家具。" },
-      { id: "cat-scratch-trim-natural", text: "為了不再抓家具，替牠去爪、磨牙或剃鬍鬚", result: "incorrect", ...incorrect, explanation: "去爪、磨牙或剃鬍鬚不是解決抓磨問題的方式，也不應作為日常處理。", suggestion: "提供安全替代環境，並用抓板、抓柱與跳台引導牠自然抓磨。" },
-      { id: "cat-scratch-location", text: "在抓對地方時給鼓勵，並用家具保護或動線調整降低抓錯機會", result: "correct", ...positive, explanation: "替代物搭配環境管理，比只要求牠不要抓更容易穩定。" },
-      { id: "cat-scratch-climbing", text: "整理窗簾、衣櫃與高處路線，確認門窗和紗窗穩固", result: "correct", ...positive, explanation: "抓磨與攀爬可能牽涉安全風險，先整理環境能避免受傷或逃脫。" },
+      {
+        id: "cat-scratch-board",
+        text: "準備穩固抓板或抓柱，放在牠常抓或常經過的位置",
+        result: "correct",
+        ...positive,
+        explanation: "抓板提供自然抓磨出口；位置合適才容易替代家具。"
+      },
+      {
+        id: "cat-scratch-trim-natural",
+        text: "為了不再抓家具，替牠去爪、磨牙或剃鬍鬚",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "去爪、磨牙或剃鬍鬚不是解決抓磨問題的方式，也不應作為日常處理。",
+        suggestion: "提供安全替代環境，並用抓板、抓柱與跳台引導牠自然抓磨。"
+      },
+      {
+        id: "cat-scratch-location",
+        text: "在抓對地方時給鼓勵，並用家具保護或動線調整降低抓錯機會",
+        result: "correct",
+        ...positive,
+        explanation: "替代物搭配環境管理，比只要求牠不要抓更容易穩定。"
+      },
+      {
+        id: "cat-scratch-climbing",
+        text: "整理窗簾、衣櫃與高處路線，確認門窗和紗窗穩固",
+        result: "correct",
+        ...positive,
+        explanation: "抓磨與攀爬可能牽涉安全風險，先整理環境能避免受傷或逃脫。"
+      },
     ],
+    correctSummary: ["抓磨是貓咪的天性需求，應在常被抓的地方提供穩固抓板或抓柱，搭配環境管理引導正確行為，不可以去爪或懲罰代替。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你為 {petName} 準備合適的抓磨出口，也用環境調整取代處罰，做得很好！",
+      knowledgeTitle: "貓咪小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "提供**位置適合、穩固**的抓板是比阻止更有效的做法；**去爪、磨牙或剁腳趾**不應作為處理抓磨的方式。"
+        },
+      ]
+    }
   },
   {
     id: "cat-climbing-care",
@@ -95,18 +210,55 @@ export const catLifeScenarios: Scenario[] = [
     reportSummary: "貓咪偏好高處是天性；設置貓跳台提供安全的垂直活動空間，同時將易碎物品收好、確認門窗紗窗穩固，是居家照護的基本安全措施。",
     artIndex: 2,
     multipleChoice: true,
-    requiredCorrectOptionIds: ["cat-climb-provide-tree", "cat-climb-secure-items", "cat-climb-window-guard"],
-    wrongOptionIds: ["cat-climb-spray-water"],
-    correctSummary: ["設置貓跳台或貓抓柱，提供安全的垂直活動空間。", "將貴重或易碎物品收好或固定，避免被推落打翻。", "確認門窗、紗窗穩固，避免牠因好奇而發生墜落意外。"],
-    learningPoints: [
-      "貓咪喜歡爬高是天性，設置**貓跳台**等垂直活動設施，能同時滿足牠的活動需求；高樓層飼主也要特別注意**門窗與紗窗**的穩固度，慎防**墜樓意外**。",
+    requiredCorrectOptionIds: [
+      "cat-climb-provide-tree", "cat-climb-secure-items", "cat-climb-window-guard"
+    ],
+    wrongOptionIds: [
+      "cat-climb-spray-water"
     ],
     choices: [
-      { id: "cat-climb-provide-tree", text: "設置貓跳台或貓抓柱，提供安全的垂直活動空間", result: "correct", ...positive, explanation: "貓咪偏好上下跳躍，提供合適的攀爬設施能滿足天性，也減少牠往危險地方爬的機會。" },
-      { id: "cat-climb-secure-items", text: "將貴重或易碎物品收好或固定，避免被推落打翻", result: "correct", ...positive, explanation: "貓咪習性喜歡待在高處，也容易因好奇而有突如其來的危險舉動，應注意居家環境中的貴重或危險物品。" },
-      { id: "cat-climb-window-guard", text: "確認門窗、紗窗穩固，避免牠因好奇而發生墜落意外", result: "correct", ...positive, explanation: "高樓層飼主應特別注意門窗、紗窗必須穩固，慎防貓咪因好奇而不慎發生墜樓意外。" },
-      { id: "cat-climb-spray-water", text: "每次爬上去就用噴水瓶噴牠，讓牠知道那裡不能去", result: "incorrect", ...incorrect, explanation: "噴水等懲罰方式可能讓貓咪感到壓力與焦慮，且無法滿足牠攀爬的天性需求，問題行為通常只是轉移而非改善。", suggestion: "提供合適的垂直空間，並做好環境安全防護，才能從根本減少衝突。" },
+      {
+        id: "cat-climb-provide-tree",
+        text: "設置貓跳台或貓抓柱，提供安全的垂直活動空間",
+        result: "correct",
+        ...positive,
+        explanation: "貓咪偏好上下跳躍，提供合適的攀爬設施能滿足天性，也減少牠往危險地方爬的機會。"
+      },
+      {
+        id: "cat-climb-secure-items",
+        text: "將貴重或易碎物品收好或固定，避免被推落打翻",
+        result: "correct",
+        ...positive,
+        explanation: "貓咪習性喜歡待在高處，也容易因好奇而有突如其來的危險舉動，應注意居家環境中的貴重或危險物品。"
+      },
+      {
+        id: "cat-climb-window-guard",
+        text: "確認門窗、紗窗穩固，避免牠因好奇而發生墜落意外",
+        result: "correct",
+        ...positive,
+        explanation: "高樓層飼主應特別注意門窗、紗窗必須穩固，慎防貓咪因好奇而不慎發生墜樓意外。"
+      },
+      {
+        id: "cat-climb-spray-water",
+        text: "每次爬上去就用噴水瓶噴牠，讓牠知道那裡不能去",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "噴水等懲罰方式可能讓貓咪感到壓力與焦慮，且無法滿足牠攀爬的天性需求，問題行為通常只是轉移而非改善。",
+        suggestion: "提供合適的垂直空間，並做好環境安全防護，才能從根本減少衝突。"
+      },
     ],
+    correctSummary: ["貓咪喜歡爬高是天性，應設置貓跳台提供垂直活動空間、收納固定易碎物品，並確認門窗紗窗穩固以防墜落意外。"],
+    completionFeedback: {
+      title: "做得很好！",
+      encouragement: "你保留了 {petName} 的攀爬需求，也先把環境中的風險收好，做得很好！",
+      knowledgeTitle: "貓咪小知識",
+      knowledgeContent: [
+        {
+          type: "paragraph",
+          text: "貓咪喜歡爬高是天性，設置**貓跳台**等垂直活動設施，能同時滿足牠的活動需求；高樓層飼主也要特別注意**門窗與紗窗**的穩固度，慎防**墜樓意外**。"
+        },
+      ]
+    }
   },
   {
     id: "cat-busy-care",
@@ -122,32 +274,99 @@ export const catLifeScenarios: Scenario[] = [
     artIndex: 5,
     busyCarePresentation: {
       animalName: "貓咪",
-      sceneMedia: { type: "video", src: catAssets.petJourney.busyDailyCare, ariaLabel: "貓咪等待日常照顧情境影片", fallback: { type: "image-layers", backgroundSrc: catAssets.life.safeRoom, backgroundAlt: "居家房間場景", characterSrc: catAssets.life.mixedCat, characterAlt: "{petName}在房間裡等待照顧" } },
-      feedbackMedia: { type: "video", src: catAssets.petJourney.correctPrimary },
+      sceneMedia: {
+        type: "video",
+        src: catAssets.petJourney.busyDailyCare,
+        ariaLabel: "貓咪等待日常照顧情境影片",
+        fallback: {
+          type: "image-layers",
+          backgroundSrc: catAssets.life.safeRoom,
+          backgroundAlt: "居家房間場景",
+          characterSrc: catAssets.life.mixedCat,
+          characterAlt: "{petName}在房間裡等待照顧"
+        }
+      },
+      feedbackMedia: {
+        type: "video",
+        src: catAssets.petJourney.correctPrimary
+      }
     },
     busyCareCompletion: {
       title: "做得很好！",
       encouragement: "你不只是找了人，還確認了時間、意願、照護細節和緊急聯絡，這樣的交接才能讓 {petName} 在你忙碌時仍獲得穩定照顧，做得很好！",
       reflectionText: "在 {petName} 的世界裡，你是她選擇信任的那個人。",
       reflectionTitle: "留給自己的一個問題",
-      reflectionContent: ["忙完一天回到家後，你還有心力注意 {petName} 今天的狀態、花時間陪她玩一段嗎？"],
+      reflectionContent: [
+        "忙完一天回到家後，你還有心力注意 {petName} 今天的狀態、花時間陪她玩一段嗎？"
+      ],
       careTimeTitle: "每日照護時間",
       careTimeItems: catReport.dailyCareBreakdown,
       showCareTime: false,
-      additionalAdvice: ["如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"],
+      additionalAdvice: [
+        "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
+      ]
     },
     busyCareChecklist: [
-      { id: "daily-care", prompt: "你已經向協助者說明 {petName} 每天的餵食、換水、貓砂盆清理、環境安全巡視安排了嗎？", correctAnswer: "yes", reviewHint: "每日餵食、換水、貓砂盆清理與環境安全巡視安排還需要先交接" },
-      { id: "support-confirmed", prompt: "我還沒有確認協助者在你忙碌時，是否真的有時間協助照顧 {petName}。", correctAnswer: "no", reviewHint: "協助者的時間還需要先確認" },
-      { id: "care-willing", prompt: "協助者願意依照你的交接方式照顧 {petName} 嗎？", correctAnswer: "yes", reviewHint: "協助者的意願還需要先確認" },
-      { id: "emergency-contact", prompt: "協助者知道 {petName} 出現異常或緊急狀況時怎麼聯絡你嗎？", correctAnswer: "yes", reviewHint: "緊急聯絡方式還需要補充確認" },
+      {
+        id: "daily-care",
+        prompt: "你已經向協助者說明 {petName} 每天的餵食、換水、貓砂盆清理、環境安全巡視安排了嗎？",
+        correctAnswer: "yes",
+        reviewHint: "每日餵食、換水、貓砂盆清理與環境安全巡視安排還需要先交接"
+      },
+      {
+        id: "support-confirmed",
+        prompt: "我還沒有確認協助者在你忙碌時，是否真的有時間協助照顧 {petName}。",
+        correctAnswer: "no",
+        reviewHint: "協助者的時間還需要先確認"
+      },
+      {
+        id: "care-willing",
+        prompt: "協助者願意依照你的交接方式照顧 {petName} 嗎？",
+        correctAnswer: "yes",
+        reviewHint: "協助者的意願還需要先確認"
+      },
+      {
+        id: "emergency-contact",
+        prompt: "協助者知道 {petName} 出現異常或緊急狀況時怎麼聯絡你嗎？",
+        correctAnswer: "yes",
+        reviewHint: "緊急聯絡方式還需要補充確認"
+      },
     ],
     choices: [
-      { id: "cat-alone-food", text: "放大量食物水讓牠自己撐過", result: "incorrect", ...incorrect, explanation: "食物和水不能取代砂盆清理、環境巡視、陪玩與狀況觀察，也可能造成食物過量或變質。", suggestion: "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。" },
-      { id: "seek-help", text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}", result: "correct", isSupportChoice: true, ...positive, explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。" },
-      { id: "cat-no-check", text: "覺得貓很獨立，不用特別安排", result: "incorrect", ...incorrect, explanation: "獨立不代表不需要日常照護與安全巡視。砂盆、飲水、食慾、活動與異常狀況仍需要有人確認。", suggestion: "至少安排可信任者確認基本需求、環境安全與是否有異常。" },
-      { id: "cat-late-meal", text: "等自己晚點回來再餵，先讓牠等著", result: "incorrect", ...incorrect, explanation: "只補食物會漏掉砂盆、飲水、環境安全與行為變化，也可能讓協助者不知道如何安全互動。", suggestion: "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。" },
+      {
+        id: "cat-alone-food",
+        text: "放大量食物水讓牠自己撐過",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "食物和水不能取代砂盆清理、環境巡視、陪玩與狀況觀察，也可能造成食物過量或變質。",
+        suggestion: "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。"
+      },
+      {
+        id: "seek-help",
+        text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}",
+        result: "correct",
+        isSupportChoice: true,
+        ...positive,
+        explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。"
+      },
+      {
+        id: "cat-no-check",
+        text: "覺得貓很獨立，不用特別安排",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "獨立不代表不需要日常照護與安全巡視。砂盆、飲水、食慾、活動與異常狀況仍需要有人確認。",
+        suggestion: "至少安排可信任者確認基本需求、環境安全與是否有異常。"
+      },
+      {
+        id: "cat-late-meal",
+        text: "等自己晚點回來再餵，先讓牠等著",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "只補食物會漏掉砂盆、飲水、環境安全與行為變化，也可能讓協助者不知道如何安全互動。",
+        suggestion: "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。"
+      },
     ],
+    correctSummary: ["無論多忙，都必須事先安排可信任的人代為照顧，完整交接餵食、換水、清砂盆與緊急聯絡方式，也可事先了解附近的寵物旅館作為備援，不可只靠多放食物應急。"],
   },
   {
     id: "cat-illness-vet",
@@ -160,30 +379,90 @@ export const catLifeScenarios: Scenario[] = [
     topic: "貓咪健康觀察與就醫判斷",
     reportSummary: "貓咪出現食慾、飲水、尿便、活動量或躲藏等明顯改變時，應記錄時間與觀察到的狀況並聯絡獸醫；不要自行判定原因或自行給藥。",
     artIndex: 3,
-    sceneMedia: { type: "video", src: catAssets.petJourney.sick, ariaLabel: "貓咪身體不適情境影片" },
-    correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctSecondary, ariaLabel: "貓咪答對回饋影片" },
+    sceneMedia: {
+      type: "video",
+      src: catAssets.petJourney.sick,
+      ariaLabel: "貓咪身體不適情境影片"
+    },
+    correctFeedbackMedia: {
+      type: "video",
+      src: catAssets.petJourney.correctSecondary,
+      ariaLabel: "貓咪答對回饋影片"
+    },
     requiresRetry: true,
+    choices: [
+      {
+        id: "cat-health-wait",
+        text: "先自行上網查詢症狀，照網友分享的方法在家觀察幾天",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "網路資訊和他人的經驗不能取代獸醫判斷；明顯變化不應延後聯繫獸醫。",
+        suggestion: "可以整理可信資料供溝通，但先記錄時間與觀察到的狀況，並聯絡獸醫討論下一步。"
+      },
+      {
+        id: "cat-health-complete-response",
+        text: "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫",
+        result: "correct",
+        ...positive,
+        explanation: "多項變化一起出現時，**完整紀錄、就醫準備**與聯繫獸醫要一起做；紀錄不能延後急症處置。",
+        expenseIds: [
+          "cat-mild-sick", "cat-moderate-sick", "cat-hospitalization"
+        ]
+      },
+      {
+        id: "cat-health-friend",
+        text: "拍一張照片傳給有養貓的朋友，等對方回覆後再決定",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
+        suggestion: "整理觀察資料後儘速聯絡獸醫。"
+      },
+      {
+        id: "cat-health-medicine",
+        text: "先用家裡的人用藥或剩下的藥物試試看",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "未經獸醫指示的藥物可能對貓有害，也會干擾後續判斷。",
+        suggestion: "不要自行給藥，先記錄狀況並聯絡獸醫。"
+      },
+    ],
+    correctSummary: ["貓咪同時出現食慾下降、躲藏增加、尿量減少等多項改變時，應立即完整記錄並聯繫獸醫，不可等待觀察或自行給藥。"],
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你記錄了多項異常變化並第一時間聯絡獸醫，做得很好！",
       knowledgeTitle: "貓咪小知識",
       knowledgeContent: [
-        { type: "paragraph", text: "貓咪常見需要留意的健康問題：" },
-        { type: "item", text: "**泌尿道異常**（尤其公貓）：排尿減少、頻繁出入砂盆、哭叫、血尿——尿道阻塞是急症，立即就醫。" },
-        { type: "item", text: "**腸胃異常**：嘔吐或腹瀉超過一天，或混有血絲——持續出現應就醫。" },
-        { type: "item", text: "**口腔異味與進食異常**：口臭、進食遲疑、抓嘴——定期口腔檢查可及早發現。" },
-        { type: "item", text: "**呼吸道症狀**：流鼻水、打噴嚏、眼分泌物增多——持續出現應就醫。" },
-        { type: "item", text: "**傳染病篩檢**：有流浪或收容所背景的貓，應確認傳染病篩檢狀態——多年可能無症狀。" },
-        { type: "item", text: "**飲水增加、食慾下降、體重減輕**：高齡貓尤其需要定期抽血追蹤。" },
+        {
+          type: "paragraph",
+          text: "貓咪常見需要留意的健康問題："
+        },
+        {
+          type: "item",
+          text: "**泌尿道異常**（尤其公貓）：排尿減少、頻繁出入砂盆、哭叫、血尿——尿道阻塞是急症，立即就醫。"
+        },
+        {
+          type: "item",
+          text: "**腸胃異常**：嘔吐或腹瀉超過一天，或混有血絲——持續出現應就醫。"
+        },
+        {
+          type: "item",
+          text: "**口腔異味與進食異常**：口臭、進食遲疑、抓嘴——定期口腔檢查可及早發現。"
+        },
+        {
+          type: "item",
+          text: "**呼吸道症狀**：流鼻水、打噴嚏、眼分泌物增多——持續出現應就醫。"
+        },
+        {
+          type: "item",
+          text: "**傳染病篩檢**：有流浪或收容所背景的貓，應確認傳染病篩檢狀態——多年可能無症狀。"
+        },
+        {
+          type: "item",
+          text: "**飲水增加、食慾下降、體重減輕**：高齡貓尤其需要定期抽血追蹤。"
+        },
       ],
-      reminder: "食慾、飲水、尿便、活動與躲藏的改變都是重要警訊；多項同時出現時，準備外出籠並盡速聯絡獸醫，不要自行給藥。",
-    },
-    choices: [
-      { id: "cat-health-wait", text: "先自行上網查詢症狀，照網友分享的方法在家觀察幾天", result: "incorrect", ...incorrect, explanation: "網路資訊和他人的經驗不能取代獸醫判斷；明顯變化不應延後聯繫獸醫。", suggestion: "可以整理可信資料供溝通，但先記錄時間與觀察到的狀況，並聯絡獸醫討論下一步。" },
-      { id: "cat-health-complete-response", text: "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫", result: "correct", ...positive, explanation: "多項變化一起出現時，**完整紀錄、就醫準備**與聯繫獸醫要一起做；紀錄不能延後急症處置。", expenseIds: ["cat-mild-sick", "cat-moderate-sick", "cat-hospitalization"] },
-      { id: "cat-health-friend", text: "拍一張照片傳給有養貓的朋友，等對方回覆後再決定", result: "incorrect", ...incorrect, explanation: "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。", suggestion: "整理觀察資料後儘速聯絡獸醫。" },
-      { id: "cat-health-medicine", text: "先用家裡的人用藥或剩下的藥物試試看", result: "incorrect", ...incorrect, explanation: "未經獸醫指示的藥物可能對貓有害，也會干擾後續判斷。", suggestion: "不要自行給藥，先記錄狀況並聯絡獸醫。" },
-    ],
+      reminder: "食慾、飲水、尿便、活動與躲藏的改變都是重要警訊；多項同時出現時，準備外出籠並盡速聯絡獸醫，不要自行給藥。"
+    }
   },
   {
     id: "cat-growing-old",
@@ -197,34 +476,85 @@ export const catLifeScenarios: Scenario[] = [
     topic: "高齡貓環境與健康照顧",
     reportSummary: "高齡貓需要同步調整如廁、活動、休息與健康追蹤：增設合適砂盆與地墊、階梯式設施、保暖休息處，並定期健檢與記錄變化。",
     artIndex: 1,
-    sceneMedia: { type: "video", src: catAssets.petJourney.seniorLife, ariaLabel: "高齡貓日常照護情境影片" },
-    correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctSecondary, ariaLabel: "貓咪答對回饋影片" },
+    sceneMedia: {
+      type: "video",
+      src: catAssets.petJourney.seniorLife,
+      ariaLabel: "高齡貓日常照護情境影片"
+    },
+    correctFeedbackMedia: {
+      type: "video",
+      src: catAssets.petJourney.correctSecondary,
+      ariaLabel: "貓咪答對回饋影片"
+    },
     multipleChoice: true,
-    requiredCorrectOptionIds: ["cat-senior-env", "cat-senior-vet-eval"],
-    wrongOptionIds: ["cat-senior-supplement", "cat-senior-partial"],
-    correctSummary: ["增設高度適中的砂盆與地墊、改成階梯式設施並準備保暖休息處。", "近期安排健康檢查，之後每半年健檢、每週量體重並記錄日常變化。"],
+    requiredCorrectOptionIds: [
+      "cat-senior-env", "cat-senior-vet-eval"
+    ],
+    wrongOptionIds: [
+      "cat-senior-supplement", "cat-senior-partial"
+    ],
+    choices: [
+      {
+        id: "cat-senior-env",
+        text: "增設高度適中的砂盆與地墊、改成階梯式設施並準備保暖休息處",
+        result: "correct",
+        ...positive,
+        explanation: "降低跳躍門檻、鋪設防滑地墊，讓高齡貓如廁與休息更安全舒適。",
+        expenseIds: [
+          "cat-senior-room"
+        ]
+      },
+      {
+        id: "cat-senior-supplement",
+        text: "先換成高齡保健配方與關節保健品，平時留意食慾；下次例行就醫時再一起詢問",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "飲食調整與保健品不能取代環境調整與主動就醫評估，且發現異狀就應盡早就診，不宜等到例行回診。"
+      },
+      {
+        id: "cat-senior-partial",
+        text: "先在牠常待的角落增加軟墊與保暖處，等牠更不願跳或上砂盆時再調整其他動線",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "部分調整，但如廁困難與關節狀況應主動評估，不宜等惡化再處理。"
+      },
+      {
+        id: "cat-senior-vet-eval",
+        text: "近期安排一次健康檢查，請獸醫評估關節與體況；日後每半年健檢、每週量體重並記錄日常變化",
+        result: "correct",
+        ...positive,
+        explanation: "跳躍遲疑與如廁猶豫可能是關節疾病早期警訊，獸醫評估能確認是否需要治療，並建立長期追蹤節奏。"
+      },
+    ],
+    correctSummary: ["高齡貓出現行動遲緩或如廁猶豫時，應主動調整環境（降低出入門檻、增設防滑地墊）並安排健康檢查，此後每半年健檢、每週量體重持續追蹤。"],
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你已開始為牠調整生活空間，讓陪伴能跟著身體變化慢慢前進。",
       knowledgeTitle: "長達 12-20 年的每日陪伴與生命承諾",
       knowledgeContent: [
-        { type: "paragraph", text: "與 {petName} 在一起的每一天，都是一份**長達 12-20 年**的承諾。" },
-        { type: "paragraph", text: "牠會隨著歲月慢慢老去，可能出現**失智**、**大小便失禁**，甚至**癱瘓**。" },
-        { type: "paragraph", text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到**生命盡頭**的心理準備嗎？" },
-      ],
-    },
-    choices: [
-      { id: "cat-senior-env", text: "增設高度適中的砂盆與地墊、改成階梯式設施並準備保暖休息處", result: "correct", ...positive, explanation: "降低跳躍門檻、鋪設防滑地墊，讓高齡貓如廁與休息更安全舒適。", expenseIds: ["cat-senior-room"] },
-      { id: "cat-senior-supplement", text: "先換成高齡保健配方與關節保健品，平時留意食慾；下次例行就醫時再一起詢問", result: "incorrect", ...incorrect, explanation: "飲食調整與保健品不能取代環境調整與主動就醫評估，且發現異狀就應盡早就診，不宜等到例行回診。" },
-      { id: "cat-senior-partial", text: "先在牠常待的角落增加軟墊與保暖處，等牠更不願跳或上砂盆時再調整其他動線", result: "incorrect", ...incorrect, explanation: "部分調整，但如廁困難與關節狀況應主動評估，不宜等惡化再處理。" },
-      { id: "cat-senior-vet-eval", text: "近期安排一次健康檢查，請獸醫評估關節與體況；日後每半年健檢、每週量體重並記錄日常變化", result: "correct", ...positive, explanation: "跳躍遲疑與如廁猶豫可能是關節疾病早期警訊，獸醫評估能確認是否需要治療，並建立長期追蹤節奏。" },
-    ],
+        {
+          type: "paragraph",
+          text: "與 {petName} 在一起的每一天，都是一份**長達 12-20 年**的承諾。"
+        },
+        {
+          type: "paragraph",
+          text: "牠會隨著歲月慢慢老去，可能出現**失智**、**大小便失禁**，甚至**癱瘓**。"
+        },
+        {
+          type: "paragraph",
+          text: "在迎接牠之前，請先問問自己：你做好了陪伴牠走到**生命盡頭**的心理準備嗎？"
+        },
+      ]
+    }
   },
 ];
-
 export function getCatLifeScenarios(_breedId: string): Scenario[] {
   void _breedId;
   return catLifeScenarios.map((scenario) => scenario.id === "cat-illness-vet" ? {
-    ...scenario, speciesId: "cat", stageId: "life-change", order: 2, summaryCategory: "illness-vet",
+    ...scenario,
+    speciesId: "cat",
+    stageId: "life-change",
+    order: 2,
+    summaryCategory: "illness-vet"
   } : scenario);
 }

@@ -21,10 +21,10 @@ const imageSizes: ArrivalMealSupplyImageSizes = {
 /** 桌機與手機位置皆由守宮資料設定，與其他物種互不影響。 */
 const sceneLayout: ArrivalMealSceneLayout = {
   desktop: {
-    pet: { left: 25, bottom: 12, width: 31, maxHeight: 72 },
-    food: { left: 52, bottom: 21, width: 17, maxHeight: 30 },
-    water: { left: 67, bottom: 15, width: 14, maxHeight: 25 },
-    veggie: { left: 50, bottom: 15, width: 14, maxHeight: 25 },
+    pet: { left: 40, bottom: 12, width: 31, maxHeight: 72 },
+    food: { left: 22, bottom: 18, width: 17, maxHeight: 30 },
+    water: { left: 10, bottom: 10, width: 14, maxHeight: 25 },
+    veggie: { left: 30, bottom: 10, width: 14, maxHeight: 25 },
   },
   mobile: {
     pet: { left: 20, bottom: 17, width: 47, maxHeight: 64 },

@@ -474,6 +474,10 @@ export type GeckoHealthInspectionConfig = {
   };
   feces: GeckoHealthJudgement;
   body: {
+    /** Whether body inspection points unlock one at a time. */
+    requiresOrderedInspection: boolean;
+    /** Whether visible sequence numbers are meaningful for the inspection. */
+    showPointNumbers: boolean;
     instruction: string;
     prompt: string;
     points: readonly GeckoBodyInspectionPoint[];
@@ -522,7 +526,7 @@ export type LifeActivityState = {
   rabbitGroomingIntroStarted: boolean;
   /** 兔子美容互動的固定 state machine，目前狀態不可由素材或陣列位置推斷。 */
   rabbitGroomingState: string;
-  /** 同一局的足底、門齒與指甲觀察結果固定保留，重開卡片不會重新隨機。 */
+  /** 同一局的足底、進食與指甲觀察結果固定保留，重開卡片不會重新隨機。 */
   rabbitGroomingObservations: Record<string, "normal" | "warning">;
   /** 美容判斷題的隨機圖片、答錯次數與回饋狀態，回到同一題時不可重抽。 */
   rabbitGroomingInspection: Record<string, {
@@ -535,6 +539,8 @@ export type LifeActivityState = {
   birdCageInspectionIntroStarted: boolean;
   /** 同一輪鳥籠巡視的四個健康觀察結果；重新開卡或重新 render 時不得重抽。 */
   birdCageInspectionStates: Record<string, "normal" | "warning">;
+  /** 籠外互動完成後，需由玩家主動點擊「完成巡視」才會切換至完成頁。 */
+  birdCageInspectionCompleted: boolean;
   hamsterMealSelected: string[];
   hamsterMealFeedbackId: string;
   hamsterInspectionStarted: boolean;

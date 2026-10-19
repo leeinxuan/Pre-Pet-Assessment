@@ -242,8 +242,10 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
   },
   feces,
   body: {
-    instruction: "依序點擊提示點，觀察 {petName} 的眼睛、尾巴、皮膚與趾端。",
-    prompt: "從眼睛開始，依序完成四個身體部位的觀察。",
+    requiresOrderedInspection: false,
+    showPointNumbers: false,
+    instruction: "點擊提示點，觀察 {petName} 的眼睛、尾巴、皮膚與趾端。",
+    prompt: "自由選擇提示點，完成四個身體部位的觀察。",
     points: bodyPoints,
   },
   completion: {
