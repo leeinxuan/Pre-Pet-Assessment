@@ -8,6 +8,7 @@ export const birdExpenses: Record<string, ExpenseRecord> = {
   "bird-water-bowl": { id: "bird-water-bowl", name: "水碗／水杯", amount: 200, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "不使用過大過深容器；避免鳥跌落" },
   "bird-chew-toy": { id: "bird-chew-toy", name: "啃咬玩具", amount: 300, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "天然材質（木材、麻繩）降低誤食風險；為消耗品，需定期更換" },
   "bird-climbing-toy": { id: "bird-climbing-toy", name: "攀爬玩具（梯子／鞦韆）", amount: 500, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "增加籠內落腳空間，鼓勵活動；視使用狀況定期更換" },
+  "bird-sleeping-tent": { id: "bird-sleeping-tent", name: "布窩（三角帳篷型）", amount: 300, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "提供遮蔽感與保暖；部分鸚鵡（尤其玄鳳）喜歡在布窩中休息。需定期清洗並修剪鬆脫線頭。" },
   "bird-feces-tray": { id: "bird-feces-tray", name: "籠底墊料", amount: 300, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "可使用報紙、餐巾紙、紙棉等材質鋪於籠底，每日更換以觀察糞便狀態並維持衛生；避免使用有香氣的產品" },
   "bird-thermometer": { id: "bird-thermometer", name: "溫度計", amount: 300, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "鳥對溫度變化敏感，維持環境溫度穩定非常重要" },
   "bird-food-initial": { id: "bird-food-initial", name: "主食飼料（初期備量）", amount: 250, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "依食性選購一包初期存量（種子飼料、滋養丸或吸蜜粉）；到家第一天即可立刻餵食" },

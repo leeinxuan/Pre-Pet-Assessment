@@ -120,7 +120,8 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
 function expensePriceText(expenseIds: string[] = [], species: string) {
   const prices = expenseIds.map((id) => getExpenseForSpecies(id, species)).filter((item): item is ExpenseRecord => Boolean(item));
   if (prices.length === 0) return "";
-  const total = prices.reduce((sum, item) => sum + item.amount, 0);
+  // 有金額區間的用品顯示最高值，與企劃「8,000 元（3,000–8,000）」前面的參考金額一致。
+  const total = prices.reduce((sum, item) => sum + (item.maxAmount ?? item.amount), 0);
   return `NT$${money.format(total)}`;
 }
 
@@ -352,10 +353,13 @@ export function RoomPreparation({
       return;
     }
     if (hasInteriorRoomFlow && insideView && !isOutsideItem && roomFlow?.interiorUnlockItemId && item.id !== roomFlow.interiorUnlockItemId && !selectedItems.includes(roomFlow.interiorUnlockItemId)) {
-      setRoomCheckMessage(roomFlow.copy.lockedInstruction ?? "請先完成缸內基礎配置。");
+      setRoomCheckMessage((roomFlow.copy.interiorLockedInstruction ?? roomFlow.copy.lockedInstruction ?? "請先完成內部基礎配置。").replaceAll("{petName}", displayName));
       return;
     }
     if (hasInteriorRoomFlow && item.id === roomFlow?.fenceItemId) setInsideRoomView(false);
+    // 危險物品已全部清除後放入第一件用品時，自動收起仍開著的危險物品說明框。
+    const isFirstPlacedItem = !activeRoomItems.some((entry) => selectedItems.includes(entry.id));
+    if (isFirstPlacedItem) setActiveHazardInfo(null);
     setExitingItems((current) => [...current, id]);
     onPrepare(id);
     window.setTimeout(() => setExitingItems((current) => current.filter((itemId) => itemId !== id)), 450);
@@ -417,7 +421,7 @@ export function RoomPreparation({
             {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} full-seven`}>
               {row.map((item) => {
                 const selected = selectedItems.includes(item.id);
-                const note = { label: item.label, note: item.description };
+                const note = { label: item.label, note: item.description.replaceAll("{petName}", displayName) };
                 const expenseIds = [...(item.expenseIds ?? []), ...(item.expenseId ? [item.expenseId] : [])];
                 const price = expensePriceText(Array.from(new Set(expenseIds)), species);
                 const isOutsideItem = Boolean(roomFlow?.outsideItemIds?.includes(item.id) ?? item.id === roomFlow?.fenceItemId);
@@ -431,7 +435,7 @@ export function RoomPreparation({
                 );
                 const canPrepare = hazardsCleared && !interiorItemLocked && (!hasInteriorRoomFlow || (insideView ? !isOutsideItem : (isOutsideItem && (item.id === roomFlow?.fenceItemId || fencePlaced))));
                 return <div key={item.id} className="supply-slot">
-                  {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : fencePlaced ? roomFlow?.copy.interiorInstruction ?? "請先進入圍欄內部" : roomFlow?.copy.lockedInstruction ?? "請先放置圍欄"}`} disabled={exitingItems.includes(item.id) || !canPrepare} onClick={() => prepareItem(item.id)}>
+                  {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : interiorItemLocked ? (roomFlow?.copy.interiorLockedInstruction ?? roomFlow?.copy.lockedInstruction ?? "請先完成內部基礎配置").replaceAll("{petName}", displayName) : fencePlaced ? roomFlow?.copy.interiorInstruction ?? "請先進入圍欄內部" : roomFlow?.copy.lockedInstruction ?? "請先放置圍欄"}`} disabled={exitingItems.includes(item.id) || !canPrepare} onClick={() => prepareItem(item.id)}>
                     <span className="room-supply-visual"><RoomItemVisual item={item} /></span>
                     <b>{item.label}</b>
                   </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{price && <span className="supply-slot-price">{price}</span>}</div>}
@@ -565,7 +569,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
     <StepHeading title={speciesConfig.copy.departureTitle} body={speciesConfig.copy.departureBody(petName)} />
     <div className={`departure-layout ${departing ? "departing" : ""}`}>
       <aside className="departure-supply-shelf" aria-label="準備物品">
-        <div className="departure-supply-header"><h2>準備物品</h2></div>
+        <div className="departure-supply-header"><h2><span className="departure-supply-header-icon"><StorageBoxIcon /></span>準備物品</h2></div>
         <div className="departure-supply-rows">
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
             {row.map((item) => {
@@ -577,7 +581,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
                   <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.visualClassName ?? item.id}`} style={item.visualScale === undefined ? undefined : { "--departure-item-image-scale": item.visualScale } as CSSProperties} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b>
-                </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{reusedExpense ? <span className="supply-slot-price">已於房間準備計入</span> : price && !hidePriceForReusedItem && <span className="supply-slot-price">{price}</span>}</div>}
+                </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{item.priceNote ? <span className="supply-slot-price">{item.priceNote}</span> : reusedExpense ? <span className="supply-slot-price">已於房間準備計入</span> : price && !hidePriceForReusedItem && <span className="supply-slot-price">{price}</span>}</div>}
               </div>;
             })}
           </div>)}

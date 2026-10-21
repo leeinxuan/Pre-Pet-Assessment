@@ -1,6 +1,6 @@
 export type HomeReadinessTextSegment = { text: string; emphasis?: boolean };
 export type HomeReadinessTextBlock = {
-  type: "paragraph" | "item";
+  type: "paragraph" | "item" | "ordered-item";
   segments: HomeReadinessTextSegment[];
 };
 

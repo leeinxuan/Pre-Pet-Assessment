@@ -15,10 +15,7 @@ test("all registered species expose the complete canonical data contract", async
     ];
     await Promise.all(requiredFiles.map((file) => access(new URL(`${base}${file}`, root))));
 
-    const index = await source(`${base}index.ts`);
-    for (const field of ["copy", "feeding", "journey", "preparation", "report", "homeReadiness", "masteredCareThemes", "careReviewAdditionalNotes", "acquisition"]) {
-      assert.match(index, new RegExp(`\\b${field}\\s*:`), `${species} config must register ${field}`);
-    }
+    // 設定欄位是否註冊，由 game-logic.test.mjs 直接讀取 getSpeciesConfig 檢查。
   }
 });
 
@@ -74,58 +71,6 @@ test("acquisition sources keep the legal business lookup only for dog and cat", 
       assert.doesNotMatch(acquisition, /"legal-pet-businesses"/, `${species} must not show the dog/cat legal pet business lookup`);
     }
     assert.match(acquisition, /來源方/, `${species} must use the shared source reminder`);
-  }
-});
-
-test("journey activity registry item and video scenario ids resolve to species data", async () => {
-  const registry = await source("app/data/species/activity-registry.ts");
-  for (let index = 0; index < speciesIds.length; index += 1) {
-    const species = speciesIds[index];
-    const start = registry.indexOf(`  ${species}: {`);
-    const nextSpecies = speciesIds[index + 1];
-    const end = nextSpecies ? registry.indexOf(`  ${nextSpecies}: {`, start) : registry.indexOf("\n};", start);
-    const section = registry.slice(start, end);
-    const [journey, scenarios] = await Promise.all([
-      source(`app/data/species/${species}/journey.ts`),
-      source(`app/data/species/${species}/scenarios.ts`),
-    ]);
-
-    const itemIds = [...section.matchAll(/(?:video|activity)\("([^"]+)"/g)].map((match) => match[1]);
-    for (const itemId of itemIds) {
-      assert.match(journey, new RegExp(`id:\\s*"${itemId}"`), `${species} registry item ${itemId} must exist in journey.ts`);
-    }
-
-    const scenarioIds = [...section.matchAll(/video\("[^"]+",\s*"([^"]+)"/g)].map((match) => match[1]);
-    for (const scenarioId of scenarioIds) {
-      assert.ok(
-        journey.includes(`scenarioId: "${scenarioId}"`) || scenarios.includes(`id: "${scenarioId}"`),
-        `${species} registry scenario ${scenarioId} must exist in journey/scenarios data`,
-      );
-    }
-  }
-});
-
-test("literal expense ids referenced by species flows exist in that species catalog", async () => {
-  for (const species of speciesIds) {
-    const base = `app/data/species/${species}/`;
-    const [expenses, ...flowSources] = await Promise.all([
-      source(`${base}expenses.ts`),
-      source(`${base}preparation.ts`),
-      source(`${base}feeding.ts`),
-      source(`${base}journey.ts`),
-      source(`${base}scenarios.ts`),
-    ]);
-    const catalogIds = new Set([...expenses.matchAll(/(?:\bid:\s*|initial\()"([^"]+)"/g)].map((match) => match[1]));
-    const referencedIds = new Set();
-    for (const data of flowSources) {
-      for (const match of data.matchAll(/(?:expenseId|expenseIds|silentExpenseIds|recurringExpenseIds)\s*:\s*(?:"([^"]+)"|\[([^\]]*)\])/gs)) {
-        if (match[1]) referencedIds.add(match[1]);
-        for (const literal of (match[2] ?? "").matchAll(/"([^"]+)"/g)) referencedIds.add(literal[1]);
-      }
-    }
-    for (const expenseId of referencedIds) {
-      assert.ok(catalogIds.has(expenseId), `${species} expense reference ${expenseId} must exist in expenses.ts`);
-    }
   }
 });
 

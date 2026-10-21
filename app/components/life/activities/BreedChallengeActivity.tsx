@@ -22,7 +22,9 @@ export function BreedChallengeActivity({
   onChoose,
   onContinue,
   onReplay,
+  canReplay,
   continueImmediately = false,
+  reviewFromStart = false,
   testNextSignal = 0,
 }: {
   breed: string;
@@ -31,12 +33,16 @@ export function BreedChallengeActivity({
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
   onContinue: () => void;
   onReplay?: (scenarioId: string) => void;
+  /** 已答對、可重新練習的小題；未提供時所有小題都可重玩。 */
+  canReplay?: (scenarioId: string) => boolean;
+  /** 回訪已完成節點：從第一小題的完成頁開始，已答對的小題直接顯示完成頁。 */
+  reviewFromStart?: boolean;
   continueImmediately?: boolean;
   testNextSignal?: number;
 }) {
   const scenarios = getBreedChallengeScenarios(breed);
   const firstUnfinished = scenarios.findIndex((scenario) => answers[scenario.id]?.finalResult !== "correct");
-  const [currentIndex, setCurrentIndex] = useState(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
+  const [currentIndex, setCurrentIndex] = useState(firstUnfinished === -1 ? (reviewFromStart ? 0 : scenarios.length - 1) : firstUnfinished);
   const [mode, setMode] = useState<"question" | "incorrect" | "positive">(firstUnfinished === -1 ? "positive" : "question");
   const [feedbackVideoFailed, setFeedbackVideoFailed] = useState(false);
   const [questionVideoFailedFor, setQuestionVideoFailedFor] = useState<string | null>(null);
@@ -59,7 +65,7 @@ export function BreedChallengeActivity({
       return;
     }
     setCurrentIndex((current) => current + 1);
-    setMode("question");
+    setMode(reviewFromStart && answers[scenarios[currentIndex + 1]?.id ?? ""]?.finalResult === "correct" ? "positive" : "question");
     setFeedbackVideoFailed(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -84,7 +90,7 @@ export function BreedChallengeActivity({
         intro={<p>{plainFeedbackText(withPetName(selectedChoice.explanation, petName))}</p>}
         breedHighlight={<BreedKnowledgeHighlight text={withPetName(breedKnowledge, petName)} label={`${breedLabel}小知識`} />}
         onVideoError={() => setFeedbackVideoFailed(true)}
-        onReplay={onReplay ? () => onReplay(scenario.id) : undefined}
+        onReplay={onReplay && (canReplay?.(scenario.id) ?? true) ? () => onReplay(scenario.id) : undefined}
         onContinue={moveToNext}
         continueImmediately={continueImmediately}
       />

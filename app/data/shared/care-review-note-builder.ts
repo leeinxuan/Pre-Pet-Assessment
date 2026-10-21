@@ -3,3 +3,4 @@ import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "./home-re
 export const text = (value: string, emphasis = false): HomeReadinessTextSegment => ({ text: value, ...(emphasis ? { emphasis } : {}) });
 export const paragraph = (...segments: HomeReadinessTextSegment[]): HomeReadinessTextBlock => ({ type: "paragraph", segments });
 export const item = (...segments: HomeReadinessTextSegment[]): HomeReadinessTextBlock => ({ type: "item", segments });
+export const orderedItem = (...segments: HomeReadinessTextSegment[]): HomeReadinessTextBlock => ({ type: "ordered-item", segments });

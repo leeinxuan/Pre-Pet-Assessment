@@ -36,19 +36,19 @@ const sceneLayout: ArrivalMealSceneLayout = {
 
 export const geckoFeeding: FeedingConfig = {
   animalName: "小型地棲性守宮",
-  completionMessage: "第一餐準備好了！你準備了沾好鈣粉的活昆蟲，還有乾淨的飲水。",
+  completionMessage: "第一餐準備好了！你準備了沾好鈣粉的活昆蟲，還有乾淨的飲水。守宮不需要每天餵食。成體每 2–3 天餵一次就夠了，每天餵反而容易造成肥胖與脂肪肝。尾巴粗細是判斷體況最直接的指標。",
   recurringExpenseIds: ["gecko-food-monthly"],
   interaction: "scene",
   requiredSupplies: ["food", "veggie", "water"],
   supplies: [
-    { stateKey: "food", label: "活體餌料昆蟲", image: geckoAssets.feeding.liveInsect, alt: "活體餌料昆蟲" },
-    { stateKey: "veggie", label: "鈣粉與綜合維他命粉", image: geckoAssets.room.calciumSupplement, alt: "鈣粉與綜合維他命粉" },
+    { stateKey: "food", label: "活體餌料昆蟲（蟋蟀、杜比亞蟑螂或麵包蟲）", image: geckoAssets.feeding.liveInsect, alt: "活體餌料昆蟲" },
+    { stateKey: "veggie", label: "鈣粉（餵食前沾裹昆蟲用）", image: geckoAssets.room.calciumSupplement, alt: "鈣粉與綜合維他命粉" },
     { stateKey: "water", label: "乾淨飲水（淺碟）", image: geckoAssets.feeding.waterBottle, alt: "乾淨飲水" },
   ],
   unsafeFoods: [
-    { id: "fruit-vegetable", label: "水果／蔬菜", image: geckoAssets.feeding.fruitVegetable, title: "不適合守宮的食物", text: "守宮是肉食性動物，消化系統無法處理植物纖維；蔬果不能提供所需營養，反而可能引發消化問題。", presentation: "warning" },
-    { id: "human-food", label: "人類食物（剩飯、麵包等）", image: geckoAssets.feeding.humanFood, title: "人類食物有危險", text: "人類食物中的調味料、油脂與糖分對守宮有害，絕對不可餵食。", presentation: "warning" },
-    { id: "wild-caught-insect", label: "野外捕捉的昆蟲", image: geckoAssets.feeding.wildCaughtInsect, title: "野外昆蟲風險高", text: "野外昆蟲可能殘留農藥，或攜帶寄生蟲、病菌；請使用爬蟲專門店的繁殖餌料。", presentation: "warning" },
+    { id: "fruit-vegetable", label: "水果 / 蔬菜", image: geckoAssets.feeding.fruitVegetable, title: "不適合守宮的食物", text: "守宮是肉食性動物，消化系統無法處理植物纖維，餵食蔬果不能提供所需營養，反而可能引發消化問題。", presentation: "warning" },
+    { id: "human-food", label: "人類食物（剩飯、麵包等）", image: geckoAssets.feeding.humanFood, title: "人類食物有危險", text: "人類食物中的調味料、油脂、糖分對守宮有毒，絕對不可餵食任何人類食品。", presentation: "warning" },
+    { id: "wild-caught-insect", label: "野外捕捉的昆蟲", image: geckoAssets.feeding.wildCaughtInsect, title: "野外昆蟲風險高", text: "野外昆蟲可能殘留農藥，或攜帶寄生蟲、病菌。請僅使用來自爬蟲專門店的繁殖用餌料昆蟲。", presentation: "warning" },
   ],
   scene: {
     desktopBackground: geckoAssets.room.terrariumSubstrate,

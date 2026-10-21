@@ -93,6 +93,8 @@ const feeding = config.feeding;
 - 完成判定使用既有 report practice selector 與 mastered-care selector；報告元件不得直接認識某活動的 state 欄位。
 - 不可為了補文案在報告 JSX 加入物種名稱或活動 ID 判斷。
 
+每個物種 report.ts 的 checklistGroups 固定且只可使用三組，順序必須為：每日照顧、家中環境、外出與接回。健康觀察、清潔頻率、定期維護與餵食頻率應依內容併入前兩組，不得另建群組；接回用品則列入「外出與接回」。
+
 ### 素材
 
 - 共用素材放在 `app/data/shared/assets.ts` 或 `public/assets/shared/`。
@@ -133,12 +135,20 @@ const feeding = config.feeding;
 ```bash
 pnpm exec tsc --noEmit
 pnpm lint
-node --test tests/species-flow-regression.test.mjs
+node --test tests/*.test.mjs
 pnpm run build
 git diff --check
 ```
 
 若完整測試失敗，必須區分「本次造成的失敗」與「修改前既有失敗」，不可直接忽略。
+
+### 測試的寫法
+
+- `tests/game-data-snapshot.test.mjs` 會把所有物種的正式資料（文案、費用、旅程、註冊表、重玩重設策略）和 `tests/snapshots/game-data/` 比對。
+  - 重構、整理程式碼時，快照必須維持通過；失敗代表遊戲資料被改到了。
+  - 有意修改遊戲資料時，執行 `pnpm test:update-snapshot` 更新快照，並在 commit 中一起檢查快照差異是否只包含預期的變動。
+- 資料、註冊表、費用與流程邏輯，一律寫成「直接呼叫函式」的行為測試（見 `tests/game-logic.test.mjs`，以 `tests/helpers/load-app-module.mjs` 載入 TypeScript 模組）。
+- 用正規式比對原始碼，只限於架構守則，例如「共用元件不可出現 `species ===`」「大型畫面須保留動態載入」。不可用來鎖定某一行實作寫法。
 
 ### 回報格式
 

@@ -22,6 +22,7 @@ export const birdAssets = {
     water: "/assets/bird/room/water-bowl.webp",
     toy: "/assets/bird/room/chew-toy.webp",
     climbingToy: "/assets/bird/room/climbing-toy.webp",
+    sleepingTent: "/assets/bird/room/parrot-nest.webp",
     tray: "/assets/bird/room/feces-tray.webp",
     thermometer: "/assets/bird/room/thermometer.webp",
     plant: "/assets/bird/room/toxic-plant.webp",

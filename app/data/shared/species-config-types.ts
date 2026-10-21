@@ -42,7 +42,9 @@ export type RoomFlowConfig = {
   interiorBackgroundAspectRatio?: "match-room" | string; floorHazardId: string; safeWhenAllHazards?: boolean;
   fenceItemId?: string; interiorItemId?: string; outsideItemIds?: readonly string[]; entryRequiredItemIds?: readonly string[];
   floorHotspot: { desktop: { x: number; y: number; width: number; height: number }; mobile: { x: number; y: number; width: number; height: number } };
-  copy: { fenceInstruction?: string; fencePlacedInstruction?: string; entryReadyInstruction?: string; interiorInstruction?: string; completeInstruction?: string; hazardInstruction?: string; lockedInstruction?: string; entryLabel?: string };
+  copy: { fenceInstruction?: string; fencePlacedInstruction?: string; entryReadyInstruction?: string; interiorInstruction?: string; completeInstruction?: string; hazardInstruction?: string; lockedInstruction?: string;
+    /** 內部用品因 interiorUnlockItemId 尚未放置而鎖定時的提示；未提供時沿用 lockedInstruction。 */
+    interiorLockedInstruction?: string; entryLabel?: string };
 };
 
 export type SpeciesGameConfig = {

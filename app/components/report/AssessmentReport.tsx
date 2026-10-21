@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Report artwork is consumed by the capture/export flow and must retain native image rendering. */
 
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { money } from "../../data/shared/expenses";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
@@ -51,9 +51,29 @@ function HomeReadinessReviewText({ segments, petName, species }: { segments: Hom
 }
 
 function CareReviewRichText({ blocks, petName, species }: { blocks: HomeReadinessTextBlock[]; petName: string; species?: string }) {
-  const paragraphs = blocks.filter((block) => block.type === "paragraph");
-  const items = blocks.filter((block) => block.type === "item");
-  return <>{paragraphs.map((block, index) => <p key={`paragraph-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} species={species} /></p>)}{items.length > 0 && <ul>{items.map((block, index) => <li key={`item-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} species={species} /></li>)}</ul>}</>;
+  const content: ReactNode[] = [];
+  let index = 0;
+
+  // 保留資料中的段落與清單順序；MD 使用 1、2、3 的內容以有序清單呈現。
+  while (index < blocks.length) {
+    const block = blocks[index];
+    if (block.type === "paragraph") {
+      content.push(<p key={`paragraph-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} species={species} /></p>);
+      index += 1;
+      continue;
+    }
+
+    const listType = block.type;
+    const listItems: HomeReadinessTextBlock[] = [];
+    while (index < blocks.length && blocks[index].type === listType) {
+      listItems.push(blocks[index]);
+      index += 1;
+    }
+    const items = listItems.map((itemBlock, itemIndex) => <li key={`${listType}-${index - listItems.length + itemIndex}`}><HomeReadinessReviewText segments={itemBlock.segments} petName={petName} species={species} /></li>);
+    content.push(listType === "ordered-item" ? <ol key={`${listType}-${index}`}>{items}</ol> : <ul key={`${listType}-${index}`}>{items}</ul>);
+  }
+
+  return <>{content}</>;
 }
 
 function ReviewAlertIcon() {
@@ -372,10 +392,10 @@ export function AssessmentReport({
           <h2>預估支出</h2>
           <div className="care-a4-expense-cards">
             <section className="care-a4-expense-card">
-              <h3>初期準備金</h3><strong>NT$ {money.format(initialPreparationTotal)}</strong>
+              <h3>初期準備金</h3><strong>NT$ {money.format(initialPreparationTotal)}+</strong>
               <p className="care-a4-expense-summary-copy">第一次需要準備的總金額，包含：</p>
               <dl className="care-a4-expense-summary-lines">
-                <div><dt>{initialPreparationBreakdown.afterArrival.label}</dt><dd>NT$ {money.format(initialPreparationBreakdown.afterArrival.total)}</dd></div>
+                <div><dt>{initialPreparationBreakdown.afterArrival.label}</dt><dd>NT$ {money.format(initialPreparationBreakdown.afterArrival.total)}+</dd></div>
                 <div><dt>{initialPreparationBreakdown.environment.label}</dt><dd>NT$ {money.format(initialPreparationBreakdown.environment.total)}</dd></div>
                 <div><dt>{initialPreparationBreakdown.departure.label}</dt><dd>NT$ {money.format(initialPreparationBreakdown.departure.total)}</dd></div>
               </dl>
@@ -447,7 +467,7 @@ export function AssessmentReport({
               <div className="care-review-mastered-theme-grid">
                 {group.themes.map((theme) => <article key={theme.id}>
                   <span aria-hidden="true">✓</span>
-                  <div><b>{theme.title}</b><p><HomeReadinessReviewText segments={[{ text: theme.summary }]} petName={petName} species={species} /></p></div>
+                  <div><b>{theme.title}</b><p>{/* 照顧觀念說明以一般字重呈現，不套用資料中的粗體標記。 */}{interpolatePetName(theme.summary, petName, species).replaceAll("**", "")}</p></div>
                 </article>)}
               </div>
             </section>)}
@@ -466,7 +486,7 @@ export function AssessmentReport({
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
           <div className="care-resource-grid">
-            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><section><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></section><section><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}</b></section></div><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
+            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><section><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></section><section><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}+</b></section></div><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
             <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><section className="care-time-summary"><small>每日約需安排</small><b>{dailyCareDurationLabel(speciesConfig.report.dailyCareTime)}</b></section><button type="button" className="secondary care-expense-button" onClick={() => setDailyCareDetailsOpen(true)}>查看每日照護細項</button></div></article>
           </div>
         </section>

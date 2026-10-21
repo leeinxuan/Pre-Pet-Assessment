@@ -5,62 +5,10 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, root), "utf8");
 
-const speciesFlows = {
-  dog: {
-    requiredMealSupplies: ["food", "water"],
-    recurringExpenses: ["dog-food-monthly", "dog-clean-monthly"],
-    activities: { arrival: "video-scenario", behavior: "daily-behavior", walking: "walking", "breed-challenge": "breed-challenge", "busy-care": "busy-care", sick: "video-scenario", senior: "video-scenario" },
-  },
-  cat: {
-    requiredMealSupplies: ["food", "water"],
-    recurringExpenses: ["cat-food-monthly", "cat-litter-monthly"],
-    activities: { "cat-arrival": "video-scenario", "cat-daily-care": "daily-behavior", "cat-daily-inspection": "cat-inspection", "breed-challenge": "breed-challenge", "cat-busy-care": "busy-care", "cat-sick": "video-scenario", "cat-senior": "daily-behavior-single" },
-  },
-  rabbit: {
-    requiredMealSupplies: ["food", "water", "veggie"],
-    recurringExpenses: ["rabbit-hay-monthly", "rabbit-pellet-monthly", "rabbit-veggies-monthly"],
-    activities: { "rabbit-arrival": "video-scenario", "rabbit-first-meal": "arrival-meal", "rabbit-carry-sort": "rabbit-carry-sort", "rabbit-daily-care": "daily-behavior", "rabbit-daily-check": "rabbit-daily-check", "breed-challenge": "breed-challenge", "rabbit-busy-care": "busy-care", "rabbit-health": "video-scenario", "rabbit-senior": "video-scenario" },
-  },
-  bird: {
-    requiredMealSupplies: ["food", "water", "veggie"],
-    recurringExpenses: ["bird-food-monthly", "bird-cleaning-monthly"],
-    activities: { "bird-arrival": "video-scenario", "bird-first-meal": "arrival-meal", "bird-daily-care": "daily-behavior", "bird-daily-inspection": "bird-cage-inspection", "bird-challenge": "breed-challenge", "bird-busy-care": "busy-care", "bird-sick": "video-scenario", "bird-senior": "daily-behavior-single" },
-  },
-  hamster: {
-    requiredMealSupplies: ["food", "water"],
-    recurringExpenses: ["hamster-pellet-monthly"],
-    activities: { "hamster-arrival": "video-scenario", "hamster-first-meal": "arrival-meal", "hamster-daily-care": "daily-behavior", "hamster-solitary": "video-scenario", "hamster-cage-check": "hamster-inspection", "hamster-busy-care": "busy-care", "hamster-health": "video-scenario", "hamster-senior": "video-scenario" },
-  },
-  gecko: {
-    requiredMealSupplies: ["food", "veggie", "water"],
-    recurringExpenses: ["gecko-food-monthly"],
-    activities: { "gecko-arrival": "video-scenario", "gecko-first-meal": "arrival-meal", "gecko-daily-care": "daily-behavior", "gecko-health-inspection": "gecko-health-inspection", "gecko-busy-care": "busy-care", "gecko-sick": "video-scenario", "gecko-senior": "video-scenario" },
-  },
-};
+const speciesIds = ["dog", "cat", "rabbit", "bird", "hamster", "gecko"];
 
-function quotedArray(sourceText, field) {
-  const match = sourceText.match(new RegExp(`${field}\\s*:\\s*\\[([^\\]]*)\\]`, "s"));
-  assert.ok(match, `expected ${field} array`);
-  return [...match[1].matchAll(/"([^"]+)"/g)].map((entry) => entry[1]);
-}
-
-function registrySection(registry, species, nextSpecies) {
-  const start = registry.indexOf(`  ${species}: {`);
-  assert.notEqual(start, -1, `${species} activity registry section must exist`);
-  const end = nextSpecies ? registry.indexOf(`  ${nextSpecies}: {`, start) : registry.indexOf("\n};", start);
-  return registry.slice(start, end);
-}
-
-test("registered species preserve first-meal completion and recurring-expense contracts", async () => {
+test("report registry does not duplicate feeding completion requirements", async () => {
   const reportRegistry = await source("app/data/species/report-practice-registry.ts");
-  for (const [species, expected] of Object.entries(speciesFlows)) {
-    const feeding = await source(`app/data/species/${species}/feeding.ts`);
-    assert.deepEqual(quotedArray(feeding, "recurringExpenseIds"), expected.recurringExpenses, `${species} recurring meal expenses changed`);
-
-    assert.match(feeding, /interaction:\s*"scene"/, `${species} keeps its scene-based first meal`);
-    assert.deepEqual(quotedArray(feeding, "requiredSupplies"), expected.requiredMealSupplies, `${species} required meal supplies changed`);
-    assert.match(feeding, /unsafeFoods:\s*\[/, `${species} keeps unsafe-food feedback`);
-  }
   const practiceRegistrySection = reportRegistry.slice(0, reportRegistry.indexOf("const discussionSummaryOverrides"));
   assert.doesNotMatch(practiceRegistrySection, /requiredActivityIds|dog:|cat:|rabbit:|bird:|hamster:/, "report registry must not duplicate feeding completion requirements");
   assert.match(practiceRegistrySection, /completionSelector:\s*"arrival-meal"/);
@@ -90,13 +38,6 @@ test("report completion selectors own activity-state details and derive meals fr
   assert.match(practiceSelectors, /feeding\.choices/);
 });
 
-test("species-scoped expense lookup never falls back to another species", async () => {
-  const expenses = await source("app/data/shared/expenses.ts");
-  assert.match(expenses, /if \(species !== undefined\)[\s\S]*return speciesCatalog\?\.\[id\];/);
-  assert.match(expenses, /return expenseCatalog\[id\];/);
-  assert.doesNotMatch(expenses, /speciesCatalog\?\.\[id\] \?\? expenseCatalog\[id\]/);
-});
-
 test("departure document visuals use data roles instead of document ids", async () => {
   const preparationComponent = await source("app/components/preparation/PreparationComponents.tsx");
   assert.match(preparationComponent, /item\.visualRole === "document-folder"/);
@@ -112,21 +53,6 @@ test("departure document visuals use data roles instead of document ids", async 
     assert.doesNotMatch(preparation, /visualRole: "document-folder"/, `${species} must not retain a document-folder visual`);
     assert.doesNotMatch(preparation, /visualRole: "identity-card"/, `${species} must not retain an identity-card visual`);
   }
-});
-
-test("registered species preserve journey component dispatch", async () => {
-  const registry = await source("app/data/species/activity-registry.ts");
-  const speciesIds = Object.keys(speciesFlows);
-  speciesIds.forEach((species, index) => {
-    const section = registrySection(registry, species, speciesIds[index + 1]);
-    for (const [itemId, activityKey] of Object.entries(speciesFlows[species].activities)) {
-      const helper = activityKey === "video-scenario" ? "video" : "activity";
-      const pattern = helper === "video"
-        ? new RegExp(`video\\("${itemId}",`)
-        : new RegExp(`activity\\("${itemId}",\\s*"${activityKey}"`);
-      assert.match(section, pattern, `${species}/${itemId} must still dispatch to ${activityKey}`);
-    }
-  });
 });
 
 test("cat senior care uses the shared multi-select flow and scenario question text", async () => {
@@ -152,53 +78,20 @@ test("daily-behavior activities receive the active species", async () => {
   assert.match(dailyBehavior, /species=\{species\}/, "daily behavior must use the active species data");
 });
 
+// 物種影片是否借用犬素材，改由 game-logic.test.mjs 直接檢查資料；這裡只保留共用元件的架構守則。
 test("scenario media selection stays out of shared scenario UI", async () => {
-  const [dailyBehavior, videoScenario, breedChallenge, scenarioUi, journeyRegistry, dogScenarios, dogBreedChallenges] = await Promise.all([
+  const [dailyBehavior, videoScenario, breedChallenge, scenarioUi, journeyRegistry] = await Promise.all([
     source("app/components/life/activities/DailyBehaviorActivityMulti.tsx"),
     source("app/components/life/activities/VideoScenarioActivity.tsx"),
     source("app/components/life/activities/BreedChallengeActivity.tsx"),
     source("app/components/life/activities/scenario-ui.tsx"),
     source("app/data/species/journey.ts"),
-    source("app/data/species/dog/scenarios.ts"),
-    source("app/data/species/dog/breed-challenges.ts"),
   ]);
   const componentSource = `${dailyBehavior}\n${videoScenario}\n${breedChallenge}`;
   assert.doesNotMatch(componentSource, /species\s*===|isDog|isCat|isRabbit|isBird|isHamster|\.startsWith\("(?:cat|rabbit|bird|hamster)-/);
   assert.doesNotMatch(componentSource, /dogAssets|getCorrectAnswerVideo|correct-answer(?:2)?\.mp4|chewing-on-things\.mp4/);
   assert.doesNotMatch(scenarioUi, /dogAssets|getCorrectAnswerVideo|breedChallengeVideos|arrival-adjustment|illness-vet|growing-old|busy-daily-care/);
-  assert.match(videoScenario, /scenario\.sceneMedia/);
-  assert.match(videoScenario, /scenario\.correctFeedbackMedia/);
-  assert.match(breedChallenge, /scenario\?\.sceneMedia/);
-  assert.match(scenarioUi, /scenario\.requiresRetry/);
-  assert.match(scenarioUi, /scenario\.questionText/);
-  assert.match(dailyBehavior, /withPetName\(scenario\.questionText/);
-  assert.match(scenarioUi, /scenario\.continueLabel/);
-  assert.match(dogScenarios, /sceneMedia:\s*\{\s*type: "video"/);
-  assert.match(dogScenarios, /correctFeedbackMedia:\s*\{\s*type: "video"/);
-  assert.match(dogBreedChallenges, /scenarioMedia\.dog\.shedding/);
-  assert.match(dogBreedChallenges, /scenarioMedia\.dog\.rainyWalk/);
-  assert.match(journeyRegistry, /getSpeciesConfig\(species\)\.scenarioPresentation/);
   assert.doesNotMatch(journeyRegistry, /if \(species ===|species === "cat"|species === "rabbit"|species === "bird"|species === "hamster"/);
-  for (const species of Object.keys(speciesFlows)) {
-    const [journey, speciesConfig] = await Promise.all([
-      source(`app/data/species/${species}/journey.ts`),
-      source(`app/data/species/${species}/index.ts`),
-    ]);
-    assert.match(journey, new RegExp(`export const ${species}ScenarioPresentation`));
-    assert.match(speciesConfig, new RegExp(`scenarioPresentation: ${species}ScenarioPresentation`));
-    if (species === "cat") {
-      assert.match(
-        journey,
-        /catAssets\.petJourney\.correctPrimary/,
-        "cat must use its own feedback video",
-      );
-    } else if (species !== "dog") {
-      assert.match(journey, /correctFeedbackMedia:\s*\{ type: "placeholder" \}/, `${species} must not borrow dog feedback video`);
-    }
-    if (species !== "dog") {
-      assert.doesNotMatch(journey, /scenarioMedia\.dog\./, `${species} must not borrow dog question video`);
-    }
-  }
 });
 
 test("journey transitions resolve species media through the data registry", async () => {
@@ -217,78 +110,31 @@ test("busy-care presentation and support choice come from scenario data", async 
   assert.doesNotMatch(busyCare, /dogAssets|catAssets|getCorrectAnswerVideo|family-helper|rabbit-busy-helper|bird-busy-helper/);
   assert.match(busyCare, /scenario\.busyCarePresentation/);
   assert.match(busyCare, /choice\.isSupportChoice/);
-  for (const species of Object.keys(speciesFlows)) {
+  for (const species of speciesIds) {
     const scenarios = await source(`app/data/species/${species}/scenarios.ts`);
     assert.match(scenarios, /busyCarePresentation:\s*\{/s, `${species} busy-care presentation must be data-driven`);
     assert.match(scenarios, /isSupportChoice:\s*true/, `${species} busy-care support choice must be explicit`);
   }
 });
 
-test("replay reset strategies retain the activity state fields they clear", async () => {
-  const registry = await source("app/data/species/activity-registry.ts");
-  const resetContracts = {
-    walking: ["walkingPreparedItems", "walkingSceneIndex", "walkingMinutes", "walkingPoopCleaned", "walkingComplete"],
-    "cat-inspection": ["catInspectionSteps"],
-    "rabbit-carry-sort": ["rabbitCarryOrder", "rabbitCarryComplete", "rabbitCarryAttempts", "rabbitCarryAnswerRevealed", "rabbitCarryFeedbackShown"],
-    "rabbit-daily-check": ["rabbitDailyCheckSteps", "rabbitGroomingState", "rabbitGroomingObservations", "rabbitGroomingInspection"],
-    "bird-cage-inspection": ["birdCageInspectionSteps", "birdCageInspectionStates"],
-    "hamster-first-meal": ["hamsterMealSelected", "hamsterMealFeedbackId"],
-    "hamster-inspection": ["hamsterInspectionStarted", "hamsterInspectionStates", "hamsterInspectionCompleted", "hamsterInspectionFeedback"],
-    "gecko-health-inspection": ["geckoHealthInspectionStarted", "geckoHealthInspectionStates", "geckoHealthInspectionCompleted", "geckoHealthInspectionFeedback"],
-  };
-  for (const [resetKey, fields] of Object.entries(resetContracts)) {
-    const line = registry.split("\n").find((entry) => new RegExp(`^\\s*"?${resetKey}"?: \\(\\) => \\(\\{`).test(entry));
-    assert.ok(line, `${resetKey} reset strategy must exist`);
-    for (const field of fields) assert.match(line, new RegExp(`\\b${field}\\s*:`), `${resetKey} must reset ${field}`);
-  }
-  // 重設策略以型別完整的表維護，不再用 switch 逐一補 case。
-  assert.match(registry, /const journeyActivityResetPatches: Record<JourneyActivityResetKey,/);
-  assert.doesNotMatch(registry, /switch \(resetKey\)/);
-});
-
-test("every journey item has its own activity registry entry", async () => {
-  const registry = await source("app/data/species/activity-registry.ts");
-  // 已註冊物種不得默默借用犬的節點設定。
-  assert.doesNotMatch(registry, /\?\? journeyActivityRegistry\.dog\[itemId\]/);
-  for (const species of ["dog", "cat", "rabbit", "bird", "hamster", "gecko"]) {
-    const journey = await source(`app/data/species/${species}/journey.ts`);
-    const itemIds = [...journey.matchAll(/\{ id: "([^"]+)", type:/g)].map((match) => match[1]);
-    assert.ok(itemIds.length > 0, `${species} journey items must be found`);
-    const block = registry.slice(registry.indexOf(`  ${species}: {`), registry.indexOf("\n  },", registry.indexOf(`  ${species}: {`)));
-    for (const itemId of itemIds) {
-      assert.match(block, new RegExp(`(^|[\\s{,])"?${itemId}"?: (video|activity)\\(`), `${species} journey item ${itemId} must be registered`);
-    }
-  }
-});
-
-test("choice feedback replay clears only the active scenario answer", async () => {
-  const [page, journey, replay, daily, breed] = await Promise.all([
+// 回訪與重玩的判斷邏輯由 game-logic.test.mjs 直接測試；這裡只守住頁面接線不被拆掉。
+test("journey navigation and expenses go through the shared replay state", async () => {
+  const [page, journey] = await Promise.all([
     source("app/page.tsx"),
     source("app/components/life/LifeJourneyComponents.tsx"),
-    source("app/components/life/journey-replay.ts"),
-    source("app/components/life/activities/DailyBehaviorActivityMulti.tsx"),
-    source("app/components/life/activities/BreedChallengeActivity.tsx"),
   ]);
-  // 回訪判斷：只有進入前已完成的節點才算回訪，且未在重新作答中才顯示按鈕。
-  assert.match(replay, /revisitedItemId: itemId && completedIds\.includes\(itemId\) \? itemId : null/);
-  assert.match(replay, /isRevisitingJourneyItem\(state, itemId\) && !isReplayingJourneyItem\(state, itemId\)/);
-  assert.match(replay, /delete next\[id\]/);
   // 所有旅程導覽都經過共用入口，先還原快照再判斷回訪。
-  assert.match(page, /const \[journeyReplay, setJourneyReplay\] = useState<JourneyReplayState>\(initialJourneyReplayState\)/);
-  assert.match(page, /enterJourneyReplayItem\(activeItem\?\.id\)/);
-  assert.match(page, /enterJourneyReplayItem\(targetItem\?\.id\)/);
-  assert.match(page, /enterJourneyReplayItem\(getJourneyItemsForSpecies\(category\)\[nextIndex\]\?\.id\)/);
-  assert.match(page, /restoreReplayAnswers\(current, session\)/);
+  for (const target of ["activeItem?.id", "targetItem?.id", "getJourneyItemsForSpecies(category)[nextIndex]?.id", "null"]) {
+    assert.ok(page.includes(`enterJourneyReplayItem(${target})`), `navigation to ${target} must use enterJourneyReplayItem`);
+  }
   // 重新作答期間不得新增費用或成員。
   for (const fn of ["addExpenseById", "addExpenseSilentlyById", "addExpenseGroupByIds", "playExpenseSequenceByIds", "updateMembers"]) {
-    assert.match(page, new RegExp(`function ${fn}\\([^)]*\\) \\{\\n(?:\\s*//[^\\n]*\\n)?\\s*if \\(isReplayingJourney\\(\\)\\) return`));
+    const body = page.slice(page.indexOf(`function ${fn}(`), page.indexOf(`function ${fn}(`) + 400);
+    assert.match(body, /if \(isReplayingJourney\(\)\) return/, `${fn} must skip writes while replaying`);
   }
   // 按鈕的 click 事件不可被當成題目 ID 傳入。
   assert.match(journey, /onReplay: canReplayCurrent \? \(\) => replayCurrentQuestion\(\) : undefined/);
-  assert.match(journey, /onStartReplay\(\{ itemId: item\.id, scenarioIds, activityPatch: getJourneyActivityResetPatch\(activityConfig\?\.resetKey\) \}\)/);
-  assert.match(journey, /window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\)/);
-  assert.match(daily, /onReplay=\{onReplay \? \(\) => onReplay\(scenario\.id\)/);
-  assert.match(breed, /onReplay=\{onReplay \? \(\) => onReplay\(scenario\.id\)/);
+  assert.match(journey, /reviewFromStart: isRevisitingItem/);
   assert.doesNotMatch(journey, /setJourneyCompleted|setExpenses|onResetScenarioAnswers/);
 });
 

@@ -1,0 +1,294 @@
+{
+  "appFlow": {
+    "categories": [
+      {
+        "active": true,
+        "icon": "🐕",
+        "id": "dog",
+        "image": "/assets/species/dog.webp",
+        "label": "犬"
+      },
+      {
+        "active": true,
+        "icon": "🐈",
+        "id": "cat",
+        "image": "/assets/species/cat.webp",
+        "label": "貓"
+      },
+      {
+        "active": true,
+        "icon": "🐇",
+        "id": "rabbit",
+        "image": "/assets/species/rabbit.webp",
+        "label": "兔子"
+      },
+      {
+        "active": true,
+        "icon": "🦜",
+        "id": "bird",
+        "image": "/assets/species/bird.webp",
+        "label": "鸚鵡"
+      },
+      {
+        "active": true,
+        "icon": "🦎",
+        "id": "gecko",
+        "image": "/assets/species/reptile.webp",
+        "label": "小型地棲性守宮"
+      },
+      {
+        "active": true,
+        "icon": "🐹",
+        "id": "hamster",
+        "image": "/assets/species/hamster.webp",
+        "label": "倉鼠"
+      }
+    ],
+    "initialMembers": [
+      {
+        "age": null,
+        "id": "player",
+        "isPlayer": true,
+        "name": ""
+      }
+    ],
+    "initialProfile": {
+      "activitySpace": [],
+      "age": "",
+      "backupSupport": null,
+      "careHours": "",
+      "currentCatCount": "",
+      "currentDogCount": "",
+      "currentOther": "",
+      "currentPetTypes": [],
+      "currentPets": "",
+      "emergencyFund": null,
+      "experience": "",
+      "experienceNote": "",
+      "hasHousemates": null,
+      "hasSensitiveHouseholdMembers": false,
+      "homeSpaceImage": "",
+      "homeSpaceImageName": "",
+      "homeSpaceImageNames": [],
+      "homeSpaceImages": [],
+      "hoursAway": "",
+      "housemateList": [],
+      "housemateTypes": [],
+      "housematesConsent": null,
+      "housing": "",
+      "landlordConsent": "",
+      "monthlyBudget": "",
+      "noShibaExperience": false,
+      "otherActivitySpace": "",
+      "otherHousemate": "",
+      "pastCatCount": "",
+      "pastDogCount": "",
+      "pastOther": "",
+      "pastPetTypes": [],
+      "pastPets": "",
+      "reasonOther": "",
+      "reasons": [],
+      "role": "",
+      "roleOther": ""
+    },
+    "intros": [
+      {
+        "body": "先選定物種，理解牠未來可能需要的生活節奏。",
+        "icon": "pet",
+        "tip": "",
+        "title": "選擇夥伴"
+      },
+      {
+        "body": "整理生活空間、接回用品與基本照顧安排，讓到家第一天更安穩。",
+        "icon": "home",
+        "tip": "",
+        "title": "飼養前準備"
+      },
+      {
+        "body": "從安全搭車到第一次進門，用穩定的步調陪牠認識新環境。",
+        "icon": "car",
+        "tip": "",
+        "title": "接牠回家"
+      },
+      {
+        "body": "把飲食、散步、清潔與互動，慢慢變成每天做得到的節奏。",
+        "icon": "sun",
+        "tip": "",
+        "title": "日常照護"
+      },
+      {
+        "body": "當食慾、精神或身體狀況改變時，學會記錄並找專業協助。",
+        "icon": "health",
+        "tip": "",
+        "title": "健康觀察"
+      },
+      {
+        "body": "忙碌、搬家或高齡階段來臨時，重新安排照顧與支援。",
+        "icon": "change",
+        "tip": "",
+        "title": "生活變化"
+      },
+      {
+        "body": "把你的生活條件補齊，讓提醒更貼近真實照顧狀況。",
+        "icon": "note",
+        "tip": "",
+        "title": "資料補充"
+      },
+      {
+        "body": "將這趟練習整理成清單，帶著具體重點回到現實生活。",
+        "icon": "check",
+        "tip": "",
+        "title": "照顧總覽"
+      }
+    ],
+    "previousPetHistoryCopy": {
+      "hasPreviousHint": "接著填寫以前養過的寵物名字",
+      "noPreviousHint": "直接開始這次的飼養前準備",
+      "oldPetNameLabel": "以前養過的寵物名字",
+      "oldPetNamePlaceholder": "例如：豆豆"
+    },
+    "scenarioStages": {
+      "3": {
+        "end": 2,
+        "start": 0
+      },
+      "4": {
+        "end": 8,
+        "start": 3
+      },
+      "5": {
+        "end": 11,
+        "start": 9
+      },
+      "6": {
+        "end": 15,
+        "start": 12
+      }
+    },
+    "stations": [
+      [
+        "01",
+        "選擇寵物",
+        "遇見想領養的牠"
+      ],
+      [
+        "02",
+        "飼養前準備",
+        "為牠準備一個家"
+      ],
+      [
+        "03",
+        "飼養生活",
+        "從接回家到長期陪伴"
+      ],
+      [
+        "04",
+        "飼養觀念回顧",
+        "把練習整理成清單"
+      ],
+      [
+        "05",
+        "取得寵物",
+        "銜接合法領養與購買資訊"
+      ]
+    ]
+  },
+  "resetPatches": {
+    "bird-cage-inspection": {
+      "birdCageInspectionCompleted": false,
+      "birdCageInspectionIntroStarted": false,
+      "birdCageInspectionStates": {},
+      "birdCageInspectionSteps": []
+    },
+    "breed-challenge": "<undefined>",
+    "busy-care": "<undefined>",
+    "cat-inspection": {
+      "catInspectionIntroStarted": false,
+      "catInspectionSteps": []
+    },
+    "daily-behavior": "<undefined>",
+    "gecko-first-meal": "<undefined>",
+    "gecko-health-inspection": {
+      "geckoHealthInspectionCompleted": [],
+      "geckoHealthInspectionFeedback": {},
+      "geckoHealthInspectionStarted": false,
+      "geckoHealthInspectionStates": {}
+    },
+    "hamster-first-meal": {
+      "hamsterMealFeedbackId": "",
+      "hamsterMealSelected": []
+    },
+    "hamster-inspection": {
+      "hamsterInspectionCompleted": [],
+      "hamsterInspectionFeedback": {},
+      "hamsterInspectionStarted": false,
+      "hamsterInspectionStates": {}
+    },
+    "rabbit-carry-sort": {
+      "rabbitCarryAnswerRevealed": false,
+      "rabbitCarryAttempts": 0,
+      "rabbitCarryComplete": false,
+      "rabbitCarryFeedbackShown": false,
+      "rabbitCarryOrder": []
+    },
+    "rabbit-daily-check": {
+      "rabbitDailyCheckSteps": [],
+      "rabbitGroomingInspection": {},
+      "rabbitGroomingIntroStarted": false,
+      "rabbitGroomingObservations": {},
+      "rabbitGroomingState": "part-1-step-1-head-ears"
+    },
+    "walking": {
+      "catInspectionSteps": [],
+      "walkingComplete": false,
+      "walkingMinutes": 0,
+      "walkingPoopCleaned": false,
+      "walkingPreparedItems": [],
+      "walkingSceneIndex": 0
+    }
+  },
+  "speciesCategories": [
+    {
+      "active": true,
+      "icon": "🐕",
+      "id": "dog",
+      "image": "/assets/species/dog.webp",
+      "label": "犬"
+    },
+    {
+      "active": true,
+      "icon": "🐈",
+      "id": "cat",
+      "image": "/assets/species/cat.webp",
+      "label": "貓"
+    },
+    {
+      "active": true,
+      "icon": "🐇",
+      "id": "rabbit",
+      "image": "/assets/species/rabbit.webp",
+      "label": "兔子"
+    },
+    {
+      "active": true,
+      "icon": "🦜",
+      "id": "bird",
+      "image": "/assets/species/bird.webp",
+      "label": "鸚鵡"
+    },
+    {
+      "active": true,
+      "icon": "🦎",
+      "id": "gecko",
+      "image": "/assets/species/reptile.webp",
+      "label": "小型地棲性守宮"
+    },
+    {
+      "active": true,
+      "icon": "🐹",
+      "id": "hamster",
+      "image": "/assets/species/hamster.webp",
+      "label": "倉鼠"
+    }
+  ]
+}

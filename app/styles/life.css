@@ -79,9 +79,14 @@
   font-weight: 800;
   line-height: 1.75;
 }
-.busy-care-energy-reflection .busy-care-slogan { display: block; max-width: 100%; margin: 0; color: #67470d; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(18px, 2.2vw, 22px); font-weight: 950; line-height: 1.45; text-wrap: balance; }
-.busy-care-reflection-title { display: flex; align-items: center; gap: 9px; margin: 22px 0 8px !important; color: #67470d !important; font-size: 15px !important; font-weight: 900 !important; }
-.busy-care-reflection-title > span { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 50%; background: rgba(255,255,255,.65); font-size: 18px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(177,122,15,.2); }
+/* 忙碌備援完成頁的省思區：上方是引言式標語，下方以淺色內卡收納「留給自己的一個問題」。 */
+.busy-care-energy-reflection { padding: 22px 24px; border-color: #e3bd6c; background: linear-gradient(160deg, #fff8e1 0%, #fff0c6 100%); }
+.busy-care-energy-reflection .busy-care-slogan { display: block; max-width: 100%; margin: 0; padding: 2px 0 2px 16px; border-left: 4px solid #e0a21d; color: #67470d; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(18px, 2vw, 21px); font-weight: 900; line-height: 1.6; text-wrap: pretty; }
+.busy-care-reflection-question { margin-top: 18px; padding: 14px 16px 16px; border: 1px solid rgba(216, 170, 75, .45); border-radius: 14px; background: rgba(255, 255, 255, .72); }
+.busy-care-reflection-title { display: flex; align-items: center; gap: 8px; margin: 0 0 8px !important; color: #8a5d0c !important; font-size: 14px !important; font-weight: 900 !important; letter-spacing: .04em; }
+.busy-care-reflection-title > span { display: grid; width: 26px; height: 26px; flex: 0 0 26px; place-items: center; border-radius: 50%; background: #fff4ce; font-size: 15px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(177,122,15,.25); }
+.busy-care-completion-content .busy-care-reflection-question p + p { margin-top: 4px; }
+.busy-care-energy-reflection .busy-care-reflection-question p:not(.busy-care-reflection-title) { color: #5d4a22; font-size: 15px; font-weight: 700; line-height: 1.8; }
 .busy-care-completion-content { display: grid; gap: 16px; }
 .busy-care-completion-content .busy-care-warm-note { margin: 0; }
 .busy-care-completion-content .busy-care-warm-note p + p { margin-top: 10px; }

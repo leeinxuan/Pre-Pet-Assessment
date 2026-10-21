@@ -11,6 +11,7 @@ import { getSpeciesConfig, speciesCategories } from "../../data/species/index";
 import { interpolatePetName } from "../../data/shared/pet-text";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
 import { useDialogFocus } from "./useDialogFocus";
+import { useTestModeEntry } from "./useTestModeEntry";
 
 export function StepHeading({ title, body }: { title: string; body?: string }) {
   return <div className="step-heading"><h1>{title}</h1>{body && <p>{body}</p>}</div>;
@@ -265,6 +266,7 @@ export function StageRail({
 }
 
 export function Welcome({ onStart, onTestStart }: { onStart: () => void; onTestStart: () => void }) {
+  const showTestEntry = useTestModeEntry();
   return (
     <section className="welcome" aria-label="伴日子新手村封面">
       <div className="welcome-hero-copy">
@@ -284,7 +286,7 @@ export function Welcome({ onStart, onTestStart }: { onStart: () => void; onTestS
           <span className="welcome-house welcome-house--e" />
         </div>
       </div>
-      <button type="button" className="hidden-test-entry" aria-label="開啟測試模式" onClick={onTestStart}><span aria-hidden="true">·</span></button>
+      {showTestEntry && <button type="button" className="hidden-test-entry" aria-label="開啟測試模式" onClick={onTestStart}><span aria-hidden="true">·</span></button>}
     </section>
   );
 }
@@ -463,10 +465,9 @@ export function formatTemporaryExpenseAmount(expense: Pick<ExpenseRecord, "amoun
 export function formatTemporaryExpenseReserve(expenses: Pick<ExpenseRecord, "amount" | "maxAmount" | "maxAmountOpenEnded">[]) {
   const min = expenses.reduce((sum, item) => sum + item.amount, 0);
   const hasRange = expenses.some((item) => typeof item.maxAmount === "number");
-  if (!hasRange) return `建議預留 NT$ ${money.format(min)}`;
+  if (!hasRange) return `建議預留 NT$ ${money.format(min)}+`;
   const max = expenses.reduce((sum, item) => sum + (item.maxAmount ?? item.amount), 0);
-  const openEnded = expenses.some((item) => item.maxAmountOpenEnded);
-  return `建議預留 NT$ ${money.format(min)}～${money.format(max)}${openEnded ? "+" : ""}`;
+  return `建議預留 NT$ ${money.format(min)}～${money.format(max)}+`;
 }
 
 const expenseDetailGroupOrder: ExpenseDetailGroup[] = [
@@ -584,7 +585,7 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
     ? <strong className="knowledge-emphasis" key={`${part}-${index}`}>{part}</strong>
     : <span key={`${part}-${index}`}>{part}</span>);
   const renderItems = (items: ExpenseRecord[], showReserveAmount = false) => items.length ? (
-    <ul>{items.map((item) => <li key={item.id}><span className="expense-line-copy"><b>{item.name}</b>{item.description && <small className="expense-line-description">{renderExpenseDescription(item.description)}</small>}</span><strong className="expense-line-amount">{showReserveAmount ? formatTemporaryExpenseAmount(item) : `NT$ ${money.format(item.amount)}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
+    <ul>{items.map((item) => <li key={item.id}><span className="expense-line-copy"><b>{item.name}</b>{item.description && <small className="expense-line-description">{renderExpenseDescription(item.description)}</small>}</span><strong className="expense-line-amount">{showReserveAmount ? formatTemporaryExpenseAmount(item) : `NT$ ${money.format(item.amount)}${item.name === "到家後首次健康檢查" ? "+" : ""}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
   ) : <p>{expenseLabels.noGroupExpenses}</p>;
 
   return (
@@ -592,7 +593,7 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
       <section ref={modalRef} className="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-title" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}>
         <div className="expense-modal-head"><div><p className="eyebrow">{expenseLabels.detailEyebrow}</p><h2 id="expense-title">{expenseLabels.detailTitle}</h2></div><button onClick={onClose} aria-label={expenseLabels.closeDetails}>x</button></div>
         <div className="expense-modal-summary" aria-label="費用摘要">
-          <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}</b></div>
+          <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}+</b></div>
           <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
           <div className="expense-modal-summary-reserve"><small>{expenseLabels.temporaryMedical}</small>{temporaryExpenses.length > 0
             ? <><b>{formatTemporaryExpenseReserve(temporaryExpenses)}</b><small className="expense-temporary-reserve-note">{temporaryExpenseReserveNote}</small></>
@@ -600,14 +601,14 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
         </div>
         <div className="expense-groups">
           <section className="expense-group expense-group--initial">
-            <h3>{expenseLabels.initialPreparation}<span>NT$ {money.format(preparationTotal)}</span></h3>
+            <h3>{expenseLabels.initialPreparation}<span>NT$ {money.format(preparationTotal)}+</span></h3>
             <div className="expense-initial-subgroups">
               <section className="expense-initial-subgroup">
                 <h4>{expenseLabels.oneTimePrep}<span>NT$ {money.format(oneTimePreparationTotal)}</span></h4>
                 {renderItems(oneTimePreparationItems)}
               </section>
               <section className="expense-initial-subgroup">
-                <h4>{afterArrival.label}<span>NT$ {money.format(afterArrival.total)}</span></h4>
+                <h4>{afterArrival.label}<span>NT$ {money.format(afterArrival.total)}+</span></h4>
                 {renderItems(afterArrival.items)}
               </section>
             </div>

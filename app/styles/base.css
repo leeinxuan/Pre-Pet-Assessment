@@ -745,7 +745,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-review-mastered-theme-grid article.is-pending > span { background: #f3eee4; color: #907c5d; }.care-review-mastered-theme-grid article.is-pending b { color: #6d604b; }
 .care-review-mastered-theme-grid article > div { min-width: 0; }
 .care-review-mastered-theme-grid b { color: #433926; }
-.care-review-mastered-theme-grid p { margin: 4px 0 0; color: #70644e; font-size: 14px; font-weight: 750; line-height: 1.6; }
+.care-review-mastered-theme-grid p { margin: 4px 0 0; color: #70644e; font-size: 14px; font-weight: 500; line-height: 1.6; }
 .care-review-empty { margin: 18px 0 0; color: var(--muted); font-weight: 800; }
 .care-review-all-clear { display: flex; gap: 12px; align-items: flex-start; margin-top: 18px; padding: 16px; border-radius: 16px; background: #f3faf3; color: #426246; }
 .care-review-all-clear > span { font-weight: 950; }

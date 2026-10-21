@@ -4,13 +4,13 @@ import type { RoomFlowConfig } from "../../shared/species-config-types";
 import { birdAssets } from "./assets";
 
 export const birdRoomDoorplatePlacement = {
-  desktop: { x: 33, y: 12, width: 28 },
+  desktop: { x: 40, y: 12, width: 28 },
   mobile: { x: 33, y: 20, width: 40 },
   mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
 } as const;
 
 export const birdRoomItems: RoomItem[] = [
-  { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；格柵間隙需依鳥體型選擇。" },
+  { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底；材質選白鐵，避免烤漆或鍍鋅。" },
   { id: "food-initial", label: "主食飼料", icon: "◈", image: birdAssets.room.initialFood, placement: { x: 55, y: 60, width: 10, layer: 4 }, required: false, need: "飲食", expenseId: "bird-food-initial", description: "依食性選購：種子飼料、滋養丸或吸蜜粉。" },
   {
     id: "perch-set", label: "不同材質的棲木", icon: "━", image: birdAssets.room.perch,
@@ -25,10 +25,11 @@ export const birdRoomItems: RoomItem[] = [
   },
   { id: "bird-food-bowl", label: "專用食碗", icon: "🥣", image: birdAssets.room.bowl, placement: { x: 85, y: 50, width: 30, layer: 4 }, required: true, need: "飲食", expenseId: "bird-food-bowl", description: "依食性提供專用飼料，並留意碗中是否只剩空殼。" },
   { id: "bird-water-bowl", label: "飲水器", icon: "💧", image: birdAssets.room.water, placement: { x: 77, y: 42, width: 30, layer: 3 }, required: true, need: "飲食", expenseId: "bird-water-bowl", description: "每天換水並清洗容器；避免過深容器造成跌落風險。" },
-  { id: "bird-chew-toy", label: "天然啃咬玩具", icon: "✦", image: birdAssets.room.toy, placement: { x: 68, y: 20, width: 35, layer: 4 }, required: false, need: "活動", expenseId: "bird-chew-toy", description: "木材、麻繩等天然材質可提供安全啃咬與紓壓。" },
+  { id: "bird-chew-toy", label: "天然啃咬玩具", icon: "✦", image: birdAssets.room.toy, placement: { x: 75, y: 20, width: 35, layer: 4 }, required: false, need: "活動", expenseId: "bird-chew-toy", description: "木材、麻繩等天然材質可提供安全啃咬與紓壓。" },
   { id: "bird-climbing-toy", label: "攀爬玩具", icon: "⌁", image: birdAssets.room.climbingToy, placement: { x: 12, y: 48, width: 40, layer: 4 }, required: false, need: "活動", expenseId: "bird-climbing-toy", description: "增加籠內活動與探索機會，定期輪換更有新鮮感。" },
+  { id: "bird-sleeping-tent", label: "布窩", icon: "⌂", image: birdAssets.room.sleepingTent, placement: { x: 55, y: 12, width: 30, layer: 4 }, required: false, need: "休息", expenseId: "bird-sleeping-tent", description: "提供遮蔽感與保暖，部分鸚鵡（尤其玄鳳）喜歡在布窩中休息；需定期清洗並修剪鬆脫線頭。" },
   { id: "bird-feces-tray", label: "籠底墊料", icon: "▤", image: birdAssets.room.tray, placement: { x: 50, y: 79, width: 28, layer: 3 }, required: true, need: "清潔", expenseIds: ["bird-feces-tray", "bird-cleaning-monthly"], description: "每天更換墊料，才能觀察糞便並維持環境衛生；可使用報紙、餐巾紙、紙棉等材質，避免使用有香氣的產品。" },
-  { id: "bird-thermometer", label: "溫度計", icon: "℃", image: birdAssets.room.thermometer, placement: { x: 38, y: 13, width: 20, layer: 4 }, required: false, need: "安全", expenseId: "bird-thermometer", description: "鳥對溫度變化敏感，需要具體數據協助調整環境。" },
+  { id: "bird-thermometer", label: "溫度計", icon: "℃", image: birdAssets.room.thermometer, placement: { x: 27, y: 16, width: 20, layer: 4 }, required: false, need: "安全", expenseId: "bird-thermometer", description: "鳥對溫度變化敏感，需要具體數據協助調整環境。" },
 ];
 
 export const birdHazards: HazardItem[] = [
@@ -43,7 +44,7 @@ export const birdHazards: HazardItem[] = [
 export const birdTrunkItems: TrunkItem[] = [
   { id: "bird-carrier", label: "外出籠／運輸箱", kind: "supply", image: birdAssets.preparation.carrier, visualScale: 1, preparedLabel: "已準備", description: "鳥必須在通風、堅固且間隙安全的外出籠中運送。", expenseIds: ["bird-carrier"], placement: { x: 45, y: 61, width: 25, layer: 5 } },
   { id: "cover-cloth", label: "遮光布／透氣布", kind: "supply", image: birdAssets.preparation.cover, preparedLabel: "已準備", description: "覆蓋外出籠可減少視覺刺激與緊迫。", expenseIds: ["bird-cover-cloth"], placement: { x: 45, y: 56, width: 22, layer: 6 } },
-  { id: "species-food", label: "少量飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", description: "途中備少量符合食性的飼料，從家中現有存糧取用即可。", placement: { x: 28, y: 63, width: 16, layer: 6 } },
+  { id: "species-food", label: "少量飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", expenseIds: ["bird-food-initial"], reusedExpenseIds: ["bird-food-initial"], description: "途中備少量符合食性的飼料，從家中現有存糧取用即可。", placement: { x: 28, y: 63, width: 16, layer: 6 } },
   { id: "water-supply", label: "飲水容器", kind: "supply", image: birdAssets.preparation.water, preparedLabel: "已準備", expenseIds: ["bird-water-supply"], description: "長途移動準備適量飲水，安全停靠時補充。", placement: { x: 57, y: 66, width: 12, layer: 6 } },
 ];
 export const birdRoomFlow: RoomFlowConfig = {

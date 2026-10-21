@@ -430,7 +430,7 @@ export type JourneyActivityConfig = {
 };
 
 export type GeckoHealthDisplayState = "normal" | "warning" | "shedding" | "stuck-shed";
-export type GeckoTemperatureState = "too-cold" | "too-hot";
+export type GeckoTemperatureState = "too-cold" | "too-hot" | "in-range";
 
 export type GeckoHealthInspectionChoice = {
   id: string;
@@ -705,7 +705,9 @@ export type TrunkItem = {
   description: string;
   preparedLabel: "已攜帶" | "已準備";
   expenseIds?: string[];
-  /** 已在前一個準備階段計入、此處僅重複使用的穩定費用 id。 */
+  /** 已在前一個準備階段計入、此處僅重複使用的穩定費用 id；畫面顯示「已於房間準備計入」。 */
   reusedExpenseIds?: string[];
+  /** 不需另外花費、也不是沿用房間費用時，在價格位置顯示的說明（例如「可使用紙捲」）。 */
+  priceNote?: string;
   placement: { x: number; y: number; width: number; layer: number };
 };

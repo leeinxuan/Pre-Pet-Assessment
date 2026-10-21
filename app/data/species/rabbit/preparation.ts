@@ -35,8 +35,8 @@ export const rabbitHazards: HazardItem[] = [
 export const rabbitTrunkItems: TrunkItem[] = [
   { id: "carrier", label: "安全外出籠／提袋", kind: "supply", image: rabbitAssets.preparation.carrier, visualScale: 1.3, preparedLabel: "已準備", expenseIds: ["rabbit-carrier"], description: "兔子必須在適當外出籠或提袋中運送，不可散放；籠內要能讓牠自然站立。", placement: { x: 45, y: 61, width: 25, layer: 5 } },
   // 可裁剪已在房間準備的防滑墊；沿用同一費用 ID，expense store 會自動去重。
-  { id: "anti-slip-liner", label: "防滑墊（籠內鋪底）", kind: "supply", image: rabbitAssets.preparation.antiSlipLiner, preparedLabel: "已準備", expenseIds: ["rabbit-anti-slip-mat"], description: "外出籠底部鋪防滑墊，可避免兔子在車輛晃動時滑倒受傷。", placement: { x: 45, y: 65, width: 26, layer: 4 } },
-  { id: "hay-in-carrier", label: "少量牧草（籠內放置）", kind: "supply", image: rabbitAssets.preparation.hay, preparedLabel: "已準備", description: "途中提供少量牧草，讓兔子可以進食與磨牙，也有助穩定情緒。", placement: { x: 53, y: 70, width: 12, layer: 6 } },
+  { id: "anti-slip-liner", label: "防滑墊（籠內鋪底）", kind: "supply", image: rabbitAssets.preparation.antiSlipLiner, preparedLabel: "已準備", expenseIds: ["rabbit-carrier-anti-slip-liner"], description: "外出籠底部鋪防滑墊，可避免兔子在車輛晃動時滑倒受傷。", placement: { x: 45, y: 65, width: 26, layer: 4 } },
+  { id: "hay-in-carrier", label: "少量牧草（籠內放置）", kind: "supply", image: rabbitAssets.preparation.hay, preparedLabel: "已準備", expenseIds: ["rabbit-hay-initial"], reusedExpenseIds: ["rabbit-hay-initial"], description: "途中提供少量牧草，讓兔子可以進食與磨牙，也有助穩定情緒。", placement: { x: 53, y: 70, width: 12, layer: 6 } },
   { id: "water-for-trip", label: "飲水容器", kind: "supply", image: rabbitAssets.preparation.waterSupply, preparedLabel: "已準備", expenseIds: ["rabbit-water-for-trip"], description: "長途或夏季移動時準備適量飲水；兔子緊張時可能減少進食，抵達後務必確認牠有喝水。", placement: { x: 57, y: 66, width: 12, layer: 5 } },
   { id: "cooling-pack", label: "保冷袋／冰袋（夏季必備）", kind: "supply", image: rabbitAssets.preparation.coolingPack, preparedLabel: "已準備", expenseIds: ["rabbit-cooling-pack"], description: "兔子非常怕熱，夏季外出需準備安全的降溫措施。", placement: { x: 28, y: 67, width: 15, layer: 5 } },
 ];
@@ -64,5 +64,5 @@ export const rabbitRoomFlow: RoomFlowConfig = {
 };
 
 export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌", placement: rabbitRoomDoorplatePlacement } };
-export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂", hidePriceForReusedItemIds: ["anti-slip-liner"] };
+export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂" };
 export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow, roomScene: rabbitRoomScene, departureScene: rabbitDepartureScene } as const;

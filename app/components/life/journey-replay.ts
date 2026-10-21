@@ -47,9 +47,14 @@ export function isReplayingJourneyItem(state: JourneyReplayState, itemId: string
   return state.session?.itemId === itemId;
 }
 
-/** 回訪已完成題目、且尚未開始重新作答時，才顯示「再玩一次」。 */
-export function canReplayJourneyItem(state: JourneyReplayState, itemId: string) {
-  return isRevisitingJourneyItem(state, itemId) && !isReplayingJourneyItem(state, itemId);
+/**
+ * 回訪已完成題目、且該題尚未重新作答時，才顯示「再玩一次」。
+ * 多小題活動以 scenarioId 逐題判斷；沒有題目 ID 的活動以整個節點判斷。
+ */
+export function canReplayJourneyItem(state: JourneyReplayState, itemId: string, scenarioId?: string) {
+  if (!isRevisitingJourneyItem(state, itemId)) return false;
+  if (!isReplayingJourneyItem(state, itemId)) return true;
+  return scenarioId !== undefined && !Object.hasOwn(state.session?.answers ?? {}, scenarioId);
 }
 
 export function startJourneyReplay(
@@ -58,10 +63,13 @@ export function startJourneyReplay(
   answers: Record<string, ScenarioAnswer>,
   activity: LifeActivityState,
 ): JourneyReplayState {
-  const answerSnapshot = Object.fromEntries(request.scenarioIds.map((id) => [id, answers[id]]));
-  const activitySnapshot = Object.fromEntries(
-    Object.keys(request.activityPatch ?? {}).map((key) => [key, activity[key as keyof LifeActivityState]]),
-  ) as Partial<LifeActivityState>;
+  // 同一節點內再重玩另一小題時沿用既有快照，只補上尚未快照的題目與欄位，確保還原的是第一次完成時的資料。
+  const previous = state.session?.itemId === request.itemId ? state.session : null;
+  const answerSnapshot = { ...Object.fromEntries(request.scenarioIds.map((id) => [id, answers[id]])), ...previous?.answers };
+  const activitySnapshot = {
+    ...Object.fromEntries(Object.keys(request.activityPatch ?? {}).map((key) => [key, activity[key as keyof LifeActivityState]])),
+    ...previous?.activity,
+  } as Partial<LifeActivityState>;
   return { ...state, session: { itemId: request.itemId, answers: answerSnapshot, activity: activitySnapshot } };
 }
 

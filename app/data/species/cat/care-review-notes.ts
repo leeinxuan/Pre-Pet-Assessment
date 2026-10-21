@@ -17,5 +17,6 @@ export const catCareReviewAdditionalNotes: CareReviewAdditionalNote[] = [
     item(text("**4 週後**：幼貓開始長牙，可逐步嘗試泡軟的幼貓專用乾飼料，糞便成形狀況也是健康指標之一。")),
     item(text("**早期社會化至關重要**：幼貓與母貓及人類的充分互動，是成年後個性穩定的基礎；若幼貓過早離開母貓，成年後更容易出現行為問題。")),
     item(text("**不建議過多零食**：幼貓階段避免養成依賴零食的習慣，以免影響均衡飲食。")),
+    paragraph(text("如有任何疑問，建議及時諮詢熟悉貓科的獸醫師。")),
   ] },
 ];

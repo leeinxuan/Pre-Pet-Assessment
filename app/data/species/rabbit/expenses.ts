@@ -13,6 +13,7 @@ export const rabbitExpenses: Record<string, ExpenseRecord> = {
   "rabbit-fence-pen": { id: "rabbit-fence-pen", name: "圍片／柵欄", amount: 1500, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "限制兔子活動範圍，同時提供安全的自由活動空間" },
   "rabbit-hay-initial": { id: "rabbit-hay-initial", name: "牧草（初期備量）", amount: 600, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "兔子最重要的主食，入住前需備妥足量；之後每月持續補充（見每月基本支出）" },
   "rabbit-carrier": { id: "rabbit-carrier", name: "安全外出籠／提袋", amount: 1800, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "通風良好、兔子能站立轉身；外出就醫、移動時使用" },
+  "rabbit-carrier-anti-slip-liner": { id: "rabbit-carrier-anti-slip-liner", name: "防滑墊（籠內鋪底）", amount: 150, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "外出籠底部鋪防滑墊，可避免兔子在車輛晃動時滑倒受傷" },
   "rabbit-water-for-trip": { id: "rabbit-water-for-trip", name: "飲水容器", amount: 100, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "長途或夏季移動時準備適量飲水；抵達後務必確認兔子有喝水" },
   "rabbit-cooling-pack": { id: "rabbit-cooling-pack", name: "保冷袋／冰袋", amount: 400, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "夏季外出時放於外出籠旁降溫；兔子體溫調節能力差" },
   "rabbit-arrival-checkup": { id: "rabbit-arrival-checkup", name: "到家後首次健康檢查", amount: 2000, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "確認健康狀況，建立第一份醫療紀錄；兔子常隱藏不適，早期檢查非常重要" },

@@ -335,7 +335,7 @@ export const birdLifeScenarios: Scenario[] = [
     busyCareChecklist: [
       {
         id: "daily-care",
-        prompt: "你已經向協助者說明 {petName} 每天的飼料補充、換水、籠具清潔、空氣安全注意事項與健康觀察安排了嗎？",
+        prompt: "你已經向協助者說明 {petName} 每天的飼料補充、換水、籠具清潔與健康觀察安排了嗎？",
         correctAnswer: "yes",
         reviewHint: "每日飼料補充、換水、籠具清潔與健康觀察安排還需要先交接"
       },
@@ -563,7 +563,7 @@ export const birdLifeScenarios: Scenario[] = [
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你知道高齡照護不只是「讓牠安靜休息」，而是需要主動調整環境和加強醫療觀察，做得很好！",
-      knowledgeTitle: "長達 10 年至近 50 年的每日陪伴與生命承諾",
+      knowledgeTitle: "長達 10 年至近 50 年以上的每日陪伴與生命承諾",
       knowledgeContent: [
         {
           type: "paragraph",

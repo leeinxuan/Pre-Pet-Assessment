@@ -143,8 +143,10 @@ export function BusyCareActivity({
         otherTips={busyCompletion && <div className="busy-care-completion-content">
           <section className="busy-care-warm-note busy-care-energy-reflection">
             <b className="busy-care-slogan">{renderKnowledgeText(withPetName(busyCompletion.reflectionText, petName, species))}</b>
-            <p className="busy-care-reflection-title"><span aria-hidden="true">💡</span>{busyCompletion.reflectionTitle}</p>
-            {busyCompletion.reflectionContent.map((content, index) => <p key={`${content}-${index}`}>{renderKnowledgeText(withPetName(content, petName, species))}</p>)}
+            <div className="busy-care-reflection-question">
+              <p className="busy-care-reflection-title"><span aria-hidden="true">💡</span>{busyCompletion.reflectionTitle}</p>
+              {busyCompletion.reflectionContent.map((content, index) => <p key={`${content}-${index}`}>{renderKnowledgeText(withPetName(content, petName, species))}</p>)}
+            </div>
           </section>
           {busyCompletion.showKnowledgeCard !== false && busyCompletion.knowledgeTitle && busyCompletion.knowledgeContent && (
             <KnowledgeCard title={busyCompletion.knowledgeTitle} className="busy-care-knowledge-card">

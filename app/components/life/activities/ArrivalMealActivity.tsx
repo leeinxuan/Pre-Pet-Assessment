@@ -143,7 +143,7 @@ export function ArrivalMealActivity({
     const unsafeFood = sceneUnsafeFoods.find((item) => item.id === kind);
     if (!unsafeFood) return;
     setUnsafeFoodIds((current) => current.includes(kind) ? current : [...current, kind]);
-    setFoodWarning({ title: unsafeFood.title, text: unsafeFood.text });
+    setFoodWarning({ title: interpolatePetName(unsafeFood.title, petName, species), text: interpolatePetName(unsafeFood.text, petName, species) });
   }
   function chooseMealChoice(id: string) {
     const item = choiceItems.find((entry) => entry.id === id);

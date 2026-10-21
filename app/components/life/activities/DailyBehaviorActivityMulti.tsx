@@ -23,7 +23,9 @@ export function DailyBehaviorActivityMulti({
   triggerExpenseOnFeedback = false,
   onContinue,
   onReplay,
+  canReplay,
   continueImmediately = false,
+  reviewFromStart = false,
   scenarioIds,
   species = "dog",
   testNextSignal = 0,
@@ -37,6 +39,10 @@ export function DailyBehaviorActivityMulti({
   triggerExpenseOnFeedback?: boolean;
   onContinue: () => void;
   onReplay?: (scenarioId: string) => void;
+  /** 已答對、可重新練習的小題；未提供時所有小題都可重玩。 */
+  canReplay?: (scenarioId: string) => boolean;
+  /** 回訪已完成節點：從第一小題的完成頁開始，已答對的小題直接顯示完成頁。 */
+  reviewFromStart?: boolean;
   continueImmediately?: boolean;
   scenarioIds?: readonly string[];
   species?: string;
@@ -47,7 +53,8 @@ export function DailyBehaviorActivityMulti({
     .map((id) => scenarioSource.find((entry) => entry.id === id))
     .filter((entry): entry is Scenario => Boolean(entry));
   const firstUnfinished = scenarios.findIndex((entry) => answers[entry.id]?.finalResult !== "correct");
-  const [currentIndex, setCurrentIndex] = useState(firstUnfinished === -1 ? scenarios.length - 1 : firstUnfinished);
+  const isAnsweredCorrectly = (index: number) => answers[scenarios[index]?.id ?? ""]?.finalResult === "correct";
+  const [currentIndex, setCurrentIndex] = useState(firstUnfinished === -1 ? (reviewFromStart ? 0 : scenarios.length - 1) : firstUnfinished);
   const [mode, setMode] = useState<"question" | "animating" | "incorrect" | "positive">(
     firstUnfinished === -1 ? "positive" : "question",
   );
@@ -85,7 +92,7 @@ export function DailyBehaviorActivityMulti({
     setSelectedIds([]);
     setIncorrectOptionId(null);
     setRetryCopy(null);
-    setMode("question");
+    setMode(reviewFromStart && isAnsweredCorrectly(currentIndex + 1) ? "positive" : "question");
     setVideoFailed(false);
     setVideoFinished(false);
     setExpenseSequenceComplete(true);
@@ -186,7 +193,7 @@ export function DailyBehaviorActivityMulti({
           : scenario.completionNotice ? <p>{plainFeedbackText(withPetName(scenario.completionNotice, petName, species))}</p> : null}
         onVideoEnded={() => setVideoFinished(true)}
         onVideoError={() => { setVideoFailed(true); setVideoFinished(true); }}
-        onReplay={onReplay ? () => onReplay(scenario.id) : undefined}
+        onReplay={onReplay && (canReplay?.(scenario.id) ?? true) ? () => onReplay(scenario.id) : undefined}
         onContinue={moveToNext}
         continueImmediately={continueImmediately}
         continueDisabled={triggerExpenseOnFeedback && !expenseSequenceComplete}

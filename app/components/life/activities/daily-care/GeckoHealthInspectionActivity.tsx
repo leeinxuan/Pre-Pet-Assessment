@@ -176,13 +176,17 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   const comparisonVisible = activeJudgement
     ? states[`comparison-${activeJudgement.id}`] === true
     : false;
-  const needsComparison = activeState === "normal" || activeState === "shedding";
+  // 企劃：異常對照提示只在 normal＋答對時顯示。
+  const needsComparison = activeState === "normal";
   const warm = Number(states["temperature-warm"]);
   const cool = Number(states["temperature-cool"]);
-  const temperatureIsCorrect = warm >= config.temperature.correctTemperatures.warm.min
-    && warm <= config.temperature.correctTemperatures.warm.max
-    && cool >= config.temperature.correctTemperatures.cool.min
-    && cool <= config.temperature.correctTemperatures.cool.max;
+  // 溫度計以四捨五入的整數顯示，判斷是否進入安全範圍也必須用同一個數值。
+  const displayedWarm = Math.round(warm);
+  const displayedCool = Math.round(cool);
+  const temperatureIsCorrect = displayedWarm >= config.temperature.correctTemperatures.warm.min
+    && displayedWarm <= config.temperature.correctTemperatures.warm.max
+    && displayedCool >= config.temperature.correctTemperatures.cool.min
+    && displayedCool <= config.temperature.correctTemperatures.cool.max;
   const temperatureMode = states["temperature-mode"] as GeckoTemperatureState;
   const temperatureConfirmed = activity.geckoHealthInspectionFeedback.temperature === "correct";
   const waterSceneItem = config.scene.completedItems.find((item) => item.id === config.water.sceneItemId);

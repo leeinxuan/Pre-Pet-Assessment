@@ -305,7 +305,7 @@ export const hamsterLifeScenarios: Scenario[] = [
     choices: [
       wrong("hamster-health-wait", "這可能是正常的波動，多等幾天看看", "活動力下降加上食量明顯減少連續超過一天，是需要立刻關注的警訊；不能用「等等看」代替就醫評估。"),
       correct("hamster-health-vet", "立刻諮詢**熟悉倉鼠醫療的獸醫師**，安排看診", "對！連續的食量明顯減少加上活動力下降，是需要立刻尋求獸醫師協助的訊號。倉鼠的病程發展可能很快，不能拖延。", [
-        "hamster-emergency-vet"
+        "hamster-mild-sick", "hamster-moderate-sick", "hamster-hospitalization"
       ]),
       wrong("hamster-health-seeds", "給牠喜歡的葵瓜子，看能不能刺激食慾", "此時需要的是獸醫師的評估，而不是用點心刺激食慾；突然改變飲食可能讓診斷更複雜。"),
       wrong("hamster-health-temperature", "確認籠具溫度是否合適，先調整環境再觀察", "確認環境溫度是對的，但這不能取代就醫；若調整環境後沒有明顯改善，請立刻就醫，不要繼續等待。"),

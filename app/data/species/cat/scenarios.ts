@@ -446,7 +446,7 @@ export const catLifeScenarios: Scenario[] = [
         },
         {
           type: "item",
-          text: "**口腔異味與進食異常**：口臭、進食遲疑、抓嘴——定期口腔檢查可及早發現。"
+          text: "**口腔異味或進食異常**：口臭、進食遲疑、抓嘴——定期刷牙改善或口腔檢查治療。"
         },
         {
           type: "item",

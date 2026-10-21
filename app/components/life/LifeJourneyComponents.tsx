@@ -216,10 +216,16 @@ export function LifeJourney({
   }
 
   const isRevisitingItem = isRevisitingJourneyItem(replayState, item.id);
-  const canReplayCurrent = canReplayJourneyItem(replayState, item.id);
+  const canReplayCurrent = canReplayJourneyItem(replayState, item.id, scenario?.id);
   const currentResetSignal = resetItemId === item.id ? resetSignal : 0;
   const replayCorrectProps = { onReplay: canReplayCurrent ? () => replayCurrentQuestion() : undefined, continueImmediately: isRevisitingItem };
-  const replaySubQuestion = canReplayCurrent ? (scenarioId: string) => replayCurrentQuestion(scenarioId) : undefined;
+  // 多小題活動：回訪時從第一小題開始，每一小題各自決定是否還能「再玩一次」。
+  const subQuestionReplayProps = {
+    onReplay: isRevisitingItem ? (scenarioId: string) => replayCurrentQuestion(scenarioId) : undefined,
+    canReplay: (scenarioId: string) => canReplayJourneyItem(replayState, item.id, scenarioId),
+    continueImmediately: isRevisitingItem,
+    reviewFromStart: isRevisitingItem,
+  };
 
   if (timePassOpen && activityConfig?.transition === "time-pass") {
     return <TimePassTransition species={species} onComplete={() => {
@@ -279,8 +285,7 @@ export function LifeJourney({
       scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : getDailyBehaviorScenarioIds(species)}
       species={species}
       testNextSignal={activityNextSignal}
-      onReplay={replaySubQuestion}
-      continueImmediately={isRevisitingItem}
+      {...subQuestionReplayProps}
     />
   );
 
@@ -360,8 +365,7 @@ export function LifeJourney({
         onChoose={onChoose}
         onContinue={continueJourney}
         testNextSignal={activityNextSignal}
-        onReplay={replaySubQuestion}
-        continueImmediately={isRevisitingItem}
+        {...subQuestionReplayProps}
       />
     ),
     "busy-care": () => scenario ? (
