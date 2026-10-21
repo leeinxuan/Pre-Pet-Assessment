@@ -112,7 +112,7 @@ Draw the bird as a senior: the same coloring but slightly faded and duller, a fe
 
 | 影片 | 底樂 |
 |---|---|
-| correct-answer | 輕快尤克里里＋鐵琴 jingle |
+| correct-answer | **輕快、有活力**（使用者指定）：明亮大調、速度偏快（約 120 BPM 以上）、尤克里里／音樂盒＋鐵琴 jingle，節奏跳躍、帶開心感，不要拖慢或太抒情 |
 | correct-answer2 | 俏皮撥弦＋木琴 |
 | first-day | 稀疏、試探的鋼片琴／柔音鋼琴 |
 | sick | 慢速（約 46 BPM）小調、低音 drone＋極稀疏柔音鋼琴（虛弱不詭異；樂器避開兔子版 sick 的鋼琴） |
@@ -350,10 +350,10 @@ S4: The old bird stands on the woman's finger with its eyes half closed while sh
 |---|---|---|---|---|---|
 | master：bird-cage-master | — | 籠內場景 | ✅（使用者已確認） | — | — |
 | master：bird-room-master | — | 房間場景 | ✅（使用者已確認） | — | — |
-| ① correct-answer | 題目 | 答對回饋 | ✅ correct-answer-s1.png（v2，crop Y=20） | ⬜ | ⬜ |
-| ② correct-answer2 | 題目 | 答對回饋 | ✅ correct-answer2-s1.png（v2，crop Y=50） | ⬜ | ⬜ |
-| ③ first-day | 題目 | bird-arrival-adjustment | ✅ first-day-s1.png（外出籠坡道放下） | ⬜ | ⬜ |
-| ④ sick | 題目 | bird-health-emergency | ✅ sick-s1.png（v2，crop Y=100，鳥在右下原木枝） | ⬜ | ⬜ |
+| ① correct-answer | 題目 | 答對回饋 | ✅ correct-answer-s1.png（v5 放大鳥，crop Y=40） | ✅ 2026-10-19 生成，時間軸 0–10s（clips/raw-*.mp4，已靜音） | ⬜ |
+| ② correct-answer2 | 題目 | 答對回饋 | ✅ correct-answer2-s1.png（v5 放大鳥，crop Y=100） | ✅ 2026-10-19 生成，時間軸 10–20s（clips/raw-*.mp4，已靜音） | ⬜ |
+| ③ first-day | 題目 | bird-arrival-adjustment | ✅ first-day-s1.png（v3：籠內左下角、鳥放大，crop Y=150） | ✅ 2026-10-19 生成，時間軸 20–30s（clips/raw-*.mp4，已靜音） | ⬜ |
+| ④ sick | 題目 | bird-health-emergency | ✅ sick-s1.png（v4 放大鳥，crop Y=100，鳥在右下原木枝） | ✅ 2026-10-19 生成，時間軸 30–40s（clips/raw-*.mp4，已靜音） | ⬜ |
 | ⑤ excessive-calling | 題目 | bird-excessive-calling | ⬜ | ⬜ | ⬜ |
 | ⑥ stereotypy | 題目 | bird-stereotypy | ⬜ | ⬜ | ⬜ |
 | ⑦ picky-eating | 題目 | bird-picky-eating | ⬜ | ⬜ | ⬜ |
@@ -367,7 +367,13 @@ S4: The old bird stands on the woman's finger with its eyes half closed while sh
 
 ## 踩雷與注意事項
 
-- 【重要】籠內 master 必須用「有用品的籠子」`start-frames/bird-cage-furnished-master.png`（944×1422：溫度計、吊掛玩具、橫棲木＋繩圈、繩梯、水瓶＋食盆、右下原木枝）；先前用空籠當參考，模型自己亂畫用品，使用者退回重生。prompt 要寫明「不得增減/換色/移動任何用品」，並說明忽略左上角的返回箭頭按鈕（截圖 UI）。
+- 【比例】籠內首幀鸚鵡要夠大：prompt 要寫「真實虎皮鸚鵡約 18 公分，籠內寬只有 3–4 隻鳥長；用品縮成真實比例；緊密取景，鳥全身（頭到尾尖）約佔畫面高 45%，圓滾滾的虎皮鸚鵡，不是小麻雀」。比例太小（約 20–25%）會像麻雀，使用者退回過。raw：`ca_v5_raw`、`ca2_v5_raw`、`fd_v3_raw`、`sick_v4_raw`。
+
+- ①②首幀 16:9 取景時籠頂太近、鸚鵡比例怪 → prompt 要求「加高籠頂，鳥頭到天花板至少兩個鳥高」（raw：`ca_v4_raw.png`、`ca2_v4_raw.png`）。③第一天改為籠內縮在角落（raw：`fd_v2_raw.png`），不用房間與外出籠。
+
+- furnished master v2（2026-10-19）：以空籠為背景、舊 furnished 圖為樣式參考，重生成真實安裝方式（溫度計掛鉤掛橫桿、玩具/繩梯用扣環掛頂桿、棲木以塑膠固定座插在籠壁、水瓶食盆夾具夾在籠條上）。舊版存 `_backup/_cage_furnished_v1_ref.png`。①②④ 首幀已用 v2 master 重生（raw：`_backup/ca_v3_raw.png`、`ca2_v3_raw.png`、`sick_v3_raw.png`）；之後 ⑤⑥⑦ 與過場籠內畫面都以 v2 master 為準。
+
+- 【重要】籠內 master 必須用「有用品的籠子」`start-frames/bird-cage-furnished-master.png`（v2 真實安裝版，1024×1536：溫度計、吊掛玩具、橫棲木＋繩圈、繩梯、水瓶＋食盆、右下原木枝）；先前用空籠當參考，模型自己亂畫用品，使用者退回重生。prompt 要寫明「不得增減/換色/移動任何用品」，並說明忽略左上角的返回箭頭按鈕（截圖 UI）。
 
 - 首幀統一流程：同聊天室 6ad58bfa-…，3:2 原圖存 `_backup/*_raw.png`，裁切 `crop=1536:864:0:80` → 1280×720。第一張（①）生成時水瓶/食盆被畫成綠色，之後 prompt 加「cream/white, NOT green」即正常。
 - 下載生成圖前，先確認 1536 寬圖片數量已增加，否則會抓到上一張。
@@ -380,3 +386,101 @@ S4: The old bird stands on the woman's finger with its eyes half closed while sh
   - `bird-cage-master.png`：**使用者提供的直式原圖**（`_ref_cage_interior_tray.png` 的複本，1024×1536）。第一版曾請 ChatGPT 重畫成橫式（`_backup/_rejected_cage_master_widened.png`），使用者要求保持直式，已退件。
   - `bird-room-master.png`：ChatGPT 新對話「Generate Edited Image」，圖 1 = `_ref_bird_safe_room.png`、圖 2 = `_ref_bird_cage.png`；`_backup/room_master_B_raw.png`，`crop=1536:864:0:60,scale=1280:720` → `start-frames/bird-room-master.png`。**鳥籠放在背景原有的後牆右側矮櫃（長矮櫃）頂上**（第一版放在自加的低木架上，使用者要求改，已退件為 `_backup/_rejected_room_master_v1.png`）；籠外觀正確、沒有鳥。⚠ 籠在整間房裡偏小：房間鏡頭裡鳥會很小；需要看清楚鳥的鏡頭用籠內取景，或在指令寫 `the bird cage is large and prominent`。
 - （其餘鸚鵡特有踩雷：做完第一支影片後，從上面「預期風險」搬過來並補實際結論。）
+
+### 更新：①② 無天花板規則（v7）
+- ①②首幀改為「畫面不出現天花板／籠頂／溫度計／玩具」，直條向上延伸出畫面，鸚鵡置於畫面正中央（高約 40–45%）。
+- 原始檔：①`_backup/ca_v7_raw.png`、②`_backup/ca2_v7_raw.png`(v6 跑成寫實風已淘汰;②要用①的 raw 當圖1風格參考並明說 NOT photorealistic)，皆以 `crop=1536:864:0:50,scale=1280:720` 裁切。
+
+### Vids 生成紀錄（2026-10-19）
+- 專案「鸚鵡」時間軸 40 秒、4 個場景、無空白場景：① 0–10s、② 10–20s、③ 20–30s、④ 30–40s。
+- 匯出檔：`public/assets/bird/pet-journey/clips/bird_vids_export.mp4`（40.06 s）；切段 `clips/raw-<名稱>.mp4`（各 10 s，已去音軌、libx264 crf18）。
+- 下一步：依各支需要長度修剪（①4–5s、②4s、③8s、④8s）、做底樂、混音，經使用者聽過後再接線。
+
+## 2026-10-19 更新：③ 外出籠版 + ①② 足趾環繞 2/3 規則
+- ③ first-day-s1.png 改為「鸚鵡在外出籠內部（外出籠置於鳥籠隔壁，畫面聚焦外出籠內部）」，來源 _backup/fd_v4_raw.png。
+- ①② 棲木畫面必須能看出足趾環繞棲木圓周約 2/3（參考圖 toe-wrap-2of3-ref.png）：棲木略加粗、雙腳可見、趾從上方繞到前後。來源 _backup/ca_v8_raw.png、ca2_v8_raw.png（crop Y=50）。
+- 待辦：①②③ 以新首幀重新生成 Vids 並重新切 raw-*.mp4。
+- ①② 再修（v9/v10）：鸚鵡腳為對趾足（每腳 4 趾，2 趾朝前、2 趾朝後），前趾包住棲木前側、後趾包住後側，趾尖低於棲木中線，約環繞 2/3 圓周；棲木再加粗約 1.5 倍。來源 _backup/ca_v9_raw.png、ca2_v10_raw.png。
+- ①② 再修（v10/v11）：棲木改細（直徑約鳥體高 1/6，參考 perch-feet-ref），腳縮小、纖細，前2後2趾自然環繞約 2/3 圓周，不誇張。來源 _backup/ca_v10_raw.png、ca2_v11_raw.png。
+- ③ first-day-s1.png 更新為新版外出籠（public/assets/car/bird-carrier.webp，內部中間有一根細棲木）：鸚鵡蓬鬆蹲在棲木上，趾環繞棲木。來源 _backup/fd_v5_raw.png（crop Y=60）；舊版備份 first-day-s1_carrier_nop.png。
+
+## Vids 重生記錄 v2（2026-10-19）
+- ①②（細棲木＋足趾環繞 2/3）、③（新版外出籠，中間有棲木）用新首幀重生，匯出 clips/bird_vids_export_v2.mp4（80 s）。
+- 時間軸對照：舊 ①②③ 0–30 s（棄用）、④ sick 30–40 s、新① 40–50 s、新② 50–60 s、壞掉的 ③（鏡頭被拉近）60–70 s（棄用）、新③ 70–80 s。
+- 切出：raw-correct-answer=40–50、raw-correct-answer2=50–60、raw-first-day=70–80（皆 10 s、已靜音）；raw-sick 沿用舊版。
+- 教訓：Vids 對 ③ 外出籠首幀曾自動拉近鏡頭，提示詞需加「FRAMING IS CRITICAL … never zooms … bird about 45% of frame height」。
+- 舊版 raw 備份在 scripts/bird/_backup/old-clips/。
+
+## 剪輯 v3（2026-10-19）— 保留 Vids 原音（含叫聲）
+- ③ first-day-s1 畫風修正：_backup/fd_v6_raw.png（以 ca_v10_raw 當畫風參考，線條較深、質感同 ①②）；舊版備份 first-day-s1_v5style.png。
+- 重新匯出 clips/bird_vids_export_v3.mp4（90 s）：新① 40–50、新② 50–60、新③（舊畫風，棄用）70–80、新③（新畫風）80–90；④ 取自 bird_vids_export.mp4 的 30–40。
+- raw-*.mp4（10 s，含原音）：raw-correct-answer、raw-correct-answer2、raw-first-day、raw-sick。
+- 剪短成品（含原音，頭 0.1 s 淡入、尾 0.2 s 淡出）：correct-answer.mp4 4.5 s、correct-answer2.mp4 4 s、first-day.mp4 8 s、sick.mp4 8 s。
+- 已知：③ 新版影片第一幀被 Vids 略為拉遠（看得到外出籠提把），與首幀構圖不完全相同；鳥有時看起來較不蓬鬆。
+
+## 音樂與混音（2026-10-19）
+- scripts/bird/make_music.py 以 numpy 合成音樂盒風 BGM（①② 明亮 C 大調五聲、③ 平靜 A 小調、④ 輕柔下行），wav 存 scripts/bird/music/。
+- 混音：原音（含叫聲）增益至峰值約 -6 dB，音樂壓在 -16/-16/-20/-23 dB（①②③④），尾端淡出 0.7 s；成品 clips/final/{correct-answer,correct-answer2,first-day,sick}.mp4（4.5/4/8/8 s，畫面 copy 自剪輯版）。
+- 尚未接 assets.ts。
+
+## 使用者偏好追加（2026-10-19）
+- **correct-answer 的音樂一律要輕快、有活力**（答對的開心回饋）：明亮大調、速度偏快、節奏跳躍；①②（correct-answer／correct-answer2）都照此，不可做成平靜或抒情。目前合成版：scripts/bird/make_music.py 的 bright_a（120 BPM）。
+- **保留 Vids 原音的叫聲**：鸚鵡影片的鳥叫聲要留著（與其他物種「新生成鏡頭一律靜音」不同）；生成提示詞改為「quiet room tone with a few soft natural budgie chirps only」，仍禁止人聲、說話、哼唱，鳥不模仿人說話。混音時原音增益至峰值約 -6 dB，音樂壓在其下（-16/-16/-20/-23 dB）。
+
+## 答對音樂改版（輕快版，參考貓咪）
+- ①② 改用 `scripts/bird/make_music_lively.py` 產生：尤克里里刷弦 + 鐘琴/木琴旋律 + 拍手，① 150 BPM、② 168 BPM（C 大調），舊音樂盒版備份在 `music/v1/`。
+- 混音：原音（含鳥叫）峰值拉到 -6 dB，音樂峰值 -11 dB，淡出 0.7 s，影片 `-c:v copy`；成品 mean 約 -26 / -28 dB（貓咪約 -24 dB）。
+- ③④ 仍為音樂盒版。
+
+## ⑤⑥⑦ 首幀（2026-10-20）
+- 已生成：`start-frames/excessive-calling-s1.png`、`stereotypy-s1.png`、`picky-eating-s1.png`（皆以 `bird-cage-furnished-master.png` ＋ `correct-answer-s1.png` 當圖 1／2，crop Y=50／50／20）。
+- **⑦ picky-eating**：使用者最後選回滿碗混合種子的版本（`picky-eating-s1.png`）；少數種子版備份 `_backup/pe_v2_crop_fewseeds.png`。**生成影片時鸚鵡只准吃葵花籽和花生**（prompt 明寫 only sunflower seeds and peanuts，不吃其他種子/顆粒）。
+
+## ⑤⑥⑦ Vids／剪輯／混音（2026-10-20）
+- Vids 匯出 `clips/bird_vids_export_v4.mp4`（120 s）：⑤ 90–100、⑥ 100–110、⑦ 110–120（接在 v3 的 90 s 之後）。第一次 ⑤ 生成「沒套用首幀」變成寫實鳥（棄用，重送一次才對）——生成後務必先看預覽是不是我們的畫風再插入。
+- 剪輯：`clips/raw-{excessive-calling,stereotypy,picky-eating}.mp4`（10 s 含原音）→ `clips/{…}.mp4` 切成 7／7／8 s；成品 `clips/final/{…}.mp4`。
+- 音樂 `scripts/bird/make_music_daily.py`：⑤ 112 BPM kalimba、⑥ 96 BPM 規律撥弦 ostinato、⑦ 118 BPM 馬林巴；原音（含鳥叫）峰值 -6／-6／-8 dB，音樂峰值約 -11／-7／-10 dB（成品 mean 約 -26／-31／-28 dB）。
+- ⑦ 提示詞明寫 eats ONLY sunflower seeds and peanuts（使用者要求）。
+
+## ⑧ arrival-transition 製作紀錄（2026-10-20）
+- 首幀 s2（多種鳥、一籠一隻、提籠放櫃檯、飼主站櫃檯前）、s4（外出籠門關好）、s5（門放下、鳥在籠門口）、s6（籠頂平整、前柵欄完整）；s1/s3 沿用柴犬原片。
+- Vids 一次生成 s2/s4/s5/s6 → 匯出 `clips/bird_vids_export_v5.mp4`（160s；s2 120–130、s4 130–140、s5 140–150、s6 150–160）→ `clips/raw-arrival-s*.mp4`。
+- 剪接：shiba 0–1.15（車內鏡頭只到 1.25s，1.4s 會露出柴犬）/ s2 0–2.2 / shiba 3.5–5 / s4b（重生，鏡頭鎖死）0–2.2 / s5 1.0–3.2 / s6 0–3.0，`scripts/cat/splice.py --xf 0.25`，共 11.0s（s4 初版鏡頭會平移、櫃上籠子瞬移，已改用 raw-arrival-s4b.mp4 / bird_vids_export_v6.mp4 的 160–170s）。
+- 「歡迎回家」用 `scripts/歡迎回家繽紛泡泡字貼紙.png`，寬 384px、x=154（距左 12%）、y=100，8.7s 起 0.6s alpha 淡入。
+- 配樂 `make_music_arrival.py`（84 BPM 鋼琴琶音＋弦樂 pad，C–G/B–Am–F–C），原音 ×0.8、配樂 ×0.5，結尾 0.7s 淡出；輸出 `clips/final/arrival-transition.mp4`（mean -22 dB / peak -8.3 dB）。
+- s6 影片鏡頭會自行拉遠（鳥約 25% 高），重生一次出現不同籠子，故採用第一次結果。
+
+---
+
+## ⑨ busy-day-transition 製作紀錄（2026-10-20）
+- 新首幀兩張：`start-frames/busy-day-transition-s2.png`（夜晚房間、籠子放大、鳥約 30% 高、門在左邊緣）、`busy-day-transition-s5.png`（近景，一根手指＋鳥，平面手繪畫風）。s5 第一版沿用柴犬圖的偏寫實畫風被退件（備份 `_backup/bdt_s5_v1_*`），改以 `arrival-transition-s2.png`（鸚鵡系列畫風＋飼主）當圖 1、柴犬圖只當構圖參考；柴犬圖的包包肩帶要在指令明寫 `no bag, no strap`。
+- Vids：s2 要把 s5 首幀當**第二張素材圖**（飼主外觀＋畫風參考，提示詞開頭寫 `image 2 shows the same woman…`，並刪掉提示詞開頭多出的「圖片 2」chip）。提示詞務必加：`the very first frame must be IDENTICAL to image 1… Do NOT crop/zoom in/push in` 和 `The bird cage door stays CLOSED… The woman only opens the room door`；第一次沒加這兩句，鏡頭會直接拉近、籠門被打開。
+- Vids 匯出：`clips/bird_vids_export_v7.mp4`（190 s；s2＝170–180、s5＝180–190）→ `raw-busy-s2.mp4`、`raw-busy-s5.mp4`。
+- 成品 `final/busy-day-transition.mp4`（13.1 s）：shiba 0–5.0（辦公室，保留原音）／s2 0–4.3／shiba 9.0–11.0（飼主臉部）／s5 0–2.5，交叉淡化 0.25 s；Vids 原音 ×0.8＋底樂 ×0.5（4.8 s 進），尾端淡出 0.7 s。
+- 底樂：`make_music_busy.py`＋`music/music_busy-day-transition.wav`（88 BPM，Karplus-Strong 指彈吉他＋弦樂墊，G–Em–C–G，9.8 s）。
+- 已知問題：柴犬臉部鏡頭是偏寫實畫風且肩上有包包肩帶（原片重用）；s2 後半鏡頭比首幀略拉近。
+
+### ⑨ 更新（2026-10-20）：鏡頭 4「飼主臉部」改為重生
+- 首幀 `start-frames/busy-day-transition-s4.png`（`_backup/bdt_s4_v1_*`）：平面手繪畫風、無肩帶、疲憊但帶著回到家的放鬆。圖 1＝`bdt_s5_v2_crop.png`（鸚鵡系列畫風＋飼主），圖 2＝柴犬 `busy-day-transition-s4.png`（只當構圖）。
+- 原本的 ♻️ 柴犬 9–11 s 取消，成品改用新生成的 Vids 片段（約 2 s）。
+- ⑨ 重生完成（2026-10-20）：Vids 匯出 `bird_vids_export_v8`（下載 `鸚鵡 (7).mp4`，200 s；新臉部＝190–200）→ `raw-busy-s4.mp4`。成品改為 shiba 0–5.0／s2 0–4.3／s4 0–2.2（飼主臉部，無肩帶、平面手繪）／s5 0–2.5，xf 0.25，共 13.3 s，混音同前；舊版備份 `_backup/busy_final_v1_shibaface.mp4`。
+
+## ⑩ time-passes-aging 製作紀錄（2026-10-20）
+- 首幀 `start-frames/time-passes-aging-s1…s4.png`（備份 `_backup/tpa_s*_v1_raw.png`）：s1 幼鳥（籠內，復古色）／s2 青年鳥飛行（房間，復古色）／s3 飼主手指上成鳥唱歌（正常色，圖 1＝room master、圖 2＝sing ref、圖 3＝arrival-transition-s2 飼主）／s4 老鳥（籠內，正常色）。
+- Vids 匯出 `clips/bird_vids_export_v8.mp4`（240 s；s1＝200–210、s2＝210–220、s3＝220–230、s4＝230–240）→ `raw-tpa-s1…s4.mp4`。
+- ⚠ Vids 踩雷：s2 第一次生成籠門被打開（重生一次修正）；s3 提示詞寫 `tripod` 會真的畫出相機腳架，需加 `NO camera, NO tripod`（之後避免寫 tripod）；s2 生成結果四周有米色圓角邊，剪接時 `crop=1220:686:30:17,scale=1280:720`（`raw-tpa-s2c.mp4`）。
+- 剪接（xfade）：s1 0–1.7／s2c 0–2.3／s3 0–3.3／s4 0–4.5，轉場 0.25／0.8（復古→正常）／0.25，共 10.77 s，靜音後只放底樂。
+- 底樂 `make_music_aging.py`＋`music/music_time-passes-aging.wav`：鋼琴，前 5.8 s 輕快（C–G–Am–F，120 BPM），之後轉慢（66 BPM，F–Am–C/G–C）懷舊，尾端淡出。成品 `final/time-passes-aging.mp4`。
+
+## ⑪ busy-daily-care 製作紀錄（2026-10-20）
+- 首幀 `start-frames/busy-daily-care-s2.png`（鳥守快空的食碗）、`-s3.png`（鳥縮在低棲木，需含圓形繩環；第一版缺繩環已退件 `_backup/bdc_s3_v1_crop.png`）。皆加「略暗的暖色傍晚光」。
+- Vids 匯出 `clips/bird_vids_export_v9.mp4`（260 s；s2＝240–250、s3＝250–260）。s3 第一次生成閉眼睡著、畫面多出吊掛玩具；第二次提示詞加「首幀要完全相同、眼睛保持睜開」後表情落寞、可用。
+- 成品 `final/busy-daily-care.mp4`（9.75 s）：shiba 0–4.0（辦公室，保留原音）／s2 0–2.25／s3 0–4.0，xf 0.25；Vids 原音 ×0.8＋獨奏鋼琴 ×0.55（`make_music_busycare.py`、`music/music_busy-daily-care.wav`，A 小調 60 BPM，約 3.7 s 進）。
+- 中途 Vids 被登出（需使用者重新登入），登出前未送出的生成會遺失。
+
+## ⑫ senior-life（2026-10-20）
+- 首格：senior-life-s1~s4.png（s1 低棲木休息；s2 抬頭看高棲木；s3 手＋粉袖把棲木放低；s4 客廳老鳥站手指、另一手放旁邊）。老態靠褪色／臉部發白／眼睛半閉混濁；s4 初版（手摸頭）老態不足已重畫，舊版 `_backup/sl_s4_v1_crop.png`。
+- Vids：s4「手摸頭」連續 4 次被判違規（換圖換字都一樣）→ 改成「手放旁邊不碰頭」才通過。s2 前兩次一次飛去繩圈、一次繩梯變木梯，第三次接受（老鳥飛上繩圈當「高處」）。提示詞含 "does NOT ..." 較長版曾被誤判，改回簡短原版即通過。
+- 剪接：raw-sl-s1..s4（bird_vids_export_v10.mp4，260–300 s）；s1 0–1.0、s2 4.0–6.8、s3 3.0–6.5、s4 1.0–4.0，xf 0.25 → 9.6 s。
+- 配樂：make_music_senior.py → music/music_senior-life.wav（鋼琴 F–Am–C/G–C 66 BPM + 弦墊），延遲 0.3 s、音量 0.5、片尾淡出 1.0 s。
+- 成品：clips/final/senior-life.mp4（9.6 s）。

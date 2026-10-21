@@ -8,7 +8,7 @@
 - `daily-care/CatDailyInspectionActivity.tsx`：貓砂盆日常檢查。
 - `daily-care/RabbitDailyCheckActivity.tsx`：兔子梳毛與外觀檢查。
 - `daily-care/BirdCageInspectionActivity.tsx`：鸚鵡鳥籠巡視。
-- `daily-care/GuidedActivities.tsx`：倉鼠早晨巡視。
+- `daily-care/HamsterMorningInspectionActivity.tsx`：倉鼠早晨巡視。
 
 這五個元件在旅程中屬於相同層級：每個物種各自保留不同的互動狀態機，但都由共用旅程依活動註冊設定分派。
 

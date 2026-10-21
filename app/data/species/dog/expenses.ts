@@ -1,4 +1,4 @@
-import type { ExpenseRecord } from "../../../game-types";
+import type { ExpenseRecord, SpeciesExpenseRules } from "../../../game-types";
 
 /** §7 犬費用清單；金額與費用明細說明均以 dog-game-planning.md 為準。 */
 export const dogExpenses: Record<string, ExpenseRecord> = {
@@ -24,4 +24,11 @@ export const dogExpenses: Record<string, ExpenseRecord> = {
   "dog-moderate-sick": { id: "dog-moderate-sick", name: "急症檢查（嘔吐不吃／精神極差）", amount: 1400, maxAmount: 4600, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "血液常規或影像檢查與藥費；食慾或精神明顯下降" },
   "dog-hospitalization": { id: "dog-hospitalization", name: "住院與手術費用", amount: 4000, maxAmount: 40000, maxAmountOpenEnded: true, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "含麻醉、住院護理與手術費；需住院觀察、靜脈輸液或手術" },
   "dog-senior-room": { id: "dog-senior-room", name: "高齡環境調整用品", amount: 800, maxAmount: 2500, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: false, description: "降低障礙物高度、提供防滑地墊、增加保暖設備；高齡犬行動退化需調整生活環境" },
+};
+
+/** 費用流程規則；ID 只引用本物種費用。 */
+export const dogExpenseRules: SpeciesExpenseRules = {
+  // 狗狗清潔耗材在散步前選取撿便袋時加入，不能跟第一餐一起觸發。
+  arrivalMealExcludedExpenseIds: ["dog-clean-monthly"],
+  walkingExpenseIds: ["dog-clean-monthly"],
 };

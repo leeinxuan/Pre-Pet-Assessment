@@ -1,6 +1,13 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 import { sharedAssets } from "../../shared/assets";
+import type { RoomFlowConfig } from "../../shared/species-config-types";
 import { birdAssets } from "./assets";
+
+export const birdRoomDoorplatePlacement = {
+  desktop: { x: 33, y: 12, width: 28 },
+  mobile: { x: 33, y: 20, width: 40 },
+  mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
+} as const;
 
 export const birdRoomItems: RoomItem[] = [
   { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；格柵間隙需依鳥體型選擇。" },
@@ -8,7 +15,7 @@ export const birdRoomItems: RoomItem[] = [
   {
     id: "perch-set", label: "不同材質的棲木", icon: "━", image: birdAssets.room.perch,
     placement: { x: 50, y: 54, width: 30, layer: 3 }, required: true, need: "休息", expenseId: "bird-perch-set",
-    description: "不同高度與粗細的棲木能分散足部壓力。",
+    description: "足趾環繞棲木圓周約 2/3 為合適粗細；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
     // 籠內三張棲木分開定位；每筆均可獨立調整桌機／手機位置、尺寸與圖層。
     sceneParts: [
       { id: "perch-1", image: birdAssets.room.perchParts[0], placement: { x: 30, y: 28, width: 42, layer: 5 }, mobilePlacement: { x: 31, y: 31, width: 42 } },
@@ -36,10 +43,10 @@ export const birdHazards: HazardItem[] = [
 export const birdTrunkItems: TrunkItem[] = [
   { id: "bird-carrier", label: "外出籠／運輸箱", kind: "supply", image: birdAssets.preparation.carrier, visualScale: 1, preparedLabel: "已準備", description: "鳥必須在通風、堅固且間隙安全的外出籠中運送。", expenseIds: ["bird-carrier"], placement: { x: 45, y: 61, width: 25, layer: 5 } },
   { id: "cover-cloth", label: "遮光布／透氣布", kind: "supply", image: birdAssets.preparation.cover, preparedLabel: "已準備", description: "覆蓋外出籠可減少視覺刺激與緊迫。", expenseIds: ["bird-cover-cloth"], placement: { x: 45, y: 56, width: 22, layer: 6 } },
-  { id: "species-food", label: "少量熟悉飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", description: "途中備少量符合食性的熟悉飼料，從家中現有存糧取用即可。", placement: { x: 28, y: 63, width: 16, layer: 6 } },
+  { id: "species-food", label: "少量飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", description: "途中備少量符合食性的飼料，從家中現有存糧取用即可。", placement: { x: 28, y: 63, width: 16, layer: 6 } },
   { id: "water-supply", label: "飲水容器", kind: "supply", image: birdAssets.preparation.water, preparedLabel: "已準備", expenseIds: ["bird-water-supply"], description: "長途移動準備適量飲水，安全停靠時補充。", placement: { x: 57, y: 66, width: 12, layer: 6 } },
 ];
-export const birdRoomFlow = {
+export const birdRoomFlow: RoomFlowConfig = {
   initialBackground: birdAssets.room.background,
   safeBackground: birdAssets.room.background,
   interiorBackground: birdAssets.room.cageInterior,
@@ -62,8 +69,8 @@ export const birdRoomFlow = {
     lockedInstruction: "請先放好鳥籠，再準備主食飼料。",
     entryLabel: "查看鳥籠內部配置",
   },
-} as const;
+};
 
-export const birdRoomScene: RoomSceneConfig = { backgroundAlt: "鳥兒生活空間", interiorBackgroundAlt: "鳥籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "鸚鵡名字名牌" } };
+export const birdRoomScene: RoomSceneConfig = { backgroundAlt: "鳥兒生活空間", interiorBackgroundAlt: "鳥籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "鸚鵡名字名牌", placement: birdRoomDoorplatePlacement } };
 export const birdDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂" };
 export const birdPreparation = { roomItems: birdRoomItems, hazards: birdHazards, trunkItems: birdTrunkItems, roomFlow: birdRoomFlow, roomScene: birdRoomScene, departureScene: birdDepartureScene } as const;

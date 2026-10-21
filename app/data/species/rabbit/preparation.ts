@@ -1,6 +1,13 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 import { sharedAssets } from "../../shared/assets";
+import type { RoomFlowConfig } from "../../shared/species-config-types";
 import { rabbitAssets } from "./assets";
+
+export const rabbitRoomDoorplatePlacement = {
+  desktop: { x: 60, y: 14, width: 28 },
+  mobile: { x: 33, y: 20, width: 40 },
+  mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
+} as const;
 
 /** 兔子房間用品與素材由此資料設定提供，共用房間元件只負責渲染與流程控制。 */
 export const rabbitRoomItems: RoomItem[] = [
@@ -35,7 +42,7 @@ export const rabbitTrunkItems: TrunkItem[] = [
 ];
 
 /** 兔子房間的階段與背景只由資料設定，避免共用房間元件混入物種字串或素材路徑。 */
-export const rabbitRoomFlow = {
+export const rabbitRoomFlow: RoomFlowConfig = {
   initialBackground: rabbitAssets.room.background,
   safeBackground: rabbitAssets.room.safeBackground,
   interiorBackground: rabbitAssets.room.fenceInterior,
@@ -54,8 +61,8 @@ export const rabbitRoomFlow = {
     fencePlacedInstruction: "圍欄好了！點進去幫 {petName} 佈置裡面吧 👆",
     interiorInstruction: "這就是 {petName} 的家。把需要的東西一件一件放進來吧。",
   },
-} as const;
+};
 
-export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌" } };
+export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌", placement: rabbitRoomDoorplatePlacement } };
 export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂", hidePriceForReusedItemIds: ["anti-slip-liner"] };
 export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow, roomScene: rabbitRoomScene, departureScene: rabbitDepartureScene } as const;

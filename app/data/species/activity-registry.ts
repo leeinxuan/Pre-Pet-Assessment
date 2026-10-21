@@ -1,5 +1,5 @@
-import type { JourneyActivityConfig, JourneyActivityKey, LifeActivityState } from "../../game-types";
-import { rabbitGroomingConfig } from "./rabbit/journey";
+import type { JourneyActivityConfig, JourneyActivityKey, JourneyActivityResetKey, LifeActivityState } from "../../game-types";
+import { rabbitGroomingConfig } from "./rabbit/activities";
 
 type SpeciesActivityRegistry = Record<string, JourneyActivityConfig>;
 
@@ -42,8 +42,8 @@ export const journeyActivityRegistry: Record<string, SpeciesActivityRegistry> = 
     "bird-daily-care": activity("bird-daily-care", "daily-behavior", { resetKey: "daily-behavior" }),
     "bird-daily-inspection": activity("bird-daily-inspection", "bird-cage-inspection", { resetKey: "bird-cage-inspection" }),
     "bird-challenge": activity("bird-challenge", "breed-challenge", { resetKey: "breed-challenge" }),
-    "bird-busy-care": activity("bird-busy-care", "busy-care", { resetKey: "busy-care" }),
-    "bird-sick": video("bird-sick", "bird-health-emergency", { triggerExpenseOnFeedback: true }), "bird-senior": activity("bird-senior", "daily-behavior-single", { resetKey: "daily-behavior", triggerExpenseOnFeedback: true }),
+    "bird-busy-care": activity("bird-busy-care", "busy-care", { transition: "busy-care", resetKey: "busy-care" }),
+    "bird-sick": video("bird-sick", "bird-health-emergency", { transition: "time-pass", triggerExpenseOnFeedback: true }), "bird-senior": activity("bird-senior", "daily-behavior-single", { resetKey: "daily-behavior", triggerExpenseOnFeedback: true }),
   },
   hamster: {
     "hamster-arrival": video("hamster-arrival", "hamster-arrival-adjustment", { deferItemExpenses: true }),
@@ -51,8 +51,8 @@ export const journeyActivityRegistry: Record<string, SpeciesActivityRegistry> = 
     "hamster-daily-care": activity("hamster-daily-care", "daily-behavior", { resetKey: "daily-behavior" }),
     "hamster-solitary": video("hamster-solitary", "hamster-solitary"),
     "hamster-cage-check": activity("hamster-cage-check", "hamster-inspection", { resetKey: "hamster-inspection" }),
-    "hamster-busy-care": activity("hamster-busy-care", "busy-care", { resetKey: "busy-care" }),
-    "hamster-health": video("hamster-health", "hamster-health-emergency", { triggerExpenseOnFeedback: true }), "hamster-senior": video("hamster-senior", "hamster-senior-care", { triggerExpenseOnFeedback: true }),
+    "hamster-busy-care": activity("hamster-busy-care", "busy-care", { transition: "busy-care", resetKey: "busy-care" }),
+    "hamster-health": video("hamster-health", "hamster-health-emergency", { transition: "time-pass", triggerExpenseOnFeedback: true }), "hamster-senior": video("hamster-senior", "hamster-senior-care", { triggerExpenseOnFeedback: true }),
   },
   gecko: {
     "gecko-arrival": video("gecko-arrival", "gecko-arrival-settle", { deferItemExpenses: true }),
@@ -66,20 +66,30 @@ export const journeyActivityRegistry: Record<string, SpeciesActivityRegistry> = 
 };
 
 export function getJourneyActivityConfig(species: string, itemId: string): JourneyActivityConfig | undefined {
-  return journeyActivityRegistry[species]?.[itemId] ?? journeyActivityRegistry.dog[itemId];
+  // 未註冊的物種沿用犬旅程（與 getSpeciesConfig 一致）；已註冊物種只讀自己的設定，不再默默借用犬的節點。
+  const speciesRegistry = Object.hasOwn(journeyActivityRegistry, species) ? journeyActivityRegistry[species] : journeyActivityRegistry.dog;
+  return speciesRegistry[itemId];
 }
 
-/** 重玩時只回復既有活動 state；不處理答題、費用或完成紀錄。 */
-export function getJourneyActivityResetPatch(resetKey: string | undefined): Partial<LifeActivityState> | undefined {
-  switch (resetKey) {
-    case "walking": return { walkingPreparedItems: [], walkingSceneIndex: 0, walkingMinutes: 0, walkingPoopCleaned: false, walkingComplete: false, catInspectionSteps: [] };
-    case "cat-inspection": return { catInspectionSteps: [], catInspectionIntroStarted: false };
-    case "rabbit-carry-sort": return { rabbitCarryOrder: [], rabbitCarryComplete: false, rabbitCarryAttempts: 0, rabbitCarryAnswerRevealed: false, rabbitCarryFeedbackShown: false };
-    case "rabbit-daily-check": return { rabbitDailyCheckSteps: [], rabbitGroomingIntroStarted: false, rabbitGroomingState: rabbitGroomingConfig.initialState, rabbitGroomingObservations: {}, rabbitGroomingInspection: {} };
-    case "bird-cage-inspection": return { birdCageInspectionSteps: [], birdCageInspectionIntroStarted: false, birdCageInspectionStates: {}, birdCageInspectionCompleted: false };
-    case "hamster-first-meal": return { hamsterMealSelected: [], hamsterMealFeedbackId: "" };
-    case "hamster-inspection": return { hamsterInspectionStarted: false, hamsterInspectionStates: {}, hamsterInspectionCompleted: [], hamsterInspectionFeedback: {} };
-    case "gecko-health-inspection": return { geckoHealthInspectionStarted: false, geckoHealthInspectionStates: {}, geckoHealthInspectionCompleted: [], geckoHealthInspectionFeedback: {} };
-    default: return undefined;
-  }
+/**
+ * 重玩時只回復既有活動 state；不處理答題、費用或完成紀錄。
+ * null 代表答案重設與元件重新掛載即可回到初始畫面。新增 reset key 時型別會要求在此補上策略。
+ */
+const journeyActivityResetPatches: Record<JourneyActivityResetKey, (() => Partial<LifeActivityState>) | null> = {
+  walking: () => ({ walkingPreparedItems: [], walkingSceneIndex: 0, walkingMinutes: 0, walkingPoopCleaned: false, walkingComplete: false, catInspectionSteps: [] }),
+  "cat-inspection": () => ({ catInspectionSteps: [], catInspectionIntroStarted: false }),
+  "rabbit-carry-sort": () => ({ rabbitCarryOrder: [], rabbitCarryComplete: false, rabbitCarryAttempts: 0, rabbitCarryAnswerRevealed: false, rabbitCarryFeedbackShown: false }),
+  "rabbit-daily-check": () => ({ rabbitDailyCheckSteps: [], rabbitGroomingIntroStarted: false, rabbitGroomingState: rabbitGroomingConfig.initialState, rabbitGroomingObservations: {}, rabbitGroomingInspection: {} }),
+  "bird-cage-inspection": () => ({ birdCageInspectionSteps: [], birdCageInspectionIntroStarted: false, birdCageInspectionStates: {}, birdCageInspectionCompleted: false }),
+  "hamster-first-meal": () => ({ hamsterMealSelected: [], hamsterMealFeedbackId: "" }),
+  "hamster-inspection": () => ({ hamsterInspectionStarted: false, hamsterInspectionStates: {}, hamsterInspectionCompleted: [], hamsterInspectionFeedback: {} }),
+  "gecko-health-inspection": () => ({ geckoHealthInspectionStarted: false, geckoHealthInspectionStates: {}, geckoHealthInspectionCompleted: [], geckoHealthInspectionFeedback: {} }),
+  "daily-behavior": null,
+  "breed-challenge": null,
+  "busy-care": null,
+  "gecko-first-meal": null,
+};
+
+export function getJourneyActivityResetPatch(resetKey: JourneyActivityResetKey | undefined): Partial<LifeActivityState> | undefined {
+  return resetKey ? journeyActivityResetPatches[resetKey]?.() : undefined;
 }

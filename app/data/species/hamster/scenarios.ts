@@ -1,5 +1,6 @@
 import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
+import { hamsterAssets } from "./assets";
 import { hamsterReport } from "./report";
 const correct = (id: string, text: string, explanation: string, expenseIds?: string[]) => ({
   id,
@@ -33,10 +34,14 @@ export const hamsterLifeScenarios: Scenario[] = [
     reportSummary: "讓倉鼠用自己的節奏探索新家，不強迫牠離開巢箱。",
     artIndex: 0,
     sceneMedia: {
-      type: "placeholder"
+      type: "video",
+      src: hamsterAssets.petJourney.firstDay,
+      ariaLabel: "倉鼠到家第一天情境影片"
     },
     correctFeedbackMedia: {
-      type: "placeholder"
+      type: "video",
+      src: hamsterAssets.petJourney.correctPrimary,
+      ariaLabel: "倉鼠答對回饋影片"
     },
     choices: [
       wrong("hamster-arrival-force", "把 {petName} 從巢箱裡拿出來，讓牠多接觸新環境", "躲藏是面對新環境的正常壓力反應，不是失敗。強迫出來只會增加緊迫；倉鼠需要自己決定何時探索。"),
@@ -153,10 +158,14 @@ export const hamsterLifeScenarios: Scenario[] = [
     reportSummary: "先了解倉鼠的領域性，避免貿然合籠。",
     artIndex: 0,
     sceneMedia: {
-      type: "placeholder"
+      type: "video",
+      src: hamsterAssets.petJourney.solitary,
+      ariaLabel: "倉鼠獨居情境影片"
     },
     correctFeedbackMedia: {
-      type: "placeholder"
+      type: "video",
+      src: hamsterAssets.petJourney.correctPrimary,
+      ariaLabel: "倉鼠答對回饋影片"
     },
     choices: [
       wrong("hamster-solitary-together", "再去收容所領養一隻，把牠們放進同一個籠子，讓牠們一起生活", "倉鼠天生具有強烈領域性，把兩隻放進同一籠中，無論公母，都很可能發生**激烈打鬥，甚至互相致死**。看似平靜的倉鼠，在籠內壓力累積後也可能突然爆發衝突。"),
@@ -192,10 +201,20 @@ export const hamsterLifeScenarios: Scenario[] = [
     busyCarePresentation: {
       animalName: "倉鼠",
       sceneMedia: {
-        type: "placeholder"
+        type: "video",
+        src: hamsterAssets.petJourney.busyDailyCare,
+        ariaLabel: "倉鼠等待日常照顧情境影片",
+        fallback: {
+          type: "image-layers",
+          backgroundSrc: hamsterAssets.room.safeBackground,
+          backgroundAlt: "居家房間場景",
+          characterSrc: hamsterAssets.selection.hamster,
+          characterAlt: "{petName}在房間裡等待照顧"
+        }
       },
       feedbackMedia: {
-        type: "placeholder"
+        type: "video",
+        src: hamsterAssets.petJourney.correctPrimary
       }
     },
     busyCareCompletion: {
@@ -271,23 +290,27 @@ export const hamsterLifeScenarios: Scenario[] = [
     description: "最近這兩天，你傍晚去確認{petName}時，發現牠比平常晚很多才從巢箱出來，滾輪也幾乎沒有轉動的聲音，食碗的食物到了隔天幾乎原封未動。今天更發現牠縮在角落，對你的靠近也沒什麼反應。",
     questionText: "根據這些觀察，你應該？",
     topic: "健康突發事件",
-    reportSummary: "活動力與食量明顯下降時，立刻諮詢熟悉倉鼠的獸醫。",
+    reportSummary: "活動力與食量明顯下降時，立刻諮詢**熟悉倉鼠醫療的獸醫師**。",
     artIndex: 0,
     sceneMedia: {
-      type: "placeholder"
+      type: "video",
+      src: hamsterAssets.petJourney.sick,
+      ariaLabel: "倉鼠生病情境影片"
     },
     correctFeedbackMedia: {
-      type: "placeholder"
+      type: "video",
+      src: hamsterAssets.petJourney.correctSecondary,
+      ariaLabel: "倉鼠答對回饋影片"
     },
     choices: [
       wrong("hamster-health-wait", "這可能是正常的波動，多等幾天看看", "活動力下降加上食量明顯減少連續超過一天，是需要立刻關注的警訊；不能用「等等看」代替就醫評估。"),
-      correct("hamster-health-vet", "立刻諮詢熟悉倉鼠的獸醫師，安排看診", "對！連續的食量明顯減少加上活動力下降，是需要立刻尋求獸醫師協助的訊號。倉鼠的病程發展可能很快，不能拖延。", [
+      correct("hamster-health-vet", "立刻諮詢**熟悉倉鼠醫療的獸醫師**，安排看診", "對！連續的食量明顯減少加上活動力下降，是需要立刻尋求獸醫師協助的訊號。倉鼠的病程發展可能很快，不能拖延。", [
         "hamster-emergency-vet"
       ]),
       wrong("hamster-health-seeds", "給牠喜歡的葵瓜子，看能不能刺激食慾", "此時需要的是獸醫師的評估，而不是用點心刺激食慾；突然改變飲食可能讓診斷更複雜。"),
       wrong("hamster-health-temperature", "確認籠具溫度是否合適，先調整環境再觀察", "確認環境溫度是對的，但這不能取代就醫；若調整環境後沒有明顯改善，請立刻就醫，不要繼續等待。"),
     ],
-    correctSummary: ["倉鼠活動力明顯下降加上食量連續減少是緊急警訊，應立刻諮詢熟悉倉鼠的獸醫，不可等待觀察或用點心刺激食慾取代就醫。"],
+    correctSummary: ["倉鼠活動力明顯下降加上食量連續減少是緊急警訊，應立刻諮詢**熟悉倉鼠醫療的獸醫師**，不可等待觀察或用點心刺激食慾取代就醫。"],
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你注意到了{petName}的異常，而且立刻決定就醫而不是再等等，做得很好！日常觀察習慣讓你能在關鍵時刻保護牠。",
@@ -334,10 +357,14 @@ export const hamsterLifeScenarios: Scenario[] = [
     reportSummary: "高齡前提前諮詢獸醫、安排規律檢查，並調整環境。",
     artIndex: 0,
     sceneMedia: {
-      type: "placeholder"
+      type: "video",
+      src: hamsterAssets.petJourney.seniorLife,
+      ariaLabel: "倉鼠高齡生活情境影片"
     },
     correctFeedbackMedia: {
-      type: "placeholder"
+      type: "video",
+      src: hamsterAssets.petJourney.correctSecondary,
+      ariaLabel: "倉鼠答對回饋影片"
     },
     choices: [
       correct("hamster-senior-vet", "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查", "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。", [

@@ -1,8 +1,7 @@
 import { dogBreeds } from "./data/species/dog/selection";
 import { catBreeds } from "./data/species/cat/selection";
 import { rabbitSelection } from "./data/species/rabbit";
-import { roomDoorplatePlacement as dogRoomDoorplatePlacement } from "./data/species/dog/layout";
-import { dogDepartureTrunkItems, dogHazards, dogRoomItems } from "./data/species/dog/preparation";
+import { dogDepartureTrunkItems, dogHazards, dogRoomDoorplatePlacement, dogRoomItems } from "./data/species/dog/preparation";
 /** @deprecated 請改從 data/shared/app-flow.ts 匯入。 */
 export {
   categories,
@@ -26,7 +25,7 @@ export const roomItems = dogRoomItems;
 // Mobile doorplate position:
 // 在這裡調整手機版「布置房間」門牌的位置與大小。
 // mobile 的 x / y / width 都是百分比，基準是手機版 1:1 房間容器；不會影響桌機版門牌 CSS。
-/** @deprecated 請改至 data/species/dog/layout.ts 調整。 */
+/** @deprecated 請改至 data/species/dog/preparation.ts 調整。 */
 export const roomDoorplatePlacement = dogRoomDoorplatePlacement;
 
 /** @deprecated 請改至 data/species/dog/preparation.ts 調整。 */

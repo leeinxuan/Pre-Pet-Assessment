@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   GeckoHealthDisplayState,
   GeckoHealthInspectionConfig,
@@ -12,13 +12,34 @@ import type {
 import { getSpeciesConfig } from "../../../../data/species";
 import { interpolatePetName } from "../../../../data/shared/pet-text";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
-import { ActivityIntroPage, renderKnowledgeText } from "../activity-ui";
+import { ActivityIntroPage, renderKnowledgeText, type ObservationAnswerStatus } from "../activity-ui";
 import { InspectionHotspot } from "../InspectionHotspot";
+import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 
 type Change = (patch: Partial<LifeActivityState>) => void;
-type PointerPosition = { x: number; y: number } | null;
+type PointerPosition = { id: string; x: number; y: number } | null;
 
 const choose = <T,>(values: readonly T[]) => values[Math.floor(Math.random() * values.length)];
+
+function CompletedTerrariumScene({ config, excludeItemIds = [] }: {
+  config: GeckoHealthInspectionConfig;
+  excludeItemIds?: readonly string[];
+}) {
+  return <>
+    <img className="gecko-health-background" src={config.scene.background} alt="" />
+    {config.scene.completedItems.filter((item) => !excludeItemIds.includes(item.id)).map((item) => (
+      <img
+        key={item.id}
+        className="gecko-completed-scene-item"
+        src={item.image}
+        alt={item.alt}
+        style={{
+          left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer,
+        }}
+      />
+    ))}
+  </>;
+}
 
 function buildInitialStates(config: GeckoHealthInspectionConfig): Record<string, string | number | boolean> {
   const temperatureMode = choose(Object.keys(config.temperature.presets) as GeckoTemperatureState[]);
@@ -57,6 +78,34 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   const completed = activity.geckoHealthInspectionCompleted;
   const bodyComplete = config.body.points.every((point) => completed.includes(point.id));
   const isComplete = config.progress.every((step) => step.id === "body" ? bodyComplete : completed.includes(step.id));
+  const activeStage = !completed.includes("temperature")
+    ? "temperature"
+    : !completed.includes("water")
+      ? "water"
+      : !completed.includes("feces")
+        ? "feces"
+        : "body";
+  const waterFilled = states["water-filled"] === true;
+  const waterFeedbackTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const waterReplacementInProgress = useRef(false);
+  const waterStepActive = useRef(false);
+
+  useEffect(() => () => {
+    if (waterFeedbackTimeout.current !== null) {
+      clearTimeout(waterFeedbackTimeout.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    waterStepActive.current = activity.geckoHealthInspectionStarted && activeStage === "water";
+    if (waterStepActive.current) return;
+
+    if (waterFeedbackTimeout.current !== null) {
+      clearTimeout(waterFeedbackTimeout.current);
+      waterFeedbackTimeout.current = null;
+    }
+    waterReplacementInProgress.current = false;
+  }, [activeStage, activity.geckoHealthInspectionStarted]);
 
   const persistStates = (patch: Record<string, string | number | boolean>) => {
     onChange({ geckoHealthInspectionStates: { ...states, ...patch } });
@@ -75,12 +124,20 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
         config={config.intro}
         petName={petName}
         species={species}
-        onStart={() => onChange({
-          geckoHealthInspectionStarted: true,
-          geckoHealthInspectionStates: generatedInitialStates,
-          geckoHealthInspectionCompleted: [],
-          geckoHealthInspectionFeedback: {},
-        })}
+        onStart={() => {
+          if (waterFeedbackTimeout.current !== null) {
+            clearTimeout(waterFeedbackTimeout.current);
+            waterFeedbackTimeout.current = null;
+          }
+          waterReplacementInProgress.current = false;
+          setOpenId(null);
+          onChange({
+            geckoHealthInspectionStarted: true,
+            geckoHealthInspectionStates: generatedInitialStates,
+            geckoHealthInspectionCompleted: [],
+            geckoHealthInspectionFeedback: {},
+          });
+        }}
       />
     );
   }
@@ -101,13 +158,6 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
     );
   }
 
-  const activeStage = !completed.includes("temperature")
-    ? "temperature"
-    : !completed.includes("water")
-      ? "water"
-      : !completed.includes("feces")
-        ? "feces"
-        : "body";
   const activeBodyPoint = config.body.requiresOrderedInspection
     ? config.body.points.find((point) => !completed.includes(point.id))
     : undefined;
@@ -120,20 +170,22 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   const activeStateContent = activeJudgement && activeState
     ? activeJudgement.states[activeState]
     : undefined;
-  const activeFeedback = activeJudgement
+  const activeFeedback: ObservationAnswerStatus = activeJudgement
     ? activity.geckoHealthInspectionFeedback[activeJudgement.id] ?? "question"
     : "question";
   const comparisonVisible = activeJudgement
     ? states[`comparison-${activeJudgement.id}`] === true
     : false;
   const needsComparison = activeState === "normal" || activeState === "shedding";
-  const temperatureMode = states["temperature-mode"] as GeckoTemperatureState;
   const warm = Number(states["temperature-warm"]);
   const cool = Number(states["temperature-cool"]);
-  const warmSafe = warm >= config.temperature.target.warmMin && warm <= config.temperature.target.warmMax;
-  const coolSafe = cool >= config.temperature.target.coolMin && cool <= config.temperature.target.coolMax;
+  const temperatureIsCorrect = warm >= config.temperature.correctTemperatures.warm.min
+    && warm <= config.temperature.correctTemperatures.warm.max
+    && cool >= config.temperature.correctTemperatures.cool.min
+    && cool <= config.temperature.correctTemperatures.cool.max;
+  const temperatureMode = states["temperature-mode"] as GeckoTemperatureState;
   const temperatureConfirmed = activity.geckoHealthInspectionFeedback.temperature === "correct";
-  const waterFilled = states["water-filled"] === true;
+  const waterSceneItem = config.scene.completedItems.find((item) => item.id === config.water.sceneItemId);
 
   const instruction = activeStage === "temperature"
     ? config.temperature.instruction
@@ -162,9 +214,9 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
     });
   };
 
-  const trackMagnifier = (event: React.PointerEvent<HTMLButtonElement>) => {
+  const trackMagnifier = (id: string, event: React.PointerEvent<HTMLButtonElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
-    setMagnifier({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+    setMagnifier({ id, x: event.clientX - rect.left, y: event.clientY - rect.top });
   };
 
   return (
@@ -192,45 +244,32 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
 
         {activeStage === "temperature" && (
           <>
-            <img className="gecko-health-background" src={config.scene.background} alt="" />
+            <CompletedTerrariumScene config={config} />
             <div className="gecko-temperature-layout">
-              <article className={`gecko-thermometer-card ${warmSafe ? "is-safe" : ""}`}>
-                <img src={config.temperature.warmThermometer} alt="" />
-                <div>
-                  <span>{config.temperature.warmLabel}</span>
-                  <strong>{Math.round(warm)}°C</strong>
-                </div>
+              <article
+                className="gecko-thermometer gecko-thermometer--warm"
+                style={{ left: `${config.temperature.warmPlacement.x}%`, top: `${config.temperature.warmPlacement.y}%`, width: `${config.temperature.warmPlacement.width}%` }}
+              >
+                <span className="gecko-thermometer-label">{config.temperature.warmLabel}</span>
+                <img src={config.temperature.warmThermometer} alt={`${config.temperature.warmLabel}溫度計`} />
+                <strong>{Math.round(warm)}°C</strong>
               </article>
-              <article className={`gecko-thermometer-card ${coolSafe ? "is-safe" : ""}`}>
-                <img src={config.temperature.coolThermometer} alt="" />
-                <div>
-                  <span>{config.temperature.coolLabel}</span>
-                  <strong>{Math.round(cool)}°C</strong>
-                </div>
+              <article
+                className="gecko-thermometer gecko-thermometer--cool"
+                style={{ left: `${config.temperature.coolPlacement.x}%`, top: `${config.temperature.coolPlacement.y}%`, width: `${config.temperature.coolPlacement.width}%` }}
+              >
+                <img src={config.temperature.coolThermometer} alt={`${config.temperature.coolLabel}溫度計`} />
+                <strong>{Math.round(cool)}°C</strong>
+                <span className="gecko-thermometer-label">{config.temperature.coolLabel}</span>
               </article>
               <div className="gecko-temperature-controller">
                 <img src={config.temperature.controllerImage} alt="" />
-                <span>{config.temperature.controllerLabel}</span>
+                <span className="sr-only">{config.temperature.controllerLabel}</span>
                 <div className="gecko-temperature-controls" aria-label={config.temperature.controllerLabel}>
                   <button type="button" onClick={() => adjustTemperature(-1)} aria-label="降低溫度">−</button>
                   <button type="button" onClick={() => adjustTemperature(1)} aria-label="提高溫度">＋</button>
                 </div>
               </div>
-              {!temperatureConfirmed && (
-                <button
-                  type="button"
-                  className="primary gecko-temperature-confirm"
-                  disabled={!warmSafe || !coolSafe}
-                  onClick={() => onChange({
-                    geckoHealthInspectionFeedback: {
-                      ...activity.geckoHealthInspectionFeedback,
-                      temperature: "correct",
-                    },
-                  })}
-                >
-                  {config.temperature.confirmLabel}
-                </button>
-              )}
             </div>
             {temperatureConfirmed && (
               <section className="gecko-health-feedback gecko-health-feedback--success" aria-live="polite">
@@ -247,11 +286,28 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
 
         {activeStage === "water" && (
           <>
-            <img className="gecko-health-background" src={config.scene.background} alt="" />
-            <button type="button" className="gecko-water-target" onClick={() => setOpenId("water")}>
+            <CompletedTerrariumScene config={config} excludeItemIds={[config.water.sceneItemId]} />
+            {waterSceneItem && <button
+              type="button"
+              className="gecko-water-target"
+              style={{ left: `${waterSceneItem.placement.x}%`, top: `${waterSceneItem.placement.y}%`, width: `${waterSceneItem.placement.width}%`, zIndex: waterSceneItem.placement.layer }}
+              onClick={() => {
+                if (waterFilled || waterReplacementInProgress.current) return;
+                waterReplacementInProgress.current = true;
+                waterFeedbackTimeout.current = setTimeout(() => {
+                  waterFeedbackTimeout.current = null;
+                  if (!waterStepActive.current) return;
+                  waterReplacementInProgress.current = false;
+                  setOpenId("water");
+                }, 1000);
+                persistStates({ "water-filled": true });
+              }}
+              aria-label={waterFilled ? "已換上新鮮飲水" : "點擊髒水碟更換飲水"}
+              disabled={waterFilled}
+            >
               <img className={waterFilled ? "is-filled" : ""} src={waterFilled ? config.water.cleanImage : config.water.dirtyImage} alt={waterFilled ? config.water.cleanImageAlt : config.water.dirtyImageAlt} />
-              <span>{waterFilled ? "已換上新鮮飲水" : "點擊水碟"}</span>
-            </button>
+              {!waterFilled && <span>點擊水碟</span>}
+            </button>}
             {openId === "water" && (
               <section className="gecko-health-card gecko-health-card--center" aria-live="polite">
                 <img className={`gecko-health-card-image ${waterFilled ? "is-filled" : ""}`} src={waterFilled ? config.water.cleanImage : config.water.dirtyImage} alt={waterFilled ? config.water.cleanImageAlt : config.water.dirtyImageAlt} />
@@ -261,9 +317,9 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                 <button
                   type="button"
                   className="primary"
-                  onClick={() => waterFilled ? complete("water") : persistStates({ "water-filled": true })}
+                  onClick={() => complete("water")}
                 >
-                  {waterFilled ? config.water.continueLabel : config.water.fillLabel}
+                  {config.water.continueLabel}
                 </button>
               </section>
             )}
@@ -272,19 +328,23 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
 
         {activeStage === "feces" && (
           <>
-            <img className="gecko-health-background" src={config.scene.background} alt="" />
-            <button type="button" className="gecko-feces-target" onClick={() => setOpenId(config.feces.id)}>
+            <CompletedTerrariumScene config={config} />
+            <button
+              type="button"
+              className="gecko-feces-target"
+              style={{ left: `${config.feces.scenePlacement.x}%`, top: `${config.feces.scenePlacement.y}%`, width: `${config.feces.scenePlacement.width}%`, zIndex: config.feces.scenePlacement.layer }}
+              onClick={() => setOpenId(config.feces.id)}
+              aria-label="點擊底材上的排泄物進行觀察"
+            >
               {activeStateContent
                 ? <img src={activeStateContent.image} alt={activeStateContent.imageAlt} />
                 : <img src={config.feces.states[states.feces as GeckoHealthDisplayState]?.image} alt="" />}
-              <span>點擊排泄角落</span>
             </button>
           </>
         )}
 
         {activeStage === "body" && (
           <div className="gecko-body-stage">
-            <p className="gecko-body-prompt">{render(config.body.prompt)}</p>
             <div className="gecko-body-art">
               <img className="gecko-body-image" src={config.scene.body} alt={config.scene.bodyAlt} />
               {config.body.points.map((point, index) => {
@@ -302,10 +362,11 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                     disabled={!isAvailable}
                     aria-label={pointComplete ? `${point.label}已完成` : point.instruction}
                     onClick={() => setOpenId(point.id)}
-                    onPointerMove={isAvailable ? trackMagnifier : undefined}
+                    onPointerEnter={isAvailable ? (event) => trackMagnifier(point.id, event) : undefined}
+                    onPointerMove={isAvailable ? (event) => trackMagnifier(point.id, event) : undefined}
                     onPointerLeave={() => setMagnifier(null)}
                   >
-                    {isAvailable && magnifier && (
+                    {isAvailable && magnifier?.id === point.id && (
                       <img
                         className="gecko-magnifier-cursor"
                         src={config.scene.magnifier}
@@ -321,49 +382,54 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
         )}
 
         {activeJudgement && activeStateContent && (
-          <section className="gecko-health-card gecko-health-card--inspection" aria-live="polite">
+          <ObservationCard className="gecko-observation-card" label={`${activeJudgement.label}觀察`}>
             {comparisonVisible && activeJudgement.comparison ? (
               <>
-                <img className="gecko-health-card-image" src={activeJudgement.comparison.image} alt={activeJudgement.comparison.imageAlt} />
-                <p className="gecko-health-card-kicker">異常對照</p>
-                <h2>{activeJudgement.comparison.title}</h2>
-                <p>{render(activeJudgement.comparison.description)}</p>
-                <button type="button" className="primary" onClick={() => complete(activeJudgement.id)}>我了解了，繼續巡視 →</button>
+                <h2>異常狀態</h2>
+                <ObservationCardComparison>
+                  <img src={activeJudgement.comparison.image} alt={activeJudgement.comparison.imageAlt} />
+                  <p>{render(activeJudgement.comparison.description)}</p>
+                </ObservationCardComparison>
+                <button type="button" className="observation-card-action" onClick={() => complete(activeJudgement.id)}>我了解了</button>
               </>
             ) : (
-              <>
-                <img className="gecko-health-card-image" src={activeStateContent.image} alt={activeStateContent.imageAlt} />
-                <p className="gecko-health-card-kicker">{activeJudgement.label}</p>
-                <h2>{render(activeJudgement.prompt)}</h2>
-                <p>{render(activeStateContent.detail)}</p>
-                {activeFeedback !== "correct" && (
-                  <div className="gecko-health-choices">
-                    {activeJudgement.choices.map((choice) => (
-                      <button
-                        key={choice.id}
-                        type="button"
-                        className={activeFeedback === "incorrect" ? "is-retry" : ""}
-                        onClick={() => selectAnswer(choice.id)}
-                      >
-                        {choice.text}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {activeFeedback === "incorrect" && <p className="gecko-answer-feedback is-incorrect">{render(activeStateContent.incorrectFeedback)}</p>}
-                {activeFeedback === "correct" && (
-                  <>
-                    <p className="gecko-answer-feedback is-correct">{render(activeStateContent.correctFeedback)}</p>
-                    {needsComparison && activeJudgement.comparison
-                      ? <button type="button" className="gecko-comparison-button" onClick={() => persistStates({ [`comparison-${activeJudgement.id}`]: true })}>{activeJudgement.comparison.actionLabel} →</button>
-                      : <button type="button" className="primary" onClick={() => complete(activeJudgement.id)}>我了解了，繼續巡視 →</button>}
-                  </>
-                )}
-              </>
+              <ObservationCardFlow
+                status={activeFeedback}
+                title={activeJudgement.label}
+                image={<img className="observation-card-image" src={activeStateContent.image} alt={activeStateContent.imageAlt} />}
+                question={render(activeJudgement.prompt)}
+                choices={activeJudgement.choices.map((choice) => ({ id: choice.id, label: renderText(choice.text) }))}
+                feedback={render(activeFeedback === "incorrect" ? activeStateContent.incorrectFeedback : activeStateContent.correctFeedback)}
+                onChoose={selectAnswer}
+                onReturn={() => onChange({ geckoHealthInspectionFeedback: { ...activity.geckoHealthInspectionFeedback, [activeJudgement.id]: "question" } })}
+                correctAction={needsComparison && activeJudgement.comparison
+                  ? <button type="button" className="observation-card-action" onClick={() => persistStates({ [`comparison-${activeJudgement.id}`]: true })}>{activeJudgement.comparison.actionLabel}</button>
+                  : <button type="button" className="observation-card-action" onClick={() => complete(activeJudgement.id)}>我了解了</button>}
+              />
             )}
-          </section>
+          </ObservationCard>
         )}
       </div>
+      {activeStage === "temperature" && !temperatureConfirmed && (
+        <div className="gecko-temperature-actions">
+          <p className="gecko-temperature-action-hint" aria-live="polite">
+            {temperatureIsCorrect ? "溫度已調整完成，可以確認。" : "暖側底部應維持 28–32°C，涼側應維持 22–25°C。"}
+          </p>
+          <button
+            type="button"
+            className="primary gecko-temperature-confirm"
+            disabled={!temperatureIsCorrect}
+            onClick={() => onChange({
+              geckoHealthInspectionFeedback: {
+                ...activity.geckoHealthInspectionFeedback,
+                temperature: "correct",
+              },
+            })}
+          >
+            {config.temperature.confirmLabel}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

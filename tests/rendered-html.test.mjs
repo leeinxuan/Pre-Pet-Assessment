@@ -130,14 +130,15 @@ test("contains the five-unit journey and current project-owned artwork", async (
   }
   assert.match(dogJourney, /一起生活的第一天[\s\S]*日常行為照顧[\s\S]*今天也要出門散步[\s\S]*品種的考驗[\s\S]*疲憊忙碌的日子[\s\S]*生病與就醫[\s\S]*小狗逐漸老去/);
 
-  assert.match(journeyTransitions, /arrival-transition\.mp4/);
+  assert.match(dogJourney, /arrival-transition\.mp4/);
+  assert.match(journeyTransitions, /getJourneyTransitionMedia\(species\)\.arrival/);
   assert.match(journeyTransitions, /arrival-video-screen/);
   assert.match(journeyTransitions, /autoPlay/);
   assert.match(journeyTransitions, /muted/);
   assert.match(journeyTransitions, /preload="auto"/);
   assert.match(journeyTransitions, /hasFinishedArrivalVideo/);
-  assert.match(activityUi, /replaceAll\("小狗", displayName\)/);
-  assert.match(activityUi, /replaceAll\("狗狗", displayName\)/);
+  assert.match(activityUi, /return interpolatePetName\(text, petName, species\);/);
+  assert.doesNotMatch(activityUi, /replaceAll\("(?:豆豆|小狗|狗狗)"/);
   assert.doesNotMatch(lifeComponents, /量杯|飼料克數|每餐份量|餵食後觀察|是否吃完/);
   assert.match(profileReport, /petName/);
   assert.match(shared, /width=\{2720\} height=\{1860\}/);
@@ -145,7 +146,8 @@ test("contains the five-unit journey and current project-owned artwork", async (
   assert.match(css, /font-family: "Huninn"/);
   assert.match(css, /\.cost-bar/);
   assert.match(css, /\.room-supply-row \{ display: flex/);
-  assert.match(css, /\.room-hazard-alert \{ position: absolute; left: 16px; top: 16px/);
+  assert.match(css, /\.room-hazard-overlay \{ position: absolute; inset: 0;/);
+  assert.match(css, /\.room-hazard-alert \{ position: relative;/);
   assert.match(css, /\.car-trunk-scene/);
   assert.match(css, /prep-room\.webp/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);

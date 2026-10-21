@@ -1,4 +1,4 @@
-import type { SpeciesId } from "./types";
+import { pickSpeciesEntry, type SpeciesId } from "./types";
 import type { HomeReadinessConfig } from "./home-readiness-types";
 import { dogHomeReadiness } from "../species/dog/home-readiness";
 import { catHomeReadiness } from "../species/cat/home-readiness";
@@ -20,10 +20,5 @@ export const homeReadinessBySpecies: Record<SpeciesId, HomeReadinessConfig> = {
 };
 
 export function getHomeReadinessConfig(species: string): HomeReadinessConfig {
-  if (species === "cat") return homeReadinessBySpecies.cat;
-  if (species === "rabbit") return homeReadinessBySpecies.rabbit;
-  if (species === "bird") return homeReadinessBySpecies.bird;
-  if (species === "hamster") return homeReadinessBySpecies.hamster;
-  if (species === "gecko") return homeReadinessBySpecies.gecko;
-  return homeReadinessBySpecies.dog;
+  return pickSpeciesEntry(homeReadinessBySpecies, species);
 }

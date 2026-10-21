@@ -181,10 +181,12 @@ export function ArrivalMealActivity({
         {feeding.interaction === "choice" ? <div className="scene-media-placeholder" aria-live="polite"><small>互動場景</small><b>食碗</b><p>{activity.hamsterMealSelected.length ? choiceItems.filter((item) => activity.hamsterMealSelected.includes(item.id)).map((item) => item.label).join("、") : feeding.emptyBowlText}</p></div> : <>
         <img className="arrival-meal-room arrival-meal-room--desktop" src={feeding.scene.desktopBackground} alt={`${feeding.animalName}的新家房間`} />
         <img className="arrival-meal-room arrival-meal-room--mobile" src={feeding.scene.mobileBackground} alt="" />
-        {foodWarning && <div className="arrival-meal-warning" role="alert">
-          <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
-          <b>{foodWarning.title}</b>
-          <p>{foodWarning.text}</p>
+        {foodWarning && <div className="arrival-meal-warning-overlay">
+          <div className="arrival-meal-warning" role="dialog" onClick={() => setFoodWarning(null)}>
+            <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
+            <b>{foodWarning.title}</b>
+            <p>{foodWarning.text}</p>
+          </div>
         </div>}
         <img className="arrival-meal-dog" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "pet")} src={complete && (feeding.readyPetDelayMs === undefined || readyPetDisplayed) ? feeding.scene.pet.ready : feeding.scene.pet.waiting} alt={complete ? `${petName || feeding.animalName}安心地待在房間裡` : `${petName || feeding.animalName}還在等待晚餐與飲水`} />
         <img className="arrival-meal-water" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "water")} src={activity.arrivalMealWaterReady ? feeding.scene.water.ready : feeding.scene.water.empty} alt={activity.arrivalMealWaterReady ? "裝好水的水碗" : "空水碗"} />

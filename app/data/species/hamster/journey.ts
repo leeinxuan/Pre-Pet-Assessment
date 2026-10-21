@@ -1,4 +1,5 @@
 import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
+import { hamsterAssets } from "./assets";
 
 export const hamsterJourneyItems: JourneyItem[] = [
   { id: "hamster-arrival", type: "scenario", timeLabel: "接回家", title: "第一天適應新家", scenarioId: "hamster-arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
@@ -14,7 +15,18 @@ export const hamsterJourneyItems: JourneyItem[] = [
 
 export const hamsterDailyBehaviorScenarioIds = ["hamster-nocturnal", "hamster-picky-eating"] as const;
 export const hamsterScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "芝麻", knowledgeTitle: "倉鼠小知識", correctFeedbackMedia: { type: "placeholder" } },
-  scenarios: {},
+  defaults: { defaultPetName: "芝麻", knowledgeTitle: "倉鼠小知識", correctFeedbackMedia: { type: "video", src: hamsterAssets.petJourney.correctPrimary } },
+  scenarios: {
+    "hamster-nocturnal": { sceneVideo: { src: hamsterAssets.petJourney.nocturnal, ariaLabel: "倉鼠夜行性情境影片" } },
+    "hamster-picky-eating": { sceneVideo: { src: hamsterAssets.petJourney.pickyEating, ariaLabel: "倉鼠挑食情境影片" } },
+  },
 };
-export const hamsterJourney = { items: hamsterJourneyItems, dailyBehaviorScenarioIds: hamsterDailyBehaviorScenarioIds } as const;
+export const hamsterJourney = {
+  items: hamsterJourneyItems,
+  dailyBehaviorScenarioIds: hamsterDailyBehaviorScenarioIds,
+  transitionMedia: {
+    arrival: hamsterAssets.petJourney.arrivalTransition,
+    timePass: hamsterAssets.petJourney.timePassesAging,
+    busyCare: hamsterAssets.petJourney.busyDayTransition,
+  },
+} as const;

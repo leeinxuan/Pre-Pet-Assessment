@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Rabbit carry sorting keeps native image dimensions inside pointer-sort rows. */
 import { useEffect, useRef, useState } from "react";
-import { rabbitActivityScenarios, rabbitCarrySortSteps } from "../../../data/species/rabbit/scenarios";
+import { rabbitActivityScenarios, rabbitCarrySortSteps } from "../../../data/species/rabbit/activities";
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
 import { CompletionReminderBlock, CorrectFeedbackLayout } from "./scenario-ui";

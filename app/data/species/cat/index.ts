@@ -1,8 +1,6 @@
 import { catAssets } from "./assets";
 import { catFeeding } from "./feeding";
-import { catHazards, catRoomItems } from "./preparation";
 import { catJourney, catScenarioPresentation } from "./journey";
-import { catLayout } from "./layout";
 import { catPreparation } from "./preparation";
 import { catReport } from "./report";
 import { catLifeScenarios, getCatLifeScenarios } from "./scenarios";
@@ -13,11 +11,12 @@ import { catHomeReadiness } from "./home-readiness";
 import { catMasteredCareThemes } from "./mastered-care-themes";
 import { catCareReviewAdditionalNotes } from "./care-review-notes";
 import { catAcquisition } from "./acquisition";
+import { catLitterRescueConfig } from "./activities";
 
 export const catConfig = {
   id: "cat" as const,
   selection: catSelection,
-  preparation: { roomItems: catRoomItems, hazards: catHazards, ...catPreparation },
+  preparation: catPreparation,
   journey: catJourney,
   scenarios: catLifeScenarios,
   getLifeScenarios: getCatLifeScenarios,
@@ -26,7 +25,6 @@ export const catConfig = {
   breedChallenges: getCatBreedChallengeScenarios,
   report: catReport,
   assets: catAssets,
-  layout: catLayout,
   feeding: catFeeding,
   copy: catCopy,
   homeReadiness: catHomeReadiness,
@@ -35,4 +33,4 @@ export const catConfig = {
   acquisition: catAcquisition,
 } as const;
 
-export { catAssets, catJourney, catLayout, catPreparation, catReport, catSelection, catLifeScenarios, getCatBreedChallengeScenarios, catFeeding };
+export { catAssets, catJourney, catPreparation, catReport, catSelection, catLifeScenarios, getCatBreedChallengeScenarios, catFeeding, catLitterRescueConfig };

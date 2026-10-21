@@ -84,7 +84,7 @@ export const geckoLifeScenarios: Scenario[] = [
       knowledgeContent: [
         {
           type: "paragraph",
-          text: "守宮在幾種情況下會短暫拒食——**適應期（接回 1–2 週內）**、**蛻皮前**（皮膚變灰白）、**繁殖季**（發情期），以及**環境溫度不足**時。首先確認這四個原因，若排除後仍超過 14 天未進食，**應諮詢熟悉爬蟲的獸醫**。不要急著強迫餵食，那會讓問題更難解決。"
+          text: "守宮在幾種情況下會短暫拒食——**適應期（接回 1–2 週內）**、**蛻皮前**（皮膚變灰白）、**繁殖季**（發情期），以及**環境溫度不足**時。首先確認這四個原因，若排除後仍超過 14 天未進食，應諮詢**熟悉爬蟲類醫療的獸醫師**。不要急著強迫餵食，那會讓問題更難解決。"
         }
       ]
     }
@@ -248,7 +248,7 @@ export const geckoLifeScenarios: Scenario[] = [
     description: "{petName} 活動力下降、拒食且尾巴消瘦，你需要立刻判斷下一步。",
     questionText: "你應該怎麼做？",
     topic: "健康突發事件",
-    reportSummary: "出現明顯異常時，記錄症狀並盡快諮詢爬蟲獸醫。",
+    reportSummary: "出現明顯異常時，記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**。",
     artIndex: 0,
     sceneMedia: {
       type: "placeholder"
@@ -257,11 +257,11 @@ export const geckoLifeScenarios: Scenario[] = [
       type: "placeholder"
     },
     choices: [
-      correct("gecko-vet", "記錄症狀並盡快諮詢熟悉爬蟲的獸醫", "正確！先記錄並安排專業評估。", [
+      correct("gecko-vet", "記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**", "正確！先記錄並安排專業評估。", [
         "gecko-mild-sick", "gecko-moderate-sick", "gecko-hospitalization"
       ]), wrong("gecko-wait", "再等幾天看看", "明顯異常不應以等待取代專業評估。"), wrong("gecko-force-feed", "強迫餵食讓牠恢復體力", "強迫餵食會增加壓力且可能掩蓋問題。")
     ],
-    correctSummary: ["守宮出現後腿無力顫抖或持續拒食等異常時，應立刻記錄並諮詢熟悉爬蟲的獸醫，不可自行給藥、給人用藥物或等待觀察。"],
+    correctSummary: ["守宮出現後腿無力顫抖或持續拒食等異常時，應立刻記錄並諮詢**熟悉爬蟲類醫療的獸醫師**，不可自行給藥、給人用藥物或等待觀察。"],
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你注意到異常並決定尋求專業協助，做得很好！",
@@ -292,7 +292,7 @@ export const geckoLifeScenarios: Scenario[] = [
           text: "**泄殖腔外有組織外露**：泄殖腔口出現紅色或粉紅色組織，**絕對不可自行嘗試推回**，需立即就醫。"
         }
       ],
-      reminder: "食慾、排泄、精神與後腿力量的變化都是重要觀察指標；多項同時出現時，請準備好記錄並盡速聯絡熟悉爬蟲的獸醫。台灣熟悉爬蟲疾病的獸醫資源相對少，建議事先找好診所，不要等到急症才找。"
+      reminder: "食慾、排泄、精神與後腿力量的變化都是重要觀察指標；多項同時出現時，請準備好記錄並盡速聯絡**熟悉爬蟲類醫療的獸醫師**。台灣**熟悉爬蟲類醫療的獸醫師**資源相對少，建議事先找好診所，不要等到急症才找。"
     }
   },
   {

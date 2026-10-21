@@ -3,11 +3,11 @@
 /* eslint-disable @next/next/no-img-element -- Shared game artwork uses CSS-controlled intrinsic sizing that must remain unchanged. */
 
 import React, { useEffect, useRef, useState } from "react";
-import { categories } from "../../data/shared/app-flow";
 import { sharedAssets } from "../../data/shared/assets";
+import { previousPetHistoryCopy } from "../../data/shared/app-flow";
 import { isTemporaryReserveExpense, money } from "../../data/shared/expenses";
 import { getJourneyItemsForSpecies } from "../../data/species/journey";
-import { getSpeciesConfig } from "../../data/species/index";
+import { getSpeciesConfig, speciesCategories } from "../../data/species/index";
 import { interpolatePetName } from "../../data/shared/pet-text";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
 import { useDialogFocus } from "./useDialogFocus";
@@ -360,11 +360,7 @@ export function SpeciesStep({
         <section className="partner-selection-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.selectionTitle} />
           <div className="category-grid species-page-grid">
-            {categories.map((item) => {
-              const selectionConfig = getSpeciesConfig(item.id).selection;
-              const categoryImage = "categoryImage" in selectionConfig && typeof selectionConfig.categoryImage === "string"
-                ? selectionConfig.categoryImage
-                : item.image;
+            {speciesCategories.map((item) => {
               return (
                 <button
                   key={item.id}
@@ -373,7 +369,7 @@ export function SpeciesStep({
                   disabled={!item.active}
                   aria-label={item.active ? `選擇${item.label}` : `${item.label}，陸續開放`}
                 >
-                  {categoryImage ? <img className="partner-card-image" src={categoryImage} alt="" /> : <span>{item.icon}</span>}<b>{item.label}</b>
+                  {item.image ? <img className="partner-card-image" src={item.image} alt="" /> : <span>{item.icon}</span>}<b>{item.label}</b>
                   <small>{item.active ? "點擊選擇" : "陸續開放"}</small>
                 </button>
               );
@@ -391,15 +387,15 @@ export function SpeciesStep({
           <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
         </section>
       ) : visibleSelectionPage === "history" ? (
-        <section className="partner-selection-page previous-dog-page" key="selection-page">
+        <section className="partner-selection-page previous-pet-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.historyTitle} body={speciesConfig.copy.historyBody} />
-          <div className="previous-dog-choice" role="group" aria-label={`是否曾經養過${speciesConfig.copy.animalName}`}>
-            <button type="button" className={hasPreviousPet === true ? "selected" : ""} aria-pressed={hasPreviousPet === true} onClick={() => onHasPreviousPet(true)}><b>{interpolatePetName(speciesConfig.copy.hasPreviousLabel, petName, category)}</b><small>接著填寫以前養過的寵物名字</small></button>
-            <button type="button" className={hasPreviousPet === false ? "selected" : ""} aria-pressed={hasPreviousPet === false} onClick={() => onHasPreviousPet(false)}><b>{interpolatePetName(speciesConfig.copy.noPreviousLabel, petName, category)}</b><small>直接開始這次的飼養前準備</small></button>
+          <div className="previous-pet-choice" role="group" aria-label={`是否曾經養過${speciesConfig.copy.animalName}`}>
+            <button type="button" className={hasPreviousPet === true ? "selected" : ""} aria-pressed={hasPreviousPet === true} onClick={() => onHasPreviousPet(true)}><b>{interpolatePetName(speciesConfig.copy.hasPreviousLabel, petName, category)}</b><small>{previousPetHistoryCopy.hasPreviousHint}</small></button>
+            <button type="button" className={hasPreviousPet === false ? "selected" : ""} aria-pressed={hasPreviousPet === false} onClick={() => onHasPreviousPet(false)}><b>{interpolatePetName(speciesConfig.copy.noPreviousLabel, petName, category)}</b><small>{previousPetHistoryCopy.noPreviousHint}</small></button>
           </div>
           {hasPreviousPet === true && (
-            <div className="previous-dog-details">
-              <label className="previous-dog-name">以前養過的寵物名字<input value={oldPetName} maxLength={12} placeholder="例如：豆豆" onChange={(event) => onOldPetName(event.target.value)} /></label>
+            <div className="previous-pet-details">
+              <label className="previous-pet-name">{previousPetHistoryCopy.oldPetNameLabel}<input value={oldPetName} maxLength={12} placeholder={previousPetHistoryCopy.oldPetNamePlaceholder} onChange={(event) => onOldPetName(event.target.value)} /></label>
             </div>
           )}
           <NavButtons
@@ -411,14 +407,14 @@ export function SpeciesStep({
         </section>
       ) : (
         <section className="experience-transition-page" key="selection-page" aria-labelledby="experience-transition-title">
-          <div className="experience-dogs" aria-label="從過去的陪伴經驗走向新的生命">
-            <article className="experience-dog-card experience-dog-card--past">
+          <div className="experience-pets" aria-label="從過去的陪伴經驗走向新的生命">
+            <article className="experience-pet-card experience-pet-card--past">
               <span>過去熟悉的生活</span>
               {selectedSpecies?.image ? <img src={selectedSpecies.image} alt={`以前的${speciesConfig.copy.animalName}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">🐾</span>}
               <div><h2>{oldPetName || `以前的${speciesConfig.copy.animalName}`}</h2></div>
             </article>
             <div className="experience-arrow" aria-hidden="true"><i>→</i></div>
-            <article className="experience-dog-card experience-dog-card--next">
+            <article className="experience-pet-card experience-pet-card--next">
               <span>準備迎接的新生活</span>
               {selectedSpecies?.image ? <img src={selectedSpecies.image} alt={`這次想迎接的${speciesConfig.copy.animalName}`} /> : <span className="experience-pet-placeholder" aria-hidden="true">🐾</span>}
               <div><h2>{petName || `新的${speciesConfig.copy.animalName}`}</h2></div>

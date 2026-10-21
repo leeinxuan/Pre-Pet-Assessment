@@ -22,6 +22,49 @@ test("all registered species expose the complete canonical data contract", async
   }
 });
 
+test("specialized interactions have one species-local activity entry point", async () => {
+  for (const species of speciesIds) {
+    await access(new URL(`app/data/species/${species}/activities.ts`, root));
+  }
+
+  const [dogActivities, rabbitActivities, catPreparation, catIndex] = await Promise.all([
+    source("app/data/species/dog/activities.ts"),
+    source("app/data/species/rabbit/activities.ts"),
+    source("app/data/species/cat/preparation.ts"),
+    source("app/data/species/cat/index.ts"),
+  ]);
+  assert.match(dogActivities, /walkingActivityConfig/);
+  assert.match(rabbitActivities, /rabbitGroomingConfig/);
+  assert.match(catPreparation, /roomItems:\s*catRoomItems/);
+  assert.match(catPreparation, /hazards:\s*catHazards/);
+  assert.match(catIndex, /preparation:\s*catPreparation/);
+});
+
+test("formal species data does not retain layout or split activity-data modules", async () => {
+  for (const species of speciesIds) {
+    const base = `app/data/species/${species}/`;
+    await assert.rejects(access(new URL(`${base}layout.ts`, root)));
+  }
+
+  const [dogActivities, rabbitActivities, rabbitJourney, rabbitScenarios, rabbitReport, birdActivities, birdScenarios] = await Promise.all([
+    source("app/data/species/dog/activities.ts"),
+    source("app/data/species/rabbit/activities.ts"),
+    source("app/data/species/rabbit/journey.ts"),
+    source("app/data/species/rabbit/scenarios.ts"),
+    source("app/data/species/rabbit/report.ts"),
+    source("app/data/species/bird/activities.ts"),
+    source("app/data/species/bird/scenarios.ts"),
+  ]);
+  await assert.rejects(access(new URL("app/data/species/dog/walking.ts", root)));
+  assert.match(dogActivities, /walkingActivityConfig/);
+  assert.match(rabbitActivities, /rabbitActivityScenarios/);
+  assert.doesNotMatch(rabbitJourney, /export const rabbitGroomingConfig/);
+  assert.doesNotMatch(rabbitScenarios, /export const rabbitActivityScenarios/);
+  assert.doesNotMatch(rabbitReport, /export const rabbitGroomingCompletion/);
+  assert.match(birdActivities, /export const birdActivityScenarios/);
+  assert.doesNotMatch(birdScenarios, /export const birdActivityScenarios/);
+});
+
 test("acquisition sources keep the legal business lookup only for dog and cat", async () => {
   for (const species of speciesIds) {
     const acquisition = await source(`app/data/species/${species}/acquisition.ts`);

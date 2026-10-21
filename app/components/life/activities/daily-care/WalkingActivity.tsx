@@ -3,25 +3,10 @@
 /* eslint-disable @next/next/no-img-element -- The walking scene uses native layered images for animation and drag coordinates. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
-import { dogAssets } from "../../../../data/species/dog/assets";
-import { dogReport } from "../../../../data/species/dog/report";
-import { dogShibaWalkingAsset, walkingLawCopy, walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../../../data/species/dog/walking";
+import { walkingActivityConfig, walkingLawCopy, walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../../../data/species/dog/activities";
 import type { LifeActivityState } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
-import { renderKnowledgeText } from "../activity-ui";
-
-const dogDailyAsset = (fileName: string) => `${dogAssets.daily.root}/${fileName}`;
-
-const walkingPrepNotes: Record<string, string> = {
-  leash: "外出時維持安全距離，避免走失或衝突。",
-  bag: "散步時清理排泄物，是對環境與他人的責任。",
-  water: "天氣熱或散步時間較長時，幫狗狗補充飲水。",
-};
-
-// 點一下按鈕前進一小步；長按則以每秒固定百分比平滑前進，避免不同螢幕更新頻率造成跳動。
-const walkingStep = 7;
-const walkingHoldSpeed = 40;
-const dailyLifeStageLabel = "日常照護";
+import { renderKnowledgeText, withPetName } from "../activity-ui";
 
 // 貓砂盆救援隊暫用已存在的共用素材，避免缺少 /assets/cat/... 圖檔時讓 Vite/RSC 請求失敗。
 // 正式貓咪素材補齊後，只需在此替換為對應的 /assets/cat/... 路徑即可。
@@ -35,13 +20,8 @@ type WalkingPathPoint = {
   scale: number;
 };
 
-const walkingSceneCompletionAt: Partial<Record<number, number>> = {
-  // 場景 2 視覺上較早抵達終點，縮短完成距離，避免最後還要多按幾下。
-  1: 80,
-};
-
 function getWalkingCompletionPosition(sceneIndex: number) {
-  return walkingSceneCompletionAt[sceneIndex] ?? 100;
+  return walkingActivityConfig.interaction.completionAtByScene[sceneIndex] ?? 100;
 }
 
 function clampPercent(value: number) {
@@ -115,6 +95,7 @@ export function WalkingActivity({
   onPlayExpenseSequence?: (ids: readonly string[]) => Promise<void>;
   onContinue: () => void;
 }) {
+  const { assets, copy, interaction, prepNotes } = walkingActivityConfig;
   const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
   const [safetyStep, setSafetyStep] = useState<"question" | "law" | "correct" | "prepared">(
     activity.walkingMinutes > 0 || activity.walkingComplete ? "prepared" : "question",
@@ -140,11 +121,11 @@ export function WalkingActivity({
   const allPrepared = walkingPrepItems.every((item) => prepared.includes(item.id));
   const needsCleanup = started && scene.poopEvent && position >= 50 && !activity.walkingPoopCleaned;
   const progressMinutes = Math.min(20, activity.walkingMinutes);
-  const walkingInstruction = "按住「往前走」，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。";
+  const walkingInstruction = copy.walkInstruction;
   const walkingEventMessage = scene.poopEvent && position >= 50
     ? activity.walkingPoopCleaned
-      ? { title: "做得很好！", body: "散步時清理排泄物，也是照顧責任的一部分。" }
-      : { title: "散步中的小事件", body: "牠在路上排泄了，先停下來幫牠清理乾淨，再繼續往前走。" }
+      ? copy.messages.event.complete
+      : copy.messages.event.pending
     : null;
   const mobilePoopPlacement = walkingSceneLayout[sceneIndex]?.mobilePoop;
   const mobilePoopStyle = mobilePoopPlacement
@@ -195,11 +176,11 @@ export function WalkingActivity({
 
   function startWalk() {
     if (!prepared.includes("leash")) {
-      setMessage("外出活動需要適當防護措施，牽繩或胸背帶能避免走失、驚嚇衝出，也能保護牠和其他人。");
+      setMessage(copy.messages.leashRequired);
       return;
     }
     if (!allPrepared) {
-      setMessage("出門前也要準備撿便袋和水，讓散步更安心。");
+      setMessage(copy.messages.preparationRequired);
       return;
     }
     setStarted(true);
@@ -217,13 +198,13 @@ export function WalkingActivity({
       walkingSceneIndex: complete ? completedIndex : completedIndex + 1,
       walkingComplete: complete,
     });
-    setMessage(complete ? "散步時間達到 20 分鐘！" : `完成「${walkingScenes[completedIndex].title}」，散步時間 +5 分鐘。`);
+    setMessage(complete ? copy.messages.complete : copy.messages.sceneComplete(walkingScenes[completedIndex].title));
   }
 
   const advanceWalk = useCallback((distance: number) => {
     if (!started || activity.walkingComplete) return;
     if (needsCleanup) {
-      setMessage("先把排泄物清理乾淨，再繼續散步。");
+      setMessage(copy.messages.cleanupRequired);
       setMoving(false);
       return;
     }
@@ -254,18 +235,18 @@ export function WalkingActivity({
 
   function startForward() {
     if (!started || activity.walkingComplete || needsCleanup) {
-      if (needsCleanup) setMessage("先把排泄物清理乾淨，再繼續散步。");
+        if (needsCleanup) setMessage(copy.messages.cleanupRequired);
       return;
     }
     if (forwardHeldRef.current || forwardHoldTimerRef.current !== null) return;
     // 短按只前進一步；超過門檻才啟動唯一的 rAF 連續移動迴圈。
-    advanceWalk(walkingStep);
+    advanceWalk(interaction.stepDistance);
     const moveFrame = (timestamp: number) => {
       if (!forwardHeldRef.current) return;
       const previousTimestamp = forwardLastFrameRef.current ?? timestamp;
       const deltaSeconds = Math.min(0.05, Math.max(0, timestamp - previousTimestamp) / 1000);
       forwardLastFrameRef.current = timestamp;
-      if (deltaSeconds > 0) advanceWalk(walkingHoldSpeed * deltaSeconds);
+      if (deltaSeconds > 0) advanceWalk(interaction.holdSpeed * deltaSeconds);
       if (forwardHeldRef.current) forwardAnimationFrameRef.current = window.requestAnimationFrame(moveFrame);
     };
     forwardHoldTimerRef.current = window.setTimeout(() => {
@@ -279,7 +260,7 @@ export function WalkingActivity({
   function moveForwardByKeyboard() {
     // 原本的指標操作包含「按住」的連續移動；鍵盤則以一次按鍵前進一小步，
     // 讓 Enter 與 Space 有可預期、可重複的等價操作。
-    advanceWalk(walkingStep);
+    advanceWalk(interaction.stepDistance);
     if (keyboardMoveTimerRef.current !== null) window.clearTimeout(keyboardMoveTimerRef.current);
     keyboardMoveTimerRef.current = window.setTimeout(() => {
       keyboardMoveTimerRef.current = null;
@@ -367,7 +348,7 @@ export function WalkingActivity({
     draggingBagRef.current = false;
     setDraggedBag(null);
     onChange({ walkingPoopCleaned: true });
-    setMessage("已清理完成，繼續陪牠往前走。");
+    setMessage(copy.messages.cleanupComplete);
   }
 
   const renderWalkingEventCard = (className = "") => walkingEventMessage ? (
@@ -385,11 +366,11 @@ export function WalkingActivity({
               onPointerUp={finishDraggingBag}
               onPointerCancel={cancelDraggingBag}
               onClick={(event) => { if (event.detail === 0) cleanupPoop(); }}
-              aria-label="使用撿便袋清理排泄物"
+              aria-label={copy.aria.cleanupBag}
             >
-              <img src={dogDailyAsset("poop-bag-1.webp")} alt="" />
+              <img src={assets.poopBag} alt="" />
             </button>
-            <p className="walking-drag-instruction">拖曳撿便袋到便便的位置完成清理。</p>
+            <p className="walking-drag-instruction">{copy.aria.cleanupInstruction}</p>
           </div>
         </div>
       )}
@@ -397,38 +378,38 @@ export function WalkingActivity({
   ) : null;
 
   if (activity.walkingComplete) return <DailyCareCompletion
-    title="每天，都要一起走出去"
-    summary={`你陪${petName}完成了今天的散步，也記得為牠清理排泄物。`}
-    detail="規律散步讓牠能探索環境、嗅聞、活動身體，也有助於維持生理與心理健康。"
-    reflectionTitle="把每天的照顧，想成長長的日常"
-    reflection="散步只是照顧牠的一部分。餵食、換水、清潔、互動、觀察狀況與安靜陪伴，都會反覆出現在每一天裡。晴天、下雨、疲累或工作忙碌時，牠仍需要你留下一段穩定的時間。請想一想：你願意怎麼安排自己的生活，長期陪牠好好長大、變老？"
-    dailyCareBreakdown={dogReport.dailyCareBreakdown}
+    title={copy.completion.title}
+    summary={withPetName(copy.completion.summary, petName, "dog")}
+    detail={copy.completion.detail}
+    reflectionTitle={copy.completion.reflectionTitle}
+    reflection={copy.completion.reflection}
+    dailyCareBreakdown={copy.completion.dailyCareBreakdown}
     onContinue={onContinue}
   />;
 
   return (
-    <section className="walking-activity" aria-label="今天也要出門散步">
+    <section className="walking-activity" aria-label={copy.aria.activity}>
       <div className="walking-head">
         <div>
-          <p className="life-stage-label">{dailyLifeStageLabel}</p>
-          <h1>今天也要出門散步</h1>
-          {!started && safetyStep === "question" && <p>出門前，先選出你認為能兼顧安全與探索的散步方式。</p>}
-          {!started && safetyStep !== "question" && <p>一天的照顧不只是在家餵食和陪伴，狗狗也需要規律外出活動。散步能讓牠探索環境、消耗體力、練習社會化，也有機會完成排泄。</p>}
+          <p className="life-stage-label">{copy.stageLabel}</p>
+          <h1>{copy.heading}</h1>
+          {!started && safetyStep === "question" && <p>{copy.beforeChoice}</p>}
+          {!started && safetyStep !== "question" && <p>{copy.afterChoice}</p>}
         </div>
       </div>
 
       {!started ? (
         safetyStep === "question" ? (
           <section className="walking-safety-choice" aria-labelledby="walking-safety-title">
-            <h2 id="walking-safety-title">你會用哪一種方式陪牠散步？</h2>
+            <h2 id="walking-safety-title">{copy.safetyQuestion}</h2>
             <div className="walking-safety-grid">
               <button type="button" onClick={() => setSafetyStep("correct")}>
-                <img src={dogShibaWalkingAsset("leash-choice.webp")} alt="" />
-                <span><b>繫好牽繩，保持鬆弛</b><small>讓狗狗在可控距離內嗅聞、探索環境。</small></span>
+                <img src={assets.leashChoice} alt="" />
+                <span><b>{copy.choices.leash.title}</b><small>{copy.choices.leash.detail}</small></span>
               </button>
               <button type="button" onClick={() => setSafetyStep("law")}>
-                <img src={dogShibaWalkingAsset("off-leash-choice.webp")} alt="" />
-                <span><b>不繫牽繩，讓牠自己走</b><small>讓狗狗自由自在探索，飼主在後方跟著。</small></span>
+                <img src={assets.offLeashChoice} alt="" />
+                <span><b>{copy.choices.offLeash.title}</b><small>{copy.choices.offLeash.detail}</small></span>
               </button>
             </div>
           </section>
@@ -437,20 +418,20 @@ export function WalkingActivity({
             <span aria-hidden="true">!</span>
             <div><p className="life-stage-label">{walkingLawCopy.incorrect.eyebrow}</p><h2>{walkingLawCopy.incorrect.title}</h2></div>
             {walkingLawCopy.incorrect.paragraphs.map((paragraph) => <p key={paragraph}>{renderKnowledgeText(paragraph)}</p>)}
-            <button type="button" className="secondary" onClick={() => setSafetyStep("question")}>回去重新選擇</button>
+            <button type="button" className="secondary" onClick={() => setSafetyStep("question")}>{copy.actions.retry}</button>
           </section>
         ) : safetyStep === "correct" ? (
           <section className="walking-law-feedback walking-law-feedback--correct" aria-live="polite">
             <span aria-hidden="true">✓</span>
             <div><p className="life-stage-label">{walkingLawCopy.correct.eyebrow}</p><h2>{walkingLawCopy.correct.title}</h2></div>
             {walkingLawCopy.correct.paragraphs.map((paragraph) => <p key={paragraph}>{renderKnowledgeText(paragraph)}</p>)}
-            <button type="button" className="primary" onClick={() => setSafetyStep("prepared")}>繼續準備散步用品 <span>→</span></button>
+            <button type="button" className="primary" onClick={() => setSafetyStep("prepared")}>{copy.actions.continuePreparation} <span>→</span></button>
           </section>
         ) : (
         <div className="walking-prep">
-          <section className="walking-prep-supplies" aria-label="出門前準備用品">
-            <h2>出門前，先確認這些東西</h2>
-            <p className="walking-safety-confirmed">✓ 已選擇牽繩陪伴，讓探索保持在安全範圍內。</p>
+          <section className="walking-prep-supplies" aria-label={copy.preparation.suppliesLabel}>
+            <h2>{copy.preparation.title}</h2>
+            <p className="walking-safety-confirmed">{copy.preparation.safetyConfirmed}</p>
             <div className="walking-prep-list">
               {walkingPrepItems.map((item) => {
                 const done = prepared.includes(item.id);
@@ -462,18 +443,18 @@ export function WalkingActivity({
                       style={{ "--walking-prep-image-scale": item.imageScale } as CSSProperties}
                     />
                     <b>{item.label}</b>
-                    <small>{walkingPrepNotes[item.id]}</small>
+                    <small>{prepNotes[item.id as keyof typeof prepNotes]}</small>
                   </button>
                 );
               })}
             </div>
           </section>
           <div className="walking-prep-card">
-            <h2>準備好再出門</h2>
-            <p>確認牽繩、撿便袋和水都準備好後，就可以陪牠走一段 20 分鐘的散步路線。路上如果牠排泄，也要記得停下來清理。</p>
+            <h2>{copy.preparation.readyTitle}</h2>
+            <p>{copy.preparation.readyDescription}</p>
             {message && <p className="walking-message" role="alert">{message}</p>}
             <div className="walking-prep-actions">
-              <button type="button" className="primary" disabled={!allPrepared} onClick={startWalk}>開始散步 <span>→</span></button>
+              <button type="button" className="primary" disabled={!allPrepared} onClick={startWalk}>{copy.actions.start} <span>→</span></button>
             </div>
           </div>
         </div>)
@@ -485,9 +466,9 @@ export function WalkingActivity({
             className={`walking-scene ${moving ? "is-moving" : ""}`}
             ref={sceneRef}
             role="group"
-            aria-label="散步場景"
+            aria-label={copy.aria.scene}
           >
-            <div className="walking-progress walking-progress-overlay" aria-label={`散步進度 ${progressMinutes} / 20 分鐘`}>
+            <div className="walking-progress walking-progress-overlay" aria-label={copy.aria.progress(progressMinutes)}>
               <b>散步進度</b>
               <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
               <small>{progressMinutes} / 20 分鐘</small>
@@ -499,7 +480,7 @@ export function WalkingActivity({
             {draggedBag && (
               <img
                 className="walking-drag-bag-ghost"
-                src={dogDailyAsset("poop-bag-1.webp")}
+                src={assets.poopBag}
                 alt=""
                 aria-hidden="true"
                 style={{ left: draggedBag.x, top: draggedBag.y }}
@@ -507,8 +488,8 @@ export function WalkingActivity({
             )}
             <div className="walking-character" style={getWalkingCharacterStyle(sceneIndex, position, isMobileWalkingLayout)}>
               <img
-                src={activity.walkingPoopCleaned ? dogShibaWalkingAsset("walker-dog-bag.webp") : needsCleanup ? dogShibaWalkingAsset("walker-and-dog-poop.webp") : dogShibaWalkingAsset("walker-and-dog.webp")}
-                alt={`正在和${petName}散步的人物與小狗`}
+                src={activity.walkingPoopCleaned ? assets.walkerWithBag : needsCleanup ? assets.walkerWithPoop : assets.walker}
+                alt={withPetName(copy.aria.walkingCharacter, petName, "dog")}
               />
             </div>
             {needsCleanup && (
@@ -518,7 +499,7 @@ export function WalkingActivity({
                 style={isMobileWalkingLayout ? mobilePoopStyle : desktopPoopStyle}
                 aria-hidden="true"
               >
-                <img src={dogDailyAsset("poop.webp")} alt="" />
+                <img src={assets.poop} alt="" />
               </div>
             )}
             {renderWalkingEventCard("walking-event-card--desktop")}
@@ -543,7 +524,7 @@ export function WalkingActivity({
                 event.preventDefault();
                 moveForwardByKeyboard();
               }}
-              aria-label="往前走"
+              aria-label={copy.aria.forward}
             >
               <span className="walking-forward-orb" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false">
@@ -553,7 +534,7 @@ export function WalkingActivity({
                   <path d="M17.4 12.2v-1a1.35 1.35 0 1 1 2.7 0v4.1c0 3.3-2.3 5.7-6.1 5.7h-1.6c-2.2 0-3.7-.9-4.9-2.5l-3-4.1a1.7 1.7 0 0 1 2.6-2.1l1.1 1.1" />
                 </svg>
               </span>
-              <span className="walking-forward-label">往前走</span>
+              <span className="walking-forward-label">{copy.actions.forward}</span>
             </button>
           </div>
           {renderWalkingEventCard("walking-event-card--mobile")}

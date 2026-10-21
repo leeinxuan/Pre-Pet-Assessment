@@ -4,8 +4,10 @@
 /* Simplified adoption preparation */
 .simplified-room-layout { grid-template-columns: 320px minmax(0, 1fr); }
 .room-supply-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: -17px -17px 12px; padding: 15px 17px; border-bottom: 1px solid rgba(111, 91, 58, .14); }
-.room-supply-header h2 { margin: 0; font-size: 15px; }
-.room-supply-header span { color: var(--muted); font-size: 11px; font-weight: 800; text-align: right; }
+.room-supply-header h2 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 15px; }
+.room-supply-header > span { color: var(--muted); font-size: 11px; font-weight: 800; text-align: right; }
+.room-supply-header-icon { display: grid; width: 19px; height: 19px; place-items: center; color: inherit; }
+.room-supply-header-icon svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .room-phase-progress { display: flex; gap: 10px; margin: 0 0 16px; padding: 0; list-style: none; }
 .room-phase-progress li { display: flex; flex: 1; align-items: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--muted); font-size: 12px; font-weight: 850; }
 .room-phase-progress li span { display: grid; width: 22px; height: 22px; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 11px; }
@@ -284,18 +286,18 @@
 .room-scene--floor-safe .room-scene-background { animation: roomBackgroundCrossfade .3s ease both; }
 .room-object { position: absolute; z-index: 2; height: auto; padding: 0; border: 0; background: transparent; cursor: pointer; transform: translate(-50%, -50%); filter: drop-shadow(0 5px 5px rgba(65, 45, 21, .2)); }
 .room-object img { display: block; width: 100%; height: auto; max-height: 100%; object-fit: contain; }
-.room-object span { position: absolute; left: 50%; bottom: -17px; max-width: 120px; padding: 2px 6px; border-radius: 999px; background: rgba(255, 253, 247, .92); color: var(--ink); font-size: 9px; font-weight: 900; white-space: nowrap; transform: translateX(-50%); opacity: 0; transition: opacity .2s; }
-.room-object:hover span, .room-object:focus-visible span { opacity: 1; }
+.room-object span:not(.interior-entry-hint):not(.interior-entry-hint-label):not(.room-hazard-label) { position: absolute; left: 50%; bottom: -17px; max-width: 120px; padding: 2px 6px; border-radius: 999px; background: rgba(255, 253, 247, .92); color: var(--ink); font-size: 9px; font-weight: 900; white-space: nowrap; transform: translateX(-50%); opacity: 0; transition: opacity .2s; }
+.room-object:not(.room-hazard):hover span:not(.interior-entry-hint):not(.interior-entry-hint-label):not(.room-hazard-label), .room-object:not(.room-hazard):focus-visible span:not(.interior-entry-hint):not(.interior-entry-hint-label):not(.room-hazard-label) { opacity: 1; }
 .room-object:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 8px; }
 .placed-supply { animation: roomDropPop .45s cubic-bezier(.16,1.5,.3,1) both; }
 .auto-room-object { pointer-events: none; }
 .placed-room-item--food img { transform: scale(1.55); }
 .room-hazard { position: absolute; inset: auto; z-index: 3; cursor: pointer; }
-.room-hazard span { top: -19px; bottom: auto; opacity: 1; transform: translateX(-50%); }
+.room-hazard .room-hazard-label { position: absolute; left: 50%; top: -19px; bottom: auto; max-width: 120px; padding: 2px 6px; border-radius: 999px; background: rgba(255, 253, 247, .92); color: var(--ink); font-size: 9px; font-weight: 900; white-space: nowrap; pointer-events: none; transform: translateX(-50%); opacity: 1; }
 .room-hazard img { transform-origin: center; animation: hazardPulse 2.4s ease-in-out infinite; }
 .room-hazard.dismissing { pointer-events: none; animation: hazardDismiss .26s ease forwards; }
 .room-floor-hazard-hotspot { position: absolute; z-index: 4; box-sizing: border-box; padding: 0; border: 2px dashed rgba(180, 119, 42, .82); border-radius: 18px; background: rgba(255, 229, 158, .12); color: #725022; cursor: pointer; transition: background .18s ease, box-shadow .18s ease; transform: translate(-50%, -50%); }
-.room-floor-hazard-hotspot span { position: absolute; left: 50%; top: 50%; padding: 5px 10px; border: 1px solid rgba(180,119,42,.32); border-radius: 999px; background: rgba(255,252,243,.94); box-shadow: 0 4px 12px rgba(96,62,21,.12); color: #725022; font-size: 12px; font-weight: 900; white-space: nowrap; transform: translate(-50%, -50%); }
+.room-floor-hazard-label { position: absolute; left: 50%; top: 50%; z-index: 1; max-width: 140px; padding: 3px 7px; border-radius: 999px; background: rgba(255, 253, 247, .94); color: var(--ink); font-size: 10px; font-weight: 900; line-height: 1.25; text-align: center; white-space: nowrap; pointer-events: none; box-shadow: 0 3px 8px rgba(65, 45, 21, .12); transform: translate(-50%, -50%); }
 .room-floor-hazard-hotspot:hover { background: rgba(255, 229, 158, .28); box-shadow: inset 0 0 0 2px rgba(255, 250, 229, .46); }
 .room-floor-hazard-hotspot:focus-visible { outline: 3px solid rgba(212,154,36,.7); outline-offset: -3px; }
 .room-flow-scene--custom-aspect { width: min(100%, 480px); aspect-ratio: var(--room-flow-aspect-ratio); justify-self: center; }
@@ -303,19 +305,15 @@
 .room-flow-entry:disabled { cursor: not-allowed; filter: saturate(.7) opacity(.72); }
 .room-flow-entry:not(:disabled):hover, .room-flow-entry:not(:disabled):focus-visible { filter: drop-shadow(0 0 12px rgba(218, 157, 37, .48)); outline: 3px solid rgba(212,154,36,.66); outline-offset: 5px; }
 .room-flow-entry.is-interior-entry-prompt { filter: drop-shadow(0 5px 5px rgba(65,45,21,.2)) drop-shadow(0 0 16px rgba(212,154,36,.72)); animation: roomInteriorEntryGlow 1.35s ease-in-out infinite; }
-.room-interior-entry-hand { --entry-hand-shift: 6px; position: absolute; z-index: 4; top: 50%; width: 42px; height: 42px; overflow: visible; color: #b87816; filter: drop-shadow(0 3px 4px rgba(105,67,16,.18)) drop-shadow(0 0 6px rgba(232,181,69,.34)); pointer-events: none; transform: translate(0, -50%); animation: roomInteriorEntryHand 1.35s ease-in-out infinite; }
-.room-interior-entry-hand path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.1; }
-.room-interior-entry-arrow-shape { transform-box: fill-box; transform-origin: center; }
-.room-interior-entry-hand .room-interior-entry-arrow-shape path { fill: #fffdf8; }
-.room-interior-entry-hand--right .room-interior-entry-arrow-shape { transform: scaleX(-1); }
-.room-interior-entry-hand--left { right: calc(100% + 10px); }
-.room-interior-entry-hand--right { --entry-hand-shift: -6px; left: calc(100% + 10px); }
-.room-flow-entry .room-interior-entry-label { position: absolute; z-index: 4; top: calc(50% + 29px); bottom: auto; display: block; max-width: none; padding: 0; border-radius: 0; background: transparent; color: #fff; font-size: 11px; font-weight: 900; line-height: 1.2; white-space: nowrap; text-shadow: 0 2px 4px rgba(76,47,14,.72); pointer-events: none; opacity: 1; transition: none; }
-.room-flow-entry .room-interior-entry-label--left { right: calc(100% + 31px); left: auto; transform: translateX(50%); }
-.room-flow-entry .room-interior-entry-label--right { right: auto; left: calc(100% + 31px); transform: translateX(-50%); }
+.interior-entry-hint { position: absolute; z-index: 5; top: 50%; display: flex; flex-direction: column; align-items: center; gap: 5px; pointer-events: none; animation: entryHintFloat 2.2s ease-in-out infinite; }
+.interior-entry-hint--left  { right: calc(100% + 10px); }
+.interior-entry-hint--right { left: calc(100% + 10px); }
+.interior-entry-hint-arrow { width: 36px; height: 36px; flex-shrink: 0; fill: #fff; stroke: #c8841a; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 3px 8px rgba(100,60,10,.35)); }
+.interior-entry-hint-label { color: rgba(255,255,255,.95); font-size: 11px; font-weight: 900; white-space: nowrap; text-shadow: 0 1px 5px rgba(80,40,10,.55); }
 .room-flow-return { position: absolute; z-index: 12; top: 16px; left: 16px; display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid rgba(133, 93, 35, .28); border-radius: 50%; background: rgba(255, 252, 245, .94); box-shadow: 0 5px 14px rgba(70,53,26,.16); color: #704d24; font-size: 24px; font-weight: 900; line-height: 1; cursor: pointer; }
 .room-flow-return:hover, .room-flow-return:focus-visible { background: #fff4d7; outline: 3px solid rgba(212,154,36,.55); outline-offset: 2px; }
-.room-hazard-alert { position: absolute; left: 16px; top: 16px; z-index: 20; box-sizing: border-box; width: min(390px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 13px 46px 13px 15px; border: 1px solid #e08942; border-radius: 15px; background: rgba(255, 248, 233, .94); color: #70421c; line-height: 1.55; box-shadow: 0 10px 28px rgba(71,43,18,.14); backdrop-filter: blur(3px); }
+.room-hazard-overlay { position: absolute; inset: 0; z-index: 20; display: grid; align-content: start; padding: 16px; pointer-events: none; }
+.room-hazard-alert { position: relative; box-sizing: border-box; width: min(390px, 100%); max-height: 100%; overflow: auto; padding: 13px 46px 13px 15px; border: 1px solid #e08942; border-radius: 15px; background: rgba(255, 248, 233, .97); color: #70421c; line-height: 1.55; cursor: pointer; box-shadow: 0 10px 28px rgba(71,43,18,.14); backdrop-filter: blur(3px); pointer-events: auto; }
 .room-hazard-alert h2 { margin: 0; font-size: inherit; line-height: inherit; }
 .room-hazard-alert p { margin: 6px 0 0; color: inherit; font-size: 12px; line-height: inherit; }
 .room-hazard-alert b { color: inherit; }
@@ -325,6 +323,7 @@
 .room-hazard-review-list { display: flex; align-items: center; gap: 9px; margin-top: 11px; padding: 8px 10px; border: 1px solid rgba(154,185,155,.28); border-radius: 16px; background: rgba(227,238,225,.42); color: var(--muted); font-size: 12px; }
 .room-hazard-review-icon { display: grid; flex: 0 0 30px; width: 30px; height: 30px; place-items: center; border-radius: 10px; background: var(--mint-soft); color: var(--mint); }
 .room-hazard-review-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.room-hazard-review-icon svg circle { fill: currentColor; stroke: none; }
 .room-hazard-review-items { display: flex; min-width: 0; flex-wrap: wrap; gap: 6px; }
 .room-hazard-review-list button { min-height: 30px; padding: 5px 10px; border: 1px solid rgba(92,135,96,.26); border-radius: 999px; background: var(--mint-soft); color: #4f7051; font: inherit; font-weight: 800; cursor: pointer; }
 .room-hazard-review-list button:hover { background: #e2f1df; }
@@ -333,9 +332,9 @@
 @keyframes hazardDismiss { to { opacity: 0; transform: translate(-50%, -60%) scale(.72); } }
 @keyframes roomDropPop { 0% { opacity: 0; transform: translate(-50%, -75%) scale(.72); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 @keyframes roomBackgroundCrossfade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes roomInteriorEntryHand {
-  0%, 100% { transform: translate(0, -50%); }
-  50% { transform: translate(var(--entry-hand-shift), -50%); }
+@keyframes entryHintFloat {
+  0%, 100% { transform: translateY(-50%); }
+  50%       { transform: translateY(calc(-50% - 5px)); }
 }
 @keyframes roomInteriorEntryGlow {
   0%, 100% { filter: drop-shadow(0 5px 5px rgba(65,45,21,.2)) drop-shadow(0 0 12px rgba(212,154,36,.52)); }
@@ -343,7 +342,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .room-flow-entry.is-interior-entry-prompt { filter: drop-shadow(0 0 14px rgba(212,154,36,.76)); outline: 3px solid rgba(212,154,36,.58); outline-offset: 4px; }
-  .room-interior-entry-hand { animation: none; }
+  .interior-entry-hint { animation: none; transform: translateY(-50%); }
 }
 .room-hazard-alert { animation: roomAlertIn .22s ease both; }
 @keyframes roomAlertIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -411,7 +410,8 @@
   .room-actions-right button { width: 100%; }
   .room-check-message { max-width: none; }
   .room-object span { display: none; }
-  .room-hazard span { display: block; top: -15px; font-size: 8px; }
+  .room-hazard .room-hazard-label { display: block; top: -15px; font-size: 8px; }
+  .room-floor-hazard-label { max-width: 112px; padding: 2px 6px; font-size: 8px; }
   .room-hazard-alert { width: min(390px, calc(100% - 32px)); max-height: calc(100% - 32px); padding: 13px 46px 13px 15px; }
   .room-hazard-review-list { align-items: flex-start; margin-top: 9px; padding: 8px; }
   .room-hazard-review-icon { flex-basis: 28px; width: 28px; height: 28px; }
@@ -461,7 +461,8 @@
   transform: translate(-50%, -50%);
 }
 .unsafe-food-prohibition-icon { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 54px; height: 54px; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(164, 42, 24, .13); color: #b52d1d; font-style: normal; font-size: 34px; line-height: 1; }
-.arrival-meal-warning { position: absolute; left: 16px; top: 16px; z-index: 6; width: min(390px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 13px 46px 13px 15px; border: 1px solid #e08942; border-radius: 15px; background: rgba(255, 248, 233, .94); color: #70421c; line-height: 1.55; box-shadow: 0 10px 28px rgba(71, 43, 18, .14); backdrop-filter: blur(3px); }
+.arrival-meal-warning-overlay { position: absolute; inset: 0; z-index: 6; display: grid; align-content: start; padding: 16px; pointer-events: none; }
+.arrival-meal-warning { position: relative; width: min(390px, 100%); max-height: 100%; overflow: auto; padding: 13px 46px 13px 15px; border: 1px solid #e08942; border-radius: 15px; background: rgba(255, 248, 233, .97); color: #70421c; line-height: 1.55; cursor: pointer; box-shadow: 0 10px 28px rgba(71, 43, 18, .14); backdrop-filter: blur(3px); pointer-events: auto; }
 .arrival-meal-warning b { display: block; }
 .arrival-meal-warning p { margin: 6px 0 0; color: inherit; font-size: 12px; }
 .arrival-meal-warning-close { position: absolute; top: 9px; right: 9px; display: grid; place-items: center; width: 29px; height: 29px; border: 1px solid rgba(112, 66, 28, .16); border-radius: 50%; background: rgba(255, 253, 247, .84); color: #70421c; font: inherit; font-size: 18px; font-weight: 900; line-height: 1; cursor: pointer; transition: background .18s ease, transform .18s ease; }

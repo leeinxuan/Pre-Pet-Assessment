@@ -56,6 +56,14 @@ function CareReviewRichText({ blocks, petName, species }: { blocks: HomeReadines
   return <>{paragraphs.map((block, index) => <p key={`paragraph-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} species={species} /></p>)}{items.length > 0 && <ul>{items.map((block, index) => <li key={`item-${index}`}><HomeReadinessReviewText segments={block.segments} petName={petName} species={species} /></li>)}</ul>}</>;
 }
 
+function ReviewAlertIcon() {
+  return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 5v8" /><circle cx="12" cy="17" r="1.25" /></svg>;
+}
+
+function ReviewBookIcon() {
+  return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M4 5.5c2.9-1.1 5.5-.6 8 1.1v12c-2.5-1.7-5.1-2.2-8-1.1zM20 5.5c-2.9-1.1-5.5-.6-8 1.1v12c2.5-1.7 5.1-2.2 8-1.1z" /></svg>;
+}
+
 function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {
   // 複習內容以企劃指定的 correctSummary 為唯一來源；不可由選項或回饋拼接出另一版知識點。
   const rawPoints = scenario.correctSummary ?? [];
@@ -447,13 +455,13 @@ export function AssessmentReport({
         </section>
 
         <section className="care-review-section care-review-followup" aria-labelledby="followup-care-title">
-          <header><span aria-hidden="true">✦</span><div><h2 id="followup-care-title">建議再留意的觀念</h2><p>以下主題在體驗中曾出現不同選擇，建議在真正飼養前，再多花一些時間了解。</p></div></header>
+          <header><span aria-hidden="true"><ReviewAlertIcon /></span><div><h2 id="followup-care-title">建議再留意的觀念</h2><p>以下主題在體驗中曾出現不同選擇，建議在真正飼養前，再多花一些時間了解。</p></div></header>
           {discussionTopics.length ? <div className="care-review-topic-grid">
-            {discussionTopics.map((topic) => <article key={topic.id}><span aria-hidden="true">✦</span><div><b>{topic.title}</b><p>{topic.summary ?? topic.topic}</p></div><button type="button" className="discussion-info-button" onClick={() => setActiveDiscussionId(topic.id)} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button></article>)}
+            {discussionTopics.map((topic) => <article key={topic.id}><span aria-hidden="true"><ReviewAlertIcon /></span><div><b>{topic.title}</b><p>{topic.summary ?? topic.topic}</p></div><button type="button" className="discussion-info-button" onClick={() => setActiveDiscussionId(topic.id)} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button></article>)}
           </div> : <div className="care-review-all-clear"><span aria-hidden="true">✓</span><p>你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。</p></div>}
         </section>
 
-        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true">◌</span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true">◌</span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} species={species} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} species={species} /></p></div><button type="button" className="discussion-info-button" onClick={() => setActiveAdditionalNoteIndex(index)} aria-label={`查看「${homeReadinessText(note.title, petName, species)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
+        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true"><ReviewBookIcon /></span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true"><ReviewBookIcon /></span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} species={species} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} species={species} /></p></div><button type="button" className="discussion-info-button" onClick={() => setActiveAdditionalNoteIndex(index)} aria-label={`查看「${homeReadinessText(note.title, petName, species)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
 
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>

@@ -1,16 +1,36 @@
 import { birdAssets } from "./assets";
+import { birdSelection } from "./selection";
 import { birdFeeding } from "./feeding";
 import { getBirdChallengeScenarios } from "./breed-challenges";
 import { birdJourney, birdScenarioPresentation } from "./journey";
-import { birdLayout } from "./layout";
 import { birdPreparation } from "./preparation";
 import { birdReport } from "./report";
-import { birdActivityScenarios, birdLifeScenarios } from "./scenarios";
+import { birdLifeScenarios } from "./scenarios";
 import { birdCopy } from "./copy";
 import { birdHomeReadiness } from "./home-readiness";
 import { birdMasteredCareThemes } from "./mastered-care-themes";
 import { birdCareReviewAdditionalNotes } from "./care-review-notes";
 import { birdAcquisition } from "./acquisition";
-export const birdSelection = { skipBreedPage: true, breeds: [{ id: "bird", species: "bird", label: "鸚鵡", icon: "🦜", image: birdAssets.selection.bird, size: "small", shortDescription: "鸚鵡對空氣品質、環境變化與社交互動很敏感；不同物種的壽命與食性差異也很大。" }] } as const;
-export const birdConfig = { id: "bird" as const, selection: birdSelection, preparation: birdPreparation, journey: birdJourney, scenarios: birdLifeScenarios, getLifeScenarios: () => birdLifeScenarios, getReportScenarios: () => [...birdLifeScenarios, ...Object.values(birdActivityScenarios)], scenarioPresentation: birdScenarioPresentation, breedChallenges: getBirdChallengeScenarios, report: birdReport, assets: birdAssets, layout: birdLayout, feeding: birdFeeding, copy: birdCopy, homeReadiness: birdHomeReadiness, masteredCareThemes: birdMasteredCareThemes, careReviewAdditionalNotes: birdCareReviewAdditionalNotes, acquisition: birdAcquisition } as const;
-export { birdAssets, birdJourney, birdLayout, birdPreparation, birdReport, birdLifeScenarios, getBirdChallengeScenarios, birdFeeding };
+import { birdActivityScenarios, birdCageInspectionActivityData, birdCageInspectionConfig } from "./activities";
+
+export const birdConfig = {
+  id: "bird" as const,
+  selection: birdSelection,
+  preparation: birdPreparation,
+  journey: birdJourney,
+  scenarios: birdLifeScenarios,
+  getLifeScenarios: () => birdLifeScenarios,
+  getReportScenarios: () => [...birdLifeScenarios, ...Object.values(birdActivityScenarios)],
+  scenarioPresentation: birdScenarioPresentation,
+  breedChallenges: getBirdChallengeScenarios,
+  report: birdReport,
+  assets: birdAssets,
+  feeding: birdFeeding,
+  copy: birdCopy,
+  homeReadiness: birdHomeReadiness,
+  masteredCareThemes: birdMasteredCareThemes,
+  careReviewAdditionalNotes: birdCareReviewAdditionalNotes,
+  acquisition: birdAcquisition,
+} as const;
+
+export { birdAssets, birdJourney, birdPreparation, birdReport, birdLifeScenarios, getBirdChallengeScenarios, birdFeeding, birdCageInspectionActivityData, birdCageInspectionConfig, birdSelection };

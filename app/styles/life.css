@@ -551,6 +551,7 @@
  */
 .activity-intro-page { display: grid; min-height: min(690px, 76vh); place-items: center; padding: clamp(16px, 3vw, 40px); border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(145deg, #fff9eb, #edf5e9); overflow: clip; }
 .activity-intro-page-card { display: grid; grid-template-columns: minmax(240px, .78fr) minmax(0, 1.22fr); width: min(100%, 980px); overflow: hidden; border: 1px solid rgba(216, 196, 159, .72); border-radius: 20px; background: rgba(255, 255, 255, .9); box-shadow: 0 12px 30px rgba(76, 56, 31, .08); }
+.activity-intro-page-card--copy-only { grid-template-columns: minmax(0, 1fr); width: min(100%, 860px); }
 .activity-intro-page-visual { position: relative; min-height: 440px; overflow: hidden; border-right: 1px solid rgba(216, 196, 159, .64); background: linear-gradient(160deg, rgba(239, 227, 194, .82), rgba(226, 239, 222, .94)); }
 .activity-intro-page-visual::before { position: absolute; top: 12%; right: -18%; width: 72%; aspect-ratio: 1; border: 1px solid rgba(212, 154, 36, .26); border-radius: 50%; content: ""; }
 .activity-intro-page-pet { position: absolute; z-index: 1; right: 5%; bottom: 7%; width: 94%; max-height: 74%; object-fit: contain; filter: drop-shadow(0 18px 14px rgba(76, 56, 31, .14)); }

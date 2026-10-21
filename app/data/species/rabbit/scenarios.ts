@@ -73,7 +73,7 @@ export const rabbitLifeScenarios: Scenario[] = [
       knowledgeContent: [
         {
           type: "paragraph",
-          text: "**躲藏**是兔子面對陌生環境的正常**壓力反應**，不是失敗，也不需要急著安慰。"
+          text: "**躲藏**是兔子面對陌生環境的正常**壓力反應**，不是對你布置的環境感到不滿，不需要急著安慰。"
         },
         {
           type: "paragraph",
@@ -259,7 +259,7 @@ export const rabbitLifeScenarios: Scenario[] = [
     description: "你蹲下來摸 {petName}，發現牠身上有一股悶悶的氣味，尾根附近的毛也結成一小塊、有點髒污。你直覺地想：「這樣不行，要幫牠好好洗個澡才行。」",
     questionText: "下列哪些是正確的清潔方式？（複選）",
     topic: "兔子日常清潔",
-    reportSummary: "兔子不適合洗澡；日常清潔以梳毛、局部微濕擦拭及必要時諮詢兔科獸醫為主。",
+    reportSummary: "兔子不適合洗澡；日常清潔以梳毛、局部微濕擦拭及必要時諮詢**熟悉兔子醫療的獸醫師**為主。",
     artIndex: 3,
     sceneMedia: {
       type: "video",
@@ -304,10 +304,10 @@ export const rabbitLifeScenarios: Scenario[] = [
       },
       {
         id: "rabbit-bath-vet",
-        text: "如果污染情況自己無法處理，先諮詢兔科獸醫，不自行沖洗",
+        text: "如果污染情況自己無法處理，先諮詢**熟悉兔子醫療的獸醫師**，不自行沖洗",
         result: "correct",
         ...positive,
-        explanation: "正確！如尾部嚴重污染，應請兔科獸醫評估處理方式，不應自行將牠放入水中。"
+        explanation: "正確！如尾部嚴重污染，應請**熟悉兔子醫療的獸醫師**評估處理方式，不應自行將牠放入水中。"
       },
     ],
     correctSummary: ["兔子不能洗澡，日常清潔以梳毛為主，局部髒污用微濕毛巾輕擦即可，無法自行處理時應諮詢獸醫而非自行沖洗。"],
@@ -382,7 +382,7 @@ export const rabbitLifeScenarios: Scenario[] = [
       careTimeItems: rabbitReport.dailyCareBreakdown,
       showCareTime: false,
       additionalAdvice: [
-        "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館或兔科獸醫診所提供的住宿服務，作為備用方案。"
+        "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
       ]
     },
     busyCareChecklist: [
@@ -454,7 +454,7 @@ export const rabbitLifeScenarios: Scenario[] = [
     description: "最近這兩天，你注意到 `{petName}` 活動力明顯下降，長時間蹲坐在角落不太移動，牧草架幾乎沒被碰過，便盆裡的糞粒也比平常少很多，而且嘴巴周圍有些濕濕的。",
     questionText: "根據這些觀察，你應該？",
     topic: "生活變化：排泄與食慾觀察",
-    reportSummary: "排便量驟減與食慾下降是兔子重要危急警訊，應立刻聯繫兔科獸醫。",
+    reportSummary: "排便量驟減與食慾下降是兔子重要危急警訊，應立刻聯繫**熟悉兔子醫療的獸醫師**。",
     artIndex: 4,
     sceneMedia: {
       type: "video",
@@ -473,11 +473,11 @@ export const rabbitLifeScenarios: Scenario[] = [
         result: "incorrect",
         ...incorrect,
         explanation: "排便量突然減少＋食慾下降是兔子最重要的危急警訊，不能等待。",
-        suggestion: "立刻聯繫兔科獸醫，帶去看診。"
+        suggestion: "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診。"
       },
       {
         id: "rabbit-health-vet",
-        text: "立刻聯繫兔科獸醫，帶去看診",
+        text: "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診",
         result: "correct",
         ...positive,
         explanation: "兔子突然排便量變少、食慾變差，應立刻尋求獸醫師協助。12 小時完全無進食就是非常危急的情形。",
@@ -499,10 +499,10 @@ export const rabbitLifeScenarios: Scenario[] = [
         result: "incorrect",
         ...incorrect,
         explanation: "排便量驟減＋食慾下降需要立刻處置，等一週可能已造成嚴重腸阻塞。",
-        suggestion: "立刻聯繫兔科獸醫，帶去看診。"
+        suggestion: "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診。"
       },
     ],
-    correctSummary: ["兔子排便量突然減少、食慾下降是緊急警訊，必須立刻聯繫兔科獸醫就診，不可等待觀察或自行調整飲食。"],
+    correctSummary: ["兔子排便量突然減少、食慾下降是緊急警訊，必須立刻聯繫**熟悉兔子醫療的獸醫師**就診，不可等待觀察或自行調整飲食。"],
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你立刻察覺到異常並聯繫獸醫，沒有觀望等待，做得很好！",
@@ -533,7 +533,7 @@ export const rabbitLifeScenarios: Scenario[] = [
           text: "**體表異常**：大量脫毛、眼周潮濕、耳朵或身體出現異味——出現時應就醫確認。"
         },
       ],
-      reminder: "排便量減少、食慾下降、活動力降低都是兔子最重要的危急警訊；12 小時完全無進食就是非常緊急的情形，應立刻帶去兔科獸醫，不可自行換食物或等待下次回診。"
+      reminder: "排便量減少、食慾下降、活動力降低都是兔子最重要的危急警訊；12 小時完全無進食就是非常緊急的情形，應立刻帶去**熟悉兔子醫療的獸醫師**，不可自行換食物或等待下次回診。"
     }
   },
   {
@@ -573,7 +573,7 @@ export const rabbitLifeScenarios: Scenario[] = [
         result: "incorrect",
         ...incorrect,
         explanation: "牧草對高齡兔的磨牙與腸胃功能仍然重要。",
-        suggestion: "飲食調整需依兔科獸醫建議進行。"
+        suggestion: "飲食調整需依**熟悉兔子醫療的獸醫師**建議進行。"
       },
       {
         id: "rabbit-senior-no-change",
@@ -617,156 +617,3 @@ export const rabbitLifeScenarios: Scenario[] = [
   },
 ];
 /** 規劃文件 D-1：順序即為正解；操作元件只讀取動作與對應提示。 */
-const rabbitHoldStepAssets = {
-  approach: "/assets/rabbit/pet-journey/rabbit-hold-step-1-approach.webp",
-  handSniff: "/assets/rabbit/pet-journey/rabbit-hold-step-2-hand-sniff.webp",
-  headStroke: "/assets/rabbit/pet-journey/rabbit-hold-step-3-head-stroke.webp",
-  supportChestHindquarters: "/assets/rabbit/pet-journey/rabbit-hold-step-4-support-chest-hindquarters.webp",
-  holdClose: "/assets/rabbit/pet-journey/rabbit-hold-step-5-hold-close.webp"
-} as const;
-/** 抱兔排序的文字、順序與素材皆集中於此，供拖曳卡與正解狀態共用。 */
-export const rabbitCarrySortSteps = [
-  {
-    text: "緩慢靠近，不發出大聲音，蹲低到與 {petName} 視線同高",
-    hint: "突然靠近或蹲太快都會嚇到兔子，牠可能逃跑或警戒。",
-    image: rabbitHoldStepAssets.approach
-  },
-  {
-    text: "伸出手背讓 {petName} 嗅聞，等牠不緊張",
-    hint: "讓兔子先認識你的氣味，才能進行下一步。不要急著摸牠。",
-    image: rabbitHoldStepAssets.handSniff
-  },
-  {
-    text: "輕輕摸頭頂，確認 {petName} 沒有蹲低或後退",
-    hint: "摸頭是確認兔子放鬆的重要步驟，耳朵貼後、蹲低代表牠還不安心。",
-    image: rabbitHoldStepAssets.headStroke
-  },
-  {
-    text: "一手托住胸口，另一手同時托住臀部",
-    hint: "兩手必須同時支撐，單手抓會讓兔子掙扎，增加骨折風險。",
-    image: rabbitHoldStepAssets.supportChestHindquarters
-  },
-  {
-    text: "讓 {petName} 靠著你的身體，前肢有支撐",
-    hint: "兔子靠著身體才有安全感，懸空抱容易引發恐慌和掙扎。",
-    image: rabbitHoldStepAssets.holdClose
-  },
-] as const;
-/** 兔子專屬互動也以 Scenario 紀錄結果，讓共用回顧與下載摘要可直接讀取。 */
-export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily-check", Scenario> = {
-  "rabbit-carry-sort": {
-    id: "rabbit-carry-sort",
-    stage: "日常照護",
-    stageId: "daily",
-    stageTitle: "日常照護",
-    timeLabel: "日常照護",
-    title: "和{petName} 成為好朋友吧！",
-    description: "{petName} 已經到家一段時間了，跟你越來越熟悉。\n今天，你想試著第一次把牠抱起來。你慢慢靠近，{petName} 停下來看著你，鬍鬚輕輕一動。",
-    topic: "安全抱兔",
-    reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。",
-    artIndex: 0,
-    questionText: "請把這 5 個動作拖曳到正確的順序，安全地抱起 {petName}。",
-    activityCompletionTitle: "你已學會安全抱起 {petName} 的方式！",
-    activityRevealNotice: "不用擔心，抱兔子確實需要練習～我們一起看看正確的步驟吧！",
-    completionFeedback: {
-      title: "做得很好！",
-      encouragement: "你知道怎麼讓 {petName} 安心被抱起，做得很好！每一個步驟都是在幫牠建立對你的信任。",
-      knowledgeTitle: "兔兔小知識",
-      knowledgeContent: [
-        {
-          type: "paragraph",
-          text: "**緩慢靠近、先讓牠嗅聞**，再確認牠沒有緊張或後退。抱起時要**同時托住胸口與臀部，讓牠靠著身體**；不可拎耳朵或讓腹部朝上。"
-        },
-      ]
-    },
-    completionReminder: {
-      title: "<danger>請不要這樣抱兔兔</danger>",
-      items: [
-        {
-          title: "<danger>從耳朵拎起</danger>",
-          description: "耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。",
-          imagePlaceholderLabel: "從耳朵拎起示意圖片待補",
-          image: "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.webp",
-          imageAlt: "從耳朵拎起兔子的錯誤抱法示意"
-        },
-        {
-          title: "<danger>讓牠腹部朝上</danger>",
-          description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不代表牠不緊張或害怕。",
-          imagePlaceholderLabel: "腹部朝上示意圖片待補",
-          image: "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp",
-          imageAlt: "讓兔子腹部朝上的錯誤抱法示意"
-        },
-      ],
-      footer: "如果兔兔抗拒或退避，不要強迫互動"
-    },
-    choices: [
-      {
-        id: "rabbit-carry-incorrect",
-        text: "需要重新思考順序",
-        result: "incorrect",
-        ...incorrect,
-        explanation: "安全抱兔需要循序降低緊張感，確認每一步都完成後再往下。"
-      },
-      {
-        id: "rabbit-carry-complete",
-        text: "完成安全抱兔步驟",
-        result: "correct",
-        ...positive,
-        explanation: "你用循序、穩定的方式照顧牠的安全感。"
-      },
-    ],
-    correctSummary: ["抱兔子需要緩慢靠近、先讓牠嗅聞，再確認放鬆後同時托住胸口與臀部，絕不可拎耳朵或讓腹部朝上。"],
-  },
-  "rabbit-daily-check": {
-    id: "rabbit-daily-check",
-    stage: "日常照護",
-    stageId: "daily",
-    stageTitle: "日常照護",
-    timeLabel: "日常照護",
-    title: "{petName} 的美容時間到了！",
-    description: "完成梳毛、足底確認、進食與指甲觀察，讓每週保養成為健康觀察的機會。",
-    questionText: "開始今天的美容保養吧。",
-    topic: "兔兔美容保養",
-    reportSummary: "每週梳理後肢及尾根、確認足底、進食與指甲，能及早發現健康變化。",
-    artIndex: 0,
-    completionFeedback: {
-      title: "做得很好！",
-      encouragement: "你完成了今天的保養——梳毛、足底確認、進食與指甲觀察。定期梳毛，尤其是後肢及尾根周圍，能清除皮屑及脫落毛髮，減少 {petName} 自行理毛時食入過多毛髮引發腸阻塞的機會。",
-      knowledgeTitle: "保養不只是好看，更是健康觀察的機會",
-      knowledgeContent: [
-        {
-          type: "paragraph",
-          text: "每週幫 {petName} 梳毛時，可以觀察皮膚異常、脫毛區塊、足底紅腫或換毛量是否超乎尋常。"
-        },
-        {
-          type: "paragraph",
-          text: "進食與指甲至少一週觀察一次；進食時出現遲疑、掉食或嘴邊潮濕應諮詢獸醫師，指甲偏長建議由獸醫或專業人員協助修剪。"
-        },
-        {
-          type: "paragraph",
-          text: "後肢及尾根周圍容易藏污和結毛，是最需要仔細梳理的區域。"
-        },
-        {
-          type: "paragraph",
-          text: "建議頻率：短毛兔每週梳毛 2–3 次、換毛期每日；長毛兔每日梳毛；每次梳毛時檢查足底。"
-        },
-      ]
-    },
-    choices: [
-      {
-        id: "rabbit-daily-check-incorrect",
-        text: "需要重新確認",
-        result: "incorrect",
-        ...incorrect,
-        explanation: "這一項還沒完成。請依兔子的日常需求重新處理。"
-      },
-      {
-        id: "rabbit-daily-check-complete",
-        text: "完成美容保養",
-        result: "correct",
-        ...positive,
-        explanation: "你完成了今天的保養——梳毛、足底確認、進食與指甲觀察。"
-      },
-    ]
-  }
-};

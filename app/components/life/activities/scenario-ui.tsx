@@ -8,7 +8,18 @@ import { money, getExpenseForSpecies } from "../../../data/shared/expenses";
 import { getSpeciesConfig } from "../../../data/species";
 import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
 import type { ExpenseRecord, Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
-import { renderKnowledgeText, withPetName } from "./activity-ui";
+import { plainChoiceText, renderKnowledgeText, withPetName } from "./activity-ui";
+
+/** 題目影片只在同一輪旅程首次進入時自動播放；重播永遠由玩家主動觸發。 */
+const autoPlayedQuestionVideos = new Set<string>();
+
+export function resetQuestionVideoAutoplay(videoId?: string) {
+  if (videoId) {
+    autoPlayedQuestionVideos.delete(videoId);
+    return;
+  }
+  autoPlayedQuestionVideos.clear();
+}
 
 export function useVideoMetadataPreload(src?: string) {
   useEffect(() => {
@@ -150,7 +161,7 @@ export function CorrectFeedbackLayout({
   otherTipsBeforeSuggestion = false,
   correctItems,
   knowledgeContent,
-  knowledgeTitle = "狗狗小知識",
+  knowledgeTitle = "照護小知識",
   mediaPlaceholder,
   onReplay,
   onVideoError,
@@ -252,7 +263,7 @@ export function ScenarioOptionCard({
   selected?: boolean;
   incorrect?: boolean;
   disabled?: boolean;
-  children: ReactNode;
+  children: string;
   onClick: () => void;
 }) {
   return (
@@ -266,7 +277,7 @@ export function ScenarioOptionCard({
       {type === "multiple" && selected && <span className="scenario-option-selected-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" focusable="false"><path d="m6.5 12.5 3.4 3.4 7.8-8" /></svg>
       </span>}
-      <p>{children}</p>
+      <p>{plainChoiceText(children)}</p>
     </button>
   );
 }
@@ -276,6 +287,7 @@ export function VideoWithToggle({
   src,
   loop = false,
   autoPlay = true,
+  autoPlayId,
   ariaLabel,
   onError,
   onEnded,
@@ -284,17 +296,20 @@ export function VideoWithToggle({
   src: string;
   loop?: boolean;
   autoPlay?: boolean;
+  /** 題目識別值存在時，同一輪旅程只允許第一次自動播放。 */
+  autoPlayId?: string;
   ariaLabel: string;
   onError?: () => void;
   onEnded?: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const shouldAutoPlay = autoPlay && !prefersReducedMotion;
-  const playbackKey = `${src}:${shouldAutoPlay}`;
-  const [playback, setPlayback] = useState({ key: playbackKey, paused: !shouldAutoPlay });
-  const paused = playback.key === playbackKey ? playback.paused : !shouldAutoPlay;
-  const updatePaused = (nextPaused: boolean) => setPlayback({ key: playbackKey, paused: nextPaused });
+  const shouldAutoPlay = autoPlay && !prefersReducedMotion && (!autoPlayId || !autoPlayedQuestionVideos.has(autoPlayId));
+  const playbackKey = `${src}:${autoPlayId ?? "default"}`;
+  const [playback, setPlayback] = useState({ key: playbackKey, paused: true, ended: false });
+  const paused = playback.key === playbackKey ? playback.paused : true;
+  const ended = playback.key === playbackKey && playback.ended;
+  const updatePaused = (nextPaused: boolean) => setPlayback({ key: playbackKey, paused: nextPaused, ended: false });
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -302,10 +317,19 @@ export function VideoWithToggle({
     }
   }, [prefersReducedMotion]);
 
+  useEffect(() => {
+    if (!shouldAutoPlay) return;
+    const video = videoRef.current;
+    if (!video) return;
+    if (autoPlayId) autoPlayedQuestionVideos.add(autoPlayId);
+    void video.play().catch(() => setPlayback({ key: playbackKey, paused: true, ended: false }));
+  }, [autoPlayId, playbackKey, shouldAutoPlay]);
+
   function toggleVideo() {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
+      if (video.ended || ended) video.currentTime = 0;
       video.play().then(() => updatePaused(false)).catch(() => updatePaused(true));
     } else {
       video.pause();
@@ -319,20 +343,20 @@ export function VideoWithToggle({
         ref={videoRef}
         className={className}
         src={src}
-        autoPlay={shouldAutoPlay}
+        autoPlay={false}
         loop={loop}
         playsInline
         preload="metadata"
         aria-label={ariaLabel}
-        onPlay={() => updatePaused(false)}
+        onPlay={() => setPlayback({ key: playbackKey, paused: false, ended: false })}
         onPause={() => updatePaused(true)}
         onEnded={() => {
-          updatePaused(true);
+          setPlayback({ key: playbackKey, paused: true, ended: true });
           onEnded?.();
         }}
         onError={onError}
       />
-      <button type="button" className="video-toggle-button" onClick={toggleVideo} aria-label={paused ? "播放影片" : "暫停影片"} title={paused ? "播放" : "暫停"}>
+      <button type="button" className="video-toggle-button" onClick={toggleVideo} aria-label={ended ? "重新播放影片" : paused ? "播放影片" : "暫停影片"} title={ended ? "重新播放" : paused ? "播放" : "暫停"}>
         {paused ? <span className="video-play-icon" aria-hidden="true" /> : <span className="video-pause-icon" aria-hidden="true" />}
       </button>
     </>
@@ -381,7 +405,7 @@ function ScenarioFeedback({
         intro={<p>{completionFeedback ? renderKnowledgeText(withPetName(completionFeedback.encouragement, petName, species)) : plainFeedbackText(withPetName(choice.explanation, petName, species))}</p>}
         correctItems={completionFeedback ? undefined : scenario.learningPoints}
         knowledgeContent={completionFeedback?.knowledgeContent.map((content) => ({ ...content, text: withPetName(content.text, petName, species) }))}
-        knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "狗狗小知識"}
+        knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "照護小知識"}
         suggestion={completionFeedback?.reminder
           ? <p>{renderKnowledgeText(withPetName(completionFeedback.reminder, petName, species))}</p>
           : choice.suggestion ? <p>{plainFeedbackText(withPetName(choice.suggestion, petName, species))}</p> : null}
@@ -468,7 +492,7 @@ export function ScenarioCard({
           {sceneMedia.type === "video" ? (
             sceneVideoFailed
               ? <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>
-              : <VideoWithToggle className="scene-video" src={sceneMedia.src} loop ariaLabel={sceneMedia.ariaLabel} onError={() => setFailedSceneVideoFor(scenario.id)} />
+              : <VideoWithToggle className="scene-video" src={sceneMedia.src} autoPlayId={`${species ?? "dog"}:${scenario.id}:scene`} ariaLabel={sceneMedia.ariaLabel} onError={() => setFailedSceneVideoFor(scenario.id)} />
           ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} />}
           <p>{scenario.timeLabel}</p>
         </div>

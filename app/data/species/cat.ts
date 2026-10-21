@@ -21,7 +21,6 @@ export {
   catConfig,
   catAssets,
   catJourney,
-  catLayout,
   catPreparation,
   catReport,
   catSelection,

@@ -83,4 +83,18 @@ export const birdAssets = {
     food: birdSeedMixAsset,
     water: "/assets/car/water-supply.webp",
   },
+  petJourney: {
+    arrivalTransition: "/assets/bird/pet-journey/arrival-transition.mp4",
+    firstDay: "/assets/bird/pet-journey/first-day.mp4",
+    pickyEating: "/assets/bird/pet-journey/picky-eating.mp4",
+    stereotypy: "/assets/bird/pet-journey/stereotypy.mp4",
+    excessiveCalling: "/assets/bird/pet-journey/excessive-calling.mp4",
+    busyDailyCare: "/assets/bird/pet-journey/busy-daily-care.mp4",
+    busyDayTransition: "/assets/bird/pet-journey/busy-day-transition.mp4",
+    sick: "/assets/bird/pet-journey/sick.mp4",
+    seniorLife: "/assets/bird/pet-journey/senior-life.mp4",
+    timePassesAging: "/assets/bird/pet-journey/time-passes-aging.mp4",
+    correctPrimary: "/assets/bird/pet-journey/correct-answer.mp4",
+    correctSecondary: "/assets/bird/pet-journey/correct-answer2.mp4",
+  },
 } as const;

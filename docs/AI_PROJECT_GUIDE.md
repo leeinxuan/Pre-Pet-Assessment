@@ -320,7 +320,7 @@ getBreedForSpecies(species, breedId)  // 依物種找品種資料
 getSpeciesConfigForBreed(breedId)     // 依品種 id 反查物種設定
 ```
 
-五個物種（dog、cat、rabbit、bird、hamster）均已完整實作並註冊到 `speciesConfigs`。各物種資料分別位於：
+六個物種（dog、cat、rabbit、bird、hamster、gecko）均已註冊到 `speciesConfigs`。各物種資料分別位於：
 
 ```txt
 app/data/species/dog/
@@ -328,9 +328,10 @@ app/data/species/cat/
 app/data/species/rabbit/
 app/data/species/bird/
 app/data/species/hamster/
+app/data/species/gecko/
 ```
 
-各資料夾均包含：`index.ts`、`assets.ts`、`copy.ts`、`expenses.ts`、`feeding.ts`、`home-readiness.ts`、`journey.ts`、`layout.ts`、`preparation.ts`、`report.ts`、`scenarios.ts`、`selection.ts`、`breed-challenges.ts`、`care-review-notes.ts`、`mastered-care-themes.ts`。
+各資料夾均包含核心檔案：`index.ts`、`assets.ts`、`copy.ts`、`expenses.ts`、`feeding.ts`、`home-readiness.ts`、`journey.ts`、`preparation.ts`、`report.ts`、`scenarios.ts`、`selection.ts`、`activities.ts`、`care-review-notes.ts`、`mastered-care-themes.ts`。`breed-challenges.ts` 僅在該物種有品種挑戰流程時存在。
 
 ### 6.3 Activity 分派入口
 
@@ -455,17 +456,17 @@ app/data/shared/
 | `expenses.ts` | 物種費用設定 |
 | `feeding.ts` | 第一餐食物選項 |
 | `home-readiness.ts` | 居家準備度問題 |
-| `journey.ts` | 生活旅程 items |
-| `layout.ts` | 房間布局設定 |
-| `preparation.ts` | 用品、危害、出發行李 |
+| `journey.ts` | 生活旅程 items 與情境關聯 |
+| `preparation.ts` | 房間布局、用品、危害、出發行李與場景座標 |
 | `report.ts` | 報告文案與設定 |
 | `scenarios.ts` | 情境題 |
+| `activities.ts` | 所有專屬互動遊戲的資料、素材、步驟與完成內容 |
 | `selection.ts` | 品種／外觀類型選項 |
 | `breed-challenges.ts` | 品種挑戰題 |
 | `care-review-notes.ts` | 照顧回顧備註 |
 | `mastered-care-themes.ts` | 已掌握照護主題 |
 
-犬版另有 `walking.ts`（散步場景）；倉鼠版另有 `activities.ts`（倉鼠專屬活動）。
+所有物種都使用 `activities.ts` 作為專屬互動遊戲資料的唯一入口；不可新增 `walking.ts`、`layout.ts` 或按活動另建平行資料檔。
 
 ### 8.3 活動分派
 

@@ -3,7 +3,7 @@
  * 互動元件只讀資料設定，不能自行硬寫 /assets/hamster 路徑。
  */
 export const hamsterAssets = {
-  selection: { hamster: "/assets/hamster/feeding/hamster-happy.webp" },
+  selection: { hamster: "/assets/species/hamster.webp" },
   room: {
     initialBackground: "/assets/hamster/room/direct-sunlight-spot.webp",
     safeBackground: "/assets/hamster/room/hamster-safe-room.webp",
@@ -54,5 +54,19 @@ export const hamsterAssets = {
     sandBathClean: "/assets/hamster/CageCheckActivity/sand-bath-clean.webp",
     scoop: "/assets/hamster/CageCheckActivity/tool-scoop.webp",
     sandSieve: "/assets/hamster/CageCheckActivity/tool-sand-sieve.webp",
+  },
+  petJourney: {
+    arrivalTransition: "/assets/hamster/pet-journey/arrival-transition.mp4",
+    firstDay: "/assets/hamster/pet-journey/first-day.mp4",
+    nocturnal: "/assets/hamster/pet-journey/nocturnal.mp4",
+    pickyEating: "/assets/hamster/pet-journey/picky-eating.mp4",
+    solitary: "/assets/hamster/pet-journey/solitary.mp4",
+    busyDailyCare: "/assets/hamster/pet-journey/busy-daily-care.mp4",
+    busyDayTransition: "/assets/hamster/pet-journey/busy-day-transition.mp4",
+    sick: "/assets/hamster/pet-journey/sick.mp4",
+    seniorLife: "/assets/hamster/pet-journey/senior-life.mp4",
+    timePassesAging: "/assets/hamster/pet-journey/time-passes-aging.mp4",
+    correctPrimary: "/assets/hamster/pet-journey/correct-answer.mp4",
+    correctSecondary: "/assets/hamster/pet-journey/correct-answer2.mp4",
   },
 } as const;

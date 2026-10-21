@@ -102,7 +102,7 @@ export function BreedChallengeActivity({
       <div className="breed-challenge-layout">
         <div className={challengeVideoSource && !questionVideoFailed ? "breed-challenge-video-placeholder breed-challenge-video-frame" : "breed-challenge-video-placeholder"}>
           {challengeVideoSource && !questionVideoFailed ? (
-            <VideoWithToggle className="breed-challenge-video" src={challengeVideoSource} loop ariaLabel={`${scenario.title}情境影片`} onError={() => setQuestionVideoFailedFor(scenario.id)} />
+            <VideoWithToggle className="breed-challenge-video" src={challengeVideoSource} autoPlayId={`breed:${scenario.id}:scene`} ariaLabel={`${scenario.title}情境影片`} onError={() => setQuestionVideoFailedFor(scenario.id)} />
           ) : (
             <><span>影片製作中</span><b>{scenario.title}</b><p>情境影片將於後續補上。</p></>
           )}

@@ -147,7 +147,7 @@ export function VideoScenarioActivity({
           {source ? (
             <VideoWithToggle
               src={source}
-              loop
+              autoPlayId={`${species}:${scenario.id}:scene`}
               ariaLabel={sceneMedia.type === "video" ? sceneMedia.ariaLabel : scenario.title}
               onError={() => setVideoFailed(true)}
             />

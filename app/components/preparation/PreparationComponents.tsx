@@ -27,16 +27,33 @@ function HomeReadinessRichText({ blocks, replaceName }: { blocks: HomeReadinessT
   return <>{paragraphs.map((block, index) => <p key={`paragraph-${index}`}>{renderHomeReadinessSegments(block.segments, replaceName)}</p>)}{listItems.length > 0 && <ul>{listItems.map((block, index) => <li key={`item-${index}`}>{renderHomeReadinessSegments(block.segments, replaceName)}</li>)}</ul>}</>;
 }
 
+function StorageBoxIcon() {
+  return <svg viewBox="0 0 32 32" focusable="false" aria-hidden="true">
+    <path d="M5 9h22v4H5zM7 13h18l-1.5 13h-15zM12 17h8" />
+  </svg>;
+}
+
+function WarningTriangleIcon() {
+  return <svg viewBox="0 0 32 30" focusable="false" aria-hidden="true">
+    <path d="M16 3 29 27H3L16 3Z" />
+    <path d="M16 11v8" />
+    <circle cx="16" cy="23" r="1" />
+  </svg>;
+}
+
 /** 共用的籠舍／圍欄／爬蟲缸入口指示箭頭；以 SVG 保持各物種視覺一致。 */
 function InteriorEntryPointerIcon({ direction }: { direction: "left" | "right" }) {
-  return <>
-    <svg className={`room-interior-entry-hand room-interior-entry-hand--${direction}`} viewBox="0 0 28 28" focusable="false" aria-hidden="true">
-      <g className="room-interior-entry-arrow-shape">
-        <path d="M4.5 11.3H14V6.55L23.5 14 14 21.45V16.7H4.5Z" />
-      </g>
-    </svg>
-    <span className={`room-interior-entry-label room-interior-entry-label--${direction}`} aria-hidden="true">點擊佈置</span>
-  </>;
+  return (
+    <span className={`interior-entry-hint interior-entry-hint--${direction}`} aria-hidden="true">
+      <svg className="interior-entry-hint-arrow" viewBox="0 0 28 28" focusable="false" aria-hidden="true">
+        <circle cx="14" cy="14" r="14" fill="#fff" stroke="none" />
+        {direction === "left"
+          ? <path d="M12.5 9.5l5 4.5-5 4.5" />
+          : <path d="M15.5 9.5l-5 4.5 5 4.5" />}
+      </svg>
+      <span className="interior-entry-hint-label">點擊佈置</span>
+    </span>
+  );
 }
 
 export function HomeReadinessActivity({ species = "dog", petName, state, onChange, onBack, onNext }: {
@@ -187,12 +204,14 @@ function RoomItemVisual({ item, scene = false }: { item: RoomItem; scene?: boole
 
 function HazardInfoPanel({ hazard, petName, onClose }: { hazard: HazardItem; petName: string; onClose: () => void }) {
   return (
-    <section className="room-hazard-alert" role="dialog" aria-modal="false" aria-labelledby={`hazard-info-${hazard.id}`}>
-      <button type="button" className="room-hazard-alert-close" onClick={onClose} aria-label={`關閉${hazard.label}說明`}>×</button>
-      <h2 id={`hazard-info-${hazard.id}`}>{hazard.label}已收起</h2>
-      <p><b>為什麼危險：</b>{hazard.danger.replaceAll("{petName}", petName)}</p>
-      <p><b>建議如何處理：</b>{hazard.handling.replaceAll("{petName}", petName)}</p>
-    </section>
+    <div className="room-hazard-overlay">
+      <section className="room-hazard-alert" role="dialog" aria-labelledby={`hazard-info-${hazard.id}`} onClick={onClose}>
+        <button type="button" className="room-hazard-alert-close" onClick={onClose} aria-label={`關閉${hazard.label}說明`}>×</button>
+        <h2 id={`hazard-info-${hazard.id}`}>{hazard.label}已收起</h2>
+        <p><b>為什麼危險：</b>{hazard.danger.replaceAll("{petName}", petName)}</p>
+        <p><b>建議如何處理：</b>{hazard.handling.replaceAll("{petName}", petName)}</p>
+      </section>
+    </div>
   );
 }
 
@@ -221,8 +240,8 @@ export function RoomPreparation({
   species?: string;
 }) {
   const speciesConfig = getSpeciesConfig(species);
-  const doorplatePlacement = speciesConfig.layout.roomDoorplatePlacement;
   const roomScene = speciesConfig.preparation.roomScene;
+  const doorplatePlacement = roomScene.doorplate?.placement;
   const activeRoomItems = speciesConfig.roomItems;
   const activeHazards = speciesConfig.hazards;
   const [roomCheckMessage, setRoomCheckMessage] = useState("");
@@ -392,7 +411,7 @@ export function RoomPreparation({
       <div className="room-preparation-layout simplified-room-layout">
         <section className="room-supply-shelf" aria-label="生活用品準備區">
           <div className="room-supply-header">
-            <h2>用品準備箱</h2>{!hazardsCleared && <span>請先完成空間安全整理</span>}
+            <h2><span className="room-supply-header-icon"><StorageBoxIcon /></span>用品準備箱</h2>{!hazardsCleared && <span>請先完成空間安全整理</span>}
           </div>
           <div className="room-supply-rows">
             {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} full-seven`}>
@@ -429,7 +448,7 @@ export function RoomPreparation({
               <source media="(max-width: 720px)" srcSet={mobileRoomBackground} />
               <img src={roomBackground} alt={roomScene.backgroundAlt} style={roomScene.backgroundStyle} />
             </picture> : <><img
-              className={`room-scene-background room-scene-background--desktop ${roomScene.desktopBackgroundClass ?? "room-scene-background--cat"} ${interiorUsesOwnAspectRatio ? "room-scene-background--portrait" : ""}`}
+              className={`room-scene-background room-scene-background--desktop ${roomScene.desktopBackgroundClass ?? ""} ${interiorUsesOwnAspectRatio ? "room-scene-background--portrait" : ""}`}
               src={roomBackground}
               alt={insideView ? roomScene.interiorBackgroundAlt ?? roomScene.backgroundAlt : roomScene.backgroundAlt}
               style={roomScene.backgroundStyle}
@@ -438,7 +457,7 @@ export function RoomPreparation({
               src={mobileRoomBackground}
               alt=""
               style={roomScene.backgroundStyle}
-            /></> : <div className="preparation-asset-placeholder hamster-room-background-placeholder" role="img" aria-label={insideView ? "倉鼠籠內背景素材待補" : "倉鼠房間背景素材待補"}>素材待補</div>}
+            /></> : <div className="preparation-asset-placeholder room-scene-background-placeholder" role="img" aria-label={`${insideView ? roomScene.interiorBackgroundAlt ?? roomScene.backgroundAlt : roomScene.backgroundAlt}素材待補`}>素材待補</div>}
             {visiblePlacedItems.map((item) => hasInteriorRoomFlow && item.id === roomFlow?.fenceItemId
               ? <button key={item.id} type="button" className={`room-object placed-supply auto-room-object placed-room-item--entry room-flow-entry ${shouldPromptInteriorEntry ? "is-interior-entry-prompt" : ""}`} style={roomItemPlacementStyle(item)} aria-label={entryReady ? `${roomFlow?.copy.entryLabel ?? "查看內部配置"}${shouldPromptInteriorEntry ? "，點擊進入內部繼續佈置" : ""}` : (roomFlow?.copy.fencePlacedInstruction ?? "請先完成入口用品。").replaceAll("{petName}", displayName)} disabled={!entryReady} onClick={() => setInsideRoomView(true)}>
                 <RoomItemVisual item={item} scene />
@@ -449,21 +468,19 @@ export function RoomPreparation({
                 ? item.sceneParts.map((part) => <div key={`${item.id}-${part.id}`} className={`room-object room-object-part placed-supply auto-room-object placed-room-item--${item.id}`} style={roomScenePartPlacementStyle(part)}><img src={part.image} alt={`房間中已配置的${item.label}`} /></div>)
                 : <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
             {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => item.hotspot
-              ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(item.hotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span>{item.label}</span></button>
+              ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(item.hotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
               : roomFlow && roomFlow.floorHazardId && item.id === roomFlow.floorHazardId
-                ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(roomFlow.floorHotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span>{item.label}</span></button>
-              : <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}>{item.image ? <img src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-hidden="true">{item.icon}</span>}<span>{item.label}</span></button>)}
+                ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(roomFlow.floorHotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
+              : <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}>{item.image ? <img src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-hidden="true">{item.icon}</span>}<span className="room-hazard-label">{item.label}</span></button>)}
             {insideView && <button type="button" className="room-flow-return" aria-label="返回整個房間" onClick={() => setInsideRoomView(false)}>←</button>}
-            {!insideView && roomScene.doorplate && <div className="pet-doorplate" style={roomDoorplatePlacementStyle(doorplatePlacement)}>
+            {!insideView && roomScene.doorplate && doorplatePlacement && <div className="pet-doorplate" style={roomDoorplatePlacementStyle(doorplatePlacement)}>
               <img src={roomScene.doorplate.image} alt={roomScene.doorplate.alt} />
               <span className="pet-doorplate-name">{displayName}</span>
             </div>}
           </div>
           {securedHazards.length > 0 && <div className="room-hazard-review-list" aria-label="已處理的危險物品說明">
             <span className="room-hazard-review-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32" focusable="false">
-                <path d="M5 9h22v4H5zM7 13h18l-1.5 13h-15zM12 17h8" />
-              </svg>
+              <WarningTriangleIcon />
             </span>
             <div className="room-hazard-review-items">
               {activeHazards.filter((hazard) => securedHazards.includes(hazard.id)).map((hazard) => (

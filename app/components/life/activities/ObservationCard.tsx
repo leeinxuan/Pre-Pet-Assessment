@@ -56,7 +56,7 @@ export function ObservationCardFlow({
   title: ReactNode;
   image: ReactNode;
   question: ReactNode;
-  choices: ReadonlyArray<{ id: string; label: ReactNode }>;
+  choices: ReadonlyArray<{ id: string; label: string }>;
   feedback: ReactNode;
   onChoose: (id: string) => void;
   onReturn: () => void;

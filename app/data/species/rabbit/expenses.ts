@@ -1,4 +1,4 @@
-import type { ExpenseRecord } from "../../../game-types";
+import type { ExpenseRecord, SpeciesExpenseRules } from "../../../game-types";
 
 /** §7 兔子費用清單；金額與費用明細說明均以 rabbit-game-planning.md 為準。 */
 export const rabbitExpenses: Record<string, ExpenseRecord> = {
@@ -27,4 +27,14 @@ export const rabbitExpenses: Record<string, ExpenseRecord> = {
   "rabbit-moderate-sick": { id: "rabbit-moderate-sick", name: "急症檢查（消化道阻塞等）", amount: 2500, maxAmount: 6000, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "門診含血液常規或影像檢查與藥費" },
   "rabbit-hospitalization": { id: "rabbit-hospitalization", name: "住院與手術費用", amount: 6000, maxAmount: 50000, maxAmountOpenEnded: true, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "含麻醉、住院護理與手術費；兔子麻醉風險高，需有異寵麻醉經驗的獸醫執行" },
   "rabbit-senior-room": { id: "rabbit-senior-room", name: "高齡環境調整用品", amount: 800, maxAmount: 2500, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: false, description: "降低設施高度、增加柔軟墊料、減少跳躍需求；高齡兔關節易退化" },
+};
+
+/** 費用流程規則；ID 只引用本物種費用。 */
+export const rabbitExpenseRules: SpeciesExpenseRules = {
+  deferredArrivalFeedbackExpenseIds: ["rabbit-arrival-checkup"],
+  // 便盆墊料在房間佈置時已登錄。
+  arrivalMealExcludedExpenseIds: ["rabbit-litter-monthly"],
+  combinedExpenseCards: [
+    { expenseIds: ["rabbit-hay-monthly", "rabbit-pellet-monthly", "rabbit-veggies-monthly"], name: "每月飲食費用", category: "每月基本支出", recurring: true },
+  ],
 };

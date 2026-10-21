@@ -1,6 +1,10 @@
-import type { ActivityIntroConfig, JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
+import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 import { arrivalRequiredExpenseIdsBySpecies } from "../../shared/expenses";
 import { catAssets } from "./assets";
+import { catLitterRescueConfig } from "./activities";
+
+/** @deprecated 請改由 `cat/activities.ts` 匯入。 */
+export { catLitterRescueConfig } from "./activities";
 
 /** 貓咪旅程順序；LitterInspectionActivity 是唯一專屬玩法元件。 */
 export const catJourneyItems: JourneyItem[] = [
@@ -16,41 +20,7 @@ export const catJourneyItems: JourneyItem[] = [
 /** 貓咪日常照護三題的固定識別碼；重做時選項與答題紀錄保持一致。 */
 export const catDailyBehaviorScenarioIds = ["cat-night-energy-care", "cat-scratching-care", "cat-climbing-care"] as const;
 
-/**
- * 貓咪專屬玩法：貓砂盆救援隊。
- * 每日清潔互動的命中區全部集中於此，不與犬隻散步資料共用。
- */
-export const catLitterRescueConfig = {
-  intro: {
-    eyebrow: "日常照護",
-    title: "每天清砂盆，是給 {petName} 最基本的照顧",
-    paragraphs: [
-      "貓咪對砂盆的乾淨程度**非常敏感**。砂盆太髒，牠可能**忍著不上**，或改去其他地方排泄——而貓咪一旦養成在外排泄的習慣，就**很難改正**。",
-      "**每天鏟砂**、**確認砂量**，**每週換上備用盆**——動作不多，但少了哪一樣，{petName} 都能感覺到。",
-      "{petName} 的廁所，今天靠你了！",
-    ],
-    startLabel: "開始今天的清潔 →",
-    visualAssets: {
-      character: catAssets.feeding.happyCat,
-      tool: catAssets.daily.litterScoop,
-      collector: catAssets.daily.trashBin,
-    },
-  } satisfies ActivityIntroConfig,
-  // 相容舊版儲存紀錄；現行 CatDailyInspectionActivity 不再使用印章／輪次流程。
-  targetStamps: 3,
-  enableWeeklyWash: false,
-  enableAbnormalObservation: false,
-  weeklyWashRound: 2,
-  abnormalObservationRound: 3,
-  // 清潔流程固定為：尿團 → 丟棄 → 便便 → 丟棄。
-  wasteItems: [
-    { id: "urine-1", kind: "urine", label: "尿團", x: 39, y: 57, size: 12 },
-    { id: "poop-1", kind: "poop", label: "便便", x: 43, y: 71, size: 11 },
-  ],
-  bin: { x: 82, y: 70, size: 16 },
-} as const;
-
-/** 情境題與貓砂盆設定本體仍由 life-data 逐題遷移；本檔已是旅程順序唯一來源。 */
+/** 旅程順序唯一來源；活動內容與素材維護於 activities.ts。 */
 export const catJourney = {
   items: catJourneyItems,
   dailyBehaviorScenarioIds: catDailyBehaviorScenarioIds,

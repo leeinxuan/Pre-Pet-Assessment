@@ -1,7 +1,6 @@
 import { dogAssets } from "./assets";
 import { dogFeeding } from "./feeding";
 import { dogJourney, dogScenarioPresentation } from "./journey";
-import { dogLayout } from "./layout";
 import { dogPreparation } from "./preparation";
 import { dogReport } from "./report";
 import { dogLifeScenarios, getDogLifeScenarios } from "./scenarios";
@@ -25,7 +24,6 @@ export const dogConfig = {
   breedChallenges: getDogBreedChallengeScenarios,
   report: dogReport,
   assets: dogAssets,
-  layout: dogLayout,
   feeding: dogFeeding,
   copy: dogCopy,
   homeReadiness: dogHomeReadiness,
@@ -34,4 +32,4 @@ export const dogConfig = {
   acquisition: dogAcquisition,
 } as const;
 
-export { dogAssets, dogJourney, dogLayout, dogPreparation, dogReport, dogSelection, dogLifeScenarios, getDogBreedChallengeScenarios, dogFeeding };
+export { dogAssets, dogJourney, dogPreparation, dogReport, dogSelection, dogLifeScenarios, getDogBreedChallengeScenarios, dogFeeding };

@@ -14,6 +14,7 @@ export {
   rabbitConfig,
   birdConfig,
   hamsterConfig,
+  geckoConfig,
 } from "./index";
 
 export type { SpeciesConfig } from "./index";

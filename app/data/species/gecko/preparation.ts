@@ -1,7 +1,13 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 import { sharedAssets } from "../../shared/assets";
+import type { RoomFlowConfig } from "../../shared/species-config-types";
 import { geckoAssets } from "./assets";
-import { geckoThermometerSceneParts } from "./layout";
+
+export const geckoRoomDoorplatePlacement = {
+  desktop: { x: 60, y: 14, width: 28 },
+  mobile: { x: 33, y: 20, width: 40 },
+  mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
+} as const;
 
 export const geckoHazards: HazardItem[] = [
   {
@@ -80,8 +86,8 @@ export const geckoRoomItems: RoomItem[] = [
     placement: { x: 72, y: 25, width: 12, layer: 6 }, required: true, need: "安全", expenseId: "gecko-thermometer-2",
     description: "分別置於暖側與涼側，確認溫度梯度與濕度。",
     sceneParts: [
-      { ...geckoThermometerSceneParts.cool, image: geckoAssets.room.thermometerHygrometerCool },
-      { ...geckoThermometerSceneParts.warm, image: geckoAssets.room.thermometerHygrometerWarm },
+      { id: "cool-side", image: geckoAssets.room.thermometerHygrometerCool, placement: { x: 22, y: 13, width: 23, layer: 6 }, mobilePlacement: { x: 18, y: 32, width: 16 } },
+      { id: "warm-side", image: geckoAssets.room.thermometerHygrometerWarm, placement: { x: 77, y: 91, width: 23, layer: 6 }, mobilePlacement: { x: 78, y: 32, width: 16 } },
     ],
   },
   {
@@ -116,7 +122,7 @@ export const geckoTrunkItems: TrunkItem[] = [
   { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "低於 20°C 時放在運輸盒外層保溫，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 35, y: 65, width: 12, layer: 6 } },
 ];
 
-export const geckoRoomFlow = {
+export const geckoRoomFlow: RoomFlowConfig = {
   initialBackground: geckoAssets.room.initial,
   safeBackground: geckoAssets.room.sealed,
   interiorBackground: geckoAssets.room.terrariumInterior,
@@ -145,12 +151,12 @@ export const geckoRoomFlow = {
     lockedInstruction: "請先鋪好安全底材，才能配置其他缸內用品。",
     entryLabel: "查看爬蟲缸內部配置",
   },
-} as const;
+};
 
 export const geckoRoomScene: RoomSceneConfig = {
   backgroundAlt: "守宮生活空間",
   interiorBackgroundAlt: "守宮爬蟲缸內部配置",
-  doorplate: { image: sharedAssets.nameplate, alt: "守宮名字名牌" },
+  doorplate: { image: sharedAssets.nameplate, alt: "守宮名字名牌", placement: geckoRoomDoorplatePlacement },
 };
 export const geckoDepartureScene: DepartureSceneConfig = {
   trunkBackground: geckoAssets.preparation.trunkBackground,

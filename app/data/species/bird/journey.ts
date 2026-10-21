@@ -1,5 +1,6 @@
-import type { ActivityIntroConfig, JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
+import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 import { birdAssets } from "./assets";
+import { birdCageInspectionConfig } from "./activities";
 
 export const birdJourneyItems: JourneyItem[] = [
   { id: "bird-arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "bird-arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
@@ -13,32 +14,22 @@ export const birdJourneyItems: JourneyItem[] = [
 ];
 export const birdDailyBehaviorScenarioIds = ["bird-picky-eating", "bird-stereotypy", "bird-excessive-calling"] as const;
 export const birdScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "鸚鵡", knowledgeTitle: "鳥類小知識", correctFeedbackMedia: { type: "placeholder" } },
+  defaults: { defaultPetName: "鸚鵡", knowledgeTitle: "鳥類小知識", correctFeedbackMedia: { type: "video", src: birdAssets.petJourney.correctPrimary } },
   scenarios: {
-    "bird-picky-eating": {},
-    "bird-stereotypy": {},
-    "bird-excessive-calling": {},
+    "bird-picky-eating": { sceneVideo: { src: birdAssets.petJourney.pickyEating, ariaLabel: "鸚鵡挑食情境影片" } },
+    "bird-stereotypy": { sceneVideo: { src: birdAssets.petJourney.stereotypy, ariaLabel: "鸚鵡刻板行為情境影片" } },
+    "bird-excessive-calling": { sceneVideo: { src: birdAssets.petJourney.excessiveCalling, ariaLabel: "鸚鵡過度鳴叫情境影片" } },
     "bird-senior-care": {},
   },
 };
-export const birdCageInspectionConfig = {
-  intro: {
-    eyebrow: "日常照護",
-    title: "{petName} 看起來沒事，不代表牠真的沒事",
-    paragraphs: [
-      "鳥類演化出了強大的**隱藏病徵能力**——就算生病，也會盡力維持正常外表。等到 {petName} 明顯**嗜睡**或**澎毛**，往往代表病情**已相當嚴重**。",
-      "**每天主動觀察**是最好的預防方式。**糞便的狀態**、**羽毛的光澤**、**眼睛是否清亮**——這些細節只有每天看著牠的你才能發現異常。",
-      "今天的巡視，就是你和 {petName} 之間的默契。",
-    ],
-    startLabel: "開始今日巡視 →",
-    visualAssets: {
-      character: birdAssets.dailyGame.birdCloseup,
-      tool: birdAssets.dailyGame.magnifier,
-      collector: birdAssets.dailyGame.beddingDirty,
-    },
-  } satisfies ActivityIntroConfig,
-  targetStamps: 4,
-  bodyInspection: { requiresOrderedInspection: false, showPointNumbers: false },
-  steps: ["tray-clean", "feces-observed", "health-observed", "social-time"] as const,
+export const birdJourney = {
+  items: birdJourneyItems,
+  dailyBehaviorScenarioIds: birdDailyBehaviorScenarioIds,
+  cageInspection: birdCageInspectionConfig,
+  transitionMedia: {
+    arrival: birdAssets.petJourney.arrivalTransition,
+    timePass: birdAssets.petJourney.timePassesAging,
+    busyCare: birdAssets.petJourney.busyDayTransition,
+  },
+  activity: "bird-cage-inspection" as const,
 } as const;
-export const birdJourney = { items: birdJourneyItems, dailyBehaviorScenarioIds: birdDailyBehaviorScenarioIds, cageInspection: birdCageInspectionConfig, activity: "bird-cage-inspection" as const } as const;

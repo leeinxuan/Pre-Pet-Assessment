@@ -1,4 +1,4 @@
-import type { InteractionCompletionContent, SpeciesReportConfig } from "../../shared/species-config-types";
+import type { SpeciesReportConfig } from "../../shared/species-config-types";
 
 /** 兔子照護指南與網頁回顧共用資料。 */
 export const rabbitReport: SpeciesReportConfig = {
@@ -9,7 +9,7 @@ export const rabbitReport: SpeciesReportConfig = {
   ],
   handlingRows: [
     ["忙碌或不在家", "事先安排可信任的人協助，交接牧草補充、飲水更換、便盆清潔、糞便觀察與緊急聯絡方式；也可提前了解鄰近**合格寵物旅館**或**寄宿照護服務**作為備用方案"],
-    ["食慾下降或糞便量驟減", "記錄時間與狀況，立刻聯繫兔科獸醫。"],
+    ["食慾下降或糞便量驟減", "記錄時間與狀況，立刻聯繫**熟悉兔子醫療的獸醫師**。"],
     ["換毛期大量脫毛", "規律梳毛並觀察食慾與排便，不以洗澡處理。"],
     ["夏季高溫（28℃ 以上）", "維持涼爽環境並提供陶板涼感墊；出現警訊應立即處置。"],
     ["居家安全", "收好電線、塑膠與有毒植物，提供防滑地面與安全躲藏處。"],
@@ -25,28 +25,4 @@ export const rabbitReport: SpeciesReportConfig = {
     { title: "放風陪伴與互動", detail: "約 30～60 分鐘" },
     { title: "梳毛（依毛長與換毛期）", detail: "約 5～15 分鐘" },
   ],
-};
-
-/** 兔子美容互動完成頁；由共用 DailyCareCompletion 呈現。 */
-export const rabbitGroomingCompletion: InteractionCompletionContent = {
-  title: "{petName} 的美容時間到了！",
-  subtitle: "你完成了今天的保養——梳毛、足底確認、進食與指甲觀察。",
-  description: "定期梳毛，尤其注意**後肢及尾根周圍**，能預防皮膚感染、降低**腸阻塞**風險。**進食及指甲至少一週觀察一次**——進食出現異常或指甲偏長時，請諮詢兔科獸醫或專業人員。",
-  reflectionTitle: "兔子需要的照護時間，比許多人想的還要長",
-  reflectionContent: [
-    "兔子的日常照護不只是補飼料、換水而已。牧草補充、便盆清潔、新鮮蔬菜備製、健康觀察，加上**每天至少 30–60 分鐘的放風與陪伴**——每一項都需要固定時間投入，無法用假日一次補回。請想一想：在接下來每一天的生活裡，你能為 {petName} 穩定留出這段時間嗎？",
-  ],
-  careTimeTitle: "每天留給牠的照護時間",
-  careTimeItems: rabbitReport.dailyCareBreakdown,
-  careTimeSupplement: {
-    title: "每週保養建議頻率",
-    items: [
-      { title: "梳毛（短毛兔）", detail: "每週 2–3 次；換毛期每日", description: "清除脫落毛髮，防止皮膚感染與腸阻塞" },
-      { title: "梳毛（長毛兔）", detail: "每日", description: "換毛期尤其重要，每日梳毛" },
-      { title: "進食觀察", detail: "至少每週一次", description: "確認咀嚼順暢；出現遲疑、掉食或嘴邊潮濕時需諮詢兔科獸醫" },
-      { title: "指甲觀察", detail: "至少每週一次", description: "確認長度正常；修剪需由獸醫或專業人員協助" },
-      { title: "足底檢查", detail: "每次梳毛時", description: "確認足底毛髮與皮膚無紅腫或脫毛" },
-    ],
-  },
-  continueLabel: "繼續生活旅程",
 };

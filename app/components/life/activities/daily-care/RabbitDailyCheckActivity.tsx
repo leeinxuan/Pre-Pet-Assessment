@@ -3,9 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Rabbit grooming uses native images for anatomy hitboxes and drag positioning. */
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { rabbitGroomingConfig } from "../../../../data/species/rabbit/journey";
-import { rabbitActivityScenarios } from "../../../../data/species/rabbit/scenarios";
-import { rabbitGroomingCompletion } from "../../../../data/species/rabbit/report";
+import { rabbitActivityScenarios, rabbitGroomingCompletion, rabbitGroomingConfig } from "../../../../data/species/rabbit/activities";
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, type ObservationAnswerStatus, renderKnowledgeText, withPetName } from "../activity-ui";

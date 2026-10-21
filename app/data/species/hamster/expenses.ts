@@ -1,4 +1,4 @@
-import type { ExpenseRecord } from "../../../game-types";
+import type { ExpenseRecord, SpeciesExpenseRules } from "../../../game-types";
 
 /** §7 倉鼠費用清單；金額與費用明細說明均以 hamster-game-planning.md 為準。 */
 export const hamsterExpenses: Record<string, ExpenseRecord> = {
@@ -21,4 +21,11 @@ export const hamsterExpenses: Record<string, ExpenseRecord> = {
   "hamster-moderate-sick": { id: "hamster-moderate-sick", name: "急症檢查（呼吸異常／體重急遽下降）", amount: 2500, maxAmount: 6000, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "門診含血液常規或影像檢查與藥費；倉鼠血量極少，採樣技術難度高，費用依診所差異大" },
   "hamster-hospitalization": { id: "hamster-hospitalization", name: "住院與手術費用", amount: 6000, maxAmount: 50000, maxAmountOpenEnded: true, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "含麻醉、住院護理與手術費；倉鼠體型極小，麻醉風險極高，非所有獸醫均可執行" },
   "hamster-senior-care": { id: "hamster-senior-care", name: "高齡照護備用（環境調整）", amount: 500, maxAmount: 1500, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: false, description: "高齡倉鼠需降低籠內設施高度（滾輪可調低或移除）、增加保暖與觀察頻率；壽命短，高齡期通常在出生後 18 個月開始" },
+};
+
+/** 費用流程規則；ID 只引用本物種費用。 */
+export const hamsterExpenseRules: SpeciesExpenseRules = {
+  deferredArrivalFeedbackExpenseIds: ["hamster-arrival-checkup"],
+  // 浴沙、墊料與啃咬用品在房間佈置時已登錄。
+  arrivalMealExcludedExpenseIds: ["hamster-sand-monthly", "hamster-bedding-monthly", "hamster-gnaw-monthly"],
 };

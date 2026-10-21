@@ -4,10 +4,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { birdAssets } from "../../../../data/species/bird/assets";
-import { birdCageInspectionConfig } from "../../../../data/species/bird/journey";
-import { birdReport } from "../../../../data/species/bird/report";
-import { birdActivityScenarios } from "../../../../data/species/bird/scenarios";
+import { birdActivityScenarios, birdAssets, birdCageInspectionActivityData, birdCageInspectionConfig, birdReport } from "../../../../data/species/bird/activities";
+import { birdCopy } from "../../../../data/species/bird/copy";
 import { interpolatePetName } from "../../../../data/shared/pet-text";
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
@@ -22,17 +20,8 @@ function BirdCageAsset({ src, alt, fallback, className, width, height }: { src: 
 }
 
 export function BirdCageInspectionActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
-  const healthPoints = [
-    { id: "eyes", label: "眼睛", images: birdAssets.dailyGame.parts.eyes, alt: "鸚鵡的眼睛特寫", abnormalDescription: "眼分泌物、紅腫或半閉眼都是警訊，請當天聯繫鳥類獸醫。", choices: { normal: "看起來清亮，今天沒問題", warning: "有異常，需要留意" }, feedback: { normal: { correct: "✅ 正確！{petName} 的眼睛今天清亮有神，無分泌物或腫脹，是健康的表現。繼續每天觀察。", incorrect: "其實 {petName} 的眼睛今天是正常的——清亮、無分泌物。健康的鳥眼應清晰有神；若出現眼屎、腫脹或半閉才需要注意。" }, warning: { correct: "✅ 正確！你發現了眼睛異常——眼分泌物、紅腫或半閉眼都是警訊，請當天聯繫鳥類獸醫。", incorrect: "仔細再看——{petName} 的眼睛今天有異常，不能視為正常。眼睛異常可能代表感染或全身性疾病，請盡快聯繫鳥類獸醫。" } } },
-    { id: "feathers", label: "羽毛", images: birdAssets.dailyGame.parts.feathers, alt: "鸚鵡的羽毛特寫", abnormalDescription: "澎毛（非睡眠狀態）、凌亂或出現裸皮，都是需要盡快就醫的警訊。", choices: { normal: "羽毛整齊，今天狀況好", warning: "羽毛有異常，需要留意" }, feedback: { normal: { correct: "✅ 正確！{petName} 的羽毛今天整齊、有光澤，沒有蓬鬆或凌亂，是健康的表現。", incorrect: "其實 {petName} 的羽毛今天是正常的——整齊、有光澤。健康的鳥只有在睡覺或放鬆時才會稍微蓬羽，清醒時持續澎毛才需注意。" }, warning: { correct: "✅ 正確！你發現了羽毛異常——澎毛（非睡眠狀態）、凌亂或出現裸皮，都是需要盡快就醫的警訊。鳥類澎毛常是不適的第一個外顯訊號。", incorrect: "仔細再看——{petName} 現在的羽毛不正常（非睡眠時澎毛／凌亂／裸皮），可能代表身體不適或疾病，請當天聯繫鳥類獸醫。" } } },
-    { id: "feet", label: "腳和棲木", images: birdAssets.dailyGame.parts.feet, alt: "鸚鵡雙腳抓握棲木的特寫", abnormalDescription: "抓握無力、腫脹或結痂，可能影響站姿與健康，請盡快諮詢鳥類獸醫。", choices: { normal: "腳趾抓握正常，沒問題", warning: "腳有異常，需要留意" }, feedback: { normal: { correct: "✅ 正確！{petName} 的腳趾今天抓握棲木穩固，無腫脹或結痂，是健康的表現。", incorrect: "其實 {petName} 的腳今天是正常的——抓握穩固、無異狀。健康的鳥能穩定站在棲木上，腳趾無腫脹或過多角質。" }, warning: { correct: "✅ 正確！你注意到了腳部異常——抓握無力、腫脹或結痂，可能影響站姿與健康，請盡快諮詢鳥類獸醫。", incorrect: "仔細再看——{petName} 的腳有異常（抓握無力／腫脹／結痂），不能忽視。鳥站不穩或頻繁換腳，可能是腳部疾病或神經問題的警訊。" } } },
-    { id: "breathing", label: "呼吸狀況", images: birdAssets.dailyGame.parts.breathing, alt: "鸚鵡胸腹呼吸起伏的特寫", abnormalDescription: "張口呼吸或尾羽隨呼吸上下起伏是鳥類急症，請立刻聯繫鳥類獸醫，不能等待。", choices: { normal: "呼吸平順，沒有問題", warning: "呼吸有異常，需要立即注意" }, feedback: { normal: { correct: "✅ 正確！{petName} 的呼吸今天平順，靜止時幾乎看不出起伏，沒有張口，是健康的表現。", incorrect: "其實 {petName} 今天的呼吸是正常的——安靜時幾乎看不出呼吸動作。只有張口呼吸或尾羽隨呼吸明顯起伏，才是緊急警訊。" }, warning: { correct: "✅ 正確！你發現了呼吸異常——🚨 張口呼吸或尾羽隨呼吸上下起伏是鳥類急症，請立刻聯繫鳥類獸醫，不能等待。", incorrect: "仔細再看——{petName} 現在的呼吸有異常（張口呼吸或尾羽起伏），這是鳥類急症警訊，不能視為正常。請立刻聯繫鳥類獸醫，呼吸困難屬緊急狀況。" } } },
-  ] as const;
-  const droppingOptions = [
-    { id: "healthy", image: birdAssets.dailyGame.droppings.healthy, alt: "健康的糞便", title: "正常", form: "成形", color: "深綠色", urate: "白色乾燥", meaning: "表示今天腸胃與水分正常，繼續維持。", attention: "正常", feedback: { correct: "✅ 正確！今天的糞便成形、深綠色，尿酸部分白色乾燥，是腸胃與水分正常的表現，繼續保持每天觀察的習慣。", incorrect: "其實今天的糞便是正常的——成形、深綠色、尿酸白色乾燥。健康的鸚鵡糞便應有固態部分；若糞便偏軟水、顏色異常或量少才是警訊。" } },
-    { id: "watery", image: birdAssets.dailyGame.droppings.watery, alt: "水狀、顏色異常的糞便", title: "需要留意", form: "水分過多", color: "偏綠黑帶紅或黃色", urate: "需持續觀察", meaning: "可能有消化問題或感染徵兆，建議今天觀察精神與食慾，若持續出現請聯繫鳥類獸醫。", attention: "需要留意", feedback: { correct: "✅ 正確！你注意到了糞便異常——水分過多或顏色異常可能是消化問題或感染的徵兆，建議今天持續觀察精神與食慾，若持續出現請聯繫鳥類獸醫。", incorrect: "仔細再看——今天的糞便顏色或形狀有異常（水狀或色偏），不能視為正常。鸚鵡糞便若持續偏水、帶紅或發黑，可能代表腸道問題，請密切觀察並諮詢鳥類獸醫。" } },
-    { id: "small", image: birdAssets.dailyGame.droppings.small, alt: "量很少的糞便", title: "需要留意", form: "量明顯少於平常", color: "需搭配食量觀察", urate: "需持續觀察", meaning: "若同時觀察到食慾下降，是需要注意的警訊，請今天聯繫鳥類獸醫確認。", attention: "需要留意", feedback: { correct: "✅ 正確！糞便量明顯偏少是需要注意的警訊，若同時觀察到食慾下降，請今天就聯繫鳥類獸醫確認。", incorrect: "仔細再看——今天的糞便量比平常少，這不是正常的，不能忽視。糞便量驟減＋食慾下降是重要警訊，若同時出現請當天聯繫鳥類獸醫。" } },
-  ] as const;
+  const displayPetName = petName || birdCopy.animalNameFallback;
+  const { healthPoints, droppingOptions } = birdCageInspectionActivityData;
   const done = activity.birdCageInspectionSteps;
   const has = (id: string) => done.includes(id);
   const addMany = (...ids: string[]) => {
@@ -121,7 +110,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
       add(`health-${activeObservation}`);
       if (isLastHealthPoint) {
         setHealthTransition(true);
-        setMessage(`點擊籠門鎖扣，為 ${petName || "小啾"} 打開籠門。`);
+        setMessage(`點擊籠門鎖扣，為 ${displayPetName} 打開籠門。`);
         healthTransitionTimer.current = setTimeout(() => setHealthTransition(false), 400);
       }
     }
@@ -159,7 +148,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
     doorTimer.current = setTimeout(() => {
       addMany("cage-door-open", "bird-out");
       setDoorOpening(false);
-      setMessage(`輕輕點擊，陪 ${petName || "小啾"} 享受籠外互動時光。`);
+      setMessage(`輕輕點擊，陪 ${displayPetName} 享受籠外互動時光。`);
     }, 400);
   }
 
@@ -187,7 +176,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
     onChoose(scenario, completionChoice);
   }
 
-  if (activity.birdCageInspectionCompleted) return <DailyCareCompletion title={`${petName || "小啾"} 的健康，藏在這些細節裡`} summary={`你完成了今天的鳥籠巡視——清潔糞便托盤、觀察糞便、檢視健康狀態，還給了${petName || "小啾"}籠外互動的時間。`} detail="墊料每天換，才能清楚看到糞便量與狀態；水狀、顏色偏綠黑帶紅、量明顯減少，或澎毛、無法站棲木、張口呼吸，都是需要當天聯繫鳥類獸醫的訊號。" reflectionTitle={`每天陪${petName || "牠"}的時間，比你想的還要重要`} reflection="每天清潔、每天觀察、每天給予籠外互動時間缺一不可。高互動鳥類長期缺乏社交與刺激，可能出現拔毛或自傷等問題。" dailyCareBreakdown={birdReport.dailyCareBreakdown} onContinue={onContinue} />;
+  if (activity.birdCageInspectionCompleted) return <DailyCareCompletion title={`${displayPetName} 的健康，藏在這些細節裡`} summary={`你完成了今天的鳥籠巡視——清潔糞便托盤、觀察糞便、檢視健康狀態，還給了${displayPetName}籠外互動的時間。`} detail="墊料每天換，才能清楚看到糞便量與狀態；水狀、顏色偏綠黑帶紅、量明顯減少，或澎毛、無法站棲木、張口呼吸，都是需要當天聯繫**熟悉鳥類醫療的獸醫師**的訊號。" reflectionTitle={`每天陪${petName || "牠"}的時間，比你想的還要重要`} reflection="每天清潔、每天觀察、每天給予籠外互動時間缺一不可。高互動鳥類長期缺乏社交與刺激，可能出現拔毛或自傷等問題。" dailyCareBreakdown={birdReport.dailyCareBreakdown} onContinue={onContinue} />;
 
   const isTrayInitial = !has("tray-out");
   const isTrayDirty = has("tray-out") && !has("tray-scraped");
@@ -207,13 +196,13 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
       : birdAssets.dailyGame.onHand.sing;
 
   return <section className="life-activity bird-cage-activity" aria-label="鳥籠日常巡視">
-    <div className="activity-heading"><p className="life-stage-label">日常照護</p><h1>{petName || "小啾"} 的鳥籠日常巡視</h1><p className="bird-cage-message">今天早上，你走近 {petName || "小啾"} 的鳥籠，牠正在棲木上整理羽毛，籠底也留下了昨天使用過的痕跡。開始一天前，先陪牠完成一趟日常巡視吧。</p></div>
+    <div className="activity-heading"><p className="life-stage-label">日常照護</p><h1>{displayPetName} 的鳥籠日常巡視</h1><p className="bird-cage-message">今天早上，你走近 {displayPetName} 的鳥籠，牠正在棲木上整理羽毛，籠底也留下了昨天使用過的痕跡。開始一天前，先陪牠完成一趟日常巡視吧。</p></div>
     <ol className="rabbit-grooming-progress" aria-label="鳥籠巡視進度">{["清潔托盤", "觀察糞便", "健康巡視", "籠外互動"].map((label, index) => {
       const isComplete = (index === 0 && cleanComplete) || (index === 1 && has("feces-observed")) || (index === 2 && healthComplete) || (index === 3 && has("social-time"));
       return <li key={label} className={isComplete ? "done" : index === currentStage ? "active" : ""}><span>{isComplete ? "✓" : index + 1}</span>{label}</li>;
     })}</ol>
     <div className={`bird-cage-scene ${isTrayInitial || isTrayDirty ? "is-tray-stage" : ""} ${isHealthInspection ? "is-health-inspection" : ""} ${healthTransition ? "is-health-transition" : ""} ${has("cage-door-open") ? "is-door-open" : ""} ${has("bird-out") ? "is-social-stage" : ""}`}>
-      <BirdCageAsset className="bird-cage-background" src={sceneSource} alt={isHealthInspection ? `${petName || "小啾"}的健康檢查畫面` : "鸚鵡鳥籠場景"} fallback="🪶" width={1600} height={900} />
+      <BirdCageAsset className="bird-cage-background" src={sceneSource} alt={isHealthInspection ? `${displayPetName}的健康檢查畫面` : "鸚鵡鳥籠場景"} fallback="🪶" width={1600} height={900} />
       <p className="bird-cage-scene-prompt">{inspectionReady ? inspectionCompleteFeedback : message}</p>
       {isTrayInitial && <button type="button" className="bird-cage-main-hotspot bird-cage-main-hotspot--tray" onClick={pullOutTray} aria-label="點擊鳥籠底部托盤將它拉出" />}
       {isTrayDirty && <button type="button" className="bird-replacement-tray" onClick={replaceBedding} aria-label="使用新的籠底托盤替換髒墊料"><BirdCageAsset src={birdAssets.room.tray} alt="新的籠底托盤" fallback="▤" width={280} height={180} /><span>點擊更換墊料</span></button>}
@@ -228,8 +217,8 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
         return <InspectionHotspot type="button" key={part.id} className={pointComplete ? "is-complete" : available ? "is-available" : ""} complete={pointComplete} showOrder={showPointNumbers} order={index + 1} disabled={!available || healthTransition} aria-label={pointComplete ? `${part.label}已完成` : `檢查${part.label}`} onPointerEnter={available ? showMagnifier : undefined} onPointerMove={available ? showMagnifier : undefined} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => openHealthObservation(part.id)}><small>{part.label}</small></InspectionHotspot>;
       })}</div>}
       {isSocial && !has("cage-door-open") && <button type="button" className={`bird-cage-main-hotspot bird-cage-main-hotspot--lock ${doorOpening ? "is-opening" : ""}`} disabled={doorOpening} onClick={openDoor} aria-label="點擊鳥籠鎖扣開啟鳥籠" />}
-      {has("bird-out") && <button type="button" className={`bird-social-pet ${showHearts ? "is-petted" : ""}`} onClick={petBird} disabled={socialCompleting} aria-label={`和${petName || "小啾"}互動`}>
-        <BirdCageAsset className="bird-social-pet-image" src={socialImage} alt={`${petName || "小啾"}站在手上互動`} fallback="🦜" width={1200} height={900} />
+      {has("bird-out") && <button type="button" className={`bird-social-pet ${showHearts ? "is-petted" : ""}`} onClick={petBird} disabled={socialCompleting} aria-label={`和${displayPetName}互動`}>
+        <BirdCageAsset className="bird-social-pet-image" src={socialImage} alt={`${displayPetName}站在手上互動`} fallback="🦜" width={1200} height={900} />
         {showHearts && <span className="bird-social-hearts" aria-hidden="true">♥ ♥</span>}
       </button>}
       {activeObservation && <ObservationCard className="bird-observation-card" label={activeObservation === "feces" ? "糞便觀察" : `${selectedHealthPoint?.label ?? "健康部位"}觀察`}>
@@ -257,7 +246,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
             image={<BirdCageAsset className="observation-card-image bird-observation-image" src={selectedHealthPoint.images[healthStates[selectedHealthPoint.id] === "normal" ? "normal" : "abnormal"]} alt={selectedHealthPoint.alt} fallback="●" width={280} height={280} />}
             question="你覺得今天的狀態如何？"
             choices={[{ id: "normal", label: selectedHealthPoint.choices.normal }, { id: "warning", label: selectedHealthPoint.choices.warning }]}
-            feedback={interpolatePetName(selectedHealthPoint.feedback[healthStates[selectedHealthPoint.id]][(healthFeedback[selectedHealthPoint.id] ?? "question") === "correct" ? "correct" : "incorrect"], petName || "小啾")}
+            feedback={interpolatePetName(selectedHealthPoint.feedback[healthStates[selectedHealthPoint.id]][(healthFeedback[selectedHealthPoint.id] ?? "question") === "correct" ? "correct" : "incorrect"], displayPetName)}
             onChoose={(choiceId) => answerHealthPoint(choiceId as "normal" | "warning")}
             onReturn={() => setHealthFeedback((current) => ({ ...current, [selectedHealthPoint.id]: "question" }))}
           />

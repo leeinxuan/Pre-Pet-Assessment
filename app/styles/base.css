@@ -729,6 +729,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-review-topic-grid article { display: flex; align-items: center; gap: 12px; padding: 15px 0; border-bottom: 1px solid rgba(94,116,86,.16); background: transparent; }
 .care-review-followup .care-review-topic-grid { border-color: rgba(180,128,23,.2); }.care-review-followup .care-review-topic-grid article { border-color: rgba(180,128,23,.2); background: transparent; }
 .care-review-topic-grid article > span { display: grid; flex: 0 0 auto; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #dcefe0; color: #3c7446; font-weight: 950; }
+.care-review-section > header > span svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 2.35; stroke-linecap: round; stroke-linejoin: round; }
+.care-review-topic-grid article > span svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.35; stroke-linecap: round; stroke-linejoin: round; }
+.care-review-section > header > span svg circle, .care-review-topic-grid article > span svg circle { fill: currentColor; stroke: none; }
 .care-review-followup .care-review-topic-grid article > span { background: #fff0bb; color: #936510; }
 .care-review-topic-grid article > div { display: grid; flex: 1; min-width: 0; gap: 4px; }
 .care-review-topic-grid b { color: #433926; }

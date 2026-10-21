@@ -1,4 +1,5 @@
 import type { CareMember, Profile } from "../../game-types";
+import { speciesCategories } from "../species";
 
 export const stations = [
   ["01", "選擇寵物", "遇見想領養的牠"],
@@ -59,14 +60,16 @@ export const intros = [
   },
 ] as const;
 
-export const categories = [
-  { id: "dog", label: "犬", icon: "🐕", image: "/assets/species/dog.webp", active: true },
-  { id: "cat", label: "貓", icon: "🐈", image: "/assets/species/cat.webp", active: true },
-  { id: "rabbit", label: "兔", icon: "🐇", image: "/assets/species/rabbit.webp", active: true },
-  { id: "bird", label: "鸚鵡", icon: "🦜", image: "/assets/species/bird.webp", active: true },
-  { id: "gecko", label: "小型地棲性守宮", icon: "🦎", active: true },
-  { id: "hamster", label: "倉鼠", icon: "🐹", image: "/assets/species/small-mammal.webp", active: true },
-];
+/** @deprecated 請改由 `data/species/index.ts` 匯入 speciesCategories。 */
+export const categories = speciesCategories;
+
+/** 過往經驗頁中各物種共用的固定文案；標題與選項文字由各物種 copy 提供。 */
+export const previousPetHistoryCopy = {
+  hasPreviousHint: "接著填寫以前養過的寵物名字",
+  noPreviousHint: "直接開始這次的飼養前準備",
+  oldPetNameLabel: "以前養過的寵物名字",
+  oldPetNamePlaceholder: "例如：豆豆",
+} as const;
 
 export const initialMembers: CareMember[] = [
   { id: "player", name: "", age: null, isPlayer: true },

@@ -7,5 +7,8 @@ export const catBreeds = [
 /** 現行流程採通用貓資料；既有品種資料保留，暫不納入可見流程。 */
 export const catSelection = {
   skipBreedPage: true,
+  /** 從犬切換到貓時，清除沿用的犬預設名字。 */
+  resetPetNamesOnSelect: ["小狗"],
+  category: { active: true },
   breeds: [{ id: "cat", species: "cat", label: "貓", icon: "🐈", image: "/assets/species/cat.webp", size: "medium", shortDescription: "以通用家貓照護需求為基礎，重點在室內安全、互動與健康觀察。" }],
 } as const;

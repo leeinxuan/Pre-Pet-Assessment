@@ -4,8 +4,9 @@ import { rabbitConfig } from "./rabbit/index";
 import { birdConfig } from "./bird/index";
 import { hamsterConfig } from "./hamster/index";
 import { geckoConfig } from "./gecko/index";
-import type { SpeciesId } from "../shared/types";
+import { pickSpeciesEntry, type SpeciesId } from "../shared/types";
 import type { RoomFlowConfig } from "../shared/species-config-types";
+import type { JourneyTransitionMedia } from "../../game-types";
 
 /**
  * 共用 UI 的單一物種設定入口。
@@ -22,7 +23,7 @@ export const speciesConfigs = {
     roomItems: dogConfig.preparation.roomItems,
     hazards: dogConfig.preparation.hazards,
     trunkItems: dogConfig.preparation.trunkItems,
-    roomFlow: dogConfig.preparation.roomFlow as unknown as RoomFlowConfig,
+    roomFlow: dogConfig.preparation.roomFlow,
   },
   cat: {
     ...catConfig,
@@ -31,7 +32,7 @@ export const speciesConfigs = {
     roomItems: catConfig.preparation.roomItems,
     hazards: catConfig.preparation.hazards,
     trunkItems: catConfig.preparation.trunkItems,
-    roomFlow: undefined,
+    roomFlow: undefined as RoomFlowConfig | undefined,
   },
   rabbit: {
     ...rabbitConfig,
@@ -40,7 +41,7 @@ export const speciesConfigs = {
     roomItems: rabbitConfig.preparation.roomItems,
     hazards: rabbitConfig.preparation.hazards,
     trunkItems: rabbitConfig.preparation.trunkItems,
-    roomFlow: rabbitConfig.preparation.roomFlow as unknown as RoomFlowConfig,
+    roomFlow: rabbitConfig.preparation.roomFlow,
   },
   bird: {
     ...birdConfig,
@@ -49,16 +50,7 @@ export const speciesConfigs = {
     roomItems: birdConfig.preparation.roomItems,
     hazards: birdConfig.preparation.hazards,
     trunkItems: birdConfig.preparation.trunkItems,
-    roomFlow: birdConfig.preparation.roomFlow as unknown as RoomFlowConfig,
-  },
-  hamster: {
-    ...hamsterConfig,
-    copy: hamsterConfig.copy,
-    breeds: hamsterConfig.selection.breeds,
-    roomItems: hamsterConfig.preparation.roomItems,
-    hazards: hamsterConfig.preparation.hazards,
-    trunkItems: hamsterConfig.preparation.trunkItems,
-    roomFlow: hamsterConfig.preparation.roomFlow as unknown as RoomFlowConfig,
+    roomFlow: birdConfig.preparation.roomFlow,
   },
   gecko: {
     ...geckoConfig,
@@ -67,13 +59,54 @@ export const speciesConfigs = {
     roomItems: geckoConfig.preparation.roomItems,
     hazards: geckoConfig.preparation.hazards,
     trunkItems: geckoConfig.preparation.trunkItems,
-    roomFlow: geckoConfig.preparation.roomFlow as unknown as RoomFlowConfig,
+    roomFlow: geckoConfig.preparation.roomFlow,
+  },
+  hamster: {
+    ...hamsterConfig,
+    copy: hamsterConfig.copy,
+    breeds: hamsterConfig.selection.breeds,
+    roomItems: hamsterConfig.preparation.roomItems,
+    hazards: hamsterConfig.preparation.hazards,
+    trunkItems: hamsterConfig.preparation.trunkItems,
+    roomFlow: hamsterConfig.preparation.roomFlow,
   },
 } as const;
 export type SpeciesConfig = (typeof speciesConfigs)[SpeciesId];
 
+export type SpeciesCategory = {
+  id: SpeciesId;
+  label: string;
+  icon: string;
+  image?: string;
+  active: boolean;
+};
+
+/** 物種選擇卡唯一資料來源；名稱、圖示與圖片均衍生自該物種 selection.ts。 */
+export const speciesCategories: readonly SpeciesCategory[] = (Object.entries(speciesConfigs) as Array<[SpeciesId, SpeciesConfig]>)
+  .map(([id, config]) => {
+    const primaryOption = config.selection.breeds[0];
+    return {
+      id,
+      label: primaryOption.label,
+      icon: primaryOption.icon,
+      image: primaryOption.image,
+      active: config.selection.category.active,
+    };
+  });
+
 export function getSpeciesConfig(species: string | undefined): SpeciesConfig {
-  return speciesConfigs[species as SpeciesId] ?? speciesConfigs.dog;
+  return pickSpeciesEntry<SpeciesConfig>(speciesConfigs, species);
+}
+
+/**
+ * 過場影片的正式讀取入口。
+ * 尚未提供專屬影片的物種，暫時沿用犬隻已完成的過場；備援規則留在資料層，
+ * 共用畫面不直接認識任何物種素材。
+ */
+export function getJourneyTransitionMedia(species: string | undefined): JourneyTransitionMedia {
+  const dogTransitions = (speciesConfigs.dog.journey as { transitionMedia?: JourneyTransitionMedia }).transitionMedia ?? {};
+  const speciesTransitions = (getSpeciesConfig(species).journey as { transitionMedia?: JourneyTransitionMedia }).transitionMedia ?? {};
+  return { ...dogTransitions, ...speciesTransitions };
 }
 
 /** 由已註冊的品種資料找回所屬物種，供品種題等共用流程使用。 */

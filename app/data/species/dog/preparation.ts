@@ -1,5 +1,12 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 import { sharedAssets } from "../../shared/assets";
+import type { RoomFlowConfig } from "../../shared/species-config-types";
+
+export const dogRoomDoorplatePlacement = {
+  desktop: { x: 55, y: 16, width: 28 },
+  mobile: { x: 33, y: 20, width: 40 },
+  mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
+} as const;
 
 /**
  * 犬隻房間用品。placement / mobilePlacement 是唯一的物件位置來源；
@@ -34,7 +41,7 @@ export const dogDepartureTrunkItems: TrunkItem[] = [
 ];
 
 /** 犬隻房間、危險物、接回與餵食的共用資料。 */
-export const dogRoomFlow = {
+export const dogRoomFlow: RoomFlowConfig = {
   initialBackground: "/assets/dog/room/empty-room-hazards.webp",
   initialMobileBackground: "/assets/dog/room/empty-room-mobile-hazards.webp",
   safeBackground: "/assets/dog/room/empty-room.webp",
@@ -48,8 +55,8 @@ export const dogRoomFlow = {
     hazardInstruction: "在把{petName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。",
     completeInstruction: "空間已整理完成。請點擊下方準備用品，將它們放進生活空間。",
   },
-} as const;
+};
 
-export const dogRoomScene: RoomSceneConfig = { backgroundAlt: "空的寵物生活房間", desktopBackgroundClass: "room-scene-background--dog", mobileBackgroundClass: "room-scene-background--dog-mobile", backgroundStyle: { objectFit: "contain", objectPosition: "center center" }, doorplate: { image: sharedAssets.nameplate, alt: "小狗名字門牌" } };
+export const dogRoomScene: RoomSceneConfig = { backgroundAlt: "空的寵物生活房間", desktopBackgroundClass: "room-scene-background--dog", mobileBackgroundClass: "room-scene-background--dog-mobile", backgroundStyle: { objectFit: "contain", objectPosition: "center center" }, doorplate: { image: sharedAssets.nameplate, alt: "小狗名字門牌", placement: dogRoomDoorplatePlacement } };
 export const dogDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: "/assets/car/adoption-documents.webp", documentFolderAlt: "飼養文件夾" };
 export const dogPreparation = { roomItems: dogRoomItems, hazards: dogHazards, trunkItems: dogDepartureTrunkItems, roomFlow: dogRoomFlow, roomScene: dogRoomScene, departureScene: dogDepartureScene } as const;

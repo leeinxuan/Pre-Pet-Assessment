@@ -1,4 +1,4 @@
-import type { ExpenseRecord } from "../../../game-types";
+import type { ExpenseRecord, SpeciesExpenseRules } from "../../../game-types";
 
 /** §7 鸚鵡費用清單；金額與費用明細說明均以 bird-game-planning.md 為準。 */
 export const birdExpenses: Record<string, ExpenseRecord> = {
@@ -14,11 +14,18 @@ export const birdExpenses: Record<string, ExpenseRecord> = {
   "bird-carrier": { id: "bird-carrier", name: "鳥用外出籠", amount: 1200, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "通風良好、材質堅固、內有棲木；縫隙不讓肢體探出" },
   "bird-cover-cloth": { id: "bird-cover-cloth", name: "遮光布", amount: 300, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "遮蔽籠具降低外界刺激，減少途中緊迫；也用於日常安靜休息" },
   "bird-water-supply": { id: "bird-water-supply", name: "飲水容器", amount: 150, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "長途移動準備適量飲水，安全停靠時補充" },
-  "bird-arrival-checkup": { id: "bird-arrival-checkup", name: "到家後首次健康檢查", amount: 1500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "鳥類常隱藏病徵，抵家後應找熟悉鳥類醫療的獸醫建立健康基準" },
+  "bird-arrival-checkup": { id: "bird-arrival-checkup", name: "到家後首次健康檢查", amount: 1500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "鳥類常隱藏病徵，抵家後應找**熟悉鳥類醫療的獸醫師**建立健康基準" },
   "bird-food-monthly": { id: "bird-food-monthly", name: "每月飼料費（主食＋鮮食）", amount: 800, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "專用飼料為主食，鮮食（蔬果）為輔；鮮食不建議甜度高的水果；不建議僅以單一飼料為全部食物" },
   "bird-cleaning-monthly": { id: "bird-cleaning-monthly", name: "每月清潔耗材費", amount: 300, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "糞尿托盤墊料每日更換；定期徹底清洗消毒籠舍；使用確認對鳥無害的清潔劑" },
-  "bird-mild-sick": { id: "bird-mild-sick", name: "輕症就診（輕微糞便異常／輕度羽毛問題）", amount: 1000, maxAmount: 2500, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "一般門診含診察與短期藥費；輕微糞便異常、輕度羽毛問題等症狀輕微未達抽血標準；鳥科獸醫資源稀少，須事先確認診所" },
+  "bird-mild-sick": { id: "bird-mild-sick", name: "輕症就診（輕微糞便異常／輕度羽毛問題）", amount: 1000, maxAmount: 2500, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "一般門診含診察與短期藥費；輕微糞便異常、輕度羽毛問題等症狀輕微未達抽血標準；**熟悉鳥類醫療的獸醫師**資源稀少，須事先確認診所" },
   "bird-moderate-sick": { id: "bird-moderate-sick", name: "急症檢查（澎毛精神極差／消化異常）", amount: 2500, maxAmount: 6000, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "門診含血液常規或影像檢查與藥費；澎毛、精神低落持續超過一天；鳥類血量少，採血技術難度高" },
   "bird-hospitalization": { id: "bird-hospitalization", name: "住院與手術費用", amount: 6000, maxAmount: 50000, maxAmountOpenEnded: true, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "含麻醉、住院護理與手術費；鳥類麻醉風險高，須有異寵麻醉資格的獸醫執行" },
   "bird-senior-room": { id: "bird-senior-room", name: "高齡環境調整用品", amount: 1200, category: "高齡用品", stage: "生活變化", recurring: false, fromEmergency: false, description: "降低棲木高度防跌落、增加保暖設備（暖燈、布巾）、減少環境干擾" },
+};
+
+/** 費用流程規則；ID 只引用本物種費用。 */
+export const birdExpenseRules: SpeciesExpenseRules = {
+  deferredArrivalFeedbackExpenseIds: ["bird-arrival-checkup"],
+  // 清潔耗材在房間佈置時已登錄。
+  arrivalMealExcludedExpenseIds: ["bird-cleaning-monthly"],
 };

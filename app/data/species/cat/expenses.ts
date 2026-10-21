@@ -1,4 +1,4 @@
-import type { ExpenseRecord } from "../../../game-types";
+import type { ExpenseRecord, SpeciesExpenseRules } from "../../../game-types";
 
 /** §7 貓費用清單；金額與費用明細說明均以 cat-game-planning.md 為準。 */
 export const catExpenses: Record<string, ExpenseRecord> = {
@@ -25,4 +25,10 @@ export const catExpenses: Record<string, ExpenseRecord> = {
   "cat-moderate-sick": { id: "cat-moderate-sick", name: "急症檢查（嘔吐不吃／精神極差）", amount: 1400, maxAmount: 4600, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "門診含血液常規或影像檢查與藥費；嘔吐不吃、精神萎靡；公貓尿道阻塞需立即就醫" },
   "cat-hospitalization": { id: "cat-hospitalization", name: "住院與手術費用", amount: 4000, maxAmount: 40000, maxAmountOpenEnded: true, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "含麻醉、住院護理與手術費；需住院觀察或手術（如 HCM、尿道阻塞術後、子宮蓄膿）" },
   "cat-senior-room": { id: "cat-senior-room", name: "高齡環境調整用品", amount: 800, maxAmount: 2500, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: false, description: "低入口砂盆、地墊、階梯式設施與保暖休息處；高齡貓跳躍能力下降需調整生活環境" },
+};
+
+/** 費用流程規則；ID 只引用本物種費用。 */
+export const catExpenseRules: SpeciesExpenseRules = {
+  // 貓砂在房間佈置時已登錄。
+  arrivalMealExcludedExpenseIds: ["cat-litter-monthly"],
 };

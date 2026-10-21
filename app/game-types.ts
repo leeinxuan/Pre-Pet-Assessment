@@ -24,6 +24,26 @@ export type ExpenseRecord = {
 
 export type ExpenseTriggerMeta = Pick<ExpenseRecord, "speciesId" | "stageId" | "sourceScenarioId">;
 
+/** 活動同時加入多筆費用時，合併成一張費用卡的呈現方式。 */
+export type CombinedExpenseCardRule = {
+  /** 本次新增的費用全部屬於這組 ID 時套用。 */
+  expenseIds: readonly string[];
+  name: string;
+  category: ExpenseCategory;
+  recurring: boolean;
+};
+
+/** 各物種費用的流程規則；共用流程依目前物種讀取，不在元件內寫死費用 ID。 */
+export type SpeciesExpenseRules = {
+  /** 到家題答對時不在作答當下登錄，改由「做得很好」頁出現後才登錄的費用。 */
+  deferredArrivalFeedbackExpenseIds?: readonly string[];
+  /** 已由其他互動登錄、第一餐不可重複觸發的每月費用。 */
+  arrivalMealExcludedExpenseIds?: readonly string[];
+  /** 散步準備（撿便袋）時登錄的費用。 */
+  walkingExpenseIds?: readonly string[];
+  combinedExpenseCards?: readonly CombinedExpenseCardRule[];
+};
+
 /** 第一餐物品欄圖片的桌機／手機尺寸；內容由各物種 feeding.ts 提供。 */
 export type ArrivalMealSupplyImageSize = { width: number; height: number };
 export type ArrivalMealSupplyImageKey = "default" | "food" | "water" | "veggie" | "unsafe";
@@ -108,6 +128,13 @@ export type FeedingConfig = {
   emptyBowlText: string;
 });
 
+/** 房間場景中的名字名牌位置；各物種資料直接隨 roomScene 維護。 */
+export type RoomDoorplatePlacement = {
+  desktop: { x: number; y: number; width: number };
+  mobile: { x: number; y: number; width: number };
+  mobileText: { left: number; top: number; width: number; height: number; fontSize: number };
+};
+
 /** 房間佈置畫面中與物種素材相關的設定；流程規則仍由 roomFlow 負責。 */
 export type RoomSceneConfig = {
   background?: string;
@@ -120,7 +147,7 @@ export type RoomSceneConfig = {
   desktopBackgroundClass?: string;
   mobileBackgroundClass?: string;
   backgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string };
-  doorplate?: { image: string; alt: string };
+  doorplate?: { image: string; alt: string; placement: RoomDoorplatePlacement };
 };
 
 /** 出發前準備畫面中與物種素材相關的設定。 */
@@ -382,6 +409,12 @@ export type ActivityIntroConfig = {
   };
 };
 
+/** 重玩重設策略的鍵；每個鍵都必須在 activity-registry.ts 宣告對應策略。 */
+export type JourneyActivityResetKey =
+  | "walking" | "daily-behavior" | "breed-challenge" | "busy-care" | "cat-inspection"
+  | "rabbit-carry-sort" | "rabbit-daily-check" | "bird-cage-inspection"
+  | "hamster-first-meal" | "hamster-inspection" | "gecko-first-meal" | "gecko-health-inspection";
+
 export type JourneyActivityConfig = {
   itemId: string;
   scenarioId?: string;
@@ -392,12 +425,12 @@ export type JourneyActivityConfig = {
   deferItemExpenses?: boolean;
   /** 是否在正確回饋顯示時播放 expense 動畫，而非作答當下。 */
   triggerExpenseOnFeedback?: boolean;
-  /** 下一步會依此鍵搬移重玩 state 重設策略。 */
-  resetKey?: string;
+  /** 重玩時使用的活動 state 重設策略（見 activity-registry.ts）。 */
+  resetKey?: JourneyActivityResetKey;
 };
 
 export type GeckoHealthDisplayState = "normal" | "warning" | "shedding" | "stuck-shed";
-export type GeckoTemperatureState = "too-cold" | "too-hot" | "in-range";
+export type GeckoTemperatureState = "too-cold" | "too-hot";
 
 export type GeckoHealthInspectionChoice = {
   id: string;
@@ -429,6 +462,10 @@ export type GeckoHealthJudgement = {
   };
 };
 
+export type GeckoFecesInspection = GeckoHealthJudgement & {
+  scenePlacement: { x: number; y: number; width: number; layer: number };
+};
+
 export type GeckoBodyInspectionPoint = GeckoHealthJudgement & {
   hotspot: { x: number; y: number };
 };
@@ -443,6 +480,13 @@ export type GeckoHealthInspectionConfig = {
     body: string;
     bodyAlt: string;
     magnifier: string;
+    /** Shared finished terrarium composition used across the care stages. */
+    completedItems: readonly {
+      id: string;
+      image: string;
+      alt: string;
+      placement: { x: number; y: number; width: number; layer: number };
+    }[];
   };
   temperature: {
     instruction: string;
@@ -452,8 +496,14 @@ export type GeckoHealthInspectionConfig = {
     warmThermometer: string;
     coolThermometer: string;
     controllerImage: string;
+    warmPlacement: { x: number; y: number; width: number };
+    coolPlacement: { x: number; y: number; width: number };
+    /** Internal validation bounds for each thermometer's actual position. */
+    correctTemperatures: {
+      warm: { min: number; max: number };
+      cool: { min: number; max: number };
+    };
     presets: Record<GeckoTemperatureState, readonly { warm: number; cool: number }[]>;
-    target: { warmMin: number; warmMax: number; coolMin: number; coolMax: number };
     adjustment: { warm: number; cool: number };
     confirmLabel: string;
     successFeedback: Record<GeckoTemperatureState, string>;
@@ -467,19 +517,18 @@ export type GeckoHealthInspectionConfig = {
     cleanImage: string;
     cleanImageAlt: string;
     detail: string;
-    fillLabel: string;
     successFeedback: string;
     fixedWarning: string;
     continueLabel: string;
+    sceneItemId: string;
   };
-  feces: GeckoHealthJudgement;
+  feces: GeckoFecesInspection;
   body: {
     /** Whether body inspection points unlock one at a time. */
     requiresOrderedInspection: boolean;
     /** Whether visible sequence numbers are meaningful for the inspection. */
     showPointNumbers: boolean;
     instruction: string;
-    prompt: string;
     points: readonly GeckoBodyInspectionPoint[];
   };
   completion: {

@@ -33,7 +33,7 @@ export const geckoAssets = {
     magnifier: "/assets/shared/magnifier.webp",
     warmThermometer: "/assets/gecko/room/thermometer-hygrometer-warm.webp",
     coolThermometer: "/assets/gecko/room/thermometer-hygrometer-cool.webp",
-    heatMatController: "/assets/gecko/room/heat-mat.webp",
+    heatMatController: "/assets/gecko/HealthInspectionActivity/controller.webp",
     waterDirty: "/assets/gecko/HealthInspectionActivity/water-dish-dirty.webp",
     waterClean: "/assets/gecko/feeding/shallow-water-dish-full.webp",
     fecesNormal: "/assets/gecko/HealthInspectionActivity/excretion-normal.webp",

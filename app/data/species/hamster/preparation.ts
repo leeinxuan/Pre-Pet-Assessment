@@ -1,6 +1,13 @@
 import type { DepartureSceneConfig, HazardItem, RoomItem, RoomSceneConfig, TrunkItem } from "../../../game-types";
 import { sharedAssets } from "../../shared/assets";
+import type { RoomFlowConfig } from "../../shared/species-config-types";
 import { hamsterAssets } from "./assets";
+
+export const hamsterRoomDoorplatePlacement = {
+  desktop: { x: 45, y: 15, width: 25 },
+  mobile: { x: 33, y: 20, width: 40 },
+  mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
+} as const;
 
 export const hamsterHazards: HazardItem[] = [
   { id: "cable", label: "電線", icon: "⌁", image: hamsterAssets.room.hazards.cable, placement: { x: 14, y: 77, width: 13, layer: 5 }, danger: "倉鼠有強烈啃咬天性，咬電線可能觸電或食入絕緣皮層。", handling: "整理固定電線或收入線槽，讓{petName}的活動區域無電線可及。" },
@@ -27,7 +34,7 @@ export const hamsterTrunkItems: TrunkItem[] = [
   { id: "hideout-in-carrier", label: "小型躲藏物", kind: "supply", image: hamsterAssets.preparation.hideoutInCarrier, description: "提供可躲藏的空間，讓{petName}在移動過程中感到安心。", preparedLabel: "已準備", placement: { x: 30, y: 66, width: 12, layer: 4 } },
 ];
 
-export const hamsterRoomFlow = {
+export const hamsterRoomFlow: RoomFlowConfig = {
   initialBackground: hamsterAssets.room.initialBackground,
   safeBackground: hamsterAssets.room.safeBackground,
   interiorBackground: hamsterAssets.room.cageInterior,
@@ -49,8 +56,8 @@ export const hamsterRoomFlow = {
     lockedInstruction: "請先放置倉鼠籠，再準備主食飼料。",
     entryLabel: "查看倉鼠籠內部配置",
   },
-} as const;
+};
 
-export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "倉鼠名字名牌" } };
+export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "倉鼠名字名牌", placement: hamsterRoomDoorplatePlacement } };
 export const hamsterDepartureScene: DepartureSceneConfig = { trunkBackground: hamsterAssets.preparation.trunkBackground, trunkBackgroundAlt: "打開的汽車後車廂" };
 export const hamsterPreparation = { roomItems: hamsterRoomItems, hazards: hamsterHazards, trunkItems: hamsterTrunkItems, roomFlow: hamsterRoomFlow, roomScene: hamsterRoomScene, departureScene: hamsterDepartureScene } as const;

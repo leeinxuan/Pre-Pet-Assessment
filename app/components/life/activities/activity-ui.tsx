@@ -1,24 +1,18 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- Activity intro artwork keeps existing CSS-controlled dimensions. */
-import { interpolatePetName, petNameFallback } from "../../../data/shared/pet-text";
+import { interpolatePetName } from "../../../data/shared/pet-text";
 import type { ActivityIntroConfig } from "../../../game-types";
 
 /** 外觀觀察題共用的作答狀態；返回僅回到同一個觀察題，不重新抽取素材狀態。 */
 export type ObservationAnswerStatus = "question" | "incorrect" | "correct";
 
 export function ObservationReturnButton({ onReturn }: { onReturn: () => void }) {
-  return <button type="button" className="knowledge-modal-confirm observation-return-button" onClick={onReturn}>返回</button>;
+  return <button type="button" className="knowledge-modal-confirm observation-return-button" onClick={onReturn}>重新想一次</button>;
 }
 
 export function withPetName(text: string, petName: string, species?: string) {
-  const displayName = petName.trim() || petNameFallback(species);
-  const withPlaceholders = interpolatePetName(text, displayName, species);
-  if (!petName.trim()) return withPlaceholders;
-  return withPlaceholders
-    .replaceAll("豆豆", displayName)
-    .replaceAll("小狗", displayName)
-    .replaceAll("狗狗", displayName);
+  return interpolatePetName(text, petName, species);
 }
 
 export function renderKnowledgeText(text: string) {
@@ -33,11 +27,18 @@ export function renderKnowledgeText(text: string) {
   ));
 }
 
+/** 選擇題維持純文字，不能因資料中的知識標記改變局部字重或字級。 */
+export function plainChoiceText(text: string) {
+  return text
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/<(?:mark|danger)>(.*?)<\/(?:mark|danger)>/g, "$1");
+}
+
 /** 可由各活動資料帶入的純說明前導頁，避免活動專屬頁面與內容散落在互動元件中。 */
 export function ActivityIntroPage({ config, petName, species, onStart }: { config: ActivityIntroConfig; petName: string; species: string; onStart: () => void }) {
   const { eyebrow, title, paragraphs, startLabel: actionLabel, visualAssets } = config;
   return <section className="activity-intro-page" aria-labelledby="activity-intro-title">
-    <div className="activity-intro-page-card">
+    <div className={`activity-intro-page-card${visualAssets ? "" : " activity-intro-page-card--copy-only"}`}>
       {visualAssets && <div className="activity-intro-page-visual" aria-hidden="true">
         {visualAssets.character && <img className="activity-intro-page-pet" src={visualAssets.character} alt="" />}
         {visualAssets.tool && <img className="activity-intro-page-tool" src={visualAssets.tool} alt="" />}

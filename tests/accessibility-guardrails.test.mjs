@@ -47,18 +47,20 @@ test("dialogs preserve keyboard focus and report validation is announced", async
 });
 
 test("drag interactions stay keyboard-operable without separate keyboard-instruction panels", async () => {
-  const [walking, catInspection, rabbitInspection, hamsterInspection] = await Promise.all([
+  const [walking, walkingData, catInspection, rabbitInspection, hamsterInspection] = await Promise.all([
     source("app/components/life/activities/daily-care/WalkingActivity.tsx"),
+    source("app/data/species/dog/activities.ts"),
     source("app/components/life/activities/daily-care/CatDailyInspectionActivity.tsx"),
     source("app/components/life/activities/daily-care/RabbitDailyCheckActivity.tsx"),
-    source("app/components/life/activities/daily-care/GuidedActivities.tsx"),
+    source("app/components/life/activities/daily-care/HamsterMorningInspectionActivity.tsx"),
   ]);
 
   for (const activity of [walking, catInspection, rabbitInspection, hamsterInspection]) {
     assert.doesNotMatch(activity, />鍵盤操作</);
     assert.doesNotMatch(activity, /keyboard-(?:steps|cleanup)/);
   }
-  assert.match(walking, /aria-label="使用撿便袋清理排泄物"/);
+  assert.match(walking, /aria-label=\{copy\.aria\.cleanupBag\}/);
+  assert.match(walkingData, /cleanupBag: "使用撿便袋清理排泄物"/);
   assert.match(walking, /event\.detail === 0\) cleanupPoop\(\)/);
   assert.match(catInspection, /aria-label=\{keyboardStep\?\.select/);
   assert.match(catInspection, /aria-label=\{keyboardStep\?\.action/);

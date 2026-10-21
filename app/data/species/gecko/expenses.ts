@@ -1,4 +1,4 @@
-import type { ExpenseRecord } from "../../../game-types";
+import type { ExpenseRecord, SpeciesExpenseRules } from "../../../game-types";
 
 const initial = (id: string, name: string, amount: number, description: string): ExpenseRecord => ({ id, name, amount, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description });
 export const geckoExpenses: Record<string, ExpenseRecord> = {
@@ -27,3 +27,6 @@ export const geckoExpenses: Record<string, ExpenseRecord> = {
   "gecko-hospitalization": { id: "gecko-hospitalization", name: "住院與手術（卵阻塞手術、組織脫垂手術、嚴重 MBD 處置）", amount: 6000, maxAmount: 50000, maxAmountOpenEnded: true, category: "臨時／醫療支出", stage: "生活變化", recurring: false, fromEmergency: true, description: "含麻醉、住院護理與手術費。" },
   "gecko-senior-room": { id: "gecko-senior-room", name: "高齡環境調整用品（防滑墊、低矮躲避屋、升溫設備補強）", amount: 1000, maxAmount: 3000, category: "高齡用品", stage: "生活變化", recurring: false, fromEmergency: false, description: "高齡守宮行動力下降，需調整缸具佈置降低受傷風險。" },
 };
+
+/** 費用流程規則；ID 只引用本物種費用。 */
+export const geckoExpenseRules: SpeciesExpenseRules = {};

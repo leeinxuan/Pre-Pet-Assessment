@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { initialMembers, initialProfile, intros } from "./data/shared/app-flow";
-import { getExpenseForSpecies, isTemporaryReserveExpense } from "./data/shared/expenses";
+import { getExpenseForSpecies, getExpenseRulesForSpecies, isTemporaryReserveExpense } from "./data/shared/expenses";
 import { initialHomeReadinessState } from "./data/shared/home-readiness-state";
 import { getSpeciesConfig } from "./data/species/index";
 import { getJourneyItemsForSpecies, getJourneyStepForItem } from "./data/species/journey";
 import { initialLifeActivityState } from "./data/shared/life-activity";
+import { resetQuestionVideoAutoplay } from "./components/life/activities/scenario-ui";
 import {
   clearReplayAnswers,
   enterJourneyItem,
@@ -229,6 +230,14 @@ export default function Home() {
 
   const isReplayingJourney = () => journeyReplayRef.current.session !== null;
 
+  function selectCategory(nextCategory: string) {
+    setCategory(nextCategory);
+    // 物種可在資料中指定切換時要清除的沿用名字，共用流程不判斷物種。
+    const { selection } = getSpeciesConfig(nextCategory);
+    const resetNames: readonly string[] = "resetPetNamesOnSelect" in selection ? selection.resetPetNamesOnSelect : [];
+    if (resetNames.includes(petName)) setPetName("");
+  }
+
   function selectJourneyIndex(nextIndex: number) {
     setTestNextTargetIndex(null);
     enterJourneyReplayItem(getJourneyItemsForSpecies(category)[nextIndex]?.id);
@@ -406,9 +415,8 @@ export default function Home() {
     }
 
     const isMedicalReserve = additions.every((expense) => isTemporaryReserveExpense(expense));
-    const isRabbitMeal = additions.every((expense) =>
-      ["rabbit-hay-monthly", "rabbit-pellet-monthly", "rabbit-veggies-monthly"].includes(expense.id),
-    );
+    const combinedCard = getExpenseRulesForSpecies(category).combinedExpenseCards
+      ?.find((rule) => additions.every((expense) => rule.expenseIds.includes(expense.id)));
     const hasMaximum = additions.some((expense) => typeof expense.maxAmount === "number");
 
     const totalExpense: ExpenseRecord = isMedicalReserve
@@ -427,11 +435,11 @@ export default function Home() {
         }
       : {
           id: `activity-expense-total:${additions.map((item) => item.id).join("+")}`,
-          name: isRabbitMeal ? "每月飲食費用" : "本次費用加總",
+          name: combinedCard?.name ?? "本次費用加總",
           amount: additions.reduce((sum, expense) => sum + expense.amount, 0),
-          category: isRabbitMeal ? "每月基本支出" : "活動費用",
+          category: combinedCard?.category ?? "活動費用",
           stage: additions[0].stage,
-          recurring: isRabbitMeal,
+          recurring: combinedCard?.recurring ?? false,
         };
 
     showExpenseCard(totalExpense);
@@ -495,9 +503,9 @@ export default function Home() {
       };
     });
     // 臨時性預留支出等「做得很好」頁出現後，才由 LifeJourney 寫入。
-    const deferredArrivalExpenseIds = scenario.stageId === "arrival" && choice.result === "correct"
-      ? new Set(["rabbit-arrival-checkup", "bird-arrival-checkup", "hamster-arrival-checkup"])
-      : new Set<string>();
+    const deferredArrivalExpenseIds = new Set(scenario.stageId === "arrival" && choice.result === "correct"
+      ? getExpenseRulesForSpecies(category).deferredArrivalFeedbackExpenseIds ?? []
+      : []);
     choice.expenseIds
       ?.filter((id) => {
         const expense = getExpenseForSpecies(id, category);
@@ -594,6 +602,7 @@ export default function Home() {
     setTestSkipSignal(0);
     setTestNextSignal(0);
     setTestNextTargetIndex(null);
+    resetQuestionVideoAutoplay();
     committedSelectionRef.current = nextSelection ?? null;
     if (nextSelection) {
       setStep(1);
@@ -781,7 +790,7 @@ export default function Home() {
           />
           <section className="stage">
             {step >= 2 && step <= 8 && <CostBar expenses={expenses} latestExpense={latestExpense} breed={breed} species={category} />}
-            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={(nextCategory) => { setCategory(nextCategory); if (nextCategory === "cat" && petName === "小狗") setPetName(""); }} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onSelectSpecies={selectSpeciesForJourney} onPetName={setPetName} hasPreviousPet={hasPreviousPet} oldPetName={oldPetName} onHasPreviousPet={(value) => { setHasPreviousPet(value); if (!value) setOldPetName(""); }} onOldPetName={setOldPetName} onNext={confirmSelectedJourney} />}
+            {step === 1 && <SpeciesStep selectionPage={selectionPage} onSelectionPage={changeSelectionPage} category={category} breed={breed} petName={petName} onCategory={selectCategory} onBreed={(id) => { setBreed(id); if (id) setSelectionReached((current) => Math.max(current, 1)); }} onSelectSpecies={selectSpeciesForJourney} onPetName={setPetName} hasPreviousPet={hasPreviousPet} oldPetName={oldPetName} onHasPreviousPet={(value) => { setHasPreviousPet(value); if (!value) setOldPetName(""); }} onOldPetName={setOldPetName} onNext={confirmSelectedJourney} />}
             <FlowLoadErrorBoundary resetKey={`${step}:${preparationTask}:${lifePhase}:${journeyIndex}`}>
               {step === 2 && renderPreparation()}
               {step >= 3 && step <= 6 && renderLifeJourney()}

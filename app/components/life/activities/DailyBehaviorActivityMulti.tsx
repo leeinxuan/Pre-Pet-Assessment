@@ -206,7 +206,7 @@ export function DailyBehaviorActivityMulti({
         {behaviorVideoSource ? (
           <VideoWithToggle
             src={behaviorVideoSource}
-            loop
+            autoPlayId={`${species}:${scenario.id}:scene`}
             ariaLabel={behaviorVideoAriaLabel}
             onError={() => setVideoFailed(true)}
           />

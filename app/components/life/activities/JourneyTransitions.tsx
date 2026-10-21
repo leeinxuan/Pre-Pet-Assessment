@@ -1,16 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getSpeciesConfig } from "../../../data/species";
+import { getJourneyTransitionMedia, getSpeciesConfig } from "../../../data/species";
 import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
-import { dogAssets } from "../../../data/species/dog/assets";
-import type { JourneyTransitionMedia } from "../../../game-types";
-
-const dogShibaAsset = (fileName: string) => `${dogAssets.life.shibaRoot}/${fileName}`;
-
-function transitionMediaFor(species: string): JourneyTransitionMedia | undefined {
-  return (getSpeciesConfig(species).journey as { transitionMedia?: JourneyTransitionMedia }).transitionMedia;
-}
 
 export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onContinue: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -86,7 +78,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
   }
 
   const animalLabel = getSpeciesConfig(species).copy.animalName;
-  const arrivalVideoSource = transitionMediaFor(species)?.arrival ?? dogShibaAsset("arrival-transition.mp4");
+  const arrivalVideoSource = getJourneyTransitionMedia(species).arrival;
 
   return (
     <section className="arrival-video-screen" aria-label="接回家影片過場">
@@ -114,7 +106,7 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
   const hasFinished = useRef(false);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const timePassVideoSource = transitionMediaFor(species)?.timePass ?? dogShibaAsset("time-passes-aging.mp4");
+  const timePassVideoSource = getJourneyTransitionMedia(species).timePass;
 
   const finish = useCallback(() => {
     if (hasFinished.current) return;
@@ -150,7 +142,7 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 export function BusyCareTransition({ onComplete, species = "dog" }: { onComplete: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const busyCareTransitionSource = transitionMediaFor(species)?.busyCare ?? dogAssets.life.busyCareTransition;
+  const busyCareTransitionSource = getJourneyTransitionMedia(species).busyCare;
 
   useEffect(() => {
     const video = videoRef.current;

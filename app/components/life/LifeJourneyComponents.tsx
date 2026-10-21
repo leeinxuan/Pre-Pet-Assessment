@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import {
   getDailyBehaviorScenarioIds,
   getJourneyItemsForSpecies,
@@ -9,6 +10,7 @@ import {
 } from "../../data/species/journey";
 import { getJourneyActivityConfig, getJourneyActivityResetPatch } from "../../data/species/activity-registry";
 import { getSpeciesConfig } from "../../data/species";
+import { getExpenseRulesForSpecies } from "../../data/shared/expenses";
 import {
   canReplayJourneyItem,
   isRevisitingJourneyItem,
@@ -23,7 +25,7 @@ import {
   BusyCareTransition,
   CatDailyInspectionActivity,
   DailyBehaviorActivityMulti,
-  GuidedInspection,
+  HamsterMorningInspectionActivity,
   GeckoHealthInspectionActivity,
   RabbitCarrySortActivity,
   RabbitDailyCheckActivity,
@@ -32,11 +34,13 @@ import {
   VideoScenarioActivity,
   WalkingActivity,
 } from "./activities";
+import { resetQuestionVideoAutoplay } from "./activities/scenario-ui";
 export { ArrivalTransitionVideo } from "./activities";
 import type {
   CareMember,
   ExpenseRecord,
   ExpenseTriggerMeta,
+  JourneyActivityKey,
   LifeActivityState,
   Scenario,
   ScenarioAnswer,
@@ -44,22 +48,11 @@ import type {
   ScenarioResult,
 } from "../../game-types";
 
-const directRoomExpenseIds = new Set([
-  "cat-litter-monthly",
-  "bird-cleaning-monthly",
-  "hamster-sand-monthly",
-  "hamster-bedding-monthly",
-  "hamster-gnaw-monthly",
-  "rabbit-litter-monthly",
-  // 狗狗清潔耗材在散步前選取撿便袋時加入，不能跟第一餐一起觸發。
-  "dog-clean-monthly",
-]);
-
 function arrivalMealExpenseIdsForSpecies(species: string) {
-  return getSpeciesConfig(species).feeding.recurringExpenseIds.filter((id) => !directRoomExpenseIds.has(id));
+  // 已由其他互動登錄的每月耗材（房間佈置、散步準備），不能跟第一餐一起再觸發一次。
+  const excludedIds = new Set(getExpenseRulesForSpecies(species).arrivalMealExcludedExpenseIds ?? []);
+  return getSpeciesConfig(species).feeding.recurringExpenseIds.filter((id) => !excludedIds.has(id));
 }
-
-
 
 export function LifeJourney({
   index,
@@ -125,21 +118,10 @@ export function LifeJourney({
   const answer = scenario ? answers[scenario.id] : undefined;
   const activityConfig = getJourneyActivityConfig(species, item.id);
   const activityKey = activityConfig?.activityKey ?? "scenario";
-  const isDailyBehaviorActivity = activityKey === "daily-behavior" || activityKey === "daily-behavior-single";
-  const isDailyInspectionActivity = activityKey === "cat-inspection";
-  const isRabbitCarrySortActivity = activityKey === "rabbit-carry-sort";
-  const isRabbitDailyCheckActivity = activityKey === "rabbit-daily-check";
-  const isBirdCageInspectionActivity = activityKey === "bird-cage-inspection";
-  const isGeckoHealthInspectionActivity = activityKey === "gecko-health-inspection";
   const speciesJourney = getSpeciesConfig(species).journey;
   const geckoHealthInspectionConfig = "geckoHealthInspection" in speciesJourney ? speciesJourney.geckoHealthInspection : undefined;
-  const isArrivalMealActivity = activityKey === "arrival-meal";
-  const isWalkingActivity = activityKey === "walking";
-  const isBreedChallengeActivity = activityKey === "breed-challenge";
-  const isActivityWithSubQuestions = isDailyBehaviorActivity || isBreedChallengeActivity;
+  const isActivityWithSubQuestions = activityKey === "daily-behavior" || activityKey === "daily-behavior-single" || activityKey === "breed-challenge";
   const [activityNextSignal, setActivityNextSignal] = useState(0);
-  const isBusyCareActivity = activityKey === "busy-care";
-  const isVideoFeedbackScenario = activityKey === "video-scenario";
   const [arrivalMealOpen, setArrivalMealOpen] = useState(false);
   // 兔子的第一餐是明確的 journey item；犬貓則沿用既有的到家後直接開啟方式。
   const showArrivalMeal = activityConfig?.transition === "arrival-meal" && answer?.finalResult === "correct" && arrivalMealOpen;
@@ -166,7 +148,7 @@ export function LifeJourney({
   }
 
   function continueJourney() {
-    if (!(isRabbitCarrySortActivity && activity.rabbitCarryAnswerRevealed && !activity.rabbitCarryComplete)) {
+    if (!(activityKey === "rabbit-carry-sort" && activity.rabbitCarryAnswerRevealed && !activity.rabbitCarryComplete)) {
       onCompleteItem(item.id);
     }
     if (activityConfig?.transition === "time-pass" && !activity.sickTimePassComplete) {
@@ -222,6 +204,8 @@ export function LifeJourney({
   /** 「再玩一次」：只把目前題目退回未作答狀態，快照與還原由共用 replay 狀態處理。 */
   function replayCurrentQuestion(scenarioId?: string) {
     const scenarioIds = scenarioId ? [scenarioId] : scenario ? [scenario.id] : [];
+    scenarioIds.forEach((id) => resetQuestionVideoAutoplay(`${species}:${id}:scene`));
+    scenarioIds.forEach((id) => resetQuestionVideoAutoplay(`breed:${id}:scene`));
     onStartReplay({ itemId: item.id, scenarioIds, activityPatch: getJourneyActivityResetPatch(activityConfig?.resetKey) });
     setFeedbackOpen(false);
     setArrivalMealOpen(false);
@@ -249,175 +233,190 @@ export function LifeJourney({
     return <BusyCareTransition species={species} onComplete={() => setBusyCareTransitionIndex(index)} />;
   }
 
+  const renderArrivalMeal = () => (
+    <ArrivalMealActivity
+      activity={activity}
+      petName={petName}
+      species={species}
+      onChange={onActivityChange}
+      expenseIds={arrivalMealExpenseIdsForSpecies(species)}
+      onPlayExpenseSequence={onPlayExpenseSequence}
+      onContinue={continueJourney}
+    />
+  );
+
+  // 一般情境題，也是其他活動缺少必要資料時的退回畫面。
+  const renderScenario = () => scenario && (showArrivalMeal ? renderArrivalMeal() : (
+    <ScenarioCard
+      scenario={scenario}
+      petName={petName}
+      species={species}
+      answer={answer}
+      backupNames={backupNames}
+      feedbackOpen={feedbackOpen}
+      onChoose={choose}
+      onRetry={() => setFeedbackOpen(false)}
+      onContinue={continueJourney}
+      {...replayCorrectProps}
+    />
+  ));
+
+  const renderDailyBehavior = () => (
+    <DailyBehaviorActivityMulti
+      key={`${item.id}:${currentResetSignal}`}
+      answers={answers}
+      petName={petName}
+      onChooseMultiple={onChooseMultiple}
+      onCorrectExpenseSequence={(correctScenario, choices) => {
+        return onPlayExpenseSequence(choices.flatMap((choice) => choice.expenseIds ?? []), {
+          speciesId: species,
+          stageId: correctScenario.stageId,
+          sourceScenarioId: correctScenario.id,
+        });
+      }}
+      triggerExpenseOnFeedback={activityConfig?.triggerExpenseOnFeedback === true}
+      onContinue={continueJourney}
+      scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : getDailyBehaviorScenarioIds(species)}
+      species={species}
+      testNextSignal={activityNextSignal}
+      onReplay={replaySubQuestion}
+      continueImmediately={isRevisitingItem}
+    />
+  );
+
+  /** 依 activityKey 分派活動；新增 JourneyActivityKey 時型別會要求在此補上對應畫面。 */
+  const activityRenderers: Record<JourneyActivityKey, () => ReactNode> = {
+    "rabbit-carry-sort": () => (
+      <RabbitCarrySortActivity
+        activity={activity}
+        petName={petName}
+        onChange={onActivityChange}
+        onChoose={onChoose}
+        onContinue={continueJourney}
+        {...replayCorrectProps}
+      />
+    ),
+    "hamster-inspection": () => (
+      <HamsterMorningInspectionActivity activity={activity} petName={petName} onChange={onActivityChange} onContinue={continueJourney} />
+    ),
+    "gecko-health-inspection": () => geckoHealthInspectionConfig ? (
+      <GeckoHealthInspectionActivity
+        config={geckoHealthInspectionConfig}
+        activity={activity}
+        petName={petName}
+        species={species}
+        onChange={onActivityChange}
+        onContinue={continueJourney}
+      />
+    ) : renderScenario(),
+    "rabbit-daily-check": () => (
+      <RabbitDailyCheckActivity
+        activity={activity}
+        petName={petName}
+        onChange={onActivityChange}
+        onChoose={onChoose}
+        onContinue={continueJourney}
+      />
+    ),
+    "bird-cage-inspection": () => (
+      <BirdCageInspectionActivity
+        activity={activity}
+        petName={petName}
+        onChange={onActivityChange}
+        onChoose={onChoose}
+        onContinue={continueJourney}
+      />
+    ),
+    "daily-behavior": renderDailyBehavior,
+    "daily-behavior-single": renderDailyBehavior,
+    "cat-inspection": () => (
+      <CatDailyInspectionActivity
+        activity={activity}
+        petName={petName}
+        selected={activity.catInspectionSteps}
+        onChange={(catInspectionSteps) => onActivityChange({ catInspectionSteps })}
+        onActivityChange={onActivityChange}
+        onContinue={continueJourney}
+      />
+    ),
+    walking: () => (
+      <WalkingActivity
+        key={`${item.id}:${activity.walkingSceneIndex}:${currentResetSignal}`}
+        activity={activity}
+        petName={petName}
+        onChange={onActivityChange}
+        expenseIds={getExpenseRulesForSpecies(species).walkingExpenseIds ?? []}
+        onPlayExpenseSequence={onPlayExpenseSequence}
+        onContinue={continueJourney}
+      />
+    ),
+    "arrival-meal": renderArrivalMeal,
+    "breed-challenge": () => (
+      <BreedChallengeActivity
+        key={`${item.id}:${currentResetSignal}`}
+        breed={breed}
+        petName={petName}
+        answers={answers}
+        onChoose={onChoose}
+        onContinue={continueJourney}
+        testNextSignal={activityNextSignal}
+        onReplay={replaySubQuestion}
+        continueImmediately={isRevisitingItem}
+      />
+    ),
+    "busy-care": () => scenario ? (
+      <BusyCareActivity
+        key={`${item.id}:${currentResetSignal}`}
+        scenario={scenario}
+        answer={answer}
+        petName={petName}
+        species={species}
+        members={members}
+        onMembersChange={onMembersChange}
+        onChoose={choose}
+        onMarkForReview={onMarkScenarioForReview}
+        onContinue={continueJourney}
+        {...replayCorrectProps}
+      />
+    ) : renderScenario(),
+    "video-scenario": () => scenario && !showArrivalMeal ? (
+      <VideoScenarioActivity
+        key={`${item.id}:${currentResetSignal}`}
+        scenario={scenario}
+        answer={answer}
+        petName={petName}
+        species={species}
+        breed={breed}
+        onChoose={choose}
+        onCorrectComplete={continueScenario}
+        onCorrectFeedbackShown={(correctScenario, choice) => {
+          const expenseIds = activityConfig?.deferItemExpenses ? item.expenseIds : choice.expenseIds;
+          const triggerMeta = { speciesId: species, stageId: item.stageId ?? correctScenario.stageId, sourceScenarioId: correctScenario.id };
+          if (activityConfig?.deferItemExpenses && expenseIds?.length) {
+            onAddExpenseGroup(expenseIds, triggerMeta);
+          } else {
+            expenseIds?.forEach((expenseId) => onAddExpense(expenseId, triggerMeta));
+          }
+          choice.silentExpenseIds?.forEach((expenseId) => onAddExpenseSilently(expenseId, triggerMeta));
+        }}
+        onCorrectExpenseSequence={activityConfig?.triggerExpenseOnFeedback
+          ? (correctScenario, choice) => onPlayExpenseSequence(choice.expenseIds ?? [], {
+            speciesId: species,
+            stageId: item.stageId ?? correctScenario.stageId,
+            sourceScenarioId: correctScenario.id,
+          })
+          : undefined}
+        triggerExpenseOnFeedback={activityConfig?.triggerExpenseOnFeedback === true}
+        deferExpensesUntilFeedback={activityConfig?.deferItemExpenses === true}
+        {...replayCorrectProps}
+      />
+    ) : renderScenario(),
+    scenario: renderScenario,
+  };
+
   return (
     <div className={`content-wrap life-journey-page ${canReplayCurrent ? "is-reviewing" : ""}`}>
-      {isRabbitCarrySortActivity ? (
-        <RabbitCarrySortActivity
-          activity={activity}
-          petName={petName}
-          onChange={onActivityChange}
-          onChoose={onChoose}
-          onContinue={continueJourney}
-          {...replayCorrectProps}
-        />
-      ) : activityKey === "hamster-inspection" ? (
-        <GuidedInspection activity={activity} petName={petName} onChange={onActivityChange} onContinue={continueJourney} />
-      ) : isGeckoHealthInspectionActivity && geckoHealthInspectionConfig ? (
-        <GeckoHealthInspectionActivity
-          config={geckoHealthInspectionConfig}
-          activity={activity}
-          petName={petName}
-          species={species}
-          onChange={onActivityChange}
-          onContinue={continueJourney}
-        />
-      ) : isRabbitDailyCheckActivity ? (
-        <RabbitDailyCheckActivity
-          activity={activity}
-          petName={petName}
-          onChange={onActivityChange}
-          onChoose={onChoose}
-          onContinue={continueJourney}
-        />
-      ) : isBirdCageInspectionActivity ? (
-        <BirdCageInspectionActivity
-          activity={activity}
-          petName={petName}
-          onChange={onActivityChange}
-          onChoose={onChoose}
-          onContinue={continueJourney}
-        />
-      ) : isDailyBehaviorActivity ? (
-        <DailyBehaviorActivityMulti
-          key={`${item.id}:${currentResetSignal}`}
-          answers={answers}
-          petName={petName}
-          onChooseMultiple={onChooseMultiple}
-          onCorrectExpenseSequence={(correctScenario, choices) => {
-            return onPlayExpenseSequence(choices.flatMap((choice) => choice.expenseIds ?? []), {
-              speciesId: species,
-              stageId: correctScenario.stageId,
-              sourceScenarioId: correctScenario.id,
-            });
-          }}
-          triggerExpenseOnFeedback={activityConfig?.triggerExpenseOnFeedback === true}
-          onContinue={continueJourney}
-          scenarioIds={activityKey === "daily-behavior-single" && scenario ? [scenario.id] : getDailyBehaviorScenarioIds(species)}
-          species={species}
-          testNextSignal={activityNextSignal}
-          onReplay={replaySubQuestion}
-          continueImmediately={isRevisitingItem}
-        />
-      ) : isDailyInspectionActivity ? (
-        <CatDailyInspectionActivity
-          activity={activity}
-          petName={petName}
-          selected={activity.catInspectionSteps}
-          onChange={(catInspectionSteps) => onActivityChange({ catInspectionSteps })}
-          onActivityChange={onActivityChange}
-          onContinue={continueJourney}
-        />
-      ) : isWalkingActivity ? (
-        <WalkingActivity
-          key={`${item.id}:${activity.walkingSceneIndex}:${currentResetSignal}`}
-          activity={activity}
-          petName={petName}
-          onChange={onActivityChange}
-          expenseIds={["dog-clean-monthly"]}
-          onPlayExpenseSequence={onPlayExpenseSequence}
-          onContinue={continueJourney}
-        />
-      ) : isArrivalMealActivity ? (
-        <ArrivalMealActivity
-          activity={activity}
-          petName={petName}
-          species={species}
-          onChange={onActivityChange}
-          expenseIds={arrivalMealExpenseIdsForSpecies(species)}
-          onPlayExpenseSequence={onPlayExpenseSequence}
-          onContinue={continueJourney}
-        />
-      ) : isBreedChallengeActivity ? (
-        <BreedChallengeActivity
-          key={`${item.id}:${currentResetSignal}`}
-          breed={breed}
-          petName={petName}
-          answers={answers}
-          onChoose={onChoose}
-          onContinue={continueJourney}
-          testNextSignal={activityNextSignal}
-          onReplay={replaySubQuestion}
-          continueImmediately={isRevisitingItem}
-        />
-      ) : isBusyCareActivity && scenario ? (
-        <BusyCareActivity
-          key={`${item.id}:${currentResetSignal}`}
-          scenario={scenario}
-          answer={answer}
-          petName={petName}
-          species={species}
-          members={members}
-          onMembersChange={onMembersChange}
-          onChoose={choose}
-          onMarkForReview={onMarkScenarioForReview}
-          onContinue={continueJourney}
-          {...replayCorrectProps}
-        />
-      ) : isVideoFeedbackScenario && scenario && !showArrivalMeal ? (
-        <VideoScenarioActivity
-          key={`${item.id}:${currentResetSignal}`}
-          scenario={scenario}
-          answer={answer}
-          petName={petName}
-          species={species}
-          breed={breed}
-          onChoose={choose}
-          onCorrectComplete={continueScenario}
-          onCorrectFeedbackShown={(correctScenario, choice) => {
-            const expenseIds = activityConfig?.deferItemExpenses ? item.expenseIds : choice.expenseIds;
-            const triggerMeta = { speciesId: species, stageId: item.stageId ?? correctScenario.stageId, sourceScenarioId: correctScenario.id };
-            if (activityConfig?.deferItemExpenses && expenseIds?.length) {
-              onAddExpenseGroup(expenseIds, triggerMeta);
-            } else {
-              expenseIds?.forEach((expenseId) => onAddExpense(expenseId, triggerMeta));
-            }
-            choice.silentExpenseIds?.forEach((expenseId) => onAddExpenseSilently(expenseId, triggerMeta));
-          }}
-          onCorrectExpenseSequence={activityConfig?.triggerExpenseOnFeedback
-            ? (correctScenario, choice) => onPlayExpenseSequence(choice.expenseIds ?? [], {
-              speciesId: species,
-              stageId: item.stageId ?? correctScenario.stageId,
-              sourceScenarioId: correctScenario.id,
-            })
-            : undefined}
-          triggerExpenseOnFeedback={activityConfig?.triggerExpenseOnFeedback === true}
-          deferExpensesUntilFeedback={activityConfig?.deferItemExpenses === true}
-          {...replayCorrectProps}
-        />
-      ) : scenario && (showArrivalMeal ? (
-        <ArrivalMealActivity
-          activity={activity}
-          petName={petName}
-          species={species}
-          onChange={onActivityChange}
-          expenseIds={arrivalMealExpenseIdsForSpecies(species)}
-          onPlayExpenseSequence={onPlayExpenseSequence}
-          onContinue={continueJourney}
-        />
-      ) : (
-        <ScenarioCard
-          scenario={scenario}
-          petName={petName}
-          species={species}
-          answer={answer}
-          backupNames={backupNames}
-          feedbackOpen={feedbackOpen}
-          onChoose={choose}
-          onRetry={() => setFeedbackOpen(false)}
-          onContinue={continueJourney}
-          {...replayCorrectProps}
-        />
-      ))}
+      {activityRenderers[activityKey]()}
     </div>
   );
 }

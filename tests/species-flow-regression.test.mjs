@@ -66,6 +66,16 @@ test("registered species preserve first-meal completion and recurring-expense co
   assert.match(practiceRegistrySection, /completionSelector:\s*"arrival-meal"/);
 });
 
+test("species selection uses the named hamster artwork and the requested card order", async () => {
+  const [hamsterAssets, speciesIndex] = await Promise.all([
+    source("app/data/species/hamster/assets.ts"),
+    source("app/data/species/index.ts"),
+  ]);
+  assert.match(hamsterAssets, /selection: \{ hamster: "\/assets\/species\/hamster\.webp" \}/);
+  assert.doesNotMatch(hamsterAssets, /small-mammal/);
+  assert.ok(speciesIndex.indexOf("  gecko: {") < speciesIndex.indexOf("  hamster: {"));
+});
+
 test("report completion selectors own activity-state details and derive meals from feeding data", async () => {
   const [report, masteredSelectors, practiceSelectors] = await Promise.all([
     source("app/components/report/AssessmentReport.tsx"),
@@ -163,8 +173,8 @@ test("scenario media selection stays out of shared scenario UI", async () => {
   assert.match(scenarioUi, /scenario\.questionText/);
   assert.match(dailyBehavior, /withPetName\(scenario\.questionText/);
   assert.match(scenarioUi, /scenario\.continueLabel/);
-  assert.match(dogScenarios, /sceneMedia:\s*\{ type: "video"/);
-  assert.match(dogScenarios, /correctFeedbackMedia:\s*\{ type: "video"/);
+  assert.match(dogScenarios, /sceneMedia:\s*\{\s*type: "video"/);
+  assert.match(dogScenarios, /correctFeedbackMedia:\s*\{\s*type: "video"/);
   assert.match(dogBreedChallenges, /scenarioMedia\.dog\.shedding/);
   assert.match(dogBreedChallenges, /scenarioMedia\.dog\.rainyWalk/);
   assert.match(journeyRegistry, /getSpeciesConfig\(species\)\.scenarioPresentation/);
@@ -189,6 +199,16 @@ test("scenario media selection stays out of shared scenario UI", async () => {
       assert.doesNotMatch(journey, /scenarioMedia\.dog\./, `${species} must not borrow dog question video`);
     }
   }
+});
+
+test("journey transitions resolve species media through the data registry", async () => {
+  const [transitions, speciesIndex] = await Promise.all([
+    source("app/components/life/activities/JourneyTransitions.tsx"),
+    source("app/data/species/index.ts"),
+  ]);
+  assert.match(transitions, /getJourneyTransitionMedia\(species\)/);
+  assert.doesNotMatch(transitions, /species\/dog\/assets|dogAssets|dogShibaAsset/);
+  assert.match(speciesIndex, /export function getJourneyTransitionMedia/);
 });
 
 test("busy-care presentation and support choice come from scenario data", async () => {
@@ -217,11 +237,27 @@ test("replay reset strategies retain the activity state fields they clear", asyn
     "gecko-health-inspection": ["geckoHealthInspectionStarted", "geckoHealthInspectionStates", "geckoHealthInspectionCompleted", "geckoHealthInspectionFeedback"],
   };
   for (const [resetKey, fields] of Object.entries(resetContracts)) {
-    const start = registry.indexOf(`case "${resetKey}"`);
-    assert.notEqual(start, -1, `${resetKey} reset strategy must exist`);
-    const end = registry.indexOf("case ", start + 6);
-    const section = registry.slice(start, end === -1 ? registry.indexOf("default:", start) : end);
-    for (const field of fields) assert.match(section, new RegExp(`\\b${field}\\s*:`), `${resetKey} must reset ${field}`);
+    const line = registry.split("\n").find((entry) => new RegExp(`^\\s*"?${resetKey}"?: \\(\\) => \\(\\{`).test(entry));
+    assert.ok(line, `${resetKey} reset strategy must exist`);
+    for (const field of fields) assert.match(line, new RegExp(`\\b${field}\\s*:`), `${resetKey} must reset ${field}`);
+  }
+  // 重設策略以型別完整的表維護，不再用 switch 逐一補 case。
+  assert.match(registry, /const journeyActivityResetPatches: Record<JourneyActivityResetKey,/);
+  assert.doesNotMatch(registry, /switch \(resetKey\)/);
+});
+
+test("every journey item has its own activity registry entry", async () => {
+  const registry = await source("app/data/species/activity-registry.ts");
+  // 已註冊物種不得默默借用犬的節點設定。
+  assert.doesNotMatch(registry, /\?\? journeyActivityRegistry\.dog\[itemId\]/);
+  for (const species of ["dog", "cat", "rabbit", "bird", "hamster", "gecko"]) {
+    const journey = await source(`app/data/species/${species}/journey.ts`);
+    const itemIds = [...journey.matchAll(/\{ id: "([^"]+)", type:/g)].map((match) => match[1]);
+    assert.ok(itemIds.length > 0, `${species} journey items must be found`);
+    const block = registry.slice(registry.indexOf(`  ${species}: {`), registry.indexOf("\n  },", registry.indexOf(`  ${species}: {`)));
+    for (const itemId of itemIds) {
+      assert.match(block, new RegExp(`(^|[\\s{,])"?${itemId}"?: (video|activity)\\(`), `${species} journey item ${itemId} must be registered`);
+    }
   }
 });
 
@@ -268,6 +304,19 @@ test("formal readiness and report components read the registered species data", 
   assert.match(report, /speciesConfig\.careReviewAdditionalNotes/);
   assert.match(report, /speciesConfig\.masteredCareThemes/);
   assert.doesNotMatch(report, /getHomeReadinessConfig|getCareReviewAdditionalNotes|getMasteredCareThemes/);
+});
+
+test("room-scene data owns doorplate and specialised item placement", async () => {
+  const [preparationComponent, geckoPreparation, speciesIndex] = await Promise.all([
+    source("app/components/preparation/PreparationComponents.tsx"),
+    source("app/data/species/gecko/preparation.ts"),
+    source("app/data/species/index.ts"),
+  ]);
+  assert.match(preparationComponent, /const doorplatePlacement = roomScene\.doorplate\?\.placement/);
+  assert.doesNotMatch(preparationComponent, /speciesConfig\.layout/);
+  assert.match(geckoPreparation, /id: "thermometer-hygrometer"[\s\S]*?sceneParts: \[[\s\S]*?id: "cool-side"[\s\S]*?id: "warm-side"/);
+  assert.doesNotMatch(geckoPreparation, /from "\.\/layout"/);
+  assert.doesNotMatch(speciesIndex, /layout:/);
 });
 
 test("legacy scenario entry is isolated from the formal journey", async () => {

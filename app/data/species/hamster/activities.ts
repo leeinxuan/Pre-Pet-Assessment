@@ -1,6 +1,10 @@
 import type { ActivityIntroConfig } from "../../../game-types";
 import { hamsterAssets } from "./assets";
 
+/** 專屬活動元件僅由本檔取得倉鼠巡視所需素材與照護時間資料。 */
+export { hamsterAssets };
+export { hamsterReport } from "./report";
+
 /** docs/hamster-game-planning.md §5.3.2 的倉鼠清潔日常狀態機資料。 */
 export const hamsterCageCheck = {
   sceneDescription: "今天早上，你走近 {petName} 的籠子，牠剛結束一夜的探索，正窩在熟悉的墊料裡休息。先花幾分鐘整理牠最常使用的角落和砂浴盆，讓牠醒來後有個乾淨舒適的小家吧。",

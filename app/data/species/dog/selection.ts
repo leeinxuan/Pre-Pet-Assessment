@@ -7,5 +7,6 @@ export const dogBreeds = [
 /** 現行流程採通用犬資料；既有品種資料保留供未來重新啟用。 */
 export const dogSelection = {
   skipBreedPage: true,
+  category: { active: true },
   breeds: [{ id: "dog", species: "dog", label: "犬", icon: "🐕", image: "/assets/species/dog.webp", size: "medium", shortDescription: "以通用犬隻照護需求為基礎，重點在日常陪伴、安全與健康觀察。" }],
 } as const;

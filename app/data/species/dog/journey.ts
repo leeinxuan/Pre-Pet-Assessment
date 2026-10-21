@@ -1,7 +1,8 @@
 import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 import { arrivalRequiredExpenseIdsBySpecies } from "../../shared/expenses";
 import { scenarioMedia } from "../../shared/scenario-media";
-export { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "./walking";
+import { dogAssets } from "./assets";
+export { walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "./activities";
 
 /** 犬隻旅程順序；WalkingActivity 是唯一專屬玩法元件。 */
 export const dogJourneyItems: JourneyItem[] = [
@@ -21,6 +22,11 @@ export const dogDailyBehaviorScenarioIds = ["behavior-barking", "behavior-chewin
 export const dogJourney = {
   items: dogJourneyItems,
   dailyBehaviorScenarioIds: dogDailyBehaviorScenarioIds,
+  transitionMedia: {
+    arrival: `${dogAssets.life.shibaRoot}/arrival-transition.mp4`,
+    timePass: `${dogAssets.life.shibaRoot}/time-passes-aging.mp4`,
+    busyCare: dogAssets.life.busyCareTransition,
+  },
   activity: "walking" as const,
 } as const;
 
