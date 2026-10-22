@@ -16,6 +16,7 @@ export const hamsterAssets = {
     foodBowl: "/assets/hamster/room/food-bowl.webp",
     hideout: "/assets/hamster/room/hideout.webp",
     sandBathBox: "/assets/hamster/room/sand-bath-box.webp",
+    sand: "/assets/hamster/room/hamster-sand.webp",
     bedding: "/assets/hamster/room/bedding.webp",
     gnawStick: "/assets/hamster/room/gnaw-stick.webp",
     hazards: {
@@ -50,6 +51,7 @@ export const hamsterAssets = {
     beddingPackage: "/assets/hamster/CageCheckActivity/packaging.webp",
     droppings: "/assets/hamster/CageCheckActivity/droppings.webp",
     sandBathMess: "/assets/hamster/CageCheckActivity/sand-bath-mess.webp",
+    sandBathMiddle: "/assets/hamster/CageCheckActivity/sand-bath-middle.webp",
     sandBathDirty: "/assets/hamster/CageCheckActivity/sand-bath-dirty.webp",
     sandBathClean: "/assets/hamster/CageCheckActivity/sand-bath-clean.webp",
     scoop: "/assets/hamster/CageCheckActivity/tool-scoop.webp",

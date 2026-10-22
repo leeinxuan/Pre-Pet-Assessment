@@ -84,6 +84,14 @@ function ReviewBookIcon() {
   return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M4 5.5c2.9-1.1 5.5-.6 8 1.1v12c-2.5-1.7-5.1-2.2-8-1.1zM20 5.5c-2.9-1.1-5.5-.6-8 1.1v12c2.5-1.7 5.1-2.2 8-1.1z" /></svg>;
 }
 
+function DocumentIcon() {
+  return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M6 3.5h8.5L19 8v12.5H6z" /><path d="M14.5 3.5V8H19M9 12h6M9 15.5h6" /></svg>;
+}
+
+function MedicalCrossIcon() {
+  return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" stroke="none" d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" /></svg>;
+}
+
 function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {
   // 複習內容以企劃指定的 correctSummary 為唯一來源；不可由選項或回饋拼接出另一版知識點。
   const rawPoints = scenario.correctSummary ?? [];
@@ -492,12 +500,16 @@ export function AssessmentReport({
         </section>
 
         <section className="care-guide-download" aria-labelledby="care-guide-download-title">
-          <div><span aria-hidden="true">↓</span><h2 id="care-guide-download-title">帶走你的照護指南</h2><p>將這次體驗整理成可保存的照護指南，之後準備迎接牠時也能再次查看。</p><small>內容包含：照顧準備清單、需要留意的照顧重點、預估支出、每日時間投入與照顧承諾</small></div>
+          <div><span aria-hidden="true"><DocumentIcon /></span><h2 id="care-guide-download-title">帶走你的照護指南</h2><p>將這次體驗整理成可保存的照護指南，之後準備迎接牠時也能再次查看。</p><small>內容包含：照顧準備清單、需要留意的照顧重點、預估支出、每日時間投入與照顧承諾</small></div>
           <PdfDownloadButton petName={petName} label="下載我的照護指南" />
         </section>
         <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-official-title">
-          <div><span aria-hidden="true">↗</span><h2 id="care-guide-official-title">農業部寵物飼養與照顧指南</h2><p>想再深入了解更詳細的飼養需求、照護方式與相關規範嗎？這裡整理了農業部的官方知識庫，提供更完整的資訊供你查閱。</p></div>
+          <div><span aria-hidden="true">↗</span><h2 id="care-guide-official-title">官方寵物照顧指南</h2><p>想再深入了解更詳細的飼養需求、照護方式與相關規範嗎？這裡整理了農業部的官方知識庫，提供更完整的資訊供你查閱。</p></div>
           <a className="secondary care-guide-official-link" href="https://pet-care-guide-six.vercel.app/" target="_blank" rel="noopener noreferrer">查看官方指南 <span>↗</span></a>
+        </section>
+        <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-veterinary-title">
+          <div><span aria-hidden="true"><MedicalCrossIcon /></span><h2 id="care-guide-veterinary-title">全國獸醫師職業、診療機構開業查詢</h2><p>可透過全國獸醫師執業、診療機構開業查詢網站搜尋合法的獸醫診療機構，並了解各獸醫診療機構可提供的醫療項目。</p></div>
+          <a className="secondary care-guide-official-link" href="https://ahis9.aphia.gov.tw/Veter/OD/HLIndex.aspx" target="_blank" rel="noopener noreferrer">前往查詢網站 <span>↗</span></a>
         </section>
       </section>
 

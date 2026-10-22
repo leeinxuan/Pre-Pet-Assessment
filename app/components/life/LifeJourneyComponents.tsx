@@ -7,6 +7,7 @@ import {
   getJourneyItemsForSpecies,
   getJourneyStepForItem,
   getLifeScenariosForSpecies,
+  getScenarioPresentation,
 } from "../../data/species/journey";
 import { getJourneyActivityConfig, getJourneyActivityResetPatch } from "../../data/species/activity-registry";
 import { getSpeciesConfig } from "../../data/species";
@@ -35,6 +36,7 @@ import {
   WalkingActivity,
 } from "./activities";
 import { resetQuestionVideoAutoplay } from "./activities/scenario-ui";
+import { getAlternatingCorrectFeedbackMedia } from "./activities/scenario-ui";
 export { ArrivalTransitionVideo } from "./activities";
 import type {
   CareMember,
@@ -115,6 +117,10 @@ export function LifeJourney({
   const activeLifeScenarios = getLifeScenariosForSpecies(species, breed);
   const item = activeJourneyItems[index] ?? activeJourneyItems[0];
   const scenario = item.scenarioId ? activeLifeScenarios.find((entry) => entry.id === item.scenarioId) : undefined;
+  const feedbackSequenceIndex = Math.max(0, activeLifeScenarios.findIndex((entry) => entry.id === scenario?.id));
+  const scenarioFeedbackMedia = scenario
+    ? getAlternatingCorrectFeedbackMedia(getScenarioPresentation(species, scenario.id), feedbackSequenceIndex, scenario.correctFeedbackMedia)
+    : undefined;
   const answer = scenario ? answers[scenario.id] : undefined;
   const activityConfig = getJourneyActivityConfig(species, item.id);
   const activityKey = activityConfig?.activityKey ?? "scenario";
@@ -264,6 +270,7 @@ export function LifeJourney({
       onRetry={() => setFeedbackOpen(false)}
       onContinue={continueJourney}
       {...replayCorrectProps}
+      feedbackMedia={scenarioFeedbackMedia}
     />
   ));
 
@@ -360,6 +367,7 @@ export function LifeJourney({
       <BreedChallengeActivity
         key={`${item.id}:${currentResetSignal}`}
         breed={breed}
+        species={species}
         petName={petName}
         answers={answers}
         onChoose={onChoose}
@@ -404,7 +412,7 @@ export function LifeJourney({
           choice.silentExpenseIds?.forEach((expenseId) => onAddExpenseSilently(expenseId, triggerMeta));
         }}
         onCorrectExpenseSequence={activityConfig?.triggerExpenseOnFeedback
-          ? (correctScenario, choice) => onPlayExpenseSequence(choice.expenseIds ?? [], {
+          ? (correctScenario, choice) => onPlayExpenseSequence(activityConfig.deferItemExpenses ? item.expenseIds ?? [] : choice.expenseIds ?? [], {
             speciesId: species,
             stageId: item.stageId ?? correctScenario.stageId,
             sourceScenarioId: correctScenario.id,
@@ -412,6 +420,7 @@ export function LifeJourney({
           : undefined}
         triggerExpenseOnFeedback={activityConfig?.triggerExpenseOnFeedback === true}
         deferExpensesUntilFeedback={activityConfig?.deferItemExpenses === true}
+        feedbackSequenceIndex={feedbackSequenceIndex}
         {...replayCorrectProps}
       />
     ) : renderScenario(),

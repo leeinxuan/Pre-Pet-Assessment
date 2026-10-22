@@ -4,6 +4,7 @@ import type { RoomFlowConfig } from "../../shared/species-config-types";
 
 export const dogRoomDoorplatePlacement = {
   desktop: { x: 55, y: 16, width: 28 },
+  desktopText: { left: 15, top: 63, width: 70, height: 13, fontSize: 16 },
   mobile: { x: 33, y: 20, width: 40 },
   mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
 } as const;

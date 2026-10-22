@@ -4,7 +4,8 @@ import type { RoomFlowConfig } from "../../shared/species-config-types";
 import { geckoAssets } from "./assets";
 
 export const geckoRoomDoorplatePlacement = {
-  desktop: { x: 60, y: 14, width: 28 },
+  desktop: { x: 57, y: 13, width: 25 },
+  desktopText: { left: 15, top: 62, width: 70, height: 13, fontSize: 15 },
   mobile: { x: 33, y: 20, width: 40 },
   mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
 } as const;
@@ -25,7 +26,7 @@ export const geckoHazards: HazardItem[] = [
     label: "精油擴香器",
     icon: "⚠",
     image: geckoAssets.room.essentialOilDiffuser,
-    placement: { x: 55, y: 56, width: 12, layer: 4 },
+    placement: { x: 45, y: 56, width: 12, layer: 4 },
     mobilePlacement: { x: 72, y: 26, width: 16 },
     danger: "精油揮發物對爬蟲類呼吸道有刺激性，長期暴露可能導致呼吸異常。",
     handling: "使用時請關閉爬蟲缸所在空間，保持通風。",
@@ -45,7 +46,7 @@ export const geckoHazards: HazardItem[] = [
     label: "牆縫/管道開口",
     icon: "↗",
     placement: { x: 82, y: 62, width: 1, layer: 4 },
-    hotspot: { desktop: { x: 76, y: 57, width: 14, height: 30 }, mobile: { x: 74, y: 57, width: 20, height: 30 } },
+    hotspot: { desktop: { x: 92, y: 40, width: 14, height: 62 }, mobile: { x: 74, y: 57, width: 20, height: 30 } },
     danger: "守宮體型小、善於穿縫，逃脫後極難救援。",
     handling: "請封閉所有牆縫與管道開口。",
   },
@@ -58,7 +59,7 @@ export const geckoHazards: HazardItem[] = [
 export const geckoRoomItems: RoomItem[] = [
   {
     id: "gecko-terrarium", label: "爬蟲專用玻璃缸", icon: "▣", image: geckoAssets.room.terrarium, sceneImage: geckoAssets.room.terrariumFront,
-    placement: { x: 79, y: 43, width: 15, layer: 2 }, mobilePlacement: { x: 56, y: 61, width: 52 }, required: true, need: "安全", expenseId: "gecko-terrarium",
+    placement: { x: 80, y: 43, width: 15, layer: 2 }, mobilePlacement: { x: 56, y: 61, width: 52 }, required: true, need: "安全", expenseId: "gecko-terrarium",
     description: "建議至少 60×45×30 cm，附緊固式網蓋，防止逃脫。",
   },
   {

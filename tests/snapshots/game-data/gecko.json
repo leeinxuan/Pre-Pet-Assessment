@@ -3295,7 +3295,7 @@
         "placement": {
           "layer": 4,
           "width": 12,
-          "x": 55,
+          "x": 45,
           "y": 56
         }
       },
@@ -3323,10 +3323,10 @@
         "handling": "請封閉所有牆縫與管道開口。",
         "hotspot": {
           "desktop": {
-            "height": 30,
+            "height": 62,
             "width": 14,
-            "x": 76,
-            "y": 57
+            "x": 92,
+            "y": 40
           },
           "mobile": {
             "height": 30,
@@ -4383,7 +4383,7 @@
           "placement": {
             "layer": 4,
             "width": 12,
-            "x": 55,
+            "x": 45,
             "y": 56
           }
         },
@@ -4411,10 +4411,10 @@
           "handling": "請封閉所有牆縫與管道開口。",
           "hotspot": {
             "desktop": {
-              "height": 30,
+              "height": 62,
               "width": 14,
-              "x": 76,
-              "y": 57
+              "x": 92,
+              "y": 40
             },
             "mobile": {
               "height": 30,
@@ -4524,7 +4524,7 @@
           "placement": {
             "layer": 2,
             "width": 15,
-            "x": 79,
+            "x": 80,
             "y": 43
           },
           "required": true,
@@ -4776,9 +4776,16 @@
           "image": "/assets/shared/nameplate.webp",
           "placement": {
             "desktop": {
-              "width": 28,
-              "x": 60,
-              "y": 14
+              "width": 25,
+              "x": 57,
+              "y": 13
+            },
+            "desktopText": {
+              "fontSize": 15,
+              "height": 13,
+              "left": 15,
+              "top": 62,
+              "width": 70
             },
             "mobile": {
               "width": 40,
@@ -5008,7 +5015,7 @@
         "placement": {
           "layer": 2,
           "width": 15,
-          "x": 79,
+          "x": 80,
           "y": 43
         },
         "required": true,

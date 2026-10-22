@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { ObservationReturnButton, type ObservationAnswerStatus } from "./activity-ui";
+import { ObservationReturnButton, plainChoiceText, type ObservationAnswerStatus } from "./activity-ui";
 
 /**
  * Rabbit and bird observation activities share the same card shell. Species
@@ -75,7 +75,7 @@ export function ObservationCardFlow({
       </> : <>
         <p className="observation-card-question">{question}</p>
         <div className="observation-card-choices">
-          {choices.map((choice) => <button type="button" key={choice.id} onClick={() => onChoose(choice.id)}>{choice.label}</button>)}
+          {choices.map((choice) => <button type="button" key={choice.id} onClick={() => onChoose(choice.id)}>{typeof choice.label === "string" ? plainChoiceText(choice.label) : choice.label}</button>)}
         </div>
       </>}
     </>

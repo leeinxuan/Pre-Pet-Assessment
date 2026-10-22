@@ -46,7 +46,7 @@ export const journeyActivityRegistry: Record<string, SpeciesActivityRegistry> = 
     "bird-sick": video("bird-sick", "bird-health-emergency", { transition: "time-pass", triggerExpenseOnFeedback: true }), "bird-senior": activity("bird-senior", "daily-behavior-single", { resetKey: "daily-behavior", triggerExpenseOnFeedback: true }),
   },
   hamster: {
-    "hamster-arrival": video("hamster-arrival", "hamster-arrival-adjustment", { deferItemExpenses: true }),
+    "hamster-arrival": video("hamster-arrival", "hamster-arrival-adjustment", { deferItemExpenses: true, triggerExpenseOnFeedback: true }),
     "hamster-first-meal": activity("hamster-first-meal", "arrival-meal", { resetKey: "hamster-first-meal" }),
     "hamster-daily-care": activity("hamster-daily-care", "daily-behavior", { resetKey: "daily-behavior" }),
     "hamster-solitary": video("hamster-solitary", "hamster-solitary"),

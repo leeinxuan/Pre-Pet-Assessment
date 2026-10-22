@@ -80,7 +80,7 @@
   line-height: 1.75;
 }
 /* 忙碌備援完成頁的省思區：上方是引言式標語，下方以淺色內卡收納「留給自己的一個問題」。 */
-.busy-care-energy-reflection { padding: 22px 24px; border-color: #e3bd6c; background: linear-gradient(160deg, #fff8e1 0%, #fff0c6 100%); }
+.busy-care-energy-reflection { padding: 22px 24px; border-color: #e3bd6c; background: #fff4ce; }
 .busy-care-energy-reflection .busy-care-slogan { display: block; max-width: 100%; margin: 0; padding: 2px 0 2px 16px; border-left: 4px solid #e0a21d; color: #67470d; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(18px, 2vw, 21px); font-weight: 900; line-height: 1.6; text-wrap: pretty; }
 .busy-care-reflection-question { margin-top: 18px; padding: 14px 16px 16px; border: 1px solid rgba(216, 170, 75, .45); border-radius: 14px; background: rgba(255, 255, 255, .72); }
 .busy-care-reflection-title { display: flex; align-items: center; gap: 8px; margin: 0 0 8px !important; color: #8a5d0c !important; font-size: 14px !important; font-weight: 900 !important; letter-spacing: .04em; }

@@ -131,6 +131,7 @@ export type FeedingConfig = {
 /** 房間場景中的名字名牌位置；各物種資料直接隨 roomScene 維護。 */
 export type RoomDoorplatePlacement = {
   desktop: { x: number; y: number; width: number };
+  desktopText: { left: number; top: number; width: number; height: number; fontSize: number };
   mobile: { x: number; y: number; width: number };
   mobileText: { left: number; top: number; width: number; height: number; fontSize: number };
 };
@@ -328,12 +329,14 @@ export type ScenarioPresentationConfig = {
   knowledgeTitle: string;
   preserveGenericAnimalTerms?: boolean;
   sceneVideo?: { src: string; ariaLabel: string };
-  correctFeedbackMedia: { type: "video"; src: string } | { type: "placeholder" };
+  correctFeedbackMedia: ScenarioMediaConfig;
+  /** 題目正確回饋依序輪播的媒體；未設定時沿用單一 correctFeedbackMedia。 */
+  correctFeedbackMediaVariants?: readonly ScenarioMediaConfig[];
   completionIntro?: string;
 };
 
 export type SpeciesScenarioPresentationConfig = {
-  defaults: Pick<ScenarioPresentationConfig, "defaultPetName" | "knowledgeTitle" | "preserveGenericAnimalTerms" | "correctFeedbackMedia">;
+  defaults: Pick<ScenarioPresentationConfig, "defaultPetName" | "knowledgeTitle" | "preserveGenericAnimalTerms" | "correctFeedbackMedia" | "correctFeedbackMediaVariants">;
   scenarios: Record<string, Partial<ScenarioPresentationConfig>>;
 };
 

@@ -18,7 +18,15 @@ export const rabbitJourneyItems: JourneyItem[] = [
 export const rabbitDailyBehaviorScenarioIds = ["rabbit-heatstroke-prevention", "rabbit-cecotropes", "rabbit-bath"] as const;
 
 export const rabbitScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "兔子", knowledgeTitle: "兔子小知識", correctFeedbackMedia: { type: "placeholder" } },
+  defaults: {
+    defaultPetName: "兔子",
+    knowledgeTitle: "兔子小知識",
+    correctFeedbackMedia: { type: "placeholder" },
+    correctFeedbackMediaVariants: [
+      { type: "video", src: rabbitAssets.petJourney.correctPrimary, ariaLabel: "兔子答對回饋影片" },
+      { type: "video", src: rabbitAssets.petJourney.correctSecondary, ariaLabel: "兔子答對回饋影片" },
+    ],
+  },
   scenarios: {
     "rabbit-heatstroke-prevention": { completionIntro: "你已經把降溫安排放進日常環境。維持涼爽室內與提供陶板涼感墊，能讓{petName}自己選擇舒服的位置。" },
     "rabbit-cecotropes": {},

@@ -306,6 +306,7 @@
           "trayOutClean": "/assets/bird/dailygame/cage-tray-out-clean.webp",
           "trayOutDirty": "/assets/bird/dailygame/cage-tray-out-dirty.webp"
         },
+        "cageOutTransition": "/assets/bird/dailygame/cage-out-transition.webm",
         "droppings": {
           "healthy": "/assets/bird/dailygame/droppings-health.webp",
           "small": "/assets/bird/dailygame/droppings-small.webp",
@@ -334,6 +335,10 @@
             "abnormal": "/assets/bird/dailygame/part-feet-abnormal.webp",
             "normal": "/assets/bird/dailygame/part-feet-normal.webp"
           }
+        },
+        "windows": {
+          "closed": "/assets/bird/dailygame/window-closed.webp",
+          "open": "/assets/bird/dailygame/window-opend.webp"
         }
       },
       "feeding": {
@@ -5038,6 +5043,14 @@
           "requiresOrderedInspection": false,
           "showPointNumbers": false
         },
+        "cageOut": {
+          "initialPrompt": "先確認兩側窗戶都關好了，再為 {petName} 打開籠門。",
+          "oneWindowClosedPrompt": "已關好一扇窗，再確認另一側窗戶。",
+          "outOfCageConfirmLabel": "繼續互動",
+          "outOfCagePrompt": "**讓鳥隻主動踏出籠門，不要伸手進去掏牠**\n這樣牠才能在安心的狀態下與你互動。",
+          "unsafeDoorPrompt": "你確認過門窗已關好了嗎？{petName} 一旦飛出室外很難找回來。",
+          "windowsClosedPrompt": "門窗都關好了！現在可以點擊籠門鎖扣。"
+        },
         "intro": {
           "eyebrow": "日常照護",
           "paragraphs": [
@@ -5613,6 +5626,13 @@
               "x": 40,
               "y": 12
             },
+            "desktopText": {
+              "fontSize": 16,
+              "height": 13,
+              "left": 15,
+              "top": 63,
+              "width": 70
+            },
             "mobile": {
               "width": 40,
               "x": 33,
@@ -6044,9 +6064,22 @@
     "scenarioPresentation": {
       "defaults": {
         "correctFeedbackMedia": {
+          "ariaLabel": "鸚鵡答對回饋影片",
           "src": "/assets/bird/pet-journey/correct-answer.mp4",
           "type": "video"
         },
+        "correctFeedbackMediaVariants": [
+          {
+            "ariaLabel": "鸚鵡答對回饋影片",
+            "src": "/assets/bird/pet-journey/correct-answer.mp4",
+            "type": "video"
+          },
+          {
+            "ariaLabel": "鸚鵡答對回饋影片",
+            "src": "/assets/bird/pet-journey/correct-answer2.mp4",
+            "type": "video"
+          }
+        ],
         "defaultPetName": "鸚鵡",
         "knowledgeTitle": "鳥類小知識"
       },

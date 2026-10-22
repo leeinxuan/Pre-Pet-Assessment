@@ -6,6 +6,7 @@ import type { Scenario, ScenarioAnswer, ScenarioChoice, ScenarioResult } from ".
 import { renderKnowledgeText, withPetName } from "./activity-ui";
 import {
   CorrectFeedbackLayout,
+  getAlternatingCorrectFeedbackMedia,
   IncorrectExplanation,
   SceneMediaPlaceholder,
   ScenarioOptionCard,
@@ -73,7 +74,7 @@ export function DailyBehaviorActivityMulti({
   const behaviorVideoAriaLabel = scenarioSceneMedia?.type === "video"
     ? scenarioSceneMedia.ariaLabel
     : presentation.sceneVideo?.ariaLabel ?? "日常行為照顧影片";
-  const feedbackMedia = scenario?.correctFeedbackMedia ?? presentation.correctFeedbackMedia;
+  const feedbackMedia = getAlternatingCorrectFeedbackMedia(presentation, currentIndex, scenario?.correctFeedbackMedia);
   const correctFeedbackVideo = feedbackMedia.type === "video" ? feedbackMedia.src : undefined;
   const nextBehaviorScenario = scenarios[currentIndex + 1];
   const nextPresentation = nextBehaviorScenario ? getScenarioPresentation(species, nextBehaviorScenario.id) : undefined;

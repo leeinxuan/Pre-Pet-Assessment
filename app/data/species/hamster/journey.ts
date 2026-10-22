@@ -2,7 +2,7 @@ import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../ga
 import { hamsterAssets } from "./assets";
 
 export const hamsterJourneyItems: JourneyItem[] = [
-  { id: "hamster-arrival", type: "scenario", timeLabel: "接回家", title: "第一天適應新家", scenarioId: "hamster-arrival-adjustment", stageId: "arrival", stageLabel: "接回家" },
+  { id: "hamster-arrival", type: "scenario", timeLabel: "接回家", title: "第一天適應新家", scenarioId: "hamster-arrival-adjustment", stageId: "arrival", stageLabel: "接回家", expenseIds: ["hamster-arrival-checkup"] },
   { id: "hamster-first-meal", type: "arrival-meal", timeLabel: "接回家", title: "{petName} 的第一餐，你準備了什麼？", stageId: "arrival", stageLabel: "接回家" },
   { id: "hamster-daily-care", type: "scenario", timeLabel: "日常照護", title: "倉鼠日常照護", stageId: "daily", stageLabel: "日常照護" },
   { id: "hamster-solitary", type: "scenario", timeLabel: "日常照護", title: "{petName} 需要一個同伴嗎？", scenarioId: "hamster-solitary", stageId: "daily", stageLabel: "日常照護" },
@@ -15,7 +15,15 @@ export const hamsterJourneyItems: JourneyItem[] = [
 
 export const hamsterDailyBehaviorScenarioIds = ["hamster-nocturnal", "hamster-picky-eating"] as const;
 export const hamsterScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "芝麻", knowledgeTitle: "倉鼠小知識", correctFeedbackMedia: { type: "video", src: hamsterAssets.petJourney.correctPrimary } },
+  defaults: {
+    defaultPetName: "芝麻",
+    knowledgeTitle: "倉鼠小知識",
+    correctFeedbackMedia: { type: "video", src: hamsterAssets.petJourney.correctPrimary, ariaLabel: "倉鼠答對回饋影片" },
+    correctFeedbackMediaVariants: [
+      { type: "video", src: hamsterAssets.petJourney.correctPrimary, ariaLabel: "倉鼠答對回饋影片" },
+      { type: "video", src: hamsterAssets.petJourney.correctSecondary, ariaLabel: "倉鼠答對回饋影片" },
+    ],
+  },
   scenarios: {
     "hamster-nocturnal": { sceneVideo: { src: hamsterAssets.petJourney.nocturnal, ariaLabel: "倉鼠夜行性情境影片" } },
     "hamster-picky-eating": { sceneVideo: { src: hamsterAssets.petJourney.pickyEating, ariaLabel: "倉鼠挑食情境影片" } },

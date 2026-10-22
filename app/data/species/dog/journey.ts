@@ -31,10 +31,18 @@ export const dogJourney = {
 } as const;
 
 export const dogScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "小狗", knowledgeTitle: "狗狗小知識", correctFeedbackMedia: { type: "video", src: scenarioMedia.correctPrimary } },
+  defaults: {
+    defaultPetName: "小狗",
+    knowledgeTitle: "狗狗小知識",
+    correctFeedbackMedia: { type: "video", src: scenarioMedia.correctPrimary, ariaLabel: "正確處置後的正向結果影片" },
+    correctFeedbackMediaVariants: [
+      { type: "video", src: scenarioMedia.correctPrimary, ariaLabel: "正確處置後的正向結果影片" },
+      { type: "video", src: scenarioMedia.correctSecondary, ariaLabel: "正確處置後的正向結果影片" },
+    ],
+  },
   scenarios: {
     "behavior-barking": { sceneVideo: { src: scenarioMedia.dog.barking, ariaLabel: "日常行為照顧影片" }, completionIntro: "你已經找到合適的做法。接著多認識一點{petName}吠叫時可能想傳達的需求。" },
-    "behavior-chewing": { sceneVideo: { src: scenarioMedia.dog.chewing, ariaLabel: "日常行為照顧影片" }, correctFeedbackMedia: { type: "video", src: scenarioMedia.correctSecondary }, completionIntro: "你已經找到合適的做法。接著看看狗狗為什麼需要啃咬，以及如何安全地引導{petName}。" },
+    "behavior-chewing": { sceneVideo: { src: scenarioMedia.dog.chewing, ariaLabel: "日常行為照顧影片" }, correctFeedbackMedia: { type: "video", src: scenarioMedia.correctSecondary, ariaLabel: "正確處置後的正向結果影片" }, completionIntro: "你已經找到合適的做法。接著看看狗狗為什麼需要啃咬，以及如何安全地引導{petName}。" },
     "behavior-toileting": { sceneVideo: { src: scenarioMedia.dog.toileting, ariaLabel: "日常行為照顧影片" }, completionIntro: "你已經找到合適的做法。如廁不只是記住一個地點，還和{petName}的年齡、時機與健康狀況有關。" },
   },
 };

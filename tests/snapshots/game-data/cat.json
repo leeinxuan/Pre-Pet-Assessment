@@ -3958,8 +3958,8 @@
         "placement": {
           "layer": 5,
           "width": 11,
-          "x": 31,
-          "y": 35
+          "x": 45,
+          "y": 62
         }
       },
       {
@@ -3977,8 +3977,8 @@
         "placement": {
           "layer": 5,
           "width": 9,
-          "x": 84,
-          "y": 76
+          "x": 55,
+          "y": 67
         }
       },
       {
@@ -4016,7 +4016,7 @@
           "layer": 5,
           "width": 9,
           "x": 93,
-          "y": 48
+          "y": 55
         }
       },
       {
@@ -4053,8 +4053,8 @@
         "placement": {
           "layer": 5,
           "width": 14,
-          "x": 45,
-          "y": 80
+          "x": 80,
+          "y": 85
         }
       }
     ],
@@ -4779,8 +4779,8 @@
           "placement": {
             "layer": 5,
             "width": 11,
-            "x": 31,
-            "y": 35
+            "x": 45,
+            "y": 62
           }
         },
         {
@@ -4798,8 +4798,8 @@
           "placement": {
             "layer": 5,
             "width": 9,
-            "x": 84,
-            "y": 76
+            "x": 55,
+            "y": 67
           }
         },
         {
@@ -4837,7 +4837,7 @@
             "layer": 5,
             "width": 9,
             "x": 93,
-            "y": 48
+            "y": 55
           }
         },
         {
@@ -4874,8 +4874,8 @@
           "placement": {
             "layer": 5,
             "width": 14,
-            "x": 45,
-            "y": 80
+            "x": 80,
+            "y": 85
           }
         }
       ],
@@ -4917,8 +4917,8 @@
           "placement": {
             "layer": 3,
             "width": 15,
-            "x": 25,
-            "y": 60
+            "x": 70,
+            "y": 87
           },
           "required": true
         },
@@ -4938,8 +4938,8 @@
           "placement": {
             "layer": 2,
             "width": 18,
-            "x": 43,
-            "y": 65
+            "x": 70,
+            "y": 70
           },
           "required": true
         },
@@ -4960,7 +4960,7 @@
             "layer": 2,
             "width": 20,
             "x": 14,
-            "y": 84
+            "y": 86
           },
           "required": true
         },
@@ -4981,10 +4981,10 @@
           },
           "need": "清潔",
           "placement": {
-            "layer": 3,
+            "layer": 5,
             "width": 12,
             "x": 30,
-            "y": 84
+            "y": 88
           },
           "required": true
         },
@@ -5046,8 +5046,8 @@
           "placement": {
             "layer": 4,
             "width": 12,
-            "x": 70,
-            "y": 85
+            "x": 30,
+            "y": 70
           },
           "required": true
         },
@@ -5067,8 +5067,8 @@
           "placement": {
             "layer": 2,
             "width": 20,
-            "x": 85,
-            "y": 75
+            "x": 90,
+            "y": 80
           },
           "required": true
         },
@@ -5088,7 +5088,7 @@
           "placement": {
             "layer": 4,
             "width": 10,
-            "x": 56,
+            "x": 50,
             "y": 65
           },
           "required": true
@@ -5104,7 +5104,14 @@
             "desktop": {
               "width": 28,
               "x": 47,
-              "y": 16
+              "y": 12
+            },
+            "desktopText": {
+              "fontSize": 16,
+              "height": 13,
+              "left": 15,
+              "top": 63,
+              "width": 70
             },
             "mobile": {
               "width": 40,
@@ -5352,8 +5359,8 @@
         "placement": {
           "layer": 3,
           "width": 15,
-          "x": 25,
-          "y": 60
+          "x": 70,
+          "y": 87
         },
         "required": true
       },
@@ -5373,8 +5380,8 @@
         "placement": {
           "layer": 2,
           "width": 18,
-          "x": 43,
-          "y": 65
+          "x": 70,
+          "y": 70
         },
         "required": true
       },
@@ -5395,7 +5402,7 @@
           "layer": 2,
           "width": 20,
           "x": 14,
-          "y": 84
+          "y": 86
         },
         "required": true
       },
@@ -5416,10 +5423,10 @@
         },
         "need": "清潔",
         "placement": {
-          "layer": 3,
+          "layer": 5,
           "width": 12,
           "x": 30,
-          "y": 84
+          "y": 88
         },
         "required": true
       },
@@ -5481,8 +5488,8 @@
         "placement": {
           "layer": 4,
           "width": 12,
-          "x": 70,
-          "y": 85
+          "x": 30,
+          "y": 70
         },
         "required": true
       },
@@ -5502,8 +5509,8 @@
         "placement": {
           "layer": 2,
           "width": 20,
-          "x": 85,
-          "y": 75
+          "x": 90,
+          "y": 80
         },
         "required": true
       },
@@ -5523,7 +5530,7 @@
         "placement": {
           "layer": 4,
           "width": 10,
-          "x": 56,
+          "x": 50,
           "y": 65
         },
         "required": true
@@ -5532,9 +5539,22 @@
     "scenarioPresentation": {
       "defaults": {
         "correctFeedbackMedia": {
+          "ariaLabel": "貓咪答對回饋影片",
           "src": "/assets/cat/pet-journey/correct-answer.mp4",
           "type": "video"
         },
+        "correctFeedbackMediaVariants": [
+          {
+            "ariaLabel": "貓咪答對回饋影片",
+            "src": "/assets/cat/pet-journey/correct-answer.mp4",
+            "type": "video"
+          },
+          {
+            "ariaLabel": "貓咪答對回饋影片",
+            "src": "/assets/cat/pet-journey/correct-answer2.mp4",
+            "type": "video"
+          }
+        ],
         "defaultPetName": "貓咪",
         "knowledgeTitle": "貓咪小知識",
         "preserveGenericAnimalTerms": true

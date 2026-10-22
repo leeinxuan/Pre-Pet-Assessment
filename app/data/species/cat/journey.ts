@@ -34,7 +34,16 @@ export const catJourney = {
 } as const;
 
 export const catScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "貓咪", knowledgeTitle: "貓咪小知識", preserveGenericAnimalTerms: true, correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctPrimary } },
+  defaults: {
+    defaultPetName: "貓咪",
+    knowledgeTitle: "貓咪小知識",
+    preserveGenericAnimalTerms: true,
+    correctFeedbackMedia: { type: "video", src: catAssets.petJourney.correctPrimary, ariaLabel: "貓咪答對回饋影片" },
+    correctFeedbackMediaVariants: [
+      { type: "video", src: catAssets.petJourney.correctPrimary, ariaLabel: "貓咪答對回饋影片" },
+      { type: "video", src: catAssets.petJourney.correctSecondary, ariaLabel: "貓咪答對回饋影片" },
+    ],
+  },
   scenarios: {
     "cat-night-energy-care": { sceneVideo: { src: catAssets.petJourney.nightEnergy, ariaLabel: "貓咪夜間活動情境影片" }, completionIntro: "你已經找到合適的做法。規律遊戲與安全玩具，能讓{petName}的精力有合適出口。" },
     "cat-scratching-care": { sceneVideo: { src: catAssets.petJourney.scratching, ariaLabel: "貓咪抓磨情境影片" }, completionIntro: "你已經找到合適的做法。提供抓板與安全高處，能讓{petName}用自然方式活動。" },

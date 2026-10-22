@@ -179,6 +179,7 @@ function roomHotspotStyle(placement: {
 
 function roomDoorplatePlacementStyle(placement: {
   desktop: { x: number; y: number; width: number };
+  desktopText: { left: number; top: number; width: number; height: number; fontSize: number };
   mobile: { x: number; y: number; width: number };
   mobileText: { left: number; top: number; width: number; height: number; fontSize: number };
 }): CSSProperties {
@@ -186,6 +187,11 @@ function roomDoorplatePlacementStyle(placement: {
     left: `${placement.desktop.x}%`,
     top: `${placement.desktop.y}%`,
     width: `${placement.desktop.width}%`,
+    "--desktop-doorplate-text-left": `${placement.desktopText.left}%`,
+    "--desktop-doorplate-text-top": `${placement.desktopText.top}%`,
+    "--desktop-doorplate-text-width": `${placement.desktopText.width}%`,
+    "--desktop-doorplate-text-height": `${placement.desktopText.height}%`,
+    "--desktop-doorplate-text-font-size": `${placement.desktopText.fontSize}px`,
     "--mobile-doorplate-x": `${placement.mobile.x}%`,
     "--mobile-doorplate-y": `${placement.mobile.y}%`,
     "--mobile-doorplate-width": `${placement.mobile.width}%`,

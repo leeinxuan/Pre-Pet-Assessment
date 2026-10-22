@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { getScenarioPresentation } from "../../../data/species/journey";
 import type { Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
 import {
   BreedKnowledgeHighlight,
   CorrectFeedbackLayout,
+  getAlternatingCorrectFeedbackMedia,
   IncorrectExplanation,
   OtherCorrectTips,
   SceneMediaPlaceholder,
@@ -32,6 +34,7 @@ export function VideoScenarioActivity({
   deferExpensesUntilFeedback = false,
   onReplay,
   continueImmediately = false,
+  feedbackSequenceIndex = 0,
 }: {
   scenario: Scenario;
   answer?: ScenarioAnswer;
@@ -49,12 +52,15 @@ export function VideoScenarioActivity({
   deferExpensesUntilFeedback?: boolean;
   onReplay?: () => void;
   continueImmediately?: boolean;
+  /** 同一物種的題目順序，用來固定交替正確回饋影片。 */
+  feedbackSequenceIndex?: number;
 }) {
   const [mode, setMode] = useState<"question" | "animating" | "incorrect" | "positive">(answer?.finalResult === "correct" ? "positive" : answer ? "incorrect" : "question");
   const [videoFailed, setVideoFailed] = useState(false);
   const [, setVideoFinished] = useState(false);
   const sceneMedia = scenario.sceneMedia ?? { type: "placeholder" as const };
-  const feedbackMedia = scenario.correctFeedbackMedia ?? { type: "placeholder" as const };
+  const presentation = getScenarioPresentation(species, scenario.id);
+  const feedbackMedia = getAlternatingCorrectFeedbackMedia(presentation, feedbackSequenceIndex, scenario.correctFeedbackMedia);
   const source = sceneMedia.type === "video" ? sceneMedia.src : undefined;
   const correctFeedbackVideo = feedbackMedia.type === "video" ? feedbackMedia.src : undefined;
   useVideoMetadataPreload(source);
@@ -86,12 +92,12 @@ export function VideoScenarioActivity({
 
   // Effect 在正確回饋畫面提交後才執行，避免費用動畫早於「做得很好」。
   useEffect(() => {
-    if (!deferExpensesUntilFeedback || mode !== "positive" || selectedChoice?.result !== "correct") return;
+    if (!deferExpensesUntilFeedback || triggerExpenseOnFeedback || mode !== "positive" || selectedChoice?.result !== "correct") return;
     const key = `${scenario.id}:${selectedChoice.id}`;
     if (feedbackExpenseShownFor.current === key) return;
     feedbackExpenseShownFor.current = key;
     onCorrectFeedbackShown?.(scenario, selectedChoice);
-  }, [deferExpensesUntilFeedback, mode, onCorrectFeedbackShown, scenario, selectedChoice]);
+  }, [deferExpensesUntilFeedback, mode, onCorrectFeedbackShown, scenario, selectedChoice, triggerExpenseOnFeedback]);
 
   useEffect(() => {
     if (!triggerExpenseOnFeedback || mode !== "positive" || selectedChoice?.result !== "correct" || !onCorrectExpenseSequence) return;

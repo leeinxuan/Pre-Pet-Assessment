@@ -47,16 +47,26 @@ export const hamsterCageCheck = {
   interaction: {
     // 固定廁所角落，讓每日清潔流程與畫面位置一致。
     toiletCorner: "top-right",
-    siftPassesRequired: 3,
     shakeProgressTarget: 100,
-    // 持續拖曳五秒可填滿；秒數不顯示給玩家。
-    shakeDurationMs: 5000,
+    // 持續拖曳約 2.5 秒可填滿；秒數不顯示給玩家。
+    shakeDurationMs: 2500,
     cleanCornerHint: "這裡還乾淨，再找找看",
     refillHint: "點擊剛清出的角落，補上乾淨的新墊料。",
     siftHint: "按住漏勺，從砂盆一端拖曳到另一端。",
     shakeHint: "在砂盆上左右拖曳，讓細碎粉塵沉到底部。",
     shakeCompleteHint: "太好了！砂浴盆已經平整又乾淨，{petName} 可以舒服地使用了！",
   },
+  /**
+   * 清潔活動中的籠內用品獨立於 preparation.ts；兩個畫面可各自調整位置與尺寸。
+   * 這裡只描述清潔畫面要顯示的已布置用品，不會影響飼養前準備的物品欄或房間配置。
+   */
+  preparedCageItems: [
+    { id: "exercise-wheel", image: hamsterAssets.room.exerciseWheel, placement: { x: 57, y: 40, width: 35, layer: 3 } },
+    { id: "water-bottle", image: hamsterAssets.room.waterBottle, placement: { x: 11, y: 31, width: 23, layer: 3 } },
+    { id: "food-bowl", image: hamsterAssets.room.foodBowl, placement: { x: 16, y: 70, width: 20, layer: 4 } },
+    { id: "hideout", image: hamsterAssets.room.hideout, placement: { x: 83, y: 70, width: 21, layer: 3 } },
+    { id: "sand-bath-box", image: hamsterAssets.room.sandBathBox, placement: { x: 30, y: 55, width: 25, layer: 3 } },
+  ] as const,
   completion: {
     title: "清潔完成！{petName} 的小小家整理好了",
     subtitle: "你清理了廁所角落的髒墊料，也篩好了砂浴盆。",
@@ -64,6 +74,6 @@ export const hamsterCageCheck = {
     reflectionTitle: "每天的小動作，是對 {petName} 最具體的照顧",
     reflection: "倉鼠不像貓狗會告訴你牠的需求。牠有固定的廁所角落、每天使用砂浴盆——保持這兩個地方的乾淨，就是你每天能給牠最直接的照顧，也是觀察牠使用習慣有無異常的時機。",
     careTitle: "每天留給牠的照護時間",
-    continueLabel: "繼續生活旅程 →",
+    continueLabel: "繼續生活旅程",
   },
 } as const;

@@ -781,6 +781,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .care-guide-download { display: flex; justify-content: space-between; gap: 28px; align-items: center; padding: clamp(24px, 4vw, 36px); border: 1px solid #cdb47a; border-radius: 25px; background: linear-gradient(135deg, #fff5d9, #fffdf7); box-shadow: 0 18px 40px rgba(117,83,17,.1); }
 .care-guide-download > div { position: relative; padding-left: 51px; }
 .care-guide-download > div > span { position: absolute; left: 0; top: 1px; display: grid; width: 36px; height: 36px; place-items: center; border-radius: 11px; background: #5c4b31; color: #fff; font-size: 21px; font-weight: 950; }
+.care-guide-download > div > span svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 .care-guide-download h2 { margin: 0; color: var(--ink); font-size: 26px; }
 .care-guide-download p { margin: 7px 0; color: #655943; font-weight: 800; line-height: 1.6; }
 .care-guide-download small { display: block; color: #826c43; font-weight: 750; line-height: 1.5; }
@@ -1437,7 +1438,7 @@ html, body { overflow-x: clip; }
   }
 
   /* Mobile doorplate position:
-     手機版「布置房間」門牌位置/大小請到 app/game-data.ts 的 roomDoorplatePlacement.mobile 調整。 */
+     手機版「布置房間」門牌位置/大小請到各物種 preparation.ts 的 roomDoorplatePlacement.mobile 調整。 */
   .room-scene .pet-doorplate {
     left: var(--mobile-doorplate-x) !important;
     top: var(--mobile-doorplate-y) !important;
@@ -1446,7 +1447,7 @@ html, body { overflow-x: clip; }
   }
 
   /* Mobile doorplate text position:
-     手機版門牌裡「名字文字 / 輸入文字」的位置與大小請到 app/game-data.ts 的 roomDoorplatePlacement.mobileText 調整。 */
+     手機版門牌裡「名字文字 / 輸入文字」的位置與大小請到各物種 preparation.ts 的 roomDoorplatePlacement.mobileText 調整。 */
   .room-scene .pet-doorplate-name,
   .room-scene .pet-doorplate > button,
   .room-scene .pet-doorplate-editor {

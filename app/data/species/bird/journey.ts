@@ -14,7 +14,15 @@ export const birdJourneyItems: JourneyItem[] = [
 ];
 export const birdDailyBehaviorScenarioIds = ["bird-picky-eating", "bird-stereotypy", "bird-excessive-calling"] as const;
 export const birdScenarioPresentation: SpeciesScenarioPresentationConfig = {
-  defaults: { defaultPetName: "鸚鵡", knowledgeTitle: "鳥類小知識", correctFeedbackMedia: { type: "video", src: birdAssets.petJourney.correctPrimary } },
+  defaults: {
+    defaultPetName: "鸚鵡",
+    knowledgeTitle: "鳥類小知識",
+    correctFeedbackMedia: { type: "video", src: birdAssets.petJourney.correctPrimary, ariaLabel: "鸚鵡答對回饋影片" },
+    correctFeedbackMediaVariants: [
+      { type: "video", src: birdAssets.petJourney.correctPrimary, ariaLabel: "鸚鵡答對回饋影片" },
+      { type: "video", src: birdAssets.petJourney.correctSecondary, ariaLabel: "鸚鵡答對回饋影片" },
+    ],
+  },
   scenarios: {
     "bird-picky-eating": { sceneVideo: { src: birdAssets.petJourney.pickyEating, ariaLabel: "鸚鵡挑食情境影片" } },
     "bird-stereotypy": { sceneVideo: { src: birdAssets.petJourney.stereotypy, ariaLabel: "鸚鵡刻板行為情境影片" } },

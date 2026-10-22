@@ -58,6 +58,11 @@ export const birdAssets = {
       trayOutDirty: "/assets/bird/dailygame/cage-tray-out-dirty.webp",
       trayOutClean: "/assets/bird/dailygame/cage-tray-out-clean.webp",
     },
+    windows: {
+      open: "/assets/bird/dailygame/window-opend.webp",
+      closed: "/assets/bird/dailygame/window-closed.webp",
+    },
+    cageOutTransition: "/assets/bird/dailygame/cage-out-transition.webm",
     birdCloseup: "/assets/bird/dailygame/bird-closeup-interactive.webp",
     beddingDirty: "/assets/bird/dailygame/bedding-dirty.webp",
     droppings: {

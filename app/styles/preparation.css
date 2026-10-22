@@ -69,14 +69,15 @@
 .pet-name-overlay input { min-height: 38px; padding: 8px 10px; }
 .pet-name-overlay button { min-height: 38px; padding: 8px 11px; }
 .pet-doorplate { position: absolute; z-index: 7; left: 87% ; top: 16%; width: 28%; min-width: 120px; transform: translateX(-50%); }
+/* Desktop name text position and font size come from each species preparation.ts desktopText setting. */
 .pet-doorplate > img { display: block; width: 100%; height: auto; }
-.pet-doorplate > button { position: absolute; inset: 63% 15% 24%; width: 70%; padding: 2px 4px; border: 0; background: transparent; font: inherit; font-size: clamp(10px, 1.5vw, 16px); font-weight: 900; line-height: 1.2; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pet-doorplate > button { position: absolute; left: var(--desktop-doorplate-text-left); top: var(--desktop-doorplate-text-top); width: var(--desktop-doorplate-text-width); height: var(--desktop-doorplate-text-height); padding: 2px 4px; border: 0; background: transparent; font: inherit; font-size: var(--desktop-doorplate-text-font-size); font-weight: 900; line-height: 1.2; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pet-doorplate > button.placeholder { color: #9d9a92; font-size: clamp(7px, 1.1vw, 14px); font-weight: 700; }
-.pet-doorplate-name { position: absolute; inset: 63% 15% 24%; width: 70%; display: grid; place-items: center; padding: 2px 4px; color: #5f4528; font-size: clamp(10px, 1.5vw, 16px); font-weight: 950; line-height: 1.2; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pet-doorplate-name { position: absolute; left: var(--desktop-doorplate-text-left); top: var(--desktop-doorplate-text-top); width: var(--desktop-doorplate-text-width); height: var(--desktop-doorplate-text-height); display: grid; place-items: center; padding: 2px 4px; color: #5f4528; font-size: var(--desktop-doorplate-text-font-size); font-weight: 950; line-height: 1.2; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pet-doorplate > button:focus-visible { outline: 3px solid rgba(212,154,36,.55); outline-offset: 3px; border-radius: 6px; }
-.pet-doorplate-editor { position: absolute; inset: 64% 15% 24%; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+.pet-doorplate-editor { position: absolute; left: var(--desktop-doorplate-text-left); top: var(--desktop-doorplate-text-top); width: var(--desktop-doorplate-text-width); height: var(--desktop-doorplate-text-height); display: flex; flex-direction: column; justify-content: center; gap: 3px; }
 .pet-doorplate-editor label { color: #5f4528; font-size: clamp(10px, .9vw, 15px); font-weight: 900; }
-.pet-doorplate-editor input { width: 100%; min-width: 0; padding: 2px 4px; border: 0; outline: 0; box-shadow: none; background: transparent; color: #5f4528; font: inherit; font-size: clamp(10px, 1.5vw, 16px); font-weight: 900; line-height: 1.2; text-align: center; }
+.pet-doorplate-editor input { width: 100%; min-width: 0; padding: 2px 4px; border: 0; outline: 0; box-shadow: none; background: transparent; color: #5f4528; font: inherit; font-size: var(--desktop-doorplate-text-font-size); font-weight: 900; line-height: 1.2; text-align: center; }
 .pet-doorplate-editor input::placeholder { color: #9d9a92; font-size: clamp(7px, 1.1vw, 14px) !important; font-weight: 700; opacity: 1; }
 .pet-doorplate-editor input:focus { border: 0; outline: 0; box-shadow: none; }
 .pet-doorplate-editor .field-error { margin: 0; color: #8d321c; font-size: 8px; line-height: 1.1; }

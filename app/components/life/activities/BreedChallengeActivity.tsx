@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getBreedChallengeScenarios } from "../../../data/species/journey";
+import { getBreedChallengeScenarios, getScenarioPresentation } from "../../../data/species/journey";
 import type { Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
 import { withPetName } from "./activity-ui";
 import {
   BreedKnowledgeHighlight,
   CorrectFeedbackLayout,
+  getAlternatingCorrectFeedbackMedia,
   IncorrectExplanation,
   ScenarioOptionCard,
   VideoWithToggle,
@@ -17,6 +18,7 @@ import {
 
 export function BreedChallengeActivity({
   breed,
+  species = "dog",
   petName,
   answers,
   onChoose,
@@ -28,6 +30,7 @@ export function BreedChallengeActivity({
   testNextSignal = 0,
 }: {
   breed: string;
+  species?: string;
   petName: string;
   answers: Record<string, ScenarioAnswer>;
   onChoose: (scenario: Scenario, choice: ScenarioChoice) => void;
@@ -78,7 +81,8 @@ export function BreedChallengeActivity({
 
   if (mode === "positive" && selectedChoice) {
     const breedKnowledge = scenario.breedKnowledge ?? `${scenario.description} ${selectedChoice.explanation}`;
-    const feedbackMedia = scenario.correctFeedbackMedia ?? { type: "placeholder" as const };
+    const presentation = getScenarioPresentation(species, scenario.id);
+    const feedbackMedia = getAlternatingCorrectFeedbackMedia(presentation, currentIndex, scenario.correctFeedbackMedia);
     return (
       <CorrectFeedbackLayout
         key={scenario.id}

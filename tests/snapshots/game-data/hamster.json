@@ -4,7 +4,8 @@
       "activityKey": "video-scenario",
       "deferItemExpenses": true,
       "itemId": "hamster-arrival",
-      "scenarioId": "hamster-arrival-adjustment"
+      "scenarioId": "hamster-arrival-adjustment",
+      "triggerExpenseOnFeedback": true
     },
     "hamster-busy-care": {
       "activityKey": "busy-care",
@@ -75,6 +76,7 @@
         "sandBathClean": "/assets/hamster/CageCheckActivity/sand-bath-clean.webp",
         "sandBathDirty": "/assets/hamster/CageCheckActivity/sand-bath-dirty.webp",
         "sandBathMess": "/assets/hamster/CageCheckActivity/sand-bath-mess.webp",
+        "sandBathMiddle": "/assets/hamster/CageCheckActivity/sand-bath-middle.webp",
         "sandSieve": "/assets/hamster/CageCheckActivity/tool-sand-sieve.webp",
         "scoop": "/assets/hamster/CageCheckActivity/tool-scoop.webp"
       },
@@ -128,6 +130,7 @@
         "hideout": "/assets/hamster/room/hideout.webp",
         "initialBackground": "/assets/hamster/room/direct-sunlight-spot.webp",
         "safeBackground": "/assets/hamster/room/hamster-safe-room.webp",
+        "sand": "/assets/hamster/room/hamster-sand.webp",
         "sandBathBox": "/assets/hamster/room/sand-bath-box.webp",
         "waterBottle": "/assets/hamster/room/water-bottle.webp"
       },
@@ -818,7 +821,11 @@
               "encouragement": "你了解 {petName} 的天性，做出了最安全的選擇！",
               "knowledgeContent": [
                 {
-                  "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
+                  "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
                   "type": "paragraph"
                 }
               ],
@@ -1179,7 +1186,11 @@
               "encouragement": "你願意提前為{petName}的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
               "knowledgeContent": [
                 {
-                  "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
+                  "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
                   "type": "paragraph"
                 }
               ],
@@ -1536,7 +1547,11 @@
               "encouragement": "你了解 {petName} 的天性，做出了最安全的選擇！",
               "knowledgeContent": [
                 {
-                  "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
+                  "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
                   "type": "paragraph"
                 }
               ],
@@ -1897,7 +1912,11 @@
               "encouragement": "你願意提前為{petName}的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
               "knowledgeContent": [
                 {
-                  "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
+                  "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
                   "type": "paragraph"
                 }
               ],
@@ -2258,7 +2277,11 @@
               "encouragement": "你了解 {petName} 的天性，做出了最安全的選擇！",
               "knowledgeContent": [
                 {
-                  "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
+                  "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
                   "type": "paragraph"
                 }
               ],
@@ -2619,7 +2642,11 @@
               "encouragement": "你願意提前為{petName}的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
               "knowledgeContent": [
                 {
-                  "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
+                  "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
                   "type": "paragraph"
                 }
               ],
@@ -2976,7 +3003,11 @@
               "encouragement": "你了解 {petName} 的天性，做出了最安全的選擇！",
               "knowledgeContent": [
                 {
-                  "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
+                  "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
                   "type": "paragraph"
                 }
               ],
@@ -3337,7 +3368,11 @@
               "encouragement": "你願意提前為{petName}的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
               "knowledgeContent": [
                 {
-                  "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
+                  "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
                   "type": "paragraph"
                 }
               ],
@@ -3425,7 +3460,7 @@
           "layer": 5,
           "width": 6,
           "x": 24,
-          "y": 40
+          "y": 50
         }
       }
     ],
@@ -3634,7 +3669,7 @@
             {
               "segments": [
                 {
-                  "text": "倉鼠不發出明顯叫聲，但籠具清潔需頻繁，氣味管理是主要課題；請評估通風條件與清潔動線，並確認是否有"
+                  "text": "請評估通風條件與清潔動線，並確認是否有"
                 },
                 {
                   "emphasis": true,
@@ -3804,6 +3839,9 @@
       ],
       "items": [
         {
+          "expenseIds": [
+            "hamster-arrival-checkup"
+          ],
           "id": "hamster-arrival",
           "scenarioId": "hamster-arrival-adjustment",
           "stageId": "arrival",
@@ -4041,7 +4079,7 @@
             "layer": 5,
             "width": 6,
             "x": 24,
-            "y": 40
+            "y": 50
           }
         }
       ],
@@ -4050,15 +4088,16 @@
           "entryLabel": "查看倉鼠籠內部配置",
           "entryReadyInstruction": "都備齊了！點進去幫 {petName} 佈置裡面吧 👆",
           "fenceInstruction": "先決定 {petName} 的生活角落，把籠子放好吧。",
-          "fencePlacedInstruction": "籠子放好了！把飼料也準備好吧。",
+          "fencePlacedInstruction": "籠子放好了！把飼料和倉鼠沙也準備好吧。",
           "hazardInstruction": "在把{petName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。",
           "interiorInstruction": "這就是 {petName} 的家。先鋪好紙質墊料，再把需要的東西一件一件放進來吧。",
           "interiorLockedInstruction": "請先鋪好紙質墊料，才能放入其他籠內用品。",
-          "lockedInstruction": "請先放置倉鼠籠，再準備主食飼料。"
+          "lockedInstruction": "請先放置倉鼠籠，再準備主食飼料和倉鼠沙。"
         },
         "entryRequiredItemIds": [
           "hamster-cage",
-          "pellet"
+          "pellet",
+          "hamster-sand"
         ],
         "fenceItemId": "hamster-cage",
         "floorHazardId": "direct-sunlight-spot",
@@ -4092,7 +4131,8 @@
         "interiorUnlockItemId": "bedding",
         "outsideItemIds": [
           "hamster-cage",
-          "pellet"
+          "pellet",
+          "hamster-sand"
         ],
         "safeBackground": "/assets/hamster/room/hamster-safe-room.webp"
       },
@@ -4128,7 +4168,26 @@
             "x": 20,
             "y": 78
           },
-          "required": false
+          "required": true
+        },
+        {
+          "description": "填入砂浴盆使用；之後每月補充。",
+          "expenseIds": [
+            "hamster-sand-initial",
+            "hamster-sand-monthly"
+          ],
+          "icon": "◌",
+          "id": "hamster-sand",
+          "image": "/assets/hamster/room/hamster-sand.webp",
+          "label": "倉鼠沙",
+          "need": "清潔",
+          "placement": {
+            "layer": 4,
+            "width": 8,
+            "x": 28,
+            "y": 80
+          },
+          "required": true
         },
         {
           "description": "足夠深度讓{petName}挖掘保暖；安全吸附力佳。",
@@ -4214,11 +4273,8 @@
           "required": true
         },
         {
-          "description": "倉鼠清潔毛髮的正確方式；定期篩砂，不用水洗。",
-          "expenseIds": [
-            "hamster-sand-bath-box",
-            "hamster-sand-monthly"
-          ],
+          "description": "倉鼠清潔毛髮的場所；定期篩砂，不用水洗。",
+          "expenseId": "hamster-sand-bath-box",
           "icon": "▣",
           "id": "sand-bath-box",
           "image": "/assets/hamster/room/sand-bath-box.webp",
@@ -4262,6 +4318,13 @@
               "width": 25,
               "x": 45,
               "y": 15
+            },
+            "desktopText": {
+              "fontSize": 16,
+              "height": 14,
+              "left": 15,
+              "top": 61,
+              "width": 70
             },
             "mobile": {
               "width": 40,
@@ -4419,15 +4482,16 @@
         "entryLabel": "查看倉鼠籠內部配置",
         "entryReadyInstruction": "都備齊了！點進去幫 {petName} 佈置裡面吧 👆",
         "fenceInstruction": "先決定 {petName} 的生活角落，把籠子放好吧。",
-        "fencePlacedInstruction": "籠子放好了！把飼料也準備好吧。",
+        "fencePlacedInstruction": "籠子放好了！把飼料和倉鼠沙也準備好吧。",
         "hazardInstruction": "在把{petName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。",
         "interiorInstruction": "這就是 {petName} 的家。先鋪好紙質墊料，再把需要的東西一件一件放進來吧。",
         "interiorLockedInstruction": "請先鋪好紙質墊料，才能放入其他籠內用品。",
-        "lockedInstruction": "請先放置倉鼠籠，再準備主食飼料。"
+        "lockedInstruction": "請先放置倉鼠籠，再準備主食飼料和倉鼠沙。"
       },
       "entryRequiredItemIds": [
         "hamster-cage",
-        "pellet"
+        "pellet",
+        "hamster-sand"
       ],
       "fenceItemId": "hamster-cage",
       "floorHazardId": "direct-sunlight-spot",
@@ -4461,7 +4525,8 @@
       "interiorUnlockItemId": "bedding",
       "outsideItemIds": [
         "hamster-cage",
-        "pellet"
+        "pellet",
+        "hamster-sand"
       ],
       "safeBackground": "/assets/hamster/room/hamster-safe-room.webp"
     },
@@ -4497,7 +4562,26 @@
           "x": 20,
           "y": 78
         },
-        "required": false
+        "required": true
+      },
+      {
+        "description": "填入砂浴盆使用；之後每月補充。",
+        "expenseIds": [
+          "hamster-sand-initial",
+          "hamster-sand-monthly"
+        ],
+        "icon": "◌",
+        "id": "hamster-sand",
+        "image": "/assets/hamster/room/hamster-sand.webp",
+        "label": "倉鼠沙",
+        "need": "清潔",
+        "placement": {
+          "layer": 4,
+          "width": 8,
+          "x": 28,
+          "y": 80
+        },
+        "required": true
       },
       {
         "description": "足夠深度讓{petName}挖掘保暖；安全吸附力佳。",
@@ -4583,11 +4667,8 @@
         "required": true
       },
       {
-        "description": "倉鼠清潔毛髮的正確方式；定期篩砂，不用水洗。",
-        "expenseIds": [
-          "hamster-sand-bath-box",
-          "hamster-sand-monthly"
-        ],
+        "description": "倉鼠清潔毛髮的場所；定期篩砂，不用水洗。",
+        "expenseId": "hamster-sand-bath-box",
         "icon": "▣",
         "id": "sand-bath-box",
         "image": "/assets/hamster/room/sand-bath-box.webp",
@@ -4624,9 +4705,22 @@
     "scenarioPresentation": {
       "defaults": {
         "correctFeedbackMedia": {
+          "ariaLabel": "倉鼠答對回饋影片",
           "src": "/assets/hamster/pet-journey/correct-answer.mp4",
           "type": "video"
         },
+        "correctFeedbackMediaVariants": [
+          {
+            "ariaLabel": "倉鼠答對回饋影片",
+            "src": "/assets/hamster/pet-journey/correct-answer.mp4",
+            "type": "video"
+          },
+          {
+            "ariaLabel": "倉鼠答對回饋影片",
+            "src": "/assets/hamster/pet-journey/correct-answer2.mp4",
+            "type": "video"
+          }
+        ],
         "defaultPetName": "芝麻",
         "knowledgeTitle": "倉鼠小知識"
       },
@@ -4970,7 +5064,11 @@
           "encouragement": "你了解 {petName} 的天性，做出了最安全的選擇！",
           "knowledgeContent": [
             {
-              "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
+              "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。",
+              "type": "paragraph"
+            },
+            {
+              "text": "無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
               "type": "paragraph"
             }
           ],
@@ -5331,7 +5429,11 @@
           "encouragement": "你願意提前為{petName}的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
           "knowledgeContent": [
             {
-              "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
+              "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。",
+              "type": "paragraph"
+            },
+            {
+              "text": "在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
               "type": "paragraph"
             }
           ],
@@ -5464,7 +5566,7 @@
     "hamster-bedding-initial": {
       "amount": 250,
       "category": "一次性準備費",
-      "description": "入住前鋪設足夠深度墊料供挖掘保暖；之後每月補充（見每月基本支出）",
+      "description": "入住前鋪設足夠深度墊料供挖掘保暖；之後每月補充",
       "fromEmergency": false,
       "id": "hamster-bedding-initial",
       "name": "墊料（初期備量）",
@@ -5578,7 +5680,7 @@
     "hamster-pellet-initial": {
       "amount": 300,
       "category": "一次性準備費",
-      "description": "倉鼠專用飼料為主食；入住即需備妥，之後每月補充（見每月基本支出）",
+      "description": "倉鼠專用飼料為主食；入住即需備妥，之後每月補充",
       "fromEmergency": false,
       "id": "hamster-pellet-initial",
       "name": "倉鼠綜合飼料（初期備量）",
@@ -5596,12 +5698,22 @@
       "stage": "日常照護"
     },
     "hamster-sand-bath-box": {
-      "amount": 400,
+      "amount": 350,
       "category": "一次性準備費",
       "description": "砂浴是倉鼠清潔毛髮的正確方式；提供固定砂浴盆，定期篩砂清潔",
       "fromEmergency": false,
       "id": "hamster-sand-bath-box",
-      "name": "砂浴盆（含初期砂）",
+      "name": "砂浴盆",
+      "recurring": false,
+      "stage": "飼養前準備"
+    },
+    "hamster-sand-initial": {
+      "amount": 300,
+      "category": "一次性準備費",
+      "description": "填入砂浴盆使用；之後每月補充",
+      "fromEmergency": false,
+      "id": "hamster-sand-initial",
+      "name": "倉鼠沙（初期備量）",
       "recurring": false,
       "stage": "飼養前準備"
     },
@@ -5649,6 +5761,9 @@
   },
   "journeyItems": [
     {
+      "expenseIds": [
+        "hamster-arrival-checkup"
+      ],
       "id": "hamster-arrival",
       "scenarioId": "hamster-arrival-adjustment",
       "stageId": "arrival",
@@ -6043,7 +6158,11 @@
         "encouragement": "你了解 {petName} 的天性，做出了最安全的選擇！",
         "knowledgeContent": [
           {
-            "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
+            "text": "倉鼠天生具有強烈的**領域性**，在野外各自守護自己的地盤、獨自生活。**合籠不是陪伴，是壓力的來源**——甚至可能引發致命的打鬥。",
+            "type": "paragraph"
+          },
+          {
+            "text": "無論品系，**一隻一籠**都是最安全的飼養原則。{petName} 不需要同伴，牠需要的是你的陪伴與豐富的生活環境。",
             "type": "paragraph"
           }
         ],
@@ -6404,7 +6523,11 @@
         "encouragement": "你願意提前為{petName}的高齡生活做準備，做得很好！早一步規劃，才能在最需要的時候穩穩陪著牠。",
         "knowledgeContent": [
           {
-            "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
+            "text": "與 {petName} 在一起的每一天，都是一份雖然短暫卻**真實的承諾**。牠的壽命比你想的短——**倉鼠平均壽命約 2–3 年**，牠會隨著歲月慢慢老去，**活動量下降，毛色暗淡，最終告別**。",
+            "type": "paragraph"
+          },
+          {
+            "text": "在迎接牠之前，請先問問自己：你做好了**陪伴牠走到生命盡頭**的心理準備嗎？",
             "type": "paragraph"
           }
         ],

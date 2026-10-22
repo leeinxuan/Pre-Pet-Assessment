@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 import { money, getExpenseForSpecies } from "../../../data/shared/expenses";
 import { getSpeciesConfig } from "../../../data/species";
 import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
-import type { ExpenseRecord, Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
+import type { ExpenseRecord, Scenario, ScenarioAnswer, ScenarioChoice, ScenarioMediaConfig, ScenarioPresentationConfig } from "../../../game-types";
 import { plainChoiceText, renderKnowledgeText, withPetName } from "./activity-ui";
 
 /** 題目影片只在同一輪旅程首次進入時自動播放；重播永遠由玩家主動觸發。 */
@@ -19,6 +19,20 @@ export function resetQuestionVideoAutoplay(videoId?: string) {
     return;
   }
   autoPlayedQuestionVideos.clear();
+}
+
+/**
+ * 每題正確回饋固定使用同一支影片，並在題目間交替第一、第二支素材。
+ * 沒有成對回饋素材的物種維持原本資料指定的單一媒體／預留畫面。
+ */
+export function getAlternatingCorrectFeedbackMedia(
+  presentation: ScenarioPresentationConfig,
+  questionIndex: number,
+  scenarioMedia?: ScenarioMediaConfig,
+): ScenarioMediaConfig {
+  const variants = presentation.correctFeedbackMediaVariants;
+  if (variants?.length) return variants[Math.abs(questionIndex) % variants.length];
+  return scenarioMedia ?? presentation.correctFeedbackMedia;
 }
 
 export function useVideoMetadataPreload(src?: string) {
@@ -372,6 +386,7 @@ function ScenarioFeedback({
   onContinue,
   onReplay,
   continueImmediately = false,
+  feedbackMedia,
 }: {
   scenario: Scenario;
   choice: ScenarioChoice;
@@ -381,9 +396,10 @@ function ScenarioFeedback({
   onContinue: () => void;
   onReplay?: () => void;
   continueImmediately?: boolean;
+  feedbackMedia?: ScenarioMediaConfig;
 }) {
   const requiresRetry = scenario.requiresRetry === true;
-  const feedbackMedia = scenario.correctFeedbackMedia ?? { type: "placeholder" as const };
+  const resolvedFeedbackMedia = feedbackMedia ?? scenario.correctFeedbackMedia ?? { type: "placeholder" as const };
   const completionFeedback = scenario.completionFeedback;
   const [feedbackVideoFailed, setFeedbackVideoFailed] = useState(false);
   const [, setFeedbackVideoFinished] = useState(false);
@@ -397,8 +413,8 @@ function ScenarioFeedback({
     return (
       <CorrectFeedbackLayout
         variant="single"
-        videoSrc={feedbackMedia.type === "video" ? feedbackMedia.src : ""}
-        mediaPlaceholder={feedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
+        videoSrc={resolvedFeedbackMedia.type === "video" ? resolvedFeedbackMedia.src : ""}
+        mediaPlaceholder={resolvedFeedbackMedia.type === "placeholder" ? <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} /> : undefined}
         videoFailed={feedbackVideoFailed}
         fallbackText="正向結果影片目前無法播放，仍可繼續生活旅程。"
         title={completionFeedback?.title}
@@ -451,6 +467,7 @@ export function ScenarioCard({
   onContinue,
   onReplay,
   continueImmediately = false,
+  feedbackMedia,
 }: {
   scenario: Scenario;
   petName: string;
@@ -463,6 +480,7 @@ export function ScenarioCard({
   onContinue: () => void;
   onReplay?: () => void;
   continueImmediately?: boolean;
+  feedbackMedia?: ScenarioMediaConfig;
 }) {
   const [failedSceneVideoFor, setFailedSceneVideoFor] = useState<string | null>(null);
   const sceneVideoFailed = failedSceneVideoFor === scenario.id;
@@ -471,7 +489,7 @@ export function ScenarioCard({
   useVideoMetadataPreload(sceneVideoSource);
   const selectedChoice = scenario.choices.find((choice) => choice.id === answer?.finalChoiceId);
   if (feedbackOpen && selectedChoice) {
-    return <ScenarioFeedback scenario={scenario} choice={selectedChoice} species={species} petName={petName} onRetry={onRetry} onContinue={onContinue} onReplay={onReplay} continueImmediately={continueImmediately} />;
+    return <ScenarioFeedback scenario={scenario} choice={selectedChoice} species={species} petName={petName} onRetry={onRetry} onContinue={onContinue} onReplay={onReplay} continueImmediately={continueImmediately} feedbackMedia={feedbackMedia} />;
   }
   const hasBackup = backupNames.length > 0;
   return (

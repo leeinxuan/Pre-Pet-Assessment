@@ -43,6 +43,14 @@ export const birdCageInspectionConfig = {
   targetStamps: 4,
   bodyInspection: { requiresOrderedInspection: false, showPointNumbers: false },
   steps: ["tray-clean", "feces-observed", "health-observed", "social-time"] as const,
+  cageOut: {
+    initialPrompt: "先確認兩側窗戶都關好了，再為 {petName} 打開籠門。",
+    oneWindowClosedPrompt: "已關好一扇窗，再確認另一側窗戶。",
+    windowsClosedPrompt: "門窗都關好了！現在可以點擊籠門鎖扣。",
+    unsafeDoorPrompt: "你確認過門窗已關好了嗎？{petName} 一旦飛出室外很難找回來。",
+    outOfCagePrompt: "**讓鳥隻主動踏出籠門，不要伸手進去掏牠**\n這樣牠才能在安心的狀態下與你互動。",
+    outOfCageConfirmLabel: "繼續互動",
+  },
 } as const;
 
 /** 鳥籠巡視也以 Scenario 記錄結果，供共用回顧與報告使用。 */

@@ -5883,6 +5883,13 @@
               "x": 60,
               "y": 14
             },
+            "desktopText": {
+              "fontSize": 16,
+              "height": 13,
+              "left": 15,
+              "top": 63,
+              "width": 70
+            },
             "mobile": {
               "width": 40,
               "x": 33,
@@ -6336,6 +6343,18 @@
         "correctFeedbackMedia": {
           "type": "placeholder"
         },
+        "correctFeedbackMediaVariants": [
+          {
+            "ariaLabel": "兔子答對回饋影片",
+            "src": "/assets/rabbit/pet-journey/correct-answer.mp4",
+            "type": "video"
+          },
+          {
+            "ariaLabel": "兔子答對回饋影片",
+            "src": "/assets/rabbit/pet-journey/correct-answer2.mp4",
+            "type": "video"
+          }
+        ],
         "defaultPetName": "兔子",
         "knowledgeTitle": "兔子小知識"
       },

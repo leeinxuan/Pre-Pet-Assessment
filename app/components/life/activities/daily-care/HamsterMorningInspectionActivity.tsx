@@ -13,6 +13,8 @@ import { ActivityIntroPage, renderKnowledgeText, withPetName } from "../activity
 type Change = (patch: Partial<LifeActivityState>) => void;
 type DragKind = "scoop" | "sieve" | "shake";
 
+const sandDebrisIds = ["one", "two", "three"] as const;
+
 /** 倉鼠 §5.3.2：以物種資料驅動的廁所角落與砂浴盆清潔活動。 */
 export function HamsterMorningInspectionActivity({ activity, petName, onChange, onContinue }: {
   activity: LifeActivityState; petName: string; onChange: Change; onContinue: () => void;
@@ -23,8 +25,13 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
   const render = (value: string) => withPetName(value, petName, "hamster");
   const states = activity.hamsterInspectionStates;
   const toiletComplete = activity.hamsterInspectionCompleted.includes(steps[0].id);
-  const sievePasses = typeof states.sievePasses === "number" ? states.sievePasses : 0;
-  const siftComplete = sievePasses >= config.interaction.siftPassesRequired;
+  const storedSievedDebrisIds = typeof states.sievedDebrisIds === "string"
+    ? states.sievedDebrisIds.split(",").filter((id): id is typeof sandDebrisIds[number] => sandDebrisIds.includes(id as typeof sandDebrisIds[number]))
+    // 保留既有進度：更新前已篩掉的數量，會對應為已清掉的雜質。
+    : sandDebrisIds.slice(0, typeof states.sievePasses === "number" ? states.sievePasses : 0);
+  const sievedDebrisIds = new Set(storedSievedDebrisIds);
+  const sievePasses = sievedDebrisIds.size;
+  const siftComplete = sievePasses === sandDebrisIds.length;
   const siftAcknowledged = states.siftAcknowledged === "yes";
   const storedShakeProgress = typeof states.shakeProgress === "number" ? states.shakeProgress : 0;
   const shakeComplete = storedShakeProgress >= config.interaction.shakeProgressTarget;
@@ -36,6 +43,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
   const shakeProgressRef = useRef(storedShakeProgress);
   const [shakeProgress, setShakeProgress] = useState(storedShakeProgress);
   const [dragPoint, setDragPoint] = useState<{ x: number; y: number } | null>(null);
+  const sandDebrisRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const mergeStates = (patch: Record<string, string | number>) => onChange({ hamsterInspectionStates: { ...states, ...patch } });
   const setFeedback = (id: string, status: "question" | "incorrect" | "correct") => onChange({ hamsterInspectionFeedback: { ...activity.hamsterInspectionFeedback, [id]: status } });
   const completeStep = (id: string) => {
@@ -135,13 +143,24 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
 
   function finishSieveDrag(event: ReactPointerEvent<HTMLElement>) {
     if (dragging !== "sieve" || !dragStart.current || siftComplete) return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const movedFarEnough = Math.abs(event.clientX - dragStart.current.x) >= bounds.width * .3;
     setDragging(null); dragStart.current = null; setDragPoint(null);
-    if (!movedFarEnough) return mergeStates({ statusMessage: "再拖遠一點，讓漏勺完整劃過砂浴盆。" });
-    const nextPasses = Math.min(config.interaction.siftPassesRequired, sievePasses + 1);
-    mergeStates({ sievePasses: nextPasses, statusMessage: nextPasses === config.interaction.siftPassesRequired ? "✅ 雜質清理完成" : `已篩出一部分雜質（${nextPasses} / ${config.interaction.siftPassesRequired}）` });
-    if (nextPasses === config.interaction.siftPassesRequired) completeStep(steps[1].id);
+    const debrisId = sandDebrisIds.find((id) => {
+      const bounds = sandDebrisRefs.current[id]?.getBoundingClientRect();
+      return bounds
+        && event.clientX >= bounds.left
+        && event.clientX <= bounds.right
+        && event.clientY >= bounds.top
+        && event.clientY <= bounds.bottom;
+    });
+    if (!debrisId || sievedDebrisIds.has(debrisId)) return mergeStates({ statusMessage: "把漏勺放在任一處雜質上，就能篩掉那一處。" });
+    const nextDebrisIds = [...sievedDebrisIds, debrisId];
+    const nextPasses = nextDebrisIds.length;
+    mergeStates({
+      sievePasses: nextPasses,
+      sievedDebrisIds: nextDebrisIds.join(","),
+      statusMessage: nextPasses === sandDebrisIds.length ? "✅ 雜質清理完成" : `已篩出一部分雜質（${nextPasses} / ${sandDebrisIds.length}）`,
+    });
+    if (nextPasses === sandDebrisIds.length) completeStep(steps[1].id);
   }
 
   function finishShakeDrag() {
@@ -155,9 +174,16 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       mergeStates({ toiletScooped: "yes", statusMessage: config.interaction.refillHint });
     }
     if (tool === "sieve" && !siftComplete) {
-      const nextPasses = Math.min(config.interaction.siftPassesRequired, sievePasses + 1);
-      mergeStates({ sievePasses: nextPasses, statusMessage: nextPasses === config.interaction.siftPassesRequired ? "✅ 雜質清理完成" : `已篩出一部分雜質（${nextPasses} / ${config.interaction.siftPassesRequired}）` });
-      if (nextPasses === config.interaction.siftPassesRequired) completeStep(steps[1].id);
+      const nextDebrisId = sandDebrisIds.find((id) => !sievedDebrisIds.has(id));
+      if (!nextDebrisId) return;
+      const nextDebrisIds = [...sievedDebrisIds, nextDebrisId];
+      const nextPasses = nextDebrisIds.length;
+      mergeStates({
+        sievePasses: nextPasses,
+        sievedDebrisIds: nextDebrisIds.join(","),
+        statusMessage: nextPasses === sandDebrisIds.length ? "✅ 雜質清理完成" : `已篩出一部分雜質（${nextPasses} / ${sandDebrisIds.length}）`,
+      });
+      if (nextPasses === sandDebrisIds.length) completeStep(steps[1].id);
     }
     if (tool === "shake" && !shakeComplete) finishShakeProgress();
   }
@@ -177,6 +203,12 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
           : config.interaction.shakeHint;
   const ghostImage = dragging === "scoop" ? hamsterAssets.cageCheckActivity.scoop : dragging === "sieve" ? hamsterAssets.cageCheckActivity.sandSieve : null;
   const sandBathStyle = { "--hamster-sand-offset": `${shakeOffset}px` } as CSSProperties;
+  const cleanedCageItems = config.preparedCageItems;
+  const sandBathImage = shakeComplete
+    ? hamsterAssets.cageCheckActivity.sandBathClean
+    : shakeProgress >= config.interaction.shakeProgressTarget / 2
+      ? hamsterAssets.cageCheckActivity.sandBathMiddle
+      : hamsterAssets.cageCheckActivity.sandBathMess;
   return <section className="guided-activity hamster-cage-check" aria-label={`${displayPetName}的清潔日常`}>
     <header className="guided-activity-heading hamster-cage-check-heading"><p className="life-stage-label">日常照護</p><h1>{displayPetName} 的清潔日常</h1><p className="hamster-cage-check-message">{render(config.sceneDescription)}</p></header>
     <ol className="rabbit-grooming-progress hamster-cage-check-progress" aria-label="清潔日常進度">
@@ -194,20 +226,29 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       {siftAcknowledged && !shakeComplete && <div className="hamster-shake-progress" aria-label="砂浴盆整理進度"><b>搖晃進度</b><div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}><span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} /></div></div>}
       {!toiletSummaryAcknowledged ? <>
         <img className="hamster-cage-floor" src={hamsterAssets.cageCheckActivity.floorView} alt={`${displayPetName}的籠具底部`} />
+        <div className="hamster-cage-prepared-items" aria-hidden="true">
+          {cleanedCageItems.map((item) => <img
+            key={item.id}
+            className={`hamster-cage-prepared-item hamster-cage-prepared-item--${item.id}`}
+            style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }}
+            src={item.image}
+            alt=""
+          />)}
+        </div>
         {!toiletComplete && <span className={`hamster-dirty-bedding is-top-right ${dirtyCornerIsScooped ? "is-scooped" : ""}`} aria-hidden="true"><img src={hamsterAssets.cageCheckActivity.dirtyBedding} alt="" /></span>}
         {dirtyCornerIsScooped && !toiletComplete && <button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--bedding" onClick={refillToiletCorner} aria-label="補上乾淨墊料"><img src={hamsterAssets.cageCheckActivity.beddingPackage} alt="" /><span>點擊補上新墊料</span></button>}
         {toiletComplete && <span className="hamster-filled-bedding is-top-right" aria-hidden="true"><img src={hamsterAssets.cageCheckActivity.cleanBedding} alt="" /></span>}
-        {!dirtyCornerIsScooped && <button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--scoop" onPointerDown={(event) => startDrag("scoop", event)} onClick={(event) => { if (event.detail === 0) completeKeyboardCleaning("scoop"); }} aria-label="清理髒污角落"><img src={hamsterAssets.cageCheckActivity.scoop} alt="" /><span>拖曳小鏟子</span></button>}
+        {!dirtyCornerIsScooped && <button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--scoop" onPointerDown={(event) => startDrag("scoop", event)} onClick={(event) => { if (event.detail === 0) completeKeyboardCleaning("scoop"); }} aria-label="清理髒污角落"><img src={hamsterAssets.cageCheckActivity.scoop} alt="" /><span>拖曳小鏟子清除髒污</span></button>}
         {toiletComplete && toiletFeedbackVisible && <section className="hamster-cage-check-note hamster-cage-check-note--scene" aria-live="polite"><span className="hamster-cage-check-note-icon" aria-hidden="true">✓</span><p>{renderKnowledgeText(render(steps[0].completion))}</p><button type="button" className="primary" onClick={() => { mergeStates({ statusMessage: "" }); setFeedback(steps[0].id, "correct"); }}>繼續清理砂浴盆 →</button></section>}
       </> : <>
         <div className={`hamster-sand-bath-stage ${siftAcknowledged ? "is-ready-to-shake" : ""} ${shakeComplete ? "is-clean" : ""}`} role={siftAcknowledged && !shakeComplete ? "button" : undefined} tabIndex={siftAcknowledged && !shakeComplete ? 0 : undefined} aria-label={siftAcknowledged && !shakeComplete ? "完成水平搖晃砂浴盆" : undefined} onPointerDown={(event) => siftAcknowledged && !shakeComplete && startDrag("shake", event)} onKeyDown={(event) => { if ((event.key === "Enter" || event.key === " ") && siftAcknowledged && !shakeComplete) { event.preventDefault(); completeKeyboardCleaning("shake"); } }}>
           <img
             className="hamster-sand-bath"
             style={sandBathStyle}
-            src={shakeComplete ? hamsterAssets.cageCheckActivity.sandBathClean : hamsterAssets.cageCheckActivity.sandBathMess}
-            alt={shakeComplete ? "清潔完成的砂浴盆" : "需要清理的砂浴盆"}
+            src={sandBathImage}
+            alt={shakeComplete ? "清潔完成的砂浴盆" : shakeProgress >= config.interaction.shakeProgressTarget / 2 ? "整理中的砂浴盆" : "需要清理的砂浴盆"}
           />
-          {!siftComplete && <>{Array.from({ length: config.interaction.siftPassesRequired }).map((_, index) => <span className={`hamster-sand-debris hamster-sand-debris--${index + 1} ${sievePasses > index ? "is-removed" : ""}`} key={index} aria-hidden="true"><img src={index === 1 ? hamsterAssets.cageCheckActivity.sandBathDirty : hamsterAssets.cageCheckActivity.droppings} alt="" /></span>)}<button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--sieve" onPointerDown={(event) => startDrag("sieve", event)} onClick={(event) => { if (event.detail === 0) completeKeyboardCleaning("sieve"); }} aria-label="篩除砂浴盆雜質"><img src={hamsterAssets.cageCheckActivity.sandSieve} alt="" /><span>拖曳細孔漏勺</span></button></>}
+          {!siftComplete && <>{sandDebrisIds.map((id, index) => <span ref={(element) => { sandDebrisRefs.current[id] = element; }} className={`hamster-sand-debris hamster-sand-debris--${index + 1} ${sievedDebrisIds.has(id) ? "is-removed" : ""}`} key={id} aria-hidden="true"><img src={index === 1 ? hamsterAssets.cageCheckActivity.sandBathDirty : hamsterAssets.cageCheckActivity.droppings} alt="" /></span>)}<button type="button" className="hamster-cleaning-tool hamster-cleaning-tool--sieve" onPointerDown={(event) => startDrag("sieve", event)} onClick={(event) => { if (event.detail === 0) completeKeyboardCleaning("sieve"); }} aria-label="篩除砂浴盆雜質"><img src={hamsterAssets.cageCheckActivity.sandSieve} alt="" /><span>拖曳細孔漏勺</span></button></>}
           {siftAcknowledged && !shakeComplete && <span className="hamster-sand-shake-label" aria-hidden="true">按住左右拖曳砂浴盆，讓細碎粉塵沉到底部</span>}
         </div>
         {siftComplete && !siftAcknowledged && <section className="hamster-cage-check-note hamster-cage-check-note--compact hamster-cage-check-note--scene" aria-live="polite"><span className="hamster-cage-check-note-icon" aria-hidden="true">✓</span><p>{renderKnowledgeText(render(steps[1].completion))}</p><button type="button" className="primary" onClick={() => mergeStates({ siftAcknowledged: "yes", statusMessage: "" })}>開始水平搖晃 →</button></section>}

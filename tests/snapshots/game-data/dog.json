@@ -4815,6 +4815,13 @@
               "x": 55,
               "y": 16
             },
+            "desktopText": {
+              "fontSize": 16,
+              "height": 13,
+              "left": 15,
+              "top": 63,
+              "width": 70
+            },
             "mobile": {
               "width": 40,
               "x": 33,
@@ -5213,9 +5220,22 @@
     "scenarioPresentation": {
       "defaults": {
         "correctFeedbackMedia": {
+          "ariaLabel": "正確處置後的正向結果影片",
           "src": "/assets/dog/pet-journey/shiba/correct-answer.mp4",
           "type": "video"
         },
+        "correctFeedbackMediaVariants": [
+          {
+            "ariaLabel": "正確處置後的正向結果影片",
+            "src": "/assets/dog/pet-journey/shiba/correct-answer.mp4",
+            "type": "video"
+          },
+          {
+            "ariaLabel": "正確處置後的正向結果影片",
+            "src": "/assets/dog/pet-journey/shiba/correct-answer2.mp4",
+            "type": "video"
+          }
+        ],
         "defaultPetName": "小狗",
         "knowledgeTitle": "狗狗小知識"
       },
@@ -5230,6 +5250,7 @@
         "behavior-chewing": {
           "completionIntro": "你已經找到合適的做法。接著看看狗狗為什麼需要啃咬，以及如何安全地引導{petName}。",
           "correctFeedbackMedia": {
+            "ariaLabel": "正確處置後的正向結果影片",
             "src": "/assets/dog/pet-journey/shiba/correct-answer2.mp4",
             "type": "video"
           },
