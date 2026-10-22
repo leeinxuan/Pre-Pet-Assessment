@@ -41,9 +41,9 @@ export const geckoFeeding: FeedingConfig = {
   interaction: "scene",
   requiredSupplies: ["food", "veggie", "water"],
   supplies: [
-    { stateKey: "food", label: "活體餌料昆蟲（蟋蟀、杜比亞蟑螂或麵包蟲）", image: geckoAssets.feeding.liveInsect, alt: "活體餌料昆蟲" },
-    { stateKey: "veggie", label: "鈣粉（餵食前沾裹昆蟲用）", image: geckoAssets.room.calciumSupplement, alt: "鈣粉與綜合維他命粉" },
-    { stateKey: "water", label: "乾淨飲水（淺碟）", image: geckoAssets.feeding.waterBottle, alt: "乾淨飲水" },
+    { stateKey: "food", label: "活體餌料昆蟲", image: geckoAssets.feeding.liveInsect, alt: "活體餌料昆蟲", description: "守宮為肉食性，主食為活昆蟲（蟋蟀、杜比亞蟑螂或麵包蟲）。選擇大小約為守宮兩眼間距的昆蟲，避免過大造成消化負擔。" },
+    { stateKey: "veggie", label: "鈣粉", image: geckoAssets.room.calciumSupplement, alt: "鈣粉與綜合維他命粉", description: "每次餵食前以鈣粉沾裹昆蟲，每週 1–2 次改用含 D3 鈣粉或綜合維他命粉輪替，維持鈣磷平衡。" },
+    { stateKey: "water", label: "乾淨飲水", image: geckoAssets.feeding.waterBottle, alt: "乾淨飲水", description: "每天提供新鮮飲水並清洗水碟。守宮飲水量雖少，但飲水習慣的改變是健康的重要觀察指標。" },
   ],
   unsafeFoods: [
     { id: "fruit-vegetable", label: "水果 / 蔬菜", image: geckoAssets.feeding.fruitVegetable, title: "不適合守宮的食物", text: "守宮是肉食性動物，消化系統無法處理植物纖維，餵食蔬果不能提供所需營養，反而可能引發消化問題。", presentation: "warning" },

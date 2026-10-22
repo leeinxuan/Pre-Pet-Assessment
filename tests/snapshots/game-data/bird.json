@@ -1348,20 +1348,23 @@
       "supplies": [
         {
           "alt": "鸚鵡專用混合飼料",
+          "description": "植食性鸚鵡的主食是符合食性的混合種子或滋養丸飼料，提供所需能量與基礎營養。注意定期確認食碗內是否只剩空殼，避免誤判進食量。",
           "image": "/assets/bird/feeding/bird-seed-mix.webp",
           "label": "鸚鵡專用混合飼料",
           "stateKey": "food"
         },
         {
-          "alt": "飲水",
+          "alt": "乾淨飲水（適當大小容器）",
+          "description": "每天提供新鮮飲水並清洗容器。容器不可過大過深，避免鳥跌入。注意觀察每日飲水量，飲水變化是健康的重要指標。",
           "image": "/assets/shared/waterbottle.webp",
-          "label": "飲水",
+          "label": "乾淨飲水（適當大小容器）",
           "stateKey": "water"
         },
         {
-          "alt": "新鮮蔬菜",
+          "alt": "新鮮蔬菜（如胡蘿蔔、深綠色蔬菜）",
+          "description": "適量新鮮蔬果可補充種子飼料缺乏的維生素 A——胡蘿蔔、深綠色蔬菜都是好選擇。注意限制份量，讓鳥以專用飼料為主食，新鮮食材為補充。",
           "image": "/assets/bird/feeding/fresh-veggie.webp",
-          "label": "新鮮蔬菜",
+          "label": "新鮮蔬菜（如胡蘿蔔、深綠色蔬菜）",
           "stateKey": "veggie"
         }
       ],

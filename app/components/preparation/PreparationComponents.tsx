@@ -9,6 +9,7 @@ import { initialHomeReadinessState, type HomeReadinessState } from "../../data/s
 import { getSpeciesConfig } from "../../data/species/index";
 import type { CareMember, ExpenseRecord, HazardItem, RoomItem } from "../../game-types";
 import { NavButtons, StepHeading } from "../shared/SharedComponents";
+import { ItemDescriptionCard } from "../shared/ItemDescriptionCard";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
 import { sharedAssets } from "../../data/shared/assets";
 
@@ -134,7 +135,18 @@ function roomItemPlacementStyle(item: RoomItem): CSSProperties {
     "--mobile-room-item-x": `${item.mobilePlacement?.x ?? item.placement.x}%`,
     "--mobile-room-item-y": `${item.mobilePlacement?.y ?? item.placement.y}%`,
     "--mobile-room-item-width": `${item.mobilePlacement?.width ?? item.placement.width}%`,
+    "--mobile-room-item-transform": item.mobilePlacement?.transform ?? item.placement.transform ?? "translate(-50%, -50%)",
+    transform: item.placement.transform,
   } as CSSProperties;
+}
+
+function roomItemSceneStyle(item: RoomItem): CSSProperties {
+  return {
+    ...roomItemPlacementStyle(item),
+    ...(item.sceneVisual?.mixBlendMode ? { mixBlendMode: item.sceneVisual.mixBlendMode } : {}),
+    ...(item.sceneVisual?.opacity !== undefined ? { opacity: item.sceneVisual.opacity } : {}),
+    ...(item.sceneVisual?.pointerEvents ? { pointerEvents: item.sceneVisual.pointerEvents } : {}),
+  };
 }
 
 function roomScenePartPlacementStyle(part: NonNullable<RoomItem["sceneParts"]>[number]): CSSProperties {
@@ -146,6 +158,8 @@ function roomScenePartPlacementStyle(part: NonNullable<RoomItem["sceneParts"]>[n
     "--mobile-room-item-x": `${part.mobilePlacement?.x ?? part.placement.x}%`,
     "--mobile-room-item-y": `${part.mobilePlacement?.y ?? part.placement.y}%`,
     "--mobile-room-item-width": `${part.mobilePlacement?.width ?? part.placement.width}%`,
+    "--mobile-room-item-transform": part.mobilePlacement?.transform ?? part.placement.transform ?? "translate(-50%, -50%)",
+    transform: part.placement.transform,
   } as CSSProperties;
 }
 
@@ -427,7 +441,6 @@ export function RoomPreparation({
             {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} full-seven`}>
               {row.map((item) => {
                 const selected = selectedItems.includes(item.id);
-                const note = { label: item.label, note: item.description.replaceAll("{petName}", displayName) };
                 const expenseIds = [...(item.expenseIds ?? []), ...(item.expenseId ? [item.expenseId] : [])];
                 const price = expensePriceText(Array.from(new Set(expenseIds)), species);
                 const isOutsideItem = Boolean(roomFlow?.outsideItemIds?.includes(item.id) ?? item.id === roomFlow?.fenceItemId);
@@ -444,7 +457,7 @@ export function RoomPreparation({
                   {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : interiorItemLocked ? (roomFlow?.copy.interiorLockedInstruction ?? roomFlow?.copy.lockedInstruction ?? "請先完成內部基礎配置").replaceAll("{petName}", displayName) : fencePlaced ? roomFlow?.copy.interiorInstruction ?? "請先進入圍欄內部" : roomFlow?.copy.lockedInstruction ?? "請先放置圍欄"}`} disabled={exitingItems.includes(item.id) || !canPrepare} onClick={() => prepareItem(item.id)}>
                     <span className="room-supply-visual"><RoomItemVisual item={item} /></span>
                     <b>{item.label}</b>
-                  </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{price && <span className="supply-slot-price">{price}</span>}</div>}
+                  </button> : <ItemDescriptionCard title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={price} />}
                 </div>;
               })}
             </div>)}
@@ -476,7 +489,7 @@ export function RoomPreparation({
               </button>
               : item.sceneParts?.length
                 ? item.sceneParts.map((part) => <div key={`${item.id}-${part.id}`} className={`room-object room-object-part placed-supply auto-room-object placed-room-item--${item.id}`} style={roomScenePartPlacementStyle(part)}><img src={part.image} alt={`房間中已配置的${item.label}`} /></div>)
-                : <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id}`} style={roomItemPlacementStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
+                : <div key={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id} ${item.sceneClassName ?? ""}`} style={roomItemSceneStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
             {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => item.hotspot
               ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(item.hotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
               : roomFlow && roomFlow.floorHazardId && item.id === roomFlow.floorHazardId
@@ -580,14 +593,13 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
             {row.map((item) => {
               const itemSelected = selected.includes(item.id);
-              const note = { label: item.label, note: item.description.replaceAll("{petName}", displayName) };
               const price = expensePriceText(item.expenseIds ?? [], species);
               const reusedExpense = (item.reusedExpenseIds?.length ?? 0) > 0;
               const hidePriceForReusedItem = departureScene.hidePriceForReusedItemIds?.includes(item.id);
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
                   <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.visualClassName ?? item.id}`} style={item.visualScale === undefined ? undefined : { "--departure-item-image-scale": item.visualScale } as CSSProperties} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b>
-                </button> : <div className="supply-slot-note" aria-live="polite"><b>{note.label}</b><small>{note.note}</small>{item.priceNote ? <span className="supply-slot-price">{item.priceNote}</span> : reusedExpense ? <span className="supply-slot-price">已於房間準備計入</span> : price && !hidePriceForReusedItem && <span className="supply-slot-price">{price}</span>}</div>}
+                </button> : <ItemDescriptionCard title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} />}
               </div>;
             })}
           </div>)}

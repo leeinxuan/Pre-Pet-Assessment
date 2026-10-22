@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type {
   GeckoHealthDisplayState,
   GeckoHealthInspectionConfig,
@@ -21,6 +21,29 @@ type PointerPosition = { id: string; x: number; y: number } | null;
 
 const choose = <T,>(values: readonly T[]) => values[Math.floor(Math.random() * values.length)];
 
+type CompletedTerrariumItem = GeckoHealthInspectionConfig["scene"]["completedItems"][number];
+
+function completedTerrariumItemStyle(item: CompletedTerrariumItem): CSSProperties {
+  const mobilePlacement = item.mobilePlacement ?? item.placement;
+  const transform = item.placement.transform ?? "translate(-50%, -50%)";
+  const mobileTransform = mobilePlacement.transform ?? transform;
+
+  return {
+    left: `${item.placement.x}%`,
+    top: `${item.placement.y}%`,
+    width: `${item.placement.width}%`,
+    zIndex: item.placement.layer,
+    transform,
+    mixBlendMode: item.sceneVisual?.mixBlendMode,
+    opacity: item.sceneVisual?.opacity,
+    pointerEvents: item.sceneVisual?.pointerEvents,
+    "--gecko-mobile-item-left": `${mobilePlacement.x}%`,
+    "--gecko-mobile-item-top": `${mobilePlacement.y}%`,
+    "--gecko-mobile-item-width": `${mobilePlacement.width}%`,
+    "--gecko-mobile-item-transform": mobileTransform,
+  } as CSSProperties;
+}
+
 function CompletedTerrariumScene({ config, excludeItemIds = [] }: {
   config: GeckoHealthInspectionConfig;
   excludeItemIds?: readonly string[];
@@ -30,19 +53,20 @@ function CompletedTerrariumScene({ config, excludeItemIds = [] }: {
     {config.scene.completedItems.filter((item) => !excludeItemIds.includes(item.id)).map((item) => (
       <img
         key={item.id}
-        className="gecko-completed-scene-item"
+        className={`gecko-completed-scene-item ${item.className ?? ""}`}
         src={item.image}
         alt={item.alt}
-        style={{
-          left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer,
-        }}
+        style={completedTerrariumItemStyle(item)}
       />
     ))}
   </>;
 }
 
 function buildInitialStates(config: GeckoHealthInspectionConfig): Record<string, string | number | boolean> {
-  const temperatureMode = choose(Object.keys(config.temperature.presets) as GeckoTemperatureState[]);
+  // Temperature confirmation must always begin with an unsafe reading.  The
+  // in-range preset remains in the data for its feedback copy, but is never
+  // eligible as an initial state.
+  const temperatureMode = choose(["too-cold", "too-hot"] as GeckoTemperatureState[]);
   const temperature = choose(config.temperature.presets[temperatureMode]);
   const states: Record<string, string | number | boolean> = {
     "temperature-mode": temperatureMode,
@@ -69,6 +93,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   const generatedInitialStates = useMemo(() => buildInitialStates(config), [config]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [magnifier, setMagnifier] = useState<PointerPosition>(null);
+  const [hasAdjustedTemperature, setHasAdjustedTemperature] = useState(false);
   const displayName = petName.trim() || getSpeciesConfig(species).copy.animalNameFallback;
   const renderText = (value: string) => interpolatePetName(value, displayName, species);
   const render = (value: string) => renderKnowledgeText(renderText(value));
@@ -200,6 +225,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
         : activeBodyPoint?.instruction ?? config.body.instruction;
 
   const adjustTemperature = (direction: 1 | -1) => {
+    setHasAdjustedTemperature(true);
     persistStates({
       "temperature-warm": warm + config.temperature.adjustment.warm * direction,
       "temperature-cool": cool + config.temperature.adjustment.cool * direction,
@@ -248,25 +274,43 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
 
         {activeStage === "temperature" && (
           <>
-            <CompletedTerrariumScene config={config} />
+            <CompletedTerrariumScene config={config} excludeItemIds={["thermometer-hygrometer-cool", "thermometer-hygrometer-warm"]} />
             <div className="gecko-temperature-layout">
               <article
                 className="gecko-thermometer gecko-thermometer--warm"
                 style={{ left: `${config.temperature.warmPlacement.x}%`, top: `${config.temperature.warmPlacement.y}%`, width: `${config.temperature.warmPlacement.width}%` }}
               >
-                <span className="gecko-thermometer-label">{config.temperature.warmLabel}</span>
-                <img src={config.temperature.warmThermometer} alt={`${config.temperature.warmLabel}溫度計`} />
-                <strong>{Math.round(warm)}°C</strong>
+                <span
+                  className="gecko-thermometer-label"
+                  style={config.temperature.warmLabelPlacement}
+                >
+                  {config.temperature.warmLabel}
+                </span>
+                <img
+                  src={config.temperature.warmThermometer}
+                  alt={`${config.temperature.warmLabel}溫度計`}
+                  style={config.temperature.warmImagePlacement}
+                />
+                <strong style={config.temperature.warmReadingPlacement}>{Math.round(warm)}°C</strong>
               </article>
               <article
                 className="gecko-thermometer gecko-thermometer--cool"
                 style={{ left: `${config.temperature.coolPlacement.x}%`, top: `${config.temperature.coolPlacement.y}%`, width: `${config.temperature.coolPlacement.width}%` }}
               >
-                <img src={config.temperature.coolThermometer} alt={`${config.temperature.coolLabel}溫度計`} />
-                <strong>{Math.round(cool)}°C</strong>
-                <span className="gecko-thermometer-label">{config.temperature.coolLabel}</span>
+                <img
+                  src={config.temperature.coolThermometer}
+                  alt={`${config.temperature.coolLabel}溫度計`}
+                  style={config.temperature.coolImagePlacement}
+                />
+                <strong style={config.temperature.coolReadingPlacement}>{Math.round(cool)}°C</strong>
+                <span
+                  className="gecko-thermometer-label"
+                  style={config.temperature.coolLabelPlacement}
+                >
+                  {config.temperature.coolLabel}
+                </span>
               </article>
-              <div className="gecko-temperature-controller">
+              <div className={`gecko-temperature-controller${!temperatureConfirmed && !hasAdjustedTemperature ? " gecko-temperature-controller--attention" : ""}`}>
                 <img src={config.temperature.controllerImage} alt="" />
                 <span className="sr-only">{config.temperature.controllerLabel}</span>
                 <div className="gecko-temperature-controls" aria-label={config.temperature.controllerLabel}>
@@ -294,7 +338,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
             {waterSceneItem && <button
               type="button"
               className="gecko-water-target"
-              style={{ left: `${waterSceneItem.placement.x}%`, top: `${waterSceneItem.placement.y}%`, width: `${waterSceneItem.placement.width}%`, zIndex: waterSceneItem.placement.layer }}
+              style={{ left: `${config.water.interactivePlacement.x}%`, top: `${config.water.interactivePlacement.y}%`, width: `${config.water.interactivePlacement.width}%`, zIndex: config.water.interactivePlacement.layer }}
               onClick={() => {
                 if (waterFilled || waterReplacementInProgress.current) return;
                 waterReplacementInProgress.current = true;

@@ -76,6 +76,8 @@ export type ArrivalMealSupply = {
   label: string;
   image: string;
   alt: string;
+  /** Text shown in the shared inventory explanation card after this supply is correctly prepared. */
+  description: string;
 };
 
 export type ArrivalMealSceneAssets = {
@@ -483,12 +485,19 @@ export type GeckoHealthInspectionConfig = {
     body: string;
     bodyAlt: string;
     magnifier: string;
-    /** Shared finished terrarium composition used across the care stages. */
+    /** Finished terrarium composition owned by the Gecko care activity. */
     completedItems: readonly {
       id: string;
       image: string;
       alt: string;
-      placement: { x: number; y: number; width: number; layer: number };
+      placement: { x: number; y: number; width: number; layer: number; transform?: string };
+      mobilePlacement?: { x: number; y: number; width: number; transform?: string };
+      sceneVisual?: {
+        mixBlendMode?: "normal" | "screen" | "soft-light";
+        opacity?: number;
+        pointerEvents?: "none";
+      };
+      className?: string;
     }[];
   };
   temperature: {
@@ -501,6 +510,15 @@ export type GeckoHealthInspectionConfig = {
     controllerImage: string;
     warmPlacement: { x: number; y: number; width: number };
     coolPlacement: { x: number; y: number; width: number };
+    /** Offsets for each thermometer illustration within its current anchor. */
+    warmImagePlacement: { top: string; left: string };
+    coolImagePlacement: { top: string; left: string };
+    /** Independent temperature-number positions within each thermometer. */
+    warmReadingPlacement: { top: string; right: string };
+    coolReadingPlacement: { top: string; right: string };
+    /** Independent visual offsets for the warm/cool label capsules. */
+    warmLabelPlacement: { top: string; left: string };
+    coolLabelPlacement: { top: string; left: string };
     /** Internal validation bounds for each thermometer's actual position. */
     correctTemperatures: {
       warm: { min: number; max: number };
@@ -524,6 +542,8 @@ export type GeckoHealthInspectionConfig = {
     fixedWarning: string;
     continueLabel: string;
     sceneItemId: string;
+    /** Independent position for the clickable dirty/clean water dish. */
+    interactivePlacement: { x: number; y: number; width: number; layer: number };
   };
   feces: GeckoFecesInspection;
   body: {
@@ -659,11 +679,22 @@ export type RoomItem = {
   sceneParts?: Array<{
     id: string;
     image: string;
-    placement: { x: number; y: number; width: number; layer: number };
-    mobilePlacement?: { x: number; y: number; width: number };
+    placement: { x: number; y: number; width: number; layer: number; transform?: string };
+    mobilePlacement?: { x: number; y: number; width: number; transform?: string };
   }>;
-  placement: { x: number; y: number; width: number; layer: number };
-  mobilePlacement?: { x: number; y: number; width: number };
+  /**
+   * 場景位置由物種資料提供；transform 讓單一素材可獨立微調而不必改共用元件。
+   */
+  placement: { x: number; y: number; width: number; layer: number; transform?: string };
+  mobilePlacement?: { x: number; y: number; width: number; transform?: string };
+  /** 場景素材的非幾何呈現設定，例如黑底燈光的混合模式。 */
+  sceneVisual?: {
+    mixBlendMode?: "normal" | "screen" | "soft-light";
+    opacity?: number;
+    pointerEvents?: "none";
+  };
+  /** 可由物種資料指定的場景視覺 class，例如燈光覆蓋層。 */
+  sceneClassName?: string;
   required: boolean;
   need: "飲食" | "休息" | "排泄" | "安全" | "活動" | "清潔";
   expenseId?: string;

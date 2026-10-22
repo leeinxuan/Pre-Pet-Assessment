@@ -974,15 +974,17 @@
       },
       "supplies": [
         {
-          "alt": "貓主食",
+          "alt": "貓用飼料",
+          "description": "依年齡與需求選擇適合的貓用飼料；初期維持原飼料、漸進換食避免腸胃不適。",
           "image": "/assets/cat/feeding/cat-food.webp",
-          "label": "貓主食",
+          "label": "貓用飼料",
           "stateKey": "food"
         },
         {
-          "alt": "水瓶",
+          "alt": "乾淨飲水",
+          "description": "每天提供新鮮飲水並清洗容器。貓咪天性飲水量少，可嘗試流動飲水器增加飲水意願。",
           "image": "/assets/shared/waterbottle.webp",
-          "label": "水",
+          "label": "乾淨飲水",
           "stateKey": "water"
         }
       ],

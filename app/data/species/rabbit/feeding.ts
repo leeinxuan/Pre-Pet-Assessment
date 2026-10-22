@@ -26,7 +26,11 @@ export const rabbitArrivalMealSupplyImageSizes: ArrivalMealSupplyImageSizes = {
 export const rabbitFeeding: FeedingConfig = {
   animalName: "兔子", completionMessage: "第一餐準備好了！兔子的飲食以牧草為主，搭配適量新鮮葉菜與乾淨飲水；紅蘿蔔只能少量偶爾提供。", recurringExpenseIds: ["rabbit-hay-monthly", "rabbit-pellet-monthly", "rabbit-veggies-monthly"],
   interaction: "scene", requiredSupplies: ["food", "water", "veggie"],
-  supplies: [{ stateKey: "food", label: "牧草", image: rabbitAssets.feeding.hay, alt: "牧草" }, { stateKey: "water", label: "飲水", image: "/assets/shared/waterbottle.webp", alt: "飲水" }, { stateKey: "veggie", label: "新鮮葉菜", image: rabbitAssets.feeding.leafyVeggie, alt: "新鮮葉菜" }],
+  supplies: [
+    { stateKey: "food", label: "牧草／乾草", image: rabbitAssets.feeding.hay, alt: "牧草／乾草", description: "牧草應佔兔子每日飲食 80% 以上。磨牙、腸道蠕動都靠它，必須隨時補充、永不斷供。" },
+    { stateKey: "water", label: "乾淨飲水（水碗）", image: "/assets/shared/waterbottle.webp", alt: "乾淨飲水（水碗）", description: "兔子需要隨時可取用的乾淨飲水。水碗比滾珠瓶更方便觀察飲水量，也更受兔子歡迎。" },
+    { stateKey: "veggie", label: "新鮮葉菜（青江菜／萵苣）", image: rabbitAssets.feeding.leafyVeggie, alt: "新鮮葉菜（青江菜／萵苣）", description: "葉菜類蔬菜是兔子飲食的 10–15%。青江菜、萵苣、大陸妹都是安全選項，注意洗淨。" },
+  ],
   unsafeFoods: [
     { id: "rabbit-carrot", label: "整袋紅蘿蔔", image: rabbitAssets.feeding.carrotMain, title: "整袋紅蘿蔔不適合作為主食", text: "紅蘿蔔只能偶爾少量提供，含糖量偏高，不能替代每日 80% 以上的牧草。請以足量牧草為主，搭配合適的新鮮葉菜與乾淨飲水。", presentation: "caution" },
     { id: "rabbit-onion", label: "洋蔥", image: rabbitAssets.feeding.onion, title: "洋蔥不能給兔子吃", text: "洋蔥、大蒜與蔥類對兔子有毒，不能作為零食或安撫食物。請改提供足量牧草、合適的新鮮葉菜與乾淨飲水。" },

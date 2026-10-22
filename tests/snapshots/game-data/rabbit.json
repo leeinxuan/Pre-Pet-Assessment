@@ -1250,21 +1250,24 @@
       },
       "supplies": [
         {
-          "alt": "牧草",
+          "alt": "牧草／乾草",
+          "description": "牧草應佔兔子每日飲食 80% 以上。磨牙、腸道蠕動都靠它，必須隨時補充、永不斷供。",
           "image": "/assets/car/hay-in-carrier.webp",
-          "label": "牧草",
+          "label": "牧草／乾草",
           "stateKey": "food"
         },
         {
-          "alt": "飲水",
+          "alt": "乾淨飲水（水碗）",
+          "description": "兔子需要隨時可取用的乾淨飲水。水碗比滾珠瓶更方便觀察飲水量，也更受兔子歡迎。",
           "image": "/assets/shared/waterbottle.webp",
-          "label": "飲水",
+          "label": "乾淨飲水（水碗）",
           "stateKey": "water"
         },
         {
-          "alt": "新鮮葉菜",
+          "alt": "新鮮葉菜（青江菜／萵苣）",
+          "description": "葉菜類蔬菜是兔子飲食的 10–15%。青江菜、萵苣、大陸妹都是安全選項，注意洗淨。",
           "image": "/assets/rabbit/feeding/leafy-veggie.webp",
-          "label": "新鮮葉菜",
+          "label": "新鮮葉菜（青江菜／萵苣）",
           "stateKey": "veggie"
         }
       ],

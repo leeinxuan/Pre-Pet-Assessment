@@ -23,7 +23,7 @@
 .rabbit-daily-tools button { min-width: 190px; min-height: 54px; border: 1px dashed var(--gold-dark); border-radius: 15px; background: #fff8e7; color: var(--ink); font: inherit; font-weight: 900; cursor: grab; touch-action: none; }
 .rabbit-daily-tools button:active { cursor: grabbing; }
 .rabbit-daily-drag-ghost { position: fixed; z-index: 9999; width: 54px; height: 54px; display: grid; place-items: center; transform: translate(-50%, -50%); border-radius: 50%; background: #fff8e7; color: var(--gold-dark); font-size: 30px; pointer-events: none; }
-.rabbit-grooming-progress { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 20px; padding: 0; list-style: none; }
+.rabbit-grooming-progress { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; list-style: none; }
 .rabbit-grooming-progress li { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; font-weight: 800; }
 .rabbit-grooming-progress span { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; }
 .rabbit-grooming-progress li.active { color: var(--gold-dark); }

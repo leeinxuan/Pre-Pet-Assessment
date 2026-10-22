@@ -26,7 +26,10 @@ export const catArrivalMealSupplyImageSizes: ArrivalMealSupplyImageSizes = {
 export const catFeeding: FeedingConfig = {
   animalName: "貓咪", completionMessage: "第一餐準備好了！合適的主食與乾淨飲水，能讓貓咪在新家慢慢安心下來。", recurringExpenseIds: ["cat-food-monthly", "cat-litter-monthly"],
   interaction: "scene", requiredSupplies: ["food", "water"],
-  supplies: [{ stateKey: "food", label: "貓主食", image: catAssets.feeding.food, alt: "貓主食" }, { stateKey: "water", label: "水", image: catAssets.feeding.waterBottle, alt: "水瓶" }],
+  supplies: [
+    { stateKey: "food", label: "貓用飼料", image: catAssets.feeding.food, alt: "貓用飼料", description: "依年齡與需求選擇適合的貓用飼料；初期維持原飼料、漸進換食避免腸胃不適。" },
+    { stateKey: "water", label: "乾淨飲水", image: catAssets.feeding.waterBottle, alt: "乾淨飲水", description: "每天提供新鮮飲水並清洗容器。貓咪天性飲水量少，可嘗試流動飲水器增加飲水意願。" },
+  ],
   unsafeFoods: [
     { id: "seasoned-leftovers", label: "調味剩菜", image: catAssets.feeding.seasonedLeftovers, title: "調味剩菜不適合貓咪", text: "人類剩菜可能太鹹、太油，也可能含有洋蔥、大蒜或其他不適合貓咪的成分。剛到家時請先提供合適主食與乾淨飲水。" },
     { id: "chocolate-caffeine", label: "巧克力", image: catAssets.feeding.chocolate, title: "這個不能給貓咪吃", text: "巧克力可能危害貓咪健康，也不適合作為引誘進食或安撫的食物。人類食物不一定適合貓咪，不確定食材安全性時，請查詢可靠資料或詢問獸醫。" },

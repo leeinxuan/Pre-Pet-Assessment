@@ -29,8 +29,8 @@ export const dogFeeding: FeedingConfig = {
   interaction: "scene",
   requiredSupplies: ["food", "water"],
   supplies: [
-    { stateKey: "food", label: "飼料", image: "/assets/dog/room/food.webp", alt: "飼料" },
-    { stateKey: "water", label: "水", image: "/assets/shared/waterbottle.webp", alt: "水瓶" },
+    { stateKey: "food", label: "犬用飼料", image: "/assets/dog/room/food.webp", alt: "犬用飼料", description: "依體型與年齡選擇適合的犬用飼料；初期維持原飼料、漸進換食避免腸胃不適。" },
+    { stateKey: "water", label: "乾淨飲水", image: "/assets/shared/waterbottle.webp", alt: "乾淨飲水", description: "每天提供新鮮飲水並清洗容器。飲水量的變化是健康的重要指標。" },
   ],
   unsafeFoods: [
     { id: "macadamia", label: "夏威夷豆", image: "/assets/dog/pet-journey/macadamia-nuts.webp", title: "這個不能給小狗吃", text: "常見的人類食物例如洋蔥、大蒜、巧克力、葡萄、堅果類（例如：夏威夷豆）、口香糖（含木糖醇）等，對犬隻而言可能會造成健康危害。另外，太鹹、太油或含有咖啡因的食物，也不適合犬隻食用。" },

@@ -41,7 +41,7 @@ const feces: GeckoFecesInspection = {
     description: "⚠️ 需要注意的排泄異常：尿酸呈橘色或棕色（可能脫水或腎臟問題）；連續 7 天以上無排泄記錄；排泄物帶血或有強烈異味——出現上述情況請諮詢熟悉爬蟲類醫療的獸醫師。",
     actionLabel: "了解異常排泄",
   },
-  scenePlacement: { x: 75, y: 73, width: 10, layer: 7 },
+  scenePlacement: { x: 65, y: 63, width: 15, layer: 3 },
 };
 
 const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
@@ -193,7 +193,7 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     visualAssets: { character: health.body },
   },
   title: "{petName} 的每日健康巡視",
-  description: "守宮善於隱藏不適，每天固定巡視，是在問題還小的時候先發現它的第一道防線。",
+  description: "守宮善於隱藏不適，每天固定巡視，確認暖側底部與涼側溫度、飲水是否乾淨、排泄狀態，並觀察眼睛、尾巴、皮膚與趾端，是在問題還小的時候先發現它的第一道防線。",
   progress: [
     { id: "temperature", label: "溫度確認" },
     { id: "water", label: "飲水更換" },
@@ -205,12 +205,21 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     body: health.body,
     bodyAlt: "等待進行眼睛、尾巴、皮膚與趾端檢查的守宮",
     magnifier: health.magnifier,
+    // This copy deliberately belongs to the daily-care game.  It mirrors the
+    // latest completed room layout without coupling the two activities, so
+    // future game-specific visual adjustments remain independent.
     completedItems: [
-      { id: "cool-hide", image: geckoAssets.room.coolHide, alt: "涼側躲避屋", placement: { x: 22, y: 70, width: 25, layer: 3 } },
-      { id: "moist-hide", image: geckoAssets.room.moistHide, alt: "濕躲避屋", placement: { x: 51, y: 58, width: 25, layer: 3 } },
-      { id: "warm-hide", image: geckoAssets.room.warmHide, alt: "暖側躲避屋", placement: { x: 77, y: 65, width: 25, layer: 3 } },
-      { id: "calcium-dish", image: geckoAssets.room.calciumDish, alt: "補鈣碟", placement: { x: 45, y: 77, width: 15, layer: 6 } },
-      { id: "shallow-water-dish", image: geckoAssets.room.shallowWaterDish, alt: "淺水碟", placement: { x: 60, y: 77, width: 15, layer: 6 } },
+      { id: "lighting-setup", image: geckoAssets.room.lightingSetupOverlay, alt: "爬蟲缸日間照明效果", placement: { x: 73, y: 43, width: 84, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 50, y: 50, width: 100, transform: "translate(-50%, -50%)" }, sceneVisual: { mixBlendMode: "screen", opacity: 0.7, pointerEvents: "none" }, className: "light-overlay" },
+      { id: "enrichment-decor-plant", image: geckoAssets.room.enrichmentDecorPlant, alt: "環境豐富化植物", placement: { x: 20, y: 50, width: 35, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 82, y: 47, width: 21, transform: "translate(-50%, -50%)" } },
+      { id: "enrichment-decor-stone", image: geckoAssets.room.enrichmentDecorStone, alt: "環境豐富化石頭", placement: { x: 80, y: 78, width: 20, layer: 4, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 29, y: 80, width: 20, transform: "translate(-50%, -50%)" } },
+      { id: "enrichment-decor-wooden", image: geckoAssets.room.enrichmentDecorWooden, alt: "環境豐富化沉木", placement: { x: 35, y: 63, width: 25, layer: 3, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 55, y: 68, width: 29, transform: "translate(-50%, -50%)" } },
+      { id: "thermometer-hygrometer-cool", image: geckoAssets.room.thermometerHygrometerCool, alt: "涼側溫濕度計", placement: { x: 22, y: 46, width: 26, layer: 6 }, mobilePlacement: { x: 18, y: 32, width: 16 } },
+      { id: "thermometer-hygrometer-warm", image: geckoAssets.room.thermometerHygrometerWarm, alt: "暖側溫濕度計", placement: { x: 90, y: 88, width: 25, layer: 6 }, mobilePlacement: { x: 78, y: 32, width: 16 } },
+      { id: "cool-hide", image: geckoAssets.room.coolHide, alt: "涼側躲避屋", placement: { x: 16, y: 70, width: 25, layer: 3 }, mobilePlacement: { x: 73, y: 58, width: 25 } },
+      { id: "moist-hide", image: geckoAssets.room.moistHide, alt: "濕躲避屋", placement: { x: 51, y: 58, width: 25, layer: 2 }, mobilePlacement: { x: 51, y: 54, width: 24 } },
+      { id: "warm-hide", image: geckoAssets.room.warmHide, alt: "暖側躲避屋", placement: { x: 85, y: 60, width: 25, layer: 3 }, mobilePlacement: { x: 25, y: 57, width: 25 } },
+      { id: "shallow-water-dish", image: geckoAssets.room.shallowWaterDish, alt: "淺水碟", placement: { x: 53, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 67, y: 70, width: 15 } },
+      { id: "calcium-dish", image: geckoAssets.room.calciumDish, alt: "補鈣碟", placement: { x: 40, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 38, y: 70, width: 14 } },
     ],
   },
   temperature: {
@@ -221,16 +230,25 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     warmThermometer: health.warmThermometer,
     coolThermometer: health.coolThermometer,
     controllerImage: health.heatMatController,
-    // The actual finished terrarium places the cool-side gauge high on the
-    // left and the warm-side gauge at the heated lower-right area.
-    warmPlacement: { x: 90, y: 86, width: 25 },
-    coolPlacement: { x: 22, y: 14, width: 25 },
+    // Kept as an activity-local copy of the current room layout so the
+    // interactive readings stay exactly where the room's gauges are placed.
+    warmPlacement: { x: 90, y: 87, width: 25 },
+    coolPlacement: { x: 22, y: 47, width: 25 },
+    // All temperature-stage pieces can now be adjusted separately.  The
+    // initial values preserve the existing visual arrangement.
+    warmImagePlacement: { top: "0", left: "0" },
+    coolImagePlacement: { top: "0", left: "0" },
+    warmReadingPlacement: { top: "55%", right: "45%" },
+    coolReadingPlacement: { top: "11%", right: "53%" },
+    // These offsets move only the matching label capsule.
+    warmLabelPlacement: { top: "60px", left: "-5px" },
+    coolLabelPlacement: { top: "-330px", left: "-30px" },
     correctTemperatures: {
       warm: { min: 28, max: 32 },
       cool: { min: 22, max: 25 },
     },
     presets: {
-      // 企劃 §5.3.2：too-cold 暖側 22–25°C／涼側 18–20°C；too-hot 暖側 34–36°C／涼側 26–28°C；in-range 不需調整。
+      // 企劃 §5.3.2：too-cold 暖側 22–25°C／涼側 18–20°C；too-hot 暖側 34–36°C／涼側 26–28°C。遊戲初始狀態只會抽取前兩者，讓玩家每次都需要調整。
       "too-cold": [{ warm: 22, cool: 18 }, { warm: 23, cool: 19 }, { warm: 24, cool: 20 }, { warm: 25, cool: 20 }],
       "too-hot": [{ warm: 34, cool: 26 }, { warm: 35, cool: 27 }, { warm: 36, cool: 28 }],
       "in-range": [{ warm: 29, cool: 23 }, { warm: 30, cool: 24 }, { warm: 31, cool: 24 }],
@@ -256,6 +274,9 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     fixedWarning: "⚠️ 守宮有時會在水碟附近排泄，請每天確認飲水是否清澈，水碟每日清洗更換是基本習慣。",
     continueLabel: "繼續觀察排泄 →",
     sceneItemId: "shallow-water-dish",
+    // Only controls the interactive dirty/clean dish in this daily-care step.
+    // It intentionally does not share the finished-room water-dish placement.
+    interactivePlacement: { x: 53, y: 66, width: 15, layer: 6 },
   },
   feces,
   body: {
@@ -271,6 +292,6 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     reflectionTitle: "每天多看牠一眼，是對 {petName} 最具體的守護",
     reflection: "守宮是隱藏不適的高手。牠不會靠近你尋求幫助，也不會主動讓你知道牠不舒服。溫度梯度、尾巴體況、趾端殘皮——這些每天兩三分鐘就能確認的細節，是你能給 {petName} 最直接的照顧，也是每一次發現問題時，讓牠不必痛太久的方式。",
     careTitle: "每天留給牠的照護時間",
-    continueLabel: "繼續生活旅程 →",
+    continueLabel: "繼續生活旅程",
   },
 };

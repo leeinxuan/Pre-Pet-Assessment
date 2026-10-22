@@ -79,6 +79,12 @@
   transform: translate(-50%, -50%);
 }
 
+.gecko-completed-scene-item.light-overlay {
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transition: opacity .6s ease;
+}
+
 .gecko-thermometer {
   position: absolute;
   z-index: 7;
@@ -90,6 +96,7 @@
 }
 
 .gecko-thermometer img {
+  position: relative;
   display: block;
   width: 100%;
   height: auto;
@@ -99,20 +106,14 @@
 .gecko-thermometer strong {
   position: absolute;
   display: grid;
-  min-width: 3.1em;
-  min-height: 1.7em;
   place-items: center;
-  border-radius: 7px;
-  background: rgba(255, 253, 247, .88);
   color: var(--ink);
-  box-shadow: 0 2px 8px rgba(70, 53, 26, .16);
   font-size: clamp(13px, 1.7vw, 20px);
   line-height: 1;
 }
 
-.gecko-thermometer--warm strong { inset: 50% 40% auto auto; }
-.gecko-thermometer--cool strong { inset: 40% 40% auto auto; }
 .gecko-thermometer-label {
+  position: relative;
   z-index: 1;
   padding: 6px 11px;
   border-radius: 999px;
@@ -136,6 +137,22 @@
   aspect-ratio: 1;
 }
 
+/* Before the first adjustment, a restrained pulse points players to the
+   controller without competing with the temperature readings. */
+.gecko-temperature-controller--attention {
+  animation: gecko-temperature-controller-pulse 1.45s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes gecko-temperature-controller-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.055); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gecko-temperature-controller--attention { animation: none; }
+}
+
 .gecko-temperature-controller > img {
   display: block;
   width: 100%;
@@ -151,7 +168,7 @@
 
 .gecko-temperature-controls button {
   position: absolute;
-  top: 39%;
+  top: 43%;
   width: 12%;
   aspect-ratio: 1;
   border: 0;
@@ -163,8 +180,8 @@
   transition: background .18s ease, box-shadow .18s ease;
 }
 
-.gecko-temperature-controls button:first-child { left: 26%; }
-.gecko-temperature-controls button:last-child { left: 55%; }
+.gecko-temperature-controls button:first-child { left: 23%; }
+.gecko-temperature-controls button:last-child { left: 53%; }
 
 .gecko-temperature-controls button:hover {
   background: rgba(255, 253, 247, .16);
@@ -413,6 +430,13 @@
 }
 
 @media (max-width: 720px) {
+  .gecko-completed-scene-item {
+    left: var(--gecko-mobile-item-left) !important;
+    top: var(--gecko-mobile-item-top) !important;
+    width: var(--gecko-mobile-item-width) !important;
+    transform: var(--gecko-mobile-item-transform) !important;
+  }
+
   .gecko-health-scene {
     min-height: 760px;
     border-radius: 22px;

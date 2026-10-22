@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { getSpeciesConfig } from "../../../data/species";
 import { interpolatePetName } from "../../../data/shared/pet-text";
+import { ItemDescriptionCard } from "../../shared/ItemDescriptionCard";
 import type {
   ArrivalMealSceneItemKey,
   ArrivalMealSceneLayout,
@@ -42,8 +43,8 @@ function arrivalMealSupplyImageStyle(sizes: ArrivalMealSupplyImageSizes, kind: A
 }
 
 /**
- * 完成後以透明預留格取代用品按鈕；高度跟原本「圖片＋名稱」一致，
- * 避免任何物種在點擊用品後讓左側物品欄或整個餵食場景縮動。
+ * 每個用品格預先保留完成說明卡所需的高度，讓圖片切換成卡片時，
+ * 不會推移同列的用品、餵食場景或後續按鈕。
  */
 function arrivalMealSupplySlotStyle(sizes: ArrivalMealSupplyImageSizes, kind: ArrivalMealSupplyImageKey): CSSProperties {
   const desktop = sizes.desktop[kind];
@@ -171,7 +172,8 @@ export function ArrivalMealActivity({
           const ready = supply.stateKey === "food" ? activity.arrivalMealFoodReady : supply.stateKey === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady;
           const imageClassName = supply.stateKey === "food" ? "arrival-meal-supply-food" : supply.stateKey === "water" ? "arrival-meal-supply-water" : undefined;
           const imageStyle = arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, supply.stateKey);
-          return <div key={supply.stateKey} className="arrival-meal-supply-slot" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{!ready ? <button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span></button> : <div className="arrival-meal-supply-placeholder" aria-hidden="true"><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span></div>}</div>;
+          const note = <ItemDescriptionCard className="arrival-meal-supply-note" title={supply.label} description={supply.description} footer="已準備完成" />;
+          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? note : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span></button><ItemDescriptionCard className="arrival-meal-supply-note arrival-meal-supply-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
         })}{sceneUnsafeFoods.map((food) => {
           const caution = food.presentation === "caution";
           return <button key={food.id} type="button" className={`arrival-meal-unsafe${caution ? " caution" : ""}${unsafeFoodIds.includes(food.id) ? " warning" : ""}`} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={food.image} alt="" />{unsafeFoodIds.includes(food.id) && (caution ? <WarningTriangle className="unsafe-food-warning-icon" /> : <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>)}</span><span>{food.label}</span></button>;

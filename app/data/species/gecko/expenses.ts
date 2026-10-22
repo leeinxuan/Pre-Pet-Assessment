@@ -5,6 +5,8 @@ export const geckoExpenses: Record<string, ExpenseRecord> = {
   "gecko-terrarium": { ...initial("gecko-terrarium", "爬蟲專用玻璃缸（60×45×30 cm 以上）", 3000, "附緊固式網蓋，是守宮主要生活空間。"), maxAmount: 8000 },
   "gecko-heat-mat": { ...initial("gecko-heat-mat", "加熱片（爬蟲專用）", 500, "建立暖側溫度，需搭配溫控器使用。"), maxAmount: 1500 },
   "gecko-thermostat": { ...initial("gecko-thermostat", "溫控器", 500, "防止加熱片過熱，精確維持設定溫度。"), maxAmount: 1200 },
+  "gecko-lighting-setup": { ...initial("gecko-lighting-setup", "光源設備（UVB 燈 + 日夜節律燈）", 600, "提供低強度 UVB 助 D3 合成；搭配定時器模擬 12 小時明／暗週期，定期更換燈管。"), maxAmount: 1300 },
+  "gecko-enrichment-decor": { ...initial("gecko-enrichment-decor", "環境豐富化物件（石板、沉木或人造植物）", 200, "石板供吸熱與脫皮摩擦；沉木或人造植物提供視覺遮蔽，降低壓力。"), maxAmount: 500 },
   "gecko-thermometer-2": { ...initial("gecko-thermometer-2", "數位溫濕度計 × 2", 300, "分別置於暖側與涼側監控。"), maxAmount: 800 },
   "gecko-warm-hide": { ...initial("gecko-warm-hide", "暖側躲避屋", 200, "讓守宮在暖側有隱蔽空間。"), maxAmount: 600 },
   "gecko-cool-hide": { ...initial("gecko-cool-hide", "涼側躲避屋", 200, "讓守宮在涼側休息。"), maxAmount: 400 },
