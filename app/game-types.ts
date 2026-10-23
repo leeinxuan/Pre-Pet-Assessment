@@ -711,6 +711,10 @@ export type HazardItem = {
   image?: string;
   placement: { x: number; y: number; width: number; layer: number };
   mobilePlacement?: { x: number; y: number; width: number };
+  /** 手機版獨立點擊區（1:1 場景百分比）；未設定時由 mobilePlacement 推算。 */
+  mobileHitArea?: { x: number; y: number; width: number; height: number };
+  /** 手機物品欄的未整理背景裁切區；未設定時以點擊區／物件位置推算。 */
+  mobileThumbnailCrop?: { x: number; y: number; size: number };
   /**
    * A background-only hazard can expose a labelled hit target without adding a
    * separate sprite. Geometry remains in the species data.

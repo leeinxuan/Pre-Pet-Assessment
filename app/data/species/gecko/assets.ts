@@ -70,4 +70,18 @@ export const geckoAssets = {
     humanFood: "/assets/gecko/feeding/human-food.webp",
     wildCaughtInsect: "/assets/gecko/feeding/wild-caught-insect.webp",
   },
+  petJourney: {
+    arrivalTransition: "/assets/gecko/pet-journey/arrival-transition.mp4",
+    firstDay: "/assets/gecko/pet-journey/first-day.mp4",
+    refuseFood: "/assets/gecko/pet-journey/refuse-food.mp4",
+    temperatureCheck: "/assets/gecko/pet-journey/temperature-check.mp4",
+    sheddingStuck: "/assets/gecko/pet-journey/shedding-stuck.mp4",
+    busyDailyCare: "/assets/gecko/pet-journey/busy-daily-care.mp4",
+    busyDayTransition: "/assets/gecko/pet-journey/busy-day-transition.mp4",
+    sick: "/assets/gecko/pet-journey/sick.mp4",
+    seniorLife: "/assets/gecko/pet-journey/senior-life.mp4",
+    timePassesAging: "/assets/gecko/pet-journey/time-passes-aging.mp4",
+    correctPrimary: "/assets/gecko/pet-journey/correct-answer.mp4",
+    correctSecondary: "/assets/gecko/pet-journey/correct-answer2.mp4",
+  },
 } as const;

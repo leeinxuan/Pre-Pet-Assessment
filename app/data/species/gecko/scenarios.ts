@@ -1,5 +1,6 @@
 import type { Scenario } from "../../../game-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
+import { geckoAssets } from "./assets";
 import { geckoReport } from "./report";
 const correct = (id: string, text: string, explanation: string, expenseIds?: string[]) => ({
   id,
@@ -32,10 +33,14 @@ export const geckoLifeScenarios: Scenario[] = [
     reportSummary: "維持安靜與穩定環境，讓守宮自行探索。",
     artIndex: 0,
     sceneMedia: {
-      type: "placeholder"
+      type: "video",
+      src: geckoAssets.petJourney.firstDay,
+      ariaLabel: "守宮到家第一天情境影片"
     },
     correctFeedbackMedia: {
-      type: "placeholder"
+      type: "video",
+      src: geckoAssets.petJourney.correctPrimary,
+      ariaLabel: "守宮答對回饋影片"
     },
     choices: [
       wrong("force-pick-up", "把牠從躲避屋裡拿出來，放到手上熟悉一下新環境", "強迫接觸會讓守宮在最脆弱的時刻產生強烈壓力，延長適應期，甚至引發防禦性咬人行為。接回初期請先不要碰觸牠。"), wrong("open-lid", "把缸蓋打開，讓房間更透氣一點，方便牠適應氣味", "打開缸蓋會讓守宮感受到外界威脅，且有逃脫風險。爬蟲缸提供的封閉感反而讓牠感到安全。"), correct("quiet-explore", "讓缸蓋蓋好，減少干擾，讓{petName}自己慢慢探索", "守宮需要 5–14 天甚至更長的適應期。此時最好的做法就是關好缸蓋、維持穩定溫度，讓牠在沒有干擾的環境中建立安全感。", [
@@ -184,10 +189,20 @@ export const geckoLifeScenarios: Scenario[] = [
     busyCarePresentation: {
       animalName: "小型地棲性守宮",
       sceneMedia: {
-        type: "placeholder"
+        type: "video",
+        src: geckoAssets.petJourney.busyDailyCare,
+        ariaLabel: "守宮等待日常照顧情境影片",
+        fallback: {
+          type: "image-layers",
+          backgroundSrc: geckoAssets.room.terrariumHeatMat,
+          backgroundAlt: "守宮爬蟲缸",
+          characterSrc: geckoAssets.healthInspection.body,
+          characterAlt: "{petName}在爬蟲缸中等待照顧"
+        }
       },
       feedbackMedia: {
-        type: "placeholder"
+        type: "video",
+        src: geckoAssets.petJourney.correctPrimary
       }
     },
     busyCareCompletion: {
@@ -266,10 +281,14 @@ export const geckoLifeScenarios: Scenario[] = [
     reportSummary: "出現明顯異常時，記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**。",
     artIndex: 0,
     sceneMedia: {
-      type: "placeholder"
+      type: "video",
+      src: geckoAssets.petJourney.sick,
+      ariaLabel: "守宮身體不適情境影片"
     },
     correctFeedbackMedia: {
-      type: "placeholder"
+      type: "video",
+      src: geckoAssets.petJourney.correctSecondary,
+      ariaLabel: "守宮答對回饋影片"
     },
     choices: [
       wrong("wait-and-see", "先等幾天看看，牠可能只是心情不好", "後腿無力與顫抖是代謝性骨病（MBD）的早期症狀，若延誤就醫可能造成不可逆的骨骼損傷。請勿等待，應立即記錄並諮詢獸醫。"),
@@ -326,10 +345,14 @@ export const geckoLifeScenarios: Scenario[] = [
     reportSummary: "提高健康檢查頻率並調整環境與餵食觀察。",
     artIndex: 0,
     sceneMedia: {
-      type: "placeholder"
+      type: "video",
+      src: geckoAssets.petJourney.seniorLife,
+      ariaLabel: "高齡守宮照護情境影片"
     },
     correctFeedbackMedia: {
-      type: "placeholder"
+      type: "video",
+      src: geckoAssets.petJourney.correctSecondary,
+      ariaLabel: "守宮答對回饋影片"
     },
     choices: [
       correct("gecko-senior-adjust", "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫", "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。", [

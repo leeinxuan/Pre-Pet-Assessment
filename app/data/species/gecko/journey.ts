@@ -1,5 +1,6 @@
 import type { JourneyItem, SpeciesScenarioPresentationConfig } from "../../../game-types";
 import { geckoHealthInspection } from "./activities";
+import { geckoAssets } from "./assets";
 
 export const geckoJourneyItems: JourneyItem[] = [
   { id: "gecko-arrival", type: "scenario", timeLabel: "接回家", title: "第一天適應新家", scenarioId: "gecko-arrival-settle", stageId: "arrival", stageLabel: "接回家" },
@@ -11,5 +12,29 @@ export const geckoJourneyItems: JourneyItem[] = [
   { id: "gecko-senior", type: "senior-room", timeLabel: "當生活發生變化", title: "{petName} 進入高齡期了", scenarioId: "gecko-senior-care", stageId: "life-change", stageLabel: "生活變化" },
 ];
 export const geckoDailyBehaviorScenarioIds = ["gecko-refuse-food", "gecko-temperature-check", "gecko-shedding"] as const;
-export const geckoScenarioPresentation: SpeciesScenarioPresentationConfig = { defaults: { defaultPetName: "小守", knowledgeTitle: "守宮小知識", correctFeedbackMedia: { type: "placeholder" } }, scenarios: {} };
-export const geckoJourney = { items: geckoJourneyItems, dailyBehaviorScenarioIds: geckoDailyBehaviorScenarioIds, geckoHealthInspection } as const;
+export const geckoScenarioPresentation: SpeciesScenarioPresentationConfig = {
+  defaults: {
+    defaultPetName: "小守",
+    knowledgeTitle: "守宮小知識",
+    correctFeedbackMedia: { type: "video", src: geckoAssets.petJourney.correctPrimary, ariaLabel: "守宮答對回饋影片" },
+    correctFeedbackMediaVariants: [
+      { type: "video", src: geckoAssets.petJourney.correctPrimary, ariaLabel: "守宮答對回饋影片" },
+      { type: "video", src: geckoAssets.petJourney.correctSecondary, ariaLabel: "守宮答對回饋影片" },
+    ],
+  },
+  scenarios: {
+    "gecko-refuse-food": { sceneVideo: { src: geckoAssets.petJourney.refuseFood, ariaLabel: "守宮拒食情境影片" } },
+    "gecko-temperature-check": { sceneVideo: { src: geckoAssets.petJourney.temperatureCheck, ariaLabel: "守宮低溫情境影片" } },
+    "gecko-shedding": { sceneVideo: { src: geckoAssets.petJourney.sheddingStuck, ariaLabel: "守宮脫皮殘留情境影片" } },
+  },
+};
+export const geckoJourney = {
+  items: geckoJourneyItems,
+  dailyBehaviorScenarioIds: geckoDailyBehaviorScenarioIds,
+  geckoHealthInspection,
+  transitionMedia: {
+    arrival: geckoAssets.petJourney.arrivalTransition,
+    timePass: geckoAssets.petJourney.timePassesAging,
+    busyCare: geckoAssets.petJourney.busyDayTransition,
+  },
+} as const;

@@ -632,13 +632,16 @@ function CoinFlightAnimation({ expense, triggerRef }: {
   const lastKey = useRef("");
 
   useEffect(() => {
-    if (!expense) return;
+    if (!expense) {
+      lastKey.current = "";
+      return;
+    }
     const key = `${expense.id}-${expense.amount}-${expense.maxAmount ?? ""}-${expense.maxAmountOpenEnded ?? ""}`;
     if (lastKey.current === key) return;
-    lastKey.current = key;
 
     const btn = triggerRef.current;
     if (!btn) return;
+    lastKey.current = key;
 
     // Create toast card
     const isTemporaryReserve = isTemporaryReserveExpense(expense);
@@ -646,8 +649,22 @@ function CoinFlightAnimation({ expense, triggerRef }: {
       ? formatTemporaryExpenseAmount(expense)
       : `+NT$ ${money.format(expense.amount)}${isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}`;
     const title = isTemporaryReserve ? "臨時性支出預留已更新" : "已加入準備清單";
+    const mobileRoomScene = window.matchMedia("(max-width: 720px)").matches
+      ? document.querySelector<HTMLElement>(".room-preparation-mobile.is-started .room-mobile-scene")
+      : null;
+    const measuredScene = mobileRoomScene?.getBoundingClientRect();
+    const sceneRect = measuredScene && measuredScene.width > 0 && measuredScene.height > 0 ? measuredScene : null;
+    const startCenterX = sceneRect ? sceneRect.left + sceneRect.width / 2 : window.innerWidth / 2;
+    const startCenterY = sceneRect ? sceneRect.top + sceneRect.height / 2 : window.innerHeight * .47;
     const toast = document.createElement("div");
     toast.className = "coin-toast-overlay";
+    if (sceneRect) {
+      toast.style.inset = "auto";
+      toast.style.left = `${sceneRect.left}px`;
+      toast.style.top = `${sceneRect.top}px`;
+      toast.style.width = `${sceneRect.width}px`;
+      toast.style.height = `${sceneRect.height}px`;
+    }
     toast.innerHTML = `
       <div class="coin-toast-card" role="status" aria-live="polite">
         <svg class="coin-toast-emoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 50" width="88" height="46" aria-hidden="true"><rect x="3" y="5" width="90" height="42" rx="7" fill="rgba(10,50,120,0.10)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="#8dc8ea"/><rect x="1" y="1" width="90" height="21" rx="7" fill="rgba(255,255,255,0.28)"/><rect x="1" y="20" width="90" height="4" fill="rgba(10,60,140,0.07)"/><rect x="1" y="1" width="90" height="42" rx="7" fill="none" stroke="#1a60a8" stroke-width="1.8"/><rect x="6" y="6" width="80" height="32" rx="4" fill="none" stroke="#1a60a8" stroke-width="0.7" opacity="0.45"/><ellipse cx="46" cy="22" rx="13" ry="11" fill="rgba(10,80,180,0.14)" stroke="#1a60a8" stroke-width="0.8" opacity="0.7"/><text x="46" y="26.5" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="900" text-anchor="middle" fill="#0a2e6e">NT$</text><text x="14" y="16" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#0e3d80">1000</text><text x="78" y="36" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" text-anchor="end" fill="#0e3d80">1000</text><text x="14" y="36" font-family="Arial,sans-serif" font-size="9" fill="#1a60a8" opacity="0.7">&#10022;</text><text x="78" y="16" font-family="Arial,sans-serif" font-size="9" text-anchor="end" fill="#1a60a8" opacity="0.7">&#10022;</text></svg>
@@ -670,8 +687,8 @@ function CoinFlightAnimation({ expense, triggerRef }: {
 
       const angle = (i / COIN_COUNT) * Math.PI * 2;
       const r = 18 + Math.random() * 28;
-      const startX = window.innerWidth / 2 + Math.cos(angle) * r;
-      const startY = window.innerHeight * 0.47 + Math.sin(angle) * r;
+      const startX = startCenterX + Math.cos(angle) * r;
+      const startY = startCenterY + Math.sin(angle) * r;
       coin.style.left = startX + "px";
       coin.style.top = startY + "px";
       document.body.appendChild(coin);

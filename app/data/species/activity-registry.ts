@@ -59,8 +59,8 @@ export const journeyActivityRegistry: Record<string, SpeciesActivityRegistry> = 
     "gecko-first-meal": activity("gecko-first-meal", "arrival-meal", { resetKey: "gecko-first-meal" }),
     "gecko-daily-care": activity("gecko-daily-care", "daily-behavior", { resetKey: "daily-behavior" }),
     "gecko-health-inspection": activity("gecko-health-inspection", "gecko-health-inspection", { resetKey: "gecko-health-inspection" }),
-    "gecko-busy-care": activity("gecko-busy-care", "busy-care", { resetKey: "busy-care" }),
-    "gecko-sick": video("gecko-sick", "gecko-health-emergency", { triggerExpenseOnFeedback: true }),
+    "gecko-busy-care": activity("gecko-busy-care", "busy-care", { transition: "busy-care", resetKey: "busy-care" }),
+    "gecko-sick": video("gecko-sick", "gecko-health-emergency", { transition: "time-pass", triggerExpenseOnFeedback: true }),
     "gecko-senior": video("gecko-senior", "gecko-senior-care", { triggerExpenseOnFeedback: true }),
   },
 };
