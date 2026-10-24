@@ -277,6 +277,10 @@
     line-height: 1.55;
     overflow-wrap: anywhere;
   }
+  /* 單選題的情境說明與問題同屬固定題幹，不以分隔線切開。 */
+  .video-scenario-options > .mobile-choice-context,
+  .busy-care-options > .mobile-choice-context,
+  .breed-challenge-options > .mobile-choice-context { border-bottom: 0; padding-bottom: 0; }
   .daily-behavior-question-row > .mobile-choice-context { padding: 0; border: 0; }
   .mobile-choice-context p { margin: 0; }
   .mobile-choice-context p + p { margin-top: 6px; }
@@ -293,12 +297,69 @@
     line-height: 1.4;
   }
   .breed-challenge-options > .mobile-choice-question { margin: 0; color: var(--ink); line-height: 1.4; }
-  .daily-behavior-activity--dog-barking .choice-grid > .scenario-option-card {
+  /* 六個物種共用的選項卡以文字自然撐高，長句不被固定列高裁切。 */
+  .video-scenario-choice-list > .scenario-option-card,
+  .busy-care-choice-list > .scenario-option-card,
+  .choice-grid > .scenario-option-card,
+  .breed-challenge-options .scenario-option-card {
     box-sizing: border-box;
     min-height: 80px;
+    height: auto;
+    min-width: 0;
     align-items: center;
     padding: 16px 20px;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
+  .video-scenario-choice-list > .scenario-option-card p,
+  .busy-care-choice-list > .scenario-option-card p,
+  .choice-grid > .scenario-option-card p,
+  .breed-challenge-options .scenario-option-card p { min-width: 0; overflow-wrap: anywhere; }
+
+  /* 指定五個物種的日常互動導入與完成頁：手機滿版、圖像緊接進度列。 */
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]):has(> :is(.activity-intro-page, .walking-complete)) {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > .activity-intro-page {
+    display: block;
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    background: var(--paper);
+  }
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-card {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+  }
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-visual {
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+    border: 0;
+  }
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-content { padding: 28px 24px calc(32px + env(safe-area-inset-bottom)); }
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > .walking-complete {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 0;
+    padding: 28px 20px calc(32px + env(safe-area-inset-bottom));
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .walking-complete-card { width: 100%; max-width: none; padding: 0; }
   .video-scenario-retry,
   .daily-behavior-retry,
   .busy-care-members,

@@ -428,7 +428,7 @@ export function LifeJourney({
   };
 
   return (
-    <div className={`content-wrap life-journey-page ${canReplayCurrent ? "is-reviewing" : ""}`}>
+    <div className={`content-wrap life-journey-page ${canReplayCurrent ? "is-reviewing" : ""}`} data-species={species}>
       {activityRenderers[activityKey]()}
     </div>
   );
