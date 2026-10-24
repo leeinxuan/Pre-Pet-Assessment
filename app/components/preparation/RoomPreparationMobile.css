@@ -34,6 +34,11 @@
     --room-mobile-green: #477c5d;
     --room-mobile-green-soft: #e8f4e9;
     --room-mobile-paper: #fffdf8;
+    --room-mobile-tab-band: #f2e8c8;
+    --room-mobile-tile-surface: #f3e8c7;
+    --room-mobile-tile-hover: #eadbb0;
+    --room-mobile-tile-locked: #eae9e4;
+    --room-mobile-check-fill: var(--gold-dark);
     display: block;
     width: 100vw;
     height: 100%;
@@ -80,8 +85,8 @@
     position: absolute;
     z-index: 6;
     box-sizing: border-box;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 52px;
+    min-height: 52px;
     padding: 0;
     border: 0;
     border-radius: 10px;
@@ -90,9 +95,15 @@
     cursor: pointer;
   }
   .room-mobile-hazard-hit-area:focus-visible { outline: 3px solid var(--gold); outline-offset: -2px; }
-  .room-mobile-scene .room-floor-hazard-hotspot { min-width: 44px; min-height: 44px; }
-  .room-mobile-scene .interior-entry-hint { top: 42%; }
-  .room-mobile-scene .interior-entry-hint-arrow { width: 31px; height: 31px; }
+  .room-mobile-scene .room-floor-hazard-hotspot { min-width: 52px; min-height: 52px; }
+  .room-mobile-entry-cue { position: absolute; z-index: 14; pointer-events: none; animation: roomMobileEntryNudge 1.8s ease-in-out infinite; }
+  .room-mobile-entry-cue .interior-entry-hint { position: static; display: flex; flex-direction: row; align-items: center; gap: 5px; padding: 6px 10px 6px 13px; border: 1px solid rgba(191, 130, 27, .45); border-radius: 999px; background: rgba(255, 253, 248, .97); box-shadow: 0 3px 10px rgba(65, 45, 21, .2); animation: none; transform: translate(-50%, -50%); }
+  .room-mobile-entry-cue--left .interior-entry-hint { flex-direction: row-reverse; }
+  .room-mobile-entry-cue .interior-entry-hint-arrow { width: 21px; height: 21px; filter: none; }
+  .room-mobile-entry-cue .interior-entry-hint-arrow circle { display: none; }
+  .room-mobile-entry-cue .interior-entry-hint-label { color: var(--ink); font-size: 12px; text-shadow: none; }
+  @keyframes roomMobileEntryNudge { 0%, 100% { translate: 0 0; } 50% { translate: 5px 0; } }
+  .room-mobile-entry-cue--right { animation-direction: reverse; }
   .room-mobile-complete {
     position: absolute;
     z-index: 25;
@@ -122,13 +133,16 @@
     text-align: center;
   }
   .room-mobile-tabs {
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100vw;
     min-height: 0;
+    gap: 6px;
+    padding: 5px 8px;
     border: 0;
-    border-bottom: 1px solid var(--room-mobile-line);
-    background: white;
+    border-bottom: 1px solid var(--sand);
+    background: var(--room-mobile-tab-band);
   }
   .room-mobile-tabs button {
     display: grid;
@@ -137,23 +151,26 @@
     gap: 3px;
     min-width: 0;
     min-height: 0;
-    padding: 6px 4px 3px;
+    padding: 5px 4px;
     border: 0;
-    border-bottom: 4px solid transparent;
+    border-radius: 12px;
     background: transparent;
-    color: var(--room-mobile-muted);
+    color: var(--room-mobile-ink);
     font-size: clamp(11px, 3.4vw, 14px);
     font-weight: 850;
     white-space: nowrap;
     cursor: pointer;
   }
-  .room-mobile-tabs button.is-active { border-bottom-color: var(--room-mobile-ink); color: var(--room-mobile-ink); }
+  .room-mobile-tabs button.is-active { background: var(--room-mobile-paper); box-shadow: 0 2px 6px rgba(70, 53, 26, .1); }
+  .room-mobile-tabs button:not(.is-active) { color: var(--room-mobile-muted); }
+  @media (hover: hover) and (pointer: fine) { .room-mobile-tabs button:hover:not(.is-active) { background: var(--room-mobile-tile-surface); } }
   .room-mobile-tab-title { display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-size: inherit; font-weight: 850; }
-  .room-mobile-tab-icon { display: inline-flex; width: 17px; height: 17px; flex: 0 0 auto; }
+  .room-mobile-tab-icon { display: inline-flex; width: 18px; height: 18px; flex: 0 0 auto; color: var(--gold-dark); }
   .room-mobile-tab-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .room-mobile-tab-icon circle { fill: currentColor; stroke: none; }
   .room-mobile-tabs button > span:last-child { font-size: 12px; font-weight: 750; }
-  .room-mobile-tab-check { color: var(--room-mobile-green); font-size: 20px; line-height: 1; }
+  .room-mobile-tab-check { display: inline-grid; width: 18px; height: 18px; place-items: center; border-radius: 50%; background: var(--room-mobile-check-fill); color: var(--paper); }
+  .room-mobile-tab-check svg { width: 13px; height: 13px; }
   .room-mobile-inventory {
     box-sizing: border-box;
     width: 100vw;
@@ -163,7 +180,7 @@
     padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
     border: 0;
     border-radius: 0;
-    background: white;
+    background: var(--room-mobile-paper);
     overscroll-behavior: contain;
   }
   .room-mobile-empty {
@@ -180,40 +197,41 @@
   }
   .room-mobile-empty svg { width: 32px; height: 32px; color: var(--gold-dark); }
   .room-mobile-empty p { margin: 0; font-size: 14px; font-weight: 800; }
-  .room-mobile-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+  .room-mobile-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
   .room-mobile-tile {
     position: relative;
     box-sizing: border-box;
     display: grid;
-    grid-template-rows: 52px auto;
+    grid-template-rows: 56px auto;
     justify-items: center;
     align-items: center;
     gap: 5px;
     min-width: 0;
-    min-height: 112px;
-    padding: 27px 4px 6px;
-    border: 1px solid var(--room-mobile-line);
-    border-radius: 14px;
-    background: var(--room-mobile-paper);
+    min-height: 124px;
+    padding: 21px 5px 8px;
+    border: 1px solid transparent;
+    border-radius: 18px;
+    background: var(--room-mobile-tile-surface);
     color: var(--room-mobile-ink);
-    cursor: default;
+    font: inherit;
+    cursor: pointer;
   }
-  .room-mobile-tile.is-complete { border-color: var(--room-mobile-green); background: var(--room-mobile-green-soft); color: var(--room-mobile-green); }
-  .room-mobile-hazard-tile { border-color: transparent; background: #e7e5de; color: var(--room-mobile-ink); }
-  .room-mobile-place { position: absolute; inset: 0; display: grid; grid-template-rows: 52px auto; justify-items: center; align-items: center; gap: 5px; padding: 27px 4px 6px; border: 0; border-radius: inherit; background: transparent; color: inherit; cursor: pointer; }
-  .room-mobile-place:disabled { cursor: default; opacity: .65; }
-  .room-mobile-tile-content { display: contents; opacity: .43; }
-  .room-mobile-supply-tile.is-complete .room-mobile-thumbnail,
-  .room-mobile-supply-tile.is-complete .room-mobile-tile-label { opacity: .43; }
+  .room-mobile-tile:disabled { cursor: default; }
+  .room-mobile-tile.is-complete { background: var(--room-mobile-tile-surface); color: var(--room-mobile-ink); }
+  @media (hover: hover) and (pointer: fine) { .room-mobile-tile:hover:not(:disabled) { background: var(--room-mobile-tile-hover); } }
+  .room-mobile-supply-tile.is-locked { border-color: var(--room-mobile-line); background: var(--room-mobile-tile-locked); color: var(--room-mobile-muted); }
+  .room-mobile-supply-tile.is-locked .room-mobile-thumbnail,
+  .room-mobile-supply-tile.is-locked .room-mobile-tile-label { filter: grayscale(1); opacity: .45; }
+  .room-mobile-lock { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+  .room-mobile-lock svg { width: 27px; height: 27px; padding: 5px; border-radius: 9px; background: rgba(255, 253, 248, .93); color: #5b574e; box-shadow: 0 1px 6px rgba(36, 29, 21, .12); }
   .room-mobile-tile-label { max-width: 100%; font-size: 11px; font-weight: 850; line-height: 1.3; text-align: center; overflow-wrap: anywhere; }
-  .room-mobile-thumbnail { display: grid; width: 52px; height: 52px; place-items: center; flex: 0 0 auto; }
+  .room-mobile-thumbnail { display: grid; width: 56px; height: 56px; place-items: center; flex: 0 0 auto; }
   .room-mobile-thumbnail img { display: block; width: 100%; height: 100%; object-fit: contain; }
   .room-mobile-hazard-thumbnail { position: relative; overflow: hidden; border-radius: 8px; }
   .room-mobile-hazard-thumbnail .room-mobile-hazard-background { position: absolute; max-width: none; object-fit: cover; }
-  .room-mobile-hazard-thumbnail .room-mobile-hazard-sprite { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 1px 2px rgba(40, 30, 20, .28)); }
-  .room-mobile-info { position: absolute; top: 3px; right: 3px; display: grid; width: 44px; height: 44px; place-items: start end; padding: 7px; border: 0; border-radius: 10px; background: transparent; color: #514638; cursor: pointer; opacity: 1; }
-  .room-mobile-info svg { width: 21px; height: 21px; }
-  .room-mobile-info:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+  .room-mobile-complete-mark { position: absolute; top: 8px; right: 8px; display: grid; width: 23px; height: 23px; place-items: center; border: 2px solid var(--room-mobile-paper); border-radius: 50%; background: var(--room-mobile-check-fill); color: var(--paper); box-shadow: 0 1px 4px rgba(70, 53, 26, .17); pointer-events: none; }
+  .room-mobile-complete-mark svg { width: 14px; height: 14px; }
+  @media (prefers-reduced-motion: reduce) { .room-mobile-entry-cue { animation: none; } }
   .room-mobile-sheet-overlay { position: fixed; z-index: 999; inset: 0; display: flex; align-items: flex-end; background: rgba(33, 30, 25, .42); }
   .room-mobile-sheet {
     position: relative;

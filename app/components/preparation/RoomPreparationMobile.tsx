@@ -17,12 +17,13 @@ type RoomPreparationMobileProps = {
   activeHazard: HazardItem | undefined;
   activeItem: RoomItem | undefined;
   hazardsCleared: boolean;
+  lockedItemIds: string[];
   hazardIcon: ReactNode;
   supplyIcon: ReactNode;
   onSelectHazard: (id: string) => void;
   onSelectItem: (id: string) => void;
   onCloseInfo: () => void;
-  onPrepare: (id: string) => void;
+  onPrepare: (id: string) => boolean;
   itemPrice: (item: RoomItem) => string;
 };
 
@@ -38,11 +39,16 @@ function ItemThumbnail({ image, label }: { image?: string; label: string }) {
   return <span className="room-mobile-thumbnail">{image ? <img src={image} alt="" /> : <span aria-hidden="true">◇</span>}<span className="sr-only">{label}</span></span>;
 }
 
-function InfoIcon() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 7.6h.01" /></svg>;
+function CheckIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7" /></svg>;
+}
+
+function LockIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg>;
 }
 
 function HazardThumbnail({ hazard, background }: { hazard: HazardItem; background: string }) {
+  if (hazard.image) return <ItemThumbnail image={hazard.image} label={hazard.label} />;
   const area = hazard.mobileThumbnailCrop ?? (() => {
     const placement = hazard.hotspot?.mobile ?? hazard.mobileHitArea ?? hazard.mobilePlacement ?? hazard.placement;
     return { x: placement.x, y: placement.y, size: Math.min(32, Math.max(18, placement.width + 8)) };
@@ -58,11 +64,10 @@ function HazardThumbnail({ hazard, background }: { hazard: HazardItem; backgroun
   };
   return <span className="room-mobile-thumbnail room-mobile-hazard-thumbnail">
     <img className="room-mobile-hazard-background" src={background} style={cropStyle} alt="" />
-    {hazard.image && <img className="room-mobile-hazard-sprite" src={hazard.image} alt="" />}
   </span>;
 }
 
-export function RoomPreparationMobile({ petName, scene, hazardBackground, hazards, items, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, itemPrice }: RoomPreparationMobileProps) {
+export function RoomPreparationMobile({ petName, scene, hazardBackground, hazards, items, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, itemPrice }: RoomPreparationMobileProps) {
   const [started, setStarted] = useState(() => securedHazards.length > 0 || selectedItems.length > 0);
   const [chosenTab, setChosenTab] = useState<"hazards" | "items" | null>(null);
   const tab = chosenTab ?? (hazardsCleared ? "items" : "hazards");
@@ -90,19 +95,21 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
     </section> : <>
       {scene}
       <div className="room-mobile-tabs" role="tablist" aria-label="房間佈置階段">
-        <button type="button" role="tab" aria-selected={tab === "hazards"} className={tab === "hazards" ? "is-active" : ""} onClick={() => setChosenTab("hazards")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{hazardIcon}</span>危險物品</span><span>{hazardsCleared ? <span className="room-mobile-tab-check" aria-label="已全部收好">✓</span> : `${securedHazards.filter((id) => hazards.some((item) => item.id === id)).length} / ${hazards.length}`}</span></button>
+        <button type="button" role="tab" aria-selected={tab === "hazards"} className={tab === "hazards" ? "is-active" : ""} onClick={() => setChosenTab("hazards")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{hazardIcon}</span>危險物品</span><span>{hazardsCleared ? <span className="room-mobile-tab-check" aria-label="已全部收好"><CheckIcon /></span> : `${securedHazards.filter((id) => hazards.some((item) => item.id === id)).length} / ${hazards.length}`}</span></button>
         <button type="button" role="tab" aria-selected={tab === "items"} className={tab === "items" ? "is-active" : ""} onClick={() => setChosenTab("items")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{supplyIcon}</span>用品準備箱</span><span>{selectedItems.filter((id) => items.some((item) => item.id === id)).length} / {items.length}</span></button>
       </div>
       <section className="room-mobile-inventory" role="tabpanel" aria-label={tab === "hazards" ? "已收好的危險物品" : "準備用品"}>
         {tab === "hazards" ? securedHazards.filter((id) => hazards.some((item) => item.id === id)).length === 0
           ? <div className="room-mobile-empty"><PointingHandIcon /><p>點擊場景中的危險物品收起</p></div>
-          : <div className="room-mobile-grid">{securedHazards.map((id) => hazards.find((item) => item.id === id)).filter((item): item is HazardItem => Boolean(item)).map((item) => <div key={item.id} className="room-mobile-tile room-mobile-hazard-tile"><HazardThumbnail hazard={item} background={hazardBackground} /><span className="room-mobile-tile-label">{item.label}</span><button type="button" className="room-mobile-info" onClick={() => onSelectHazard(item.id)} aria-label={`查看${item.label}說明`}><InfoIcon /></button></div>)}</div>
+          : <div className="room-mobile-grid">{securedHazards.map((id) => hazards.find((item) => item.id === id)).filter((item): item is HazardItem => Boolean(item)).map((item) => <button type="button" key={item.id} className="room-mobile-tile room-mobile-hazard-tile is-complete" onClick={() => onSelectHazard(item.id)} aria-label={`${item.label}已收好，查看說明`}><HazardThumbnail hazard={item} background={hazardBackground} /><span className="room-mobile-tile-label">{item.label}</span><span className="room-mobile-complete-mark" aria-hidden="true"><CheckIcon /></span></button>)}</div>
           : <div className="room-mobile-grid">{items.map((item) => {
             const placed = selectedItems.includes(item.id);
-            return <div key={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}`}>
-              {placed ? <><span className="room-mobile-tile-content"><ItemThumbnail image={item.image} label={item.label} /><span className="room-mobile-tile-label">{item.label}</span></span><button type="button" className="room-mobile-info" onClick={() => onSelectItem(item.id)} aria-label={`查看${item.label}說明`}><InfoIcon /></button></>
-                : <button type="button" className="room-mobile-place" onClick={() => onPrepare(item.id)} disabled={!hazardsCleared} aria-label={`${item.label}，放入生活空間`}><ItemThumbnail image={item.image} label={item.label} /><span className="room-mobile-tile-label">{item.label}</span></button>}
-            </div>;
+            const locked = !placed && lockedItemIds.includes(item.id);
+            return <button type="button" key={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}`} onClick={() => placed ? onSelectItem(item.id) : onPrepare(item.id)} disabled={!placed && (!hazardsCleared || locked)} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
+              <ItemThumbnail image={item.image} label={item.label} /><span className="room-mobile-tile-label">{item.label}</span>
+              {placed && <span className="room-mobile-complete-mark" aria-hidden="true"><CheckIcon /></span>}
+              {locked && <span className="room-mobile-lock" aria-hidden="true"><LockIcon /></span>}
+            </button>;
           })}</div>}
       </section>
     </>}
