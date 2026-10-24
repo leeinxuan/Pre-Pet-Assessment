@@ -1073,3 +1073,47 @@
 .profile-supplement .pet-experience-row input[type="checkbox"] { width: 20px; min-height: 20px; margin: 0; accent-color: var(--gold-dark); }.profile-supplement .pet-experience-row input:not([type="checkbox"]) { min-width: 0; min-height: 44px; padding: 8px; background: #f4f3f1; }.profile-supplement .shiba-experience { width: min(310px,100%); margin-top: 18px; }
 .profile-supplement .experience-note textarea { min-height: 112px; }.profile-supplement .profile-pdf-actions { width: 100%; margin-top: 26px; }.profile-supplement .pdf-download-button { min-width: 236px; }
 @media (max-width: 720px) { .profile-supplement .profile-panel { padding: 24px 18px; }.profile-supplement .profile-panel legend { font-size: 20px; }.profile-supplement .profile-time-grid, .profile-supplement .housing-options, .profile-supplement .supplement-choice-grid, .profile-supplement .supplement-choice-grid.compact, .profile-supplement .pet-experience-row { grid-template-columns: 1fr; }.profile-supplement .profile-time-grid > label { min-height: 84px; padding: 16px; }.profile-supplement .housemate-presence-choice { grid-template-columns: 1fr 1fr; }.profile-supplement .supplement-choice, .profile-supplement .housing-options button { min-height: 60px; }.profile-supplement .pet-experience-block { padding: 17px; }.profile-supplement .pet-experience-row label { grid-template-columns: auto max-content minmax(0,1fr); }.profile-supplement .pdf-download-button { width: 100%; } }
+
+/* 回顧提醒：手機版將標題、摘要與細節入口分成獨立三列。 */
+@media (max-width: 720px) {
+  .care-review-followup .care-review-topic-grid article,
+  .care-review-notes-entry .care-review-topic-grid article {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+    gap: 9px 12px;
+    min-width: 0;
+    padding: 18px 0;
+  }
+  .care-review-followup .care-review-topic-grid article > span,
+  .care-review-notes-entry .care-review-topic-grid article > span {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .care-review-followup .care-review-topic-grid article > div,
+  .care-review-notes-entry .care-review-topic-grid article > div { display: contents; }
+  .care-review-followup .care-review-topic-grid article > div > b,
+  .care-review-notes-entry .care-review-topic-grid article > div > b {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .care-review-followup .care-review-topic-grid article > div > p,
+  .care-review-notes-entry .care-review-topic-grid article > div > p {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+  .care-review-followup .care-review-topic-grid .discussion-info-button,
+  .care-review-notes-entry .care-review-topic-grid .discussion-info-button {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: start;
+    min-height: 44px;
+    margin: 2px 0 0;
+  }
+}

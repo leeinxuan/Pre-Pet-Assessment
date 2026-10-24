@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import type { HazardItem, RoomItem } from "../../game-types";
 import { renderKnowledgeText } from "../life/activities/activity-ui";
+import { MobileStageIntro } from "../shared/MobileStageIntro";
 
 type RoomPreparationMobileProps = {
   petName: string;
@@ -68,11 +69,26 @@ function HazardThumbnail({ hazard, background }: { hazard: HazardItem; backgroun
 }
 
 export function RoomPreparationMobile({ petName, scene, hazardBackground, hazards, items, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, itemPrice }: RoomPreparationMobileProps) {
-  const [started, setStarted] = useState(() => securedHazards.length > 0 || selectedItems.length > 0);
+  const [started, setStarted] = useState(false);
   const [chosenTab, setChosenTab] = useState<"hazards" | "items" | null>(null);
+  const [pendingInfoItemIds, setPendingInfoItemIds] = useState<Set<string>>(() => new Set());
   const tab = chosenTab ?? (hazardsCleared ? "items" : "hazards");
   const activeInfo = activeHazard ?? activeItem;
   const touchStart = useRef<number | null>(null);
+
+  function handleSupplyClick(id: string, placed: boolean) {
+    if (placed) {
+      setPendingInfoItemIds((current) => {
+        if (!current.has(id)) return current;
+        const next = new Set(current);
+        next.delete(id);
+        return next;
+      });
+      onSelectItem(id);
+    } else if (onPrepare(id)) {
+      setPendingInfoItemIds((current) => new Set(current).add(id));
+    }
+  }
 
   useEffect(() => {
     if (!activeInfo || !window.matchMedia("(max-width: 720px)").matches) return;
@@ -87,15 +103,10 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   }, [activeInfo, onCloseInfo]);
 
   return <div className={`room-preparation-mobile${started ? " is-started" : ""}`}>
-    {!started ? <section className="room-mobile-intro intro-screen" aria-labelledby="room-mobile-intro-title">
-      <div className="intro-orbit" aria-hidden="true"><RoomIntroIcon /></div>
-        <h1 id="room-mobile-intro-title" className="intro-screen-title--light">先替 {petName} 布置安全的生活空間</h1>
-        <p className="intro-body">在迎接 {petName} 前，先收好生活空間中的危險物品，再準備好牠每天需要的用品。</p>
-        <button type="button" className="primary large" onClick={() => setStarted(true)}>開始整理空間 <span>→</span></button>
-    </section> : <>
+    {!started ? <MobileStageIntro id="room-mobile-intro-title" className="room-mobile-intro" icon={<RoomIntroIcon />} title={`先替 ${petName} 布置安全的生活空間`} description={`在迎接 ${petName} 前，先收好生活空間中的危險物品，再準備好牠每天需要的用品。`} actionLabel="開始整理空間" onStart={() => setStarted(true)} /> : <>
       {scene}
       <div className="room-mobile-tabs" role="tablist" aria-label="房間佈置階段">
-        <button type="button" role="tab" aria-selected={tab === "hazards"} className={tab === "hazards" ? "is-active" : ""} onClick={() => setChosenTab("hazards")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{hazardIcon}</span>危險物品</span><span>{hazardsCleared ? <span className="room-mobile-tab-check" aria-label="已全部收好"><CheckIcon /></span> : `${securedHazards.filter((id) => hazards.some((item) => item.id === id)).length} / ${hazards.length}`}</span></button>
+        <button type="button" role="tab" aria-selected={tab === "hazards"} className={tab === "hazards" ? "is-active" : ""} onClick={() => setChosenTab("hazards")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{hazardIcon}</span>危險物品</span><span>{securedHazards.filter((id) => hazards.some((item) => item.id === id)).length} / {hazards.length}</span></button>
         <button type="button" role="tab" aria-selected={tab === "items"} className={tab === "items" ? "is-active" : ""} onClick={() => setChosenTab("items")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{supplyIcon}</span>用品準備箱</span><span>{selectedItems.filter((id) => items.some((item) => item.id === id)).length} / {items.length}</span></button>
       </div>
       <section className="room-mobile-inventory" role="tabpanel" aria-label={tab === "hazards" ? "已收好的危險物品" : "準備用品"}>
@@ -105,7 +116,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
           : <div className="room-mobile-grid">{items.map((item) => {
             const placed = selectedItems.includes(item.id);
             const locked = !placed && lockedItemIds.includes(item.id);
-            return <button type="button" key={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}`} onClick={() => placed ? onSelectItem(item.id) : onPrepare(item.id)} disabled={!placed && (!hazardsCleared || locked)} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
+            return <button type="button" key={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}${placed && pendingInfoItemIds.has(item.id) ? " is-awaiting-info" : ""}`} onClick={() => handleSupplyClick(item.id, placed)} disabled={!placed && (!hazardsCleared || locked)} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
               <ItemThumbnail image={item.image} label={item.label} /><span className="room-mobile-tile-label">{item.label}</span>
               {placed && <span className="room-mobile-complete-mark" aria-hidden="true"><CheckIcon /></span>}
               {locked && <span className="room-mobile-lock" aria-hidden="true"><LockIcon /></span>}

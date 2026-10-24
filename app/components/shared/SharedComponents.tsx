@@ -650,7 +650,7 @@ function CoinFlightAnimation({ expense, triggerRef }: {
       : `+NT$ ${money.format(expense.amount)}${isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}`;
     const title = isTemporaryReserve ? "臨時性支出預留已更新" : "已加入準備清單";
     const mobileRoomScene = window.matchMedia("(max-width: 720px)").matches
-      ? document.querySelector<HTMLElement>(".room-preparation-mobile.is-started .room-mobile-scene")
+      ? document.querySelector<HTMLElement>(".room-preparation-mobile.is-started .room-mobile-scene, .departure-preparation-page .departure-car, .life-journey-page .arrival-meal-scene")
       : null;
     const measuredScene = mobileRoomScene?.getBoundingClientRect();
     const sceneRect = measuredScene && measuredScene.width > 0 && measuredScene.height > 0 ? measuredScene : null;

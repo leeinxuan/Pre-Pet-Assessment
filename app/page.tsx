@@ -115,6 +115,7 @@ export default function Home() {
   const [hasPreviousPet, setHasPreviousPet] = useState<boolean | null>(null);
   const [oldPetName, setOldPetName] = useState("");
   const [preparationTask, setPreparationTask] = useState(0);
+  const [mobilePreparationEntry, setMobilePreparationEntry] = useState(0);
   const [preparationReached, setPreparationReached] = useState(0);
   const [preparationReplayTask, setPreparationReplayTask] = useState<number | null>(null);
   const [homeReadiness, setHomeReadiness] = useState(initialHomeReadinessState);
@@ -128,6 +129,7 @@ export default function Home() {
   const [lifePhase, setLifePhase] = useState<LifeJourneyPhase>("arrival-video");
   const [petName, setPetName] = useState("");
   const [journeyIndex, setJourneyIndex] = useState(0);
+  const [mobileJourneyEntry, setMobileJourneyEntry] = useState(0);
   const [journeyCompleted, setJourneyCompleted] = useState<string[]>([]);
   const [journeyReplay, setJourneyReplay] = useState<JourneyReplayState>(initialJourneyReplayState);
   const [lifeActivity, setLifeActivity] = useState<LifeActivityState>(initialLifeActivityState);
@@ -239,6 +241,7 @@ export default function Home() {
   }
 
   function selectJourneyIndex(nextIndex: number) {
+    if (window.matchMedia("(max-width: 720px)").matches) setMobileJourneyEntry((current) => current + 1);
     setTestNextTargetIndex(null);
     enterJourneyReplayItem(getJourneyItemsForSpecies(category)[nextIndex]?.id);
     setJourneyIndex(nextIndex);
@@ -252,6 +255,10 @@ export default function Home() {
   }
 
   function goToStation(next: number) {
+    if (window.matchMedia("(max-width: 720px)").matches) {
+      if (next === 2) setMobilePreparationEntry((current) => current + 1);
+      if (next >= 3 && next <= 6) setMobileJourneyEntry((current) => current + 1);
+    }
     if (next < 3 || next > 6) setTestNextTargetIndex(null);
     if (next >= 3 && next <= 6 && lifePhase === "complete") setLifePhase("life-journey");
     const activeItem = next >= 3 && next <= 6 ? getJourneyItemsForSpecies(category)[journeyIndex] : undefined;
@@ -262,6 +269,7 @@ export default function Home() {
   }
 
   function goToLifeStage(stageIndex: number) {
+    if (window.matchMedia("(max-width: 720px)").matches) setMobileJourneyEntry((current) => current + 1);
     const journeyItems = getJourneyItemsForSpecies(category);
     const stageStarts = journeyItems.reduce<number[]>((starts, item, index, all) => {
       if (index === 0 || item.stageId !== all[index - 1].stageId) starts.push(index);
@@ -696,10 +704,10 @@ export default function Home() {
     }
     if (preparationTask === 1) {
       const reviewing = preparationReached >= 2 && preparationReplayTask !== 1;
-      return <RoomPreparation selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { changePreparationTask(2); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
+      return <RoomPreparation key={`${category}:room:${mobilePreparationEntry}`} selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { changePreparationTask(2); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
     }
     const reviewing = furthestStep >= 3 && preparationReplayTask !== 2;
-    return <CarTrunkPreparation selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(2); }} onBack={() => changePreparationTask(1)} onNext={() => { setPreparationReached((current) => Math.max(current, 2)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation key={`${category}:departure:${mobilePreparationEntry}`} selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(2); }} onBack={() => changePreparationTask(1)} onNext={() => { setPreparationReached((current) => Math.max(current, 2)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
@@ -708,7 +716,7 @@ export default function Home() {
     }
     return (
       <LifeJourney
-        key={`${category}:${journeyIndex}`}
+        key={`${category}:${journeyIndex}:${mobileJourneyEntry}`}
         index={journeyIndex}
         petName={petName}
         breed={breed}

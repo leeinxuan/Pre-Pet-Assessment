@@ -6,6 +6,8 @@ import type { CSSProperties } from "react";
 import { getSpeciesConfig } from "../../../data/species";
 import { interpolatePetName } from "../../../data/shared/pet-text";
 import { ItemDescriptionCard } from "../../shared/ItemDescriptionCard";
+import { MobileInfoSheet, type MobileInfoSheetContent } from "../../shared/MobileInfoSheet";
+import { MobileStageIntro } from "../../shared/MobileStageIntro";
 import type {
   ArrivalMealSceneItemKey,
   ArrivalMealSceneLayout,
@@ -64,6 +66,10 @@ function WarningTriangle({ className = "" }: { className?: string }) {
   </svg>;
 }
 
+function FeedingIntroIcon() {
+  return <svg className="intro-line-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 36h46l-5 16H14L9 36ZM16 36l4-17h24l4 17M24 25h16M21 42h22" /><path d="M28 11c0 3-3 4-3 7m11-7c0 3-3 4-3 7" /></svg>;
+}
+
 
 export function ArrivalMealActivity({
   activity,
@@ -90,7 +96,9 @@ export function ArrivalMealActivity({
   const expenseIdsRef = useRef(expenseIds);
   const playExpenseSequenceRef = useRef(onPlayExpenseSequence);
   const [expenseSequenceComplete, setExpenseSequenceComplete] = useState(false);
-  const [foodWarning, setFoodWarning] = useState<{ title: string; text: string } | null>(null);
+  const [foodWarning, setFoodWarning] = useState<{ title: string; text: string; image: string } | null>(null);
+  const [mobileInfo, setMobileInfo] = useState<MobileInfoSheetContent | null>(null);
+  const [mobileStarted, setMobileStarted] = useState(false);
   const [unsafeFoodIds, setUnsafeFoodIds] = useState<string[]>([]);
   const choiceItems = feeding.interaction === "choice" ? feeding.choices : [];
   const sceneSupplies = feeding.interaction === "scene" ? feeding.supplies : [];
@@ -100,6 +108,10 @@ export function ArrivalMealActivity({
   const choiceComplete = requiredChoices.every((item) => activity.hamsterMealSelected.includes(item.id));
   const choiceFeedback = choiceItems.find((item) => item.id === activity.hamsterMealFeedbackId);
   const complete = feeding.interaction === "choice" ? choiceComplete : sceneComplete;
+  const mealTitle = feeding.interaction === "choice" ? interpolatePetName(feeding.title, petName) : `幫${petName || feeding.animalName}準備第一餐`;
+  const mealDescription = feeding.interaction === "choice"
+    ? interpolatePetName(feeding.intro, petName || "牠")
+    : `${petName || feeding.animalName}剛到新家，還有些不安。先幫${petName || "牠"}準備合適的主食與乾淨飲水，讓牠慢慢安心下來。`;
   const supplyReady = (key: "food" | "water" | "veggie") => key === "food"
     ? activity.arrivalMealFoodReady
     : key === "water"
@@ -119,7 +131,7 @@ export function ArrivalMealActivity({
     : undefined;
   const [readyPetDisplayed, setReadyPetDisplayed] = useState(false);
   useEffect(() => {
-    if (!complete || hasRecordedMeal.current) return;
+    if (!complete || hasRecordedMeal.current || (!mobileStarted && window.matchMedia("(max-width: 720px)").matches)) return;
     hasRecordedMeal.current = true;
     let active = true;
     void (async () => {
@@ -127,13 +139,13 @@ export function ArrivalMealActivity({
       if (active) setExpenseSequenceComplete(true);
     })();
     return () => { active = false; };
-  }, [complete]);
+  }, [complete, mobileStarted]);
   useEffect(() => {
     const delay = feeding.interaction === "scene" ? feeding.readyPetDelayMs : undefined;
-    if (!complete || delay === undefined) return;
+    if (!complete || delay === undefined || (!mobileStarted && window.matchMedia("(max-width: 720px)").matches)) return;
     const timer = window.setTimeout(() => setReadyPetDisplayed(true), delay);
     return () => window.clearTimeout(timer);
-  }, [complete, feeding]);
+  }, [complete, feeding, mobileStarted]);
   function prepareSupply(key: "food" | "water" | "veggie") {
     const ready = key === "food" ? activity.arrivalMealFoodReady : key === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady;
     if (ready) return;
@@ -144,7 +156,7 @@ export function ArrivalMealActivity({
     const unsafeFood = sceneUnsafeFoods.find((item) => item.id === kind);
     if (!unsafeFood) return;
     setUnsafeFoodIds((current) => current.includes(kind) ? current : [...current, kind]);
-    setFoodWarning({ title: interpolatePetName(unsafeFood.title, petName, species), text: interpolatePetName(unsafeFood.text, petName, species) });
+    setFoodWarning({ title: interpolatePetName(unsafeFood.title, petName, species), text: interpolatePetName(unsafeFood.text, petName, species), image: unsafeFood.image });
   }
   function chooseMealChoice(id: string) {
     const item = choiceItems.find((entry) => entry.id === id);
@@ -157,11 +169,12 @@ export function ArrivalMealActivity({
     onChange({ hamsterMealFeedbackId: id });
   }
   return (
-    <section className={`arrival-meal-activity${feeding.interaction === "choice" ? " arrival-meal-activity--choice" : ""}`} aria-label={`為${petName}準備第一餐`}>
-      <div className="arrival-meal-heading">
+    <section className={`arrival-meal-activity${feeding.interaction === "choice" ? " arrival-meal-activity--choice" : ""}${mobileStarted ? " is-mobile-started" : " is-mobile-intro"}`} aria-label={`為${petName}準備第一餐`}>
+      <MobileStageIntro id="arrival-meal-mobile-intro-title" icon={<FeedingIntroIcon />} title={mealTitle} description={mealDescription} actionLabel="開始準備第一餐" onStart={() => setMobileStarted(true)} />
+      <div className="arrival-meal-inventory"><div className="arrival-meal-heading">
         <p className="life-stage-label">{lifeStageArrivalLabel}</p>
-        <h1>{feeding.interaction === "choice" ? interpolatePetName(feeding.title, petName) : `幫${petName || feeding.animalName}準備第一餐`}</h1>
-        <p>{feeding.interaction === "choice" ? interpolatePetName(feeding.intro, petName || "牠") : `${petName || feeding.animalName}剛到新家，還有些不安。先幫${petName || "牠"}準備合適的主食與乾淨飲水，讓牠慢慢安心下來。`}</p>
+        <h1>{mealTitle}</h1>
+        <p>{mealDescription}</p>
       </div>
       <aside className={`arrival-meal-supplies${feeding.interaction === "choice" ? " arrival-meal-supplies--choice" : ""}`} aria-label="晚餐用品">
         {feeding.interaction === "choice" ? choiceItems.map((item) => <button key={item.id} type="button" draggable={!activity.hamsterMealSelected.includes(item.id)}
@@ -173,12 +186,13 @@ export function ArrivalMealActivity({
           const imageClassName = supply.stateKey === "food" ? "arrival-meal-supply-food" : supply.stateKey === "water" ? "arrival-meal-supply-water" : undefined;
           const imageStyle = arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, supply.stateKey);
           const note = <ItemDescriptionCard className="arrival-meal-supply-note" title={supply.label} description={supply.description} footer="已準備完成" />;
-          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? note : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span></button><ItemDescriptionCard className="arrival-meal-supply-note arrival-meal-supply-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
+          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? <><div className="arrival-meal-desktop-note">{note}</div><button type="button" className="arrival-meal-mobile-done" onClick={() => setMobileInfo({ title: supply.label, description: supply.description, image: supply.image })} aria-label={`查看${supply.label}說明`}><img style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><span aria-hidden="true">✓</span></button></> : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span></button><ItemDescriptionCard className="arrival-meal-supply-note arrival-meal-supply-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
         })}{sceneUnsafeFoods.map((food) => {
           const caution = food.presentation === "caution";
           return <button key={food.id} type="button" className={`arrival-meal-unsafe${caution ? " caution" : ""}${unsafeFoodIds.includes(food.id) ? " warning" : ""}`} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={food.image} alt="" />{unsafeFoodIds.includes(food.id) && (caution ? <WarningTriangle className="unsafe-food-warning-icon" /> : <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>)}</span><span>{food.label}</span></button>;
         })}</>}
       </aside>
+      </div>
       <div className="arrival-meal-scene" role={feeding.interaction === "choice" ? "group" : undefined} aria-label={feeding.interaction === "choice" ? "第一餐食碗" : undefined} onDragOver={feeding.interaction === "choice" ? (event) => event.preventDefault() : undefined} onDrop={feeding.interaction === "choice" ? (event) => { event.preventDefault(); chooseMealChoice(event.dataTransfer.getData("text/plain")); } : undefined}>
         {feeding.interaction === "choice" ? <div className="scene-media-placeholder" aria-live="polite"><small>互動場景</small><b>食碗</b><p>{activity.hamsterMealSelected.length ? choiceItems.filter((item) => activity.hamsterMealSelected.includes(item.id)).map((item) => item.label).join("、") : feeding.emptyBowlText}</p></div> : <>
         <img className="arrival-meal-room arrival-meal-room--desktop" src={feeding.scene.desktopBackground} alt={`${feeding.animalName}的新家房間`} />
@@ -198,9 +212,10 @@ export function ArrivalMealActivity({
       </div>
       <div className="arrival-meal-footer">
         {feeding.interaction === "choice" && choiceFeedback && <p className={`guided-activity-feedback ${choiceFeedback.result}`} role="status">{interpolatePetName(choiceFeedback.feedback, petName)}</p>}
-        <p className="arrival-meal-completion-message" role="status">{complete ? feeding.completionMessage : "\u00a0"}</p>
+        {complete && <p className="arrival-meal-completion-message" role="status">{feeding.completionMessage}</p>}
         <button className="primary arrival-meal-continue-button" disabled={!complete || !expenseSequenceComplete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
       </div>
+      <MobileInfoSheet content={mobileInfo ?? (foodWarning ? { title: foodWarning.title, description: foodWarning.text, image: foodWarning.image } : null)} onClose={() => { setMobileInfo(null); setFoodWarning(null); }} />
     </section>
   );
 }

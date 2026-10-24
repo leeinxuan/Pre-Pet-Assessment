@@ -126,7 +126,9 @@ export function BreedChallengeActivity({
           </section>
         ) : (
           <section className="breed-challenge-options">
+            <div className="mobile-choice-context">{withPetName(scenario.description, petName).split(/\n{2,}/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
             <h2>{withPetName(scenario.questionText, petName)}</h2>
+            <p className="mobile-choice-question">{withPetName(scenario.questionText, petName)}</p>
             <div>{scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => choose(choice)}>{withPetName(choice.text, petName)}</ScenarioOptionCard>)}</div>
           </section>
         )}

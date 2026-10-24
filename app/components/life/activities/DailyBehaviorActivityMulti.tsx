@@ -204,7 +204,7 @@ export function DailyBehaviorActivityMulti({
   }
 
   return (
-    <section className="daily-behavior-activity">
+    <section className={`daily-behavior-activity${species === "dog" && scenario.id === "behavior-barking" ? " daily-behavior-activity--dog-barking" : ""}`}>
       <div className="daily-behavior-head">
         <p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p>
         <h1>{withPetName(scenario.title, petName, species)}</h1>
@@ -232,6 +232,7 @@ export function DailyBehaviorActivityMulti({
         </section>
       ) : <section className="reflection daily-behavior-choices">
           <div className="daily-behavior-question-row">
+            <p className="mobile-choice-context">{renderKnowledgeText(withPetName(scenario.description, petName, species))}</p>
             <h2>{withPetName(scenario.questionText, petName, species)}</h2>
             <p className="daily-behavior-live-hint visible daily-behavior-progress-hint" role="status">
               {mode === "animating" ? "正在加入本次照顧費用…" : `已找到 ${correctSelectedCount} / ${correctChoiceIds.length} 個合適做法`}

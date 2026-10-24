@@ -4,10 +4,10 @@ import path from "node:path";
 const assetRoot = path.resolve("public/assets");
 const limits = {
   image: 2 * 1024 * 1024,
-  video: 5 * 1024 * 1024,
+  video: 15 * 1024 * 1024,
   // The full published experience includes one media set per species. Keep
-  // per-file limits strict, while leaving capacity for the remaining species.
-  total: 380 * 1024 * 1024,
+  // per-file limits in place, while leaving capacity for the remaining species.
+  total: 500 * 1024 * 1024,
 };
 const imageExtensions = new Set([".avif", ".gif", ".jpeg", ".jpg", ".png", ".webp"]);
 const videoExtensions = new Set([".m4v", ".mov", ".mp4", ".webm"]);

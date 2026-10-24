@@ -6,7 +6,7 @@ export const rabbitExpenses: Record<string, ExpenseRecord> = {
   "rabbit-heavy-water-bowl": { id: "rabbit-heavy-water-bowl", name: "較重的飲水碗", amount: 350, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "較重不易翻倒；每日換新鮮水、保持清潔" },
   "rabbit-litter-box": { id: "rabbit-litter-box", name: "兔用便盆", amount: 600, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "兔子可訓練定點上廁所；搭配墊料每日清理" },
   "rabbit-hiding-box": { id: "rabbit-hiding-box", name: "躲藏箱／小屋", amount: 800, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "提供可隨時躲藏的安全空間，減少緊迫" },
-  "rabbit-anti-slip-mat": { id: "rabbit-anti-slip-mat", name: "防滑墊", amount: 400, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "防止兔子在地板上打滑，保護關節與後肢" },
+  "rabbit-anti-slip-mat": { id: "rabbit-anti-slip-mat", name: "寵物保潔墊", amount: 400, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "鋪設於圍欄內，便於清理排泄物與食物殘渣，可清洗或拋棄式皆可" },
   "rabbit-cooling-mat": { id: "rabbit-cooling-mat", name: "陶板涼感墊", amount: 600, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "夏季降溫必備；兔子對高溫極度敏感，超過 28°C 有中暑風險" },
   "rabbit-chew-toy": { id: "rabbit-chew-toy", name: "木製咀嚼玩具", amount: 200, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "天然材質供兔子啃咬；維持牙齒磨損，兼具豐富化功能" },
   "rabbit-dig-box": { id: "rabbit-dig-box", name: "挖掘箱", amount: 400, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false, description: "提供挖掘行為出口，減少破壞性行為" },

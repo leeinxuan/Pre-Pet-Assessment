@@ -11,6 +11,8 @@ import { getSpeciesConfig } from "../../data/species/index";
 import type { CareMember, ExpenseRecord, HazardItem, RoomItem } from "../../game-types";
 import { NavButtons, StepHeading } from "../shared/SharedComponents";
 import { ItemDescriptionCard } from "../shared/ItemDescriptionCard";
+import { MobileInfoSheet, type MobileInfoSheetContent } from "../shared/MobileInfoSheet";
+import { MobileStageIntro } from "../shared/MobileStageIntro";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
 import { sharedAssets } from "../../data/shared/assets";
 import { RoomPreparationMobile } from "./RoomPreparationMobile";
@@ -34,6 +36,10 @@ function StorageBoxIcon() {
   return <svg viewBox="0 0 32 32" focusable="false" aria-hidden="true">
     <path d="M5 9h22v4H5zM7 13h18l-1.5 13h-15zM12 17h8" />
   </svg>;
+}
+
+function DepartureIntroIcon() {
+  return <svg className="intro-line-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="13" y="22" width="38" height="30" rx="4" /><path d="M25 22v-6a7 7 0 0 1 14 0v6M13 32h38M25 32v7m14-7v7" /></svg>;
 }
 
 function WarningTriangleIcon() {
@@ -644,6 +650,8 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
   const departureScene = speciesConfig.preparation.departureScene;
   const [exitingItems, setExitingItems] = useState<string[]>([]);
   const [departing, setDeparting] = useState(false);
+  const [mobileStarted, setMobileStarted] = useState(false);
+  const [mobileInfo, setMobileInfo] = useState<MobileInfoSheetContent | null>(null);
   const documents = activeTrunkItems.filter((item) => item.kind === "document");
   const supplies = activeTrunkItems.filter((item) => item.kind === "supply");
   const documentDone = documents.filter((item) => selected.includes(item.id)).length;
@@ -664,10 +672,12 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
 
   function depart() { setDeparting(true); window.setTimeout(onNext, 650); }
 
-  return <div className="content-wrap preparation-page">
+  return <div className={`content-wrap preparation-page departure-preparation-page${mobileStarted ? " is-mobile-started" : " is-mobile-intro"}`}>
+    <MobileStageIntro id="departure-mobile-intro-title" icon={<DepartureIntroIcon />} title={speciesConfig.copy.departureTitle} description={speciesConfig.copy.departureBody(petName)} actionLabel="開始出發前準備" onStart={() => setMobileStarted(true)} />
     <StepHeading title={speciesConfig.copy.departureTitle} body={speciesConfig.copy.departureBody(petName)} />
     <div className={`departure-layout ${departing ? "departing" : ""}`}>
       <aside className="departure-supply-shelf" aria-label="準備物品">
+        <div className="departure-mobile-heading"><h1>{speciesConfig.copy.departureTitle}</h1><p>{speciesConfig.copy.departureBody(petName)}</p></div>
         <div className="departure-supply-header"><h2><span className="departure-supply-header-icon"><StorageBoxIcon /></span>準備物品</h2></div>
         <div className="departure-supply-rows">
           {supplyRows.map((row, index) => <div className={`departure-supply-row departure-supply-row--${row.length}`} key={`${row.map((item) => item.id).join("-")}-${index}`}>
@@ -679,7 +689,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
                   <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.visualClassName ?? item.id}`} style={item.visualScale === undefined ? undefined : { "--departure-item-image-scale": item.visualScale } as CSSProperties} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b>
-                </button> : <ItemDescriptionCard title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} />}
+                </button> : <><div className="departure-desktop-note"><ItemDescriptionCard title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} /></div><button type="button" className="departure-mobile-done" onClick={() => setMobileInfo({ title: item.label, description: item.description.replaceAll("{petName}", displayName), image: item.image, price: item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined) })} aria-label={`查看${item.label}說明`}><span className="departure-supply-visual">{item.image && <img src={item.image} alt="" />}</span><b>{item.label}</b><span aria-hidden="true">✓</span></button></>}
               </div>;
             })}
           </div>)}
@@ -697,5 +707,6 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
       <button type="button" className="secondary" onClick={complete || reviewing ? onReplay : onBack}>{complete || reviewing ? "↻ 再玩一次" : "← 返回"}</button>
       <div><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
     </div>
+    <MobileInfoSheet content={mobileInfo} onClose={() => setMobileInfo(null)} />
   </div>;
 }

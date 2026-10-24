@@ -1,0 +1,458 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */
+/* Hallmark · macrostructure: fixed media / fixed prompt / local-scroll content · genre: narrative workflow · tone: warm-practical · anchor: existing cream and mint */
+/* Mobile-only full-bleed activities. Desktop retains its existing card layout. */
+.mobile-choice-context,
+.mobile-choice-question,
+.mobile-stage-intro,
+.breed-challenge-options > .mobile-choice-context,
+.departure-mobile-heading,
+.departure-supply-row button.departure-mobile-done,
+.arrival-meal-supplies button.arrival-meal-mobile-done { display: none; }
+.arrival-meal-inventory { display: contents; }
+.mobile-info-sheet-overlay { display: none; }
+.video-scenario-choice-list,
+.busy-care-choice-list { display: grid; align-content: start; gap: 14px; }
+.video-scenario-choice-list > .scenario-option-card,
+.busy-care-choice-list > .scenario-option-card { margin-top: 0; padding: 18px 20px; background: #fffdf7; }
+.video-scenario-choice-list > .scenario-option-card:hover,
+.busy-care-choice-list > .scenario-option-card:hover { background: #fff9e7; }
+.arrival-meal-activity--choice > .arrival-meal-scene { min-height: 430px; }
+.arrival-meal-activity--choice > .arrival-meal-scene .scene-media-placeholder { min-height: 100%; border: 0; border-radius: 0; }
+.arrival-meal-activity--choice > .arrival-meal-scene .scene-media-placeholder p { max-width: min(100%, 420px); overflow-wrap: anywhere; }
+
+@media (max-width: 720px) {
+  .mobile-stage-intro {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 24px 24px calc(24px + env(safe-area-inset-bottom));
+    background: var(--paper);
+  }
+  .mobile-stage-intro .intro-orbit { width: min(112px, 20dvh); height: min(112px, 20dvh); margin-bottom: 25px; }
+  .mobile-stage-intro h1 { min-width: 0; max-width: 100%; font-size: clamp(30px, 8vw, 42px); line-height: 1.2; overflow-wrap: anywhere; }
+  .mobile-stage-intro .intro-body { margin: 20px 0 30px; font-size: 15px; line-height: 1.8; }
+  .mobile-stage-intro .primary { min-height: 56px; white-space: nowrap; }
+  .departure-preparation-page.is-mobile-intro,
+  .arrival-meal-activity.is-mobile-intro { display: block; }
+  .departure-preparation-page.is-mobile-intro > :not(.mobile-stage-intro),
+  .arrival-meal-activity.is-mobile-intro > :not(.mobile-stage-intro),
+  .departure-preparation-page.is-mobile-started > .mobile-stage-intro,
+  .arrival-meal-activity.is-mobile-started > .mobile-stage-intro { display: none; }
+
+  html:has(.departure-preparation-page),
+  body:has(.departure-preparation-page),
+  html:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
+  body:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) { height: 100%; overflow: hidden; }
+
+  .stage-layout:has(.departure-preparation-page),
+  .stage-layout:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .stage-layout:has(.departure-preparation-page) > .stage,
+  .stage-layout:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) > .stage { min-height: 0; overflow: hidden; }
+  .content-wrap.departure-preparation-page,
+  .content-wrap.life-journey-page:has(> :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    animation: none;
+  }
+
+  /* Correct answer: the video is a fixed row; only the green copy pane scrolls. */
+  .correct-feedback-layout,
+  .correct-feedback-layout--single,
+  .correct-feedback-layout--multiple {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .correct-feedback-media,
+  .correct-feedback-media video,
+  .correct-feedback-media > .breed-challenge-video-placeholder {
+    width: 100%;
+    height: min(56.25vw, 34dvh);
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+  }
+  .correct-feedback-media video { object-fit: cover; }
+  .correct-feedback-copy,
+  .correct-feedback-layout--single .correct-feedback-copy {
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    justify-content: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 24px 20px calc(28px + env(safe-area-inset-bottom));
+    background: #e8f3e6;
+  }
+  .correct-feedback-actions { flex: 0 0 auto; padding-bottom: 2px; }
+
+  /* Questions share fixed media, title, context and prompt; only option cards scroll. */
+  .video-scenario-activity,
+  .daily-behavior-activity,
+  .busy-care-activity,
+  .breed-challenge-activity {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .video-scenario-layout,
+  .busy-care-layout,
+  .breed-challenge-layout { display: contents; }
+  .video-scenario-visual,
+  .daily-behavior-video,
+  .busy-care-room,
+  .breed-challenge-video-placeholder {
+    grid-row: 1;
+    width: 100%;
+    height: min(56.25vw, 34dvh);
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .video-scenario-visual video,
+  .daily-behavior-video video,
+  .busy-care-room-video,
+  .busy-care-room-background,
+  .breed-challenge-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+  }
+  .video-scenario-heading,
+  .daily-behavior-head,
+  .busy-care-heading,
+  .breed-challenge-heading {
+    grid-row: 2;
+    min-width: 0;
+    margin: 0;
+    padding: 12px 16px 8px;
+    background: var(--paper);
+  }
+  .video-scenario-heading h1,
+  .daily-behavior-head h1,
+  .busy-care-heading h1,
+  .breed-challenge-heading h1 { margin: 0; font-size: clamp(21px, 6vw, 29px); line-height: 1.25; }
+  .video-scenario-heading > p:not(.life-stage-label),
+  .daily-behavior-head > p:not(.life-stage-label),
+  .busy-care-heading > p:not(.life-stage-label),
+  .breed-challenge-heading .breed-challenge-description,
+  .breed-challenge-heading small { display: none; }
+  .video-scenario-options,
+  .busy-care-options,
+  .breed-challenge-options {
+    grid-row: 3;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    align-content: stretch;
+    gap: 0;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+  .daily-behavior-choices {
+    grid-row: 3;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: stretch;
+    gap: 0;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+  .video-scenario-options h2,
+  .daily-behavior-question-row,
+  .busy-care-options h2,
+  .breed-challenge-options h2 {
+    min-width: 0;
+    margin: 0;
+    padding: 9px 16px 12px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    font-size: clamp(16px, 4.5vw, 20px);
+    line-height: 1.4;
+  }
+  .video-scenario-options > h2,
+  .daily-behavior-question-row > h2,
+  .busy-care-options > h2,
+  .breed-challenge-options > h2 { display: none; }
+  .daily-behavior-question-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+  }
+  .daily-behavior-question-row > .mobile-choice-context { grid-column: 1 / -1; }
+  .daily-behavior-question-row > h2 {
+    display: block;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    font-size: clamp(16px, 4.5vw, 20px);
+    overflow-wrap: anywhere;
+  }
+  .daily-behavior-progress-hint {
+    justify-self: end;
+    max-width: 116px;
+    padding: 5px 8px;
+    font-size: 11px;
+    line-height: 1.35;
+    text-align: center;
+    white-space: normal;
+  }
+  .video-scenario-choice-list,
+  .busy-care-choice-list,
+  .daily-behavior-choices .choice-grid,
+  .breed-challenge-options > div:not(.mobile-choice-context) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 10px;
+    min-height: 0;
+    margin: 0;
+    padding: 14px 16px calc(24px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .video-scenario-options > .mobile-choice-context,
+  .busy-care-options > .mobile-choice-context,
+  .breed-challenge-options > .mobile-choice-context,
+  .daily-behavior-question-row > .mobile-choice-context {
+    display: block;
+    min-width: 0;
+    margin: 0;
+    padding: 10px 16px 12px;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    background: var(--paper);
+    font-size: 13px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+  .daily-behavior-question-row > .mobile-choice-context { padding: 0; border: 0; }
+  .mobile-choice-context p { margin: 0; }
+  .mobile-choice-context p + p { margin-top: 6px; }
+  .mobile-choice-question {
+    display: block;
+    min-width: 0;
+    margin: 0;
+    padding: 10px 16px 12px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: clamp(16px, 4.5vw, 20px);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .breed-challenge-options > .mobile-choice-question { margin: 0; color: var(--ink); line-height: 1.4; }
+  .daily-behavior-activity--dog-barking .choice-grid > .scenario-option-card {
+    box-sizing: border-box;
+    min-height: 80px;
+    align-items: center;
+    padding: 16px 20px;
+  }
+  .video-scenario-retry,
+  .daily-behavior-retry,
+  .busy-care-members,
+  .busy-care-feedback,
+  .breed-challenge-retry {
+    grid-row: 3;
+    min-height: 0;
+    margin: 0;
+    padding: 20px 16px calc(26px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* Departure: square trunk first, then scrollable inventory and a safe footer. */
+  .departure-preparation-page { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+  .departure-preparation-page > .step-heading { display: none; }
+  .departure-layout { display: contents; }
+  .departure-car {
+    grid-row: 1;
+    justify-self: stretch;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .departure-car .car-trunk-background { width: 100%; height: 100%; object-fit: cover; }
+  .departure-supply-shelf {
+    grid-row: 2;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 14px 16px 22px;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+  }
+  .departure-mobile-heading { display: none; }
+  .departure-mobile-heading h1 { margin: 0 0 5px; font-size: 20px; line-height: 1.3; }
+  .departure-mobile-heading p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+  .departure-supply-header { margin: 0 0 12px; padding: 0 0 10px; background: transparent; }
+  .departure-supply-rows { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .departure-supply-row .supply-slot { min-width: 0; min-height: 112px; }
+  .departure-desktop-note { display: none; }
+  .departure-supply-row button.departure-mobile-done {
+    position: relative;
+    display: flex;
+    min-height: 112px;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fffaf0;
+  }
+  .departure-mobile-done > span:last-child { position: absolute; top: 5px; right: 7px; color: #4f8059; font-weight: 900; }
+  .departure-actions {
+    grid-row: 3;
+    flex-direction: row;
+    align-items: center;
+    min-height: 62px;
+    margin: 0;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: white;
+  }
+  .departure-actions > div { flex: 1; }
+  .departure-actions button { min-height: 44px; font-size: 12px; }
+  .departure-actions > .secondary { width: auto; white-space: nowrap; }
+
+  /* Feeding keeps all species data and scene coordinates; only layout changes. */
+  .arrival-meal-activity,
+  .arrival-meal-activity--choice {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .arrival-meal-scene,
+  .arrival-meal-activity--choice > .arrival-meal-scene { grid-row: 1; width: 100%; min-height: 0; aspect-ratio: 1 / 1; }
+  .arrival-meal-inventory {
+    display: block;
+    grid-row: 2;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--paper);
+  }
+  .arrival-meal-warning-overlay { display: none; }
+  .arrival-meal-heading { display: none; }
+  .arrival-meal-heading h1 { font-size: 21px; }
+  .arrival-meal-heading p { font-size: 13px; line-height: 1.5; }
+  .arrival-meal-supplies,
+  .arrival-meal-supplies--choice {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    gap: 12px;
+    min-height: 0;
+    padding: 14px 16px 24px;
+  }
+  .arrival-meal-supply-slot { min-width: 0; }
+  .arrival-meal-desktop-note { display: none; }
+  .arrival-meal-supplies button.arrival-meal-mobile-done {
+    position: relative;
+    display: flex;
+    min-height: 112px;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fffaf0;
+    font-size: 12px;
+  }
+  .arrival-meal-mobile-done > span:last-child { position: absolute; top: 6px; right: 7px; color: #4f8059; }
+  .arrival-meal-mobile-done img { width: min(76px, 70%) !important; height: 72px !important; }
+  .arrival-meal-footer {
+    grid-row: 3;
+    gap: 4px;
+    min-height: 0;
+    margin: 0;
+    padding: 7px 12px calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: white;
+  }
+  .arrival-meal-footer p { flex: 0 0 auto; font-size: 11px; line-height: 1.35; }
+  .arrival-meal-completion-message { min-height: 0; }
+  .arrival-meal-footer .primary { min-height: 44px; margin: 0; }
+  .arrival-meal-activity .arrival-meal-footer .arrival-meal-continue-button { margin-bottom: 0; }
+}
+
+/* A short phone keeps enough of the inventory visible without changing scene coordinates. */
+@media (max-width: 720px) and (max-height: 740px) {
+  .departure-car,
+  .arrival-meal-scene,
+  .arrival-meal-activity--choice > .arrival-meal-scene { height: min(100vw, 48dvh); aspect-ratio: auto; }
+  .departure-car .car-trunk-background,
+  .arrival-meal-room { object-fit: fill; }
+}
+
+@media (max-width: 720px) {
+  .mobile-info-sheet-overlay { position: fixed; z-index: 999; inset: 0; display: flex; align-items: flex-end; background: rgba(33, 30, 25, .42); }
+  .mobile-info-sheet { position: relative; box-sizing: border-box; width: 100%; max-height: min(74dvh, 680px); overflow-y: auto; overscroll-behavior: contain; padding: 20px 22px calc(24px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; background: white; box-shadow: 0 -12px 32px rgba(33, 30, 25, .14); }
+  .mobile-info-sheet-handle { display: block; width: 44px; height: 5px; margin: -7px auto 20px; border-radius: 999px; background: var(--line); }
+  .mobile-info-sheet-close { position: absolute; top: 17px; right: 17px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: white; color: var(--ink); font-size: 24px; line-height: 1; }
+  .mobile-info-sheet header { display: flex; align-items: center; gap: 14px; padding-right: 38px; }
+  .mobile-info-sheet header img { width: 72px; height: 72px; padding: 7px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); object-fit: contain; }
+  .mobile-info-sheet h2 { margin: 0; font-size: 19px; line-height: 1.3; overflow-wrap: anywhere; }
+  .mobile-info-sheet header p { margin: 4px 0 0; color: #477c5d; font-size: 15px; font-weight: 900; }
+  .mobile-info-sheet-copy { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .mobile-info-sheet-copy p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
+}
