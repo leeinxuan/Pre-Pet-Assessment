@@ -1229,6 +1229,16 @@ html, body { overflow-x: clip; }
     min-height: 100dvh;
   }
 
+  /* iOS Safari 底部工具列區域不計入 dvh/svh，影片區會停在工具列上緣而露出底色；
+     改用 lvh（最大視窗高度）讓過場影片延伸到畫面最底。頁面已鎖定不捲動，多出的高度只會被 cover 裁切。 */
+  @supports (height: 100lvh) {
+    .stage-layout:has(.arrival-video-screen),
+    .stage-layout:has(.time-pass-transition) {
+      height: 100lvh;
+      min-height: 100lvh;
+    }
+  }
+
   .stage:has(> .arrival-video-screen),
   .stage:has(> .time-pass-transition) {
     height: 100%;

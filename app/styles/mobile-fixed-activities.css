@@ -520,6 +520,8 @@
   .departure-actions > .secondary { width: auto; white-space: nowrap; }
   /* 初始的返回只屬於桌機流程；手機保留完成後的「再玩一次」。 */
   .departure-actions > .departure-return-button:not(.is-replay) { display: none; }
+  /* 手機版在所有出發用品完成前不預留底部操作列；桌機維持既有按鈕與流程。 */
+  .departure-actions:not(.is-complete) { display: none; }
 
   /* Feeding keeps all species data and scene coordinates; only layout changes. */
   .arrival-meal-activity,

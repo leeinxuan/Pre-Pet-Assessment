@@ -766,7 +766,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
         {supplies.filter((item) => selected.includes(item.id)).map((item) => item.image ? <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`後車廂內的${item.label}`} /> : <div key={item.id} className={`placed-car-item placed-car-${item.id} preparation-asset-placeholder`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} role="img" aria-label={`已準備${item.label}，素材待補`}>{item.label}</div>)}
       </section>
     </div>
-    <div className="departure-actions">
+    <div className={`departure-actions${complete ? " is-complete" : ""}`}>
       <button type="button" className={`secondary departure-return-button${reviewing ? " is-replay" : ""}`} onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
       <div><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
     </div>
