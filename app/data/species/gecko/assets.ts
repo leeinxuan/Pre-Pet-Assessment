@@ -8,6 +8,9 @@ export const geckoAssets = {
     terrariumInterior: "/assets/gecko/room/bg-gecko-terrarium-interior.webp",
     terrariumSubstrate: "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
     terrariumHeatMat: "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+    terrariumInteriorMobile: "/assets/gecko/room/bg-gecko-terrarium-interior-mobile.webp",
+    terrariumSubstrateMobile: "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
+    terrariumHeatMatMobile: "/assets/gecko/room/bg-gecko-terrarium-heat-mat-mobile.webp",
     terrarium: "/assets/gecko/room/gecko-terrarium.webp",
     terrariumFront: "/assets/gecko/room/gecko-terrarium-front.webp",
     feederInsects: "/assets/gecko/room/first-feeder-insects.webp",
@@ -35,6 +38,7 @@ export const geckoAssets = {
   },
   healthInspection: {
     terrariumBackground: "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+    terrariumBackgroundMobile: "/assets/gecko/room/bg-gecko-terrarium-heat-mat-mobile.webp",
     body: "/assets/gecko/room/gecko.webp",
     magnifier: "/assets/shared/magnifier.webp",
     warmThermometer: "/assets/gecko/room/thermometer-hygrometer-warm.webp",

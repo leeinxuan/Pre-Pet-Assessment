@@ -55,6 +55,7 @@ export const birdRoomFlow: RoomFlowConfig = {
   interiorSafeBackground: birdAssets.room.cageInteriorWithTray,
   // 鳥籠內背景素材為 1024 × 1536（2:3）；依原始比例呈現，避免上下產生留白。
   interiorBackgroundAspectRatio: "2 / 3",
+  interiorBackgroundMobileFit: "cover",
   floorHazardId: "",
   safeWhenAllHazards: true,
   fenceItemId: "bird-cage",

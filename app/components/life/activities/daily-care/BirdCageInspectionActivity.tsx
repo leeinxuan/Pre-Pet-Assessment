@@ -160,10 +160,20 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
     if (doorOpening || has(`window-${side}-closed`)) return;
     const otherSide = side === "left" ? "right" : "left";
     add(`window-${side}-closed`);
+    const bothWindowsClosed = has(`window-${otherSide}-closed`);
     setMessage(interpolatePetName(
-      has(`window-${otherSide}-closed`) ? cageOut.windowsClosedPrompt : cageOut.oneWindowClosedPrompt,
+      bothWindowsClosed ? cageOut.windowsClosedPrompt : cageOut.oneWindowClosedPrompt,
       displayPetName,
     ));
+
+    // On phones the window-only scene has no cage lock to tap. After both
+    // windows close, continue into the existing opening transition instead.
+    if (isMobile && bothWindowsClosed) {
+      setTimeout(() => {
+        setCageOutTransitionEnded(false);
+        setDoorOpening(true);
+      }, 420);
+    }
   }
 
   function finishCageOutTransition() {
@@ -285,7 +295,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
       </span>
       <span className="bird-stage-name" title={stageLabels[currentStage]}>{stageLabels[currentStage]}</span>
     </div>
-    <div className={`bird-cage-scene ${isTrayInitial || isTrayDirty ? "is-tray-stage" : ""} ${isHealthInspection ? "is-health-inspection" : ""} ${healthTransition ? "is-health-transition" : ""} ${has("cage-door-open") ? "is-door-open" : ""} ${isSocial ? "is-social-stage" : ""}`}>
+    <div className={`bird-cage-scene ${isTrayInitial || isTrayDirty ? "is-tray-stage" : ""} ${isHealthInspection ? "is-health-inspection" : ""} ${healthTransition ? "is-health-transition" : ""} ${isCageOutPreparation ? "is-window-stage" : ""} ${has("cage-door-open") ? "is-door-open" : ""} ${isSocial ? "is-social-stage" : ""}`}>
       <BirdCageAsset className="bird-cage-background" src={sceneSource} alt={isHealthInspection ? `${displayPetName}的健康檢查畫面` : "鸚鵡鳥籠場景"} fallback="🪶" width={1600} height={900} />
       {!isCageOutGuidance && <p className="bird-cage-scene-prompt">{renderKnowledgeText(inspectionReady ? inspectionCompleteFeedback : message)}</p>}
       {isTrayInitial && <button type="button" className="bird-cage-main-hotspot bird-cage-main-hotspot--tray" onClick={pullOutTray} aria-label="點擊鳥籠底部托盤將它拉出" />}

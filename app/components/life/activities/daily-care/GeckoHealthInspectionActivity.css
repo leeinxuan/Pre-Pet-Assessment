@@ -31,6 +31,8 @@
   object-fit: cover;
 }
 
+.gecko-health-mobile-background { display: none; }
+
 .gecko-health-scene::after {
   position: absolute;
   inset: 0;
@@ -429,73 +431,10 @@
   50% { box-shadow: 0 0 0 12px rgba(212, 154, 36, .08), 0 10px 24px rgba(70, 53, 26, .25); }
 }
 
-@media (max-width: 720px) {
-  .gecko-completed-scene-item {
-    left: var(--gecko-mobile-item-left) !important;
-    top: var(--gecko-mobile-item-top) !important;
-    width: var(--gecko-mobile-item-width) !important;
-    transform: var(--gecko-mobile-item-transform) !important;
-  }
+/* 手機階段摘要與場景內提示：僅供手機版使用，桌機版隱藏（手機版樣式在 GeckoHealthInspectionMobile.css）。 */
+.gecko-stage-summary,
+.gecko-mobile-prompt { display: none; }
 
-  .gecko-health-scene {
-    min-height: 760px;
-    border-radius: 22px;
-  }
-
-  .gecko-health-instruction {
-    top: 12px;
-    max-width: calc(100% - 24px);
-    font-size: 12px;
-  }
-
-  .gecko-thermometer-label { padding: 5px 9px; font-size: 11px; }
-  .gecko-thermometer strong { font-size: 12px; }
-
-  .gecko-temperature-controller {
-    left: -8px;
-    bottom: -102px;
-    width: min(330px, 68vw);
-  }
-
-  .gecko-temperature-actions {
-    align-items: flex-end;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .gecko-temperature-action-hint {
-    font-size: 13px;
-    text-align: right;
-  }
-
-  .gecko-body-stage {
-    inset: 64px 5px 10px;
-  }
-
-  .gecko-body-art {
-    width: 100%;
-    height: min(380px, 95vw);
-  }
-
-  .gecko-body-hotspot {
-    width: 44px;
-    height: 44px;
-  }
-
-  .gecko-observation-card {
-    position: absolute;
-    top: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: auto;
-    max-height: min(470px, 84%);
-    transform: none;
-    border-radius: 22px 22px 0 0;
-  }
-
-  .gecko-health-card--center { top: auto; right: 0; bottom: 0; left: 0; width: auto; transform: none; border-radius: 22px 22px 0 0; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .gecko-body-hotspot.is-current,

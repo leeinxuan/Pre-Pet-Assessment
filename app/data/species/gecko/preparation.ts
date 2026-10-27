@@ -145,9 +145,15 @@ export const geckoRoomFlow: RoomFlowConfig = {
   safeBackground: geckoAssets.room.sealed,
   interiorBackground: geckoAssets.room.terrariumInterior,
   interiorSafeBackground: geckoAssets.room.terrariumSubstrate,
+  interiorMobileBackground: geckoAssets.room.terrariumInteriorMobile,
+  interiorSafeMobileBackground: geckoAssets.room.terrariumSubstrateMobile,
   interiorBackgroundStates: [
     { whenItemIds: ["safe-substrate"], background: geckoAssets.room.terrariumSubstrate },
     { whenItemIds: ["safe-substrate", "heat-mat"], background: geckoAssets.room.terrariumHeatMat },
+  ],
+  interiorMobileBackgroundStates: [
+    { whenItemIds: ["safe-substrate"], background: geckoAssets.room.terrariumSubstrateMobile },
+    { whenItemIds: ["safe-substrate", "heat-mat"], background: geckoAssets.room.terrariumHeatMatMobile },
   ],
   hiddenPlacedItemIds: ["safe-substrate", "heat-mat"],
   interiorUnlockItemId: "safe-substrate",

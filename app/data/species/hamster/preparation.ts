@@ -38,9 +38,13 @@ export const hamsterTrunkItems: TrunkItem[] = [
 
 export const hamsterRoomFlow: RoomFlowConfig = {
   initialBackground: hamsterAssets.room.initialBackground,
+  initialMobileBackground: hamsterAssets.room.initialMobileBackground,
   safeBackground: hamsterAssets.room.safeBackground,
+  safeMobileBackground: hamsterAssets.room.safeMobileBackground,
   interiorBackground: hamsterAssets.room.cageInterior,
   interiorSafeBackground: hamsterAssets.room.cageInteriorWithBedding,
+  interiorMobileBackground: hamsterAssets.room.cageInteriorMobile,
+  interiorSafeMobileBackground: hamsterAssets.room.cageInteriorWithBeddingMobile,
   interiorBackgroundAspectRatio: "match-room",
   // 比照守宮安全底材：先鋪紙質墊料，其他籠內用品才會解鎖。
   interiorUnlockItemId: "bedding",

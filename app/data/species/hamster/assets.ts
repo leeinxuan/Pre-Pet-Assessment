@@ -6,9 +6,13 @@ export const hamsterAssets = {
   selection: { hamster: "/assets/species/hamster.webp" },
   room: {
     initialBackground: "/assets/hamster/room/direct-sunlight-spot.webp",
+    initialMobileBackground: "/assets/hamster/room/direct-sunlight-spot-mobile.webp",
     safeBackground: "/assets/hamster/room/hamster-safe-room.webp",
+    safeMobileBackground: "/assets/hamster/room/hamster-safe-room-mobile.webp",
     cageInterior: "/assets/hamster/room/bg-cage-interior.webp",
     cageInteriorWithBedding: "/assets/hamster/room/bg-bedding.webp",
+    cageInteriorMobile: "/assets/hamster/room/bg-cage-interior-mobile.webp",
+    cageInteriorWithBeddingMobile: "/assets/hamster/room/bg-bedding-mobile.webp",
     cage: "/assets/hamster/room/hamster-cage.webp",
     cageFront: "/assets/hamster/room/hamster-cage-front.webp",
     exerciseWheel: "/assets/hamster/room/exercise-wheel.webp",
@@ -46,6 +50,7 @@ export const hamsterAssets = {
   },
   cageCheckActivity: {
     floorView: "/assets/hamster/CageCheckActivity/cage-floor-view.webp",
+    floorViewMobile: "/assets/hamster/room/bg-bedding-mobile.webp",
     dirtyBedding: "/assets/hamster/CageCheckActivity/bedding-dirty-main.webp",
     cleanBedding: "/assets/hamster/CageCheckActivity/bedding-clean.webp",
     beddingPackage: "/assets/hamster/CageCheckActivity/packaging.webp",

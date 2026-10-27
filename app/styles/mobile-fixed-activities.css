@@ -518,6 +518,8 @@
   .departure-actions > div { flex: 1; }
   .departure-actions button { min-height: 44px; font-size: 12px; }
   .departure-actions > .secondary { width: auto; white-space: nowrap; }
+  /* 初始的返回只屬於桌機流程；手機保留完成後的「再玩一次」。 */
+  .departure-actions > .departure-return-button:not(.is-replay) { display: none; }
 
   /* Feeding keeps all species data and scene coordinates; only layout changes. */
   .arrival-meal-activity,
@@ -596,6 +598,11 @@
   }
   .departure-supply-row .supply-slot,
   .arrival-meal-supply-slot { min-width: 0; min-height: 112px; }
+  /* Ignore desktop image-reserved heights so every mobile item card uses one compact row height. */
+  .arrival-meal-supply-slot--info-card {
+    height: 112px;
+    min-height: 112px !important;
+  }
   .departure-supply-visual { width: 52px; height: 52px; }
   .departure-supply-row img { width: 52px !important; height: 52px !important; }
   .arrival-meal-supplies img,
@@ -623,6 +630,13 @@
   .departure-mobile-done > span:last-child svg,
   .arrival-meal-mobile-done > span:last-child svg,
   .arrival-meal-choice-check svg { width: 14px; height: 14px; }
+  /* Newly prepared items glow only around their card until the explanation opens. */
+  .departure-supply-row button.departure-mobile-done.is-awaiting-info,
+  .arrival-meal-supplies button.arrival-meal-mobile-done.is-awaiting-info {
+    border-color: var(--line);
+    box-shadow: 0 0 12px rgba(204, 151, 38, .32);
+    animation: mobile-prepared-item-info-glow 1.7s ease-in-out infinite;
+  }
   .arrival-meal-supplies button.arrival-meal-choice-button { grid-template-rows: auto auto; align-content: center; padding: 16px 6px 10px; }
   .arrival-meal-supplies .arrival-meal-choice-button.done { background: var(--paper); border-color: var(--line); }
   .arrival-meal-supplies .arrival-meal-choice-button small { min-width: 0; margin-top: 0; font-size: 10px; line-height: 1.3; text-align: center; white-space: normal; }
@@ -639,6 +653,10 @@
   .arrival-meal-completion-message { min-height: 0; }
   .arrival-meal-footer .primary { min-height: 44px; margin: 0; }
   .arrival-meal-activity .arrival-meal-footer .arrival-meal-continue-button { margin-bottom: 0; }
+}
+
+@keyframes mobile-prepared-item-info-glow {
+  50% { box-shadow: 0 0 19px rgba(204, 151, 38, .48); }
 }
 
 /* A short phone keeps enough of the inventory visible without changing scene coordinates. */
@@ -661,4 +679,255 @@
   .mobile-info-sheet header p { margin: 4px 0 0; color: #477c5d; font-size: 15px; font-weight: 900; }
   .mobile-info-sheet-copy { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
   .mobile-info-sheet-copy p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
+}
+
+/* 家庭與居住確認：手機保留固定標題與導覽，只有閱讀內容本身可以捲動。 */
+.home-readiness-desktop-flow { display: contents; }
+.home-readiness-mobile-flow { display: none; }
+
+@media (max-width: 720px) {
+  html:has(.home-readiness-mobile-flow),
+  body:has(.home-readiness-mobile-flow) {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .stage-layout:has(.home-readiness-mobile-flow) {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .stage-layout:has(.home-readiness-mobile-flow) > .stage {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .content-wrap.home-readiness {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    animation: none;
+  }
+
+  .home-readiness-desktop-flow { display: none; }
+
+  .home-readiness-mobile-flow {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    background: var(--paper);
+  }
+
+  /* 住宅選擇與提醒階段沒有三步導覽；此時改為三列，避免固定操作列被空白 grid row 撐高。 */
+  .home-readiness-mobile-flow:not(:has(.home-readiness-mobile-progress)) {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .home-readiness-mobile-heading {
+    padding: 16px 78px 12px 20px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+
+  .home-readiness-mobile-heading h1 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(24px, 7vw, 30px);
+    line-height: 1.18;
+    letter-spacing: -.035em;
+  }
+
+  .home-readiness-mobile-heading p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .home-readiness-mobile-progress {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    background: #fffdf8;
+  }
+
+  .home-readiness-mobile-progress button {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 42px;
+    padding: 5px 4px;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    color: #a39b8d;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 850;
+    line-height: 1.2;
+    text-align: left;
+  }
+
+  .home-readiness-mobile-progress button span {
+    display: grid;
+    width: 20px;
+    height: 20px;
+    place-items: center;
+    border: 1px solid #ddd5c8;
+    border-radius: 50%;
+    background: #fff;
+    color: #9d927e;
+    font-size: 10px;
+    font-weight: 950;
+  }
+
+  .home-readiness-mobile-progress button b {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .home-readiness-mobile-progress button.is-current {
+    border-bottom-color: var(--gold-dark);
+    color: var(--ink);
+  }
+
+  .home-readiness-mobile-progress button.is-current span {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: #fff;
+    box-shadow: 0 0 0 3px rgba(212, 154, 36, .16);
+  }
+
+  .home-readiness-mobile-progress button.is-complete {
+    color: #426246;
+  }
+
+  .home-readiness-mobile-progress button.is-complete span {
+    border-color: #6d9f76;
+    background: #6d9f76;
+    color: #fff;
+  }
+
+  .home-readiness-mobile-progress button:disabled { opacity: .62; }
+
+  .home-readiness-mobile-content {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 20px calc(24px + env(safe-area-inset-bottom));
+  }
+
+  .home-readiness-mobile-content .home-readiness-workbench {
+    display: block;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .home-readiness-mobile-content .home-readiness-question,
+  .home-readiness-mobile-content .home-readiness-reminder-step {
+    max-width: none;
+    padding: 0;
+  }
+
+  .home-readiness-mobile-content .home-readiness-question h2,
+  .home-readiness-mobile-content .home-readiness-reminder-step h2 {
+    font-size: 23px;
+  }
+
+  .home-readiness-mobile-content .home-readiness-workbench--housing .home-readiness-choice-grid {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 16px;
+  }
+
+  .home-readiness-mobile-content .home-readiness-choice-grid button {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .home-readiness-mobile-content .home-readiness-choice-label { font-size: 15px; }
+
+  .home-readiness-mobile-content .home-readiness-reminder-step {
+    gap: 14px;
+    color: var(--muted);
+  }
+
+  .home-readiness-mobile-content .home-readiness-reminder-step .primary,
+  .home-readiness-mobile-content .home-readiness-commitment-card .primary {
+    width: 100%;
+    min-height: 46px;
+    justify-content: center;
+  }
+
+  .home-readiness-mobile-content .home-readiness-commitment-card {
+    max-width: none;
+    margin: 0;
+    padding: 20px 18px;
+    border-radius: 16px;
+    box-shadow: none;
+  }
+
+  .home-readiness-mobile-content .home-readiness-commitment-card h3 {
+    font-size: 21px;
+    line-height: 1.42;
+  }
+
+  .home-readiness-mobile-content .home-readiness-commitment-copy {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .home-readiness-mobile-content .home-readiness-completion {
+    max-width: none;
+    margin: 0;
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .home-readiness-mobile-complete-action {
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: rgba(255, 253, 247, .98);
+    animation: home-readiness-continue-reveal .42s cubic-bezier(.2, .8, .2, 1) both;
+  }
+
+  .home-readiness-mobile-complete-action .primary {
+    width: auto;
+    min-width: min(100%, 220px);
+    min-height: 46px;
+    padding-inline: 24px;
+  }
+
+  @keyframes home-readiness-continue-reveal {
+    from { opacity: 0; transform: translateY(16px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-readiness-mobile-complete-action { animation: none; }
 }

@@ -1,0 +1,230 @@
+/* 守宮日常巡視：手機版（僅 max-width: 720px）。桌機版樣式維持在 GeckoHealthInspectionActivity.css。 */
+/* 版面順序：標題與說明 → 階段摘要列 → 1:1 滿版場景（含提示）→ 場景下方操作按鈕。 */
+@media (max-width: 720px) {
+  /* 整頁鎖定在可用視窗高度內，矮螢幕只在互動區內部捲動。 */
+  html:has(.gecko-health-inspection),
+  body:has(.gecko-health-inspection) { height: 100%; overflow: hidden; }
+  .stage-layout:has(.gecko-health-inspection) {
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .stage-layout:has(.gecko-health-inspection) > .stage { min-height: 0; overflow: hidden; }
+  .content-wrap.life-journey-page:has(> .gecko-health-inspection) {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* 移除桌機版外層卡片：不留 max-width、外框、陰影與內距。 */
+  .life-journey-page > .gecko-health-inspection.life-activity {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+
+  /* 標題與情境說明：比照兔子手機版，位於階段摘要列上方。 */
+  .gecko-health-inspection > .activity-heading { display: block; flex: 0 0 auto; margin: 0; padding: 16px 16px 12px; }
+  .gecko-health-inspection > .activity-heading .life-stage-label { margin: 0 0 8px; font-size: 14px; }
+  .gecko-health-inspection > .activity-heading h1 { margin: 0 0 8px; font-size: 28px; line-height: 1.3; }
+  .gecko-health-inspection > .activity-heading .gecko-health-message { min-height: 0; margin: 0; font-size: 14px; line-height: 1.65; }
+
+  /* 階段摘要列：步驟 N / 4＋狀態圓點＋目前階段名稱；完整文字進度列在手機版隱藏。 */
+  .gecko-health-inspection > .rabbit-grooming-progress { display: none; }
+  .gecko-health-inspection > .gecko-stage-summary {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    min-height: 44px;
+    padding: 6px 16px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .gecko-stage-summary strong { white-space: nowrap; }
+  .gecko-stage-dots { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .gecko-stage-dots i {
+    display: block;
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--paper);
+  }
+  .gecko-stage-dots i.is-complete { border-color: var(--mint); background: var(--mint); }
+  .gecko-stage-dots i.is-active { width: 14px; height: 14px; flex-basis: 14px; border-color: var(--gold); background: var(--gold); }
+  .gecko-stage-name { min-width: 0; overflow: hidden; color: var(--gold-dark); text-overflow: ellipsis; white-space: nowrap; }
+
+  /* 操作提示膠囊：置於場景上緣中央，不額外擠出場景高度。 */
+  .gecko-health-scene > .gecko-mobile-prompt {
+    position: absolute;
+    z-index: 10;
+    top: 12px;
+    left: 50%;
+    display: block;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    margin: 0;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255, 253, 247, .96);
+    color: var(--ink);
+    box-shadow: 0 4px 12px rgba(70, 53, 26, .12);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.45;
+    text-align: center;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .gecko-health-scene > .gecko-health-instruction { display: none; }
+
+  /* 滿版 1:1 場景：貼齊左右，不變形、不留白邊。 */
+  .gecko-health-inspection > .gecko-health-scene {
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+    border: 0;
+    border-radius: 0;
+    background: #f0dcc0;
+    overflow: hidden;
+  }
+  .gecko-health-mobile-background { display: contents; }
+  .gecko-health-scene .gecko-health-background { object-fit: cover; object-position: center; }
+  .gecko-health-scene::after { display: none; }
+
+  /* 場景物件：位置沿用資料中的 mobilePlacement（相對 1:1 場景）。 */
+  .gecko-completed-scene-item {
+    left: var(--gecko-mobile-item-left) !important;
+    top: var(--gecko-mobile-item-top) !important;
+    width: var(--gecko-mobile-item-width) !important;
+    transform: var(--gecko-mobile-item-transform) !important;
+  }
+
+  /* 溫度確認：溫度計貼在玻璃兩側，標籤跟隨溫度計排列。 */
+  .gecko-thermometer--warm { left: 89% !important; top: 43% !important; width: 12% !important; }
+  .gecko-thermometer--cool { left: 12% !important; top: 43% !important; width: 9% !important; }
+  .gecko-thermometer-label {
+    top: auto !important;
+    left: auto !important;
+    padding: 3px 7px;
+    font-size: 10px;
+    line-height: 1.3;
+  }
+  /* 讀數改成標籤下方的小膠囊（原本為桌機版溫度計螢幕上的絕對定位），兩支溫度計一致：標籤 → 讀數 → 裝置。 */
+  .gecko-thermometer--cool .gecko-thermometer-label { order: -2; }
+  .gecko-thermometer strong {
+    position: relative;
+    inset: auto !important;
+    order: -1;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(255, 253, 247, .94);
+    font-size: 11px;
+  }
+
+  /* 控制器：放在缸前桌面，按鈕實際點擊範圍 44 × 44px。 */
+  .gecko-temperature-controller {
+    left: 6%;
+    bottom: 1%;
+    width: 46%;
+    aspect-ratio: 1752 / 897;
+  }
+  .gecko-temperature-controls button {
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    aspect-ratio: auto;
+    transform: translate(-50%, -50%);
+  }
+  .gecko-temperature-controls button:first-child { left: 29%; }
+  .gecko-temperature-controls button:last-child { left: 59%; }
+
+  /* 場景下方的操作列：提示文字＋全寬按鈕。 */
+  .gecko-health-inspection > .gecko-temperature-actions {
+    flex: 0 0 auto;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .gecko-temperature-action-hint { font-size: 13px; text-align: center; }
+  .gecko-temperature-actions .primary { min-height: 48px; width: 100%; justify-content: center; }
+
+  /* 飲水更換／排泄觀察：可點擊物件放在底材上，點擊範圍至少 44 × 44px，只引導當前目標。 */
+  .gecko-water-target { left: 46% !important; top: 61% !important; width: 12% !important; min-width: 44px; min-height: 44px; padding: 0; }
+  .gecko-feces-target { left: 68% !important; top: 59% !important; width: 11% !important; min-width: 44px; min-height: 44px; padding: 0; }
+  .gecko-water-target > span,
+  .gecko-feces-target > span { display: none; }
+  .gecko-water-target:not(:disabled) img,
+  .gecko-feces-target img { animation: gecko-mobile-target-pulse 1.5s ease-in-out infinite; }
+
+  /* 身體巡視：守宮置中滿版，提示點 44 × 44px。 */
+  .gecko-body-stage { inset: 0; }
+  .gecko-body-art { width: 100%; height: 100%; }
+  .gecko-body-hotspot { width: 44px; height: 44px; cursor: pointer; }
+  .gecko-body-hotspot.is-available { animation: geckoHotspotPulse 1.5s ease-in-out infinite; }
+
+  /* 底部說明欄（外層沿用 .rabbit-observation-sheet*）：內容改為靜態排版。 */
+  .rabbit-observation-sheet .gecko-observation-card,
+  .rabbit-observation-sheet .gecko-observation-card.observation-card,
+  .rabbit-observation-sheet .gecko-health-card,
+  .rabbit-observation-sheet .gecko-health-card--center,
+  .rabbit-observation-sheet .gecko-health-feedback {
+    position: static;
+    inset: auto;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 10px 2px 0;
+    overflow: visible;
+    transform: none;
+    animation: none;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .rabbit-observation-sheet .gecko-health-card .primary,
+  .rabbit-observation-sheet .gecko-health-feedback .primary { min-height: 48px; width: 100%; justify-content: center; }
+  .rabbit-observation-sheet .gecko-health-card,
+  .rabbit-observation-sheet .gecko-health-feedback { padding-top: 40px; }
+  /* 說明欄高度依內容調整：圖片限制高度，避免短內容也撐成大面積。 */
+  .rabbit-observation-sheet .gecko-observation-card .observation-card-image,
+  .rabbit-observation-sheet .gecko-health-card-image { display: block; width: auto; max-width: 100%; max-height: 150px; margin: 0 auto; object-fit: contain; }
+  .rabbit-observation-sheet .gecko-observation-card .observation-card-comparison img { max-height: 150px; object-fit: contain; }
+
+  @keyframes gecko-mobile-target-pulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(245, 200, 97, 0)); }
+    50% { transform: scale(1.06); filter: drop-shadow(0 0 8px rgba(245, 200, 97, .9)); }
+  }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .gecko-water-target:not(:disabled) img,
+  .gecko-feces-target img,
+  .gecko-body-hotspot.is-available { animation: none; }
+}

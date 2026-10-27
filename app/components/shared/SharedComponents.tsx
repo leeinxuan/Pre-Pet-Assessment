@@ -360,7 +360,7 @@ export function SpeciesStep({
     <div className="content-wrap partner-picker">
       {visibleSelectionPage === "species" ? (
         <section className="partner-selection-page" key="selection-page">
-          <StepHeading title={speciesConfig.copy.selectionTitle} />
+          <StepHeading title="你想飼養哪一種動物？" />
           <div className="category-grid species-page-grid">
             {speciesCategories.map((item) => {
               return (

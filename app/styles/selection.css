@@ -133,6 +133,12 @@
 }
 
 @media (max-width: 720px) {
+  /* 物種選擇標題保持單行，避免最後的「物？」被擠到下一列。 */
+  .partner-selection-page .step-heading h1 {
+    font-size: clamp(22px, 6.2vw, 27px);
+    letter-spacing: -.055em;
+    white-space: nowrap;
+  }
   .category-grid { grid-template-columns: repeat(2, 1fr); }
   .breed-row { grid-template-columns: repeat(2, 1fr); }
   .partner-selection-page:has(.breed-carousel) {

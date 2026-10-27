@@ -26,3 +26,209 @@
 @media (max-width: 700px) {
   .hamster-shake-progress { top: 12px; }
 }
+
+/* Touch-first phone layout. The desktop drag and hold-to-shake interactions above remain unchanged. */
+.hamster-stage-summary,
+.hamster-mobile-prompt,
+.hamster-mobile-action-progress { display: none; }
+
+@media (max-width: 720px) {
+  html:has(.hamster-cage-check),
+  body:has(.hamster-cage-check) { height: 100%; overflow: hidden; }
+  .stage-layout:has(.hamster-cage-check) {
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .stage-layout:has(.hamster-cage-check) > .stage { min-height: 0; overflow: hidden; }
+  .content-wrap.life-journey-page:has(> .hamster-cage-check) { height: 100%; min-height: 0; overflow: hidden; }
+
+  .life-journey-page > .hamster-cage-check.guided-activity {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+  /* Keep the activity title and context above the scene, matching the rabbit activity structure. */
+  .hamster-cage-check > .hamster-cage-check-heading {
+    display: grid;
+    flex: 0 0 auto;
+    gap: 7px;
+    margin: 0;
+    padding: 16px 24px 14px;
+  }
+  .hamster-cage-check > .hamster-cage-check-heading .life-stage-label { margin: 0; font-size: 14px; }
+  .hamster-cage-check > .hamster-cage-check-heading h1 { margin: 0; font-size: clamp(28px, 8vw, 34px); line-height: 1.3; }
+  .hamster-cage-check > .hamster-cage-check-heading .hamster-cage-check-message { min-height: 0; margin: 0; font-size: 14px; line-height: 1.65; }
+  .hamster-cage-check > .hamster-cage-check-progress { display: none; }
+  .hamster-stage-summary {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    min-height: 46px;
+    padding: 7px 16px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 900;
+    box-sizing: border-box;
+  }
+  .hamster-stage-summary > b { white-space: nowrap; }
+  .hamster-stage-dots { display: flex; align-items: center; gap: 4px; }
+  .hamster-stage-dots i {
+    display: grid;
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    place-items: center;
+    border: 1px solid #d8d5ce;
+    border-radius: 50%;
+    background: var(--paper);
+    color: white;
+    font-size: 7px;
+    font-style: normal;
+  }
+  .hamster-stage-dots i.is-complete { width: 14px; height: 14px; flex-basis: 14px; border-color: var(--mint); background: var(--mint); }
+  .hamster-stage-dots i.is-active { width: 15px; height: 15px; flex-basis: 15px; border-color: var(--gold); background: var(--gold); box-shadow: 0 0 0 4px rgba(224, 160, 29, .16); }
+  .hamster-stage-name { min-width: 0; overflow: hidden; color: var(--gold-dark); text-overflow: ellipsis; white-space: nowrap; }
+
+  .hamster-mobile-prompt {
+    position: absolute;
+    z-index: 9;
+    top: 14px;
+    left: 50%;
+    display: grid;
+    width: fit-content;
+    max-width: calc(100% - 32px);
+    min-height: 42px;
+    margin: 0;
+    padding: 10px 15px;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(255, 253, 247, .98);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.45;
+    text-align: center;
+    box-shadow: 0 5px 14px rgba(70, 53, 26, .13);
+    box-sizing: border-box;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .hamster-mobile-action-progress {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--gold-dark);
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .hamster-mobile-action-progress b,
+  .hamster-mobile-action-progress small { white-space: nowrap; }
+  .hamster-mobile-action-progress > div { height: 9px; overflow: hidden; border-radius: 999px; background: #eee3cc; box-shadow: inset 0 0 0 1px rgba(124, 94, 44, .12); }
+  .hamster-mobile-action-progress > div span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e0a01d, #85bd9b); transition: width .2s ease; }
+
+  .hamster-cage-check-scene {
+    flex: 0 0 auto;
+    width: 100vw;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    align-self: start;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background: #edf5e9;
+    touch-action: manipulation;
+  }
+  .hamster-cage-floor { width: 100%; height: 100%; object-fit: cover; }
+  .hamster-cage-prepared-items { z-index: 2; }
+  .hamster-cage-check-prompt,
+  .hamster-shake-progress,
+  .hamster-cage-check-drag-ghost { display: none; }
+  .hamster-dirty-bedding,
+  .hamster-filled-bedding { width: 25%; min-width: 0; max-width: none; }
+  .hamster-dirty-bedding.is-top-right,
+  .hamster-filled-bedding.is-top-right { top: 48%; right: 7%; }
+  .hamster-mobile-target {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .hamster-mobile-target.is-tap-target,
+  .hamster-cleaning-tool.is-tap-target {
+    animation: hamster-mobile-tap-guide 1.35s ease-in-out infinite;
+  }
+  .hamster-mobile-target.is-tap-success { animation: hamster-mobile-target-clear .36s ease both; }
+  .hamster-cleaning-tool {
+    min-width: 44px;
+    min-height: 44px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .hamster-cleaning-tool--scoop,
+  .hamster-cleaning-tool--bedding { bottom: 5%; left: 2%; width: 29%; }
+  .hamster-cleaning-tool--sieve { bottom: 7%; left: 2%; width: 27%; }
+  .hamster-cleaning-tool.is-tap-selected { transform: scale(1.08); filter: drop-shadow(0 0 12px rgba(224, 160, 29, .72)); }
+  .hamster-sand-bath-stage { min-height: 0; cursor: pointer; touch-action: manipulation; }
+  .hamster-sand-bath-stage.is-tap-target .hamster-sand-bath { animation: hamster-mobile-sand-prompt 1.35s ease-in-out infinite; }
+  .hamster-sand-bath { width: 96%; max-height: 80%; }
+  .hamster-sand-debris { width: 16%; height: 16%; padding: 0; border: 0; background: transparent; cursor: pointer; }
+  .hamster-sand-debris.is-tap-target { animation: hamster-mobile-tap-guide 1.35s ease-in-out infinite; }
+  .hamster-sand-debris.is-removed { pointer-events: none; }
+  .hamster-sand-debris.is-tap-success { animation: hamster-mobile-target-clear .36s ease both; }
+  .hamster-cage-check-note--scene { width: calc(100% - 28px); max-height: calc(100% - 28px); overflow-y: auto; padding: 18px; }
+  .hamster-mobile-finish-row {
+    flex: 0 0 auto;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    box-sizing: border-box;
+  }
+  .hamster-mobile-finish-row .hamster-cage-check-finish {
+    position: static;
+    width: auto !important;
+    min-width: 142px;
+    min-height: 44px;
+    padding: 11px 16px;
+    font-size: 14px;
+  }
+
+  @keyframes hamster-mobile-tap-guide {
+    50% { filter: drop-shadow(0 0 12px rgba(224, 160, 29, .7)); transform: scale(1.06); }
+  }
+  @keyframes hamster-mobile-sand-prompt {
+    50% { filter: drop-shadow(0 0 16px rgba(224, 160, 29, .62)); transform: scale(1.025); }
+  }
+  @keyframes hamster-mobile-target-clear {
+    50% { opacity: .45; transform: scale(.86); }
+  }
+}

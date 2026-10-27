@@ -104,58 +104,80 @@
     order: 2;
     flex: 0 0 auto;
     width: 100%;
+    height: calc(100vw + 64px);
     min-height: 0;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: auto;
     border: 0;
     border-radius: 0;
+    background: #edf3e8;
   }
   .bird-cage-activity .bird-cage-scene .bird-cage-background,
   .bird-cage-activity .bird-cage-scene.is-social-stage .bird-cage-background {
-    inset: 0;
+    inset: 64px 0 0;
     width: 100%;
-    height: 100%;
+    height: 100vw;
     object-fit: cover;
   }
   .bird-cage-activity .bird-cage-scene.is-health-inspection .bird-cage-background { background: transparent; }
-  /* 場景內不再顯示提示氣泡；步驟說明改放在場景下方。 */
-  .bird-cage-activity .bird-cage-scene-prompt { display: none; }
+  /* 提示放在同一塊淡綠場景底色的保留區，不覆蓋鳥籠或鳥。 */
+  .bird-cage-activity .bird-cage-scene-prompt {
+    display: block;
+    top: 12px;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    min-height: 0;
+    padding: 8px 14px;
+    font-size: 12px;
+    line-height: 1.45;
+  }
 
   /* 以下熱區皆以 1:1 場景圖為基準（百分比對應圖片）。 */
-  .bird-cage-main-hotspot--tray { left: 14%; top: 82%; bottom: auto; width: 72%; height: 15%; }
-  .bird-cage-main-hotspot--lock { left: 44%; top: 30%; width: 33%; height: 38%; }
-  .bird-cage-window-controls { inset: 0; }
+  .bird-cage-main-hotspot--tray { left: 14%; top: calc(64px + 82vw); bottom: auto; width: 72%; height: 15vw; }
+  .bird-cage-main-hotspot--lock { left: 44%; top: calc(64px + 30vw); width: 33%; height: 38vw; }
+  .bird-cage-window-controls { inset: 64px 0 0; }
   .bird-cage-window { width: 30%; }
   .bird-cage-window--left { left: 1%; top: 10%; }
   .bird-cage-window--right { right: 1%; top: 10%; }
+
+  /* 關窗關卡在手機上專注兩側窗戶，不再讓鳥籠與鳥干擾操作。 */
+  .bird-cage-activity .bird-cage-scene.is-window-stage {
+    background: linear-gradient(145deg, #fbf4e5, #edf3e8);
+  }
+  .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-background,
+  .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-main-hotspot--lock {
+    display: none;
+  }
+  .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-window-controls {
+    display: block;
+    inset: 64px 0 0;
+  }
+  .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-window {
+    width: 45%;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-window--left { left: 2%; top: 28%; }
+  .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-window--right { right: 2%; top: 28%; }
+  .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-window img { filter: drop-shadow(0 10px 14px rgba(70,53,26,.22)); }
   .bird-replacement-tray { left: 3%; bottom: 3%; width: 32%; }
   button.bird-dirty-bedding--aside { right: 4%; bottom: 4%; width: 34%; }
 
-  .bird-cage-scene .bird-health-points { inset: 0; left: 0; top: 0; width: 100%; height: 100%; aspect-ratio: auto; transform: none; }
+  .bird-cage-scene .bird-health-points { inset: 64px 0 auto; left: 0; top: 64px; width: 100%; height: 100vw; aspect-ratio: auto; transform: none; }
   .bird-health-points button:nth-child(1) { left: 68%; top: 29%; }
   .bird-health-points button:nth-child(2) { left: 44%; top: 53%; }
   .bird-health-points button:nth-child(3) { left: 75%; top: 84%; }
   .bird-health-points button:nth-child(4) { left: 67%; top: 65%; }
 
   /* 開門影片（1:1）與引導：滿版覆蓋場景。 */
-  .bird-cage-door-transition { inset: 0; padding: 0; align-items: center; }
+  .bird-cage-door-transition { inset: 64px 0 0; padding: 0; align-items: center; }
   .bird-cage-door-transition video { width: 100%; max-width: none; height: 100%; max-height: none; border-radius: 0; object-fit: cover; box-shadow: none; }
   .bird-cage-out-guidance { width: min(90%, 420px); }
 
-  .bird-social-pet { --bird-social-image-width: 90%; padding: 0; }
+  .bird-social-pet { --bird-social-image-width: 90%; inset: 64px 0 0; height: 100vw; padding: 0; }
 
-  /* 步驟說明：在場景下方獨立顯示；內容過長時僅此區內部捲動。 */
+  /* 場景內提示已使用上方保留區；此舊節點在手機版不再顯示。 */
   .bird-cage-activity > .bird-cage-mobile-prompt {
-    order: 3;
-    display: block;
-    flex: 1 0 auto;
-    margin: 0;
-    padding: 14px 16px 16px;
-    background: var(--paper);
-    color: var(--ink);
-    font-size: 14px;
-    font-weight: 800;
-    line-height: 1.7;
-    text-align: left;
+    display: none;
   }
   .bird-cage-activity > .bird-cage-complete-button--mobile {
     position: static; /* 桌機版的絕對定位在手機版改為版面流內，固定在畫面底部 */
@@ -178,5 +200,15 @@
     width: 100%;
     transform: none;
     animation: none;
+  }
+  .rabbit-observation-sheet .bird-observation-comparison-grid article {
+    display: grid;
+    justify-items: center;
+  }
+  .rabbit-observation-sheet .bird-observation-comparison-grid img {
+    width: 240px;
+    height: 240px;
+    max-width: 100%;
+    flex: 0 0 240px;
   }
 }

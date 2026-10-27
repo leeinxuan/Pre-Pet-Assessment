@@ -29,17 +29,21 @@ export type RoomFlowConfig = {
   initialMobileBackground?: string; safeMobileBackground?: string;
   /** 僅有籠具／圍欄內部視角的物種需要提供以下欄位。 */
   interiorBackground?: string; interiorSafeBackground?: string;
+  /** 籠具／圍欄內部若有獨立手機比例素材，僅在手機背景層使用。 */
+  interiorMobileBackground?: string; interiorSafeMobileBackground?: string;
   /** 需要先放置入口用品、再進入內部佈置的物種，可在素材尚未就緒時保留流程。 */
   hasInteriorView?: boolean;
   /** Data-driven cumulative interior backgrounds, evaluated in declaration order. */
   interiorBackgroundStates?: Array<{ whenItemIds: readonly string[]; background: string }>;
+  /** Mobile equivalent of cumulative interior backgrounds, evaluated in declaration order. */
+  interiorMobileBackgroundStates?: Array<{ whenItemIds: readonly string[]; background: string }>;
   /** Items which alter the composited background but do not have a separate scene sprite. */
   hiddenPlacedItemIds?: readonly string[];
   /** Interior supplies remain unavailable until this required item is placed. */
   interiorUnlockItemId?: string;
   /** Required supplies placed in the interior view; drives the shared entry prompt completion state. */
   interiorRequiredItemIds?: readonly string[];
-  interiorBackgroundAspectRatio?: "match-room" | string; floorHazardId: string; safeWhenAllHazards?: boolean;
+  interiorBackgroundAspectRatio?: "match-room" | string; interiorBackgroundMobileFit?: "cover"; floorHazardId: string; safeWhenAllHazards?: boolean;
   fenceItemId?: string; interiorItemId?: string; outsideItemIds?: readonly string[]; entryRequiredItemIds?: readonly string[];
   floorHotspot: { desktop: { x: number; y: number; width: number; height: number }; mobile: { x: number; y: number; width: number; height: number } };
   copy: { fenceInstruction?: string; fencePlacedInstruction?: string; entryReadyInstruction?: string; interiorInstruction?: string; completeInstruction?: string; hazardInstruction?: string; lockedInstruction?: string;

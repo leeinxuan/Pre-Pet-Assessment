@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Report artwork is consumed by the capture/export flow and must retain native image rendering. */
 
-import { useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { money } from "../../data/shared/expenses";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
@@ -27,6 +27,7 @@ import {
 import type { HomeReadinessState } from "../../data/shared/home-readiness-state";
 import { PdfDownloadButton } from "./PdfExportControls";
 import { useDialogFocus } from "../shared/useDialogFocus";
+import { useMobileLayout } from "../shared/useMobileLayout";
 
 function personalizeReportText(text: string, petName: string, species?: string) {
   return interpolatePetName(text, petName, species);
@@ -74,6 +75,75 @@ function CareReviewRichText({ blocks, petName, species }: { blocks: HomeReadines
   }
 
   return <>{content}</>;
+}
+
+type ResponsiveKnowledgeDetailProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  dialogRef: RefObject<HTMLElement | null>;
+  label: string;
+  title: ReactNode;
+  titleId: string;
+  closeLabel: string;
+  desktopConfirmLabel?: string;
+  className?: string;
+  children: ReactNode;
+};
+
+/** Keeps the desktop modal intact while giving mobile review details the same bottom-sheet pattern as activity knowledge cards. */
+function ResponsiveKnowledgeDetail({
+  isOpen,
+  onClose,
+  dialogRef,
+  label,
+  title,
+  titleId,
+  closeLabel,
+  desktopConfirmLabel = "我知道了",
+  className = "",
+  children,
+}: ResponsiveKnowledgeDetailProps) {
+  const isMobile = useMobileLayout();
+  const swipeStartY = useRef<number | null>(null);
+
+  if (!isOpen || typeof document === "undefined") return null;
+
+  const beginSwipe = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    swipeStartY.current = event.clientY;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const endSwipe = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (swipeStartY.current !== null && event.clientY - swipeStartY.current > 72) onClose();
+    swipeStartY.current = null;
+  };
+
+  if (!isMobile) {
+    return createPortal(
+      <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+        <section ref={dialogRef} className={`knowledge-modal ${className}`.trim()} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}>
+          <button type="button" className="knowledge-modal-close" onClick={onClose} aria-label={closeLabel}>×</button>
+          <p className="life-stage-label">{label}</p>
+          <h2 id={titleId}>{title}</h2>
+          {children}
+          <button type="button" className="knowledge-modal-confirm" onClick={onClose}>{desktopConfirmLabel}</button>
+        </section>
+      </div>,
+      document.body,
+    );
+  }
+
+  return createPortal(
+    <div className="knowledge-modal-backdrop responsive-knowledge-sheet-backdrop" onPointerDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <section ref={dialogRef} className={`knowledge-modal responsive-knowledge-sheet ${className}`.trim()} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}>
+        <button type="button" className="responsive-knowledge-sheet-handle" aria-label="向下拖曳關閉說明欄" onPointerDown={beginSwipe} onPointerUp={endSwipe} onPointerCancel={() => { swipeStartY.current = null; }}><span /></button>
+        <button type="button" className="knowledge-modal-close" onClick={onClose} aria-label={closeLabel}>×</button>
+        <header className="responsive-knowledge-sheet-header"><p className="life-stage-label">{label}</p><h2 id={titleId}>{title}</h2></header>
+        <div className="responsive-knowledge-sheet-content">{children}</div>
+        <footer className="responsive-knowledge-sheet-footer"><button type="button" className="knowledge-modal-confirm" onClick={onClose}>我知道了</button></footer>
+      </section>
+    </div>,
+    document.body,
+  );
 }
 
 function ReviewAlertIcon() {
@@ -253,21 +323,18 @@ export function AssessmentReport({
   ] as const)
     .map((group) => ({ ...group, themes: visibleMasteredCareThemes.filter((theme) => theme.category === group.category) }))
     .filter((group) => group.themes.length > 0);
-  const knowledgeModal = activeKnowledge && typeof document !== "undefined"
-    ? createPortal(
-      <div className="knowledge-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDiscussionId(""); }}>
-        <section ref={knowledgeModalRef} className="knowledge-modal" role="dialog" aria-modal="true" aria-labelledby="knowledge-modal-title" tabIndex={-1}>
-          <button type="button" className="knowledge-modal-close" onClick={() => setActiveDiscussionId("")} aria-label="關閉知識點">×</button>
-          <p className="life-stage-label">{activeKnowledge.topic}</p>
-          <h2 id="knowledge-modal-title">{activeKnowledge.title}</h2>
-          <p>回顧這一題較合適的照護知識點：</p>
-          <ul>{activeKnowledge.knowledgePoints.map((point) => <li key={point}><HomeReadinessReviewText segments={[{ text: point }]} petName={petName} species={species} /></li>)}</ul>
-          <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveDiscussionId("")}>我知道了</button>
-        </section>
-      </div>,
-      document.body,
-    )
-    : null;
+  const knowledgeModal = <ResponsiveKnowledgeDetail
+    isOpen={Boolean(activeKnowledge)}
+    onClose={() => setActiveDiscussionId("")}
+    dialogRef={knowledgeModalRef}
+    label={activeKnowledge?.topic ?? ""}
+    title={activeKnowledge?.title ?? ""}
+    titleId="knowledge-modal-title"
+    closeLabel="關閉知識點"
+  >
+    <p>回顧這一題較合適的照護知識點：</p>
+    <ul>{activeKnowledge?.knowledgePoints.map((point) => <li key={point}><HomeReadinessReviewText segments={[{ text: point }]} petName={petName} species={species} /></li>)}</ul>
+  </ResponsiveKnowledgeDetail>;
   const dailyCareModal = dailyCareDetailsOpen && typeof document !== "undefined"
     ? createPortal(
       <div className="knowledge-modal-backdrop daily-care-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setDailyCareDetailsOpen(false); }}>
@@ -283,20 +350,19 @@ export function AssessmentReport({
     )
     : null;
   const activeAdditionalNote = activeAdditionalNoteIndex === null ? null : careReviewAdditionalNotes[activeAdditionalNoteIndex];
-  const additionalNotesModal = activeAdditionalNote && typeof document !== "undefined"
-    ? createPortal(
-      <div className="knowledge-modal-backdrop care-review-notes-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveAdditionalNoteIndex(null); }}>
-        <section ref={additionalNotesModalRef} className="knowledge-modal care-review-notes-modal" role="dialog" aria-modal="true" aria-labelledby="care-review-notes-modal-title" tabIndex={-1}>
-          <button type="button" className="knowledge-modal-close" onClick={() => setActiveAdditionalNoteIndex(null)} aria-label="關閉照顧路上的提醒">×</button>
-          <p className="life-stage-label">照顧路上的提醒</p>
-          <h2 id="care-review-notes-modal-title"><HomeReadinessReviewText segments={activeAdditionalNote.title} petName={petName} species={species} /></h2>
-          <div className="care-review-notes-modal-content"><CareReviewRichText blocks={activeAdditionalNote.content} petName={petName} species={species} /></div>
-          <button type="button" className="knowledge-modal-confirm" onClick={() => setActiveAdditionalNoteIndex(null)}>關閉</button>
-        </section>
-      </div>,
-      document.body,
-    )
-    : null;
+  const additionalNotesModal = <ResponsiveKnowledgeDetail
+    isOpen={Boolean(activeAdditionalNote)}
+    onClose={() => setActiveAdditionalNoteIndex(null)}
+    dialogRef={additionalNotesModalRef}
+    label="照顧路上的提醒"
+    title={activeAdditionalNote ? <HomeReadinessReviewText segments={activeAdditionalNote.title} petName={petName} species={species} /> : ""}
+    titleId="care-review-notes-modal-title"
+    closeLabel="關閉照顧路上的提醒"
+    desktopConfirmLabel="關閉"
+    className="care-review-notes-modal"
+  >
+    <div className="care-review-notes-modal-content">{activeAdditionalNote && <CareReviewRichText blocks={activeAdditionalNote.content} petName={petName} species={species} />}</div>
+  </ResponsiveKnowledgeDetail>;
   const homeSpaceImages = profile.homeSpaceImages.length ? profile.homeSpaceImages : (profile.homeSpaceImage ? [profile.homeSpaceImage] : []);
   const homeSpaceImageNames = profile.homeSpaceImageNames.length ? profile.homeSpaceImageNames : (profile.homeSpaceImageName ? [profile.homeSpaceImageName] : []);
 

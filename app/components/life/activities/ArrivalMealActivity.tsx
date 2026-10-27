@@ -98,6 +98,7 @@ export function ArrivalMealActivity({
   const [expenseSequenceComplete, setExpenseSequenceComplete] = useState(false);
   const [foodWarning, setFoodWarning] = useState<{ title: string; text: string; image: string } | null>(null);
   const [mobileInfo, setMobileInfo] = useState<MobileInfoSheetContent | null>(null);
+  const [pendingMobileInfoSupplyKeys, setPendingMobileInfoSupplyKeys] = useState<Set<string>>(() => new Set());
   const [mobileStarted, setMobileStarted] = useState(false);
   const [unsafeFoodIds, setUnsafeFoodIds] = useState<string[]>([]);
   const choiceItems = feeding.interaction === "choice" ? feeding.choices : [];
@@ -151,6 +152,17 @@ export function ArrivalMealActivity({
     if (ready) return;
     setFoodWarning(null);
     onChange(key === "food" ? { arrivalMealFoodReady: true } : key === "water" ? { arrivalMealWaterReady: true } : { arrivalMealVeggieReady: true });
+    setPendingMobileInfoSupplyKeys((current) => new Set(current).add(key));
+  }
+
+  function openMobileSupplyInfo(key: string, supply: typeof sceneSupplies[number]) {
+    setPendingMobileInfoSupplyKeys((current) => {
+      if (!current.has(key)) return current;
+      const next = new Set(current);
+      next.delete(key);
+      return next;
+    });
+    setMobileInfo({ title: supply.label, description: supply.description, image: supply.image });
   }
   function warnUnsafeFood(kind: string) {
     const unsafeFood = sceneUnsafeFoods.find((item) => item.id === kind);
@@ -185,8 +197,8 @@ export function ArrivalMealActivity({
           const ready = supply.stateKey === "food" ? activity.arrivalMealFoodReady : supply.stateKey === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady;
           const imageClassName = supply.stateKey === "food" ? "arrival-meal-supply-food" : supply.stateKey === "water" ? "arrival-meal-supply-water" : undefined;
           const imageStyle = arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, supply.stateKey);
-          const note = <ItemDescriptionCard className="arrival-meal-supply-note" title={supply.label} description={supply.description} footer="已準備完成" />;
-          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? <><div className="arrival-meal-desktop-note">{note}</div><button type="button" className="arrival-meal-mobile-done" onClick={() => setMobileInfo({ title: supply.label, description: supply.description, image: supply.image })} aria-label={`查看${supply.label}說明`}><img style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4.5 4.5L19 7" /></svg></span></button></> : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span></button><ItemDescriptionCard className="arrival-meal-supply-note arrival-meal-supply-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
+          const note = <ItemDescriptionCard className="arrival-meal-desktop-note" title={supply.label} description={supply.description} footer="已準備完成" />;
+          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? <>{note}<button type="button" className={`arrival-meal-mobile-done${pendingMobileInfoSupplyKeys.has(supply.stateKey) ? " is-awaiting-info" : ""}`} onClick={() => openMobileSupplyInfo(supply.stateKey, supply)} aria-label={`查看${supply.label}說明`}><img style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4.5 4.5L19 7" /></svg></span></button></> : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span></button><ItemDescriptionCard className="arrival-meal-desktop-note arrival-meal-desktop-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
         })}{sceneUnsafeFoods.map((food) => {
           const caution = food.presentation === "caution";
           return <button key={food.id} type="button" className={`arrival-meal-unsafe${caution ? " caution" : ""}${unsafeFoodIds.includes(food.id) ? " warning" : ""}`} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={food.image} alt="" />{unsafeFoodIds.includes(food.id) && (caution ? <WarningTriangle className="unsafe-food-warning-icon" /> : <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>)}</span><span>{food.label}</span></button>;

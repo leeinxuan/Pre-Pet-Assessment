@@ -4105,7 +4105,7 @@
                 "transform": "translate(-50%, -50%)",
                 "width": 100,
                 "x": 50,
-                "y": 50
+                "y": 47
               },
               "placement": {
                 "layer": 2,
@@ -4126,9 +4126,9 @@
               "image": "/assets/gecko/room/enrichment-decor-plant.webp",
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
-                "width": 21,
-                "x": 82,
-                "y": 47
+                "width": 12,
+                "x": 74,
+                "y": 50
               },
               "placement": {
                 "layer": 2,
@@ -4144,9 +4144,9 @@
               "image": "/assets/gecko/room/enrichment-decor-stone.webp",
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
-                "width": 20,
-                "x": 29,
-                "y": 80
+                "width": 10,
+                "x": 20,
+                "y": 68
               },
               "placement": {
                 "layer": 4,
@@ -4162,9 +4162,9 @@
               "image": "/assets/gecko/room/enrichment-decor-wooden.webp",
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
-                "width": 29,
-                "x": 55,
-                "y": 68
+                "width": 20,
+                "x": 56,
+                "y": 62
               },
               "placement": {
                 "layer": 3,
@@ -4179,9 +4179,9 @@
               "id": "thermometer-hygrometer-cool",
               "image": "/assets/gecko/room/thermometer-hygrometer-cool.webp",
               "mobilePlacement": {
-                "width": 16,
-                "x": 18,
-                "y": 32
+                "width": 9,
+                "x": 12,
+                "y": 40
               },
               "placement": {
                 "layer": 6,
@@ -4195,9 +4195,9 @@
               "id": "thermometer-hygrometer-warm",
               "image": "/assets/gecko/room/thermometer-hygrometer-warm.webp",
               "mobilePlacement": {
-                "width": 16,
-                "x": 78,
-                "y": 32
+                "width": 12,
+                "x": 89,
+                "y": 40
               },
               "placement": {
                 "layer": 6,
@@ -4211,8 +4211,8 @@
               "id": "cool-hide",
               "image": "/assets/gecko/room/cool-hide.webp",
               "mobilePlacement": {
-                "width": 25,
-                "x": 73,
+                "width": 16,
+                "x": 20,
                 "y": 58
               },
               "placement": {
@@ -4227,9 +4227,9 @@
               "id": "moist-hide",
               "image": "/assets/gecko/room/moist-hide.webp",
               "mobilePlacement": {
-                "width": 24,
-                "x": 51,
-                "y": 54
+                "width": 14,
+                "x": 40,
+                "y": 56
               },
               "placement": {
                 "layer": 2,
@@ -4243,9 +4243,9 @@
               "id": "warm-hide",
               "image": "/assets/gecko/room/warm-hide.webp",
               "mobilePlacement": {
-                "width": 25,
-                "x": 25,
-                "y": 57
+                "width": 15,
+                "x": 84,
+                "y": 60
               },
               "placement": {
                 "layer": 3,
@@ -4259,9 +4259,9 @@
               "id": "shallow-water-dish",
               "image": "/assets/gecko/room/shallow-water-dish.webp",
               "mobilePlacement": {
-                "width": 15,
-                "x": 67,
-                "y": 70
+                "width": 10,
+                "x": 46,
+                "y": 68
               },
               "placement": {
                 "layer": 6,
@@ -4275,9 +4275,9 @@
               "id": "calcium-dish",
               "image": "/assets/gecko/room/calcium-dish.webp",
               "mobilePlacement": {
-                "width": 14,
-                "x": 38,
-                "y": 70
+                "width": 9,
+                "x": 36,
+                "y": 68
               },
               "placement": {
                 "layer": 6,

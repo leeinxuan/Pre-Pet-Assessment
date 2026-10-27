@@ -4,7 +4,7 @@ export const geckoCopy: SpeciesCopy = {
   animalName: "小型地棲性守宮",
   animalNameFallback: "小型地棲性守宮",
   typeLabel: "小型地棲性守宮",
-  selectionTitle: "選擇想認識的小型地棲性守宮",
+  selectionTitle: "你想飼養哪一種動物？",
   breedTitle: "認識牠的生活習性",
   nameTitle: "替牠取個名字",
   namePlaceholder: "輸入守宮的名字",

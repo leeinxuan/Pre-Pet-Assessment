@@ -202,6 +202,7 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
   ],
   scene: {
     background: health.terrariumBackground,
+    backgroundMobile: health.terrariumBackgroundMobile,
     body: health.body,
     bodyAlt: "等待進行眼睛、尾巴、皮膚與趾端檢查的守宮",
     magnifier: health.magnifier,
@@ -209,17 +210,17 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     // latest completed room layout without coupling the two activities, so
     // future game-specific visual adjustments remain independent.
     completedItems: [
-      { id: "lighting-setup", image: geckoAssets.room.lightingSetupOverlay, alt: "爬蟲缸日間照明效果", placement: { x: 73, y: 43, width: 84, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 50, y: 50, width: 100, transform: "translate(-50%, -50%)" }, sceneVisual: { mixBlendMode: "screen", opacity: 0.7, pointerEvents: "none" }, className: "light-overlay" },
-      { id: "enrichment-decor-plant", image: geckoAssets.room.enrichmentDecorPlant, alt: "環境豐富化植物", placement: { x: 20, y: 50, width: 35, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 82, y: 47, width: 21, transform: "translate(-50%, -50%)" } },
-      { id: "enrichment-decor-stone", image: geckoAssets.room.enrichmentDecorStone, alt: "環境豐富化石頭", placement: { x: 80, y: 78, width: 20, layer: 4, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 29, y: 80, width: 20, transform: "translate(-50%, -50%)" } },
-      { id: "enrichment-decor-wooden", image: geckoAssets.room.enrichmentDecorWooden, alt: "環境豐富化沉木", placement: { x: 35, y: 63, width: 25, layer: 3, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 55, y: 68, width: 29, transform: "translate(-50%, -50%)" } },
-      { id: "thermometer-hygrometer-cool", image: geckoAssets.room.thermometerHygrometerCool, alt: "涼側溫濕度計", placement: { x: 22, y: 46, width: 26, layer: 6 }, mobilePlacement: { x: 18, y: 32, width: 16 } },
-      { id: "thermometer-hygrometer-warm", image: geckoAssets.room.thermometerHygrometerWarm, alt: "暖側溫濕度計", placement: { x: 90, y: 88, width: 25, layer: 6 }, mobilePlacement: { x: 78, y: 32, width: 16 } },
-      { id: "cool-hide", image: geckoAssets.room.coolHide, alt: "涼側躲避屋", placement: { x: 16, y: 70, width: 25, layer: 3 }, mobilePlacement: { x: 73, y: 58, width: 25 } },
-      { id: "moist-hide", image: geckoAssets.room.moistHide, alt: "濕躲避屋", placement: { x: 51, y: 58, width: 25, layer: 2 }, mobilePlacement: { x: 51, y: 54, width: 24 } },
-      { id: "warm-hide", image: geckoAssets.room.warmHide, alt: "暖側躲避屋", placement: { x: 85, y: 60, width: 25, layer: 3 }, mobilePlacement: { x: 25, y: 57, width: 25 } },
-      { id: "shallow-water-dish", image: geckoAssets.room.shallowWaterDish, alt: "淺水碟", placement: { x: 53, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 67, y: 70, width: 15 } },
-      { id: "calcium-dish", image: geckoAssets.room.calciumDish, alt: "補鈣碟", placement: { x: 40, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 38, y: 70, width: 14 } },
+      { id: "lighting-setup", image: geckoAssets.room.lightingSetupOverlay, alt: "爬蟲缸日間照明效果", placement: { x: 73, y: 43, width: 84, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 50, y: 47, width: 100, transform: "translate(-50%, -50%)" }, sceneVisual: { mixBlendMode: "screen", opacity: 0.7, pointerEvents: "none" }, className: "light-overlay" },
+      { id: "enrichment-decor-plant", image: geckoAssets.room.enrichmentDecorPlant, alt: "環境豐富化植物", placement: { x: 20, y: 50, width: 35, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 74, y: 50, width: 12, transform: "translate(-50%, -50%)" } },
+      { id: "enrichment-decor-stone", image: geckoAssets.room.enrichmentDecorStone, alt: "環境豐富化石頭", placement: { x: 80, y: 78, width: 20, layer: 4, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 20, y: 68, width: 10, transform: "translate(-50%, -50%)" } },
+      { id: "enrichment-decor-wooden", image: geckoAssets.room.enrichmentDecorWooden, alt: "環境豐富化沉木", placement: { x: 35, y: 63, width: 25, layer: 3, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 56, y: 62, width: 20, transform: "translate(-50%, -50%)" } },
+      { id: "thermometer-hygrometer-cool", image: geckoAssets.room.thermometerHygrometerCool, alt: "涼側溫濕度計", placement: { x: 22, y: 46, width: 26, layer: 6 }, mobilePlacement: { x: 12, y: 40, width: 9 } },
+      { id: "thermometer-hygrometer-warm", image: geckoAssets.room.thermometerHygrometerWarm, alt: "暖側溫濕度計", placement: { x: 90, y: 88, width: 25, layer: 6 }, mobilePlacement: { x: 89, y: 40, width: 12 } },
+      { id: "cool-hide", image: geckoAssets.room.coolHide, alt: "涼側躲避屋", placement: { x: 16, y: 70, width: 25, layer: 3 }, mobilePlacement: { x: 20, y: 58, width: 16 } },
+      { id: "moist-hide", image: geckoAssets.room.moistHide, alt: "濕躲避屋", placement: { x: 51, y: 58, width: 25, layer: 2 }, mobilePlacement: { x: 40, y: 56, width: 14 } },
+      { id: "warm-hide", image: geckoAssets.room.warmHide, alt: "暖側躲避屋", placement: { x: 85, y: 60, width: 25, layer: 3 }, mobilePlacement: { x: 84, y: 60, width: 15 } },
+      { id: "shallow-water-dish", image: geckoAssets.room.shallowWaterDish, alt: "淺水碟", placement: { x: 53, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 46, y: 68, width: 10 } },
+      { id: "calcium-dish", image: geckoAssets.room.calciumDish, alt: "補鈣碟", placement: { x: 40, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 36, y: 68, width: 9 } },
     ],
   },
   temperature: {

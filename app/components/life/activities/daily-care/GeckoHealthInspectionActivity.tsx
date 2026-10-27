@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import type {
   GeckoHealthDisplayState,
   GeckoHealthInspectionConfig,
@@ -14,6 +14,7 @@ import { interpolatePetName } from "../../../../data/shared/pet-text";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, renderKnowledgeText, type ObservationAnswerStatus } from "../activity-ui";
 import { InspectionHotspot } from "../InspectionHotspot";
+import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 
 type Change = (patch: Partial<LifeActivityState>) => void;
@@ -49,7 +50,10 @@ function CompletedTerrariumScene({ config, excludeItemIds = [] }: {
   excludeItemIds?: readonly string[];
 }) {
   return <>
-    <img className="gecko-health-background" src={config.scene.background} alt="" />
+    <picture>
+      {config.scene.backgroundMobile && <source media="(max-width: 720px)" srcSet={config.scene.backgroundMobile} />}
+      <img className="gecko-health-background" src={config.scene.background} alt="" />
+    </picture>
     {config.scene.completedItems.filter((item) => !excludeItemIds.includes(item.id)).map((item) => (
       <img
         key={item.id}
@@ -82,6 +86,28 @@ function buildInitialStates(config: GeckoHealthInspectionConfig): Record<string,
   return states;
 }
 
+/** 手機版底部說明欄（外觀沿用兔子／鸚鵡的 .rabbit-observation-sheet*）；桌機版不會渲染，維持原本置中 Modal。 */
+function GeckoMobileSheet({ label, onDismiss, children }: { label: string; onDismiss: () => void; children: ReactNode }) {
+  const [pointerStart, setPointerStart] = useState<number | null>(null);
+  return (
+    <div
+      className="rabbit-observation-sheet-layer gecko-observation-sheet-layer"
+      onPointerDown={(event) => setPointerStart(event.clientY)}
+      onPointerUp={(event) => {
+        if (pointerStart !== null && event.clientY - pointerStart > 56) onDismiss();
+        setPointerStart(null);
+      }}
+    >
+      <button type="button" className="rabbit-observation-sheet-backdrop" aria-label="關閉說明" onClick={onDismiss} />
+      <aside className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={label}>
+        <div className="rabbit-observation-sheet-handle" aria-hidden="true" />
+        <button type="button" className="rabbit-observation-sheet-close" aria-label="關閉說明" onClick={onDismiss}>×</button>
+        {children}
+      </aside>
+    </div>
+  );
+}
+
 export function GeckoHealthInspectionActivity({ config, activity, petName, species, onChange, onContinue }: {
   config: GeckoHealthInspectionConfig;
   activity: LifeActivityState;
@@ -94,6 +120,9 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   const [openId, setOpenId] = useState<string | null>(null);
   const [magnifier, setMagnifier] = useState<PointerPosition>(null);
   const [hasAdjustedTemperature, setHasAdjustedTemperature] = useState(false);
+  const isMobile = useMobileLayout();
+  // 手機版底部說明欄被關閉後（不算完成）記錄是哪一個，改由場景下方的按鈕繼續。
+  const [closedSheet, setClosedSheet] = useState<string | null>(null);
   const displayName = petName.trim() || getSpeciesConfig(species).copy.animalNameFallback;
   const renderText = (value: string) => interpolatePetName(value, displayName, species);
   const render = (value: string) => renderKnowledgeText(renderText(value));
@@ -141,6 +170,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
     }
     setOpenId(null);
     setMagnifier(null);
+    setClosedSheet(null);
   };
 
   if (!activity.geckoHealthInspectionStarted) {
@@ -156,6 +186,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
           }
           waterReplacementInProgress.current = false;
           setOpenId(null);
+          setClosedSheet(null);
           onChange({
             geckoHealthInspectionStarted: true,
             geckoHealthInspectionStates: generatedInitialStates,
@@ -249,6 +280,77 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
     setMagnifier({ id, x: event.clientX - rect.left, y: event.clientY - rect.top });
   };
 
+  const dismissObservation = () => {
+    if (activeJudgement && activeFeedback === "incorrect") {
+      onChange({ geckoHealthInspectionFeedback: { ...activity.geckoHealthInspectionFeedback, [activeJudgement.id]: "question" } });
+    }
+    setOpenId(null);
+    setMagnifier(null);
+  };
+  const stageIndex = config.progress.findIndex((step) => step.id === activeStage);
+  const stageComplete = (stepId: string) => stepId === "body" ? bodyComplete : completed.includes(stepId);
+  const mobilePrompt = activeStage === "temperature"
+    ? temperatureConfirmed ? "溫度確認完成，點擊下方按鈕繼續確認飲水。" : instruction
+    : activeStage === "water" && waterFilled
+      ? "飲水已更換完成，繼續觀察排泄。"
+      : instruction;
+
+  const temperatureFeedbackCard = temperatureConfirmed && closedSheet !== "temperature" ? (
+    <section className="gecko-health-feedback gecko-health-feedback--success" aria-live="polite">
+      <span className="gecko-feedback-check" aria-hidden="true">✓</span>
+      <p>{render(config.temperature.successFeedback[temperatureMode])}</p>
+      <p className="gecko-feedback-note">{render(config.temperature.fixedWarning)}</p>
+      <button type="button" className="primary" onClick={() => complete("temperature")}>
+        {config.temperature.continueLabel}
+      </button>
+    </section>
+  ) : null;
+
+  const waterCard = openId === "water" ? (
+    <section className="gecko-health-card gecko-health-card--center" aria-live="polite">
+      <img className={`gecko-health-card-image ${waterFilled ? "is-filled" : ""}`} src={waterFilled ? config.water.cleanImage : config.water.dirtyImage} alt={waterFilled ? config.water.cleanImageAlt : config.water.dirtyImageAlt} />
+      <h2>{waterFilled ? "飲水更換完成" : "每天確認飲水"}</h2>
+      <p>{render(waterFilled ? config.water.successFeedback : config.water.detail)}</p>
+      {waterFilled && <p className="gecko-feedback-note">{render(config.water.fixedWarning)}</p>}
+      <button
+        type="button"
+        className="primary"
+        onClick={() => complete("water")}
+      >
+        {config.water.continueLabel}
+      </button>
+    </section>
+  ) : null;
+
+  const observationCard = activeJudgement && activeStateContent ? (
+    <ObservationCard className="gecko-observation-card" label={`${activeJudgement.label}觀察`}>
+      {comparisonVisible && activeJudgement.comparison ? (
+        <>
+          <h2>異常狀態</h2>
+          <ObservationCardComparison>
+            <img src={activeJudgement.comparison.image} alt={activeJudgement.comparison.imageAlt} />
+            <p>{render(activeJudgement.comparison.description)}</p>
+          </ObservationCardComparison>
+          <button type="button" className="observation-card-action" onClick={() => complete(activeJudgement.id)}>我了解了</button>
+        </>
+      ) : (
+        <ObservationCardFlow
+          status={activeFeedback}
+          title={activeJudgement.label}
+          image={<img className="observation-card-image" src={activeStateContent.image} alt={activeStateContent.imageAlt} />}
+          question={render(activeJudgement.prompt)}
+          choices={activeJudgement.choices.map((choice) => ({ id: choice.id, label: renderText(choice.text) }))}
+          feedback={render(activeFeedback === "incorrect" ? activeStateContent.incorrectFeedback : activeStateContent.correctFeedback)}
+          onChoose={selectAnswer}
+          onReturn={() => onChange({ geckoHealthInspectionFeedback: { ...activity.geckoHealthInspectionFeedback, [activeJudgement.id]: "question" } })}
+          correctAction={needsComparison && activeJudgement.comparison
+            ? <button type="button" className="observation-card-action" onClick={() => persistStates({ [`comparison-${activeJudgement.id}`]: true })}>{activeJudgement.comparison.actionLabel}</button>
+            : <button type="button" className="observation-card-action" onClick={() => complete(activeJudgement.id)}>我了解了</button>}
+        />
+      )}
+    </ObservationCard>
+  ) : null;
+
   return (
     <section className="life-activity gecko-health-inspection" aria-label={renderText(config.title)}>
       <div className="activity-heading">
@@ -268,8 +370,16 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
           );
         })}
       </ol>
-
+      <div className="gecko-stage-summary" role="status" aria-label={`每日巡視進度：步驟 ${stageIndex + 1} / ${config.progress.length}，${config.progress[stageIndex]?.label ?? ""}`}>
+        <strong>步驟 {stageIndex + 1} / {config.progress.length}</strong>
+        <span className="gecko-stage-dots" aria-hidden="true">
+          {config.progress.map((step) => <i key={step.id} className={stageComplete(step.id) ? "is-complete" : step.id === activeStage ? "is-active" : ""} />)}
+        </span>
+        <span className="gecko-stage-name">{config.progress[stageIndex]?.label}</span>
+      </div>
       <div className={`gecko-health-scene gecko-health-scene--${activeStage}`}>
+        {/* 手機版提示與桌機版提示使用相同資料；手機提示固定在場景的上緣中央。 */}
+        <p className="gecko-mobile-prompt" aria-live="polite">{render(mobilePrompt)}</p>
         <div className="gecko-health-instruction" aria-live="polite">{render(instruction)}</div>
 
         {activeStage === "temperature" && (
@@ -319,16 +429,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                 </div>
               </div>
             </div>
-            {temperatureConfirmed && (
-              <section className="gecko-health-feedback gecko-health-feedback--success" aria-live="polite">
-                <span className="gecko-feedback-check" aria-hidden="true">✓</span>
-                <p>{render(config.temperature.successFeedback[temperatureMode])}</p>
-                <p className="gecko-feedback-note">{render(config.temperature.fixedWarning)}</p>
-                <button type="button" className="primary" onClick={() => complete("temperature")}>
-                  {config.temperature.continueLabel}
-                </button>
-              </section>
-            )}
+            {!isMobile && temperatureFeedbackCard}
           </>
         )}
 
@@ -342,6 +443,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
               onClick={() => {
                 if (waterFilled || waterReplacementInProgress.current) return;
                 waterReplacementInProgress.current = true;
+                setClosedSheet(null);
                 waterFeedbackTimeout.current = setTimeout(() => {
                   waterFeedbackTimeout.current = null;
                   if (!waterStepActive.current) return;
@@ -356,21 +458,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
               <img className={waterFilled ? "is-filled" : ""} src={waterFilled ? config.water.cleanImage : config.water.dirtyImage} alt={waterFilled ? config.water.cleanImageAlt : config.water.dirtyImageAlt} />
               {!waterFilled && <span>點擊水碟</span>}
             </button>}
-            {openId === "water" && (
-              <section className="gecko-health-card gecko-health-card--center" aria-live="polite">
-                <img className={`gecko-health-card-image ${waterFilled ? "is-filled" : ""}`} src={waterFilled ? config.water.cleanImage : config.water.dirtyImage} alt={waterFilled ? config.water.cleanImageAlt : config.water.dirtyImageAlt} />
-                <h2>{waterFilled ? "飲水更換完成" : "每天確認飲水"}</h2>
-                <p>{render(waterFilled ? config.water.successFeedback : config.water.detail)}</p>
-                {waterFilled && <p className="gecko-feedback-note">{render(config.water.fixedWarning)}</p>}
-                <button
-                  type="button"
-                  className="primary"
-                  onClick={() => complete("water")}
-                >
-                  {config.water.continueLabel}
-                </button>
-              </section>
-            )}
+            {!isMobile && waterCard}
           </>
         )}
 
@@ -392,8 +480,12 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
         )}
 
         {activeStage === "body" && (
-          <div className="gecko-body-stage">
-            <div className="gecko-body-art">
+          <>
+            <picture className="gecko-health-mobile-background">
+              <img className="gecko-health-background" src={config.scene.background} alt="" />
+            </picture>
+            <div className="gecko-body-stage">
+              <div className="gecko-body-art">
               <img className="gecko-body-image" src={config.scene.body} alt={config.scene.bodyAlt} />
               {config.body.points.map((point, index) => {
                 const pointComplete = completed.includes(point.id);
@@ -425,38 +517,12 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                   </InspectionHotspot>
                 );
               })}
+              </div>
             </div>
-          </div>
+          </>
         )}
 
-        {activeJudgement && activeStateContent && (
-          <ObservationCard className="gecko-observation-card" label={`${activeJudgement.label}觀察`}>
-            {comparisonVisible && activeJudgement.comparison ? (
-              <>
-                <h2>異常狀態</h2>
-                <ObservationCardComparison>
-                  <img src={activeJudgement.comparison.image} alt={activeJudgement.comparison.imageAlt} />
-                  <p>{render(activeJudgement.comparison.description)}</p>
-                </ObservationCardComparison>
-                <button type="button" className="observation-card-action" onClick={() => complete(activeJudgement.id)}>我了解了</button>
-              </>
-            ) : (
-              <ObservationCardFlow
-                status={activeFeedback}
-                title={activeJudgement.label}
-                image={<img className="observation-card-image" src={activeStateContent.image} alt={activeStateContent.imageAlt} />}
-                question={render(activeJudgement.prompt)}
-                choices={activeJudgement.choices.map((choice) => ({ id: choice.id, label: renderText(choice.text) }))}
-                feedback={render(activeFeedback === "incorrect" ? activeStateContent.incorrectFeedback : activeStateContent.correctFeedback)}
-                onChoose={selectAnswer}
-                onReturn={() => onChange({ geckoHealthInspectionFeedback: { ...activity.geckoHealthInspectionFeedback, [activeJudgement.id]: "question" } })}
-                correctAction={needsComparison && activeJudgement.comparison
-                  ? <button type="button" className="observation-card-action" onClick={() => persistStates({ [`comparison-${activeJudgement.id}`]: true })}>{activeJudgement.comparison.actionLabel}</button>
-                  : <button type="button" className="observation-card-action" onClick={() => complete(activeJudgement.id)}>我了解了</button>}
-              />
-            )}
-          </ObservationCard>
-        )}
+        {!isMobile && observationCard}
       </div>
       {activeStage === "temperature" && !temperatureConfirmed && (
         <div className="gecko-temperature-actions">
@@ -477,6 +543,25 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
             {config.temperature.confirmLabel}
           </button>
         </div>
+      )}
+      {isMobile && activeStage === "temperature" && temperatureConfirmed && closedSheet === "temperature" && (
+        <div className="gecko-temperature-actions">
+          <button type="button" className="primary" onClick={() => complete("temperature")}>{config.temperature.continueLabel}</button>
+        </div>
+      )}
+      {isMobile && activeStage === "water" && waterFilled && openId !== "water" && closedSheet === "water" && (
+        <div className="gecko-temperature-actions">
+          <button type="button" className="primary" onClick={() => complete("water")}>{config.water.continueLabel}</button>
+        </div>
+      )}
+      {isMobile && temperatureFeedbackCard && activeStage === "temperature" && (
+        <GeckoMobileSheet label="溫度確認完成" onDismiss={() => setClosedSheet("temperature")}>{temperatureFeedbackCard}</GeckoMobileSheet>
+      )}
+      {isMobile && waterCard && (
+        <GeckoMobileSheet label="飲水更換" onDismiss={() => { setOpenId(null); setClosedSheet("water"); }}>{waterCard}</GeckoMobileSheet>
+      )}
+      {isMobile && observationCard && activeJudgement && (
+        <GeckoMobileSheet label={`${activeJudgement.label}觀察`} onDismiss={dismissObservation}>{observationCard}</GeckoMobileSheet>
       )}
     </section>
   );

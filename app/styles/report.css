@@ -937,7 +937,7 @@
     margin-left: 0;
   }
   .result-share-ready { align-items: stretch; flex-direction: column; }
-  .knowledge-modal { padding: 25px 21px; border-radius: 20px; }.care-review-notes-modal { top: 0; left: 0; width: 100vw; max-height: 100dvh; min-height: 100dvh; border: 0; border-radius: 22px 22px 0 0; transform: none; }
+  .knowledge-modal { padding: 25px 21px; border-radius: 20px; }
   .shared-result-page { padding: 20px 15px 36px; }
   .shared-result-hero,
   .shared-result-costs { align-items: stretch; flex-direction: column; }
@@ -954,6 +954,73 @@
   .shared-discussion-list summary em { margin-left: 33px; }
   .shared-discussion-list details ul { padding: 0 24px 16px 42px; }
   .shared-result-costs dl { min-width: 0; }
+}
+
+@media (max-width: 720px) {
+  html:has(.responsive-knowledge-sheet),
+  body:has(.responsive-knowledge-sheet) { overflow: hidden; }
+  .responsive-knowledge-sheet-backdrop {
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+    touch-action: none;
+  }
+  .responsive-knowledge-sheet {
+    position: relative;
+    top: auto;
+    left: auto;
+    display: flex;
+    width: 100%;
+    max-width: none;
+    max-height: min(84dvh, 720px);
+    min-height: 0;
+    padding: 0;
+    border: 1px solid rgba(226, 207, 166, .9);
+    border-bottom: 0;
+    border-radius: 24px 24px 0 0;
+    background: #fffdf7;
+    overflow: hidden;
+    transform: none;
+    flex-direction: column;
+    overscroll-behavior: contain;
+  }
+  .responsive-knowledge-sheet-handle {
+    display: grid;
+    width: 100%;
+    min-height: 30px;
+    flex: 0 0 30px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    cursor: grab;
+    touch-action: none;
+  }
+  .responsive-knowledge-sheet-handle:active { cursor: grabbing; }
+  .responsive-knowledge-sheet-handle span { width: 48px; height: 5px; border-radius: 999px; background: #d8cfbf; }
+  .responsive-knowledge-sheet .knowledge-modal-close { top: 14px; right: 18px; z-index: 2; width: 42px; height: 42px; border: 1px solid #e3d5bd; background: #fffdf7; }
+  .responsive-knowledge-sheet-header { flex: 0 0 auto; padding: 2px 74px 13px 22px; }
+  .responsive-knowledge-sheet-header .life-stage-label { margin: 0 0 4px; }
+  .responsive-knowledge-sheet-header h2 { margin: 0; color: #3d362b; font-size: clamp(22px, 6.4vw, 28px); line-height: 1.35; }
+  .responsive-knowledge-sheet-content {
+    min-height: 0;
+    flex: 0 1 auto;
+    padding: 0 22px 18px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .responsive-knowledge-sheet-content > p { margin: 0; color: #5d5547; font-weight: 700; line-height: 1.75; }
+  .responsive-knowledge-sheet-content > p + ul { margin-top: 12px; }
+  .responsive-knowledge-sheet-content > ul { margin-bottom: 0; }
+  .responsive-knowledge-sheet-footer {
+    flex: 0 0 auto;
+    padding: 12px 22px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(226, 207, 166, .72);
+    background: #fffdf7;
+  }
+  .responsive-knowledge-sheet-footer .knowledge-modal-confirm { min-height: 48px; margin: 0; }
+  .responsive-knowledge-sheet .care-review-notes-modal-content { display: grid; gap: 14px; }
 }
 
 @media (max-width: 360px) {

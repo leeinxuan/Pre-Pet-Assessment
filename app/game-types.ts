@@ -486,6 +486,8 @@ export type GeckoHealthInspectionConfig = {
   progress: readonly { id: "temperature" | "water" | "feces" | "body"; label: string }[];
   scene: {
     background: string;
+    /** Optional mobile-only scene artwork; desktop continues to use background. */
+    backgroundMobile?: string;
     body: string;
     bodyAlt: string;
     magnifier: string;

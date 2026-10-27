@@ -100,6 +100,7 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
   }
 
   return <div className="content-wrap home-readiness">
+    <div className="home-readiness-desktop-flow">
     {!canShowCards ? <>
       <header className="home-readiness-heading"><h1>家庭與居住確認</h1><p>{arrivalLead}</p></header>
       {!selectedHousing ? <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question"><p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2><div className="home-readiness-choice-grid">
@@ -123,6 +124,43 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
         </article>}
       </section>{allAcknowledged && <section className="home-readiness-completion" role="status"><span aria-hidden="true">✓</span><div><p className="life-stage-label">共同承諾完成</p><p>{renderHomeReadinessSegments(config.completionMessage, replaceName)}</p></div></section>}<NavButtons onBack={onBack} onNext={onNext} disabled={!allAcknowledged} nextLabel="繼續" />
     </>}
+    </div>
+
+    <div className="home-readiness-mobile-flow">
+      <header className="home-readiness-mobile-heading">
+        <h1>家庭與居住確認</h1>
+        <p>{canShowCards ? "還有一件事——同住的人都準備好了嗎？" : arrivalLead}</p>
+      </header>
+
+      {canShowCards && <nav className="home-readiness-mobile-progress" aria-label="共同承諾進度">{config.cards.map((card, index) => {
+        const complete = state.acknowledgedCardIds.includes(card.id);
+        const current = activeCard?.id === card.id;
+        const available = complete || index === firstIncompleteIndex;
+        return <button type="button" key={card.id} className={`${complete ? "is-complete" : ""} ${current ? "is-current" : ""}`} disabled={!available || allAcknowledged} onClick={() => openCommitmentCard(index)}><span>{complete ? "✓" : index + 1}</span><b>{card.stepLabel}</b></button>;
+      })}</nav>}
+
+      <main className="home-readiness-mobile-content">
+        {!canShowCards ? (!selectedHousing
+          ? <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question"><p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2><div className="home-readiness-choice-grid">
+            {config.housingChoices.map((choice) => <button type="button" key={choice.id} onClick={() => onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false })}><span className="home-readiness-choice-media"><img src={choice.id === "renter" ? sharedAssets.housing.tenant : sharedAssets.housing.homeowner} alt="" /></span><span className="home-readiness-choice-label">{choice.label}</span></button>)}
+          </div></article></section>
+          : <section className="home-readiness-workbench home-readiness-workbench--reminder"><article className="home-readiness-reminder-step"><p className="life-stage-label">第一步・居住提醒</p><h2>{selectedHousing.followUpTitle}</h2><HomeReadinessRichText blocks={selectedHousing.followUpContent} replaceName={replaceName} /><button type="button" className="primary" onClick={() => onChange({ ...state, housingReminderAcknowledged: true })}>我了解了</button></article></section>)
+          : <>
+            {activeCard && <article className="home-readiness-commitment-card">
+              <h3>{renderHomeReadinessSegments(activeCard.title, replaceName)}</h3>
+              <div className="home-readiness-commitment-copy"><HomeReadinessRichText blocks={activeCard.body} replaceName={replaceName} /></div>
+              {state.acknowledgedCardIds.includes(activeCard.id)
+                ? <p className="home-readiness-reviewed">已確認；可從上方步驟回看其他內容。</p>
+                : <button type="button" className="primary" onClick={acknowledgeCommitmentCard}>我了解了</button>}
+            </article>}
+            {allAcknowledged && <section className="home-readiness-completion" role="status"><span aria-hidden="true">✓</span><div><p className="life-stage-label">共同承諾完成</p><p>{renderHomeReadinessSegments(config.completionMessage, replaceName)}</p></div></section>}
+          </>}
+      </main>
+
+      {canShowCards && allAcknowledged && <div className="home-readiness-mobile-complete-action">
+        <button type="button" className="primary" onClick={onNext}>繼續 <span>→</span></button>
+      </div>}
+    </div>
   </div>;
 }
 
@@ -136,7 +174,11 @@ function expensePriceText(expenseIds: string[] = [], species: string) {
 
 function mobileRoomPriceText(item: RoomItem, species: string) {
   const ids = Array.from(new Set([...(item.expenseIds ?? []), ...(item.expenseId ? [item.expenseId] : [])]));
-  const prices = ids.map((id) => getExpenseForSpecies(id, species)).filter((record): record is ExpenseRecord => Boolean(record));
+  return mobileExpensePriceText(ids, species);
+}
+
+function mobileExpensePriceText(expenseIds: string[] = [], species: string) {
+  const prices = expenseIds.map((id) => getExpenseForSpecies(id, species)).filter((record): record is ExpenseRecord => Boolean(record));
   if (prices.length === 0) return "";
   const minimum = prices.reduce((sum, record) => sum + record.amount, 0);
   const maximum = prices.reduce((sum, record) => sum + (record.maxAmount ?? record.amount), 0);
@@ -338,16 +380,25 @@ export function RoomPreparation({
   const matchingInteriorBackground = roomFlow?.interiorBackgroundStates
     ?.filter((state) => state.whenItemIds.every((id) => selectedItems.includes(id)))
     .at(-1)?.background;
+  const matchingInteriorMobileBackground = roomFlow?.interiorMobileBackgroundStates
+    ?.filter((state) => state.whenItemIds.every((id) => selectedItems.includes(id)))
+    .at(-1)?.background;
   const roomBackground = roomFlow
     ? (insideView ? (matchingInteriorBackground ?? (interiorItemPlaced ? roomFlow.interiorSafeBackground ?? roomFlow.safeBackground : roomFlow.interiorBackground ?? roomFlow.safeBackground)) : (floorHazardComplete ? roomFlow.safeBackground : roomFlow.initialBackground))
     : (isSceneSafe ? roomScene.safeBackground : roomScene.background);
   const mobileRoomBackground = roomFlow
     ? (insideView
-      ? roomBackground
+      ? (matchingInteriorMobileBackground ?? (interiorItemPlaced
+        ? roomFlow.interiorSafeMobileBackground ?? roomFlow.interiorSafeBackground ?? roomBackground
+        : roomFlow.interiorMobileBackground ?? roomFlow.interiorBackground ?? roomBackground))
       : (floorHazardComplete ? roomFlow.safeMobileBackground ?? roomFlow.safeBackground : roomFlow.initialMobileBackground ?? roomFlow.initialBackground))
     : (isSceneSafe ? roomScene.safeBackground ?? roomBackground : roomScene.mobileBackground ?? roomBackground);
-  // 只有犬隻目前提供獨立手機背景；用 picture 在素材層切換，避免影響其他頁面的 CSS。
-  const usesDedicatedMobileRoomBackground = Boolean(!insideView && (roomFlow?.initialMobileBackground || roomFlow?.safeMobileBackground));
+  // 有獨立手機背景時一律用 picture 由瀏覽器切換來源，避免桌機背景層在手機籠內視角殘留。
+  const usesDedicatedMobileRoomBackground = Boolean(
+    insideView
+      ? (roomFlow?.interiorMobileBackground || roomFlow?.interiorSafeMobileBackground || roomFlow?.interiorMobileBackgroundStates?.length)
+      : (roomFlow?.initialMobileBackground || roomFlow?.safeMobileBackground),
+  );
   const displayName = petName.trim() || speciesConfig.copy.animalNameFallback;
   const roomInstruction = roomFlow
     ? !hazardsCleared
@@ -507,7 +558,7 @@ export function RoomPreparation({
               alt={insideView ? roomScene.interiorBackgroundAlt ?? roomScene.backgroundAlt : roomScene.backgroundAlt}
               style={roomScene.backgroundStyle}
             /><img
-              className={`room-scene-background room-scene-background--mobile ${roomScene.mobileBackgroundClass ?? ""} ${interiorUsesOwnAspectRatio ? "room-scene-background--portrait" : ""}`}
+              className={`room-scene-background room-scene-background--mobile ${roomScene.mobileBackgroundClass ?? ""} ${interiorUsesOwnAspectRatio ? "room-scene-background--portrait" : ""} ${interiorUsesOwnAspectRatio && roomFlow?.interiorBackgroundMobileFit === "cover" ? "room-scene-background--fit-cover" : ""}`}
               src={mobileRoomBackground}
               alt=""
               style={roomScene.backgroundStyle}
@@ -597,7 +648,7 @@ export function RoomPreparation({
         </div>
       </div>
       <div className="room-actions">
-        <button className="secondary" onClick={complete || reviewing ? onReplay : onBack}>{complete || reviewing ? "↻ 再玩一次" : "← 返回"}</button>
+        <button className="secondary" onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
         <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="primary" onClick={completeRoomCheck}>完成房間檢查，準備出發 <span>→</span></button></div>
       </div>
       </div>
@@ -651,6 +702,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
   const [departing, setDeparting] = useState(false);
   const [mobileStarted, setMobileStarted] = useState(false);
   const [mobileInfo, setMobileInfo] = useState<MobileInfoSheetContent | null>(null);
+  const [pendingMobileInfoItemIds, setPendingMobileInfoItemIds] = useState<Set<string>>(() => new Set());
   const documents = activeTrunkItems.filter((item) => item.kind === "document");
   const supplies = activeTrunkItems.filter((item) => item.kind === "supply");
   const documentDone = documents.filter((item) => selected.includes(item.id)).length;
@@ -666,7 +718,18 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
     window.setTimeout(() => {
       onSelect(id);
       setExitingItems((current) => current.filter((itemId) => itemId !== id));
+      setPendingMobileInfoItemIds((current) => new Set(current).add(id));
     }, 360);
+  }
+
+  function openMobileItemInfo(item: typeof activeTrunkItems[number], price: string | undefined) {
+    setPendingMobileInfoItemIds((current) => {
+      if (!current.has(item.id)) return current;
+      const next = new Set(current);
+      next.delete(item.id);
+      return next;
+    });
+    setMobileInfo({ title: item.label, description: item.description.replaceAll("{petName}", displayName), image: item.image, price });
   }
 
   function depart() { setDeparting(true); window.setTimeout(onNext, 650); }
@@ -684,11 +747,12 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
               const itemSelected = selected.includes(item.id);
               const price = expensePriceText(item.expenseIds ?? [], species);
               const reusedExpense = (item.reusedExpenseIds?.length ?? 0) > 0;
+              const mobilePrice = item.priceNote ?? (reusedExpense ? "已於房間準備計入" : mobileExpensePriceText(item.expenseIds ?? [], species));
               const hidePriceForReusedItem = departureScene.hidePriceForReusedItemIds?.includes(item.id);
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
                   <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.visualClassName ?? item.id}`} style={item.visualScale === undefined ? undefined : { "--departure-item-image-scale": item.visualScale } as CSSProperties} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b>
-                </button> : <><div className="departure-desktop-note"><ItemDescriptionCard title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} /></div><button type="button" className="departure-mobile-done" onClick={() => setMobileInfo({ title: item.label, description: item.description.replaceAll("{petName}", displayName), image: item.image, price: item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined) })} aria-label={`查看${item.label}說明`}><span className="departure-supply-visual">{item.image && <img src={item.image} alt="" />}</span><b>{item.label}</b><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4.5 4.5L19 7" /></svg></span></button></>}
+                </button> : <><ItemDescriptionCard className="departure-desktop-note" title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} /><button type="button" className={`departure-mobile-done${pendingMobileInfoItemIds.has(item.id) ? " is-awaiting-info" : ""}`} onClick={() => openMobileItemInfo(item, mobilePrice || undefined)} aria-label={`查看${item.label}說明`}><span className="departure-supply-visual">{item.image && <img src={item.image} alt="" />}</span><b>{item.label}</b><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4.5 4.5L19 7" /></svg></span></button></>}
               </div>;
             })}
           </div>)}
@@ -703,7 +767,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
       </section>
     </div>
     <div className="departure-actions">
-      <button type="button" className="secondary" onClick={complete || reviewing ? onReplay : onBack}>{complete || reviewing ? "↻ 再玩一次" : "← 返回"}</button>
+      <button type="button" className={`secondary departure-return-button${reviewing ? " is-replay" : ""}`} onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
       <div><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
     </div>
     <MobileInfoSheet content={mobileInfo} onClose={() => setMobileInfo(null)} />

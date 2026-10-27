@@ -55,6 +55,22 @@ export const hamsterCageCheck = {
     siftHint: "按住漏勺，從砂盆一端拖曳到另一端。",
     shakeHint: "在砂盆上左右拖曳，讓細碎粉塵沉到底部。",
     shakeCompleteHint: "太好了！砂浴盆已經平整又乾淨，{petName} 可以舒服地使用了！",
+    /** Touch-first instructions and thresholds. Desktop keeps the drag/hold interactions above. */
+    mobileTap: {
+      scoop: {
+        selectPrompt: "點擊小鏟子，準備清理髒污。",
+        targetPrompt: "點擊髒污，完成清理。",
+      },
+      sieve: {
+        selectPrompt: "點擊細孔漏勺，準備篩除雜質。",
+        targetPrompt: "點擊砂盆中的雜質，將它篩出。",
+      },
+      shake: {
+        prompt: "輕點砂盆，讓墊材鬆動並找出雜質。",
+        progressLabel: "搖晃進度",
+        progressIncrement: 25,
+      },
+    },
   },
   /**
    * 清潔活動中的籠內用品獨立於 preparation.ts；兩個畫面可各自調整位置與尺寸。
