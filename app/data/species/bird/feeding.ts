@@ -28,8 +28,8 @@ export const birdFeeding: FeedingConfig = {
   interaction: "scene", requiredSupplies: ["food", "water", "veggie"],
   supplies: [
     { stateKey: "food", label: "鸚鵡專用混合飼料", image: birdAssets.feeding.seedMix, alt: "鸚鵡專用混合飼料", description: "植食性鸚鵡的主食是符合食性的混合種子或滋養丸飼料，提供所需能量與基礎營養。注意定期確認食碗內是否只剩空殼，避免誤判進食量。" },
-    { stateKey: "water", label: "乾淨飲水（適當大小容器）", image: birdAssets.feeding.waterBottle, alt: "乾淨飲水（適當大小容器）", description: "每天提供新鮮飲水並清洗容器。容器不可過大過深，避免鳥跌入。注意觀察每日飲水量，飲水變化是健康的重要指標。" },
-    { stateKey: "veggie", label: "新鮮蔬菜（如胡蘿蔔、深綠色蔬菜）", image: birdAssets.feeding.freshVeggie, alt: "新鮮蔬菜（如胡蘿蔔、深綠色蔬菜）", description: "適量新鮮蔬果可補充種子飼料缺乏的維生素 A——胡蘿蔔、深綠色蔬菜都是好選擇。注意限制份量，讓鳥以專用飼料為主食，新鮮食材為補充。" },
+    { stateKey: "water", label: "乾淨飲水", image: birdAssets.feeding.waterBottle, alt: "乾淨飲水", description: "每天提供新鮮飲水並清洗容器。容器不可過大過深，避免鳥跌入。注意觀察每日飲水量，飲水變化是健康的重要指標。" },
+    { stateKey: "veggie", label: "新鮮蔬菜", image: birdAssets.feeding.freshVeggie, alt: "新鮮蔬菜", description: "如胡蘿蔔、深綠色蔬菜等適量新鮮蔬果可補充種子飼料缺乏的維生素 A——胡蘿蔔、深綠色蔬菜都是好選擇。注意限制份量，讓鳥以專用飼料為主食，新鮮食材為補充。" },
   ],
   unsafeFoods: [
     { id: "chocolate", label: "巧克力", image: birdAssets.feeding.chocolate, title: "巧克力不能給鳥吃", text: "巧克力對鳥類具有毒性，即使少量也可能致命，絕對不可給鳥食用。" },

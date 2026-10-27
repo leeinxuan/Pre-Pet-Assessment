@@ -1,6 +1,8 @@
 /* 鸚鵡鳥籠巡視：籠內清潔、健康觀察與籠外互動。 */
 .bird-cage-activity { display: grid; gap: 16px; }
 .bird-cage-message { min-height: 3.4em; margin-bottom: 0; }
+.bird-cage-mobile-prompt { display: none; }
+.bird-stage-summary { display: none; }
 .bird-cage-scene { position: relative; min-height: 520px; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(145deg, #fbf4e5, #e7f0e6); isolation: isolate; }
 .bird-cage-background { position: absolute; z-index: -1; inset: 78px 0 0; width: 100%; height: calc(100% - 78px); object-fit: contain; }
 .bird-cage-scene.is-social-stage .bird-cage-background { top: 70px; height: calc(100% - 70px); }

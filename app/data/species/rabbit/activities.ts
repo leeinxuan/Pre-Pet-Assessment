@@ -42,10 +42,10 @@ export const rabbitGroomingConfig = {
     furBallStep3: rabbitGroomingAsset("fur-ball-step3.webp"),
   },
   groomingSteps: [
-    { id: "groom-head-ears", stateId: "part-1-step-1-head-ears", completeStateId: "part-1-step-1-complete", label: "頭頂與耳後", instruction: "拖曳梳子，輕輕梳理頭頂與耳後。", character: "idle", furBall: "furBallEmpty" },
-    { id: "groom-back-sides", stateId: "part-1-step-2-back-sides", completeStateId: "part-1-step-2-complete", label: "背部與側面", instruction: "拖曳梳子，沿背部與側面梳理。", character: "side", furBall: "furBallStep1" },
-    { id: "groom-hind-tail", stateId: "part-1-step-3-hindquarters", completeStateId: "part-1-step-3-complete", label: "後肢及尾根", instruction: "拖曳梳子，仔細梳理後肢及尾根周圍。", character: "hindquarters", furBall: "furBallStep2", caution: "尾根部容易藏污和結毛，是最需要仔細梳理的區域。" },
-    { id: "groom-footpad", stateId: "part-1-step-4-footpad", completeStateId: "part-1-complete", label: "足底檢查", instruction: "梳完後肢，順手翻開看看腳底吧\n點擊腳掌，完成足底檢查。", character: "footpad", furBall: "furBallStep3" },
+    { id: "groom-head-ears", stateId: "part-1-step-1-head-ears", completeStateId: "part-1-step-1-complete", label: "頭頂與耳後", instruction: "拖曳梳子，輕輕梳理頭頂與耳後。", mobileTap: { tool: "點擊梳子，準備替 {petName} 梳毛。", target: "點擊 {petName} 的頭頂，輕輕梳毛。" }, character: "idle", furBall: "furBallEmpty" },
+    { id: "groom-back-sides", stateId: "part-1-step-2-back-sides", completeStateId: "part-1-step-2-complete", label: "背部與側面", instruction: "拖曳梳子，沿背部與側面梳理。", mobileTap: { tool: "點擊梳子，準備替 {petName} 梳毛。", target: "點擊 {petName} 的背部與側面，輕輕梳毛。" }, character: "side", furBall: "furBallStep1" },
+    { id: "groom-hind-tail", stateId: "part-1-step-3-hindquarters", completeStateId: "part-1-step-3-complete", label: "後肢及尾根", instruction: "拖曳梳子，仔細梳理後肢及尾根周圍。", mobileTap: { tool: "點擊梳子，準備替 {petName} 梳毛。", target: "點擊 {petName} 的後肢與尾根，仔細梳毛。" }, character: "hindquarters", furBall: "furBallStep2", caution: "尾根部容易藏污和結毛，是最需要仔細梳理的區域。" },
+    { id: "groom-footpad", stateId: "part-1-step-4-footpad", completeStateId: "part-1-complete", label: "足底檢查", instruction: "梳完後肢，順手翻開看看腳底吧\n點擊腳掌，完成足底檢查。", mobileTap: { tool: "點擊 {petName} 的腳掌，完成足底檢查。", target: "點擊 {petName} 的腳掌，完成足底檢查。" }, character: "footpad", furBall: "furBallStep3" },
   ],
   sceneDescriptions: {
     part1: "今天早上，你來到 {petName} 身邊，牠正安靜地整理著自己的毛髮。換毛期容易留下細小浮毛，先陪牠完成一趟溫柔的梳毛與足底檢查吧。",
@@ -102,7 +102,7 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
     topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
     questionText: "請把這 5 個動作拖曳到正確的順序，安全地抱起 {petName}。", activityCompletionTitle: "你已學會安全抱起 {petName} 的方式！", activityRevealNotice: "不用擔心，抱兔子確實需要練習～我們一起看看正確的步驟吧！",
     completionFeedback: { title: "做得很好！", encouragement: "你知道怎麼讓 {petName} 安心被抱起，做得很好！每一個步驟都是在幫牠建立對你的信任。", knowledgeTitle: "兔兔小知識", knowledgeContent: [{ type: "paragraph", text: "**緩慢靠近、先讓牠嗅聞**，再確認牠沒有緊張或後退。抱起時要**同時托住胸口與臀部，讓牠靠著身體**；不可拎耳朵或讓腹部朝上。" }] },
-    completionReminder: { title: "<danger>請不要這樣抱兔兔</danger>", items: [
+    completionReminder: { title: "<danger>請注意這樣抱兔兔</danger>", items: [
       { title: "<danger>從耳朵拎起</danger>", description: "耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。", imagePlaceholderLabel: "從耳朵拎起示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.webp", imageAlt: "從耳朵拎起兔子的錯誤抱法示意" },
       { title: "<danger>讓牠腹部朝上</danger>", description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不代表牠不緊張或害怕。", imagePlaceholderLabel: "腹部朝上示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp", imageAlt: "讓兔子腹部朝上的錯誤抱法示意" },
     ], footer: "如果兔兔抗拒或退避，不要強迫互動" },

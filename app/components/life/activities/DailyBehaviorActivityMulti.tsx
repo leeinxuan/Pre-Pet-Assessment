@@ -235,7 +235,7 @@ export function DailyBehaviorActivityMulti({
             <p className="mobile-choice-context">{renderKnowledgeText(withPetName(scenario.description, petName, species))}</p>
             <h2>{withPetName(scenario.questionText, petName, species)}</h2>
             <p className="daily-behavior-live-hint visible daily-behavior-progress-hint" role="status">
-              {mode === "animating" ? "正在加入本次照顧費用…" : `已找到 ${correctSelectedCount} / ${correctChoiceIds.length} 個合適做法`}
+              {mode === "animating" ? "正在加入本次照顧費用…" : <><span>已找到 {correctSelectedCount} / {correctChoiceIds.length}</span><span>個合適做法</span></>}
             </p>
           </div>
           <div className="choice-grid">

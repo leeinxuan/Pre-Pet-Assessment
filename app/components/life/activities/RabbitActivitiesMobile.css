@@ -1,0 +1,207 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 */
+/* Mobile rabbit activities keep task context fixed and make only dense task content scroll. */
+@media (max-width: 720px) {
+  .stage-layout:has(.rabbit-activity) {
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .stage-layout:has(.rabbit-activity) > .stage { min-height: 0; overflow: hidden; }
+  .content-wrap.life-journey-page:has(> .rabbit-activity) {
+    display: flex;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    animation: none;
+  }
+
+  .rabbit-carry-activity {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .rabbit-carry-activity > header { flex: 0 0 auto; margin: 0; padding: 16px; }
+  .rabbit-carry-activity > header h1 { font-size: 28px; line-height: 1.3; }
+  .rabbit-carry-activity > header .rabbit-carry-description { display: block; font-size: 14px; line-height: 1.65; }
+  .rabbit-carry-activity .rabbit-activity-panel {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0 16px calc(16px + env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+  .rabbit-carry-activity .rabbit-activity-panel h2 { flex: 0 0 auto; margin-bottom: 12px; font-size: 18px; line-height: 1.45; }
+  .rabbit-carry-activity .rabbit-sort-list {
+    flex: 1 1 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0 2px 12px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+  .rabbit-carry-activity .rabbit-sort-list::-webkit-scrollbar { display: none; }
+  .rabbit-carry-activity .rabbit-drag-sort-list li {
+    grid-template-columns: 30px 56px minmax(0, 1fr) 92px;
+    gap: 8px;
+    min-height: 72px;
+    padding: 8px;
+    cursor: default;
+    touch-action: manipulation;
+  }
+  .rabbit-carry-activity .rabbit-drag-sort-list li > span { width: 28px; height: 28px; }
+  .rabbit-carry-activity .rabbit-step-image-slot { grid-column: 2; width: 56px; min-height: 56px; }
+  .rabbit-carry-activity .rabbit-step-image-slot img { width: 56px; height: 56px; object-fit: contain; }
+  .rabbit-carry-activity .rabbit-drag-sort-list p {
+    grid-column: 3;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+  .rabbit-carry-activity .rabbit-drag-sort-list .rabbit-sort-keyboard-controls {
+    grid-column: 4;
+    display: grid;
+    grid-template-columns: repeat(2, 44px);
+    gap: 3px;
+  }
+  .rabbit-carry-activity .rabbit-drag-sort-list .rabbit-sort-keyboard-controls button {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  .rabbit-carry-activity.is-completion-state .rabbit-drag-sort-list li {
+    grid-template-columns: 30px 56px minmax(0, 1fr) auto;
+  }
+  .rabbit-carry-activity.is-completion-state .rabbit-drag-sort-list p { grid-column: 3; }
+  .rabbit-carry-activity.is-completion-state .rabbit-drag-sort-list small {
+    grid-column: 4;
+    grid-row: 1;
+    align-self: center;
+    justify-self: end;
+    color: var(--gold-dark);
+    font-size: 11px;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .rabbit-carry-activity .rabbit-activity-panel > .primary,
+  .rabbit-carry-activity .rabbit-carry-reveal-button {
+    flex: 0 0 auto;
+    align-self: stretch;
+    min-height: 52px;
+    margin-top: 8px;
+  }
+  .rabbit-carry-activity .rabbit-activity-message,
+  .rabbit-carry-activity .sort-attempts { flex: 0 0 auto; margin: 8px 0; }
+
+  .rabbit-grooming-activity {
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+    overflow-y: auto;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .rabbit-grooming-activity > header { margin: 0; padding: 16px; }
+  .rabbit-grooming-activity > header h1 { font-size: 28px; line-height: 1.3; }
+  .rabbit-grooming-activity .rabbit-grooming-scene {
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    padding-top: 58px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+  .rabbit-grooming-activity .rabbit-grooming-scene.is-inspection-stage,
+  .rabbit-grooming-activity .rabbit-grooming-scene.has-observation-layout { min-height: 0; }
+  .rabbit-grooming-activity .rabbit-grooming-character { width: min(84%, 390px); max-height: none; }
+  .rabbit-grooming-activity .rabbit-grooming-character > img { max-height: none; }
+  .rabbit-grooming-activity .rabbit-grooming-brush {
+    width: 118px;
+    height: 96px;
+    touch-action: manipulation;
+  }
+  .rabbit-grooming-activity .rabbit-grooming-brush.is-tap-selected {
+    border-radius: 16px;
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+    filter: drop-shadow(0 0 10px rgba(212, 154, 36, .6));
+    transform: scale(1.06);
+  }
+  .rabbit-grooming-activity .rabbit-grooming-guideline { min-width: 44px; min-height: 44px; touch-action: manipulation; }
+  .rabbit-grooming-activity .rabbit-grooming-guideline:not(.is-tap-target) { pointer-events: none; }
+  .rabbit-grooming-activity .rabbit-grooming-guideline.is-tap-target {
+    outline: 3px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 50%;
+    animation: rabbit-mobile-tap-pulse 1.25s ease-in-out infinite;
+  }
+  .rabbit-grooming-activity .rabbit-fur-collector { width: 112px; right: 2px; bottom: 4px; }
+  .rabbit-grooming-activity .rabbit-fur-collector img { width: 94px; height: 94px; }
+  .rabbit-grooming-activity .rabbit-fur-collector small,
+  .rabbit-grooming-activity .rabbit-fur-collector span { font-size: 9px; white-space: normal; }
+  .rabbit-grooming-activity .rabbit-anatomy-hitbox { min-width: 44px; min-height: 44px; }
+  @keyframes rabbit-mobile-tap-pulse { 50% { transform: scale(1.06); box-shadow: 0 0 0 8px rgba(245, 200, 97, .28); } }
+
+  .rabbit-observation-sheet-layer { position: fixed; z-index: 90; inset: 0; display: grid; align-items: end; }
+  .rabbit-observation-sheet-backdrop { position: absolute; inset: 0; border: 0; background: rgba(48, 39, 28, .42); }
+  .rabbit-observation-sheet {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    max-height: min(78dvh, 680px);
+    padding: 10px 16px calc(18px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    border-radius: 24px 24px 0 0;
+    background: var(--paper);
+    box-shadow: 0 -12px 32px rgba(48, 39, 28, .2);
+    overscroll-behavior: contain;
+    animation: rabbit-observation-sheet-in .2s ease-out both;
+  }
+  .rabbit-observation-sheet-handle { justify-self: center; width: 42px; height: 4px; border-radius: 99px; background: var(--line); }
+  .rabbit-observation-sheet-close { position: absolute; top: 13px; right: 16px; display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: white; color: var(--ink); font-size: 26px; line-height: 1; }
+  .rabbit-observation-sheet .rabbit-grooming-observation { position: static; width: 100%; margin: 0; transform: none; animation: none; }
+  .rabbit-observation-sheet .observation-card { padding: 10px 2px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .rabbit-observation-sheet .observation-card > button,
+  .rabbit-observation-sheet .observation-card-action { min-height: 44px; }
+  @keyframes rabbit-observation-sheet-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* The weekly-care cards contain a title, frequency, and detail; never squeeze
+     the first two into competing columns on a narrow completion screen. */
+  .walking-complete .walking-care-supplement-grid > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .walking-complete .walking-care-supplement-grid b,
+  .walking-complete .walking-care-supplement-grid span,
+  .walking-complete .walking-care-supplement-grid small {
+    grid-column: 1;
+    min-width: 0;
+    text-align: left;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+  .walking-complete .walking-care-supplement-grid span { white-space: normal; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rabbit-grooming-activity .rabbit-grooming-guideline.is-tap-target,
+    .rabbit-observation-sheet { animation-duration: 120ms; }
+  }
+}

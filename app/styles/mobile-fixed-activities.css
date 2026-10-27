@@ -9,6 +9,7 @@
 .departure-supply-row button.departure-mobile-done,
 .arrival-meal-supplies button.arrival-meal-mobile-done { display: none; }
 .arrival-meal-inventory { display: contents; }
+.arrival-meal-choice-check { display: none; }
 .mobile-info-sheet-overlay { display: none; }
 .video-scenario-choice-list,
 .busy-care-choice-list { display: grid; align-content: start; gap: 14px; }
@@ -21,6 +22,38 @@
 .arrival-meal-activity--choice > .arrival-meal-scene .scene-media-placeholder p { max-width: min(100%, 420px); overflow-wrap: anywhere; }
 
 @media (max-width: 720px) {
+  /* Touch-first litter cleaning: keep sprites in place while enlarging their hit targets. */
+  .cat-litter-rescue .cat-rescue-waste,
+  .cat-litter-rescue .cat-rescue-bin,
+  .cat-litter-rescue .cat-rescue-scoop-tool,
+  .cat-litter-rescue .cat-rescue-action-icon {
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  .cat-litter-rescue .cat-rescue-waste { aspect-ratio: 1; cursor: pointer; }
+  .cat-litter-rescue .cat-rescue-waste.is-tap-target,
+  .cat-litter-rescue .cat-rescue-bin.is-tap-target,
+  .cat-litter-rescue .cat-rescue-litter-box.is-tap-target,
+  .cat-litter-rescue .cat-rescue-action-icon.is-tap-prompt { animation: catLitterTapCue 1.25s ease-in-out infinite; }
+  .cat-litter-rescue .cat-rescue-scoop-tool.is-tap-selected,
+  .cat-litter-rescue .cat-rescue-action-icon.is-tap-selected { transform: scale(1.06); filter: drop-shadow(0 0 12px rgba(183, 117, 22, .72)); }
+  .cat-litter-rescue .cat-rescue-litter-box.is-tap-target { filter: drop-shadow(0 0 11px rgba(183, 117, 22, .7)); }
+  .cat-rescue-collected-tool { position: relative; width: 84px; height: 84px; pointer-events: none; }
+  .cat-rescue-collected-tool > img:first-child { width: 100%; height: 100%; object-fit: contain; }
+  .cat-rescue-collected-waste { position: absolute; top: 24%; left: 32%; width: 44%; height: 44%; object-fit: contain; animation: catLitterTapCollect .32s ease-out both; }
+  .cat-litter-rescue .cat-rescue-bin .cat-rescue-discarding-waste { position: absolute; z-index: 2; top: 13%; left: 28%; width: 44%; height: 44%; object-fit: contain; pointer-events: none; animation: catLitterTapDiscard .35s ease-in both; }
+  @keyframes catLitterTapCue { 50% { filter: drop-shadow(0 0 18px rgba(212, 154, 36, .95)); } }
+  @keyframes catLitterTapCollect { from { opacity: 0; transform: translate(48px, -25px) scale(.6); } to { opacity: 1; transform: translate(0, 0) scale(1); } }
+  @keyframes catLitterTapDiscard { to { opacity: 0; transform: translate(10px, 28px) scale(.25); } }
+  @media (prefers-reduced-motion: reduce) {
+    .cat-litter-rescue .cat-rescue-waste.is-tap-target,
+    .cat-litter-rescue .cat-rescue-bin.is-tap-target,
+    .cat-litter-rescue .cat-rescue-litter-box.is-tap-target,
+    .cat-litter-rescue .cat-rescue-action-icon.is-tap-prompt,
+    .cat-rescue-collected-waste,
+    .cat-litter-rescue .cat-rescue-bin .cat-rescue-discarding-waste { animation: none; }
+  }
   .mobile-stage-intro {
     box-sizing: border-box;
     display: flex;
@@ -239,14 +272,16 @@
     overflow-wrap: anywhere;
   }
   .daily-behavior-progress-hint {
+    flex-direction: column;
     justify-self: end;
     max-width: 116px;
     padding: 5px 8px;
     font-size: 11px;
     line-height: 1.35;
     text-align: center;
-    white-space: normal;
+    white-space: nowrap;
   }
+  .daily-behavior-progress-hint > span { display: block; }
   .video-scenario-choice-list,
   .busy-care-choice-list,
   .daily-behavior-choices .choice-grid,
@@ -316,8 +351,37 @@
   .choice-grid > .scenario-option-card p,
   .breed-challenge-options .scenario-option-card p { min-width: 0; overflow-wrap: anywhere; }
 
-  /* 指定五個物種的日常互動導入與完成頁：手機滿版、圖像緊接進度列。 */
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]):has(> :is(.activity-intro-page, .walking-complete)) {
+  /* 互動與完成頁的背景延伸至手機畫面底部，避免外框移除後露出區塊接縫。 */
+  .stage-layout:has(.life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > .activity-intro-page),
+  .stage-layout:has(.life-journey-page > .walking-complete),
+  .stage-layout:has(.life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > :is(.life-activity, .guided-activity, .rabbit-activity)) {
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 100dvh;
+  }
+  .stage-layout:has(.life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > .activity-intro-page) > .stage,
+  .stage-layout:has(.life-journey-page > .walking-complete) > .stage,
+  .stage-layout:has(.life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > :is(.life-activity, .guided-activity, .rabbit-activity)) > .stage {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    background: var(--paper);
+  }
+  .content-wrap.life-journey-page:has(> .walking-complete),
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]):has(> .activity-intro-page),
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]):has(> :is(.life-activity, .guided-activity, .rabbit-activity)) {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    animation: none;
+  }
+  /* 犬以外五個物種的日常互動：手機滿版，不使用包住圖文的外層卡片。 */
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]):has(> :is(.activity-intro-page, .walking-complete, .life-activity, .guided-activity, .rabbit-activity)) {
     box-sizing: border-box;
     width: 100%;
     max-width: none;
@@ -346,20 +410,36 @@
   .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-visual {
     width: 100%;
     min-height: 0;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 3;
     border: 0;
   }
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-pet {
+    bottom: 2%;
+    max-height: 94%;
+  }
   .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-content { padding: 28px 24px calc(32px + env(safe-area-inset-bottom)); }
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > .walking-complete {
+  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > :is(.life-activity, .guided-activity, .rabbit-activity) {
     box-sizing: border-box;
     width: 100%;
-    min-height: 0;
+    max-width: none;
+    flex: 1;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+  .life-journey-page > .walking-complete {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100%;
+    flex: 1;
     padding: 28px 20px calc(32px + env(safe-area-inset-bottom));
     border: 0;
     border-radius: 0;
     box-shadow: none;
   }
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .walking-complete-card { width: 100%; max-width: none; padding: 0; }
+  .life-journey-page .walking-complete-card { width: 100%; max-width: none; padding: 0; }
   .video-scenario-retry,
   .daily-behavior-retry,
   .busy-care-members,
@@ -392,19 +472,27 @@
   .departure-car .car-trunk-background { width: 100%; height: 100%; object-fit: cover; }
   .departure-supply-shelf {
     grid-row: 2;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     min-height: 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding: 14px 16px 22px;
+    overflow: hidden;
+    padding: 0;
     border: 0;
     border-radius: 0;
-    background: var(--paper);
+    background: white;
   }
   .departure-mobile-heading { display: none; }
   .departure-mobile-heading h1 { margin: 0 0 5px; font-size: 20px; line-height: 1.3; }
   .departure-mobile-heading p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
-  .departure-supply-header { margin: 0 0 12px; padding: 0 0 10px; background: transparent; }
-  .departure-supply-rows { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .departure-supply-header { margin: 0; padding: 12px 16px; background: white; }
+  .departure-supply-rows {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-content: start;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 12px 12px 20px;
+  }
   .departure-supply-row .supply-slot { min-width: 0; min-height: 112px; }
   .departure-desktop-note { display: none; }
   .departure-supply-row button.departure-mobile-done {
@@ -461,11 +549,12 @@
   .arrival-meal-heading p { font-size: 13px; line-height: 1.5; }
   .arrival-meal-supplies,
   .arrival-meal-supplies--choice {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-content: start;
-    gap: 12px;
+    gap: 9px;
     min-height: 0;
-    padding: 14px 16px 24px;
+    padding: 12px 12px 24px;
+    background: white;
   }
   .arrival-meal-supply-slot { min-width: 0; }
   .arrival-meal-desktop-note { display: none; }
@@ -481,6 +570,62 @@
   }
   .arrival-meal-mobile-done > span:last-child { position: absolute; top: 6px; right: 7px; color: #4f8059; }
   .arrival-meal-mobile-done img { width: min(76px, 70%) !important; height: 72px !important; }
+  /* 與房間準備箱同尺寸、底色、圓角與右上角完成勾。 */
+  .departure-supply-row button,
+  .departure-supply-row button.departure-mobile-done,
+  .arrival-meal-supplies button,
+  .arrival-meal-supplies button.arrival-meal-mobile-done {
+    position: relative;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 52px auto;
+    justify-items: center;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 112px;
+    padding: 27px 4px 6px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    box-shadow: none;
+  }
+  .departure-supply-row .supply-slot,
+  .arrival-meal-supply-slot { min-width: 0; min-height: 112px; }
+  .departure-supply-visual { width: 52px; height: 52px; }
+  .departure-supply-row img { width: 52px !important; height: 52px !important; }
+  .arrival-meal-supplies img,
+  .arrival-meal-supplies button.arrival-meal-mobile-done img { width: 52px !important; height: 52px !important; object-fit: contain; }
+  .departure-supply-row b,
+  .arrival-meal-supplies button > span:nth-child(2),
+  .arrival-meal-supplies button > b { max-width: 100%; font-size: 11px; font-weight: 850; line-height: 1.3; text-align: center; overflow-wrap: anywhere; }
+  .departure-mobile-done > span:last-child,
+  .arrival-meal-mobile-done > span:last-child,
+  .arrival-meal-choice-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: grid;
+    width: 23px;
+    height: 23px;
+    place-items: center;
+    border: 2px solid var(--paper);
+    border-radius: 50%;
+    background: var(--gold-dark);
+    color: var(--paper);
+    box-shadow: 0 1px 4px rgba(70, 53, 26, .17);
+    pointer-events: none;
+  }
+  .departure-mobile-done > span:last-child svg,
+  .arrival-meal-mobile-done > span:last-child svg,
+  .arrival-meal-choice-check svg { width: 14px; height: 14px; }
+  .arrival-meal-supplies button.arrival-meal-choice-button { grid-template-rows: auto auto; align-content: center; padding: 16px 6px 10px; }
+  .arrival-meal-supplies .arrival-meal-choice-button.done { background: var(--paper); border-color: var(--line); }
+  .arrival-meal-supplies .arrival-meal-choice-button small { min-width: 0; margin-top: 0; font-size: 10px; line-height: 1.3; text-align: center; white-space: normal; }
   .arrival-meal-footer {
     grid-row: 3;
     gap: 4px;

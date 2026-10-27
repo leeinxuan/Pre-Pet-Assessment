@@ -30,6 +30,14 @@ export const catLitterRescueConfig = {
     { id: "poop-1", kind: "poop", label: "便便", x: 43, y: 71, size: 11 },
   ],
   bin: { x: 82, y: 70, size: 16 },
+  mobileTapSteps: [
+    { id: "collect-urine", tool: "scoop", target: "urine-1", prompts: { idle: "點擊貓砂鏟，準備鏟出尿團。", toolSelected: "點擊尿團，鏟起尿團。" }, outcome: { type: "reveal", itemId: "urine-1" } },
+    { id: "discard-urine", target: "bin", initialPhase: "itemCollected", prompts: { itemCollected: "點擊垃圾桶，將尿團丟棄。", completed: "正在丟棄尿團…" }, outcome: { type: "discard", itemId: "urine-1" } },
+    { id: "collect-poop", tool: "scoop", target: "poop-1", prompts: { idle: "點擊貓砂鏟，準備鏟出便便。", toolSelected: "點擊便便，鏟起便便。" }, outcome: { type: "reveal", itemId: "poop-1" } },
+    { id: "discard-poop", target: "bin", initialPhase: "itemCollected", prompts: { itemCollected: "點擊垃圾桶，將便便丟棄。", completed: "正在丟棄便便…" }, outcome: { type: "discard", itemId: "poop-1" } },
+    { id: "refill-litter", tool: "clean-litter", target: "litter-box", prompts: { idle: "點擊乾淨貓砂，準備補砂。", toolSelected: "點擊貓砂盆，補上新貓砂。" }, outcome: { type: "fill" } },
+    { id: "replace-box", tool: "backup-box", target: "litter-box", prompts: { idle: "點擊備用貓砂盆，準備替換。", toolSelected: "點擊貓砂盆，換上乾淨的備用盆。" }, outcome: { type: "backup" } },
+  ],
   assets: {
     dirtyLitterBox: catAssets.daily.dirtyLitterBox,
     cleanLitterBox: catAssets.daily.cleanLitterBox,

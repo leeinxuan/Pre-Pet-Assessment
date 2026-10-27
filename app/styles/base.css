@@ -536,9 +536,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   .arrival-video-screen,
   .time-pass-transition {
     width: 100%;
-    height: calc(100dvh - 72px);
-    min-height: 80dvh;
-    aspect-ratio: 9 / 16;
+    height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
   }
   .arrival-video-screen video,
   .time-pass-transition video {
@@ -548,18 +548,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
     object-fit: cover;
     object-position: center center;
   }
-  /* 接回家的過場素材是橫式影片；手機保持原始比例並置中，不裁切成直式畫面。 */
-  .arrival-video-screen {
-    display: grid;
-    place-items: center;
-    aspect-ratio: auto;
-  }
-  .arrival-video-screen video {
-    width: 100%;
-    height: auto;
-    max-height: 100%;
-    object-fit: contain;
-  }
+  /* 手機改播 9:16 直式過場影片，直接填滿畫面，不再旋轉成橫向。 */
   .daily-behavior-activity, .daily-behavior-positive, .correct-feedback-layout { grid-template-columns: 1fr; min-height: auto; }
   .daily-behavior-video, .daily-behavior-video video, .daily-behavior-positive-video, .daily-behavior-positive-video video, .correct-feedback-media, .correct-feedback-media video { min-height: 250px; }
   .daily-behavior-choices { padding: 26px 20px 24px; }
@@ -1245,22 +1234,22 @@ html, body { overflow-x: clip; }
     height: 100%;
     min-height: 0;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
     align-items: stretch;
   }
 
+  /* 滿版：填滿導覽列以下的整個剩餘空間（不依賴固定高度，任何手機尺寸都不留縫隙）。 */
   .arrival-video-screen,
   .time-pass-transition {
-    width: min(100%, 100svw);
-    height: calc(100dvh - 72px);
-    min-height: 80dvh;
-    max-width: 100svw;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-width: none;
     max-height: none;
-    aspect-ratio: 9 / 16;
+    aspect-ratio: auto;
     transform: none;
-    transform-origin: center center;
-    align-self: center;
-    justify-self: center;
+    align-self: stretch;
+    justify-self: stretch;
     place-items: center;
   }
 
@@ -1268,44 +1257,6 @@ html, body { overflow-x: clip; }
   .time-pass-transition video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center center;
-  }
-}
-
-/* 直向手機播放橫式影片：CSS 旋轉 90° 模擬橫向全螢幕，無須使用者手動轉機。 */
-@media (max-width: 768px) and (orientation: portrait) {
-  .stage-layout:has(.arrival-video-screen),
-  .stage-layout:has(.time-pass-transition) {
-    height: 100dvh;
-    min-height: 100dvh;
-    overflow: hidden;
-  }
-
-  .arrival-video-screen,
-  .time-pass-transition {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    /* 旋轉後：視覺寬 = 螢幕高、視覺高 = 螢幕寬，恰好填滿直式螢幕的橫向空間 */
-    width: 100dvh;
-    height: 100dvw;
-    min-height: 0;
-    max-width: none;
-    max-height: none;
-    aspect-ratio: auto;
-    transform: translate(-50%, -50%) rotate(-90deg);
-    transform-origin: center center;
-    z-index: 50;
-    background: black;
-    overflow: hidden;
-  }
-
-  .arrival-video-screen video,
-  .time-pass-transition video {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
     object-fit: cover;
     object-position: center center;
   }

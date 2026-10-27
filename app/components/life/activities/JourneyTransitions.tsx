@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getJourneyTransitionMedia, getSpeciesConfig } from "../../../data/species";
 import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
+import { useIsMobileViewport } from "../../shared/useIsMobileViewport";
 
 export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onContinue: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -12,6 +13,10 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
   const onContinueRef = useRef(onContinue);
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isMobile = useIsMobileViewport();
+  const transitionMedia = getJourneyTransitionMedia(species);
+  const arrivalVideoSource = isMobile === null ? undefined : (isMobile && transitionMedia.arrivalMobile) || transitionMedia.arrival;
+  const sourceReady = isMobile !== null;
 
   useEffect(() => {
     onContinueRef.current = onContinue;
@@ -27,7 +32,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !sourceReady) return;
     if (prefersReducedMotion) {
       video.pause();
       video.currentTime = 0;
@@ -52,7 +57,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
       if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
       if (endTimeoutRef.current !== null) window.clearTimeout(endTimeoutRef.current);
     };
-  }, [prefersReducedMotion, showFinalFrame]);
+  }, [prefersReducedMotion, showFinalFrame, sourceReady]);
 
   function handlePlaying() {
     if (startTimeoutRef.current !== null) {
@@ -78,7 +83,6 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
   }
 
   const animalLabel = getSpeciesConfig(species).copy.animalName;
-  const arrivalVideoSource = getJourneyTransitionMedia(species).arrival;
 
   return (
     <section className="arrival-video-screen" aria-label="接回家影片過場">
@@ -106,7 +110,10 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
   const hasFinished = useRef(false);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const timePassVideoSource = getJourneyTransitionMedia(species).timePass;
+  const isMobile = useIsMobileViewport();
+  const transitionMedia = getJourneyTransitionMedia(species);
+  const timePassVideoSource = isMobile === null ? undefined : (isMobile && transitionMedia.timePassMobile) || transitionMedia.timePass;
+  const sourceReady = isMobile !== null;
 
   const finish = useCallback(() => {
     if (hasFinished.current) return;
@@ -116,13 +123,13 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !sourceReady) return;
     if (prefersReducedMotion) {
       const timer = window.setTimeout(finish, 180);
       return () => window.clearTimeout(timer);
     }
     video.play().catch(() => setNeedsManualPlay(true));
-  }, [finish, prefersReducedMotion]);
+  }, [finish, prefersReducedMotion, sourceReady]);
 
   function playManually() {
     const video = videoRef.current;
@@ -142,17 +149,20 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 export function BusyCareTransition({ onComplete, species = "dog" }: { onComplete: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const busyCareTransitionSource = getJourneyTransitionMedia(species).busyCare;
+  const isMobile = useIsMobileViewport();
+  const transitionMedia = getJourneyTransitionMedia(species);
+  const busyCareTransitionSource = isMobile === null ? undefined : (isMobile && transitionMedia.busyCareMobile) || transitionMedia.busyCare;
+  const sourceReady = isMobile !== null;
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !sourceReady) return;
     if (prefersReducedMotion) {
       const timer = window.setTimeout(onComplete, 180);
       return () => window.clearTimeout(timer);
     }
     video.play().catch(onComplete);
-  }, [onComplete, prefersReducedMotion]);
+  }, [onComplete, prefersReducedMotion, sourceReady]);
 
   return (
     <section className="arrival-video-screen busy-care-transition" aria-label="疲憊忙碌的日子過場影片">

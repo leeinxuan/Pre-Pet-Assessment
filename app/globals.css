@@ -18,3 +18,7 @@
 @import "./styles/report.css";
 @import "./components/preparation/RoomPreparationMobile.css";
 @import "./styles/mobile-fixed-activities.css";
+@import "./components/life/activities/daily-care/WalkingActivityMobile.css";
+@import "./components/life/activities/daily-care/CatDailyInspectionMobile.css";
+@import "./components/life/activities/RabbitActivitiesMobile.css";
+@import "./components/life/activities/daily-care/BirdCageInspectionMobile.css";

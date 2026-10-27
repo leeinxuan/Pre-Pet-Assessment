@@ -28,6 +28,7 @@ export const dogAssets = {
     root: "/assets/dog/pet-journey",
     shibaRoot: "/assets/dog/pet-journey/shiba",
     busyCareTransition: "/assets/dog/pet-journey/shiba/busy-day-transition.mp4",
+    busyCareTransitionMobile: "/assets/dog/pet-journey/shiba/busy-day-transition-mobile.mp4",
   },
   daily: {
     root: "/assets/dog/walking",

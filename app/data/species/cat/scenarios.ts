@@ -401,7 +401,7 @@ export const catLifeScenarios: Scenario[] = [
       },
       {
         id: "cat-health-complete-response",
-        text: "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫",
+        text: "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫",
         result: "correct",
         ...positive,
         explanation: "多項變化一起出現時，**完整紀錄、就醫準備**與聯繫獸醫要一起做；紀錄不能延後急症處置。",

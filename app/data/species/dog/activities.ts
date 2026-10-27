@@ -25,6 +25,19 @@ export const walkingActivityConfig = {
     stepDistance: 7,
     holdSpeed: 40,
     completionAtByScene: { 1: 80 } as Partial<Record<number, number>>,
+    mobileCleanupSteps: [
+      {
+        id: "walking-poop-cleanup",
+        tool: "bag",
+        target: "poop",
+        prompts: {
+          idle: "點擊拾便袋，準備清理便便。",
+          toolSelected: "點擊便便，完成清理。",
+          completed: "正在清理便便…",
+        },
+        outcome: { type: "cleanup" },
+      },
+    ],
   },
   prepNotes: {
     leash: "外出時維持安全距離，避免走失或衝突。",
@@ -49,12 +62,13 @@ export const walkingActivityConfig = {
       readyTitle: "準備好再出門",
       readyDescription: "確認牽繩、撿便袋和水都準備好後，就可以陪牠走一段 20 分鐘的散步路線。路上如果牠排泄，也要記得停下來清理。",
     },
-    walkInstruction: "按住「往前走」，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。",
+    walkInstruction: "點擊「往前走」，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。",
     messages: {
       leashRequired: "外出活動需要適當防護措施，牽繩或胸背帶能避免走失、驚嚇衝出，也能保護牠和其他人。",
       preparationRequired: "出門前也要準備撿便袋和水，讓散步更安心。",
       cleanupRequired: "先把排泄物清理乾淨，再繼續散步。",
       cleanupComplete: "已清理完成，繼續陪牠往前走。",
+      mobileCleanupComplete: "清理完成，繼續散步吧！",
       complete: "散步時間達到 20 分鐘！",
       sceneComplete: (title: string) => `完成「${title}」，散步時間 +5 分鐘。`,
       event: {
@@ -67,6 +81,7 @@ export const walkingActivityConfig = {
       scene: "散步場景",
       forward: "往前走",
       cleanupBag: "使用撿便袋清理排泄物",
+      cleanupTarget: "清理便便",
       cleanupInstruction: "拖曳撿便袋到便便的位置完成清理。",
       walkingCharacter: "正在和{petName}散步的人物與小狗",
       progress: (minutes: number) => `散步進度 ${minutes} / 20 分鐘`,
@@ -121,7 +136,7 @@ type WalkingSceneLayout = {
 export const walkingSceneLayout: Record<number, WalkingSceneLayout> = {
   0: { startX: 30, startY: 50, endX: 65, endY: 50, scale: 1.5, endScale: 0.3, turnAt: 0.55, waypoint: { x: 70, y: 60, scale: 1.5 }, mobileStartX: 35, mobileStartY: 50, mobileScale: 0.7, mobileWaypoint: { x: 70, y: 60, scale: 0.7 }, mobileEndX: 70, mobileEndY: 50, mobileEndScale: 0.3 },
   1: { startX: 25, startY: 60, endX: 70, endY: 45, scale: 1.5, endScale: 1, mobileStartX: 40, mobileStartY: 60, mobileScale: 1, mobileEndX: 60, mobileEndY: 45, mobileEndScale: 0.5 },
-  2: { startX: 20, startY: 58, endX: 90, endY: 58, scale: 1.5, endScale: 1.5, mobileStartX: 30, mobileStartY: 65, mobileScale: 1, mobileEndX: 78, mobileEndY: 65, mobileEndScale: 1, poop: { x: 70, y: 85, size: 20 }, mobilePoop: { x: 65, y: 85, size: 40 } },
+  2: { startX: 20, startY: 58, endX: 90, endY: 58, scale: 1.5, endScale: 1.5, mobileStartX: 30, mobileStartY: 65, mobileScale: 1, mobileEndX: 78, mobileEndY: 65, mobileEndScale: 1, poop: { x: 70, y: 85, size: 20 }, mobilePoop: { x: 59, y: 89, size: 40 } },
   3: { startX: 25, startY: 50, endX: 70, endY: 60, scale: 0.3, endScale: 1.5, turnAt: 0.55, waypoint: { x: 30, y: 60, scale: 1.5 }, mobileStartX: 30, mobileStartY: 50, mobileScale: 0.4, mobileWaypoint: { x: 40, y: 55, scale: 0.7 }, mobileEndX: 65, mobileEndY: 55, mobileEndScale: 0.82 },
 };
 

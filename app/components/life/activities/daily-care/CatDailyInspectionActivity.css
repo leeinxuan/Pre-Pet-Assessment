@@ -444,6 +444,18 @@
   font-size: 12px;
   text-align: center;
 }
+.cat-litter-rescue .cat-rescue-replacement-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 0 4px 12px rgb(70 53 26 / 12%);
+  white-space: nowrap;
+}
+.cat-litter-stage-summary { display: none; }
 .cat-litter-rescue .cat-rescue-scoop-tool,
 .cat-litter-rescue .cat-rescue-action-icon {
   width: min(18vw, 112px);

@@ -25,6 +25,8 @@ type RoomPreparationMobileProps = {
   onSelectItem: (id: string) => void;
   onCloseInfo: () => void;
   onPrepare: (id: string) => boolean;
+  roomComplete: boolean;
+  onComplete: () => void;
   itemPrice: (item: RoomItem) => string;
 };
 
@@ -68,7 +70,7 @@ function HazardThumbnail({ hazard, background }: { hazard: HazardItem; backgroun
   </span>;
 }
 
-export function RoomPreparationMobile({ petName, scene, hazardBackground, hazards, items, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, itemPrice }: RoomPreparationMobileProps) {
+export function RoomPreparationMobile({ petName, scene, hazardBackground, hazards, items, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, roomComplete, onComplete, itemPrice }: RoomPreparationMobileProps) {
   const [started, setStarted] = useState(false);
   const [chosenTab, setChosenTab] = useState<"hazards" | "items" | null>(null);
   const [pendingInfoItemIds, setPendingInfoItemIds] = useState<Set<string>>(() => new Set());
@@ -123,6 +125,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
             </button>;
           })}</div>}
       </section>
+      <div className="room-mobile-footer"><button type="button" className="primary room-mobile-complete" onClick={onComplete} disabled={!roomComplete}>完成房間檢查，準備出發 <span aria-hidden="true">→</span></button></div>
     </>}
     {activeInfo && started && typeof document !== "undefined" && createPortal(<div className="room-mobile-sheet-overlay" onClick={onCloseInfo}>
       <section className="room-mobile-sheet" role="dialog" aria-modal="true" aria-label={`${activeInfo.label}說明`} onClick={(event) => event.stopPropagation()} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientY ?? null; }} onTouchEnd={(event) => { if (touchStart.current !== null && event.currentTarget.scrollTop <= 0 && (event.changedTouches[0]?.clientY ?? 0) - touchStart.current > 70) onCloseInfo(); touchStart.current = null; }}>

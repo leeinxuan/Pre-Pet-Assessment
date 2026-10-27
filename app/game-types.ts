@@ -347,6 +347,10 @@ export type JourneyTransitionMedia = {
   arrival?: string;
   timePass?: string;
   busyCare?: string;
+  /** 手機直式（9:16）版本；未提供時退回橫式影片。 */
+  arrivalMobile?: string;
+  timePassMobile?: string;
+  busyCareMobile?: string;
 };
 
 export type ScenarioAnswer = {

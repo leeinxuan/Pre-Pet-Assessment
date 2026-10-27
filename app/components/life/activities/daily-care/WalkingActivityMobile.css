@@ -1,0 +1,314 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */
+/* Hallmark · macrostructure: Narrative Workflow · tone: warm-practical · anchor hue: existing gold */
+/* The mobile walking game is a full-bleed sequence; desktop walking styles stay in WalkingActivity.css. */
+.walking-forward-button--mobile { display: none; }
+
+@media (max-width: 720px) {
+  /* The dog flow uses the same edge-to-edge mobile canvas as the other life activities. */
+  html:has(.walking-activity),
+  body:has(.walking-activity) { height: 100%; overflow-x: clip; }
+
+  .stage-layout:has(.walking-activity) {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .stage-layout:has(.walking-activity) > .stage { min-height: 0; overflow: hidden; }
+  .content-wrap.life-journey-page:has(> .walking-activity) {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    animation: none;
+  }
+  .walking-activity:not(.is-walking-game) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+  .walking-activity:not(.is-walking-game) .walking-head {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 16px;
+  }
+  .walking-activity:not(.is-walking-game) .walking-head h1 { margin: 0 0 8px; font-size: 28px; line-height: 1.3; }
+  .walking-activity:not(.is-walking-game) .walking-head p { font-size: 14px; line-height: 1.65; }
+  .walking-activity:not(.is-walking-game) .walking-safety-choice,
+  .walking-activity:not(.is-walking-game) .walking-prep {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+  .walking-activity:not(.is-walking-game) .walking-safety-choice::-webkit-scrollbar,
+  .walking-activity:not(.is-walking-game) .walking-prep::-webkit-scrollbar { display: none; }
+  .walking-activity:not(.is-walking-game) .walking-safety-choice {
+    flex: 1 1 0;
+    padding: 16px;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+  }
+  .walking-activity:not(.is-walking-game) .walking-safety-grid { grid-template-columns: 1fr; gap: 12px; }
+
+  /* On the two decision-result views, the heading remains fixed: only the coloured result panel scrolls. */
+  .walking-activity.is-walking-law .walking-law-feedback,
+  .walking-activity.is-walking-correct .walking-law-feedback {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-width: none;
+    margin: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: 0;
+  }
+
+  .walking-activity:not(.is-walking-game) .walking-prep {
+    display: block;
+    flex: 1 1 0;
+    padding: 0 16px calc(24px + env(safe-area-inset-bottom));
+  }
+  .walking-activity:not(.is-walking-game) .walking-prep-supplies,
+  .walking-activity:not(.is-walking-game) .walking-prep-card {
+    border-radius: 0;
+    border-right: 0;
+    border-left: 0;
+    box-shadow: none;
+  }
+  .walking-activity:not(.is-walking-game) .walking-prep-supplies { padding: 16px 0; }
+  .walking-activity:not(.is-walking-game) .walking-prep-list { grid-template-columns: 1fr; gap: 10px; }
+  .walking-activity:not(.is-walking-game) .walking-prep-list button {
+    grid-template-columns: 70px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 14px;
+    row-gap: 3px;
+    min-height: 82px;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  .walking-activity:not(.is-walking-game) .walking-prep-list img {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    width: 64px;
+    height: 64px;
+  }
+  .walking-activity:not(.is-walking-game) .walking-prep-list b { grid-column: 2; align-self: end; }
+  .walking-activity:not(.is-walking-game) .walking-prep-list small {
+    grid-column: 2;
+    max-width: none;
+    font-size: 11px;
+    line-height: 1.45;
+    text-align: left;
+  }
+  .walking-activity:not(.is-walking-game) .walking-prep-list button.prepared::after {
+    top: 10px;
+    right: 10px;
+  }
+  .walking-activity:not(.is-walking-game) .walking-prep-card { padding: 18px 0 0; }
+  .walking-activity.walking-complete {
+    display: block;
+    overflow-y: auto;
+    padding: 28px 20px calc(32px + env(safe-area-inset-bottom));
+  }
+
+  html:has(.walking-activity.is-walking-game),
+  body:has(.walking-activity.is-walking-game) { height: 100%; overflow-x: clip; overflow-y: hidden; }
+
+  .stage-layout:has(.walking-activity.is-walking-game) {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .stage-layout:has(.walking-activity.is-walking-game) > .stage { min-height: 0; overflow: hidden; }
+  .content-wrap.life-journey-page:has(> .walking-activity.is-walking-game) {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    animation: none;
+  }
+  .walking-activity.is-walking-game {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: clip;
+    overflow-y: auto;
+    scrollbar-width: none;
+    overscroll-behavior: contain;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+  .walking-activity.is-walking-game::-webkit-scrollbar { display: none; }
+  .walking-activity.is-walking-game .walking-head { margin: 0; padding: 12px 16px; }
+  .walking-activity.is-walking-game .walking-head .life-stage-label,
+  .walking-activity.is-walking-game .walking-head p:not(.life-stage-label) { display: none; }
+  .walking-activity.is-walking-game .walking-head h1 { margin: 0; font-size: 21px; line-height: 1.3; }
+  .walking-activity.is-walking-game .walking-game-hint {
+    display: block;
+    margin: 0;
+    padding: 0 16px 10px;
+    color: #7d6c58;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .walking-activity.is-walking-game .walking-game,
+  .walking-activity.is-walking-game .walking-scene-shell { display: grid; gap: 0; width: 100%; min-width: 0; }
+
+  .walking-activity.is-walking-game .walking-progress-overlay {
+    position: sticky;
+    top: 0;
+    left: auto;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 56px;
+    margin: 0;
+    padding: 10px 16px;
+    transform: none;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+    backdrop-filter: none;
+    font-size: 12px;
+  }
+  .walking-activity.is-walking-game .walking-progress-overlay b { grid-column: auto; white-space: nowrap; }
+  .walking-activity.is-walking-game .walking-progress-overlay div { min-width: 0; height: 10px; }
+  .walking-activity.is-walking-game .walking-progress-overlay small { font-size: 11px; }
+
+  .walking-activity.is-walking-game .walking-event-card--mobile {
+    position: static;
+    display: block;
+    max-width: none;
+    margin: 0;
+    padding: 12px 16px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--cream);
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+  .walking-activity.is-walking-game .walking-event-card--mobile b { margin-bottom: 2px; }
+  .walking-activity.is-walking-game .walking-event-card--mobile p { font-size: 13px; line-height: 1.45; }
+  .walking-activity.is-walking-game .walking-mobile-event-instruction {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    color: var(--gold-dark);
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.45;
+  }
+  .walking-activity.is-walking-game .walking-drag-row { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+  .walking-activity.is-walking-game .walking-drag-bag {
+    flex-basis: 52px;
+    width: 52px;
+    height: 52px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .walking-activity.is-walking-game .walking-drag-bag.is-tap-prompt img { animation: walkingTapCue 1.25s cubic-bezier(.65, 0, .35, 1) infinite; }
+  .walking-activity.is-walking-game .walking-drag-bag.is-tap-selected { outline: 3px solid var(--gold); outline-offset: 1px; border-radius: 12px; transform: scale(1.05); }
+
+  .walking-activity.is-walking-game .walking-scene {
+    order: 0;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .walking-activity.is-walking-game .walking-scene > picture,
+  .walking-activity.is-walking-game .walking-bg { width: 100%; height: 100%; }
+  .walking-activity.is-walking-game .walking-bg { object-fit: cover; }
+  .walking-activity.is-walking-game .walking-forward-button--desktop { display: none; }
+  .walking-activity.is-walking-game .walking-forward-button--mobile {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 18px;
+    width: calc(100% - 32px);
+    min-height: 56px;
+    margin: 14px 16px calc(22px + env(safe-area-inset-bottom));
+    padding: 12px 18px;
+    border-radius: 14px;
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 0 6px 0 var(--gold-dark);
+    font-size: 17px;
+    white-space: nowrap;
+    touch-action: none;
+    transform: none;
+  }
+  .walking-activity.is-walking-game .walking-forward-button--mobile:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .walking-activity.is-walking-game .walking-forward-button--mobile:active:not(:disabled) { transform: translateY(2px); }
+  .walking-activity.is-walking-game .walking-forward-button--mobile:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+  .walking-activity.is-walking-game .walking-poop--mobile {
+    display: grid;
+    place-items: center;
+    width: 88px;
+    height: 88px;
+    min-width: 44px;
+    min-height: 44px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .walking-activity.is-walking-game .walking-poop--mobile > img:first-child { width: var(--mobile-walk-poop-size, 40%); height: auto; }
+  .walking-activity.is-walking-game .walking-poop--mobile.is-tap-target > img:first-child { animation: walkingTapCue 1.25s cubic-bezier(.65, 0, .35, 1) infinite; }
+  .walking-activity.is-walking-game .walking-poop--mobile.is-cleaning > img:first-child { animation: walkingPoopDisappear 420ms cubic-bezier(.7, 0, .84, 0) both; }
+  .walking-activity.is-walking-game .walking-poop-cleanup-bag {
+    position: absolute;
+    inset: 20%;
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    pointer-events: none;
+    animation: walkingBagCollect 420ms cubic-bezier(.16, 1, .3, 1) both;
+  }
+  @keyframes walkingTapCue { 50% { transform: scale(1.12); } }
+  @keyframes walkingPoopDisappear { to { opacity: 0; transform: scale(.35); } }
+  @keyframes walkingBagCollect { from { opacity: 0; transform: scale(.5); } to { opacity: 1; transform: scale(1); } }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .walking-activity.is-walking-game .walking-drag-bag.is-tap-prompt img,
+  .walking-activity.is-walking-game .walking-poop--mobile.is-tap-target > img:first-child,
+  .walking-activity.is-walking-game .walking-poop--mobile.is-cleaning > img:first-child,
+  .walking-activity.is-walking-game .walking-poop-cleanup-bag { animation-duration: 120ms; animation-iteration-count: 1; }
+}

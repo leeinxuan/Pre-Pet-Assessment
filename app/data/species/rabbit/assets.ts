@@ -56,6 +56,7 @@ export const rabbitAssets = {
   /** 寵物旅程情境影片（rabbit-frames-workflow.md 的 ①–⑪）。 */
   petJourney: {
     arrivalTransition: "/assets/rabbit/pet-journey/arrival-transition.mp4",
+    arrivalTransitionMobile: "/assets/rabbit/pet-journey/arrival-transition-mobile.mp4",
     firstDay: "/assets/rabbit/pet-journey/first-day.mp4",
     summerHeat: "/assets/rabbit/pet-journey/summer-heat.mp4",
     sick: "/assets/rabbit/pet-journey/sick.mp4",
@@ -63,8 +64,10 @@ export const rabbitAssets = {
     bath: "/assets/rabbit/pet-journey/bath.mp4",
     busyDailyCare: "/assets/rabbit/pet-journey/busy-daily-care.mp4",
     busyDayTransition: "/assets/rabbit/pet-journey/busy-day-transition.mp4",
+    busyDayTransitionMobile: "/assets/rabbit/pet-journey/busy-day-transition-mobile.mp4",
     seniorLife: "/assets/rabbit/pet-journey/senior-life.mp4",
     timePassesAging: "/assets/rabbit/pet-journey/time-passes-aging.mp4",
+    timePassesAgingMobile: "/assets/rabbit/pet-journey/time-passes-aging-mobile.mp4",
     correctPrimary: "/assets/rabbit/pet-journey/correct-answer.mp4",
     correctSecondary: "/assets/rabbit/pet-journey/correct-answer2.mp4",
   },

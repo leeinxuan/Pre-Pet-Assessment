@@ -27,8 +27,11 @@ export const catJourney = {
   litterInspection: catLitterRescueConfig,
   transitionMedia: {
     arrival: catAssets.petJourney.arrivalTransition,
+    arrivalMobile: catAssets.petJourney.arrivalTransitionMobile,
     timePass: catAssets.petJourney.timePassesAging,
+    timePassMobile: catAssets.petJourney.timePassesAgingMobile,
     busyCare: catAssets.petJourney.busyDayTransition,
+    busyCareMobile: catAssets.petJourney.busyDayTransitionMobile,
   },
   activity: "litter-inspection" as const,
 } as const;

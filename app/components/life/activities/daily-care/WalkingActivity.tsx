@@ -7,6 +7,7 @@ import { walkingActivityConfig, walkingLawCopy, walkingPreloadImages, walkingPre
 import type { LifeActivityState } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { renderKnowledgeText, withPetName } from "../activity-ui";
+import { useTapSequence } from "../useTapSequence";
 
 // 貓砂盆救援隊暫用已存在的共用素材，避免缺少 /assets/cat/... 圖檔時讓 Vite/RSC 請求失敗。
 // 正式貓咪素材補齊後，只需在此替換為對應的 /assets/cat/... 路徑即可。
@@ -109,12 +110,16 @@ export function WalkingActivity({
   const forwardHoldTimerRef = useRef<number | null>(null);
   const forwardLastFrameRef = useRef<number | null>(null);
   const keyboardMoveTimerRef = useRef<number | null>(null);
+  const mobileCleanupTimerRef = useRef<number | null>(null);
+  const mobileCleanupBusyRef = useRef(false);
   const sceneRef = useRef<HTMLDivElement | null>(null);
   const poopTargetRef = useRef<HTMLDivElement | null>(null);
   const draggingBagRef = useRef(false);
   const forwardHeldRef = useRef(false);
   const [draggedBag, setDraggedBag] = useState<{ x: number; y: number } | null>(null);
   const isMobileWalkingLayout = useMobileWalkingLayout();
+  const [mobilePoopCleaning, setMobilePoopCleaning] = useState(false);
+  const { step: mobileCleanupStep, phase: mobileCleanupPhase, selectTool: selectMobileCleanupTool, completeTarget: completeMobileCleanupTarget } = useTapSequence(interaction.mobileCleanupSteps, 0);
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
   const scene = walkingScenes[sceneIndex];
   const prepared = activity.walkingPreparedItems;
@@ -159,6 +164,7 @@ export function WalkingActivity({
     if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
     if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
     if (keyboardMoveTimerRef.current !== null) window.clearTimeout(keyboardMoveTimerRef.current);
+    if (mobileCleanupTimerRef.current !== null) window.clearTimeout(mobileCleanupTimerRef.current);
   }, []);
 
   async function prepare(id: string) {
@@ -351,31 +357,89 @@ export function WalkingActivity({
     setMessage(copy.messages.cleanupComplete);
   }
 
-  const renderWalkingEventCard = (className = "") => walkingEventMessage ? (
+  function selectMobileBag() {
+    if (!isMobileWalkingLayout || !needsCleanup || mobileCleanupBusyRef.current) return;
+    selectMobileCleanupTool("bag");
+  }
+
+  function cleanMobilePoop() {
+    if (!isMobileWalkingLayout || !needsCleanup || mobileCleanupBusyRef.current) return;
+    if (!completeMobileCleanupTarget("poop")) return;
+    mobileCleanupBusyRef.current = true;
+    setMobilePoopCleaning(true);
+    mobileCleanupTimerRef.current = window.setTimeout(() => {
+      cleanupPoop();
+      setMobilePoopCleaning(false);
+      mobileCleanupTimerRef.current = null;
+    }, 420);
+  }
+
+  const renderWalkingEventCard = (className = "", mobile = false) => walkingEventMessage ? (
     <div className={`walking-event-card ${className}`} role="status">
       <b>{walkingEventMessage.title}</b>
       <p>{walkingEventMessage.body}</p>
+      {mobile && !needsCleanup && <p className="walking-mobile-event-instruction">{copy.messages.mobileCleanupComplete}</p>}
       {needsCleanup && (
         <div className="walking-cleanup-controls">
           <div className="walking-drag-row">
             <button
               type="button"
-              className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}`}
-              onPointerDown={startDraggingBag}
-              onPointerMove={dragBag}
-              onPointerUp={finishDraggingBag}
-              onPointerCancel={cancelDraggingBag}
-              onClick={(event) => { if (event.detail === 0) cleanupPoop(); }}
+              className={`walking-drag-bag ${draggedBag ? "is-source-dragging" : ""}${mobile && mobileCleanupPhase === "idle" ? " is-tap-prompt" : ""}${mobile && mobileCleanupPhase === "toolSelected" ? " is-tap-selected" : ""}`}
+              onPointerDown={mobile ? undefined : startDraggingBag}
+              onPointerMove={mobile ? undefined : dragBag}
+              onPointerUp={mobile ? undefined : finishDraggingBag}
+              onPointerCancel={mobile ? undefined : cancelDraggingBag}
+              onClick={(event) => { if (mobile) selectMobileBag(); else if (event.detail === 0) cleanupPoop(); }}
+              aria-pressed={mobile ? mobileCleanupPhase === "toolSelected" : undefined}
               aria-label={copy.aria.cleanupBag}
             >
               <img src={assets.poopBag} alt="" />
             </button>
-            <p className="walking-drag-instruction">{copy.aria.cleanupInstruction}</p>
+            {mobile && <p className="walking-mobile-event-instruction">{mobileCleanupStep.prompts[mobileCleanupPhase]}</p>}
+            {!mobile && <p className="walking-drag-instruction">{copy.aria.cleanupInstruction}</p>}
           </div>
         </div>
       )}
     </div>
   ) : null;
+
+  const renderForwardButton = (mobile: boolean) => (
+    <button
+      type="button"
+      className={`walking-forward-button ${mobile ? "walking-forward-button--mobile" : "walking-forward-button--desktop"}`}
+      disabled={needsCleanup || mobilePoopCleaning}
+      onPointerDown={(event) => {
+        event.preventDefault();
+        event.currentTarget.setPointerCapture?.(event.pointerId);
+        startForward();
+      }}
+      onPointerUp={(event) => {
+        event.currentTarget.releasePointerCapture?.(event.pointerId);
+        stopForward();
+      }}
+      onPointerCancel={() => stopForward()}
+      onPointerLeave={() => stopForward()}
+      onLostPointerCapture={() => stopForward()}
+      onKeyDown={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        moveForwardByKeyboard();
+      }}
+      aria-label={copy.aria.forward}
+    >
+      {mobile ? <>{copy.actions.forward}<span aria-hidden="true">→</span></> : <>
+        <span className="walking-forward-orb" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M8 11.2V4.8a1.7 1.7 0 1 1 3.4 0v5.4" />
+            <path d="M11.4 10V8.3a1.55 1.55 0 1 1 3.1 0v2.3" />
+            <path d="M14.5 10.7V9.4a1.45 1.45 0 1 1 2.9 0v2.4" />
+            <path d="M17.4 12.2v-1a1.35 1.35 0 1 1 2.7 0v4.1c0 3.3-2.3 5.7-6.1 5.7h-1.6c-2.2 0-3.7-.9-4.9-2.5l-3-4.1a1.7 1.7 0 0 1 2.6-2.1l1.1 1.1" />
+          </svg>
+        </span>
+        <span className="walking-forward-label">{copy.actions.forward}</span>
+      </>}
+    </button>
+  );
 
   if (activity.walkingComplete) return <DailyCareCompletion
     title={copy.completion.title}
@@ -388,7 +452,7 @@ export function WalkingActivity({
   />;
 
   return (
-    <section className="walking-activity" aria-label={copy.aria.activity}>
+    <section className={`walking-activity${started ? " is-walking-game" : ""}${!started ? ` is-walking-${safetyStep}` : ""}`} aria-label={copy.aria.activity}>
       <div className="walking-head">
         <div>
           <p className="life-stage-label">{copy.stageLabel}</p>
@@ -462,17 +526,18 @@ export function WalkingActivity({
         <div className="walking-game">
           <p className="walking-game-hint">{walkingInstruction}</p>
           <div className="walking-scene-shell">
+          <div className="walking-progress walking-progress-overlay" aria-label={copy.aria.progress(progressMinutes)}>
+            <b>散步進度</b>
+            <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
+            <small>{progressMinutes} / 20 分鐘</small>
+          </div>
+          {renderWalkingEventCard("walking-event-card--mobile", true)}
           <div
             className={`walking-scene ${moving ? "is-moving" : ""}`}
             ref={sceneRef}
             role="group"
             aria-label={copy.aria.scene}
           >
-            <div className="walking-progress walking-progress-overlay" aria-label={copy.aria.progress(progressMinutes)}>
-              <b>散步進度</b>
-              <div><span style={{ width: `${(progressMinutes / 20) * 100}%` }} /></div>
-              <small>{progressMinutes} / 20 分鐘</small>
-            </div>
             <picture>
               <source media="(max-width: 720px)" srcSet={scene.mobileImage} />
               <img className="walking-bg" src={scene.image} alt={scene.title} />
@@ -492,52 +557,27 @@ export function WalkingActivity({
                 alt={withPetName(copy.aria.walkingCharacter, petName, "dog")}
               />
             </div>
-            {needsCleanup && (
-              <div
-                className={isMobileWalkingLayout ? "walking-poop walking-poop--mobile" : "walking-poop"}
-                ref={poopTargetRef}
-                style={isMobileWalkingLayout ? mobilePoopStyle : desktopPoopStyle}
-                aria-hidden="true"
+            {needsCleanup && (isMobileWalkingLayout ? (
+              <button
+                type="button"
+                className={`walking-poop walking-poop--mobile${mobileCleanupPhase === "toolSelected" ? " is-tap-target" : ""}${mobilePoopCleaning ? " is-cleaning" : ""}`}
+                style={mobilePoopStyle}
+                onClick={cleanMobilePoop}
+                aria-label={copy.aria.cleanupTarget}
+                aria-disabled={mobileCleanupPhase !== "toolSelected"}
               >
                 <img src={assets.poop} alt="" />
+                {mobilePoopCleaning && <img className="walking-poop-cleanup-bag" src={assets.poopBag} alt="" />}
+              </button>
+            ) : (
+              <div className="walking-poop" ref={poopTargetRef} style={desktopPoopStyle} aria-hidden="true">
+                <img src={assets.poop} alt="" />
               </div>
-            )}
+            ))}
             {renderWalkingEventCard("walking-event-card--desktop")}
-            <button
-              type="button"
-              className="walking-forward-button"
-              disabled={needsCleanup}
-              onPointerDown={(event) => {
-                event.preventDefault();
-                event.currentTarget.setPointerCapture?.(event.pointerId);
-                startForward();
-              }}
-              onPointerUp={(event) => {
-                event.currentTarget.releasePointerCapture?.(event.pointerId);
-                stopForward();
-              }}
-              onPointerCancel={() => stopForward()}
-              onPointerLeave={() => stopForward()}
-              onLostPointerCapture={() => stopForward()}
-              onKeyDown={(event) => {
-                if (event.key !== "Enter" && event.key !== " ") return;
-                event.preventDefault();
-                moveForwardByKeyboard();
-              }}
-              aria-label={copy.aria.forward}
-            >
-              <span className="walking-forward-orb" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false">
-                  <path d="M8 11.2V4.8a1.7 1.7 0 1 1 3.4 0v5.4" />
-                  <path d="M11.4 10V8.3a1.55 1.55 0 1 1 3.1 0v2.3" />
-                  <path d="M14.5 10.7V9.4a1.45 1.45 0 1 1 2.9 0v2.4" />
-                  <path d="M17.4 12.2v-1a1.35 1.35 0 1 1 2.7 0v4.1c0 3.3-2.3 5.7-6.1 5.7h-1.6c-2.2 0-3.7-.9-4.9-2.5l-3-4.1a1.7 1.7 0 0 1 2.6-2.1l1.1 1.1" />
-                </svg>
-              </span>
-              <span className="walking-forward-label">{copy.actions.forward}</span>
-            </button>
+            {renderForwardButton(false)}
           </div>
-          {renderWalkingEventCard("walking-event-card--mobile")}
+          {renderForwardButton(true)}
           </div>
         </div>
       )}

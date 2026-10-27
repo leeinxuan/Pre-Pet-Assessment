@@ -36,8 +36,11 @@ export const birdJourney = {
   cageInspection: birdCageInspectionConfig,
   transitionMedia: {
     arrival: birdAssets.petJourney.arrivalTransition,
+    arrivalMobile: birdAssets.petJourney.arrivalTransitionMobile,
     timePass: birdAssets.petJourney.timePassesAging,
+    timePassMobile: birdAssets.petJourney.timePassesAgingMobile,
     busyCare: birdAssets.petJourney.busyDayTransition,
+    busyCareMobile: birdAssets.petJourney.busyDayTransitionMobile,
   },
   activity: "bird-cage-inspection" as const,
 } as const;

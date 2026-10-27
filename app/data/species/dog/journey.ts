@@ -26,6 +26,9 @@ export const dogJourney = {
     arrival: `${dogAssets.life.shibaRoot}/arrival-transition.mp4`,
     timePass: `${dogAssets.life.shibaRoot}/time-passes-aging.mp4`,
     busyCare: dogAssets.life.busyCareTransition,
+    arrivalMobile: `${dogAssets.life.shibaRoot}/arrival-transition-mobile.mp4`,
+    timePassMobile: `${dogAssets.life.shibaRoot}/time-passes-aging-mobile.mp4`,
+    busyCareMobile: dogAssets.life.busyCareTransitionMobile,
   },
   activity: "walking" as const,
 } as const;

@@ -39,8 +39,11 @@ export const rabbitJourney = {
   dailyCheck: rabbitDailyCheckConfig,
   transitionMedia: {
     arrival: rabbitAssets.petJourney.arrivalTransition,
+    arrivalMobile: rabbitAssets.petJourney.arrivalTransitionMobile,
     timePass: rabbitAssets.petJourney.timePassesAging,
+    timePassMobile: rabbitAssets.petJourney.timePassesAgingMobile,
     busyCare: rabbitAssets.petJourney.busyDayTransition,
+    busyCareMobile: rabbitAssets.petJourney.busyDayTransitionMobile,
   },
   activity: "rabbit-daily-check" as const,
 } as const;

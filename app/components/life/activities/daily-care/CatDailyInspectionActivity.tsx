@@ -6,6 +6,7 @@ import type { PointerEvent as ReactPointerEvent } from "react";
 import { catLitterRescueConfig } from "../../../../data/species/cat/activities";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, withPetName } from "../activity-ui";
+import { useTapSequence } from "../useTapSequence";
 
 export function CatDailyInspectionActivity({ activity, petName, selected, onChange, onActivityChange, onContinue }: { activity: { catInspectionIntroStarted: boolean }; petName: string; selected: string[]; onChange: (selected: string[]) => void; onActivityChange: (patch: { catInspectionIntroStarted: boolean }) => void; onContinue: () => void }) {
   const config = catLitterRescueConfig;
@@ -22,6 +23,10 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
   const [isWasteOverBin, setIsWasteOverBin] = useState(false);
   const [binAcceptingWaste, setBinAcceptingWaste] = useState(false);
   const binCloseTimerRef = useRef<number | null>(null);
+  const discardTimerRef = useRef<number | null>(null);
+  const tapBusyRef = useRef(false);
+  const [isMobileTap, setIsMobileTap] = useState(false);
+  const [discardingWaste, setDiscardingWaste] = useState<string | null>(null);
   const [litterFilled, setLitterFilled] = useState(false);
   const [backupInstalled, setBackupInstalled] = useState(false);
   const [keyboardSelectedStage, setKeyboardSelectedStage] = useState<number | null>(null);
@@ -29,14 +34,16 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
   const scoopCountRef = useRef(0);
   useEffect(() => () => {
     if (binCloseTimerRef.current !== null) window.clearTimeout(binCloseTimerRef.current);
+    if (discardTimerRef.current !== null) window.clearTimeout(discardTimerRef.current);
+  }, []);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 720px)");
+    const syncMode = () => setIsMobileTap(query.matches);
+    syncMode();
+    query.addEventListener("change", syncMode);
+    return () => query.removeEventListener("change", syncMode);
   }, []);
   const [wastePositions] = useState(() => config.wasteItems.map((item) => ({ ...item })));
-  if (!activity.catInspectionIntroStarted) return <ActivityIntroPage
-    config={config.intro}
-    petName={petName}
-    species="cat"
-    onStart={() => onActivityChange({ catInspectionIntroStarted: true })}
-  />;
   const complete = selected.includes("litter-complete");
   const wasteItems = wastePositions;
   const urineWaste = wasteItems[0];
@@ -46,9 +53,18 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
   const poopRevealed = Boolean(poopWaste && revealedWaste.includes(poopWaste.id));
   const poopDiscarded = Boolean(poopWaste && selected.includes(`litter-waste:${poopWaste.id}`));
   const stageIndex = !urineRevealed ? 0 : !urineDiscarded ? 1 : !poopRevealed ? 2 : !poopDiscarded ? 3 : !litterFilled ? 4 : 5;
-  const stageInstruction = stageIndex <= 4
-    ? copy.stageInstructions[stageIndex as 0 | 1 | 2 | 3 | 4]
-    : backupInstalled ? copy.backupCompleteInstruction : "";
+  const { step: tapStep, phase: tapPhase, selectTool: selectTapTool, completeTarget: completeTapTarget } = useTapSequence<string, string, (typeof config.mobileTapSteps)[number]["outcome"]>(config.mobileTapSteps, stageIndex);
+  useEffect(() => { tapBusyRef.current = false; }, [stageIndex]);
+  if (!activity.catInspectionIntroStarted) return <ActivityIntroPage
+    config={config.intro}
+    petName={petName}
+    species="cat"
+    onStart={() => onActivityChange({ catInspectionIntroStarted: true })}
+  />;
+  const stageInstruction = isMobileTap && !backupInstalled
+    ? stageIndex === 5 ? "" : tapStep?.prompts[tapPhase] ?? ""
+    : stageIndex <= 4 ? copy.stageInstructions[stageIndex as 0 | 1 | 2 | 3 | 4]
+      : backupInstalled ? copy.backupCompleteInstruction : "";
   const stageHelper = stageIndex === 5 && !backupInstalled
     ? copy.backupHelper
     : undefined;
@@ -74,6 +90,36 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
       setBinAcceptingWaste(false);
       binCloseTimerRef.current = null;
     }, 280);
+  }
+  function handleTapTool(tool: string) {
+    if (!isMobileTap || tapBusyRef.current || backupInstalled) return;
+    selectTapTool(tool);
+  }
+  function handleTapTarget(target: string) {
+    if (!isMobileTap || tapBusyRef.current || backupInstalled) return;
+    const outcome = completeTapTarget(target);
+    if (!outcome) return;
+    tapBusyRef.current = true;
+    switch (outcome.type) {
+      case "reveal":
+        setRevealedWaste((current) => current.includes(outcome.itemId) ? current : [...current, outcome.itemId]);
+        break;
+      case "discard":
+        holdBinOpenForDiscard();
+        setDiscardingWaste(outcome.itemId);
+        discardTimerRef.current = window.setTimeout(() => {
+          onChange([...selected, `litter-waste:${outcome.itemId}`]);
+          setDiscardingWaste(null);
+          discardTimerRef.current = null;
+        }, 350);
+        break;
+      case "fill":
+        setLitterFilled(true);
+        break;
+      case "backup":
+        setBackupInstalled(true);
+        break;
+    }
   }
   function beginPointerDrag(event: ReactPointerEvent<HTMLElement>, kind: string) {
     event.preventDefault();
@@ -194,14 +240,25 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
     <ol className="cat-litter-stage-rail" aria-label={copy.aria.stageRail}>
       {copy.stageLabels.map((label, index) => <li key={`${label}-${index}`} className={index < stageIndex ? "is-complete" : index === stageIndex ? "is-active" : ""}><span>{index < stageIndex ? "✓" : index + 1}</span>{label}</li>)}
     </ol>
+    <div className="cat-litter-stage-summary" role="status" aria-label={`${copy.aria.stageRail}：步驟 ${stageIndex + 1} / ${copy.stageLabels.length}，${copy.stageLabels[stageIndex]}`}>
+      <strong>步驟 {stageIndex + 1} / {copy.stageLabels.length}</strong>
+      <span className="cat-litter-stage-dots" aria-hidden="true">
+        {copy.stageLabels.map((_, index) => <i key={index} className={index < stageIndex ? "is-complete" : index === stageIndex ? "is-active" : ""} />)}
+      </span>
+      <span className="cat-litter-stage-name" title={copy.stageLabels[stageIndex]}>{copy.stageLabels[stageIndex]}</span>
+    </div>
     <div className="cat-rescue-layout">
       <div className="cat-rescue-scene" aria-label={copy.aria.scene}>
         <div className={`cat-rescue-event-card${stageHelper && !stageInstruction ? " is-helper-only" : ""}`}><b>{copy.aria.currentStep}</b>{stageInstruction && <p>{stageInstruction}</p>}{stageHelper && <small>{stageHelper}</small>}</div>
-        <button ref={litterBoxRef} type="button" className={`cat-rescue-litter-box${litterFilled ? " is-filled" : ""}${backupInstalled ? " is-backup" : ""}${stageIndex === 0 ? " is-scoop-target" : ""}`} aria-label={keyboardStep?.action ?? copy.aria.litterBox} aria-disabled={keyboardSelectedStage !== stageIndex} onClick={(event) => { if (event.detail === 0) completeKeyboardStage(); }}><img draggable={false} src={backupInstalled ? assets.replacementLitterBox : litterFilled ? assets.cleanLitterBox : assets.dirtyLitterBox} alt="" /></button>
-        {wasteItems.map((item) => revealedWaste.includes(item.id) && !selected.includes(`litter-waste:${item.id}`) && carryingWaste !== item.id ? <button type="button" key={item.id} className="cat-rescue-waste" style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }} aria-label={`選取${item.label}`} onPointerDown={(event) => startWasteDrag(event, item.id)} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} onClick={(event) => { if (event.detail === 0) selectWasteByKeyboard(item.id); }}><img draggable={false} src={item.kind === "poop" ? assets.catPoop : assets.urineClump} alt="" /></button> : null)}
-        <button ref={binRef} type="button" className={`cat-rescue-bin${isBinOpen ? " is-drop-target" : ""}`} style={{ left: `${config.bin.x}%`, top: `${config.bin.y}%`, width: `${config.bin.size}%`, height: `${config.bin.size}%` }} aria-label={keyboardStep?.action ?? copy.aria.trashBin} aria-disabled={keyboardSelectedStage !== stageIndex} onClick={(event) => { if (event.detail === 0) completeKeyboardStage(); }}><img src={isBinOpen ? assets.trashBinOpen : assets.trashBin} alt="" /></button>
+        <button ref={litterBoxRef} type="button" className={`cat-rescue-litter-box${litterFilled ? " is-filled" : ""}${backupInstalled ? " is-backup" : ""}${!isMobileTap && stageIndex === 0 ? " is-scoop-target" : ""}${isMobileTap && tapStep?.target === "litter-box" && tapPhase === "toolSelected" ? " is-tap-target" : ""}`} aria-label={keyboardStep?.action ?? copy.aria.litterBox} aria-disabled={isMobileTap ? tapStep?.target !== "litter-box" || tapPhase !== "toolSelected" : keyboardSelectedStage !== stageIndex} onClick={(event) => { if (isMobileTap) handleTapTarget("litter-box"); else if (event.detail === 0) completeKeyboardStage(); }}><img draggable={false} src={backupInstalled ? assets.replacementLitterBox : litterFilled ? assets.cleanLitterBox : assets.dirtyLitterBox} alt="" /></button>
+        {wasteItems.map((item) => {
+          const isTapWaste = isMobileTap && tapStep?.target === item.id && (stageIndex === 0 || stageIndex === 2);
+          const isDesktopWaste = !isMobileTap && revealedWaste.includes(item.id) && !selected.includes(`litter-waste:${item.id}`) && carryingWaste !== item.id;
+          return isTapWaste || isDesktopWaste ? <button type="button" key={item.id} className={`cat-rescue-waste${isTapWaste && tapPhase === "toolSelected" ? " is-tap-target" : ""}`} style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }} aria-label={isMobileTap ? `鏟起${item.label}` : `選取${item.label}`} aria-disabled={isMobileTap && tapPhase !== "toolSelected"} onPointerDown={isMobileTap ? undefined : (event) => startWasteDrag(event, item.id)} onPointerMove={isMobileTap ? undefined : trackScoopSweep} onPointerUp={isMobileTap ? undefined : finishDrag} onPointerCancel={isMobileTap ? undefined : cancelDrag} onClick={(event) => { if (isMobileTap) handleTapTarget(item.id); else if (event.detail === 0) selectWasteByKeyboard(item.id); }}><img draggable={false} src={item.kind === "poop" ? assets.catPoop : assets.urineClump} alt="" /></button> : null;
+        })}
+        <button ref={binRef} type="button" className={`cat-rescue-bin${isBinOpen ? " is-drop-target" : ""}${isMobileTap && tapStep?.target === "bin" && tapPhase === "itemCollected" ? " is-tap-target" : ""}`} style={{ left: `${config.bin.x}%`, top: `${config.bin.y}%`, width: `${config.bin.size}%`, height: `${config.bin.size}%` }} aria-label={keyboardStep?.action ?? copy.aria.trashBin} aria-disabled={isMobileTap ? tapStep?.target !== "bin" || tapPhase !== "itemCollected" : keyboardSelectedStage !== stageIndex} onClick={(event) => { if (isMobileTap) handleTapTarget("bin"); else if (event.detail === 0) completeKeyboardStage(); }}><img src={isBinOpen ? assets.trashBinOpen : assets.trashBin} alt="" />{discardingWaste && <img className="cat-rescue-discarding-waste" src={wasteItems.find((item) => item.id === discardingWaste)?.kind === "poop" ? assets.catPoop : assets.urineClump} alt="" />}</button>
       <div className="cat-rescue-controls">
-          {(stageIndex === 0 || stageIndex === 2) ? <div className="cat-rescue-tool-card"><button type="button" className={`cat-rescue-scoop-tool${dragging ? " is-dragging" : ""} is-prompt`} onPointerDown={startDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} onClick={(event) => { if (event.detail === 0) selectKeyboardTool(); }} aria-label={keyboardStep?.select ?? copy.keyboardSteps[0].select}><img draggable={false} src={assets.litterScoop} alt="" /></button></div> : stageIndex === 4 ? <div className="cat-rescue-tool-card"><button type="button" className="cat-rescue-action-icon" onPointerDown={startLitterDrag} onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag} onClick={(event) => { if (event.detail === 0) selectKeyboardTool(); }} aria-label={keyboardStep?.select ?? copy.keyboardSteps[4].select}><img draggable={false} src={assets.cleanLitter} alt="" /></button></div> : stageIndex === 5 && !backupInstalled ? <div className="cat-rescue-choice-card"><b className="cat-rescue-replacement-label">{copy.replaceLabel}</b><button type="button" className="cat-rescue-action-icon" onClick={installBackup} aria-label={copy.aria.replaceLitterBox}><img draggable={false} src={assets.replacementLitterBoxIcon} alt="" /></button></div> : null}
+          {(stageIndex === 0 || stageIndex === 2) ? <div className="cat-rescue-tool-card"><button type="button" className={`cat-rescue-scoop-tool${dragging ? " is-dragging" : ""}${!isMobileTap || tapPhase === "idle" ? " is-prompt" : ""}${isMobileTap && tapPhase === "toolSelected" ? " is-tap-selected" : ""}`} onPointerDown={isMobileTap ? undefined : startDrag} onPointerMove={isMobileTap ? undefined : trackScoopSweep} onPointerUp={isMobileTap ? undefined : finishDrag} onPointerCancel={isMobileTap ? undefined : cancelDrag} onClick={(event) => { if (isMobileTap) handleTapTool("scoop"); else if (event.detail === 0) selectKeyboardTool(); }} aria-label={keyboardStep?.select ?? copy.keyboardSteps[0].select}><img draggable={false} src={assets.litterScoop} alt="" /></button></div> : isMobileTap && (stageIndex === 1 || stageIndex === 3) ? <div className="cat-rescue-collected-tool" aria-hidden="true"><img src={assets.litterScoop} alt="" /><img className="cat-rescue-collected-waste" src={stageIndex === 1 ? assets.urineClump : assets.catPoop} alt="" /></div> : stageIndex === 4 ? <div className="cat-rescue-tool-card"><button type="button" className={`cat-rescue-action-icon${isMobileTap && tapPhase === "idle" ? " is-tap-prompt" : ""}${isMobileTap && tapPhase === "toolSelected" ? " is-tap-selected" : ""}`} onPointerDown={isMobileTap ? undefined : startLitterDrag} onPointerMove={isMobileTap ? undefined : trackScoopSweep} onPointerUp={isMobileTap ? undefined : finishDrag} onPointerCancel={isMobileTap ? undefined : cancelDrag} onClick={(event) => { if (isMobileTap) handleTapTool("clean-litter"); else if (event.detail === 0) selectKeyboardTool(); }} aria-label={keyboardStep?.select ?? copy.keyboardSteps[4].select}><img draggable={false} src={assets.cleanLitter} alt="" /></button></div> : stageIndex === 5 && !backupInstalled ? <div className="cat-rescue-choice-card"><b className="cat-rescue-replacement-label">{copy.replaceLabel}</b><button type="button" className={`cat-rescue-action-icon${isMobileTap && tapPhase === "idle" ? " is-tap-prompt" : ""}${isMobileTap && tapPhase === "toolSelected" ? " is-tap-selected" : ""}`} onClick={() => { if (isMobileTap) handleTapTool("backup-box"); else installBackup(); }} aria-label={copy.aria.replaceLitterBox}><img draggable={false} src={assets.replacementLitterBoxIcon} alt="" /></button></div> : null}
         </div>
       </div>
       {backupInstalled && <div className="cat-rescue-finish-action"><button type="button" className="primary" onClick={finishCleaning}>{copy.completeLabel} <span>→</span></button></div>}

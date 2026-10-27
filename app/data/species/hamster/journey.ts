@@ -34,7 +34,10 @@ export const hamsterJourney = {
   dailyBehaviorScenarioIds: hamsterDailyBehaviorScenarioIds,
   transitionMedia: {
     arrival: hamsterAssets.petJourney.arrivalTransition,
+    arrivalMobile: hamsterAssets.petJourney.arrivalTransitionMobile,
     timePass: hamsterAssets.petJourney.timePassesAging,
+    timePassMobile: hamsterAssets.petJourney.timePassesAgingMobile,
     busyCare: hamsterAssets.petJourney.busyDayTransition,
+    busyCareMobile: hamsterAssets.petJourney.busyDayTransitionMobile,
   },
 } as const;

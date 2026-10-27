@@ -31,6 +31,18 @@ function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { s
   </div>;
 }
 
+function useMobileLayout() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 720px)");
+    const update = () => setIsMobile(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return isMobile;
+}
+
 export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onContinue, onReplay }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void; onReplay?: () => void }) {
   const scenario = rabbitActivityScenarios["rabbit-carry-sort"];
   const order = activity.rabbitCarryOrder.length ? activity.rabbitCarryOrder : ["2", "0", "4", "1", "3"];
@@ -41,6 +53,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
   const feedbackRef = useRef<HTMLDivElement>(null);
   const submittedRef = useRef(false);
   const previousCompletionStateRef = useRef<boolean | null>(null);
+  const isMobile = useMobileLayout();
   const complete = activity.rabbitCarryComplete;
   const answerRevealed = activity.rabbitCarryAnswerRevealed;
   const feedbackShown = activity.rabbitCarryFeedbackShown;
@@ -112,6 +125,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
           {order.map((value, index) => (
             <li key={value} data-rabbit-step={index}
               onPointerDown={(event) => {
+                if (isMobile) return;
                 if (isCompletionState || isLockedAfterFailures || (event.target as HTMLElement).closest("button")) return;
                 event.preventDefault();
                 event.currentTarget.setPointerCapture(event.pointerId);
@@ -119,6 +133,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
                 setDropIndex(index);
               }}
               onPointerMove={(event) => {
+                if (isMobile) return;
                 if (draggedIndex === null) return;
                 const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>("[data-rabbit-step]");
                 if (!target) return;
@@ -127,6 +142,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
                 setDropIndex(event.clientY > rect.top + rect.height / 2 ? targetIndex + 1 : targetIndex);
               }}
               onPointerUp={(event) => {
+                if (isMobile) return;
                 const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>("[data-rabbit-step]");
                 if (draggedIndex !== null && target) {
                   const rect = target.getBoundingClientRect();
@@ -136,7 +152,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
                 setDraggedIndex(null);
                 setDropIndex(null);
               }}
-              onPointerCancel={() => { setDraggedIndex(null); setDropIndex(null); }}
+              onPointerCancel={() => { if (!isMobile) { setDraggedIndex(null); setDropIndex(null); } }}
               className={`${draggedIndex === index ? "is-dragging" : ""} ${dropIndex === index ? "is-drop-before" : ""} ${dropIndex === index + 1 ? "is-drop-after" : ""} ${isCompletionState ? "is-revealed" : ""}`}
             >
               <span>{index + 1}</span><div className="rabbit-step-image-slot"><img src={rabbitCarrySortSteps[Number(value)].image} alt="" draggable={false} /></div>

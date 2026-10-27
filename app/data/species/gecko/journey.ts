@@ -34,7 +34,10 @@ export const geckoJourney = {
   geckoHealthInspection,
   transitionMedia: {
     arrival: geckoAssets.petJourney.arrivalTransition,
+    arrivalMobile: geckoAssets.petJourney.arrivalTransitionMobile,
     timePass: geckoAssets.petJourney.timePassesAging,
+    timePassMobile: geckoAssets.petJourney.timePassesAgingMobile,
     busyCare: geckoAssets.petJourney.busyDayTransition,
+    busyCareMobile: geckoAssets.petJourney.busyDayTransitionMobile,
   },
 } as const;

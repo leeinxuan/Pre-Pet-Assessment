@@ -1,0 +1,53 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */
+/* Hallmark · component: cat litter step summary · tone: warm-practical · anchor: existing cream and gold */
+@media (max-width: 720px) {
+  .cat-litter-rescue {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .cat-litter-rescue .activity-heading { flex: 0 0 auto; margin-bottom: 0; }
+  .cat-litter-rescue .cat-litter-stage-rail { display: none; }
+  .cat-litter-rescue .cat-litter-stage-summary {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    min-height: 44px;
+    padding: 6px 16px;
+    overflow: hidden;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .cat-litter-stage-summary strong { white-space: nowrap; }
+  .cat-litter-stage-dots { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .cat-litter-stage-dots i {
+    display: block;
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--paper);
+  }
+  .cat-litter-stage-dots i.is-complete { border-color: var(--mint); background: var(--mint); }
+  .cat-litter-stage-dots i.is-active { width: 14px; height: 14px; flex-basis: 14px; border-color: var(--gold); background: var(--gold); }
+  .cat-litter-stage-name {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--gold-dark);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cat-litter-rescue .cat-rescue-event-card.is-helper-only {
+    width: calc(100% - 24px);
+    max-width: none;
+    padding: 10px 16px;
+    border-radius: 22px;
+  }
+  .cat-litter-rescue .cat-rescue-event-card.is-helper-only small { max-width: 100%; font-size: 12px; line-height: 1.5; }
+  .cat-litter-rescue .cat-rescue-replacement-label { max-width: none; }
+}

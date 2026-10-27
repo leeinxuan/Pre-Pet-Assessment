@@ -11,6 +11,18 @@ import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from 
 
 type RabbitObservationStatus = ObservationAnswerStatus | "comparison";
 
+function useMobileLayout() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 720px)");
+    const update = () => setIsMobile(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return isMobile;
+}
+
 export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
   const scenario = rabbitActivityScenarios["rabbit-daily-check"];
   const completed = activity.rabbitDailyCheckSteps;
@@ -19,8 +31,11 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
   const [keyboardBrushSelectedFor, setKeyboardBrushSelectedFor] = useState<string | null>(null);
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
   const [magnifierPosition, setMagnifierPosition] = useState<{ x: number; y: number } | null>(null);
+  const [mobileBrushSelectedFor, setMobileBrushSelectedFor] = useState<string | null>(null);
+  const [sheetPointerStart, setSheetPointerStart] = useState<number | null>(null);
   const [observation, setObservation] = useState<{ key: keyof typeof rabbitGroomingConfig.observations; displayState: "normal" | "warning"; status: RabbitObservationStatus } | null>(null);
   const brushTargetRef = useRef<HTMLButtonElement>(null);
+  const isMobile = useMobileLayout();
   const groomingSteps = rabbitGroomingConfig.groomingSteps;
   const current = groomingSteps.find((step) => step.stateId === state)
     ?? (state === "part-1-footpad-observation" ? groomingSteps.find((step) => step.id === "groom-footpad") : undefined);
@@ -75,6 +90,13 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     setObservation(null);
     setState(nextState);
   };
+  const completeBrush = () => {
+    if (!current || !isBrushStep) return;
+    add(current.id);
+    setKeyboardBrushSelectedFor(null);
+    setMobileBrushSelectedFor(null);
+    setState(current.completeStateId);
+  };
   const finishBrush = (event: ReactPointerEvent<HTMLElement>) => {
     if (!draggingBrush || !current || !isBrushStep) return;
     setDraggingBrush(false); setPoint(null);
@@ -82,18 +104,20 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     // 只接受目前局部提示對應的部位，避免梳到其他身體區域也被判定完成。
     const overTarget = inRect(brushTargetRef.current?.getBoundingClientRect(), 12);
     if (!overTarget) return;
-    add(current.id); setState(current.completeStateId);
+    completeBrush();
   };
   const finishBrushByKeyboard = () => {
     if (!current || !isBrushStep || keyboardBrushSelectedFor !== current.id) return;
-    add(current.id);
-    setKeyboardBrushSelectedFor(null);
-    setState(current.completeStateId);
+    completeBrush();
   };
   const selectBrushByKeyboard = () => {
     if (!current || !isBrushStep) return;
     setKeyboardBrushSelectedFor(current.id);
     window.requestAnimationFrame(() => brushTargetRef.current?.focus());
+  };
+  const selectMobileBrush = () => {
+    if (!current || !isBrushStep) return;
+    setMobileBrushSelectedFor(current.id);
   };
   if (!activity.rabbitGroomingIntroStarted) return <ActivityIntroPage
     config={rabbitGroomingConfig.intro}
@@ -106,48 +130,63 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
   const characterKey = isInspection || isTransition ? "inspection" : current?.character ?? (state.startsWith("part-1-step-") && state.endsWith("-complete") ? "eyesClose" : "idle");
   const furBallKey = current?.furBall ?? (state === "part-1-step-1-complete" ? "furBallStep1" : state === "part-1-step-2-complete" ? "furBallStep2" : "furBallStep3");
   const observationData = observation ? rabbitGroomingConfig.observations[observation.key] : null;
+  const mobileBrushInstruction = isMobile && current && isBrushStep
+    ? mobileBrushSelectedFor === current.id
+      ? withPetName(current.mobileTap.target, petName)
+      : withPetName(current.mobileTap.tool, petName)
+    : current?.instruction ?? "請依照提示完成保養。";
+
+  const observationContent = observation && observationData ? <ObservationCard className={`rabbit-grooming-observation rabbit-grooming-observation-${observation.key} is-${observation.status}`} label={observation.status === "comparison" ? "異常狀態" : observationData.title} labelledBy="rabbit-grooming-observation-title">
+    {observation.status === "comparison" ? <>
+      <h2 id="rabbit-grooming-observation-title">異常狀態</h2>
+      <ObservationCardComparison>
+        <img src={observationData.warningImage} alt={`${observationData.title}異常狀態`} onError={(event) => { event.currentTarget.style.display = "none"; }} />
+        <p>{renderKnowledgeText(withPetName(observationData.abnormalDescription, petName))}</p>
+      </ObservationCardComparison>
+      <button type="button" className="observation-card-action" onClick={confirmObservation}>我了解了</button>
+    </> : <>
+      <ObservationCardFlow
+        status={observation.status}
+        title={<span id="rabbit-grooming-observation-title">{observationData.title}</span>}
+        image={<img className="observation-card-image" src={observation.displayState === "warning" ? observationData.warningImage : observationData.normalImage} alt={observationData.title} onError={(event) => { event.currentTarget.style.display = "none"; }} />}
+        question={renderKnowledgeText(withPetName(observationData.question, petName))}
+        choices={observationData.choices}
+        feedback={renderKnowledgeText(withPetName((observation.status === "correct" ? observationData.correctFeedback : observationData.incorrectFeedback)[observation.displayState], petName))}
+        onChoose={(choiceId) => answerObservation(choiceId as "normal" | "warning")}
+        onReturn={returnToObservationQuestion}
+        correctAction={observation.displayState === "normal"
+          ? <button type="button" className="observation-card-action" onClick={() => setObservation({ ...observation, status: "comparison" })}>了解異常狀況</button>
+          : <button type="button" className="observation-card-action" onClick={confirmObservation}>我了解了</button>}
+      />
+    </>}
+  </ObservationCard> : null;
   return <section className="rabbit-activity rabbit-grooming-activity" onPointerMove={(event) => draggingBrush && setPoint({ x: event.clientX, y: event.clientY })} onPointerUp={finishBrush} onPointerCancel={() => { setDraggingBrush(false); setPoint(null); }} aria-labelledby="rabbit-grooming-title">
     <header><p>日常照護</p><h1 id="rabbit-grooming-title">{withPetName(scenario.title, petName)}</h1><p className="rabbit-grooming-scene-description">{withPetName(firstPart ? rabbitGroomingConfig.sceneDescriptions.part1 : rabbitGroomingConfig.sceneDescriptions.part2, petName)}</p><span>{firstPart ? "第一部分：梳毛與足底確認" : "第二部分：進食與指甲外觀觀察"}</span></header>
     {isTransition ? <div className="rabbit-grooming-transition" role="status"><span aria-hidden="true">✓</span><div><p>第一部分完成</p><strong>梳毛與足底檢查都完成了</strong><small>接著一起觀察 {petName || "兔兔"} 的進食與指甲狀況。</small></div></div> : <>
       <div className={`rabbit-grooming-scene ${isInspection ? "is-inspection-stage" : ""} ${current?.id === "groom-footpad" ? "has-observation-layout" : ""} ${observation ? "has-observation" : ""}`}>
-        {!observation && <p className="rabbit-grooming-scene-prompt">{isInspection ? "點擊進食畫面與前腳，完成外觀觀察。" : current?.instruction ?? "請依照提示完成保養。"}</p>}
+        {!observation && <p className="rabbit-grooming-scene-prompt">{isInspection ? "點擊進食畫面與前腳，完成外觀觀察。" : mobileBrushInstruction}</p>}
         {current?.id === "groom-hind-tail" && <aside className="rabbit-grooming-caution"><b>特別注意！</b><span>{current.caution}</span></aside>}
         <div className="rabbit-grooming-character"><img src={rabbitGroomingConfig.assets[characterKey]} alt={petName || "兔兔"} onError={(event) => { event.currentTarget.style.display = "none"; event.currentTarget.parentElement?.classList.add("asset-unavailable"); }} />
-          {!isInspection && current && (current.id === "groom-footpad" ? <button type="button" data-grooming-step={current.id} className="rabbit-anatomy-hitbox rabbit-footpad-hitbox" aria-label="檢查兔子足底" disabled={Boolean(observation) || completed.includes("groom-footpad")} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => { setMagnifierPosition(null); setState("part-1-footpad-observation"); openObservation("footpad"); }} /> : <button ref={brushTargetRef} type="button" data-grooming-step={current.id} className={`rabbit-grooming-guideline ${draggingBrush ? "is-dragging" : ""}`} aria-label={`梳理${current.label}`} aria-disabled={keyboardBrushSelectedFor !== current.id} onClick={(event) => { if (event.detail === 0) finishBrushByKeyboard(); }} />)}
+          {!isInspection && current && (current.id === "groom-footpad" ? <button type="button" data-grooming-step={current.id} className="rabbit-anatomy-hitbox rabbit-footpad-hitbox" aria-label="檢查兔子足底" disabled={Boolean(observation) || completed.includes("groom-footpad")} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => { setMagnifierPosition(null); setState("part-1-footpad-observation"); openObservation("footpad"); }} /> : <button ref={brushTargetRef} type="button" data-grooming-step={current.id} className={`rabbit-grooming-guideline ${draggingBrush ? "is-dragging" : ""}${isMobile && mobileBrushSelectedFor === current.id ? " is-tap-target" : ""}`} aria-label={`梳理${current.label}`} aria-disabled={isMobile ? mobileBrushSelectedFor !== current.id : keyboardBrushSelectedFor !== current.id} onClick={(event) => { if (isMobile && mobileBrushSelectedFor === current.id) completeBrush(); else if (!isMobile && event.detail === 0) finishBrushByKeyboard(); }} />)}
           {isInspection && <>
             <button type="button" className={`rabbit-anatomy-hitbox rabbit-eating-hitbox ${completed.includes("inspect-eating") ? "done" : ""}`} aria-label="觀察兔子進食狀況" disabled={Boolean(observation) || completed.includes("inspect-eating")} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => { setMagnifierPosition(null); setState("part-2-eating-observation"); openObservation("eating"); }} />
             <button type="button" className={`rabbit-anatomy-hitbox rabbit-nail-hitbox ${completed.includes("inspect-nail") ? "done" : ""}`} aria-label="檢查兔子指甲" disabled={Boolean(observation) || !completed.includes("inspect-eating") || completed.includes("inspect-nail")} onPointerEnter={showMagnifier} onPointerMove={showMagnifier} onPointerLeave={() => setMagnifierPosition(null)} onClick={() => { setMagnifierPosition(null); setState("part-2-nail-observation"); openObservation("nail"); }} />
           </>}
         </div>
         {firstPart && current?.id !== "groom-footpad" && <aside className="rabbit-fur-collector" aria-label={`毛球收集進度 ${furCollectionProgress}%`}><small>毛球收集進度 {furCollectionProgress}%</small><img src={rabbitGroomingConfig.assets[furBallKey]} alt="收集到的毛球" onError={(event) => { event.currentTarget.style.display = "none"; }} /><span>毛球收集罐</span></aside>}
-      {isBrushStep && current && <button type="button" className="rabbit-grooming-brush" onDragStart={(event) => event.preventDefault()} onPointerDown={(event) => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingBrush(true); setPoint({ x: event.clientX, y: event.clientY }); }} onPointerUp={(event) => { finishBrush(event); event.stopPropagation(); }} onClick={(event) => { if (event.detail === 0) selectBrushByKeyboard(); }} aria-label="選取梳子"><img draggable={false} src={rabbitGroomingConfig.assets.brush} alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} /></button>}
-      {observation && observationData && <ObservationCard className={`rabbit-grooming-observation rabbit-grooming-observation-${observation.key} is-${observation.status}`} label={observation.status === "comparison" ? "異常狀態" : observationData.title} labelledBy="rabbit-grooming-observation-title">
-        {observation.status === "comparison" ? <>
-          <h2 id="rabbit-grooming-observation-title">異常狀態</h2>
-          <ObservationCardComparison>
-            <img src={observationData.warningImage} alt={`${observationData.title}異常狀態`} onError={(event) => { event.currentTarget.style.display = "none"; }} />
-            <p>{renderKnowledgeText(withPetName(observationData.abnormalDescription, petName))}</p>
-          </ObservationCardComparison>
-          <button type="button" className="observation-card-action" onClick={confirmObservation}>我了解了</button>
-        </> : <>
-          <ObservationCardFlow
-            status={observation.status}
-            title={<span id="rabbit-grooming-observation-title">{observationData.title}</span>}
-            image={<img className="observation-card-image" src={observation.displayState === "warning" ? observationData.warningImage : observationData.normalImage} alt={observationData.title} onError={(event) => { event.currentTarget.style.display = "none"; }} />}
-            question={renderKnowledgeText(withPetName(observationData.question, petName))}
-            choices={observationData.choices}
-            feedback={renderKnowledgeText(withPetName((observation.status === "correct" ? observationData.correctFeedback : observationData.incorrectFeedback)[observation.displayState], petName))}
-            onChoose={(choiceId) => answerObservation(choiceId as "normal" | "warning")}
-            onReturn={returnToObservationQuestion}
-            correctAction={observation.displayState === "normal"
-              ? <button type="button" className="observation-card-action" onClick={() => setObservation({ ...observation, status: "comparison" })}>了解異常狀況</button>
-              : <button type="button" className="observation-card-action" onClick={confirmObservation}>我了解了</button>}
-          />
-        </>}
-      </ObservationCard>}
+      {isBrushStep && current && <button type="button" className={`rabbit-grooming-brush${isMobile && mobileBrushSelectedFor === current.id ? " is-tap-selected" : ""}`} onDragStart={(event) => event.preventDefault()} onPointerDown={(event) => { if (isMobile) return; event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingBrush(true); setPoint({ x: event.clientX, y: event.clientY }); }} onPointerUp={(event) => { if (!isMobile) { finishBrush(event); event.stopPropagation(); } }} onClick={(event) => { if (isMobile) selectMobileBrush(); else if (event.detail === 0) selectBrushByKeyboard(); }} aria-pressed={isMobile ? mobileBrushSelectedFor === current.id : undefined} aria-label="選取梳子"><img draggable={false} src={rabbitGroomingConfig.assets.brush} alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} /></button>}
+      {!isMobile && observationContent}
       </div>
     </>}
     {draggingBrush && point && <div className="rabbit-grooming-drag-ghost" style={{ left: point.x, top: point.y }}><img src={rabbitGroomingConfig.assets.brush} alt="" /></div>}
     {magnifierPosition && <img className="activity-magnifier-hint" src={rabbitGroomingConfig.assets.magnifier} alt="" aria-hidden="true" style={{ left: magnifierPosition.x, top: magnifierPosition.y }} />}
+    {isMobile && observationContent && <div className="rabbit-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) setObservation(null); setSheetPointerStart(null); }}>
+      <button type="button" className="rabbit-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={() => setObservation(null)} />
+      <aside className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={observationData?.title}>
+        <div className="rabbit-observation-sheet-handle" aria-hidden="true" />
+        <button type="button" className="rabbit-observation-sheet-close" aria-label="關閉觀察說明" onClick={() => setObservation(null)}>×</button>
+        {observationContent}
+      </aside>
+    </div>}
   </section>;
 }
