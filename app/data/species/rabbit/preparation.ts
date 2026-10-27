@@ -64,6 +64,6 @@ export const rabbitRoomFlow: RoomFlowConfig = {
   },
 };
 
-export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌", placement: rabbitRoomDoorplatePlacement } };
+export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", mobileSupplyHintPlacement: { top: 8 }, doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌", placement: rabbitRoomDoorplatePlacement } };
 export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂" };
 export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow, roomScene: rabbitRoomScene, departureScene: rabbitDepartureScene } as const;

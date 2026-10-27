@@ -282,6 +282,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
         : shakeComplete
           ? config.interaction.shakeCompleteHint
           : config.interaction.mobileTap.shake.prompt;
+  const mobilePromptIsLong = mobilePromptText.length > 20;
   const ghostImage = dragging === "scoop" ? hamsterAssets.cageCheckActivity.scoop : dragging === "sieve" ? hamsterAssets.cageCheckActivity.sandSieve : null;
   const sandBathStyle = { "--hamster-sand-offset": `${shakeOffset}px` } as CSSProperties;
   const cleanedCageItems = config.preparedCageItems;
@@ -310,7 +311,14 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       if (dragging === "sieve") finishSieveDrag(event);
       if (dragging === "shake") finishShakeDrag();
     }} onPointerCancel={isMobile ? undefined : () => { setDragging(null); dragStart.current = null; setDragPoint(null); setShakeOffset(0); mergeStates({ shakeProgress: Math.round(shakeProgressRef.current) }); }}>
-      {isMobile && <p className="hamster-mobile-prompt" role={shakeComplete ? "status" : undefined}>{render(mobilePromptText)}</p>}
+      {isMobile && (
+        <p
+          className={`hamster-mobile-prompt${mobilePromptIsLong ? " is-long" : ""}`}
+          role={shakeComplete ? "status" : undefined}
+        >
+          {render(mobilePromptText)}
+        </p>
+      )}
       {!isMobile && (!siftAcknowledged || shakeComplete) && <p className="hamster-cage-check-prompt" role={shakeComplete ? "status" : undefined}>{render(desktopPromptText)}</p>}
       {!isMobile && siftAcknowledged && !shakeComplete && <div className="hamster-shake-progress" aria-label="砂浴盆整理進度"><b>搖晃進度</b><div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}><span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} /></div></div>}
       {!toiletSummaryAcknowledged ? <>

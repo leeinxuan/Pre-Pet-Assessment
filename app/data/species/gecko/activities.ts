@@ -42,6 +42,8 @@ const feces: GeckoFecesInspection = {
     actionLabel: "了解異常排泄",
   },
   scenePlacement: { x: 65, y: 63, width: 15, layer: 3 },
+  // 手機版排泄物素材位置與尺寸，和桌機版互不綁定。
+  mobileScenePlacement: { x: 72, y: 66, width: 18 },
 };
 
 const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
@@ -214,8 +216,8 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
       { id: "enrichment-decor-plant", image: geckoAssets.room.enrichmentDecorPlant, alt: "環境豐富化植物", placement: { x: 20, y: 50, width: 35, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 0, y: 55, width: 40, transform: "translate(-50%, -50%)" } },
       { id: "enrichment-decor-stone", image: geckoAssets.room.enrichmentDecorStone, alt: "環境豐富化石頭", placement: { x: 80, y: 78, width: 20, layer: 4, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 100, y: 76, width: 30, transform: "translate(-50%, -50%)" } },
       { id: "enrichment-decor-wooden", image: geckoAssets.room.enrichmentDecorWooden, alt: "環境豐富化沉木", placement: { x: 35, y: 63, width: 25, layer: 3, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 10, y: 62, width: 35, transform: "translate(-50%, -50%)" } },
-      { id: "thermometer-hygrometer-cool", image: geckoAssets.room.thermometerHygrometerCool, alt: "涼側溫濕度計", placement: { x: 22, y: 46, width: 26, layer: 6 }, mobilePlacement: { x: 12, y: 40, width: 9 } },
-      { id: "thermometer-hygrometer-warm", image: geckoAssets.room.thermometerHygrometerWarm, alt: "暖側溫濕度計", placement: { x: 90, y: 88, width: 25, layer: 6 }, mobilePlacement: { x: 89, y: 40, width: 12 } },
+      { id: "thermometer-hygrometer-cool", image: geckoAssets.room.thermometerHygrometerCool, alt: "涼側溫濕度計", placement: { x: 22, y: 46, width: 26, layer: 6 }, mobilePlacement: { x: 18, y: 45, width: 35 } },
+      { id: "thermometer-hygrometer-warm", image: geckoAssets.room.thermometerHygrometerWarm, alt: "暖側溫濕度計", placement: { x: 90, y: 88, width: 25, layer: 6 }, mobilePlacement: { x: 89, y: 90, width: 35 } },
       { id: "cool-hide", image: geckoAssets.room.coolHide, alt: "涼側躲避屋", placement: { x: 16, y: 70, width: 25, layer: 3 }, mobilePlacement: { x: -10, y: 70, width: 40 } },
       { id: "moist-hide", image: geckoAssets.room.moistHide, alt: "濕躲避屋", placement: { x: 51, y: 58, width: 25, layer: 2 }, mobilePlacement: { x: 50, y: 60, width: 40 } },
       { id: "warm-hide", image: geckoAssets.room.warmHide, alt: "暖側躲避屋", placement: { x: 85, y: 60, width: 25, layer: 3 }, mobilePlacement: { x: 95, y: 60, width: 40 } },
@@ -235,6 +237,9 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     // interactive readings stay exactly where the room's gauges are placed.
     warmPlacement: { x: 90, y: 87, width: 25 },
     coolPlacement: { x: 22, y: 47, width: 25 },
+    // 手機版兩支溫度計各自獨立調整位置與尺寸。
+    warmMobilePlacement: { x: 88, y: 85, width: 35 },
+    coolMobilePlacement: { x: 18, y: 45, width: 35 },
     // All temperature-stage pieces can now be adjusted separately.  The
     // initial values preserve the existing visual arrangement.
     warmImagePlacement: { top: "0", left: "0" },
@@ -278,6 +283,8 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     // Only controls the interactive dirty/clean dish in this daily-care step.
     // It intentionally does not share the finished-room water-dish placement.
     interactivePlacement: { x: 53, y: 66, width: 15, layer: 6 },
+    // 手機版水碟位置與尺寸可單獨調整，不影響完成房間的水碟。
+    mobileInteractivePlacement: { x: 55, y: 72, width: 15 },
   },
   feces,
   body: {

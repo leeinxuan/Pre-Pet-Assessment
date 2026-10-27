@@ -103,8 +103,7 @@
   @keyframes roomMobileEntryNudge { 0%, 100% { translate: 0 0; } 50% { translate: 5px 0; } }
   .room-mobile-entry-cue--right { animation-direction: reverse; }
   .room-mobile-complete {
-    width: fit-content;
-    max-width: 100%;
+    width: 100%;
     min-height: 44px;
     padding: 9px 16px;
     font-size: clamp(12px, 3.2vw, 14px);
@@ -113,7 +112,7 @@
   .room-mobile-footer {
     box-sizing: border-box;
     display: flex;
-    justify-content: flex-end;
+    justify-content: stretch;
     padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
     border-top: 1px solid var(--room-mobile-line);
     background: white;
@@ -134,6 +133,27 @@
     font-size: 12px;
     font-weight: 800;
     text-align: center;
+  }
+  .room-mobile-supply-hint {
+    position: absolute;
+    z-index: 16;
+    top: var(--room-mobile-supply-hint-top);
+    left: 50%;
+    width: max-content;
+    max-width: var(--room-mobile-supply-hint-max-width);
+    margin: 0;
+    padding: 8px 14px;
+    border: 1px solid rgba(191, 130, 27, .28);
+    border-radius: 999px;
+    background: rgba(255, 253, 248, .96);
+    box-shadow: 0 4px 14px rgba(65, 45, 21, .16);
+    color: var(--room-mobile-ink);
+    font-size: 12px;
+    font-weight: 850;
+    line-height: 1.35;
+    text-align: center;
+    transform: translateX(-50%);
+    pointer-events: none;
   }
   .room-mobile-tabs {
     box-sizing: border-box;
@@ -163,6 +183,7 @@
     cursor: pointer;
   }
   .room-mobile-tabs button.is-active { border-bottom-color: var(--room-mobile-ink); color: var(--room-mobile-ink); }
+  .room-mobile-tabs button:disabled { cursor: not-allowed; opacity: .52; }
   .room-mobile-tab-title { display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-size: inherit; font-weight: 850; }
   .room-mobile-tab-icon { display: inline-flex; width: 17px; height: 17px; flex: 0 0 auto; }
   .room-mobile-tab-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -215,13 +236,6 @@
   }
   .room-mobile-tile:disabled { cursor: default; }
   .room-mobile-tile.is-complete { background: var(--room-mobile-paper); color: var(--room-mobile-ink); }
-  /* 新放置的用品以柔和卡片微光提示可點擊查看說明，不使用粗外框。 */
-  .room-mobile-supply-tile.is-awaiting-info {
-    border-color: var(--room-mobile-line);
-    background: var(--room-mobile-paper);
-    box-shadow: 0 0 12px rgba(204, 151, 38, .32);
-    animation: room-mobile-info-glow 1.7s ease-in-out infinite;
-  }
   .room-mobile-supply-tile.is-locked { border-color: var(--room-mobile-line); background: var(--room-mobile-tile-locked); color: var(--room-mobile-muted); }
   .room-mobile-supply-tile.is-locked .room-mobile-thumbnail,
   .room-mobile-supply-tile.is-locked .room-mobile-tile-label { filter: grayscale(1); opacity: .45; }
@@ -234,7 +248,7 @@
   .room-mobile-hazard-thumbnail .room-mobile-hazard-background { position: absolute; max-width: none; object-fit: cover; }
   .room-mobile-complete-mark { position: absolute; top: 8px; right: 8px; display: grid; width: 23px; height: 23px; place-items: center; border: 2px solid var(--room-mobile-paper); border-radius: 50%; background: var(--room-mobile-check-fill); color: var(--paper); box-shadow: 0 1px 4px rgba(70, 53, 26, .17); pointer-events: none; }
   .room-mobile-complete-mark svg { width: 14px; height: 14px; }
-  @media (prefers-reduced-motion: reduce) { .room-mobile-entry-cue, .room-mobile-supply-tile.is-awaiting-info { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .room-mobile-entry-cue { animation: none; } }
   .room-mobile-sheet-overlay { position: fixed; z-index: 999; inset: 0; display: flex; align-items: flex-end; background: rgba(33, 30, 25, .42); }
   .room-mobile-sheet {
     position: relative;
@@ -263,10 +277,4 @@
   .room-mobile-sheet-copy .knowledge-danger { color: #a83f38; font-weight: 900; }
   .room-preparation-mobile button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
   .room-preparation-mobile button:active:not(:disabled) { transform: scale(.985); }
-}
-
-@keyframes room-mobile-info-glow {
-  50% {
-    box-shadow: 0 0 19px rgba(204, 151, 38, .48);
-  }
 }

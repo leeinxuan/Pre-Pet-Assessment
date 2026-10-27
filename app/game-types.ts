@@ -149,6 +149,8 @@ export type RoomSceneConfig = {
   interiorBackgroundAlt?: string;
   desktopBackgroundClass?: string;
   mobileBackgroundClass?: string;
+  /** 手機版用品準備箱提示的場景內位置；由各物種背景構圖獨立微調。 */
+  mobileSupplyHintPlacement?: { top: number; maxWidth?: number };
   backgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string };
   doorplate?: { image: string; alt: string; placement: RoomDoorplatePlacement };
 };
@@ -471,8 +473,13 @@ export type GeckoHealthJudgement = {
   };
 };
 
+type GeckoScenePlacement = { x: number; y: number; width: number; layer: number };
+type GeckoMobileScenePlacement = { x: number; y: number; width: number };
+
 export type GeckoFecesInspection = GeckoHealthJudgement & {
-  scenePlacement: { x: number; y: number; width: number; layer: number };
+  scenePlacement: GeckoScenePlacement;
+  /** Mobile-only placement for the interactive feces artwork. */
+  mobileScenePlacement?: GeckoMobileScenePlacement;
 };
 
 export type GeckoBodyInspectionPoint = GeckoHealthJudgement & {
@@ -516,6 +523,9 @@ export type GeckoHealthInspectionConfig = {
     controllerImage: string;
     warmPlacement: { x: number; y: number; width: number };
     coolPlacement: { x: number; y: number; width: number };
+    /** Mobile-only positions and sizes for the two interactive thermometers. */
+    warmMobilePlacement?: { x: number; y: number; width: number };
+    coolMobilePlacement?: { x: number; y: number; width: number };
     /** Offsets for each thermometer illustration within its current anchor. */
     warmImagePlacement: { top: string; left: string };
     coolImagePlacement: { top: string; left: string };
@@ -549,7 +559,9 @@ export type GeckoHealthInspectionConfig = {
     continueLabel: string;
     sceneItemId: string;
     /** Independent position for the clickable dirty/clean water dish. */
-    interactivePlacement: { x: number; y: number; width: number; layer: number };
+    interactivePlacement: GeckoScenePlacement;
+    /** Mobile-only position and size for the interactive dirty/clean dish. */
+    mobileInteractivePlacement?: GeckoMobileScenePlacement;
   };
   feces: GeckoFecesInspection;
   body: {

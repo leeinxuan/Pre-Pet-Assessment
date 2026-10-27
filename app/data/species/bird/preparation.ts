@@ -74,6 +74,6 @@ export const birdRoomFlow: RoomFlowConfig = {
   },
 };
 
-export const birdRoomScene: RoomSceneConfig = { backgroundAlt: "鳥兒生活空間", interiorBackgroundAlt: "鳥籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "鸚鵡名字名牌", placement: birdRoomDoorplatePlacement } };
+export const birdRoomScene: RoomSceneConfig = { backgroundAlt: "鳥兒生活空間", interiorBackgroundAlt: "鳥籠內部配置", mobileSupplyHintPlacement: { top: 6 }, doorplate: { image: sharedAssets.nameplate, alt: "鸚鵡名字名牌", placement: birdRoomDoorplatePlacement } };
 export const birdDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂" };
 export const birdPreparation = { roomItems: birdRoomItems, hazards: birdHazards, trunkItems: birdTrunkItems, roomFlow: birdRoomFlow, roomScene: birdRoomScene, departureScene: birdDepartureScene } as const;

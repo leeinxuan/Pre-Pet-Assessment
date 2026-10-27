@@ -181,6 +181,7 @@ export const geckoRoomFlow: RoomFlowConfig = {
 export const geckoRoomScene: RoomSceneConfig = {
   backgroundAlt: "守宮生活空間",
   interiorBackgroundAlt: "守宮爬蟲缸內部配置",
+  mobileSupplyHintPlacement: { top: 7 },
   doorplate: { image: sharedAssets.nameplate, alt: "守宮名字名牌", placement: geckoRoomDoorplatePlacement },
 };
 export const geckoDepartureScene: DepartureSceneConfig = {

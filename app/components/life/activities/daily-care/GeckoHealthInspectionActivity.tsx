@@ -23,6 +23,39 @@ type PointerPosition = { id: string; x: number; y: number } | null;
 const choose = <T,>(values: readonly T[]) => values[Math.floor(Math.random() * values.length)];
 
 type CompletedTerrariumItem = GeckoHealthInspectionConfig["scene"]["completedItems"][number];
+type ScenePlacement = { x: number; y: number; width: number; layer: number };
+type MobileScenePlacement = { x: number; y: number; width: number };
+
+function mobileScenePlacementStyle(
+  placement: ScenePlacement,
+  mobilePlacement?: MobileScenePlacement,
+): CSSProperties {
+  const mobile = mobilePlacement ?? placement;
+  return {
+    left: `${placement.x}%`,
+    top: `${placement.y}%`,
+    width: `${placement.width}%`,
+    zIndex: placement.layer,
+    "--gecko-mobile-target-left": `${mobile.x}%`,
+    "--gecko-mobile-target-top": `${mobile.y}%`,
+    "--gecko-mobile-target-width": `${mobile.width}%`,
+  } as CSSProperties;
+}
+
+function mobileThermometerPlacementStyle(
+  placement: { x: number; y: number; width: number },
+  mobilePlacement?: { x: number; y: number; width: number },
+): CSSProperties {
+  const mobile = mobilePlacement ?? placement;
+  return {
+    left: `${placement.x}%`,
+    top: `${placement.y}%`,
+    width: `${placement.width}%`,
+    "--gecko-mobile-target-left": `${mobile.x}%`,
+    "--gecko-mobile-target-top": `${mobile.y}%`,
+    "--gecko-mobile-target-width": `${mobile.width}%`,
+  } as CSSProperties;
+}
 
 function completedTerrariumItemStyle(item: CompletedTerrariumItem): CSSProperties {
   const mobilePlacement = item.mobilePlacement ?? item.placement;
@@ -388,7 +421,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
             <div className="gecko-temperature-layout">
               <article
                 className="gecko-thermometer gecko-thermometer--warm"
-                style={{ left: `${config.temperature.warmPlacement.x}%`, top: `${config.temperature.warmPlacement.y}%`, width: `${config.temperature.warmPlacement.width}%` }}
+                style={mobileThermometerPlacementStyle(config.temperature.warmPlacement, config.temperature.warmMobilePlacement)}
               >
                 <span
                   className="gecko-thermometer-label"
@@ -405,7 +438,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
               </article>
               <article
                 className="gecko-thermometer gecko-thermometer--cool"
-                style={{ left: `${config.temperature.coolPlacement.x}%`, top: `${config.temperature.coolPlacement.y}%`, width: `${config.temperature.coolPlacement.width}%` }}
+                style={mobileThermometerPlacementStyle(config.temperature.coolPlacement, config.temperature.coolMobilePlacement)}
               >
                 <img
                   src={config.temperature.coolThermometer}
@@ -439,7 +472,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
             {waterSceneItem && <button
               type="button"
               className="gecko-water-target"
-              style={{ left: `${config.water.interactivePlacement.x}%`, top: `${config.water.interactivePlacement.y}%`, width: `${config.water.interactivePlacement.width}%`, zIndex: config.water.interactivePlacement.layer }}
+              style={mobileScenePlacementStyle(config.water.interactivePlacement, config.water.mobileInteractivePlacement)}
               onClick={() => {
                 if (waterFilled || waterReplacementInProgress.current) return;
                 waterReplacementInProgress.current = true;
@@ -468,7 +501,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
             <button
               type="button"
               className="gecko-feces-target"
-              style={{ left: `${config.feces.scenePlacement.x}%`, top: `${config.feces.scenePlacement.y}%`, width: `${config.feces.scenePlacement.width}%`, zIndex: config.feces.scenePlacement.layer }}
+              style={mobileScenePlacementStyle(config.feces.scenePlacement, config.feces.mobileScenePlacement)}
               onClick={() => setOpenId(config.feces.id)}
               aria-label="點擊底材上的排泄物進行觀察"
             >

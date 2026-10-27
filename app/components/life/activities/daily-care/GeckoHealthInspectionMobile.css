@@ -124,8 +124,11 @@
   }
 
   /* 溫度確認：溫度計貼在玻璃兩側，標籤跟隨溫度計排列。 */
-  .gecko-thermometer--warm { left: 89% !important; top: 43% !important; width: 12% !important; }
-  .gecko-thermometer--cool { left: 12% !important; top: 43% !important; width: 9% !important; }
+  .gecko-thermometer {
+    left: var(--gecko-mobile-target-left) !important;
+    top: var(--gecko-mobile-target-top) !important;
+    width: var(--gecko-mobile-target-width) !important;
+  }
   .gecko-thermometer-label {
     top: auto !important;
     left: auto !important;
@@ -174,8 +177,15 @@
   .gecko-temperature-actions .primary { min-height: 48px; width: 100%; justify-content: center; }
 
   /* 飲水更換／排泄觀察：可點擊物件放在底材上，點擊範圍至少 44 × 44px，只引導當前目標。 */
-  .gecko-water-target { left: 46% !important; top: 61% !important; width: 12% !important; min-width: 44px; min-height: 44px; padding: 0; }
-  .gecko-feces-target { left: 68% !important; top: 59% !important; width: 11% !important; min-width: 44px; min-height: 44px; padding: 0; }
+  .gecko-water-target,
+  .gecko-feces-target {
+    left: var(--gecko-mobile-target-left) !important;
+    top: var(--gecko-mobile-target-top) !important;
+    width: var(--gecko-mobile-target-width) !important;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
   .gecko-water-target > span,
   .gecko-feces-target > span { display: none; }
   .gecko-water-target:not(:disabled) img,

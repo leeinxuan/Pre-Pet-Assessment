@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Room and departure scenes rely on native image sizing for existing drag coordinates and overlays. */
 /* eslint-disable react-hooks/refs -- The scene event handlers read the in-flight guard only after user interaction. */
 
-import type { CSSProperties, MouseEvent } from "react";
+import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getExpenseForSpecies, money } from "../../data/shared/expenses";
 import { initialHomeReadinessState, type HomeReadinessState } from "../../data/shared/home-readiness-state";
@@ -544,7 +544,7 @@ export function RoomPreparation({
     setRoomCheckMessage(messages.length > 0 ? messages.join("，") : "房間還沒準備好，請再確認用品與危險物品");
   }
 
-  const renderRoomScene = (mobile: boolean) => (
+  const renderRoomScene = (mobile: boolean, mobileOverlay?: ReactNode) => (
           <div ref={mobile ? mobileRoomSceneRef : roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${usesDedicatedMobileRoomBackground ? "room-scene--dedicated-mobile-background" : ""} ${floorHazardComplete ? "room-scene--floor-safe" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${interiorUsesOwnAspectRatio ? "room-flow-scene--custom-aspect" : ""} ${roomSceneReady || mobile ? "room-scene-ready" : ""} ${mobile ? "room-mobile-scene" : ""}`} style={interiorUsesOwnAspectRatio ? { "--room-flow-aspect-ratio": roomFlow?.interiorBackgroundAspectRatio } as CSSProperties : undefined} role="group" aria-label="寵物生活空間" onClick={mobile ? secureMobileHazardFromScene : undefined}>
             {!mobile && activeHazard && <HazardInfoPanel hazard={activeHazard} petName={displayName} onClose={() => setActiveHazardInfo(null)} />}
             {roomBackground ? usesDedicatedMobileRoomBackground ? <picture className="room-scene-background room-scene-background--dedicated-mobile">
@@ -585,6 +585,7 @@ export function RoomPreparation({
               <img src={roomScene.doorplate.image} alt={roomScene.doorplate.alt} />
               <span className="pet-doorplate-name">{displayName}</span>
             </div>}
+            {mobileOverlay}
             {mobile && roomCheckMessage && <p className="room-mobile-scene-message" role="alert">{roomCheckMessage}</p>}
           </div>
   );
@@ -650,7 +651,7 @@ export function RoomPreparation({
         <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="primary" onClick={completeRoomCheck}>完成房間檢查，準備出發 <span>→</span></button></div>
       </div>
       </div>
-      <RoomPreparationMobile key={species} petName={displayName} scene={renderRoomScene(true)} hazardBackground={roomFlow?.initialMobileBackground ?? roomFlow?.initialBackground ?? roomScene.mobileBackground ?? roomScene.background ?? ""} hazards={activeHazards} items={activeRoomItems} securedHazards={securedHazards} selectedItems={selectedItems} activeHazard={activeHazard} activeItem={activeRoomItems.find((item) => item.id === activeMobileItemInfo)} hazardsCleared={hazardsCleared} lockedItemIds={hasInteriorRoomFlow && !insideView ? activeRoomItems.filter((item) => !outsideItemIds.includes(item.id)).map((item) => item.id) : []} hazardIcon={<WarningTriangleIcon />} supplyIcon={<StorageBoxIcon />} onSelectHazard={(id) => { setActiveMobileItemInfo(null); setActiveHazardInfo(id); }} onSelectItem={(id) => { setActiveHazardInfo(null); setActiveMobileItemInfo(id); }} onCloseInfo={closeMobileInfo} onPrepare={prepareItem} roomComplete={mobileRoomComplete} onComplete={completeRoomCheck} itemPrice={(item) => mobileRoomPriceText(item, species)} />
+      <RoomPreparationMobile key={species} petName={displayName} scene={(overlay) => renderRoomScene(true, overlay)} supplyHintPlacement={roomScene.mobileSupplyHintPlacement} hazardBackground={roomFlow?.initialMobileBackground ?? roomFlow?.initialBackground ?? roomScene.mobileBackground ?? roomScene.background ?? ""} hazards={activeHazards} items={activeRoomItems} securedHazards={securedHazards} selectedItems={selectedItems} activeHazard={activeHazard} activeItem={activeRoomItems.find((item) => item.id === activeMobileItemInfo)} hazardsCleared={hazardsCleared} lockedItemIds={hasInteriorRoomFlow && !insideView ? activeRoomItems.filter((item) => !outsideItemIds.includes(item.id)).map((item) => item.id) : []} hazardIcon={<WarningTriangleIcon />} supplyIcon={<StorageBoxIcon />} onSelectHazard={(id) => { setActiveMobileItemInfo(null); setActiveHazardInfo(id); }} onSelectItem={(id) => { setActiveHazardInfo(null); setActiveMobileItemInfo(id); }} onCloseInfo={closeMobileInfo} onPrepare={prepareItem} roomComplete={mobileRoomComplete} onComplete={completeRoomCheck} itemPrice={(item) => mobileRoomPriceText(item, species)} />
     </div>
   );
 }
