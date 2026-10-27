@@ -11,11 +11,11 @@ export const birdRoomDoorplatePlacement = {
 } as const;
 
 export const birdRoomItems: RoomItem[] = [
-  { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底；材質選白鐵，避免烤漆或鍍鋅。" },
-  { id: "food-initial", label: "主食飼料", icon: "◈", image: birdAssets.room.initialFood, placement: { x: 55, y: 60, width: 10, layer: 4 }, required: false, need: "飲食", expenseId: "bird-food-initial", description: "依食性選購：種子飼料、滋養丸或吸蜜粉。" },
+  { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, mobilePlacement: { x: 70, y: 40, width: 15 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底；材質選白鐵，避免烤漆或鍍鋅。" },
+  { id: "food-initial", label: "主食飼料", icon: "◈", image: birdAssets.room.initialFood, placement: { x: 55, y: 60, width: 10, layer: 4 }, mobilePlacement: { x: 55, y: 60, width: 10 }, required: false, need: "飲食", expenseId: "bird-food-initial", description: "依食性選購：種子飼料、滋養丸或吸蜜粉。" },
   {
     id: "perch-set", label: "不同材質的棲木", icon: "━", image: birdAssets.room.perch,
-    placement: { x: 50, y: 54, width: 30, layer: 3 }, required: true, need: "休息", expenseId: "bird-perch-set",
+    placement: { x: 50, y: 54, width: 30, layer: 3 }, mobilePlacement: { x: 50, y: 54, width: 30 }, required: true, need: "休息", expenseId: "bird-perch-set",
     description: "足趾環繞棲木圓周約 2/3 為合適粗細；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
     // 籠內三張棲木分開定位；每筆均可獨立調整桌機／手機位置、尺寸與圖層。
     sceneParts: [
@@ -24,22 +24,22 @@ export const birdRoomItems: RoomItem[] = [
       { id: "perch-3", image: birdAssets.room.perchParts[2], placement: { x: 40, y: 43, width: 38, layer: 5 }, mobilePlacement: { x: 35, y: 72, width: 38 } },
     ],
   },
-  { id: "bird-food-bowl", label: "專用食碗", icon: "🥣", image: birdAssets.room.bowl, placement: { x: 85, y: 50, width: 30, layer: 4 }, required: true, need: "飲食", expenseId: "bird-food-bowl", description: "依食性提供專用飼料，並留意碗中是否只剩空殼。" },
-  { id: "bird-water-bowl", label: "飲水器", icon: "💧", image: birdAssets.room.water, placement: { x: 77, y: 42, width: 30, layer: 3 }, required: true, need: "飲食", expenseId: "bird-water-bowl", description: "每天換水並清洗容器；避免過深容器造成跌落風險。" },
-  { id: "bird-chew-toy", label: "天然啃咬玩具", icon: "✦", image: birdAssets.room.toy, placement: { x: 75, y: 20, width: 35, layer: 4 }, required: false, need: "活動", expenseId: "bird-chew-toy", description: "木材、麻繩等天然材質可提供安全啃咬與紓壓。" },
-  { id: "bird-climbing-toy", label: "攀爬玩具", icon: "⌁", image: birdAssets.room.climbingToy, placement: { x: 12, y: 48, width: 40, layer: 4 }, required: false, need: "活動", expenseId: "bird-climbing-toy", description: "增加籠內活動與探索機會，定期輪換更有新鮮感。" },
-  { id: "bird-sleeping-tent", label: "布窩", icon: "⌂", image: birdAssets.room.sleepingTent, placement: { x: 55, y: 12, width: 30, layer: 4 }, required: false, need: "休息", expenseId: "bird-sleeping-tent", description: "提供遮蔽感與保暖，部分鸚鵡（尤其玄鳳）喜歡在布窩中休息；需定期清洗並修剪鬆脫線頭。" },
-  { id: "bird-feces-tray", label: "籠底墊料", icon: "▤", image: birdAssets.room.tray, placement: { x: 50, y: 79, width: 28, layer: 3 }, required: true, need: "清潔", expenseIds: ["bird-feces-tray", "bird-cleaning-monthly"], description: "每天更換墊料，才能觀察糞便並維持環境衛生；可使用報紙、餐巾紙、紙棉等材質，避免使用有香氣的產品。" },
-  { id: "bird-thermometer", label: "溫度計", icon: "℃", image: birdAssets.room.thermometer, placement: { x: 27, y: 16, width: 20, layer: 4 }, required: false, need: "安全", expenseId: "bird-thermometer", description: "鳥對溫度變化敏感，需要具體數據協助調整環境。" },
+  { id: "bird-food-bowl", label: "專用食碗", icon: "🥣", image: birdAssets.room.bowl, placement: { x: 85, y: 50, width: 30, layer: 4 }, mobilePlacement: { x: 85, y: 50, width: 30 }, required: true, need: "飲食", expenseId: "bird-food-bowl", description: "依食性提供專用飼料，並留意碗中是否只剩空殼。" },
+  { id: "bird-water-bowl", label: "飲水器", icon: "💧", image: birdAssets.room.water, placement: { x: 77, y: 42, width: 30, layer: 3 }, mobilePlacement: { x: 77, y: 42, width: 30 }, required: true, need: "飲食", expenseId: "bird-water-bowl", description: "每天換水並清洗容器；避免過深容器造成跌落風險。" },
+  { id: "bird-chew-toy", label: "天然啃咬玩具", icon: "✦", image: birdAssets.room.toy, placement: { x: 75, y: 20, width: 35, layer: 4 }, mobilePlacement: { x: 75, y: 20, width: 35 }, required: false, need: "活動", expenseId: "bird-chew-toy", description: "木材、麻繩等天然材質可提供安全啃咬與紓壓。" },
+  { id: "bird-climbing-toy", label: "攀爬玩具", icon: "⌁", image: birdAssets.room.climbingToy, placement: { x: 12, y: 48, width: 40, layer: 4 }, mobilePlacement: { x: 12, y: 48, width: 40 }, required: false, need: "活動", expenseId: "bird-climbing-toy", description: "增加籠內活動與探索機會，定期輪換更有新鮮感。" },
+  { id: "bird-sleeping-tent", label: "布窩", icon: "⌂", image: birdAssets.room.sleepingTent, placement: { x: 55, y: 12, width: 30, layer: 4 }, mobilePlacement: { x: 55, y: 12, width: 30 }, required: false, need: "休息", expenseId: "bird-sleeping-tent", description: "提供遮蔽感與保暖，部分鸚鵡（尤其玄鳳）喜歡在布窩中休息；需定期清洗並修剪鬆脫線頭。" },
+  { id: "bird-feces-tray", label: "籠底墊料", icon: "▤", image: birdAssets.room.tray, placement: { x: 50, y: 79, width: 28, layer: 3 }, mobilePlacement: { x: 50, y: 79, width: 28 }, required: true, need: "清潔", expenseIds: ["bird-feces-tray", "bird-cleaning-monthly"], description: "每天更換墊料，才能觀察糞便並維持環境衛生；可使用報紙、餐巾紙、紙棉等材質，避免使用有香氣的產品。" },
+  { id: "bird-thermometer", label: "溫度計", icon: "℃", image: birdAssets.room.thermometer, placement: { x: 27, y: 16, width: 20, layer: 4 }, mobilePlacement: { x: 27, y: 16, width: 20 }, required: false, need: "安全", expenseId: "bird-thermometer", description: "鳥對溫度變化敏感，需要具體數據協助調整環境。" },
 ];
 
 export const birdHazards: HazardItem[] = [
-  { id: "teflon-pan", label: "鐵氟龍不沾鍋", icon: "⚠", image: birdAssets.room.hazards.teflonPan, placement: { x: 23, y: 65, width: 10, layer: 5 }, danger: "高溫可能產生對鳥致命的有毒氣體，養鳥家庭必須完全停用。", handling: "移除並改用不含鐵氟龍的鍋具。" },
-  { id: "incense-candle", label: "線香／薰香蠟燭", icon: "♨", image: birdAssets.room.hazards.incenseCandle, placement: { x: 34, y: 63, width: 8, layer: 5 }, danger: "揮發性氣味與煙霧會傷害敏感的鳥類呼吸道。", handling: "不要在鳥的生活空間使用香氛或精油。" },
-  { id: "spray-aerosol", label: "噴霧清潔劑／芳香劑", icon: "☁", image: birdAssets.room.hazards.sprayAerosol, placement: { x: 60, y: 85, width: 10, layer: 5 }, danger: "噴霧化學物質會刺激鳥類呼吸道。", handling: "改用無揮發、對鳥安全的清潔方式。" },
-  { id: "toxic-plant", label: "有毒植物", icon: "✿", image: birdAssets.room.plant, placement: { x: 55, y: 55, width: 15, layer: 5 }, danger: "鳥可能啃咬植物，部分常見植物會造成中毒，例如黛粉葉、水仙、夾竹桃、鈴蘭、聖誕紅、常春藤等。", handling: "移出鳥能接觸的範圍並確認植物安全。" },
-  { id: "mirror-toy", label: "鏡子／身形相似玩具", icon: "◇", image: birdAssets.room.hazards.mirrorToy, placement: { x: 80, y: 60, width: 12, layer: 5 }, danger: "長期把倒影當同類互動，可能影響社交並誘發發情。", handling: "移除鏡子，改提供可輪換的天然玩具。" },
-  { id: "round-cage", label: "圓形鳥籠", icon: "○", image: birdAssets.room.hazards.roundCage, placement: { x: 70, y: 38, width: 18, layer: 5 }, danger: "圓形籠缺少角落可倚靠，長期可能增加緊迫。", handling: "更換為方形、尺寸與格柵合適的金屬鳥籠。" },
+  { id: "teflon-pan", label: "鐵氟龍不沾鍋", icon: "⚠", image: birdAssets.room.hazards.teflonPan, placement: { x: 23, y: 65, width: 10, layer: 5 }, mobilePlacement: { x: 23, y: 65, width: 10 }, danger: "高溫可能產生對鳥致命的有毒氣體，養鳥家庭必須完全停用。", handling: "移除並改用不含鐵氟龍的鍋具。" },
+  { id: "incense-candle", label: "線香／薰香蠟燭", icon: "♨", image: birdAssets.room.hazards.incenseCandle, placement: { x: 34, y: 63, width: 8, layer: 5 }, mobilePlacement: { x: 34, y: 63, width: 8 }, danger: "揮發性氣味與煙霧會傷害敏感的鳥類呼吸道。", handling: "不要在鳥的生活空間使用香氛或精油。" },
+  { id: "spray-aerosol", label: "噴霧清潔劑／芳香劑", icon: "☁", image: birdAssets.room.hazards.sprayAerosol, placement: { x: 60, y: 85, width: 10, layer: 5 }, mobilePlacement: { x: 60, y: 85, width: 10 }, danger: "噴霧化學物質會刺激鳥類呼吸道。", handling: "改用無揮發、對鳥安全的清潔方式。" },
+  { id: "toxic-plant", label: "有毒植物", icon: "✿", image: birdAssets.room.plant, placement: { x: 55, y: 55, width: 15, layer: 5 }, mobilePlacement: { x: 55, y: 55, width: 15 }, danger: "鳥可能啃咬植物，部分常見植物會造成中毒，例如黛粉葉、水仙、夾竹桃、鈴蘭、聖誕紅、常春藤等。", handling: "移出鳥能接觸的範圍並確認植物安全。" },
+  { id: "mirror-toy", label: "鏡子／身形相似玩具", icon: "◇", image: birdAssets.room.hazards.mirrorToy, placement: { x: 80, y: 60, width: 12, layer: 5 }, mobilePlacement: { x: 80, y: 60, width: 12 }, danger: "長期把倒影當同類互動，可能影響社交並誘發發情。", handling: "移除鏡子，改提供可輪換的天然玩具。" },
+  { id: "round-cage", label: "圓形鳥籠", icon: "○", image: birdAssets.room.hazards.roundCage, placement: { x: 70, y: 38, width: 18, layer: 5 }, mobilePlacement: { x: 70, y: 38, width: 18 }, danger: "圓形籠缺少角落可倚靠，長期可能增加緊迫。", handling: "更換為方形、尺寸與格柵合適的金屬鳥籠。" },
 ];
 
 export const birdTrunkItems: TrunkItem[] = [

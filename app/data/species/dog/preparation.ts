@@ -38,7 +38,7 @@ export const dogDepartureTrunkItems: TrunkItem[] = [
   { id: "pee-pad", label: "尿墊", kind: "supply", image: "/assets/car/pee-pad.webp", preparedLabel: "已準備", description: "接回途中可降低排泄與清潔壓力。", expenseIds: ["toilet"], reusedExpenseIds: ["toilet"], placement: { x: 49, y: 66, width: 20, layer: 6 } },
   { id: "water-kit", label: "水碗", kind: "supply", image: "/assets/car/water-bottle.webp", preparedLabel: "已準備", description: "必要時補充飲水，避免長時間缺水。", expenseIds: ["water-kit"], placement: { x: 55, y: 67, width: 27, layer: 6 } },
   { id: "leash", label: "牽繩", kind: "supply", image: "/assets/car/leash.webp", preparedLabel: "已準備", description: "下車或移動時維持安全防護。", expenseIds: ["dog-leash"], placement: { x: 30, y: 60, width: 25, layer: 4 } },
-  { id: "cleaner", label: "寵物專用清潔用品", kind: "supply", image: "/assets/dog/room/cleaner.webp", preparedLabel: "已準備", description: "處理接回途中可能發生的髒污。", expenseIds: ["dog-cleaner-kit"], placement: { x: 35, y: 68, width: 12, layer: 8 } },
+  { id: "cleaner", label: "寵物專用清潔用品", kind: "supply", image: "/assets/dog/room/cleaner.webp", preparedLabel: "已準備", description: "處理接回途中可能發生的髒污。", expenseIds: ["dog-cleaner-kit"], placement: { x: 35, y: 65, width: 14, layer: 8 } },
 ];
 
 /** 犬隻房間、危險物、接回與餵食的共用資料。 */

@@ -46,6 +46,7 @@ export const geckoHazards: HazardItem[] = [
     label: "牆縫/管道開口",
     icon: "↗",
     placement: { x: 82, y: 62, width: 1, layer: 4 },
+    mobilePlacement: { x: 82, y: 62, width: 1 },
     hotspot: { desktop: { x: 92, y: 40, width: 14, height: 62 }, mobile: { x: 74, y: 57, width: 20, height: 30 } },
     danger: "守宮體型小、善於穿縫，逃脫後極難救援。",
     handling: "請封閉所有牆縫與管道開口。",
@@ -101,7 +102,7 @@ export const geckoRoomItems: RoomItem[] = [
   },
   {
     id: "thermometer-hygrometer", label: "數位溫濕度計", icon: "◷", image: geckoAssets.room.thermometerHygrometer,
-    placement: { x: 72, y: 25, width: 12, layer: 6 }, required: true, need: "安全", expenseId: "gecko-thermometer-2",
+    placement: { x: 72, y: 25, width: 12, layer: 6 }, mobilePlacement: { x: 72, y: 25, width: 12 }, required: true, need: "安全", expenseId: "gecko-thermometer-2",
     description: "至少兩個分別置於暖側與涼側，隨時確認溫度梯度是否正確，濕度維持 30–50%。",
     sceneParts: [
       { id: "cool-side", image: geckoAssets.room.thermometerHygrometerCool, placement: { x: 22, y: 47, width: 22, layer: 6 }, mobilePlacement: { x: 18, y: 32, width: 16 } },

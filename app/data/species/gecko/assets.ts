@@ -38,7 +38,8 @@ export const geckoAssets = {
   },
   healthInspection: {
     terrariumBackground: "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
-    terrariumBackgroundMobile: "/assets/gecko/room/bg-gecko-terrarium-heat-mat-mobile.webp",
+    // 手機互動場景沿用桌機熱墊背景，避免以 mobile 裁切版本遺失缸內資訊。
+    terrariumBackgroundMobile: "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
     body: "/assets/gecko/room/gecko.webp",
     magnifier: "/assets/shared/magnifier.webp",
     warmThermometer: "/assets/gecko/room/thermometer-hygrometer-warm.webp",

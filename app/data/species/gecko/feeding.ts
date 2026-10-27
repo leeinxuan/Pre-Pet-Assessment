@@ -19,7 +19,8 @@ const imageSizes: ArrivalMealSupplyImageSizes = {
 };
 
 /** 桌機與手機位置皆由守宮資料設定，與其他物種互不影響。 */
-const sceneLayout: ArrivalMealSceneLayout = {
+/** 第一餐場景可在 desktop／mobile 分別調整素材位置與大小。 */
+export const geckoArrivalMealSceneLayout: ArrivalMealSceneLayout = {
   desktop: {
     pet: { left: 40, bottom: 12, width: 31, maxHeight: 72 },
     food: { left: 22, bottom: 18, width: 17, maxHeight: 30 },
@@ -62,6 +63,6 @@ export const geckoFeeding: FeedingConfig = {
     },
     veggie: { empty: geckoAssets.room.shallowWaterDish, ready: geckoAssets.room.calciumDish, alt: "裝好鈣粉的補鈣碟" },
   },
-  arrivalMealSceneLayout: sceneLayout,
+  arrivalMealSceneLayout: geckoArrivalMealSceneLayout,
   arrivalMealSupplyImageSizes: imageSizes,
 };

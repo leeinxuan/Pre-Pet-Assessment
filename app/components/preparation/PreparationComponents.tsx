@@ -312,7 +312,6 @@ export function RoomPreparation({
   petName,
   onPrepare,
   onToggleHazard,
-  onBack,
   onReplay,
   onNext,
   reviewing = false,
@@ -323,7 +322,6 @@ export function RoomPreparation({
   petName: string;
   onPrepare: (id: string) => void;
   onToggleHazard: (id: string) => void;
-  onBack: () => void;
   onReplay: () => void;
   onNext: () => void;
   reviewing?: boolean;
@@ -648,7 +646,7 @@ export function RoomPreparation({
         </div>
       </div>
       <div className="room-actions">
-        <button className="secondary" onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
+        {reviewing && <button className="secondary" onClick={onReplay}>↻ 再玩一次</button>}
         <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="primary" onClick={completeRoomCheck}>完成房間檢查，準備出發 <span>→</span></button></div>
       </div>
       </div>
@@ -693,7 +691,7 @@ export function CareMemberSetup({ members, onChange, onBack, onNext }: { members
   </div>;
 }
 
-export function CarTrunkPreparation({ selected, petName, species = "dog", onSelect, onBack, onReplay, onNext, reviewing = false }: { selected: string[]; petName: string; breed: string; species?: string; onSelect: (id: string) => void; onBack: () => void; onReplay: () => void; onNext: () => void; reviewing?: boolean }) {
+export function CarTrunkPreparation({ selected, petName, species = "dog", onSelect, onReplay, onNext, reviewing = false }: { selected: string[]; petName: string; breed: string; species?: string; onSelect: (id: string) => void; onReplay: () => void; onNext: () => void; reviewing?: boolean }) {
   const speciesConfig = getSpeciesConfig(species);
   const displayName = petName.trim() || speciesConfig.copy.animalNameFallback;
   const activeTrunkItems = speciesConfig.trunkItems;
@@ -767,7 +765,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
       </section>
     </div>
     <div className={`departure-actions${complete ? " is-complete" : ""}`}>
-      <button type="button" className={`secondary departure-return-button${reviewing ? " is-replay" : ""}`} onClick={reviewing ? onReplay : onBack}>{reviewing ? "↻ 再玩一次" : "← 返回"}</button>
+      {reviewing && <button type="button" className="secondary departure-return-button is-replay" onClick={onReplay}>↻ 再玩一次</button>}
       <div><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
     </div>
     <MobileInfoSheet content={mobileInfo} onClose={() => setMobileInfo(null)} />

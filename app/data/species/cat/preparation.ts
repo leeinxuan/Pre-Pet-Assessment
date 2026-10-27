@@ -6,24 +6,24 @@ import { dogDepartureTrunkItems } from "../dog/preparation";
 /** 貓咪房間用品與危險物的位置；資料緊鄰實際用品定義，避免分散維護。 */
 export const catRoomPlacements = {
   "cat-safe-window": { placement: { x: 88, y: 44, width: 11, layer: 5 }, mobilePlacement: { x: 86, y: 45, width: 17 } },
-  "cat-hide-box": { placement: { x: 70, y: 87, width: 15, layer: 3 }, mobilePlacement: { x: 58, y: 74, width: 32 } },
-  "cat-rest-space": { placement: { x: 70, y: 70, width: 18, layer: 2 }, mobilePlacement: { x: 70, y: 84, width: 28 } },
-  "cat-litter-box": { placement: { x: 14, y: 86, width: 20, layer: 2 }, mobilePlacement: { x: 15, y: 78, width: 30 } },
-  "cat-litter": { placement: { x: 30, y: 88, width: 12, layer: 5 }, mobilePlacement: { x: 28, y: 78, width: 22 } },
-  "cat-food-bowl": { placement: { x: 52, y: 89, width: 10, layer: 3 }, mobilePlacement: { x: 37, y: 87, width: 17 } },
-  "cat-water-bowl": { placement: { x: 42, y: 89, width: 10, layer: 3 }, mobilePlacement: { x: 22, y: 88, width: 18 } },
-  "cat-scratcher": { placement: { x: 30, y: 70, width: 12, layer: 4 }, mobilePlacement: { x: 68, y: 83, width: 20 } },
-  "cat-tree": { placement: { x: 90, y: 80, width: 20, layer: 2 }, mobilePlacement: { x: 78, y: 66, width: 27 } },
-  "cat-safe-toy": { placement: { x: 50, y: 65, width: 10, layer: 4 }, mobilePlacement: { x: 49, y: 83, width: 17 } },
+  "cat-hide-box": { placement: { x: 70, y: 87, width: 15, layer: 3 }, mobilePlacement: { x: 65, y: 85, width: 20 } },
+  "cat-rest-space": { placement: { x: 70, y: 70, width: 18, layer: 2 }, mobilePlacement: { x: 80, y: 70, width: 28 } },
+  "cat-litter-box": { placement: { x: 14, y: 86, width: 20, layer: 2 }, mobilePlacement: { x: 15, y: 87, width: 25 } },
+  "cat-litter": { placement: { x: 30, y: 88, width: 12, layer: 5 }, mobilePlacement: { x: 32, y: 85, width: 15 } },
+  "cat-food-bowl": { placement: { x: 52, y: 89, width: 10, layer: 3 }, mobilePlacement: { x: 53, y: 93, width: 12 } },
+  "cat-water-bowl": { placement: { x: 42, y: 89, width: 10, layer: 5 }, mobilePlacement: { x: 40, y: 93, width: 12 } },
+  "cat-scratcher": { placement: { x: 30, y: 70, width: 12, layer: 4 }, mobilePlacement: { x: 10, y: 68, width: 20 } },
+  "cat-tree": { placement: { x: 90, y: 80, width: 20, layer: 2 }, mobilePlacement: { x: 86, y: 82, width: 27 } },
+  "cat-safe-toy": { placement: { x: 50, y: 65, width: 10, layer: 4 }, mobilePlacement: { x: 49, y: 65, width: 17 } },
 } as const;
 
 export const catHazardPlacements = {
-  "cat-toxic-plants": { placement: { x: 45, y: 62, width: 11, layer: 5 }, mobilePlacement: { x: 28, y: 52, width: 17 } },
-  "cat-human-medicine": { placement: { x: 55, y: 67, width: 9, layer: 5 }, mobilePlacement: { x: 83, y: 76, width: 15 } },
-  "cat-string": { placement: { x: 12, y: 79, width: 12, layer: 5 }, mobilePlacement: { x: 13, y: 80, width: 24 } },
-  "cat-essential-oil": { placement: { x: 93, y: 55, width: 9, layer: 5 }, mobilePlacement: { x: 58, y: 66, width: 15 } },
-  "cat-cleaner": { placement: { x: 69, y: 71, width: 9, layer: 5 }, mobilePlacement: { x: 70, y: 70, width: 15 } },
-  "cat-cooling-product": { placement: { x: 80, y: 85, width: 14, layer: 5 }, mobilePlacement: { x: 86, y: 45, width: 17 } },
+  "cat-toxic-plants": { placement: { x: 45, y: 62, width: 11, layer: 5 }, mobilePlacement: { x: 50, y: 60, width: 17 } },
+  "cat-human-medicine": { placement: { x: 55, y: 67, width: 9, layer: 5 }, mobilePlacement: { x: 38, y: 65, width: 13 } },
+  "cat-string": { placement: { x: 12, y: 79, width: 12, layer: 5 }, mobilePlacement: { x: 13, y: 80, width: 20 } },
+  "cat-essential-oil": { placement: { x: 93, y: 55, width: 9, layer: 5 }, mobilePlacement: { x: 60, y: 64, width: 12 } },
+  "cat-cleaner": { placement: { x: 69, y: 71, width: 9, layer: 5 }, mobilePlacement: { x: 85, y: 70, width: 15 } },
+  "cat-cooling-product": { placement: { x: 80, y: 85, width: 14, layer: 5 }, mobilePlacement: { x: 74, y: 85, width: 17 } },
 } as const;
 
 export const catRoomDoorplatePlacement = {
@@ -56,7 +56,7 @@ export const catHazards: HazardItem[] = [
   { id: "cat-human-medicine", label: "人類藥品", icon: "▣", image: catAssets.room.humanMedicine, ...catHazardPlacements["cat-human-medicine"], danger: "人用藥品不應自行給貓使用，誤食也可能造成中毒。", handling: "收到有門的櫃內，並避免把藥放在桌面或包包外層。" },
   { id: "cat-string", label: "線狀異物", icon: "⌁", image: catAssets.room.yarn, ...catHazardPlacements["cat-string"], danger: "線、繩、橡皮筋等可能被吞食，造成腸胃阻塞或傷害。", handling: "收進抽屜或盒內，玩具使用後也要收好。" },
   { id: "cat-essential-oil", label: "精油／薰香", icon: "◍", image: catAssets.room.fragrance, ...catHazardPlacements["cat-essential-oil"], danger: "部分精油與薰香對貓不適合，密閉空間中風險更高。", handling: "避免在貓咪活動區使用，並保持通風與安全距離。" },
-  { id: "cat-cleaner", label: "清潔劑", icon: "🧴", image: "/assets/dog/room/detergent.webp", ...catHazardPlacements["cat-cleaner"], danger: "清潔劑可能刺激皮膚、呼吸道或被舔入體內。", handling: "使用後確實收納，地面乾燥前避免貓咪進入。" },
+  { id: "cat-cleaner", label: "一般清潔劑", icon: "🧴", image: "/assets/dog/room/detergent.webp", ...catHazardPlacements["cat-cleaner"], danger: "清潔劑可能刺激皮膚、呼吸道或被舔入體內。", handling: "使用後確實收納，地面乾燥前避免貓咪進入。" },
   { id: "cat-cooling-product", label: "涼感產品", icon: "❄", image: catAssets.room.coolingMat, ...catHazardPlacements["cat-cooling-product"], danger: "部分涼感墊、冰包或凝膠產品若被咬破，可能造成誤食、滑倒或受傷風險。", handling: "改用通風陰涼處、乾淨飲水與可清洗墊材；任何降溫用品都要確認材質安全並避免貓咪啃咬。" },
 ];
 

@@ -222,7 +222,7 @@ export function ArrivalMealActivity({
         {veggieSceneAsset && feeding.scene.veggie && <img className="arrival-meal-veggie" style={arrivalMealPlacementStyle(arrivalMealSceneLayout, "veggie")} src={veggieSceneAsset} alt={activity.arrivalMealVeggieReady ? feeding.scene.veggie.alt : "空的補鈣碟"} />}
         </>}
       </div>
-      <div className="arrival-meal-footer">
+      <div className={`arrival-meal-footer${complete ? " is-complete" : ""}${feeding.interaction === "choice" && choiceFeedback ? " has-feedback" : ""}`}>
         {feeding.interaction === "choice" && choiceFeedback && <p className={`guided-activity-feedback ${choiceFeedback.result}`} role="status">{interpolatePetName(choiceFeedback.feedback, petName)}</p>}
         {complete && <p className="arrival-meal-completion-message" role="status">{feeding.completionMessage}</p>}
         <button className="primary arrival-meal-continue-button" disabled={!complete || !expenseSequenceComplete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>

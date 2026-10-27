@@ -126,6 +126,7 @@
 .departure-source a { margin-left: 10px; color: var(--gold-dark); font-weight: 900; }
 .departure-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
 .departure-actions > div { display: flex; gap: 10px; }
+.departure-actions > div:only-child { margin-left: auto; }
 .departure-layout { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; transition: transform .55s, opacity .55s; }
 .departure-layout.departing { transform: translateX(40px) scale(.98); opacity: 0; }
 .departure-supply-shelf { min-height: 390px; padding: 17px; border: 1px solid var(--line); border-radius: 20px; background: white; }
@@ -355,6 +356,7 @@
 .task-message.success { background: var(--mint-soft); color: #4f7051; }
 .room-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
 .room-actions-right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-width: 0; }
+.room-actions > .room-actions-right:only-child { margin-left: auto; }
 .room-actions button { min-height: 44px; }
 .room-check-message { max-width: 260px; margin: 0; color: #9c5b12; font-size: 12px; font-weight: 800; line-height: 1.4; }
 
@@ -524,6 +526,9 @@
   .arrival-meal-scene { aspect-ratio: 1 / 1; }
   .arrival-meal-footer { flex-direction: column; align-items: stretch; padding: 16px; }
   .arrival-meal-footer .primary { width: 100%; }
+  /* 第一餐尚未完成時，手機版不保留空的完成按鈕列；選擇題回饋仍可顯示。 */
+  .arrival-meal-footer:not(.is-complete):not(.has-feedback) { display: none; }
+  .arrival-meal-footer:not(.is-complete) .arrival-meal-continue-button { display: none; }
   .serve-dinner { grid-column: auto; }
   .food-options { grid-template-columns: 1fr 1fr; }
 }

@@ -118,6 +118,9 @@ export default function Home() {
   const [mobilePreparationEntry, setMobilePreparationEntry] = useState(0);
   const [preparationReached, setPreparationReached] = useState(0);
   const [preparationReplayTask, setPreparationReplayTask] = useState<number | null>(null);
+  // 「可進入」和「已完成後回訪」是兩個不同狀態：側欄解鎖不能讓第一次
+  // 進入的關卡被誤判為可再玩。
+  const [completedPreparationTasks, setCompletedPreparationTasks] = useState<number[]>([]);
   const [homeReadiness, setHomeReadiness] = useState(initialHomeReadinessState);
   const [roomReady, setRoomReady] = useState<string[]>([]);
   const [hazardsReady, setHazardsReady] = useState<string[]>([]);
@@ -585,6 +588,7 @@ export default function Home() {
     setPreparationTask(0);
     setPreparationReached(0);
     setPreparationReplayTask(null);
+    setCompletedPreparationTasks([]);
     setHomeReadiness(initialHomeReadinessState);
     setRoomReady([]);
     setHazardsReady([]);
@@ -703,11 +707,11 @@ export default function Home() {
       return <HomeReadinessActivity species={category} petName={petName} state={homeReadiness} onChange={setHomeReadiness} onBack={() => goTo(1)} onNext={() => { changePreparationTask(1); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
     }
     if (preparationTask === 1) {
-      const reviewing = preparationReached >= 2 && preparationReplayTask !== 1;
-      return <RoomPreparation key={`${category}:room:${mobilePreparationEntry}`} selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setPreparationReplayTask(1); }} onBack={() => changePreparationTask(0)} onNext={() => { changePreparationTask(2); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
+      const reviewing = completedPreparationTasks.includes(1) && preparationReached >= 2 && preparationReplayTask !== 1;
+      return <RoomPreparation key={`${category}:room:${mobilePreparationEntry}`} selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setCompletedPreparationTasks((current) => current.filter((task) => task !== 1)); setPreparationReplayTask(1); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(1) ? current : [...current, 1]); changePreparationTask(2); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
     }
-    const reviewing = furthestStep >= 3 && preparationReplayTask !== 2;
-    return <CarTrunkPreparation key={`${category}:departure:${mobilePreparationEntry}`} selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setPreparationReplayTask(2); }} onBack={() => changePreparationTask(1)} onNext={() => { setPreparationReached((current) => Math.max(current, 2)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    const reviewing = completedPreparationTasks.includes(2) && furthestStep >= 3 && preparationReplayTask !== 2;
+    return <CarTrunkPreparation key={`${category}:departure:${mobilePreparationEntry}`} selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setCompletedPreparationTasks((current) => current.filter((task) => task !== 2)); setPreparationReplayTask(2); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(2) ? current : [...current, 2]); setPreparationReached((current) => Math.max(current, 2)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
   }
 
   function renderLifeJourney() {
