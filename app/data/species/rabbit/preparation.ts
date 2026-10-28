@@ -6,7 +6,7 @@ import { rabbitAssets } from "./assets";
 export const rabbitRoomDoorplatePlacement = {
   desktop: { x: 60, y: 14, width: 28 },
   desktopText: { left: 15, top: 63, width: 70, height: 13, fontSize: 16 },
-  mobile: { x: 33, y: 20, width: 40 },
+  mobile: { x: 80, y: 20, width: 40 },
   mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
 } as const;
 
@@ -26,10 +26,10 @@ export const rabbitRoomItems: RoomItem[] = [
 
 export const rabbitHazards: HazardItem[] = [
   { id: "cable", label: "電線", icon: "🔌", image: rabbitAssets.room.cable, placement: { x: 20, y: 75, width: 20, layer: 5 }, mobilePlacement: { x: 14, y: 77, width: 25 }, danger: "兔子有強烈啃咬天性，咬電線可能觸電或食入異物。", handling: "整理固定電線或加裝保護套，避免讓兔子接觸。" },
-  { id: "toxic-plant", label: "有毒植物", icon: "✿", image: rabbitAssets.room.toxicPlant, placement: { x: 40, y: 44, width: 15, layer: 5 }, mobilePlacement: { x: 82, y: 43, width: 21 }, danger: "部分常見觀葉與庭院植物對兔子有毒，例如鈴蘭、夾竹桃、繡球花、常春藤等，誤食可能造成中毒。", handling: "移出兔子能到達的活動空間，並確認家中植物安全。" },
-  { id: "plastic-item", label: "塑膠製品", icon: "▣", image: rabbitAssets.room.plasticItem, placement: { x: 43, y: 76, width: 12, layer: 5 }, mobilePlacement: { x: 44, y: 74, width: 18 }, danger: "兔子可能啃咬塑膠並食入，造成腸胃問題。", handling: "收進櫃子或改用安全材質的用品。" },
-  { id: "foam-mat-with-edges", label: "有邊角的海棉墊", icon: "◇", image: rabbitAssets.room.foamMat, placement: { x: 80, y: 80, width: 20, layer: 5 }, mobilePlacement: { x: 68, y: 89, width: 34 }, danger: "兔子啃食泡棉可能食入異物，造成腸阻塞。", handling: "改用完整、無可啃邊角的防滑墊。" },
-  { id: "high-platform", label: "過高的平台（無保護）", icon: "△", image: rabbitAssets.room.highPlatform, placement: { x: 73, y: 65, width: 18, layer: 4 }, mobilePlacement: { x: 74, y: 45, width: 24 }, danger: "兔子骨骼脆弱，從無保護的高處落下容易受傷。", handling: "移除過高平台，或改成低矮、穩固且有防護的設施。" },
+  { id: "toxic-plant", label: "有毒植物", icon: "✿", image: rabbitAssets.room.toxicPlant, placement: { x: 40, y: 44, width: 15, layer: 5 }, mobilePlacement: { x: 40, y: 45, width: 21 }, danger: "部分常見觀葉與庭院植物對兔子有毒，例如鈴蘭、夾竹桃、繡球花、常春藤等，誤食可能造成中毒。", handling: "移出兔子能到達的活動空間，並確認家中植物安全。" },
+  { id: "plastic-item", label: "塑膠製品", icon: "▣", image: rabbitAssets.room.plasticItem, placement: { x: 43, y: 76, width: 12, layer: 5 }, mobilePlacement: { x: 35, y: 70, width: 18 }, danger: "兔子可能啃咬塑膠並食入，造成腸胃問題。", handling: "收進櫃子或改用安全材質的用品。" },
+  { id: "foam-mat-with-edges", label: "有邊角的海棉墊", icon: "◇", image: rabbitAssets.room.foamMat, placement: { x: 80, y: 80, width: 20, layer: 5 }, mobilePlacement: { x: 75, y: 89, width: 25 }, danger: "兔子啃食泡棉可能食入異物，造成腸阻塞。", handling: "改用完整、無可啃邊角的防滑墊。" },
+  { id: "high-platform", label: "過高的平台（無保護）", icon: "△", image: rabbitAssets.room.highPlatform, placement: { x: 73, y: 65, width: 18, layer: 4 }, mobilePlacement: { x: 74, y: 70, width: 24 }, danger: "兔子骨骼脆弱，從無保護的高處落下容易受傷。", handling: "移除過高平台，或改成低矮、穩固且有防護的設施。" },
   { id: "slippery-floor", label: "光滑地板", icon: "▱", image: rabbitAssets.room.antiSlipMat, placement: { x: 51, y: 88, width: 67, layer: 5 }, mobilePlacement: { x: 50, y: 88, width: 84 }, danger: "滑溜地板容易讓骨骼脆弱的兔子滑倒受傷。", handling: "鋪設完整防滑墊，讓活動與休息區保持止滑。" },
 ];
 
@@ -64,6 +64,6 @@ export const rabbitRoomFlow: RoomFlowConfig = {
   },
 };
 
-export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", mobileSupplyHintPlacement: { top: 8 }, doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌", placement: rabbitRoomDoorplatePlacement } };
+export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", mobileFirstSupplyItemId: "fence-pen", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌", placement: rabbitRoomDoorplatePlacement } };
 export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂" };
 export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow, roomScene: rabbitRoomScene, departureScene: rabbitDepartureScene } as const;

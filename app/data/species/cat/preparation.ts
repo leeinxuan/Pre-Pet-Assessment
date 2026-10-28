@@ -74,7 +74,7 @@ export const catTrunkItems: TrunkItem[] = dogDepartureTrunkItems
     return item;
   });
 
-export const catRoomScene: RoomSceneConfig = { background: catAssets.room.safeRoom, mobileBackground: catAssets.room.safeRoom, safeBackground: catAssets.room.safeRoomSecured, safeBackgroundWhenItemId: "cat-safe-window", hidePlacedItemId: "cat-safe-window", backgroundAlt: "貓咪安全房", mobileSupplyHintPlacement: { top: 10 }, doorplate: { image: sharedAssets.nameplate, alt: "貓咪名字門牌", placement: catRoomDoorplatePlacement } };
+export const catRoomScene: RoomSceneConfig = { background: catAssets.room.safeRoom, mobileBackground: catAssets.room.safeRoom, safeBackground: catAssets.room.safeRoomSecured, safeBackgroundWhenItemId: "cat-safe-window", hidePlacedItemId: "cat-safe-window", backgroundAlt: "貓咪安全房", mobileFirstSupplyItemId: "cat-safe-window", doorplate: { image: sharedAssets.nameplate, alt: "貓咪名字門牌", placement: catRoomDoorplatePlacement } };
 export const catDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: "/assets/car/adoption-documents.webp", documentFolderAlt: "飼養文件夾" };
 /** 貓咪出發、房間布置與危險物的正式設定入口。 */
 export const catPreparation = {

@@ -134,27 +134,6 @@
     font-weight: 800;
     text-align: center;
   }
-  .room-mobile-supply-hint {
-    position: absolute;
-    z-index: 16;
-    top: var(--room-mobile-supply-hint-top);
-    left: 50%;
-    width: max-content;
-    max-width: var(--room-mobile-supply-hint-max-width);
-    margin: 0;
-    padding: 8px 14px;
-    border: 1px solid rgba(191, 130, 27, .28);
-    border-radius: 999px;
-    background: rgba(255, 253, 248, .96);
-    box-shadow: 0 4px 14px rgba(65, 45, 21, .16);
-    color: var(--room-mobile-ink);
-    font-size: 12px;
-    font-weight: 850;
-    line-height: 1.35;
-    text-align: center;
-    transform: translateX(-50%);
-    pointer-events: none;
-  }
   .room-mobile-tabs {
     box-sizing: border-box;
     display: grid;
@@ -215,6 +194,14 @@
   }
   .room-mobile-empty svg { width: 32px; height: 32px; color: var(--gold-dark); }
   .room-mobile-empty p { margin: 0; font-size: 14px; font-weight: 800; }
+  .room-mobile-first-supply-tutorial {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px;
+    min-height: 100%;
+  }
+  .room-mobile-first-supply-tutorial > .room-mobile-grid { width: min(100%, 118px); }
+  .room-mobile-first-supply-guide { min-height: min(180px, 100%); }
   .room-mobile-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
   .room-mobile-tile {
     position: relative;
@@ -236,6 +223,8 @@
   }
   .room-mobile-tile:disabled { cursor: default; }
   .room-mobile-tile.is-complete { background: var(--room-mobile-paper); color: var(--room-mobile-ink); }
+  .room-mobile-supply-tile.is-complete .room-mobile-thumbnail,
+  .room-mobile-supply-tile.is-complete .room-mobile-tile-label { opacity: .42; }
   .room-mobile-supply-tile.is-locked { border-color: var(--room-mobile-line); background: var(--room-mobile-tile-locked); color: var(--room-mobile-muted); }
   .room-mobile-supply-tile.is-locked .room-mobile-thumbnail,
   .room-mobile-supply-tile.is-locked .room-mobile-tile-label { filter: grayscale(1); opacity: .45; }

@@ -528,7 +528,7 @@ export function AssessmentReport({
             <p>回顧這次體驗中你已掌握的照顧重點，也看看哪些地方值得在真正迎接牠之前再多了解一些。</p>
           </div>
           <aside className="care-review-pet">
-            <div><b>{selectedBreed?.label ?? selectedTypeLabel}</b>{petName.trim() && <span>{petName}</span>}</div>
+            <div><small className="care-review-pet-label">你的夥伴</small><b>{selectedBreed?.label ?? selectedTypeLabel}</b>{petName.trim() && <span>{petName}</span>}</div>
             {selectedBreed?.image && <img src={selectedBreed.image} alt={selectedBreed.label} />}
           </aside>
         </header>

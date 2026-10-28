@@ -67,6 +67,6 @@ export const hamsterRoomFlow: RoomFlowConfig = {
   },
 };
 
-export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置", mobileSupplyHintPlacement: { top: 7 }, doorplate: { image: sharedAssets.nameplate, alt: "倉鼠名字名牌", placement: hamsterRoomDoorplatePlacement } };
+export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置", mobileFirstSupplyItemId: "hamster-cage", doorplate: { image: sharedAssets.nameplate, alt: "倉鼠名字名牌", placement: hamsterRoomDoorplatePlacement } };
 export const hamsterDepartureScene: DepartureSceneConfig = { trunkBackground: hamsterAssets.preparation.trunkBackground, trunkBackgroundAlt: "打開的汽車後車廂" };
 export const hamsterPreparation = { roomItems: hamsterRoomItems, hazards: hamsterHazards, trunkItems: hamsterTrunkItems, roomFlow: hamsterRoomFlow, roomScene: hamsterRoomScene, departureScene: hamsterDepartureScene } as const;

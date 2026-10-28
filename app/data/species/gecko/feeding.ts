@@ -28,10 +28,10 @@ export const geckoArrivalMealSceneLayout: ArrivalMealSceneLayout = {
     veggie: { left: 30, bottom: 10, width: 14, maxHeight: 25 },
   },
   mobile: {
-    pet: { left: 20, bottom: 17, width: 47, maxHeight: 64 },
-    food: { left: 55, bottom: 29, width: 25, maxHeight: 30 },
-    water: { left: 68, bottom: 16, width: 20, maxHeight: 24 },
-    veggie: { left: 45, bottom: 16, width: 20, maxHeight: 24 },
+    pet: { left: 55, bottom: 17, width: 35, maxHeight: 64 },
+    food: { left: 47, bottom: 10, width: 25, maxHeight: 30 },
+    water: { left: 30, bottom: 16, width: 18, maxHeight: 24 },
+    veggie: { left: 10, bottom: 16, width: 18, maxHeight: 24 },
   },
 };
 
@@ -53,7 +53,9 @@ export const geckoFeeding: FeedingConfig = {
   ],
   scene: {
     desktopBackground: geckoAssets.room.terrariumSubstrate,
+    // 手機沿用桌機橫幅背景，以 cover 保留原始比例、不壓縮變形。
     mobileBackground: geckoAssets.room.terrariumSubstrate,
+    mobileBackgroundStyle: { objectFit: "cover", objectPosition: "center" },
     pet: { waiting: geckoAssets.feeding.geckoWaiting, ready: geckoAssets.feeding.geckoReady },
     water: { empty: geckoAssets.room.shallowWaterDish, ready: geckoAssets.feeding.fullWaterDish },
     food: {

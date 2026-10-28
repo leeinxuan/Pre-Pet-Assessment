@@ -44,6 +44,7 @@
 .profile-modal { position: relative; width: min(760px, 100%); max-height: min(860px, calc(100vh - 48px)); overflow: auto; padding: 28px; border: 1px solid rgba(216,199,170,.9); border-radius: 24px; background: #fffdf8; box-shadow: 0 24px 60px rgba(56,42,24,.22); }
 .profile-modal-close { position: absolute; top: 12px; right: 14px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--ink); font-size: 24px; line-height: 1; cursor: pointer; }
 .profile-modal-close:focus-visible { outline: 3px solid rgba(212,154,36,.35); outline-offset: 2px; }
+.care-review-pet-label { display: none; }
 .official-acquisition-footer-actions { align-items: center; margin-top: 32px; border-top: 0; }
 .official-final-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .official-share-status { margin: 12px 0 0; color: var(--gold-dark); font-size: 13px; font-weight: 900; text-align: right; }
@@ -1140,6 +1141,46 @@
 .profile-supplement .pet-experience-row input[type="checkbox"] { width: 20px; min-height: 20px; margin: 0; accent-color: var(--gold-dark); }.profile-supplement .pet-experience-row input:not([type="checkbox"]) { min-width: 0; min-height: 44px; padding: 8px; background: #f4f3f1; }.profile-supplement .shiba-experience { width: min(310px,100%); margin-top: 18px; }
 .profile-supplement .experience-note textarea { min-height: 112px; }.profile-supplement .profile-pdf-actions { width: 100%; margin-top: 26px; }.profile-supplement .pdf-download-button { min-width: 236px; }
 @media (max-width: 720px) { .profile-supplement .profile-panel { padding: 24px 18px; }.profile-supplement .profile-panel legend { font-size: 20px; }.profile-supplement .profile-time-grid, .profile-supplement .housing-options, .profile-supplement .supplement-choice-grid, .profile-supplement .supplement-choice-grid.compact, .profile-supplement .pet-experience-row { grid-template-columns: 1fr; }.profile-supplement .profile-time-grid > label { min-height: 84px; padding: 16px; }.profile-supplement .housemate-presence-choice { grid-template-columns: 1fr 1fr; }.profile-supplement .supplement-choice, .profile-supplement .housing-options button { min-height: 60px; }.profile-supplement .pet-experience-block { padding: 17px; }.profile-supplement .pet-experience-row label { grid-template-columns: auto max-content minmax(0,1fr); }.profile-supplement .pdf-download-button { width: 100%; } }
+
+/* Mobile review summary and the full-height personal-details form. */
+@media (max-width: 720px) {
+  .care-review-page { width: 100%; min-width: 0; gap: 10px; }
+  .care-review-hero { gap: 17px; padding: 18px 20px 6px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .care-review-hero h1 { margin: 4px 0 8px; font-size: clamp(29px, 8vw, 36px); }
+  .care-review-hero p:not(.life-stage-label) { font-weight: 750; line-height: 1.6; }
+  .care-review-pet { display: flex; flex: none; width: 100%; min-width: 0; min-height: 108px; justify-content: space-between; gap: 12px; padding: 12px 16px; border: 1px solid rgba(216,199,170,.65); border-radius: 18px; background: #f8f3e8; }
+  .care-review-pet div { display: flex; min-width: 0; flex: 1; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; text-align: left; }
+  .care-review-pet-label { display: block; color: var(--gold-dark); font-size: 12px; font-weight: 900; }
+  .care-review-pet b, .care-review-pet span { display: block; max-width: 100%; white-space: normal; word-break: keep-all; overflow-wrap: break-word; line-height: 1.25; }
+  .care-review-pet b { font-size: 18px; }
+  .care-review-pet span { font-size: 16px; }
+  .care-review-pet img { width: 84px; height: 84px; flex: 0 0 84px; }
+
+  .profile-modal-backdrop { inset: 0; display: block; padding: 0; overflow: hidden; }
+  .profile-modal { display: block; width: 100vw; height: 100vh; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 0; border-radius: 0; background: var(--paper); box-shadow: none; }
+  .profile-modal-close { z-index: 2; top: calc(env(safe-area-inset-top, 0px) + 13px); right: 16px; width: 44px; height: 44px; }
+  .profile-modal .profile-supplement--embedded { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; width: 100%; height: 100%; min-height: 0; max-width: none; margin: 0; padding: 0; overflow: hidden; }
+  .profile-modal .profile-wizard-head { min-width: 0; margin: 0; padding: calc(env(safe-area-inset-top, 0px) + 18px) 72px 16px 20px; border-bottom: 1px solid var(--line); background: var(--paper); }
+  .profile-modal .profile-wizard-head h1 { margin: 0 0 6px; font-size: clamp(24px, 7vw, 30px); line-height: 1.2; }
+  .profile-modal .profile-wizard-head p { font-size: 13px; line-height: 1.55; }
+  .profile-modal .profile-panel { min-height: 0; margin: 0; padding: 18px 20px 32px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; border: 0; border-radius: 0; background: var(--paper); box-shadow: none; animation: none; }
+  .profile-modal .profile-panel fieldset { min-width: 0; margin-top: 24px; padding-top: 22px; }
+  .profile-modal .profile-panel fieldset:first-child { margin-top: 0; padding-top: 0; }
+  .profile-modal .profile-panel legend { font-size: 19px; }
+  .profile-modal .profile-time-grid { gap: 10px; }
+  .profile-modal .profile-time-grid > label { min-width: 0; min-height: 72px; padding: 13px 14px; font-size: 14px; }
+  .profile-modal .profile-time-grid input { width: 62px; min-height: 46px; }
+  .profile-modal .housing-options, .profile-modal .supplement-choice-grid, .profile-modal .supplement-choice-grid.compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .profile-modal .supplement-choice-grid.reasons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .profile-modal .supplement-choice, .profile-modal .housing-options button { min-width: 0; min-height: 52px; padding: 10px 12px; font-size: 14px; line-height: 1.35; white-space: normal; word-break: keep-all; }
+  .profile-modal .landlord-consent-followup .supplement-choice-grid, .profile-modal .supplement-followup:not(.landlord-consent-followup) .supplement-choice-grid { grid-template-columns: 1fr; }
+  .profile-modal .pet-experience-row { grid-template-columns: 1fr; }
+  .profile-modal .pet-experience-row label { min-width: 0; min-height: 60px; }
+  .profile-modal .profile-pdf-actions { display: block; width: 100%; margin: 0; padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); background: var(--paper); }
+  .profile-modal .profile-pdf-actions > p { display: none; }
+  .profile-modal .profile-pdf-actions .report-download-control, .profile-modal .profile-pdf-actions .pdf-download-button { width: 100%; }
+  .profile-modal .profile-pdf-actions .pdf-download-button { min-height: 52px; }
+}
 
 /* 回顧提醒：手機版將標題、摘要與細節入口分成獨立三列。 */
 @media (max-width: 720px) {

@@ -6,13 +6,13 @@ import { birdAssets } from "./assets";
 export const birdRoomDoorplatePlacement = {
   desktop: { x: 40, y: 12, width: 28 },
   desktopText: { left: 15, top: 63, width: 70, height: 13, fontSize: 16 },
-  mobile: { x: 33, y: 20, width: 40 },
+  mobile: { x: 50, y: 20, width: 40 },
   mobileText: { left: 4, top: 56, width: 95, height: 20, fontSize: 16 },
 } as const;
 
 export const birdRoomItems: RoomItem[] = [
-  { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, mobilePlacement: { x: 70, y: 40, width: 15 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底；材質選白鐵，避免烤漆或鍍鋅。" },
-  { id: "food-initial", label: "主食飼料", icon: "◈", image: birdAssets.room.initialFood, placement: { x: 55, y: 60, width: 10, layer: 4 }, mobilePlacement: { x: 55, y: 60, width: 10 }, required: false, need: "飲食", expenseId: "bird-food-initial", description: "依食性選購：種子飼料、滋養丸或吸蜜粉。" },
+  { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, mobilePlacement: { x: 47, y: 40, width: 25 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底；材質選白鐵，避免烤漆或鍍鋅。" },
+  { id: "food-initial", label: "主食飼料", icon: "◈", image: birdAssets.room.initialFood, placement: { x: 55, y: 60, width: 10, layer: 4 }, mobilePlacement: { x: 25, y: 60, width: 15 }, required: false, need: "飲食", expenseId: "bird-food-initial", description: "依食性選購：種子飼料、滋養丸或吸蜜粉。" },
   {
     id: "perch-set", label: "不同材質的棲木", icon: "━", image: birdAssets.room.perch,
     placement: { x: 50, y: 54, width: 30, layer: 3 }, mobilePlacement: { x: 50, y: 54, width: 30 }, required: true, need: "休息", expenseId: "bird-perch-set",
@@ -34,12 +34,12 @@ export const birdRoomItems: RoomItem[] = [
 ];
 
 export const birdHazards: HazardItem[] = [
-  { id: "teflon-pan", label: "鐵氟龍不沾鍋", icon: "⚠", image: birdAssets.room.hazards.teflonPan, placement: { x: 23, y: 65, width: 10, layer: 5 }, mobilePlacement: { x: 23, y: 65, width: 10 }, danger: "高溫可能產生對鳥致命的有毒氣體，養鳥家庭必須完全停用。", handling: "移除並改用不含鐵氟龍的鍋具。" },
-  { id: "incense-candle", label: "線香／薰香蠟燭", icon: "♨", image: birdAssets.room.hazards.incenseCandle, placement: { x: 34, y: 63, width: 8, layer: 5 }, mobilePlacement: { x: 34, y: 63, width: 8 }, danger: "揮發性氣味與煙霧會傷害敏感的鳥類呼吸道。", handling: "不要在鳥的生活空間使用香氛或精油。" },
-  { id: "spray-aerosol", label: "噴霧清潔劑／芳香劑", icon: "☁", image: birdAssets.room.hazards.sprayAerosol, placement: { x: 60, y: 85, width: 10, layer: 5 }, mobilePlacement: { x: 60, y: 85, width: 10 }, danger: "噴霧化學物質會刺激鳥類呼吸道。", handling: "改用無揮發、對鳥安全的清潔方式。" },
-  { id: "toxic-plant", label: "有毒植物", icon: "✿", image: birdAssets.room.plant, placement: { x: 55, y: 55, width: 15, layer: 5 }, mobilePlacement: { x: 55, y: 55, width: 15 }, danger: "鳥可能啃咬植物，部分常見植物會造成中毒，例如黛粉葉、水仙、夾竹桃、鈴蘭、聖誕紅、常春藤等。", handling: "移出鳥能接觸的範圍並確認植物安全。" },
-  { id: "mirror-toy", label: "鏡子／身形相似玩具", icon: "◇", image: birdAssets.room.hazards.mirrorToy, placement: { x: 80, y: 60, width: 12, layer: 5 }, mobilePlacement: { x: 80, y: 60, width: 12 }, danger: "長期把倒影當同類互動，可能影響社交並誘發發情。", handling: "移除鏡子，改提供可輪換的天然玩具。" },
-  { id: "round-cage", label: "圓形鳥籠", icon: "○", image: birdAssets.room.hazards.roundCage, placement: { x: 70, y: 38, width: 18, layer: 5 }, mobilePlacement: { x: 70, y: 38, width: 18 }, danger: "圓形籠缺少角落可倚靠，長期可能增加緊迫。", handling: "更換為方形、尺寸與格柵合適的金屬鳥籠。" },
+  { id: "teflon-pan", label: "鐵氟龍不沾鍋", icon: "⚠", image: birdAssets.room.hazards.teflonPan, placement: { x: 23, y: 65, width: 10, layer: 5 }, mobilePlacement: { x: 15, y: 65, width: 15 }, danger: "高溫可能產生對鳥致命的有毒氣體，養鳥家庭必須完全停用。", handling: "移除並改用不含鐵氟龍的鍋具。" },
+  { id: "incense-candle", label: "線香／薰香蠟燭", icon: "♨", image: birdAssets.room.hazards.incenseCandle, placement: { x: 34, y: 63, width: 8, layer: 6 }, mobilePlacement: { x: 80, y: 65, width: 12 }, danger: "揮發性氣味與煙霧會傷害敏感的鳥類呼吸道。", handling: "不要在鳥的生活空間使用香氛或精油。" },
+  { id: "spray-aerosol", label: "噴霧清潔劑／芳香劑", icon: "☁", image: birdAssets.room.hazards.sprayAerosol, placement: { x: 60, y: 85, width: 10, layer: 5 }, mobilePlacement: { x: 70, y: 85, width: 15 }, danger: "噴霧化學物質會刺激鳥類呼吸道。", handling: "改用無揮發、對鳥安全的清潔方式。" },
+  { id: "toxic-plant", label: "有毒植物", icon: "✿", image: birdAssets.room.plant, placement: { x: 55, y: 55, width: 15, layer: 5 }, mobilePlacement: { x: 60, y: 60, width: 15 }, danger: "鳥可能啃咬植物，部分常見植物會造成中毒，例如黛粉葉、水仙、夾竹桃、鈴蘭、聖誕紅、常春藤等。", handling: "移出鳥能接觸的範圍並確認植物安全。" },
+  { id: "mirror-toy", label: "鏡子／身形相似玩具", icon: "◇", image: birdAssets.room.hazards.mirrorToy, placement: { x: 80, y: 60, width: 12, layer: 5 }, mobilePlacement: { x: 40, y: 75, width: 18 }, danger: "長期把倒影當同類互動，可能影響社交並誘發發情。", handling: "移除鏡子，改提供可輪換的天然玩具。" },
+  { id: "round-cage", label: "圓形鳥籠", icon: "○", image: birdAssets.room.hazards.roundCage, placement: { x: 70, y: 38, width: 18, layer: 5 }, mobilePlacement: { x: 85, y: 42, width: 20 }, danger: "圓形籠缺少角落可倚靠，長期可能增加緊迫。", handling: "更換為方形、尺寸與格柵合適的金屬鳥籠。" },
 ];
 
 export const birdTrunkItems: TrunkItem[] = [
@@ -74,6 +74,6 @@ export const birdRoomFlow: RoomFlowConfig = {
   },
 };
 
-export const birdRoomScene: RoomSceneConfig = { backgroundAlt: "鳥兒生活空間", interiorBackgroundAlt: "鳥籠內部配置", mobileSupplyHintPlacement: { top: 6 }, doorplate: { image: sharedAssets.nameplate, alt: "鸚鵡名字名牌", placement: birdRoomDoorplatePlacement } };
+export const birdRoomScene: RoomSceneConfig = { backgroundAlt: "鳥兒生活空間", interiorBackgroundAlt: "鳥籠內部配置", mobileFirstSupplyItemId: "bird-cage", doorplate: { image: sharedAssets.nameplate, alt: "鸚鵡名字名牌", placement: birdRoomDoorplatePlacement } };
 export const birdDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂" };
 export const birdPreparation = { roomItems: birdRoomItems, hazards: birdHazards, trunkItems: birdTrunkItems, roomFlow: birdRoomFlow, roomScene: birdRoomScene, departureScene: birdDepartureScene } as const;

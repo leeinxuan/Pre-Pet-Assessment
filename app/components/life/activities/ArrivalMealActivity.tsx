@@ -205,10 +205,10 @@ export function ArrivalMealActivity({
         })}</>}
       </aside>
       </div>
-      <div className="arrival-meal-scene" role={feeding.interaction === "choice" ? "group" : undefined} aria-label={feeding.interaction === "choice" ? "第一餐食碗" : undefined} onDragOver={feeding.interaction === "choice" ? (event) => event.preventDefault() : undefined} onDrop={feeding.interaction === "choice" ? (event) => { event.preventDefault(); chooseMealChoice(event.dataTransfer.getData("text/plain")); } : undefined}>
+      <div className={`arrival-meal-scene${feeding.interaction !== "choice" && feeding.scene.mobileBackgroundStyle ? " arrival-meal-scene--own-mobile-bg" : ""}`} role={feeding.interaction === "choice" ? "group" : undefined} aria-label={feeding.interaction === "choice" ? "第一餐食碗" : undefined} onDragOver={feeding.interaction === "choice" ? (event) => event.preventDefault() : undefined} onDrop={feeding.interaction === "choice" ? (event) => { event.preventDefault(); chooseMealChoice(event.dataTransfer.getData("text/plain")); } : undefined}>
         {feeding.interaction === "choice" ? <div className="scene-media-placeholder" aria-live="polite"><small>互動場景</small><b>食碗</b><p>{activity.hamsterMealSelected.length ? choiceItems.filter((item) => activity.hamsterMealSelected.includes(item.id)).map((item) => item.label).join("、") : feeding.emptyBowlText}</p></div> : <>
         <img className="arrival-meal-room arrival-meal-room--desktop" src={feeding.scene.desktopBackground} alt={`${feeding.animalName}的新家房間`} />
-        <img className="arrival-meal-room arrival-meal-room--mobile" src={feeding.scene.mobileBackground} alt="" />
+        <img className="arrival-meal-room arrival-meal-room--mobile" src={feeding.scene.mobileBackground} style={feeding.scene.mobileBackgroundStyle} alt="" />
         {foodWarning && <div className="arrival-meal-warning-overlay">
           <div className="arrival-meal-warning" role="dialog" onClick={() => setFoodWarning(null)}>
             <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>

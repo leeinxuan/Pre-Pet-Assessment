@@ -10,9 +10,9 @@ export const hamsterArrivalMealSceneLayout: ArrivalMealSceneLayout = {
     veggie: { left: 55, bottom: 10, width: 13 },
   },
   mobile: {
-    pet: { left: 32, bottom: 10, width: 50, maxHeight: 58 },
-    water: { left: 10, bottom: 10, width: 24 },
-    food: { left: 28, bottom: 5, width: 24 },
+    pet: { left: 50, bottom: 10, width: 35, maxHeight: 58 },
+    water: { left: 10, bottom: 35, width: 45 },
+    food: { left: 25, bottom: 5, width: 30 },
     veggie: { left: 52, bottom: 7, width: 20 },
   },
 };
@@ -27,8 +27,8 @@ export const hamsterFeeding: FeedingConfig = {
   animalName: "倉鼠", completionMessage: "第一餐準備好了！固定份量的綜合飼料與乾淨飲水，能讓倉鼠在新家慢慢安心下來。", recurringExpenseIds: ["hamster-pellet-monthly"],
   interaction: "scene", requiredSupplies: ["food", "water"],
   supplies: [
-    { stateKey: "food", label: "倉鼠專用綜合飼料（定量）", image: hamsterAssets.feeding.pellet, alt: "倉鼠專用綜合飼料（定量）", description: "倉鼠需要均衡的綜合飼料；每天固定餵食量，不要因為「碗空了」就補充，因為牠可能把食物藏進頰囊或巢穴了。" },
-    { stateKey: "water", label: "乾淨飲水（飲水器）", image: hamsterAssets.feeding.inventoryWaterBottle, alt: "乾淨飲水（飲水器）", description: "每天確認飲水器正常出水，並提供乾淨飲水。" },
+    { stateKey: "food", label: "倉鼠專用綜合飼料", image: hamsterAssets.feeding.pellet, alt: "倉鼠專用綜合飼料", description: "倉鼠需要均衡的綜合飼料；每天固定餵食量，不要因為「碗空了」就補充，因為牠可能把食物藏進頰囊或巢穴了。" },
+    { stateKey: "water", label: "乾淨飲水", image: hamsterAssets.feeding.inventoryWaterBottle, alt: "乾淨飲水", description: "每天確認飲水器正常出水，並提供乾淨飲水。" },
   ],
   unsafeFoods: [
     { id: "sunflower-seeds", label: "一大把葵瓜子", image: hamsterAssets.feeding.sunflowerSeeds, title: "葵瓜子不能當主食", text: "少量可以，但不能當主食！倉鼠特別喜歡葵瓜子，但容易只吃這個忽略其他成分，造成挑食和營養不均。每天固定少量作為點心即可，不可讓牠想吃多少就吃多少。", presentation: "caution" },
@@ -38,6 +38,8 @@ export const hamsterFeeding: FeedingConfig = {
   scene: {
     desktopBackground: hamsterAssets.feeding.background,
     mobileBackground: hamsterAssets.feeding.background,
+    // 手機版只顯示籠角與墊料區域：靠左對齊後放大，基準點對準該區域。
+    mobileBackgroundStyle: { objectFit: "cover", objectPosition: "left center", transform: "scale(1.7)", transformOrigin: "14% 33%" },
     pet: { waiting: hamsterAssets.feeding.unhappy, ready: hamsterAssets.feeding.happy },
     water: { empty: hamsterAssets.room.waterBottle, ready: hamsterAssets.feeding.fullWaterBottle },
     food: { empty: hamsterAssets.room.foodBowl, ready: hamsterAssets.feeding.fullFoodBowl },

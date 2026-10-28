@@ -3358,9 +3358,9 @@
         "image": "/assets/gecko/room/insecticide-spray.webp",
         "label": "殺蟲劑噴霧",
         "mobilePlacement": {
-          "width": 16,
-          "x": 18,
-          "y": 30
+          "width": 13,
+          "x": 57,
+          "y": 38
         },
         "placement": {
           "layer": 4,
@@ -3377,9 +3377,9 @@
         "image": "/assets/gecko/room/essential-oil-diffuser.webp",
         "label": "精油擴香器",
         "mobilePlacement": {
-          "width": 16,
-          "x": 72,
-          "y": 26
+          "width": 13,
+          "x": 73,
+          "y": 38
         },
         "placement": {
           "layer": 4,
@@ -3397,8 +3397,8 @@
         "label": "細沙/爬蟲沙",
         "mobilePlacement": {
           "width": 22,
-          "x": 50,
-          "y": 75
+          "x": 30,
+          "y": 76
         },
         "placement": {
           "layer": 4,
@@ -4611,9 +4611,9 @@
           "image": "/assets/gecko/room/insecticide-spray.webp",
           "label": "殺蟲劑噴霧",
           "mobilePlacement": {
-            "width": 16,
-            "x": 18,
-            "y": 30
+            "width": 13,
+            "x": 57,
+            "y": 38
           },
           "placement": {
             "layer": 4,
@@ -4630,9 +4630,9 @@
           "image": "/assets/gecko/room/essential-oil-diffuser.webp",
           "label": "精油擴香器",
           "mobilePlacement": {
-            "width": 16,
-            "x": 72,
-            "y": 26
+            "width": 13,
+            "x": 73,
+            "y": 38
           },
           "placement": {
             "layer": 4,
@@ -4650,8 +4650,8 @@
           "label": "細沙/爬蟲沙",
           "mobilePlacement": {
             "width": 22,
-            "x": 50,
-            "y": 75
+            "x": 30,
+            "y": 76
           },
           "placement": {
             "layer": 4,

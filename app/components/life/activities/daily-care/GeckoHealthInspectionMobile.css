@@ -111,7 +111,10 @@
     background: #f0dcc0;
     overflow: hidden;
   }
-  .gecko-health-mobile-background { display: contents; }
+  /* 身體觀察沿用桌機場景的奶油綠漸層。 */
+  .gecko-health-inspection > .gecko-health-scene--body {
+    background: linear-gradient(145deg, #fbf4e5, #e7f0e6);
+  }
   .gecko-health-scene .gecko-health-background { object-fit: cover; object-position: center; }
   .gecko-health-scene::after { display: none; }
 
@@ -132,27 +135,44 @@
   .gecko-thermometer-label {
     top: auto !important;
     left: auto !important;
+    order: -1 !important;
     padding: 3px 7px;
     font-size: 10px;
     line-height: 1.3;
+    transform: translate(var(--gecko-mobile-label-x, 0px), var(--gecko-mobile-label-y, 0px));
   }
-  /* 讀數改成標籤下方的小膠囊（原本為桌機版溫度計螢幕上的絕對定位），兩支溫度計一致：標籤 → 讀數 → 裝置。 */
-  .gecko-thermometer--cool .gecko-thermometer-label { order: -2; }
+  /* 讀數位於溫度計圖片的前景層，可由資料調整錨點。 */
+  .gecko-thermometer img { order: 0; }
   .gecko-thermometer strong {
-    position: relative;
-    inset: auto !important;
-    order: -1;
+    position: absolute;
+    z-index: 2;
+    top: var(--gecko-mobile-reading-top, 50%) !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: var(--gecko-mobile-reading-left, 50%) !important;
     padding: 1px 6px;
     border-radius: 999px;
     background: rgba(255, 253, 247, .94);
     font-size: 11px;
+    transform: translate(-50%, -50%);
   }
 
-  /* 控制器：放在缸前桌面，按鈕實際點擊範圍 44 × 44px。 */
-  .gecko-temperature-controller {
-    left: 6%;
-    bottom: 1%;
-    width: 46%;
+  /* 控制器與點擊按鈕位於場景下方的獨立列。 */
+  .gecko-temperature-controller-bar {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 116px;
+    padding: 6px 16px;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .gecko-temperature-controller-bar .gecko-temperature-controller {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: min(260px, 70vw);
     aspect-ratio: 1752 / 897;
   }
   .gecko-temperature-controls button {
@@ -194,7 +214,13 @@
   /* 身體巡視：守宮置中滿版，提示點 44 × 44px。 */
   .gecko-body-stage { inset: 0; }
   .gecko-body-art { width: 100%; height: 100%; }
-  .gecko-body-hotspot { width: 44px; height: 44px; cursor: pointer; }
+  .gecko-body-hotspot {
+    left: var(--gecko-mobile-hotspot-left) !important;
+    top: var(--gecko-mobile-hotspot-top) !important;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+  }
   .gecko-body-hotspot.is-available { animation: geckoHotspotPulse 1.5s ease-in-out infinite; }
 
   /* 底部說明欄（外層沿用 .rabbit-observation-sheet*）：內容改為靜態排版。 */

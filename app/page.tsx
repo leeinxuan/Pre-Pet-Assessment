@@ -41,6 +41,16 @@ import { FlowLoadErrorBoundary, FlowLoadingFallback } from "./components/shared/
 
 const dynamicFlowOptions = { loading: FlowLoadingFallback };
 
+type RoomSupplyTutorialState = {
+  firstItemPlaced: boolean;
+  firstItemInfoViewed: boolean;
+  preparedItemsTutorialCompleted: boolean;
+};
+
+function createRoomSupplyTutorialState(): RoomSupplyTutorialState {
+  return { firstItemPlaced: false, firstItemInfoViewed: false, preparedItemsTutorialCompleted: false };
+}
+
 const ArrivalTransitionVideo = dynamic(() => import("./components/life/LifeJourneyComponents").then((module) => module.ArrivalTransitionVideo), dynamicFlowOptions);
 const LifeJourney = dynamic(() => import("./components/life/LifeJourneyComponents").then((module) => module.LifeJourney), dynamicFlowOptions);
 const HomeReadinessActivity = dynamic(() => import("./components/preparation/PreparationComponents").then((module) => module.HomeReadinessActivity), dynamicFlowOptions);
@@ -124,6 +134,7 @@ export default function Home() {
   const [homeReadiness, setHomeReadiness] = useState(initialHomeReadinessState);
   const [roomReady, setRoomReady] = useState<string[]>([]);
   const [hazardsReady, setHazardsReady] = useState<string[]>([]);
+  const [roomSupplyTutorial, setRoomSupplyTutorial] = useState<RoomSupplyTutorialState>(createRoomSupplyTutorialState);
   const [members, setMembers] = useState<CareMember[]>(initialMembers);
   const [trunkSelected, setTrunkSelected] = useState<string[]>([]);
   const [trunkPassed, setTrunkPassed] = useState(false);
@@ -592,6 +603,7 @@ export default function Home() {
     setHomeReadiness(initialHomeReadinessState);
     setRoomReady([]);
     setHazardsReady([]);
+    setRoomSupplyTutorial(createRoomSupplyTutorialState());
     setMembers(initialMembers);
     setTrunkSelected([]);
     setTrunkPassed(false);
@@ -708,7 +720,7 @@ export default function Home() {
     }
     if (preparationTask === 1) {
       const reviewing = completedPreparationTasks.includes(1) && preparationReached >= 2 && preparationReplayTask !== 1;
-      return <RoomPreparation key={`${category}:room:${mobilePreparationEntry}`} selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setCompletedPreparationTasks((current) => current.filter((task) => task !== 1)); setPreparationReplayTask(1); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(1) ? current : [...current, 1]); changePreparationTask(2); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
+      return <RoomPreparation key={`${category}:room:${mobilePreparationEntry}`} selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} mobileSupplyTutorial={roomSupplyTutorial} onMobileSupplyTutorialChange={setRoomSupplyTutorial} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setRoomSupplyTutorial(createRoomSupplyTutorialState()); setCompletedPreparationTasks((current) => current.filter((task) => task !== 1)); setPreparationReplayTask(1); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(1) ? current : [...current, 1]); changePreparationTask(2); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
     }
     const reviewing = completedPreparationTasks.includes(2) && furthestStep >= 3 && preparationReplayTask !== 2;
     return <CarTrunkPreparation key={`${category}:departure:${mobilePreparationEntry}`} selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setCompletedPreparationTasks((current) => current.filter((task) => task !== 2)); setPreparationReplayTask(2); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(2) ? current : [...current, 2]); setPreparationReached((current) => Math.max(current, 2)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;

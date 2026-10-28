@@ -666,8 +666,12 @@
   .departure-car,
   .arrival-meal-scene,
   .arrival-meal-activity--choice > .arrival-meal-scene { height: min(100vw, 48dvh); aspect-ratio: auto; }
-  .departure-car .car-trunk-background,
-  .arrival-meal-room { object-fit: fill; }
+}
+
+/* 有指定手機背景裁切（mobileBackgroundStyle）的物種：手機版只顯示手機背景。
+   否則桌機背景會因 .arrival-meal-room { display: block } 的優先順序而照常顯示，手機背景被擠到場景外，裁切設定不會生效。 */
+@media (max-width: 720px) {
+  .arrival-meal-scene--own-mobile-bg .arrival-meal-room--desktop { display: none; }
 }
 
 @media (max-width: 720px) {

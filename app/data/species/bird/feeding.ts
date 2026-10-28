@@ -10,10 +10,10 @@ export const birdArrivalMealSceneLayout: ArrivalMealSceneLayout = {
     veggie: { left: 45, bottom: -1, width: 30 },
   },
   mobile: {
-    pet: { left: 32, bottom: 10, width: 50, maxHeight: 58 },
-    water: { left: 10, bottom: 10, width: 24 },
-    food: { left: 28, bottom: 5, width: 24 },
-    veggie: { left: 52, bottom: 7, width: 20 },
+    pet: { left:-5, bottom: 40, width: 55, maxHeight: 58 },
+    water: { left: 65, bottom: 40, width: 45 },
+    food: { left: 40, bottom: 38, width: 35 },
+    veggie: { left: 52, bottom: 0, width: 40 },
   },
 };
 

@@ -53,6 +53,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
     instruction: "點擊眼睛，觀察是否清亮、有無腫脹或殘皮。",
     prompt: "{petName} 的眼睛看起來……？",
     hotspot: { x: 27, y: 32 },
+    mobileHotspot: { x: 17, y: 30 },
     choices: binaryChoices("眼睛清亮，今天沒有問題", "眼睛有異常，需要留意"),
     states: {
       normal: {
@@ -84,6 +85,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
     instruction: "點擊尾巴，確認是否飽滿並觀察近期體況。",
     prompt: "{petName} 的尾巴看起來……？",
     hotspot: { x: 77, y: 51 },
+    mobileHotspot: { x: 85, y: 51 },
     choices: binaryChoices("尾巴看起來健康，體況正常", "尾巴有異常，需要留意"),
     states: {
       normal: {
@@ -115,6 +117,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
     instruction: "點擊身體皮膚，確認目前的脫皮狀態。",
     prompt: "{petName} 的皮膚看起來……？",
     hotspot: { x: 49, y: 44 },
+    mobileHotspot: { x: 58, y: 50 },
     choices: [
       { id: "normal", text: "皮膚狀況正常或即將脫皮，不需特別處理", correctStates: ["normal", "shedding"] },
       { id: "warning", text: "皮膚有殘皮問題，需要處理", correctStates: ["stuck-shed"] },
@@ -156,6 +159,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
     instruction: "點擊趾端，確認是否有環狀殘皮。",
     prompt: "{petName} 的趾端看起來……？",
     hotspot: { x: 42, y: 74 },
+    mobileHotspot: { x: 42, y: 77 },
     choices: binaryChoices("趾端乾淨，沒有殘皮", "趾端有殘皮，需要處理"),
     states: {
       normal: {
@@ -238,17 +242,23 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     warmPlacement: { x: 90, y: 87, width: 25 },
     coolPlacement: { x: 22, y: 47, width: 25 },
     // 手機版兩支溫度計各自獨立調整位置與尺寸。
-    warmMobilePlacement: { x: 88, y: 85, width: 35 },
-    coolMobilePlacement: { x: 18, y: 45, width: 35 },
+    warmMobilePlacement: { x: 88, y: 67, width: 35 },
+    coolMobilePlacement: { x: 18, y: 48, width: 35 },
     // All temperature-stage pieces can now be adjusted separately.  The
     // initial values preserve the existing visual arrangement.
     warmImagePlacement: { top: "0", left: "0" },
     coolImagePlacement: { top: "0", left: "0" },
     warmReadingPlacement: { top: "55%", right: "45%" },
     coolReadingPlacement: { top: "11%", right: "53%" },
+    // 手機版讀數錨點（相對各自溫度計），讀數顯示在素材前景層。
+    warmMobileReadingPlacement: { x: "45%", y: "60%" },
+    coolMobileReadingPlacement: { x: "38%", y: "22%" },
     // These offsets move only the matching label capsule.
     warmLabelPlacement: { top: "60px", left: "-5px" },
     coolLabelPlacement: { top: "-330px", left: "-30px" },
+    // 手機版標題膠囊可各自調整 x / y，不會影響桌機的 top / left。
+    warmMobileLabelPlacement: { x: "0px", y: "35px" },
+    coolMobileLabelPlacement: { x: "-17px", y: "95px" },
     correctTemperatures: {
       warm: { min: 28, max: 32 },
       cool: { min: 22, max: 25 },

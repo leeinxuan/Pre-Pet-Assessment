@@ -57,6 +57,28 @@ function mobileThermometerPlacementStyle(
   } as CSSProperties;
 }
 
+function mobileReadingPlacementStyle(
+  placement: { top: string; right: string },
+  mobilePlacement?: { x: string; y: string },
+): CSSProperties {
+  return {
+    ...placement,
+    "--gecko-mobile-reading-left": mobilePlacement?.x ?? "50%",
+    "--gecko-mobile-reading-top": mobilePlacement?.y ?? "50%",
+  } as CSSProperties;
+}
+
+function mobileLabelPlacementStyle(
+  placement: { top: string; left: string },
+  mobilePlacement?: { x: string; y: string },
+): CSSProperties {
+  return {
+    ...placement,
+    "--gecko-mobile-label-x": mobilePlacement?.x ?? "0px",
+    "--gecko-mobile-label-y": mobilePlacement?.y ?? "0px",
+  } as CSSProperties;
+}
+
 function completedTerrariumItemStyle(item: CompletedTerrariumItem): CSSProperties {
   const mobilePlacement = item.mobilePlacement ?? item.placement;
   const transform = item.placement.transform ?? "translate(-50%, -50%)";
@@ -384,6 +406,17 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
     </ObservationCard>
   ) : null;
 
+  const temperatureController = (
+    <div className={`gecko-temperature-controller${!temperatureConfirmed && !hasAdjustedTemperature ? " gecko-temperature-controller--attention" : ""}`}>
+      <img src={config.temperature.controllerImage} alt="" />
+      <span className="sr-only">{config.temperature.controllerLabel}</span>
+      <div className="gecko-temperature-controls" aria-label={config.temperature.controllerLabel}>
+        <button type="button" onClick={() => adjustTemperature(-1)} aria-label="降低溫度">−</button>
+        <button type="button" onClick={() => adjustTemperature(1)} aria-label="提高溫度">＋</button>
+      </div>
+    </div>
+  );
+
   return (
     <section className="life-activity gecko-health-inspection" aria-label={renderText(config.title)}>
       <div className="activity-heading">
@@ -425,7 +458,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
               >
                 <span
                   className="gecko-thermometer-label"
-                  style={config.temperature.warmLabelPlacement}
+                  style={mobileLabelPlacementStyle(config.temperature.warmLabelPlacement, config.temperature.warmMobileLabelPlacement)}
                 >
                   {config.temperature.warmLabel}
                 </span>
@@ -434,7 +467,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                   alt={`${config.temperature.warmLabel}溫度計`}
                   style={config.temperature.warmImagePlacement}
                 />
-                <strong style={config.temperature.warmReadingPlacement}>{Math.round(warm)}°C</strong>
+                <strong style={mobileReadingPlacementStyle(config.temperature.warmReadingPlacement, config.temperature.warmMobileReadingPlacement)}>{Math.round(warm)}°C</strong>
               </article>
               <article
                 className="gecko-thermometer gecko-thermometer--cool"
@@ -445,22 +478,15 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                   alt={`${config.temperature.coolLabel}溫度計`}
                   style={config.temperature.coolImagePlacement}
                 />
-                <strong style={config.temperature.coolReadingPlacement}>{Math.round(cool)}°C</strong>
+                <strong style={mobileReadingPlacementStyle(config.temperature.coolReadingPlacement, config.temperature.coolMobileReadingPlacement)}>{Math.round(cool)}°C</strong>
                 <span
                   className="gecko-thermometer-label"
-                  style={config.temperature.coolLabelPlacement}
+                  style={mobileLabelPlacementStyle(config.temperature.coolLabelPlacement, config.temperature.coolMobileLabelPlacement)}
                 >
                   {config.temperature.coolLabel}
                 </span>
               </article>
-              <div className={`gecko-temperature-controller${!temperatureConfirmed && !hasAdjustedTemperature ? " gecko-temperature-controller--attention" : ""}`}>
-                <img src={config.temperature.controllerImage} alt="" />
-                <span className="sr-only">{config.temperature.controllerLabel}</span>
-                <div className="gecko-temperature-controls" aria-label={config.temperature.controllerLabel}>
-                  <button type="button" onClick={() => adjustTemperature(-1)} aria-label="降低溫度">−</button>
-                  <button type="button" onClick={() => adjustTemperature(1)} aria-label="提高溫度">＋</button>
-                </div>
-              </div>
+              {!isMobile && temperatureController}
             </div>
             {!isMobile && temperatureFeedbackCard}
           </>
@@ -514,9 +540,6 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
 
         {activeStage === "body" && (
           <>
-            <picture className="gecko-health-mobile-background">
-              <img className="gecko-health-background" src={config.scene.background} alt="" />
-            </picture>
             <div className="gecko-body-stage">
               <div className="gecko-body-art">
               <img className="gecko-body-image" src={config.scene.body} alt={config.scene.bodyAlt} />
@@ -531,7 +554,12 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                     complete={pointComplete}
                     showOrder={config.body.showPointNumbers}
                     order={index + 1}
-                    style={{ left: `${point.hotspot.x}%`, top: `${point.hotspot.y}%` }}
+                    style={{
+                      left: `${point.hotspot.x}%`,
+                      top: `${point.hotspot.y}%`,
+                      "--gecko-mobile-hotspot-left": `${(point.mobileHotspot ?? point.hotspot).x}%`,
+                      "--gecko-mobile-hotspot-top": `${(point.mobileHotspot ?? point.hotspot).y}%`,
+                    } as CSSProperties}
                     disabled={!isAvailable}
                     aria-label={pointComplete ? `${point.label}已完成` : point.instruction}
                     onClick={() => setOpenId(point.id)}
@@ -557,6 +585,9 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
 
         {!isMobile && observationCard}
       </div>
+      {isMobile && activeStage === "temperature" && (
+        <div className="gecko-temperature-controller-bar">{temperatureController}</div>
+      )}
       {activeStage === "temperature" && !temperatureConfirmed && (
         <div className="gecko-temperature-actions">
           <p className="gecko-temperature-action-hint" aria-live="polite">

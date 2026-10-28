@@ -83,6 +83,8 @@ export type ArrivalMealSupply = {
 export type ArrivalMealSceneAssets = {
   desktopBackground: string;
   mobileBackground: string;
+  /** 手機版場景背景的裁切設定；省略時沿用共用樣式。 */
+  mobileBackgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string; transform?: string; transformOrigin?: string };
   pet: { waiting: string; ready: string };
   water: { empty: string; ready: string };
   /**
@@ -149,8 +151,10 @@ export type RoomSceneConfig = {
   interiorBackgroundAlt?: string;
   desktopBackgroundClass?: string;
   mobileBackgroundClass?: string;
-  /** 手機版用品準備箱提示的場景內位置；由各物種背景構圖獨立微調。 */
-  mobileSupplyHintPlacement?: { top: number; maxWidth?: number };
+  /** 僅手機版外部房間背景的裁切方式；不會套用到籠子／缸體內部場景。 */
+  mobileExteriorBackgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string };
+  /** 手機版用品準備箱首次教學要優先顯示的用品。 */
+  mobileFirstSupplyItemId?: string;
   backgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string };
   doorplate?: { image: string; alt: string; placement: RoomDoorplatePlacement };
 };
@@ -484,6 +488,8 @@ export type GeckoFecesInspection = GeckoHealthJudgement & {
 
 export type GeckoBodyInspectionPoint = GeckoHealthJudgement & {
   hotspot: { x: number; y: number };
+  /** Position in the square mobile inspection scene; desktop uses hotspot. */
+  mobileHotspot?: { x: number; y: number };
 };
 
 export type GeckoHealthInspectionConfig = {
@@ -532,9 +538,15 @@ export type GeckoHealthInspectionConfig = {
     /** Independent temperature-number positions within each thermometer. */
     warmReadingPlacement: { top: string; right: string };
     coolReadingPlacement: { top: string; right: string };
+    /** Mobile-only x/y anchors for readings over each thermometer image. */
+    warmMobileReadingPlacement?: { x: string; y: string };
+    coolMobileReadingPlacement?: { x: string; y: string };
     /** Independent visual offsets for the warm/cool label capsules. */
     warmLabelPlacement: { top: string; left: string };
     coolLabelPlacement: { top: string; left: string };
+    /** Mobile-only offsets for each label capsule, relative to its thermometer. */
+    warmMobileLabelPlacement?: { x: string; y: string };
+    coolMobileLabelPlacement?: { x: string; y: string };
     /** Internal validation bounds for each thermometer's actual position. */
     correctTemperatures: {
       warm: { min: number; max: number };

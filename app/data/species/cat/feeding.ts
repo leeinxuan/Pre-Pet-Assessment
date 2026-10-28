@@ -10,7 +10,7 @@ export const catArrivalMealSceneLayout: ArrivalMealSceneLayout = {
     veggie: { left: 55, bottom: 10, width: 13 },
   },
   mobile: {
-    pet: { left: 32, bottom: 10, width: 50, maxHeight: 58 },
+    pet: { left: 32, bottom: 10, width: 40, maxHeight: 58 },
     water: { left: 10, bottom: 10, width: 24 },
     food: { left: 28, bottom: 5, width: 24 },
     veggie: { left: 52, bottom: 7, width: 20 },
@@ -35,6 +35,6 @@ export const catFeeding: FeedingConfig = {
     { id: "chocolate-caffeine", label: "巧克力", image: catAssets.feeding.chocolate, title: "這個不能給貓咪吃", text: "巧克力可能危害貓咪健康，也不適合作為引誘進食或安撫的食物。人類食物不一定適合貓咪，不確定食材安全性時，請查詢可靠資料或詢問獸醫。" },
     { id: "vegetables-fruits", label: "蔬菜／水果", image: catAssets.feeding.vegetablesFruit, title: "蔬菜／水果只能確認安全後少量提供", text: "有些蔬菜或水果可在確認安全後少量補充，但洋蔥、青蔥、大蒜、葡萄與葡萄乾等不適合貓咪。蔬菜／水果不應取代主食；不確定食材是否適合時，請先查詢可靠資料或詢問獸醫。" },
   ],
-  scene: { desktopBackground: catAssets.life.safeRoom, mobileBackground: catAssets.life.safeRoom, pet: { waiting: catAssets.feeding.hungryScaredCat, ready: catAssets.feeding.happyCat }, water: { empty: catAssets.feeding.emptyWaterBowl, ready: catAssets.feeding.waterBowl }, food: { empty: catAssets.feeding.emptyFoodBowl, ready: catAssets.feeding.foodBowl } },
+  scene: { desktopBackground: catAssets.life.safeRoom, mobileBackground: catAssets.room.safeRoomSecured, mobileBackgroundStyle: { objectFit: "cover", objectPosition: "center", transform: "scale(1.9)", transformOrigin: "45% 90%" }, pet: { waiting: catAssets.feeding.hungryScaredCat, ready: catAssets.feeding.happyCat }, water: { empty: catAssets.feeding.emptyWaterBowl, ready: catAssets.feeding.waterBowl }, food: { empty: catAssets.feeding.emptyFoodBowl, ready: catAssets.feeding.foodBowl } },
   arrivalMealSceneLayout: catArrivalMealSceneLayout, arrivalMealSupplyImageSizes: catArrivalMealSupplyImageSizes,
 };
