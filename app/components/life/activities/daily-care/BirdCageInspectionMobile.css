@@ -166,7 +166,7 @@
   .bird-health-points button:nth-child(1) { left: 68%; top: 29%; }
   .bird-health-points button:nth-child(2) { left: 44%; top: 53%; }
   .bird-health-points button:nth-child(3) { left: 75%; top: 84%; }
-  .bird-health-points button:nth-child(4) { left: 67%; top: 65%; }
+  .bird-health-points button:nth-child(4) { left: 75%; top: 55%; }
 
   /* 開門影片（1:1）與引導：滿版覆蓋場景。 */
   .bird-cage-door-transition { inset: 64px 0 0; padding: 0; align-items: center; }

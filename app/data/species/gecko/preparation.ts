@@ -46,7 +46,7 @@ export const geckoHazards: HazardItem[] = [
     label: "牆縫/管道開口",
     icon: "↗",
     placement: { x: 82, y: 62, width: 1, layer: 4 },
-    mobilePlacement: { x: 91, y: 67, width: 1 },
+    mobilePlacement: { x: 91, y: 67, width: 1 }, mobileThumbnailCrop: { x: 92, y: 42, size: 24 },
     hotspot: { desktop: { x: 92, y: 40, width: 14, height: 62 }, mobile: { x: 92, y: 42, width: 16, height: 62 } },
     danger: "守宮體型小、善於穿縫，逃脫後極難救援。",
     handling: "請封閉所有牆縫與管道開口。",
@@ -162,6 +162,7 @@ export const geckoRoomFlow: RoomFlowConfig = {
   // 牆縫與管道共用一個熱區；封好後立即切換為已封閉的房間背景。
   floorHazardId: "openings",
   fenceItemId: "gecko-terrarium",
+  mobileEntryHintPlacement: { x: 34, y: 44 },
   interiorItemId: "safe-substrate",
   interiorRequiredItemIds: ["safe-substrate", "heat-mat", "lighting-setup", "enrichment-decor", "thermometer-hygrometer", "warm-hide", "cool-hide", "moist-hide", "shallow-water-dish", "calcium-dish"],
   outsideItemIds: ["gecko-terrarium", "first-feeder-insects", "calcium-and-vitamin-supplement"],
@@ -182,7 +183,6 @@ export const geckoRoomScene: RoomSceneConfig = {
   backgroundAlt: "守宮生活空間",
   interiorBackgroundAlt: "守宮爬蟲缸內部配置",
   mobileExteriorBackgroundStyle: { objectFit: "cover", objectPosition: "right center" },
-  mobileFirstSupplyItemId: "gecko-terrarium",
   doorplate: { image: sharedAssets.nameplate, alt: "守宮名字名牌", placement: geckoRoomDoorplatePlacement },
 };
 export const geckoDepartureScene: DepartureSceneConfig = {

@@ -35,7 +35,6 @@
     --room-mobile-green-soft: #e8f4e9;
     --room-mobile-paper: #fffdf8;
     --room-mobile-tile-locked: #eae9e4;
-    --room-mobile-check-fill: var(--gold-dark);
     display: block;
     width: 100vw;
     height: 100%;
@@ -69,9 +68,31 @@
     border-radius: 0;
     box-shadow: none;
   }
+  .room-mobile-scene-shell { position: relative; width: 100vw; height: 100vw; min-width: 0; }
+  .room-mobile-supply-cue {
+    position: absolute;
+    z-index: 15;
+    top: 16px;
+    left: 50%;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    margin: 0;
+    padding: 9px 15px;
+    transform: translateX(-50%);
+    border: 1px solid rgba(190, 159, 103, .32);
+    border-radius: 999px;
+    background: rgba(255, 253, 248, .97);
+    color: var(--room-mobile-ink);
+    box-shadow: 0 5px 16px rgba(64, 49, 28, .13);
+    font-size: clamp(12px, 3.5vw, 14px);
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+    pointer-events: none;
+  }
   .room-mobile-scene .room-scene-background--mobile { object-fit: cover; }
-  .room-mobile-scene .room-scene-background--portrait { object-fit: contain; }
-  .room-mobile-scene .room-scene-background--portrait.room-scene-background--fit-cover { object-fit: cover; object-position: center; }
+  .room-mobile-scene .room-scene-background--portrait { object-fit: cover; object-position: center 10%; }
   .room-mobile-scene .placed-supply:not(.room-flow-entry) { pointer-events: none; cursor: default; }
   .room-mobile-scene .room-flow-entry { pointer-events: auto; cursor: pointer; }
   .room-mobile-scene .room-flow-entry:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
@@ -194,14 +215,6 @@
   }
   .room-mobile-empty svg { width: 32px; height: 32px; color: var(--gold-dark); }
   .room-mobile-empty p { margin: 0; font-size: 14px; font-weight: 800; }
-  .room-mobile-first-supply-tutorial {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 12px;
-    min-height: 100%;
-  }
-  .room-mobile-first-supply-tutorial > .room-mobile-grid { width: min(100%, 118px); }
-  .room-mobile-first-supply-guide { min-height: min(180px, 100%); }
   .room-mobile-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
   .room-mobile-tile {
     position: relative;
@@ -234,9 +247,42 @@
   .room-mobile-thumbnail { display: grid; width: 52px; height: 52px; place-items: center; flex: 0 0 auto; }
   .room-mobile-thumbnail img { display: block; width: 100%; height: 100%; object-fit: contain; }
   .room-mobile-hazard-thumbnail { position: relative; overflow: hidden; border-radius: 8px; }
-  .room-mobile-hazard-thumbnail .room-mobile-hazard-background { position: absolute; max-width: none; object-fit: cover; }
-  .room-mobile-complete-mark { position: absolute; top: 8px; right: 8px; display: grid; width: 23px; height: 23px; place-items: center; border: 2px solid var(--room-mobile-paper); border-radius: 50%; background: var(--room-mobile-check-fill); color: var(--paper); box-shadow: 0 1px 4px rgba(70, 53, 26, .17); pointer-events: none; }
-  .room-mobile-complete-mark svg { width: 14px; height: 14px; }
+  .room-mobile-hazard-crop-scene { position: absolute; display: block; }
+  .room-mobile-hazard-thumbnail .room-mobile-hazard-background { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+  .room-mobile-hazard-thumbnail .room-mobile-hazard-sprite { position: absolute; height: auto; max-width: none; object-fit: contain; transform: translate(-50%, -50%); }
+  .room-mobile-info-badge {
+    position: absolute;
+    z-index: 2;
+    top: 8px;
+    right: 8px;
+    box-sizing: border-box;
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border: 1px solid rgba(184, 141, 73, .55);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .78);
+    color: #a96a0d;
+    box-shadow: 0 2px 5px rgba(92, 58, 19, .15);
+    pointer-events: none;
+  }
+  .room-mobile-info-badge svg { width: 17px; height: 17px; }
+  .room-mobile-supply-check {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    box-sizing: border-box;
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    transform: translate(-50%, -50%);
+    color: var(--room-mobile-green);
+    pointer-events: none;
+  }
+  .room-mobile-supply-check svg { width: 29px; height: 29px; }
   @media (prefers-reduced-motion: reduce) { .room-mobile-entry-cue { animation: none; } }
   .room-mobile-sheet-overlay { position: fixed; z-index: 999; inset: 0; display: flex; align-items: flex-end; background: rgba(33, 30, 25, .42); }
   .room-mobile-sheet {

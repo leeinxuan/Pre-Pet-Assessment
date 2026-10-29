@@ -588,79 +588,13 @@ async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profi
   }
 }
 
-function downloadBlob(blob: Blob, fileName: string) {
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-async function downloadAssessmentImage(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
-  if (kind === "profile" && profile) {
-    const canvases = await createProfilePdfCanvases(profile, petName, selectedTypeLabel || "寵物");
-    const safePetName = sanitizePdfFileName(petName);
-    const baseFileName = safePetName ? `伴日子新手村_個人資料_${safePetName}` : "伴日子新手村_個人資料";
-    for (let index = 0; index < canvases.length; index += 1) {
-      const canvas = canvases[index];
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob((nextBlob) => nextBlob ? resolve(nextBlob) : reject(new Error("PNG export failed")), "image/png");
-      });
-      downloadBlob(blob, canvases.length > 1 ? `${baseFileName}_${index + 1}.png` : `${baseFileName}.png`);
-    }
-    return;
-  }
-  const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
-  const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
-  if (!sourcePages.length) throw new Error("Image source pages not found");
-
-  const stage = document.createElement("div");
-  stage.className = "pdf-export-stage image-export-stage desktop-pdf-layout";
-  sourcePages.forEach((page) => stage.appendChild(page.cloneNode(true)));
-  document.body.appendChild(stage);
-
-  try {
-    await document.fonts?.ready;
-    await replaceImagesWithDataUrls(stage);
-    const pages = Array.from(stage.children) as HTMLElement[];
-    const canvases = [];
-    for (const page of pages) canvases.push(await elementToCanvas(page));
-    const safePetName = sanitizePdfFileName(petName);
-    const baseFileName = safePetName
-      ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}_${safePetName}`
-      : `伴日子新手村_${kind === "profile" ? "個人資料" : "照護總覽"}`;
-
-    for (let index = 0; index < canvases.length; index += 1) {
-      const canvas = canvases[index];
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob((nextBlob) => {
-          if (nextBlob) resolve(nextBlob);
-          else reject(new Error("PNG export failed"));
-        }, "image/png");
-      });
-      const fileName = canvases.length > 1 ? `${baseFileName}_${index + 1}.png` : `${baseFileName}.png`;
-      downloadBlob(blob, fileName);
-    }
-  } finally {
-    stage.remove();
-  }
-}
-
 export function PdfDownloadButton({ petName, kind = "overview", label, profile, selectedTypeLabel }: { petName: string; kind?: ReportPdfKind; label?: string; profile?: Profile; selectedTypeLabel?: string }) {
   const [generating, setGenerating] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [error, setError] = useState("");
   const mobileDownload = useMobileDownloadMode();
-  const defaultLabel = mobileDownload
-    ? (kind === "profile" ? "儲存個人資料" : "儲存照護總覽")
-    : (kind === "profile" ? "下載個人資料" : "下載照顧準備總覽");
-  const buttonLabel = mobileDownload
-    ? (kind === "profile" ? "儲存個人資料" : "儲存照護總覽")
-    : (label ?? defaultLabel);
-  const exportKindLabel = mobileDownload ? "圖片" : "PDF";
+  const defaultLabel = kind === "profile" ? "下載個人資料" : "下載照顧準備總覽";
+  const buttonLabel = mobileDownload && kind === "profile" ? "儲存個人資料" : (label ?? defaultLabel);
 
   return (
     <div className="report-download-control">
@@ -674,19 +608,18 @@ export function PdfDownloadButton({ petName, kind = "overview", label, profile, 
           setCompleted(false);
           setError("");
           try {
-            if (mobileDownload) await downloadAssessmentImage(petName, kind, profile, selectedTypeLabel);
-            else await downloadAssessmentPdf(petName, kind, profile, selectedTypeLabel);
+            await downloadAssessmentPdf(petName, kind, profile, selectedTypeLabel);
             setCompleted(true);
           } catch (error) {
             console.error("Assessment export failed.", error);
-            setError(`${exportKindLabel}下載失敗，請再試一次。`);
+            setError("PDF下載失敗，請再試一次。");
           } finally {
             setGenerating(false);
           }
         }}
         disabled={generating}
         aria-label={buttonLabel}
-        title={mobileDownload ? "儲存圖片" : "下載 PDF"}
+        title="下載 PDF"
       >
         {generating ? (
           <span className="pdf-download-spinner" aria-hidden="true" />

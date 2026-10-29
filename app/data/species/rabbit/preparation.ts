@@ -12,7 +12,7 @@ export const rabbitRoomDoorplatePlacement = {
 
 /** 兔子房間用品與素材由此資料設定提供，共用房間元件只負責渲染與流程控制。 */
 export const rabbitRoomItems: RoomItem[] = [
-  { id: "fence-pen", label: "圍片／柵欄", icon: "▥", image: rabbitAssets.room.fencePen, sceneImage: rabbitAssets.room.fencePenInRoom, placement: { x: 72, y: 80, width: 30, layer: 2 }, mobilePlacement: { x: 68, y: 54, width: 30 }, required: true, need: "安全", expenseId: "rabbit-fence-pen", description: "以穩固圍片隔出安全活動範圍，保護兔子與家具。" },
+  { id: "fence-pen", label: "圍片／柵欄", icon: "▥", image: rabbitAssets.room.fencePen, sceneImage: rabbitAssets.room.fencePenInRoom, placement: { x: 72, y: 80, width: 30, layer: 2 }, mobilePlacement: { x: 68, y: 80, width: 50 }, required: true, need: "安全", expenseId: "rabbit-fence-pen", description: "以穩固圍片隔出安全活動範圍，保護兔子與家具。" },
   { id: "hay-rack", label: "牧草架", icon: "🌾", image: rabbitAssets.room.hayRack, placement: { x: 22, y: 50, width: 23, layer: 3 }, mobilePlacement: { x: 15, y: 53, width: 30 }, required: true, need: "飲食", expenseId: "rabbit-hay-rack", description: "牧草是兔子的主食，必須隨時可取用；牧草架也能避免牧草被踩髒。" },
   { id: "heavy-water-bowl", label: "較重的飲水碗", icon: "💧", image: rabbitAssets.room.waterBowl, placement: { x: 40, y: 65, width: 15, layer: 3 }, mobilePlacement: { x: 45, y: 60, width: 17 }, required: true, need: "飲食", expenseId: "rabbit-heavy-water-bowl", description: "較重的飲水碗不容易打翻，也方便每天觀察飲水量。" },
   { id: "litter-box", label: "便盆", icon: "▤", image: rabbitAssets.room.litterBox, placement: { x: 73, y: 30, width: 25, layer: 3 }, mobilePlacement: { x: 80, y: 30, width: 31 }, required: true, need: "排泄", expenseIds: ["rabbit-litter-box", "rabbit-litter-monthly"], description: "兔子傾向固定區域排泄；定期清潔便盆才能避免尿灼傷並觀察糞便。" },
@@ -30,7 +30,7 @@ export const rabbitHazards: HazardItem[] = [
   { id: "plastic-item", label: "塑膠製品", icon: "▣", image: rabbitAssets.room.plasticItem, placement: { x: 43, y: 76, width: 12, layer: 5 }, mobilePlacement: { x: 35, y: 70, width: 18 }, danger: "兔子可能啃咬塑膠並食入，造成腸胃問題。", handling: "收進櫃子或改用安全材質的用品。" },
   { id: "foam-mat-with-edges", label: "有邊角的海棉墊", icon: "◇", image: rabbitAssets.room.foamMat, placement: { x: 80, y: 80, width: 20, layer: 5 }, mobilePlacement: { x: 75, y: 89, width: 25 }, danger: "兔子啃食泡棉可能食入異物，造成腸阻塞。", handling: "改用完整、無可啃邊角的防滑墊。" },
   { id: "high-platform", label: "過高的平台（無保護）", icon: "△", image: rabbitAssets.room.highPlatform, placement: { x: 73, y: 65, width: 18, layer: 4 }, mobilePlacement: { x: 74, y: 70, width: 24 }, danger: "兔子骨骼脆弱，從無保護的高處落下容易受傷。", handling: "移除過高平台，或改成低矮、穩固且有防護的設施。" },
-  { id: "slippery-floor", label: "光滑地板", icon: "▱", image: rabbitAssets.room.antiSlipMat, placement: { x: 51, y: 88, width: 67, layer: 5 }, mobilePlacement: { x: 50, y: 88, width: 84 }, danger: "滑溜地板容易讓骨骼脆弱的兔子滑倒受傷。", handling: "鋪設完整防滑墊，讓活動與休息區保持止滑。" },
+  { id: "slippery-floor", label: "光滑地板", icon: "▱", image: rabbitAssets.room.antiSlipMat, placement: { x: 51, y: 88, width: 67, layer: 5 }, mobilePlacement: { x: 50, y: 88, width: 84 }, mobileThumbnailCrop: { x: 50, y: 83, size: 30, includeSprite: false }, danger: "滑溜地板容易讓骨骼脆弱的兔子滑倒受傷。", handling: "鋪設完整防滑墊，讓活動與休息區保持止滑。" },
 ];
 
 export const rabbitTrunkItems: TrunkItem[] = [
@@ -51,6 +51,7 @@ export const rabbitRoomFlow: RoomFlowConfig = {
   interiorBackgroundAspectRatio: "match-room",
   floorHazardId: "slippery-floor",
   fenceItemId: "fence-pen",
+  mobileEntryHintPlacement: { x: 25, y: 80 },
   interiorItemId: "anti-slip-mat",
   interiorRequiredItemIds: ["hay-rack", "heavy-water-bowl", "litter-box", "hiding-box", "anti-slip-mat"],
   floorHotspot: {
@@ -64,6 +65,6 @@ export const rabbitRoomFlow: RoomFlowConfig = {
   },
 };
 
-export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", mobileFirstSupplyItemId: "fence-pen", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌", placement: rabbitRoomDoorplatePlacement } };
+export const rabbitRoomScene: RoomSceneConfig = { backgroundAlt: "兔子生活空間", interiorBackgroundAlt: "兔子圍欄內部", doorplate: { image: sharedAssets.nameplate, alt: "兔子名字名牌", placement: rabbitRoomDoorplatePlacement } };
 export const rabbitDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂" };
 export const rabbitPreparation = { roomItems: rabbitRoomItems, hazards: rabbitHazards, trunkItems: rabbitTrunkItems, roomFlow: rabbitRoomFlow, roomScene: rabbitRoomScene, departureScene: rabbitDepartureScene } as const;

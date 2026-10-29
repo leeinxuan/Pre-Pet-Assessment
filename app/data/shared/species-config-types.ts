@@ -45,6 +45,8 @@ export type RoomFlowConfig = {
   interiorRequiredItemIds?: readonly string[];
   interiorBackgroundAspectRatio?: "match-room" | string; interiorBackgroundMobileFit?: "cover"; floorHazardId: string; safeWhenAllHazards?: boolean;
   fenceItemId?: string; interiorItemId?: string; outsideItemIds?: readonly string[]; entryRequiredItemIds?: readonly string[];
+  /** 手機版「點擊佈置」提示膠囊中心，使用場景百分比座標。 */
+  mobileEntryHintPlacement?: { x: number; y: number };
   floorHotspot: { desktop: { x: number; y: number; width: number; height: number }; mobile: { x: number; y: number; width: number; height: number } };
   copy: { fenceInstruction?: string; fencePlacedInstruction?: string; entryReadyInstruction?: string; interiorInstruction?: string; completeInstruction?: string; hazardInstruction?: string; lockedInstruction?: string;
     /** 內部用品因 interiorUnlockItemId 尚未放置而鎖定時的提示；未提供時沿用 lockedInstruction。 */

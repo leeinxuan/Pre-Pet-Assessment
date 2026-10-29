@@ -8,6 +8,7 @@ import { interpolatePetName } from "../../../data/shared/pet-text";
 import { ItemDescriptionCard } from "../../shared/ItemDescriptionCard";
 import { MobileInfoSheet, type MobileInfoSheetContent } from "../../shared/MobileInfoSheet";
 import { MobileStageIntro } from "../../shared/MobileStageIntro";
+import { MobileItemInfoBadge, MobileItemPlacedCheck } from "../../shared/MobileItemMarks";
 import type {
   ArrivalMealSceneItemKey,
   ArrivalMealSceneLayout,
@@ -98,7 +99,6 @@ export function ArrivalMealActivity({
   const [expenseSequenceComplete, setExpenseSequenceComplete] = useState(false);
   const [foodWarning, setFoodWarning] = useState<{ title: string; text: string; image: string } | null>(null);
   const [mobileInfo, setMobileInfo] = useState<MobileInfoSheetContent | null>(null);
-  const [pendingMobileInfoSupplyKeys, setPendingMobileInfoSupplyKeys] = useState<Set<string>>(() => new Set());
   const [mobileStarted, setMobileStarted] = useState(false);
   const [unsafeFoodIds, setUnsafeFoodIds] = useState<string[]>([]);
   const choiceItems = feeding.interaction === "choice" ? feeding.choices : [];
@@ -118,6 +118,9 @@ export function ArrivalMealActivity({
     : key === "water"
       ? activity.arrivalMealWaterReady
       : activity.arrivalMealVeggieReady;
+  const hasMealItemPlaced = feeding.interaction === "choice"
+    ? activity.hamsterMealSelected.length > 0
+    : sceneSupplies.some((supply) => supplyReady(supply.stateKey));
   const foodReadyOverride = feeding.interaction !== "choice" && activity.arrivalMealFoodReady
     ? feeding.scene.food.readyOverrides?.find((override) => supplyReady(override.when))
     : undefined;
@@ -152,16 +155,9 @@ export function ArrivalMealActivity({
     if (ready) return;
     setFoodWarning(null);
     onChange(key === "food" ? { arrivalMealFoodReady: true } : key === "water" ? { arrivalMealWaterReady: true } : { arrivalMealVeggieReady: true });
-    setPendingMobileInfoSupplyKeys((current) => new Set(current).add(key));
   }
 
-  function openMobileSupplyInfo(key: string, supply: typeof sceneSupplies[number]) {
-    setPendingMobileInfoSupplyKeys((current) => {
-      if (!current.has(key)) return current;
-      const next = new Set(current);
-      next.delete(key);
-      return next;
-    });
+  function openMobileSupplyInfo(supply: typeof sceneSupplies[number]) {
     setMobileInfo({ title: supply.label, description: supply.description, image: supply.image });
   }
   function warnUnsafeFood(kind: string) {
@@ -173,6 +169,10 @@ export function ArrivalMealActivity({
   function chooseMealChoice(id: string) {
     const item = choiceItems.find((entry) => entry.id === id);
     if (!item) return;
+    if (activity.hamsterMealSelected.includes(id) && window.matchMedia("(max-width: 720px)").matches) {
+      setMobileInfo({ title: item.label, description: interpolatePetName(item.feedback, petName) });
+      return;
+    }
     const isNewSafeChoice = item.result !== "incorrect" && !activity.hamsterMealSelected.includes(id);
     if (isNewSafeChoice) {
       onChange({ hamsterMealSelected: [...activity.hamsterMealSelected, id], hamsterMealFeedbackId: id });
@@ -192,13 +192,13 @@ export function ArrivalMealActivity({
         {feeding.interaction === "choice" ? choiceItems.map((item) => <button key={item.id} type="button" draggable={!activity.hamsterMealSelected.includes(item.id)}
           onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} onClick={() => chooseMealChoice(item.id)}
           className={`arrival-meal-choice-button ${item.result === "incorrect" ? "is-unsafe" : ""} ${activity.hamsterMealSelected.includes(item.id) ? "done" : ""}`}>
-          <b>{item.result === "caution" ? "▲ " : ""}{item.label}</b><small>{activity.hamsterMealSelected.includes(item.id) ? "已放入食碗" : item.result === "incorrect" ? "點擊查看原因" : "點擊或拖曳放入"}</small>{activity.hamsterMealSelected.includes(item.id) && <span className="arrival-meal-choice-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4.5 4.5L19 7" /></svg></span>}
+          <b>{item.result === "caution" ? "▲ " : ""}{item.label}</b><small>{activity.hamsterMealSelected.includes(item.id) ? "已放入食碗" : item.result === "incorrect" ? "點擊查看原因" : "點擊或拖曳放入"}</small><MobileItemInfoBadge />{activity.hamsterMealSelected.includes(item.id) && <MobileItemPlacedCheck />}
         </button>) : <>{sceneSupplies.map((supply) => {
           const ready = supply.stateKey === "food" ? activity.arrivalMealFoodReady : supply.stateKey === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady;
           const imageClassName = supply.stateKey === "food" ? "arrival-meal-supply-food" : supply.stateKey === "water" ? "arrival-meal-supply-water" : undefined;
           const imageStyle = arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, supply.stateKey);
           const note = <ItemDescriptionCard className="arrival-meal-desktop-note" title={supply.label} description={supply.description} footer="已準備完成" />;
-          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? <>{note}<button type="button" className={`arrival-meal-mobile-done${pendingMobileInfoSupplyKeys.has(supply.stateKey) ? " is-awaiting-info" : ""}`} onClick={() => openMobileSupplyInfo(supply.stateKey, supply)} aria-label={`查看${supply.label}說明`}><img style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4.5 4.5L19 7" /></svg></span></button></> : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span></button><ItemDescriptionCard className="arrival-meal-desktop-note arrival-meal-desktop-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
+          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? <>{note}<button type="button" className="arrival-meal-mobile-done" onClick={() => openMobileSupplyInfo(supply)} aria-label={`查看${supply.label}說明`}><img style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><MobileItemInfoBadge /><MobileItemPlacedCheck /></button></> : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><MobileItemInfoBadge /></button><ItemDescriptionCard className="arrival-meal-desktop-note arrival-meal-desktop-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
         })}{sceneUnsafeFoods.map((food) => {
           const caution = food.presentation === "caution";
           return <button key={food.id} type="button" className={`arrival-meal-unsafe${caution ? " caution" : ""}${unsafeFoodIds.includes(food.id) ? " warning" : ""}`} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={food.image} alt="" />{unsafeFoodIds.includes(food.id) && (caution ? <WarningTriangle className="unsafe-food-warning-icon" /> : <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>)}</span><span>{food.label}</span></button>;
@@ -206,6 +206,7 @@ export function ArrivalMealActivity({
       </aside>
       </div>
       <div className={`arrival-meal-scene${feeding.interaction !== "choice" && feeding.scene.mobileBackgroundStyle ? " arrival-meal-scene--own-mobile-bg" : ""}`} role={feeding.interaction === "choice" ? "group" : undefined} aria-label={feeding.interaction === "choice" ? "第一餐食碗" : undefined} onDragOver={feeding.interaction === "choice" ? (event) => event.preventDefault() : undefined} onDrop={feeding.interaction === "choice" ? (event) => { event.preventDefault(); chooseMealChoice(event.dataTransfer.getData("text/plain")); } : undefined}>
+        {mobileStarted && !hasMealItemPlaced && <p className="mobile-item-operation-cue">{feeding.interaction === "choice" ? "點擊食物，放入食碗" : "點擊用品，準備第一餐"}</p>}
         {feeding.interaction === "choice" ? <div className="scene-media-placeholder" aria-live="polite"><small>互動場景</small><b>食碗</b><p>{activity.hamsterMealSelected.length ? choiceItems.filter((item) => activity.hamsterMealSelected.includes(item.id)).map((item) => item.label).join("、") : feeding.emptyBowlText}</p></div> : <>
         <img className="arrival-meal-room arrival-meal-room--desktop" src={feeding.scene.desktopBackground} alt={`${feeding.animalName}的新家房間`} />
         <img className="arrival-meal-room arrival-meal-room--mobile" src={feeding.scene.mobileBackground} style={feeding.scene.mobileBackgroundStyle} alt="" />

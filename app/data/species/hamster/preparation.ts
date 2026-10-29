@@ -13,7 +13,7 @@ export const hamsterRoomDoorplatePlacement = {
 export const hamsterHazards: HazardItem[] = [
   { id: "cable", label: "電線", icon: "⌁", image: hamsterAssets.room.hazards.cable, placement: { x: 14, y: 77, width: 13, layer: 5 }, mobilePlacement: { x: 14, y: 77, width: 20 }, danger: "倉鼠有強烈啃咬天性，咬電線可能觸電或食入絕緣皮層。", handling: "整理固定電線或收入線槽，讓{petName}的活動區域無電線可及。" },
   { id: "loose-gap-cage", label: "格柵過大的舊籠", icon: "▥", image: hamsterAssets.room.hazards.looseGapCage, placement: { x: 84, y:84, width: 15, layer: 5 }, mobilePlacement: { x: 84, y: 84, width: 20 }, danger: "倉鼠擅長利用縫隙逃脫，格柵過寬或薄壁塑膠籠都難以防逃。", handling: "更換為格柵間距適當、不易啃穿的金屬籠具。" },
-  { id: "direct-sunlight-spot", label: "陽光直曬的位置", icon: "☀", image: hamsterAssets.room.hazards.directSunlightSpot, placement: { x: 24, y: 43, width: 18, layer: 5 }, mobilePlacement: { x: 24, y: 43, width: 18 }, danger: "倉鼠靠耳朵的微血管散熱，對高溫耐受性低，直曬可能導致中暑。", handling: "將籠具位置移至陰涼、通風、無直曬的穩定角落。" },
+  { id: "direct-sunlight-spot", label: "陽光直曬的位置", icon: "☀", image: hamsterAssets.room.hazards.directSunlightSpot, placement: { x: 24, y: 43, width: 18, layer: 5 }, mobilePlacement: { x: 24, y: 43, width: 18 }, mobileThumbnailCrop: { x: 83, y: 50, size: 27, includeSprite: false }, danger: "倉鼠靠耳朵的微血管散熱，對高溫耐受性低，直曬可能導致中暑。", handling: "將籠具位置移至陰涼、通風、無直曬的穩定角落。" },
   { id: "strong-scent-item", label: "強烈氣味物品", icon: "◌", image: hamsterAssets.room.hazards.strongScentItem, placement: { x: 24, y: 50, width: 6, layer: 5 }, mobilePlacement: { x: 24, y: 48, width: 10 }, danger: "小型哺乳類嗅覺靈敏，強烈香薰、化學揮發物可能刺激呼吸道。", handling: "籠具附近應避免使用香薰、殺蟲劑或強烈清潔劑。" },
 ];
 
@@ -50,6 +50,7 @@ export const hamsterRoomFlow: RoomFlowConfig = {
   interiorUnlockItemId: "bedding",
   floorHazardId: "direct-sunlight-spot",
   fenceItemId: "hamster-cage",
+  mobileEntryHintPlacement: { x: 38, y: 60 },
   interiorItemId: "bedding",
   interiorRequiredItemIds: ["bedding", "exercise-wheel", "water-bottle", "food-bowl", "hideout", "sand-bath-box"],
   outsideItemIds: ["hamster-cage", "pellet", "hamster-sand"],
@@ -67,6 +68,6 @@ export const hamsterRoomFlow: RoomFlowConfig = {
   },
 };
 
-export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置", mobileFirstSupplyItemId: "hamster-cage", doorplate: { image: sharedAssets.nameplate, alt: "倉鼠名字名牌", placement: hamsterRoomDoorplatePlacement } };
+export const hamsterRoomScene: RoomSceneConfig = { backgroundAlt: "倉鼠生活空間", interiorBackgroundAlt: "倉鼠籠內部配置", doorplate: { image: sharedAssets.nameplate, alt: "倉鼠名字名牌", placement: hamsterRoomDoorplatePlacement } };
 export const hamsterDepartureScene: DepartureSceneConfig = { trunkBackground: hamsterAssets.preparation.trunkBackground, trunkBackgroundAlt: "打開的汽車後車廂" };
 export const hamsterPreparation = { roomItems: hamsterRoomItems, hazards: hamsterHazards, trunkItems: hamsterTrunkItems, roomFlow: hamsterRoomFlow, roomScene: hamsterRoomScene, departureScene: hamsterDepartureScene } as const;

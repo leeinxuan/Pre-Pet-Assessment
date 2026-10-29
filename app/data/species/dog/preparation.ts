@@ -58,6 +58,6 @@ export const dogRoomFlow: RoomFlowConfig = {
   },
 };
 
-export const dogRoomScene: RoomSceneConfig = { backgroundAlt: "空的寵物生活房間", desktopBackgroundClass: "room-scene-background--dog", mobileBackgroundClass: "room-scene-background--dog-mobile", mobileFirstSupplyItemId: "bed", backgroundStyle: { objectFit: "contain", objectPosition: "center center" }, doorplate: { image: sharedAssets.nameplate, alt: "小狗名字門牌", placement: dogRoomDoorplatePlacement } };
+export const dogRoomScene: RoomSceneConfig = { backgroundAlt: "空的寵物生活房間", desktopBackgroundClass: "room-scene-background--dog", mobileBackgroundClass: "room-scene-background--dog-mobile", backgroundStyle: { objectFit: "contain", objectPosition: "center center" }, doorplate: { image: sharedAssets.nameplate, alt: "小狗名字門牌", placement: dogRoomDoorplatePlacement } };
 export const dogDepartureScene: DepartureSceneConfig = { trunkBackground: "/assets/car/car-trunk.webp", trunkBackgroundAlt: "打開的汽車後車廂", documentFolderImage: "/assets/car/adoption-documents.webp", documentFolderAlt: "飼養文件夾" };
 export const dogPreparation = { roomItems: dogRoomItems, hazards: dogHazards, trunkItems: dogDepartureTrunkItems, roomFlow: dogRoomFlow, roomScene: dogRoomScene, departureScene: dogDepartureScene } as const;

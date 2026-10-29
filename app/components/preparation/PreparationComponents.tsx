@@ -13,9 +13,10 @@ import { NavButtons, StepHeading } from "../shared/SharedComponents";
 import { ItemDescriptionCard } from "../shared/ItemDescriptionCard";
 import { MobileInfoSheet, type MobileInfoSheetContent } from "../shared/MobileInfoSheet";
 import { MobileStageIntro } from "../shared/MobileStageIntro";
+import { MobileItemInfoBadge, MobileItemPlacedCheck } from "../shared/MobileItemMarks";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
 import { sharedAssets } from "../../data/shared/assets";
-import { RoomPreparationMobile, type MobileRoomSupplyTutorialState } from "./RoomPreparationMobile";
+import { RoomPreparationMobile } from "./RoomPreparationMobile";
 
 export { initialHomeReadinessState };
 export type { HomeReadinessState };
@@ -174,7 +175,7 @@ function expensePriceText(expenseIds: string[] = [], species: string) {
 
 function mobileRoomPriceText(item: RoomItem, species: string) {
   const ids = Array.from(new Set([...(item.expenseIds ?? []), ...(item.expenseId ? [item.expenseId] : [])]));
-  return mobileExpensePriceText(ids, species);
+  return expensePriceText(ids, species);
 }
 
 function mobileExpensePriceText(expenseIds: string[] = [], species: string) {
@@ -314,8 +315,6 @@ export function RoomPreparation({
   onToggleHazard,
   onReplay,
   onNext,
-  mobileSupplyTutorial,
-  onMobileSupplyTutorialChange,
   reviewing = false,
   species = "dog",
 }: {
@@ -326,8 +325,6 @@ export function RoomPreparation({
   onToggleHazard: (id: string) => void;
   onReplay: () => void;
   onNext: () => void;
-  mobileSupplyTutorial: MobileRoomSupplyTutorialState;
-  onMobileSupplyTutorialChange: (next: MobileRoomSupplyTutorialState) => void;
   reviewing?: boolean;
   breed: string;
   species?: string;
@@ -578,8 +575,8 @@ export function RoomPreparation({
                 ? item.sceneParts.map((part) => <div key={`${item.id}-${part.id}`} data-room-item-id={item.id} className={`room-object room-object-part placed-supply auto-room-object placed-room-item--${item.id}`} style={roomScenePartPlacementStyle(part)}><img src={part.image} alt={`房間中已配置的${item.label}`} /></div>)
                 : <div key={item.id} data-room-item-id={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id} ${item.sceneClassName ?? ""}`} style={roomItemSceneStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
             {mobile && shouldPromptInteriorEntry && mobileEntryItem && <div className={`room-mobile-entry-cue ${(mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? "room-mobile-entry-cue--left" : "room-mobile-entry-cue--right"}`} style={{
-              left: `${Math.max(24, Math.min(76, (mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) + ((mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? -21 : 21)))}%`,
-              top: `${mobileEntryItem.mobilePlacement?.y ?? mobileEntryItem.placement.y}%`,
+              left: `${roomFlow?.mobileEntryHintPlacement?.x ?? Math.max(24, Math.min(76, (mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) + ((mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? -30 : 21)))}%`,
+              top: `${roomFlow?.mobileEntryHintPlacement?.y ?? mobileEntryItem.mobilePlacement?.y ?? mobileEntryItem.placement.y}%`,
             }} aria-hidden="true"><InteriorEntryPointerIcon direction={(mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? "left" : "right"} /></div>}
             {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => item.hotspot
               ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(item.hotspot)} aria-label={`收好危險物品：${item.label}`} onClick={(event) => mobile ? secureMobileHazard(event, item.id) : secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
@@ -658,7 +655,7 @@ export function RoomPreparation({
         <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="primary" onClick={completeRoomCheck}>完成房間檢查，準備出發 <span>→</span></button></div>
       </div>
       </div>
-      <RoomPreparationMobile key={species} petName={displayName} scene={() => renderRoomScene(true)} firstSupplyItemId={roomScene.mobileFirstSupplyItemId} supplyTutorial={mobileSupplyTutorial} onSupplyTutorialChange={onMobileSupplyTutorialChange} hazardBackground={roomFlow?.initialMobileBackground ?? roomFlow?.initialBackground ?? roomScene.mobileBackground ?? roomScene.background ?? ""} hazards={activeHazards} items={activeRoomItems} securedHazards={securedHazards} selectedItems={selectedItems} activeHazard={activeHazard} activeItem={activeRoomItems.find((item) => item.id === activeMobileItemInfo)} hazardsCleared={hazardsCleared} lockedItemIds={hasInteriorRoomFlow && !insideView ? activeRoomItems.filter((item) => !outsideItemIds.includes(item.id)).map((item) => item.id) : []} hazardIcon={<WarningTriangleIcon />} supplyIcon={<StorageBoxIcon />} onSelectHazard={(id) => { setActiveMobileItemInfo(null); setActiveHazardInfo(id); }} onSelectItem={(id) => { setActiveHazardInfo(null); setActiveMobileItemInfo(id); }} onCloseInfo={closeMobileInfo} onPrepare={prepareItem} roomComplete={mobileRoomComplete} onComplete={completeRoomCheck} itemPrice={(item) => mobileRoomPriceText(item, species)} />
+      <RoomPreparationMobile key={species} petName={displayName} scene={() => renderRoomScene(true)} hazardBackground={roomFlow?.initialMobileBackground ?? roomFlow?.initialBackground ?? roomScene.mobileBackground ?? roomScene.background ?? ""} hazardBackgroundPosition={roomFlow?.initialMobileBackground ? "center center" : roomScene.mobileExteriorBackgroundStyle?.objectPosition ?? "right center"} hazards={activeHazards} items={activeRoomItems} securedHazards={securedHazards} selectedItems={selectedItems} activeHazard={activeHazard} activeItem={activeRoomItems.find((item) => item.id === activeMobileItemInfo)} hazardsCleared={hazardsCleared} lockedItemIds={hasInteriorRoomFlow && !insideView ? activeRoomItems.filter((item) => !outsideItemIds.includes(item.id)).map((item) => item.id) : []} hazardIcon={<WarningTriangleIcon />} supplyIcon={<StorageBoxIcon />} onSelectHazard={(id) => { setActiveMobileItemInfo(null); setActiveHazardInfo(id); }} onSelectItem={(id) => { setActiveHazardInfo(null); setActiveMobileItemInfo(id); }} onCloseInfo={closeMobileInfo} onPrepare={prepareItem} roomComplete={mobileRoomComplete} onComplete={completeRoomCheck} itemPrice={(item) => mobileRoomPriceText(item, species)} />
     </div>
   );
 }
@@ -708,7 +705,6 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
   const [departing, setDeparting] = useState(false);
   const [mobileStarted, setMobileStarted] = useState(false);
   const [mobileInfo, setMobileInfo] = useState<MobileInfoSheetContent | null>(null);
-  const [pendingMobileInfoItemIds, setPendingMobileInfoItemIds] = useState<Set<string>>(() => new Set());
   const documents = activeTrunkItems.filter((item) => item.kind === "document");
   const supplies = activeTrunkItems.filter((item) => item.kind === "supply");
   const documentDone = documents.filter((item) => selected.includes(item.id)).length;
@@ -724,17 +720,10 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
     window.setTimeout(() => {
       onSelect(id);
       setExitingItems((current) => current.filter((itemId) => itemId !== id));
-      setPendingMobileInfoItemIds((current) => new Set(current).add(id));
     }, 360);
   }
 
   function openMobileItemInfo(item: typeof activeTrunkItems[number], price: string | undefined) {
-    setPendingMobileInfoItemIds((current) => {
-      if (!current.has(item.id)) return current;
-      const next = new Set(current);
-      next.delete(item.id);
-      return next;
-    });
     setMobileInfo({ title: item.label, description: item.description.replaceAll("{petName}", displayName), image: item.image, price });
   }
 
@@ -757,8 +746,8 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
               const hidePriceForReusedItem = departureScene.hidePriceForReusedItemIds?.includes(item.id);
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
-                  <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.visualClassName ?? item.id}`} style={item.visualScale === undefined ? undefined : { "--departure-item-image-scale": item.visualScale } as CSSProperties} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b>
-                </button> : <><ItemDescriptionCard className="departure-desktop-note" title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} /><button type="button" className={`departure-mobile-done${pendingMobileInfoItemIds.has(item.id) ? " is-awaiting-info" : ""}`} onClick={() => openMobileItemInfo(item, mobilePrice || undefined)} aria-label={`查看${item.label}說明`}><span className="departure-supply-visual">{item.image && <img src={item.image} alt="" />}</span><b>{item.label}</b><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4.5 4.5L19 7" /></svg></span></button></>}
+                  <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.visualClassName ?? item.id}`} style={item.visualScale === undefined ? undefined : { "--departure-item-image-scale": item.visualScale } as CSSProperties} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b><MobileItemInfoBadge />
+                </button> : <><ItemDescriptionCard className="departure-desktop-note" title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} /><button type="button" className="departure-mobile-done" onClick={() => openMobileItemInfo(item, mobilePrice || undefined)} aria-label={`查看${item.label}說明`}><span className="departure-supply-visual">{item.image && <img src={item.image} alt="" />}</span><b>{item.label}</b><MobileItemInfoBadge /><MobileItemPlacedCheck /></button></>}
               </div>;
             })}
           </div>)}
@@ -767,6 +756,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
 
       <section className="departure-car" aria-label="已打開的汽車後車廂與自動配置用品">
         {departureScene.trunkBackground ? <img className="car-trunk-background" src={departureScene.trunkBackground} alt={departureScene.trunkBackgroundAlt} /> : <div className="car-trunk-background preparation-asset-placeholder" role="img" aria-label="接回家場景素材待補">素材待補</div>}
+        {mobileStarted && selected.length === 0 && <p className="mobile-item-operation-cue">點擊物品，放入後車廂</p>}
         {documents.some((item) => selected.includes(item.id) && item.visualRole === "document-folder") && <div className="car-document-folder complete">{departureScene.documentFolderImage ? <img src={departureScene.documentFolderImage} alt={departureScene.documentFolderAlt} /> : <span className="preparation-asset-placeholder">文件夾素材待補</span>}</div>}
         {documents.filter((item) => selected.includes(item.id) && item.image && item.visualRole === "identity-card").map((item) => <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`已放入文件夾的${item.label}`} />)}
         {supplies.filter((item) => selected.includes(item.id)).map((item) => item.image ? <img key={item.id} className={`placed-car-item placed-car-${item.id}`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} src={item.image} alt={`後車廂內的${item.label}`} /> : <div key={item.id} className={`placed-car-item placed-car-${item.id} preparation-asset-placeholder`} style={{ left: `${item.placement.x}%`, top: `${item.placement.y}%`, width: `${item.placement.width}%`, zIndex: item.placement.layer }} role="img" aria-label={`已準備${item.label}，素材待補`}>{item.label}</div>)}

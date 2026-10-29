@@ -153,8 +153,6 @@ export type RoomSceneConfig = {
   mobileBackgroundClass?: string;
   /** 僅手機版外部房間背景的裁切方式；不會套用到籠子／缸體內部場景。 */
   mobileExteriorBackgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string };
-  /** 手機版用品準備箱首次教學要優先顯示的用品。 */
-  mobileFirstSupplyItemId?: string;
   backgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string };
   doorplate?: { image: string; alt: string; placement: RoomDoorplatePlacement };
 };
@@ -743,8 +741,8 @@ export type HazardItem = {
   mobilePlacement?: { x: number; y: number; width: number };
   /** 手機版獨立點擊區（1:1 場景百分比）；未設定時由 mobilePlacement 推算。 */
   mobileHitArea?: { x: number; y: number; width: number; height: number };
-  /** 手機物品欄的未整理背景裁切區；未設定時以點擊區／物件位置推算。 */
-  mobileThumbnailCrop?: { x: number; y: number; size: number };
+  /** 手機物品欄裁切未整理場景的區域；可排除只作熱區標記的獨立素材。 */
+  mobileThumbnailCrop?: { x: number; y: number; size: number; includeSprite?: boolean };
   /**
    * A background-only hazard can expose a labelled hit target without adding a
    * separate sprite. Geometry remains in the species data.

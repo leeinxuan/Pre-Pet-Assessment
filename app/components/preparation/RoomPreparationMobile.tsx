@@ -7,21 +7,13 @@ import type { HazardItem, RoomItem } from "../../game-types";
 import { renderKnowledgeText } from "../life/activities/activity-ui";
 import { MobileStageIntro } from "../shared/MobileStageIntro";
 
-export type MobileRoomSupplyTutorialState = {
-  firstItemPlaced: boolean;
-  firstItemInfoViewed: boolean;
-  preparedItemsTutorialCompleted: boolean;
-};
-
 type RoomPreparationMobileProps = {
   petName: string;
   scene: () => ReactNode;
   hazardBackground: string;
+  hazardBackgroundPosition?: string;
   hazards: HazardItem[];
   items: RoomItem[];
-  firstSupplyItemId?: string;
-  supplyTutorial: MobileRoomSupplyTutorialState;
-  onSupplyTutorialChange: (next: MobileRoomSupplyTutorialState) => void;
   securedHazards: string[];
   selectedItems: string[];
   activeHazard: HazardItem | undefined;
@@ -55,13 +47,17 @@ function CheckIcon() {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7" /></svg>;
 }
 
+function InfoBadge() {
+  return <span className="room-mobile-info-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="6.5" r="1.2" fill="currentColor" stroke="none" /><path d="M12 10.5v7" /></svg></span>;
+}
+
 function LockIcon() {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg>;
 }
 
-function HazardThumbnail({ hazard, background }: { hazard: HazardItem; background: string }) {
-  if (hazard.image) return <ItemThumbnail image={hazard.image} label={hazard.label} />;
-  const area = hazard.mobileThumbnailCrop ?? (() => {
+function HazardThumbnail({ hazard, background, backgroundPosition = "right center" }: { hazard: HazardItem; background: string; backgroundPosition?: string }) {
+  if (hazard.image && !hazard.mobileThumbnailCrop) return <ItemThumbnail image={hazard.image} label={hazard.label} />;
+  const area: NonNullable<HazardItem["mobileThumbnailCrop"]> = hazard.mobileThumbnailCrop ?? (() => {
     const placement = hazard.hotspot?.mobile ?? hazard.mobileHitArea ?? hazard.mobilePlacement ?? hazard.placement;
     return { x: placement.x, y: placement.y, size: Math.min(32, Math.max(18, placement.width + 8)) };
   })();
@@ -74,12 +70,16 @@ function HazardThumbnail({ hazard, background }: { hazard: HazardItem; backgroun
     left: `${-left * 100 / size}%`,
     top: `${-top * 100 / size}%`,
   };
+  const spritePlacement = hazard.mobilePlacement ?? hazard.placement;
   return <span className="room-mobile-thumbnail room-mobile-hazard-thumbnail">
-    <img className="room-mobile-hazard-background" src={background} style={cropStyle} alt="" />
+    <span className="room-mobile-hazard-crop-scene" style={cropStyle}>
+      <img className="room-mobile-hazard-background" src={background} style={{ objectPosition: backgroundPosition }} alt="" />
+      {hazard.image && area.includeSprite !== false && <img className="room-mobile-hazard-sprite" src={hazard.image} style={{ left: `${spritePlacement.x}%`, top: `${spritePlacement.y}%`, width: `${spritePlacement.width}%` }} alt="" />}
+    </span>
   </span>;
 }
 
-export function RoomPreparationMobile({ petName, scene, hazardBackground, hazards, items, firstSupplyItemId, supplyTutorial, onSupplyTutorialChange, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, roomComplete, onComplete, itemPrice }: RoomPreparationMobileProps) {
+export function RoomPreparationMobile({ petName, scene, hazardBackground, hazardBackgroundPosition, hazards, items, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, roomComplete, onComplete, itemPrice }: RoomPreparationMobileProps) {
   const [started, setStarted] = useState(false);
   const [chosenTab, setChosenTab] = useState<"hazards" | "items" | null>(null);
   // The supplies are intentionally unavailable until every hazard is secured.
@@ -88,37 +88,17 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   const tab = hazardsCleared ? (chosenTab ?? "items") : "hazards";
   const activeInfo = activeHazard ?? activeItem;
   const touchStart = useRef<number | null>(null);
-  const firstSupplyItem = items.find((item) => item.id === firstSupplyItemId);
-  const firstSupplyItemPlaced = Boolean(firstSupplyItem && selectedItems.includes(firstSupplyItem.id));
-  const isSupplyTutorialActive = Boolean(firstSupplyItem && !supplyTutorial.preparedItemsTutorialCompleted);
-  const visibleSupplyItems: RoomItem[] = isSupplyTutorialActive && firstSupplyItem ? [firstSupplyItem] : items;
-
-  useEffect(() => {
-    if (!firstSupplyItemPlaced || supplyTutorial.firstItemPlaced) return;
-    onSupplyTutorialChange({ ...supplyTutorial, firstItemPlaced: true });
-  }, [firstSupplyItemPlaced, onSupplyTutorialChange, supplyTutorial]);
-
   function handleSupplyClick(id: string, placed: boolean) {
     if (placed) {
-      if (isSupplyTutorialActive && id === firstSupplyItem?.id && !supplyTutorial.firstItemInfoViewed) {
-        onSupplyTutorialChange({ ...supplyTutorial, firstItemInfoViewed: true });
-      }
       onSelectItem(id);
-    } else if (onPrepare(id) && isSupplyTutorialActive && id === firstSupplyItem?.id) {
-      onSupplyTutorialChange({ ...supplyTutorial, firstItemPlaced: true });
+    } else {
+      onPrepare(id);
     }
   }
 
   const closeInfo = useCallback(() => {
-    if (isSupplyTutorialActive && activeItem?.id === firstSupplyItem?.id && firstSupplyItemPlaced) {
-      onSupplyTutorialChange({
-        firstItemPlaced: true,
-        firstItemInfoViewed: true,
-        preparedItemsTutorialCompleted: true,
-      });
-    }
     onCloseInfo();
-  }, [activeItem?.id, firstSupplyItem?.id, firstSupplyItemPlaced, isSupplyTutorialActive, onCloseInfo, onSupplyTutorialChange]);
+  }, [onCloseInfo]);
 
   useEffect(() => {
     if (!activeInfo || !window.matchMedia("(max-width: 720px)").matches) return;
@@ -134,7 +114,10 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
 
   return <div className={`room-preparation-mobile${started ? " is-started" : ""}`}>
     {!started ? <MobileStageIntro id="room-mobile-intro-title" className="room-mobile-intro" icon={<RoomIntroIcon />} title={`先替 ${petName} 布置安全的生活空間`} description={`在迎接 ${petName} 前，先收好生活空間中的危險物品，再準備好牠每天需要的用品。`} actionLabel="開始整理空間" onStart={() => setStarted(true)} /> : <>
-      {scene()}
+      <div className="room-mobile-scene-shell">
+        {scene()}
+        {tab === "items" && selectedItems.length === 0 && <p className="room-mobile-supply-cue">點擊用品，放入房間</p>}
+      </div>
       <div className="room-mobile-tabs" role="tablist" aria-label="房間佈置階段">
         <button type="button" role="tab" aria-selected={tab === "hazards"} className={tab === "hazards" ? "is-active" : ""} onClick={() => setChosenTab("hazards")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{hazardIcon}</span>危險物品</span><span>{securedHazards.filter((id) => hazards.some((item) => item.id === id)).length} / {hazards.length}</span></button>
         <button type="button" role="tab" aria-selected={tab === "items"} className={tab === "items" ? "is-active" : ""} onClick={() => setChosenTab("items")} disabled={!hazardsCleared} aria-label={hazardsCleared ? "用品準備箱" : "請先收好所有危險物品才能使用用品準備箱"}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{supplyIcon}</span>用品準備箱</span><span>{selectedItems.filter((id) => items.some((item) => item.id === id)).length} / {items.length}</span></button>
@@ -142,20 +125,14 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
       <section className="room-mobile-inventory" role="tabpanel" aria-label={tab === "hazards" ? "已收好的危險物品" : "準備用品"}>
         {tab === "hazards" ? securedHazards.filter((id) => hazards.some((item) => item.id === id)).length === 0
           ? <div className="room-mobile-empty"><PointingHandIcon /><p>點擊場景中的危險物品收起</p></div>
-          : <div className="room-mobile-grid">{securedHazards.map((id) => hazards.find((item) => item.id === id)).filter((item): item is HazardItem => Boolean(item)).map((item) => <button type="button" key={item.id} className="room-mobile-tile room-mobile-hazard-tile is-complete" onClick={() => onSelectHazard(item.id)} aria-label={`${item.label}已收好，查看說明`}><HazardThumbnail hazard={item} background={hazardBackground} /><span className="room-mobile-tile-label">{item.label}</span><span className="room-mobile-complete-mark" aria-hidden="true"><CheckIcon /></span></button>)}</div>
-          : isSupplyTutorialActive && firstSupplyItem ? <div className="room-mobile-first-supply-tutorial"><div className="room-mobile-grid">{visibleSupplyItems.map((item) => {
-            const placed = selectedItems.includes(item.id);
-            return <button type="button" key={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}`} onClick={() => handleSupplyClick(item.id, placed)} aria-label={placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
-              <ItemThumbnail image={item.image} label={item.label} /><span className="room-mobile-tile-label">{item.label}</span>
-              {placed && <span className="room-mobile-complete-mark" aria-hidden="true"><CheckIcon /></span>}
-            </button>;
-          })}</div><div className="room-mobile-empty room-mobile-first-supply-guide"><PointingHandIcon /><p>{firstSupplyItemPlaced ? "點擊已放置用品查看說明" : "點擊物品放入房間"}</p></div></div>
-          : <div className="room-mobile-grid">{visibleSupplyItems.map((item) => {
+          : <div className="room-mobile-grid">{securedHazards.map((id) => hazards.find((item) => item.id === id)).filter((item): item is HazardItem => Boolean(item)).map((item) => <button type="button" key={item.id} className="room-mobile-tile room-mobile-hazard-tile" onClick={() => onSelectHazard(item.id)} aria-label={`${item.label}已收好，查看說明`}><HazardThumbnail hazard={item} background={hazardBackground} backgroundPosition={hazardBackgroundPosition} /><span className="room-mobile-tile-label">{item.label}</span><InfoBadge /></button>)}</div>
+          : <div className="room-mobile-grid">{items.map((item) => {
             const placed = selectedItems.includes(item.id);
             const locked = !placed && lockedItemIds.includes(item.id);
             return <button type="button" key={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}`} onClick={() => handleSupplyClick(item.id, placed)} disabled={!placed && (!hazardsCleared || locked)} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
               <ItemThumbnail image={item.image} label={item.label} /><span className="room-mobile-tile-label">{item.label}</span>
-              {placed && <span className="room-mobile-complete-mark" aria-hidden="true"><CheckIcon /></span>}
+              {!locked && <InfoBadge />}
+              {placed && <span className="room-mobile-supply-check" aria-hidden="true"><CheckIcon /></span>}
               {locked && <span className="room-mobile-lock" aria-hidden="true"><LockIcon /></span>}
             </button>;
           })}</div>}
@@ -166,7 +143,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
       <section className="room-mobile-sheet" role="dialog" aria-modal="true" aria-label={`${activeInfo.label}說明`} onClick={(event) => event.stopPropagation()} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientY ?? null; }} onTouchEnd={(event) => { if (touchStart.current !== null && event.currentTarget.scrollTop <= 0 && (event.changedTouches[0]?.clientY ?? 0) - touchStart.current > 70) closeInfo(); touchStart.current = null; }}>
         <span className="room-mobile-sheet-handle" aria-hidden="true" />
         <button type="button" className="room-mobile-sheet-close" onClick={closeInfo} aria-label="關閉說明">×</button>
-        <header>{activeHazard ? <HazardThumbnail hazard={activeHazard} background={hazardBackground} /> : <ItemThumbnail image={activeInfo.image} label={activeInfo.label} />}<div><h2>{activeInfo.label}</h2>{activeItem && <p className="room-mobile-price">{itemPrice(activeItem)}</p>}</div></header>
+        <header>{activeHazard ? <HazardThumbnail hazard={activeHazard} background={hazardBackground} backgroundPosition={hazardBackgroundPosition} /> : <ItemThumbnail image={activeInfo.image} label={activeInfo.label} />}<div><h2>{activeInfo.label}</h2>{activeItem && <p className="room-mobile-price">{itemPrice(activeItem)}</p>}</div></header>
         <div className="room-mobile-sheet-copy">{activeHazard ? <><div className="room-mobile-hazard-section"><h3>為什麼危險：</h3><p>{renderKnowledgeText(activeHazard.danger.replaceAll("{petName}", petName))}</p></div><div className="room-mobile-hazard-section"><h3>建議如何處理：</h3><p>{renderKnowledgeText(activeHazard.handling.replaceAll("{petName}", petName))}</p></div></> : activeItem && <p>{renderKnowledgeText(activeItem.description.replaceAll("{petName}", petName))}</p>}</div>
       </section>
     </div>, document.body)}

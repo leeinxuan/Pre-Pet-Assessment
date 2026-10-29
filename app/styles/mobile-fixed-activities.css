@@ -9,8 +9,10 @@
 .departure-supply-row button.departure-mobile-done,
 .arrival-meal-supplies button.arrival-meal-mobile-done { display: none; }
 .arrival-meal-inventory { display: contents; }
-.arrival-meal-choice-check { display: none; }
+.mobile-item-info-badge,
+.mobile-item-placed-check { display: none; }
 .mobile-info-sheet-overlay { display: none; }
+.mobile-item-operation-cue { display: none; }
 .video-scenario-choice-list,
 .busy-care-choice-list { display: grid; align-content: start; gap: 14px; }
 .video-scenario-choice-list > .scenario-option-card,
@@ -22,6 +24,30 @@
 .arrival-meal-activity--choice > .arrival-meal-scene .scene-media-placeholder p { max-width: min(100%, 420px); overflow-wrap: anywhere; }
 
 @media (max-width: 720px) {
+  .departure-car > .mobile-item-operation-cue,
+  .arrival-meal-scene > .mobile-item-operation-cue {
+    position: absolute;
+    z-index: 15;
+    top: 16px;
+    left: 50%;
+    display: block;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100vw - 112px);
+    margin: 0;
+    padding: 9px 15px;
+    transform: translateX(-50%);
+    border: 1px solid rgba(190, 159, 103, .32);
+    border-radius: 999px;
+    background: rgba(255, 253, 248, .97);
+    color: var(--ink);
+    box-shadow: 0 5px 16px rgba(64, 49, 28, .13);
+    font-size: clamp(12px, 3.5vw, 14px);
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+    pointer-events: none;
+  }
   /* Touch-first litter cleaning: keep sprites in place while enlarging their hit targets. */
   .cat-litter-rescue .cat-rescue-waste,
   .cat-litter-rescue .cat-rescue-bin,
@@ -504,7 +530,6 @@
     border-radius: 14px;
     background: #fffaf0;
   }
-  .departure-mobile-done > span:last-child { position: absolute; top: 5px; right: 7px; color: #4f8059; font-weight: 900; }
   .departure-actions {
     grid-row: 3;
     flex-direction: row;
@@ -572,9 +597,8 @@
     background: #fffaf0;
     font-size: 12px;
   }
-  .arrival-meal-mobile-done > span:last-child { position: absolute; top: 6px; right: 7px; color: #4f8059; }
   .arrival-meal-mobile-done img { width: min(76px, 70%) !important; height: 72px !important; }
-  /* 與房間準備箱同尺寸、底色、圓角與右上角完成勾。 */
+  /* Match the room supply shelf while preserving each stage's existing actions. */
   .departure-supply-row button,
   .departure-supply-row button.departure-mobile-done,
   .arrival-meal-supplies button,
@@ -612,35 +636,47 @@
   .departure-supply-row b,
   .arrival-meal-supplies button > span:nth-child(2),
   .arrival-meal-supplies button > b { max-width: 100%; font-size: 11px; font-weight: 850; line-height: 1.3; text-align: center; overflow-wrap: anywhere; }
-  .departure-mobile-done > span:last-child,
-  .arrival-meal-mobile-done > span:last-child,
-  .arrival-meal-choice-check {
+  .departure-supply-row .mobile-item-info-badge,
+  .arrival-meal-supplies .mobile-item-info-badge {
     position: absolute;
+    z-index: 2;
     top: 8px;
     right: 8px;
     display: grid;
-    width: 23px;
-    height: 23px;
+    width: 26px;
+    height: 26px;
     place-items: center;
-    border: 2px solid var(--paper);
+    border: 1px solid rgba(184, 141, 73, .55);
     border-radius: 50%;
-    background: var(--gold-dark);
-    color: var(--paper);
-    box-shadow: 0 1px 4px rgba(70, 53, 26, .17);
+    background: rgba(255, 255, 255, .78);
+    color: #a96a0d;
+    box-shadow: 0 2px 5px rgba(92, 58, 19, .15);
     pointer-events: none;
   }
-  .departure-mobile-done > span:last-child svg,
-  .arrival-meal-mobile-done > span:last-child svg,
-  .arrival-meal-choice-check svg { width: 14px; height: 14px; }
-  /* Newly prepared items glow only around their card until the explanation opens. */
-  .departure-supply-row button.departure-mobile-done.is-awaiting-info,
-  .arrival-meal-supplies button.arrival-meal-mobile-done.is-awaiting-info {
-    border-color: var(--line);
-    box-shadow: 0 0 12px rgba(204, 151, 38, .32);
-    animation: mobile-prepared-item-info-glow 1.7s ease-in-out infinite;
+  .mobile-item-info-badge svg { width: 17px; height: 17px; }
+  .departure-supply-row .mobile-item-placed-check,
+  .arrival-meal-supplies .mobile-item-placed-check {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    transform: translate(-50%, -50%);
+    color: #4f8059;
+    pointer-events: none;
   }
+  .mobile-item-placed-check svg { width: 29px; height: 29px; }
+  .departure-supply-row button.departure-mobile-done .departure-supply-visual,
+  .departure-supply-row button.departure-mobile-done > b,
+  .arrival-meal-supplies button.arrival-meal-mobile-done > img,
+  .arrival-meal-supplies button.arrival-meal-mobile-done > span:not(.mobile-item-info-badge):not(.mobile-item-placed-check) { opacity: .42; }
   .arrival-meal-supplies button.arrival-meal-choice-button { grid-template-rows: auto auto; align-content: center; padding: 16px 6px 10px; }
   .arrival-meal-supplies .arrival-meal-choice-button.done { background: var(--paper); border-color: var(--line); }
+  .arrival-meal-supplies .arrival-meal-choice-button.done > b,
+  .arrival-meal-supplies .arrival-meal-choice-button.done > small { opacity: .42; }
   .arrival-meal-supplies .arrival-meal-choice-button small { min-width: 0; margin-top: 0; font-size: 10px; line-height: 1.3; text-align: center; white-space: normal; }
   .arrival-meal-footer {
     grid-row: 3;
@@ -655,10 +691,6 @@
   .arrival-meal-completion-message { min-height: 0; }
   .arrival-meal-footer .primary { min-height: 44px; margin: 0; }
   .arrival-meal-activity .arrival-meal-footer .arrival-meal-continue-button { margin-bottom: 0; }
-}
-
-@keyframes mobile-prepared-item-info-glow {
-  50% { box-shadow: 0 0 19px rgba(204, 151, 38, .48); }
 }
 
 /* A short phone keeps enough of the inventory visible without changing scene coordinates. */
