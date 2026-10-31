@@ -1,7 +1,6 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- Room and departure scenes rely on native image sizing for existing drag coordinates and overlays. */
-/* eslint-disable react-hooks/refs -- The scene event handlers read the in-flight guard only after user interaction. */
 
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -15,7 +14,7 @@ import { MobileInfoSheet, type MobileInfoSheetContent } from "../shared/MobileIn
 import { MobileStageIntro } from "../shared/MobileStageIntro";
 import { MobileItemInfoBadge, MobileItemPlacedCheck } from "../shared/MobileItemMarks";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
-import { sharedAssets } from "../../data/shared/assets";
+import { housingChoiceImages } from "../../data/shared/assets";
 import { RoomPreparationMobile } from "./RoomPreparationMobile";
 
 export { initialHomeReadinessState };
@@ -69,6 +68,7 @@ function InteriorEntryPointerIcon({ direction }: { direction: "left" | "right" }
 export function HomeReadinessActivity({ species = "dog", petName, state, onChange, onBack, onNext }: {
   species?: string; petName: string; state: HomeReadinessState; onChange: (state: HomeReadinessState) => void; onBack: () => void; onNext: () => void;
 }) {
+  const [mobileReminderOpen, setMobileReminderOpen] = useState(false);
   const speciesConfig = getSpeciesConfig(species);
   const config = speciesConfig.homeReadiness;
   const displayName = petName.trim() || speciesConfig.copy.animalNameFallback;
@@ -104,9 +104,17 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
     <div className="home-readiness-desktop-flow">
     {!canShowCards ? <>
       <header className="home-readiness-heading"><h1>家庭與居住確認</h1><p>{arrivalLead}</p></header>
-      {!selectedHousing ? <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question"><p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2><div className="home-readiness-choice-grid">
-        {config.housingChoices.map((choice) => <button type="button" key={choice.id} onClick={() => onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false })}><span className="home-readiness-choice-media"><img src={choice.id === "renter" ? sharedAssets.housing.tenant : sharedAssets.housing.homeowner} alt="" /></span><span className="home-readiness-choice-label">{choice.label}</span></button>)}
-      </div></article></section> : <section className="home-readiness-workbench home-readiness-workbench--reminder"><article className="home-readiness-reminder-step"><p className="life-stage-label">第一步・居住提醒</p><h2>{selectedHousing.followUpTitle}</h2><HomeReadinessRichText blocks={selectedHousing.followUpContent} replaceName={replaceName} /><button type="button" className="primary" onClick={() => onChange({ ...state, housingReminderAcknowledged: true })}>我了解了</button></article></section>}
+      {!selectedHousing ? <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question">
+        <p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2>
+        <div className="home-readiness-choice-grid">{config.housingChoices.map((choice) => <button type="button" key={choice.id} onClick={() => onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false })}>
+          <span className="home-readiness-choice-media"><img src={housingChoiceImages[choice.id]} alt="" /></span>
+          <span className="home-readiness-choice-label">{choice.label}</span>
+        </button>)}</div>
+      </article></section> : <section className="home-readiness-workbench home-readiness-workbench--reminder"><article className="home-readiness-reminder-step">
+        <p className="life-stage-label">第一步・居住提醒</p><h2>{selectedHousing.followUpTitle}</h2>
+        <HomeReadinessRichText blocks={selectedHousing.followUpContent} replaceName={replaceName} />
+        <button type="button" className="primary" onClick={() => onChange({ ...state, housingReminderAcknowledged: true })}>我了解了</button>
+      </article></section>}
     </> : <>
       <header className="home-readiness-heading"><h1>家庭與居住確認</h1><p>還有一件事——同住的人都準備好了嗎？</p></header>
       <section className="home-readiness-checklist"><header><p className="life-stage-label">第二步・共同承諾</p><h2>逐一確認，讓照顧從全家的共識開始。</h2></header>
@@ -141,11 +149,20 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
       })}</nav>}
 
       <main className="home-readiness-mobile-content">
-        {!canShowCards ? (!selectedHousing
-          ? <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question"><p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2><div className="home-readiness-choice-grid">
-            {config.housingChoices.map((choice) => <button type="button" key={choice.id} onClick={() => onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false })}><span className="home-readiness-choice-media"><img src={choice.id === "renter" ? sharedAssets.housing.tenant : sharedAssets.housing.homeowner} alt="" /></span><span className="home-readiness-choice-label">{choice.label}</span></button>)}
-          </div></article></section>
-          : <section className="home-readiness-workbench home-readiness-workbench--reminder"><article className="home-readiness-reminder-step"><p className="life-stage-label">第一步・居住提醒</p><h2>{selectedHousing.followUpTitle}</h2><HomeReadinessRichText blocks={selectedHousing.followUpContent} replaceName={replaceName} /><button type="button" className="primary" onClick={() => onChange({ ...state, housingReminderAcknowledged: true })}>我了解了</button></article></section>)
+        {!canShowCards ? (mobileReminderOpen && selectedHousing
+          ? <section className="home-readiness-reminder-step" aria-label="居住提醒">
+              <p className="life-stage-label">第一步・居住提醒</p>
+              <h2>{selectedHousing.followUpTitle}</h2>
+              <HomeReadinessRichText blocks={selectedHousing.followUpContent} replaceName={replaceName} />
+              <button type="button" className="primary" onClick={() => onChange({ ...state, housingReminderAcknowledged: true })}>我了解了</button>
+            </section>
+          : <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question">
+              <p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2>
+              <div className="home-readiness-housing-tabs" role="tablist" aria-label="選擇居住狀況">
+                {config.housingChoices.map((choice) => <button type="button" role="tab" aria-selected={state.housing === choice.id} className={state.housing === choice.id ? "selected" : ""} key={choice.id} onClick={() => { setMobileReminderOpen(false); onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false }); }}>{choice.label}</button>)}
+              </div>
+              {selectedHousing && <div className="home-readiness-housing-detail" role="tabpanel"><img src={housingChoiceImages[selectedHousing.id]} alt="" /></div>}
+            </article></section>)
           : <>
             {activeCard && <article className="home-readiness-commitment-card">
               <h3>{renderHomeReadinessSegments(activeCard.title, replaceName)}</h3>
@@ -158,6 +175,9 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
           </>}
       </main>
 
+      {!canShowCards && !mobileReminderOpen && <div className="home-readiness-mobile-complete-action home-readiness-mobile-housing-action">
+        <button type="button" className="primary" disabled={!selectedHousing} onClick={() => setMobileReminderOpen(true)}>繼續 <span>→</span></button>
+      </div>}
       {canShowCards && allAcknowledged && <div className="home-readiness-mobile-complete-action">
         <button type="button" className="primary" onClick={onNext}>繼續 <span>→</span></button>
       </div>}

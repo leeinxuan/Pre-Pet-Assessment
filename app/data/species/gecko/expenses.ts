@@ -18,7 +18,7 @@ export const geckoExpenses: Record<string, ExpenseRecord> = {
   "gecko-supplements-initial": { ...initial("gecko-supplements-initial", "鈣粉與綜合維他命粉", 200, "每次餵食必備，每週輪替使用。"), maxAmount: 400 },
   "gecko-transport-box": { ...initial("gecko-transport-box", "爬蟲運輸盒（附通氣孔）", 200, "可遮光小型塑膠盒，減少運輸視覺壓力。"), maxAmount: 500, stage: "出發前準備" },
   "gecko-heat-pack": { ...initial("gecko-heat-pack", "暖暖包（氣溫低時備用）", 50, "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。"), maxAmount: 100, stage: "出發前準備" },
-  "gecko-arrival-checkup": { id: "gecko-arrival-checkup", name: "到家第一週健康檢查", amount: 1500, maxAmount: 3000, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "確認健康狀況、糞便寄生蟲篩檢，建立第一份醫療紀錄（異寵費用標準）。" },
+  "gecko-arrival-checkup": { id: "gecko-arrival-checkup", name: "到家第一週健康檢查", amount: 1500, showPlusSuffix: true, maxAmount: 3000, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "確認健康狀況、糞便寄生蟲篩檢，建立第一份醫療紀錄（異寵費用標準）。" },
   "gecko-food-monthly": { id: "gecko-food-monthly", name: "活體餌料昆蟲（蟋蟀/杜比亞蟑螂/麵包蟲）", amount: 300, maxAmount: 800, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "依守宮體型與餵食頻率，成體每 2–3 天餵食一次。" },
   "gecko-calcium-monthly": { id: "gecko-calcium-monthly", name: "鈣粉與綜合維他命補充劑", amount: 100, maxAmount: 300, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "每次餵食消耗，定期補充。" },
   "gecko-substrate-replace": { id: "gecko-substrate-replace", name: "底材更換（椰子纖維）", amount: 100, maxAmount: 300, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "建議每月全缸更換一次，紙巾底材費用更低。" },

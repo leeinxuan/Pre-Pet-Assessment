@@ -8,20 +8,9 @@ import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../../ga
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, type ObservationAnswerStatus, renderKnowledgeText, withPetName } from "../activity-ui";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
+import { useMobileLayout } from "../../../shared/useMobileLayout";
 
 type RabbitObservationStatus = ObservationAnswerStatus | "comparison";
-
-function useMobileLayout() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 720px)");
-    const update = () => setIsMobile(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-  return isMobile;
-}
 
 export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
   const scenario = rabbitActivityScenarios["rabbit-daily-check"];

@@ -81,7 +81,7 @@ const journeyActivityResetPatches: Record<JourneyActivityResetKey, (() => Partia
   "rabbit-carry-sort": () => ({ rabbitCarryOrder: [], rabbitCarryComplete: false, rabbitCarryAttempts: 0, rabbitCarryAnswerRevealed: false, rabbitCarryFeedbackShown: false }),
   "rabbit-daily-check": () => ({ rabbitDailyCheckSteps: [], rabbitGroomingIntroStarted: false, rabbitGroomingState: rabbitGroomingConfig.initialState, rabbitGroomingObservations: {}, rabbitGroomingInspection: {} }),
   "bird-cage-inspection": () => ({ birdCageInspectionSteps: [], birdCageInspectionIntroStarted: false, birdCageInspectionStates: {}, birdCageInspectionCompleted: false }),
-  "hamster-first-meal": () => ({ hamsterMealSelected: [], hamsterMealFeedbackId: "" }),
+  "hamster-first-meal": () => ({ arrivalMealSelectedChoiceIds: [], arrivalMealFeedbackChoiceId: "" }),
   "hamster-inspection": () => ({ hamsterInspectionStarted: false, hamsterInspectionStates: {}, hamsterInspectionCompleted: [], hamsterInspectionFeedback: {} }),
   "gecko-health-inspection": () => ({ geckoHealthInspectionStarted: false, geckoHealthInspectionStates: {}, geckoHealthInspectionCompleted: [], geckoHealthInspectionFeedback: {} }),
   "daily-behavior": null,

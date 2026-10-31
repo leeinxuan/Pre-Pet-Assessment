@@ -215,8 +215,8 @@
       "geckoHealthInspectionStates": {}
     },
     "hamster-first-meal": {
-      "hamsterMealFeedbackId": "",
-      "hamsterMealSelected": []
+      "arrivalMealFeedbackChoiceId": "",
+      "arrivalMealSelectedChoiceIds": []
     },
     "hamster-inspection": {
       "hamsterInspectionCompleted": [],

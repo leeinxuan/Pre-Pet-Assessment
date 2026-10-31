@@ -141,7 +141,7 @@ test("replay reset strategies clear the activity state they own", () => {
     "rabbit-carry-sort": ["rabbitCarryOrder", "rabbitCarryComplete", "rabbitCarryAttempts", "rabbitCarryAnswerRevealed", "rabbitCarryFeedbackShown"],
     "rabbit-daily-check": ["rabbitDailyCheckSteps", "rabbitGroomingState", "rabbitGroomingObservations", "rabbitGroomingInspection"],
     "bird-cage-inspection": ["birdCageInspectionSteps", "birdCageInspectionStates"],
-    "hamster-first-meal": ["hamsterMealSelected", "hamsterMealFeedbackId"],
+    "hamster-first-meal": ["arrivalMealSelectedChoiceIds", "arrivalMealFeedbackChoiceId"],
     "hamster-inspection": ["hamsterInspectionStarted", "hamsterInspectionStates", "hamsterInspectionCompleted", "hamsterInspectionFeedback"],
     "gecko-health-inspection": ["geckoHealthInspectionStarted", "geckoHealthInspectionStates", "geckoHealthInspectionCompleted", "geckoHealthInspectionFeedback"],
   };

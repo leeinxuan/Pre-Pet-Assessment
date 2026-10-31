@@ -4,6 +4,8 @@ export type ExpenseRecord = {
   id: string;
   name: string;
   amount: number;
+  /** 費用明細中，估算起價後是否顯示「+」。 */
+  showPlusSuffix?: boolean;
   /** 臨時性預留支出的最高參考金額；未填時代表單一金額。 */
   maxAmount?: number;
   /** 最高金額為開放式上限（例如 50,000+）時使用。 */
@@ -252,7 +254,8 @@ export type BusyCareChecklistQuestion = {
   id: string;
   prompt: string;
   correctAnswer: "yes" | "no";
-  reviewHint?: string;
+  /** 答案需要再確認時顯示的提示；由各物種情境提供。 */
+  reviewHint: string;
 };
 
 export type BusyCareImageScene = {
@@ -334,6 +337,8 @@ export type ScenarioPresentationConfig = {
   defaultPetName: string;
   knowledgeTitle: string;
   preserveGenericAnimalTerms?: boolean;
+  /** Optional class for a scenario's question layout, supplied by species presentation data. */
+  questionClassName?: string;
   sceneVideo?: { src: string; ariaLabel: string };
   correctFeedbackMedia: ScenarioMediaConfig;
   /** 題目正確回饋依序輪播的媒體；未設定時沿用單一 correctFeedbackMedia。 */
@@ -641,8 +646,8 @@ export type LifeActivityState = {
   birdCageInspectionStates: Record<string, "normal" | "warning">;
   /** 籠外互動完成後，需由玩家主動點擊「完成巡視」才會切換至完成頁。 */
   birdCageInspectionCompleted: boolean;
-  hamsterMealSelected: string[];
-  hamsterMealFeedbackId: string;
+  arrivalMealSelectedChoiceIds: string[];
+  arrivalMealFeedbackChoiceId: string;
   hamsterInspectionStarted: boolean;
   /** 倉鼠清潔活動的隨機髒污角落與各操作累積進度；重 render 時不可重抽或歸零。 */
   hamsterInspectionStates: Record<string, string | number>;

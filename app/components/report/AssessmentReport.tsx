@@ -162,6 +162,10 @@ function MedicalCrossIcon() {
   return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" stroke="none" d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" /></svg>;
 }
 
+function ExternalLinkIcon() {
+  return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M13 5h6v6M19 5l-9 9M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" /></svg>;
+}
+
 function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {
   // 複習內容以企劃指定的 correctSummary 為唯一來源；不可由選項或回饋拼接出另一版知識點。
   const rawPoints = scenario.correctSummary ?? [];
@@ -570,12 +574,12 @@ export function AssessmentReport({
           <PdfDownloadButton petName={petName} label="下載我的照護指南" />
         </section>
         <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-official-title">
-          <div><span aria-hidden="true">↗</span><h2 id="care-guide-official-title">官方寵物照顧指南</h2><p>想再深入了解更詳細的飼養需求、照護方式與相關規範嗎？這裡整理了農業部的官方知識庫，提供更完整的資訊供你查閱。</p></div>
-          <a className="secondary care-guide-official-link" href="https://pet-care-guide-six.vercel.app/" target="_blank" rel="noopener noreferrer">查看官方指南 <span>↗</span></a>
+          <div><span aria-hidden="true"><img src="/care-guid-logo.svg" alt="" /></span><h2 id="care-guide-official-title">官方寵物照顧指南</h2><p>想再深入了解更詳細的飼養需求、照護方式與相關規範嗎？這裡整理了農業部的官方知識庫，提供更完整的資訊供你查閱。</p></div>
+          <a className="secondary care-guide-official-link" href="https://pet-care-guide-six.vercel.app/" target="_blank" rel="noopener noreferrer">查看官方指南 <ExternalLinkIcon /></a>
         </section>
         <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-veterinary-title">
           <div><span aria-hidden="true"><MedicalCrossIcon /></span><h2 id="care-guide-veterinary-title">全國獸醫師職業、診療機構開業查詢</h2><p>可透過全國獸醫師執業、診療機構開業查詢網站搜尋合法的獸醫診療機構，並了解各獸醫診療機構可提供的醫療項目。</p></div>
-          <a className="secondary care-guide-official-link" href="https://ahis9.aphia.gov.tw/Veter/OD/HLIndex.aspx" target="_blank" rel="noopener noreferrer">前往查詢網站 <span>↗</span></a>
+          <a className="secondary care-guide-official-link" href="https://ahis9.aphia.gov.tw/Veter/OD/HLIndex.aspx" target="_blank" rel="noopener noreferrer">前往查詢網站 <ExternalLinkIcon /></a>
         </section>
       </section>
 

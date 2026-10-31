@@ -11,7 +11,6 @@ import { getSpeciesConfig, speciesCategories } from "../../data/species/index";
 import { interpolatePetName } from "../../data/shared/pet-text";
 import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
 import { useDialogFocus } from "./useDialogFocus";
-import { useTestModeEntry } from "./useTestModeEntry";
 
 export function StepHeading({ title, body }: { title: string; body?: string }) {
   return <div className="step-heading"><h1>{title}</h1>{body && <p>{body}</p>}</div>;
@@ -265,8 +264,7 @@ export function StageRail({
   );
 }
 
-export function Welcome({ onStart, onTestStart }: { onStart: () => void; onTestStart: () => void }) {
-  const showTestEntry = useTestModeEntry();
+export function Welcome({ onStart }: { onStart: () => void }) {
   return (
     <section className="welcome" aria-label="伴日子新手村封面">
       <div className="welcome-hero-copy">
@@ -286,7 +284,6 @@ export function Welcome({ onStart, onTestStart }: { onStart: () => void; onTestS
           <span className="welcome-house welcome-house--e" />
         </div>
       </div>
-      {showTestEntry && <button type="button" className="hidden-test-entry" aria-label="開啟測試模式" onClick={onTestStart}><span aria-hidden="true">·</span></button>}
     </section>
   );
 }
@@ -384,7 +381,7 @@ export function SpeciesStep({
           <div className="pet-naming-stage">
             <img src={sharedAssets.nameplate} width={2720} height={1860} alt={`${speciesConfig.copy.animalName}名字吊牌`} />
             <label htmlFor="new-pet-name" className="sr-only">{speciesConfig.copy.animalName}的名字</label>
-            <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} autoFocus />
+            <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} />
           </div>
           <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
         </section>
@@ -392,8 +389,8 @@ export function SpeciesStep({
         <section className="partner-selection-page previous-pet-page" key="selection-page">
           <StepHeading title={speciesConfig.copy.historyTitle} body={speciesConfig.copy.historyBody} />
           <div className="previous-pet-choice" role="group" aria-label={`是否曾經養過${speciesConfig.copy.animalName}`}>
-            <button type="button" className={hasPreviousPet === true ? "selected" : ""} aria-pressed={hasPreviousPet === true} onClick={() => onHasPreviousPet(true)}><b>{interpolatePetName(speciesConfig.copy.hasPreviousLabel, petName, category)}</b><small>{previousPetHistoryCopy.hasPreviousHint}</small></button>
             <button type="button" className={hasPreviousPet === false ? "selected" : ""} aria-pressed={hasPreviousPet === false} onClick={() => onHasPreviousPet(false)}><b>{interpolatePetName(speciesConfig.copy.noPreviousLabel, petName, category)}</b><small>{previousPetHistoryCopy.noPreviousHint}</small></button>
+            <button type="button" className={hasPreviousPet === true ? "selected" : ""} aria-pressed={hasPreviousPet === true} onClick={() => onHasPreviousPet(true)}><b>{interpolatePetName(speciesConfig.copy.hasPreviousLabel, petName, category)}</b><small>{previousPetHistoryCopy.hasPreviousHint}</small></button>
           </div>
           {hasPreviousPet === true && (
             <div className="previous-pet-details">
@@ -585,7 +582,7 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
     ? <strong className="knowledge-emphasis" key={`${part}-${index}`}>{part}</strong>
     : <span key={`${part}-${index}`}>{part}</span>);
   const renderItems = (items: ExpenseRecord[], showReserveAmount = false) => items.length ? (
-    <ul>{items.map((item) => <li key={item.id}><span className="expense-line-copy"><b>{item.name}</b>{item.description && <small className="expense-line-description">{renderExpenseDescription(item.description)}</small>}</span><strong className="expense-line-amount">{showReserveAmount ? formatTemporaryExpenseAmount(item) : `NT$ ${money.format(item.amount)}${item.name === "到家後首次健康檢查" ? "+" : ""}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
+    <ul>{items.map((item) => <li key={item.id}><span className="expense-line-copy"><b>{item.name}</b>{item.description && <small className="expense-line-description">{renderExpenseDescription(item.description)}</small>}</span><strong className="expense-line-amount">{showReserveAmount ? formatTemporaryExpenseAmount(item) : `NT$ ${money.format(item.amount)}${item.showPlusSuffix ? "+" : ""}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
   ) : <p>{expenseLabels.noGroupExpenses}</p>;
 
   return (

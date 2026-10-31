@@ -102,7 +102,7 @@
           "src": "/assets/dog/pet-journey/shiba/correct-answer.mp4",
           "type": "video"
         },
-        "description": "柴犬換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
+        "description": "{breedName}換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
         "id": "breed-challenge-1",
         "order": 1,
         "questionText": "你會怎麼處理？",
@@ -184,7 +184,7 @@
           "src": "/assets/dog/pet-journey/shiba/correct-answer.mp4",
           "type": "video"
         },
-        "description": "柴犬通常很愛乾淨，有些柴犬不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？",
+        "description": "{breedName}通常很愛乾淨，有些{breedName}不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？",
         "id": "breed-challenge-2",
         "order": 2,
         "questionText": "你會怎麼做？",
@@ -241,6 +241,7 @@
       },
       "life": {
         "busyCareTransition": "/assets/dog/pet-journey/shiba/busy-day-transition.mp4",
+        "busyCareTransitionMobile": "/assets/dog/pet-journey/shiba/busy-day-transition-mobile.mp4",
         "root": "/assets/dog/pet-journey",
         "shibaRoot": "/assets/dog/pet-journey/shiba"
       },
@@ -325,7 +326,7 @@
               "src": "/assets/dog/pet-journey/shiba/correct-answer.mp4",
               "type": "video"
             },
-            "description": "柴犬換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
+            "description": "{breedName}換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
             "id": "breed-challenge-1",
             "order": 1,
             "questionText": "你會怎麼處理？",
@@ -407,7 +408,7 @@
               "src": "/assets/dog/pet-journey/shiba/correct-answer.mp4",
               "type": "video"
             },
-            "description": "柴犬通常很愛乾淨，有些柴犬不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？",
+            "description": "{breedName}通常很愛乾淨，有些{breedName}不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？",
             "id": "breed-challenge-2",
             "order": 2,
             "questionText": "你會怎麼做？",
@@ -491,7 +492,7 @@
               "src": "/assets/dog/pet-journey/shiba/correct-answer.mp4",
               "type": "video"
             },
-            "description": "柴犬換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
+            "description": "{breedName}換毛量很大，地板、沙發和衣服上常常都看得到毛。面對長期反覆的清潔工作，你會怎麼處理？",
             "id": "breed-challenge-1",
             "order": 1,
             "questionText": "你會怎麼處理？",
@@ -573,7 +574,7 @@
               "src": "/assets/dog/pet-journey/shiba/correct-answer.mp4",
               "type": "video"
             },
-            "description": "柴犬通常很愛乾淨，有些柴犬不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？",
+            "description": "{breedName}通常很愛乾淨，有些{breedName}不喜歡在家裡上廁所。即使天氣不好，牠仍在門邊等著外出，你會怎麼做？",
             "id": "breed-challenge-2",
             "order": 2,
             "questionText": "你會怎麼做？",
@@ -4433,8 +4434,11 @@
       ],
       "transitionMedia": {
         "arrival": "/assets/dog/pet-journey/shiba/arrival-transition.mp4",
+        "arrivalMobile": "/assets/dog/pet-journey/shiba/arrival-transition-mobile.mp4",
         "busyCare": "/assets/dog/pet-journey/shiba/busy-day-transition.mp4",
-        "timePass": "/assets/dog/pet-journey/shiba/time-passes-aging.mp4"
+        "busyCareMobile": "/assets/dog/pet-journey/shiba/busy-day-transition-mobile.mp4",
+        "timePass": "/assets/dog/pet-journey/shiba/time-passes-aging.mp4",
+        "timePassMobile": "/assets/dog/pet-journey/shiba/time-passes-aging-mobile.mp4"
       }
     },
     "masteredCareThemes": [
@@ -4970,9 +4974,9 @@
           "label": "寵物專用清潔用品",
           "placement": {
             "layer": 8,
-            "width": 12,
+            "width": 14,
             "x": 35,
-            "y": 68
+            "y": 65
           },
           "preparedLabel": "已準備"
         }
@@ -5260,6 +5264,7 @@
       "scenarios": {
         "behavior-barking": {
           "completionIntro": "你已經找到合適的做法。接著多認識一點{petName}吠叫時可能想傳達的需求。",
+          "questionClassName": "daily-behavior-activity--dog-barking",
           "sceneVideo": {
             "ariaLabel": "日常行為照顧影片",
             "src": "/assets/dog/pet-journey/shiba/barking.mp4"
@@ -6132,9 +6137,9 @@
         "label": "寵物專用清潔用品",
         "placement": {
           "layer": 8,
-          "width": 12,
+          "width": 14,
           "x": 35,
-          "y": 68
+          "y": 65
         },
         "preparedLabel": "已準備"
       }
@@ -6172,6 +6177,7 @@
       "id": "dog-arrival-checkup",
       "name": "到家後首次健康檢查",
       "recurring": false,
+      "showPlusSuffix": true,
       "stage": "寵物到家後"
     },
     "dog-bed": {
@@ -7162,7 +7168,10 @@
   "petNameFallback": "小狗",
   "transitionMedia": {
     "arrival": "/assets/dog/pet-journey/shiba/arrival-transition.mp4",
+    "arrivalMobile": "/assets/dog/pet-journey/shiba/arrival-transition-mobile.mp4",
     "busyCare": "/assets/dog/pet-journey/shiba/busy-day-transition.mp4",
-    "timePass": "/assets/dog/pet-journey/shiba/time-passes-aging.mp4"
+    "busyCareMobile": "/assets/dog/pet-journey/shiba/busy-day-transition-mobile.mp4",
+    "timePass": "/assets/dog/pet-journey/shiba/time-passes-aging.mp4",
+    "timePassMobile": "/assets/dog/pet-journey/shiba/time-passes-aging-mobile.mp4"
   }
 }

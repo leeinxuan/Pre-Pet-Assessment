@@ -321,9 +321,11 @@
       },
       "petJourney": {
         "arrivalTransition": "/assets/rabbit/pet-journey/arrival-transition.mp4",
+        "arrivalTransitionMobile": "/assets/rabbit/pet-journey/arrival-transition-mobile.mp4",
         "bath": "/assets/rabbit/pet-journey/bath.mp4",
         "busyDailyCare": "/assets/rabbit/pet-journey/busy-daily-care.mp4",
         "busyDayTransition": "/assets/rabbit/pet-journey/busy-day-transition.mp4",
+        "busyDayTransitionMobile": "/assets/rabbit/pet-journey/busy-day-transition-mobile.mp4",
         "cecotropes": "/assets/rabbit/pet-journey/cecotropes.mp4",
         "correctPrimary": "/assets/rabbit/pet-journey/correct-answer.mp4",
         "correctSecondary": "/assets/rabbit/pet-journey/correct-answer2.mp4",
@@ -331,7 +333,8 @@
         "seniorLife": "/assets/rabbit/pet-journey/senior-life.mp4",
         "sick": "/assets/rabbit/pet-journey/sick.mp4",
         "summerHeat": "/assets/rabbit/pet-journey/summer-heat.mp4",
-        "timePassesAging": "/assets/rabbit/pet-journey/time-passes-aging.mp4"
+        "timePassesAging": "/assets/rabbit/pet-journey/time-passes-aging.mp4",
+        "timePassesAgingMobile": "/assets/rabbit/pet-journey/time-passes-aging-mobile.mp4"
       },
       "preparation": {
         "antiSlipLiner": "/assets/car/anti-slip-liner.webp",
@@ -1148,25 +1151,25 @@
         },
         "mobile": {
           "food": {
-            "bottom": 5,
-            "left": 28,
-            "width": 24
+            "bottom": 30,
+            "left": 10,
+            "width": 32
           },
           "pet": {
-            "bottom": 10,
-            "left": 32,
+            "bottom": 35,
+            "left": 57,
             "maxHeight": 58,
-            "width": 50
+            "width": 40
           },
           "veggie": {
-            "bottom": 7,
-            "left": 52,
-            "width": 20
+            "bottom": 58,
+            "left": 30,
+            "width": 22
           },
           "water": {
-            "bottom": 10,
-            "left": 10,
-            "width": 24
+            "bottom": 30,
+            "left": 40,
+            "width": 25
           }
         }
       },
@@ -1235,6 +1238,12 @@
           "ready": "/assets/rabbit/room/hay-rack.webp"
         },
         "mobileBackground": "/assets/rabbit/room/bg-fence-interior_anti-slip-mat.webp",
+        "mobileBackgroundStyle": {
+          "objectFit": "cover",
+          "objectPosition": "left center",
+          "transform": "scale(1.4)",
+          "transformOrigin": "27% 66%"
+        },
         "pet": {
           "ready": "/assets/rabbit/feeding/rabbit-happy.webp",
           "waiting": "/assets/rabbit/feeding/rabbit-unhappy.webp"
@@ -1260,14 +1269,14 @@
           "alt": "乾淨飲水（水碗）",
           "description": "兔子需要隨時可取用的乾淨飲水。水碗比滾珠瓶更方便觀察飲水量，也更受兔子歡迎。",
           "image": "/assets/shared/waterbottle.webp",
-          "label": "乾淨飲水（水碗）",
+          "label": "乾淨飲水",
           "stateKey": "water"
         },
         {
           "alt": "新鮮葉菜（青江菜／萵苣）",
           "description": "葉菜類蔬菜是兔子飲食的 10–15%。青江菜、萵苣、大陸妹都是安全選項，注意洗淨。",
           "image": "/assets/rabbit/feeding/leafy-veggie.webp",
-          "label": "新鮮葉菜（青江菜／萵苣）",
+          "label": "新鮮葉菜",
           "stateKey": "veggie"
         }
       ],
@@ -3781,7 +3790,12 @@
                   "title": "<danger>讓牠腹部朝上</danger>"
                 }
               ],
-              "title": "<danger>請不要這樣抱兔兔</danger>"
+              "title": "<danger>請注意這樣抱兔兔</danger>"
+            },
+            "correctFeedbackMedia": {
+              "ariaLabel": "兔子安全抱起完成影片",
+              "src": "/assets/rabbit/pet-journey/correct-answer.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "抱兔子需要緩慢靠近、先讓牠嗅聞，再確認放鬆後同時托住胸口與臀部，絕不可拎耳朵或讓腹部朝上。"
@@ -4725,7 +4739,12 @@
                   "title": "<danger>讓牠腹部朝上</danger>"
                 }
               ],
-              "title": "<danger>請不要這樣抱兔兔</danger>"
+              "title": "<danger>請注意這樣抱兔兔</danger>"
+            },
+            "correctFeedbackMedia": {
+              "ariaLabel": "兔子安全抱起完成影片",
+              "src": "/assets/rabbit/pet-journey/correct-answer.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "抱兔子需要緩慢靠近、先讓牠嗅聞，再確認放鬆後同時托住胸口與臀部，絕不可拎耳朵或讓腹部朝上。"
@@ -4835,8 +4854,8 @@
         "label": "有毒植物",
         "mobilePlacement": {
           "width": 21,
-          "x": 82,
-          "y": 43
+          "x": 40,
+          "y": 45
         },
         "placement": {
           "layer": 5,
@@ -4854,8 +4873,8 @@
         "label": "塑膠製品",
         "mobilePlacement": {
           "width": 18,
-          "x": 44,
-          "y": 74
+          "x": 35,
+          "y": 70
         },
         "placement": {
           "layer": 5,
@@ -4872,8 +4891,8 @@
         "image": "/assets/rabbit/room/foam-mat-with-edges.webp",
         "label": "有邊角的海棉墊",
         "mobilePlacement": {
-          "width": 34,
-          "x": 68,
+          "width": 25,
+          "x": 75,
           "y": 89
         },
         "placement": {
@@ -4893,7 +4912,7 @@
         "mobilePlacement": {
           "width": 24,
           "x": 74,
-          "y": 45
+          "y": 70
         },
         "placement": {
           "layer": 4,
@@ -4913,6 +4932,12 @@
           "width": 84,
           "x": 50,
           "y": 88
+        },
+        "mobileThumbnailCrop": {
+          "includeSprite": false,
+          "size": 30,
+          "x": 50,
+          "y": 83
         },
         "placement": {
           "layer": 5,
@@ -5153,7 +5178,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "特寵獸醫院"
+                  "text": "非犬貓動物醫院"
                 },
                 {
                   "text": "，並提前建立"
@@ -5240,7 +5265,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "特寵獸醫院"
+                  "text": "非犬貓動物醫院"
                 },
                 {
                   "text": "，並提前建立"
@@ -5394,8 +5419,11 @@
       ],
       "transitionMedia": {
         "arrival": "/assets/rabbit/pet-journey/arrival-transition.mp4",
+        "arrivalMobile": "/assets/rabbit/pet-journey/arrival-transition-mobile.mp4",
         "busyCare": "/assets/rabbit/pet-journey/busy-day-transition.mp4",
-        "timePass": "/assets/rabbit/pet-journey/time-passes-aging.mp4"
+        "busyCareMobile": "/assets/rabbit/pet-journey/busy-day-transition-mobile.mp4",
+        "timePass": "/assets/rabbit/pet-journey/time-passes-aging.mp4",
+        "timePassMobile": "/assets/rabbit/pet-journey/time-passes-aging-mobile.mp4"
       }
     },
     "masteredCareThemes": [
@@ -5536,8 +5564,8 @@
           "label": "有毒植物",
           "mobilePlacement": {
             "width": 21,
-            "x": 82,
-            "y": 43
+            "x": 40,
+            "y": 45
           },
           "placement": {
             "layer": 5,
@@ -5555,8 +5583,8 @@
           "label": "塑膠製品",
           "mobilePlacement": {
             "width": 18,
-            "x": 44,
-            "y": 74
+            "x": 35,
+            "y": 70
           },
           "placement": {
             "layer": 5,
@@ -5573,8 +5601,8 @@
           "image": "/assets/rabbit/room/foam-mat-with-edges.webp",
           "label": "有邊角的海棉墊",
           "mobilePlacement": {
-            "width": 34,
-            "x": 68,
+            "width": 25,
+            "x": 75,
             "y": 89
           },
           "placement": {
@@ -5594,7 +5622,7 @@
           "mobilePlacement": {
             "width": 24,
             "x": 74,
-            "y": 45
+            "y": 70
           },
           "placement": {
             "layer": 4,
@@ -5614,6 +5642,12 @@
             "width": 84,
             "x": 50,
             "y": 88
+          },
+          "mobileThumbnailCrop": {
+            "includeSprite": false,
+            "size": 30,
+            "x": 50,
+            "y": 83
           },
           "placement": {
             "layer": 5,
@@ -5657,6 +5691,10 @@
           "anti-slip-mat"
         ],
         "interiorSafeBackground": "/assets/rabbit/room/bg-fence-interior_anti-slip-mat.webp",
+        "mobileEntryHintPlacement": {
+          "x": 25,
+          "y": 80
+        },
         "safeBackground": "/assets/rabbit/room/rabbit-safe-room.webp"
       },
       "roomItems": [
@@ -5668,9 +5706,9 @@
           "image": "/assets/rabbit/room/fence-pen.webp",
           "label": "圍片／柵欄",
           "mobilePlacement": {
-            "width": 30,
+            "width": 50,
             "x": 68,
-            "y": 54
+            "y": 80
           },
           "need": "安全",
           "placement": {
@@ -5690,9 +5728,9 @@
           "image": "/assets/rabbit/room/hay-rack.webp",
           "label": "牧草架",
           "mobilePlacement": {
-            "width": 25,
-            "x": 20,
-            "y": 68
+            "width": 30,
+            "x": 15,
+            "y": 53
           },
           "need": "飲食",
           "placement": {
@@ -5712,8 +5750,8 @@
           "label": "較重的飲水碗",
           "mobilePlacement": {
             "width": 17,
-            "x": 42,
-            "y": 82
+            "x": 45,
+            "y": 60
           },
           "need": "飲食",
           "placement": {
@@ -5736,8 +5774,8 @@
           "label": "便盆",
           "mobilePlacement": {
             "width": 31,
-            "x": 70,
-            "y": 78
+            "x": 80,
+            "y": 30
           },
           "need": "排泄",
           "placement": {
@@ -5757,8 +5795,8 @@
           "label": "躲藏箱／小屋",
           "mobilePlacement": {
             "width": 35,
-            "x": 50,
-            "y": 65
+            "x": 20,
+            "y": 30
           },
           "need": "安全",
           "placement": {
@@ -5800,7 +5838,7 @@
           "mobilePlacement": {
             "width": 19,
             "x": 28,
-            "y": 63
+            "y": 60
           },
           "need": "飲食",
           "placement": {
@@ -5820,8 +5858,8 @@
           "label": "陶板涼感墊",
           "mobilePlacement": {
             "width": 25,
-            "x": 58,
-            "y": 80
+            "x": 80,
+            "y": 60
           },
           "need": "休息",
           "placement": {
@@ -5841,8 +5879,8 @@
           "label": "咀嚼玩具（木製）",
           "mobilePlacement": {
             "width": 18,
-            "x": 32,
-            "y": 78
+            "x": 80,
+            "y": 50
           },
           "need": "活動",
           "placement": {
@@ -5861,9 +5899,9 @@
           "image": "/assets/rabbit/room/dig-box.webp",
           "label": "挖掘箱",
           "mobilePlacement": {
-            "width": 23,
-            "x": 18,
-            "y": 82
+            "width": 25,
+            "x": 50,
+            "y": 30
           },
           "need": "活動",
           "placement": {
@@ -5895,7 +5933,7 @@
             },
             "mobile": {
               "width": 40,
-              "x": 33,
+              "x": 80,
               "y": 20
             },
             "mobileText": {
@@ -6123,6 +6161,10 @@
         "anti-slip-mat"
       ],
       "interiorSafeBackground": "/assets/rabbit/room/bg-fence-interior_anti-slip-mat.webp",
+      "mobileEntryHintPlacement": {
+        "x": 25,
+        "y": 80
+      },
       "safeBackground": "/assets/rabbit/room/rabbit-safe-room.webp"
     },
     "roomItems": [
@@ -6134,9 +6176,9 @@
         "image": "/assets/rabbit/room/fence-pen.webp",
         "label": "圍片／柵欄",
         "mobilePlacement": {
-          "width": 30,
+          "width": 50,
           "x": 68,
-          "y": 54
+          "y": 80
         },
         "need": "安全",
         "placement": {
@@ -6156,9 +6198,9 @@
         "image": "/assets/rabbit/room/hay-rack.webp",
         "label": "牧草架",
         "mobilePlacement": {
-          "width": 25,
-          "x": 20,
-          "y": 68
+          "width": 30,
+          "x": 15,
+          "y": 53
         },
         "need": "飲食",
         "placement": {
@@ -6178,8 +6220,8 @@
         "label": "較重的飲水碗",
         "mobilePlacement": {
           "width": 17,
-          "x": 42,
-          "y": 82
+          "x": 45,
+          "y": 60
         },
         "need": "飲食",
         "placement": {
@@ -6202,8 +6244,8 @@
         "label": "便盆",
         "mobilePlacement": {
           "width": 31,
-          "x": 70,
-          "y": 78
+          "x": 80,
+          "y": 30
         },
         "need": "排泄",
         "placement": {
@@ -6223,8 +6265,8 @@
         "label": "躲藏箱／小屋",
         "mobilePlacement": {
           "width": 35,
-          "x": 50,
-          "y": 65
+          "x": 20,
+          "y": 30
         },
         "need": "安全",
         "placement": {
@@ -6266,7 +6308,7 @@
         "mobilePlacement": {
           "width": 19,
           "x": 28,
-          "y": 63
+          "y": 60
         },
         "need": "飲食",
         "placement": {
@@ -6286,8 +6328,8 @@
         "label": "陶板涼感墊",
         "mobilePlacement": {
           "width": 25,
-          "x": 58,
-          "y": 80
+          "x": 80,
+          "y": 60
         },
         "need": "休息",
         "placement": {
@@ -6307,8 +6349,8 @@
         "label": "咀嚼玩具（木製）",
         "mobilePlacement": {
           "width": 18,
-          "x": 32,
-          "y": 78
+          "x": 80,
+          "y": 50
         },
         "need": "活動",
         "placement": {
@@ -6327,9 +6369,9 @@
         "image": "/assets/rabbit/room/dig-box.webp",
         "label": "挖掘箱",
         "mobilePlacement": {
-          "width": 23,
-          "x": 18,
-          "y": 82
+          "width": 25,
+          "x": 50,
+          "y": 30
         },
         "need": "活動",
         "placement": {
@@ -7323,10 +7365,10 @@
     "rabbit-anti-slip-mat": {
       "amount": 400,
       "category": "一次性準備費",
-      "description": "防止兔子在地板上打滑，保護關節與後肢",
+      "description": "鋪設於圍欄內，便於清理排泄物與食物殘渣，可清洗或拋棄式皆可",
       "fromEmergency": false,
       "id": "rabbit-anti-slip-mat",
-      "name": "防滑墊",
+      "name": "寵物保潔墊",
       "recurring": false,
       "stage": "飼養前準備"
     },
@@ -7338,6 +7380,7 @@
       "id": "rabbit-arrival-checkup",
       "name": "到家後首次健康檢查",
       "recurring": false,
+      "showPlusSuffix": true,
       "stage": "寵物到家後"
     },
     "rabbit-carrier": {
@@ -8458,7 +8501,10 @@
   "petNameFallback": "小白",
   "transitionMedia": {
     "arrival": "/assets/rabbit/pet-journey/arrival-transition.mp4",
+    "arrivalMobile": "/assets/rabbit/pet-journey/arrival-transition-mobile.mp4",
     "busyCare": "/assets/rabbit/pet-journey/busy-day-transition.mp4",
-    "timePass": "/assets/rabbit/pet-journey/time-passes-aging.mp4"
+    "busyCareMobile": "/assets/rabbit/pet-journey/busy-day-transition-mobile.mp4",
+    "timePass": "/assets/rabbit/pet-journey/time-passes-aging.mp4",
+    "timePassMobile": "/assets/rabbit/pet-journey/time-passes-aging-mobile.mp4"
   }
 }

@@ -62,7 +62,8 @@
 .pet-naming-stage > input::placeholder { color: #a29d91; font-size: clamp(16px, 3vw, 30px) !important; opacity: 1; }
 .pet-naming-stage > input:focus { border: 0; outline: 3px solid rgba(212,154,36,.38); outline-offset: -5px; box-shadow: none; }
 
-.experience-transition-page { min-height: min(760px, calc(100svh - 120px)); display: flex; flex-direction: column; justify-content: center; gap: clamp(26px, 4vw, 46px); padding: clamp(22px, 4vw, 46px); overflow: hidden; border: 1px solid rgba(203,185,150,.7); border-radius: 30px; background: radial-gradient(circle at 18% 18%, rgba(255,235,177,.5), transparent 29%), radial-gradient(circle at 82% 18%, rgba(190,221,194,.46), transparent 29%), linear-gradient(145deg,#fffdf8,#f5f0e6); box-shadow: var(--shadow); }
+.experience-transition-page { min-height: min(760px, calc(100svh - 120px)); display: flex; flex-direction: column; justify-content: center; gap: clamp(26px, 4vw, 46px); padding: 0; overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.partner-picker:has(.experience-transition-page) { max-width: none; }
 .experience-pets { display: grid; grid-template-columns: minmax(0,1fr) 90px minmax(0,1fr); align-items: stretch; gap: clamp(12px, 2vw, 24px); }
 .experience-pet-card { min-width: 0; display: grid; grid-template-columns: minmax(110px, .72fr) minmax(0, 1.28fr); align-items: center; gap: clamp(12px, 2.4vw, 24px); padding: clamp(16px, 2.5vw, 26px); border: 1px solid rgba(128,105,67,.18); border-radius: 24px; background: rgba(255,255,255,.76); opacity: .7; transition: opacity .4s ease, transform .4s ease, box-shadow .4s ease; }
 .experience-pet-card > span { grid-column: 1 / -1; color: var(--muted); font-size: 12px; font-weight: 900; letter-spacing: .08em; }
@@ -92,7 +93,7 @@
   .pet-naming-page { min-height: auto; }
   .pet-naming-stage { margin: 18px auto 10px; }
   .pet-naming-stage > input { font-size: clamp(18px, 6vw, 28px); }
-  .experience-transition-page { min-height: auto; padding: 20px 15px; border-radius: 22px; }
+  .experience-transition-page { min-height: auto; padding: 0; }
   .experience-pets { grid-template-columns: minmax(0,1fr) 38px minmax(0,1fr); gap: 7px; }
   .experience-pet-card { grid-template-columns: 1fr; align-content: start; gap: 9px; padding: 13px 10px; text-align: center; }
   .experience-pet-card > span { font-size: 9px; letter-spacing: .03em; }

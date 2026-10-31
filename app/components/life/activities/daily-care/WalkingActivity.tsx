@@ -6,11 +6,10 @@ import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import { walkingActivityConfig, walkingLawCopy, walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../../../data/species/dog/activities";
 import type { LifeActivityState } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
+import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { renderKnowledgeText, withPetName } from "../activity-ui";
 import { useTapSequence } from "../useTapSequence";
 
-// 貓砂盆救援隊暫用已存在的共用素材，避免缺少 /assets/cat/... 圖檔時讓 Vite/RSC 請求失敗。
-// 正式貓咪素材補齊後，只需在此替換為對應的 /assets/cat/... 路徑即可。
 function lerp(start: number, end: number, progress: number) {
   return start + (end - start) * progress;
 }
@@ -67,20 +66,6 @@ function getWalkingCharacterStyle(sceneIndex: number, position: number, mobile =
   } as CSSProperties;
 }
 
-function useMobileWalkingLayout() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 720px)");
-    const update = () => setIsMobile(mediaQuery.matches);
-    update();
-    mediaQuery.addEventListener("change", update);
-    return () => mediaQuery.removeEventListener("change", update);
-  }, []);
-
-  return isMobile;
-}
-
 export function WalkingActivity({
   activity,
   petName,
@@ -97,18 +82,20 @@ export function WalkingActivity({
   onContinue: () => void;
 }) {
   const { assets, copy, interaction, prepNotes } = walkingActivityConfig;
+  const forwardHoldStepMs = Math.round((interaction.stepDistance / interaction.holdSpeed) * 1000);
   const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
   const [safetyStep, setSafetyStep] = useState<"question" | "law" | "correct" | "prepared">(
     activity.walkingMinutes > 0 || activity.walkingComplete ? "prepared" : "question",
   );
+  const [mobileSafetyChoice, setMobileSafetyChoice] = useState<"leash" | "offLeash" | null>(null);
   const [position, setPosition] = useState(0);
+  const positionRef = useRef(0);
   const [moving, setMoving] = useState(false);
   const [message, setMessage] = useState("");
   const bagExpenseSequenceStartedRef = useRef(false);
   const completingSceneRef = useRef<number | null>(null);
-  const forwardAnimationFrameRef = useRef<number | null>(null);
+  /** 長按期間的固定節奏計時器；與畫面幀率無關，避免低幀率時只播放動作卻不前進。 */
   const forwardHoldTimerRef = useRef<number | null>(null);
-  const forwardLastFrameRef = useRef<number | null>(null);
   const keyboardMoveTimerRef = useRef<number | null>(null);
   const mobileCleanupTimerRef = useRef<number | null>(null);
   const mobileCleanupBusyRef = useRef(false);
@@ -117,7 +104,7 @@ export function WalkingActivity({
   const draggingBagRef = useRef(false);
   const forwardHeldRef = useRef(false);
   const [draggedBag, setDraggedBag] = useState<{ x: number; y: number } | null>(null);
-  const isMobileWalkingLayout = useMobileWalkingLayout();
+  const isMobileWalkingLayout = useMobileLayout();
   const [mobilePoopCleaning, setMobilePoopCleaning] = useState(false);
   const { step: mobileCleanupStep, phase: mobileCleanupPhase, selectTool: selectMobileCleanupTool, completeTarget: completeMobileCleanupTarget } = useTapSequence(interaction.mobileCleanupSteps, 0);
   const sceneIndex = Math.min(activity.walkingSceneIndex, walkingScenes.length - 1);
@@ -160,9 +147,24 @@ export function WalkingActivity({
     if (needsCleanup || activity.walkingComplete) stopForward();
   }, [needsCleanup, activity.walkingComplete]);
 
+  // 切換分頁、視窗失焦或在按鈕外放開時，按鈕可能收不到 pointerup；一律停止長按前進。
+  useEffect(() => {
+    const stopWhenHidden = () => { if (document.hidden) stopForward(); };
+    const stopHold = () => stopForward();
+    window.addEventListener("blur", stopHold);
+    window.addEventListener("pointerup", stopHold);
+    window.addEventListener("pointercancel", stopHold);
+    document.addEventListener("visibilitychange", stopWhenHidden);
+    return () => {
+      window.removeEventListener("blur", stopHold);
+      window.removeEventListener("pointerup", stopHold);
+      window.removeEventListener("pointercancel", stopHold);
+      document.removeEventListener("visibilitychange", stopWhenHidden);
+    };
+  }, []);
+
   useEffect(() => () => {
-    if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
-    if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
+    if (forwardHoldTimerRef.current !== null) window.clearInterval(forwardHoldTimerRef.current);
     if (keyboardMoveTimerRef.current !== null) window.clearTimeout(keyboardMoveTimerRef.current);
     if (mobileCleanupTimerRef.current !== null) window.clearTimeout(mobileCleanupTimerRef.current);
   }, []);
@@ -196,7 +198,7 @@ export function WalkingActivity({
   function completeWalkingScene(completedIndex: number) {
     if (completingSceneRef.current === completedIndex) return;
     completingSceneRef.current = completedIndex;
-    stopForward(false);
+    stopForward();
     const complete = completedIndex >= walkingScenes.length - 1;
     const nextMinutes = Math.min(20, activity.walkingMinutes + 5);
     onChange({
@@ -204,6 +206,10 @@ export function WalkingActivity({
       walkingSceneIndex: complete ? completedIndex : completedIndex + 1,
       walkingComplete: complete,
     });
+    if (!complete) {
+      positionRef.current = 0;
+      setPosition(0);
+    }
     setMessage(complete ? copy.messages.complete : copy.messages.sceneComplete(walkingScenes[completedIndex].title));
   }
 
@@ -216,51 +222,42 @@ export function WalkingActivity({
     }
     const completionPosition = getWalkingCompletionPosition(sceneIndex);
     setMoving(true);
-    setPosition((current) => {
-      if (scene.poopEvent && current >= 50 && !activity.walkingPoopCleaned) {
-        stopForward();
-        return 50;
-      }
-      const next = Math.min(completionPosition, current + distance);
-      if (next >= completionPosition && current < completionPosition && completingSceneRef.current !== sceneIndex) {
-        completeWalkingScene(sceneIndex);
-      }
-      return next;
-    });
+    const current = positionRef.current;
+    const cleanupBoundary = scene.poopEvent && !activity.walkingPoopCleaned ? 50 : completionPosition;
+    const next = Math.min(completionPosition, cleanupBoundary, current + distance);
+    if (next === current) return;
+    positionRef.current = next;
+    setPosition(next);
+    if (next >= cleanupBoundary && cleanupBoundary < completionPosition) stopForward();
+    if (next >= completionPosition && completingSceneRef.current !== sceneIndex) completeWalkingScene(sceneIndex);
   }, [activity.walkingComplete, activity.walkingPoopCleaned, activity.walkingMinutes, needsCleanup, onChange, scene.poopEvent, sceneIndex, started]); // eslint-disable-line react-hooks/exhaustive-deps -- completeWalkingScene intentionally uses the current walking state captured by these dependencies.
 
-  function stopForward(releaseHold = true) {
-    if (releaseHold) forwardHeldRef.current = false;
-    if (forwardHoldTimerRef.current !== null) window.clearTimeout(forwardHoldTimerRef.current);
+  // 計時器每次都呼叫最新的 advanceWalk，長按期間的事件、清理與場景完成判斷都和點擊一致。
+  const advanceWalkRef = useRef(advanceWalk);
+  useEffect(() => { advanceWalkRef.current = advanceWalk; }, [advanceWalk]);
+
+  function stopForward() {
+    forwardHeldRef.current = false;
+    if (forwardHoldTimerRef.current !== null) window.clearInterval(forwardHoldTimerRef.current);
     forwardHoldTimerRef.current = null;
-    if (forwardAnimationFrameRef.current !== null) window.cancelAnimationFrame(forwardAnimationFrameRef.current);
-    forwardAnimationFrameRef.current = null;
-    forwardLastFrameRef.current = null;
     setMoving(false);
   }
 
   function startForward() {
     if (!started || activity.walkingComplete || needsCleanup) {
-        if (needsCleanup) setMessage(copy.messages.cleanupRequired);
+      if (needsCleanup) setMessage(copy.messages.cleanupRequired);
       return;
     }
-    if (forwardHeldRef.current || forwardHoldTimerRef.current !== null) return;
-    // 短按只前進一步；超過門檻才啟動唯一的 rAF 連續移動迴圈。
+    if (forwardHeldRef.current) return;
+    // 長按等同以固定節奏連續點擊：按下立即走一步，之後每隔一段時間再走一步。
+    // 間隔由既有設定推得（步距 ÷ 長按速度），維持原本的前進速度。
+    forwardHeldRef.current = true;
     advanceWalk(interaction.stepDistance);
-    const moveFrame = (timestamp: number) => {
+    if (!forwardHeldRef.current) return;
+    forwardHoldTimerRef.current = window.setInterval(() => {
       if (!forwardHeldRef.current) return;
-      const previousTimestamp = forwardLastFrameRef.current ?? timestamp;
-      const deltaSeconds = Math.min(0.05, Math.max(0, timestamp - previousTimestamp) / 1000);
-      forwardLastFrameRef.current = timestamp;
-      if (deltaSeconds > 0) advanceWalk(interaction.holdSpeed * deltaSeconds);
-      if (forwardHeldRef.current) forwardAnimationFrameRef.current = window.requestAnimationFrame(moveFrame);
-    };
-    forwardHoldTimerRef.current = window.setTimeout(() => {
-      forwardHoldTimerRef.current = null;
-      forwardHeldRef.current = true;
-      forwardLastFrameRef.current = null;
-      forwardAnimationFrameRef.current = window.requestAnimationFrame(moveFrame);
-    }, 220);
+      advanceWalkRef.current(interaction.stepDistance);
+    }, forwardHoldStepMs);
   }
 
   function moveForwardByKeyboard() {
@@ -420,6 +417,7 @@ export function WalkingActivity({
       onPointerCancel={() => stopForward()}
       onPointerLeave={() => stopForward()}
       onLostPointerCapture={() => stopForward()}
+      onContextMenu={(event) => event.preventDefault()}
       onKeyDown={(event) => {
         if (event.key !== "Enter" && event.key !== " ") return;
         event.preventDefault();
@@ -463,10 +461,18 @@ export function WalkingActivity({
       </div>
 
       {!started ? (
-        safetyStep === "question" ? (
+        safetyStep === "question" ? (<>
           <section className="walking-safety-choice" aria-labelledby="walking-safety-title">
             <h2 id="walking-safety-title">{copy.safetyQuestion}</h2>
-            <div className="walking-safety-grid">
+            {isMobileWalkingLayout ? <>
+              <div className="walking-safety-tabs" role="tablist" aria-label={copy.safetyQuestion}>
+                <button type="button" role="tab" aria-selected={mobileSafetyChoice === "leash"} aria-controls="walking-safety-preview" className={mobileSafetyChoice === "leash" ? "is-selected" : ""} onClick={() => setMobileSafetyChoice("leash")}>{copy.choices.leash.title}</button>
+                <button type="button" role="tab" aria-selected={mobileSafetyChoice === "offLeash"} aria-controls="walking-safety-preview" className={mobileSafetyChoice === "offLeash" ? "is-selected" : ""} onClick={() => setMobileSafetyChoice("offLeash")}>{copy.choices.offLeash.title}</button>
+              </div>
+              <div className="walking-safety-preview" id="walking-safety-preview" role="tabpanel" hidden={!mobileSafetyChoice}>
+                {mobileSafetyChoice && <img src={mobileSafetyChoice === "leash" ? assets.leashChoice : assets.offLeashChoice} alt={mobileSafetyChoice === "leash" ? copy.choices.leash.title : copy.choices.offLeash.title} />}
+              </div>
+            </> : <div className="walking-safety-grid">
               <button type="button" onClick={() => setSafetyStep("correct")}>
                 <img src={assets.leashChoice} alt="" />
                 <span><b>{copy.choices.leash.title}</b><small>{copy.choices.leash.detail}</small></span>
@@ -475,9 +481,10 @@ export function WalkingActivity({
                 <img src={assets.offLeashChoice} alt="" />
                 <span><b>{copy.choices.offLeash.title}</b><small>{copy.choices.offLeash.detail}</small></span>
               </button>
-            </div>
+            </div>}
           </section>
-        ) : safetyStep === "law" ? (
+          {isMobileWalkingLayout && <div className="walking-safety-continue"><button type="button" className="primary" disabled={!mobileSafetyChoice} onClick={() => setSafetyStep(mobileSafetyChoice === "leash" ? "correct" : "law")}>繼續 <span>→</span></button></div>}
+        </>) : safetyStep === "law" ? (
           <section className="walking-law-feedback" aria-live="polite">
             <span aria-hidden="true">!</span>
             <div><p className="life-stage-label">{walkingLawCopy.incorrect.eyebrow}</p><h2>{walkingLawCopy.incorrect.title}</h2></div>

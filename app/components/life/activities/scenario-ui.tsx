@@ -54,7 +54,7 @@ export function breedChallengeLabelForId(breed: string) {
 }
 
 export function withBreedName(text: string, breed: string, species = "dog") {
-  return text.replaceAll("柴犬", breedLabelForId(breed, species));
+  return text.replaceAll("{breedName}", breedLabelForId(breed, species));
 }
 
 export function lifeStageLabelForScenario(scenario: Scenario) {
@@ -177,6 +177,8 @@ export function CorrectFeedbackLayout({
   knowledgeContent,
   knowledgeTitle = "照護小知識",
   mediaPlaceholder,
+  hideMedia = false,
+  extraCopy,
   onReplay,
   onVideoError,
   onVideoEnded,
@@ -199,6 +201,8 @@ export function CorrectFeedbackLayout({
   knowledgeContent?: Array<{ type: "paragraph" | "item"; text: string; image?: string; imageAlt?: string }>;
   knowledgeTitle?: string;
   mediaPlaceholder?: ReactNode;
+  hideMedia?: boolean;
+  extraCopy?: ReactNode;
   onReplay?: () => void;
   onVideoError: () => void;
   onVideoEnded?: () => void;
@@ -208,14 +212,14 @@ export function CorrectFeedbackLayout({
   continueHint?: string;
 }) {
   return (
-    <section className={`correct-feedback-layout correct-feedback-layout--${variant}`} aria-live="polite">
-      <div className="correct-feedback-media">
+    <section className={`correct-feedback-layout correct-feedback-layout--${variant}${hideMedia ? " correct-feedback-layout--text-only" : ""}`} aria-live="polite">
+      {!hideMedia && <div className="correct-feedback-media">
         {mediaPlaceholder ? mediaPlaceholder : videoFailed ? (
           <div className="scene-video-fallback" role="status">{fallbackText}</div>
         ) : (
           <VideoWithToggle src={videoSrc} ariaLabel="正確處置後的正向結果影片" onEnded={onVideoEnded} onError={onVideoError} />
         )}
-      </div>
+      </div>}
       <div className="correct-feedback-copy">
         <h2>{title}</h2>
         <div className="correct-feedback-intro">{intro}</div>
@@ -243,6 +247,7 @@ export function CorrectFeedbackLayout({
         {otherTipsBeforeSuggestion && otherTips}
         {suggestion && <div className="correct-feedback-suggestion">{suggestion}</div>}
         {!otherTipsBeforeSuggestion && otherTips}
+        {extraCopy}
         <div className={`correct-feedback-actions ${onReplay ? "has-replay" : ""}`}>
           {onReplay && <button type="button" className="secondary correct-feedback-replay" onClick={onReplay}>↻ 再玩一次</button>}
           <DelayedContinueButton onContinue={onContinue} immediate={continueImmediately} disabled={continueDisabled} hint={continueHint} />
@@ -518,12 +523,7 @@ export function ScenarioCard({
       <section className="reflection">
         <h2>{withPetName(scenario.questionText, petName, species)}</h2>
         <div className="choice-grid">
-          {scenario.choices.filter((choice) => choice.id !== "assigned-helper" || hasBackup).map((choice) => {
-            const text = choice.id === "assigned-helper"
-              ? `請${backupNames.join("或")}依照事先安排的分工，協助今晚的餵食與活動。`
-              : withPetName(choice.text, petName, species);
-            return <ScenarioOptionCard key={choice.id} onClick={() => onChoose(choice)}>{text}</ScenarioOptionCard>;
-          })}
+          {scenario.choices.map((choice) => <ScenarioOptionCard key={choice.id} onClick={() => onChoose(choice)}>{withPetName(choice.text, petName, species)}</ScenarioOptionCard>)}
         </div>
       </section>
     </>

@@ -106,8 +106,8 @@ export function ArrivalMealActivity({
   const sceneUnsafeFoods = feeding.interaction === "scene" ? feeding.unsafeFoods : [];
   const sceneComplete = feeding.interaction === "scene" && feeding.requiredSupplies.every((key) => key === "food" ? activity.arrivalMealFoodReady : key === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady);
   const requiredChoices = choiceItems.filter((item) => item.result === "correct");
-  const choiceComplete = requiredChoices.every((item) => activity.hamsterMealSelected.includes(item.id));
-  const choiceFeedback = choiceItems.find((item) => item.id === activity.hamsterMealFeedbackId);
+  const choiceComplete = requiredChoices.every((item) => activity.arrivalMealSelectedChoiceIds.includes(item.id));
+  const choiceFeedback = choiceItems.find((item) => item.id === activity.arrivalMealFeedbackChoiceId);
   const complete = feeding.interaction === "choice" ? choiceComplete : sceneComplete;
   const mealTitle = feeding.interaction === "choice" ? interpolatePetName(feeding.title, petName) : `幫${petName || feeding.animalName}準備第一餐`;
   const mealDescription = feeding.interaction === "choice"
@@ -119,7 +119,7 @@ export function ArrivalMealActivity({
       ? activity.arrivalMealWaterReady
       : activity.arrivalMealVeggieReady;
   const hasMealItemPlaced = feeding.interaction === "choice"
-    ? activity.hamsterMealSelected.length > 0
+    ? activity.arrivalMealSelectedChoiceIds.length > 0
     : sceneSupplies.some((supply) => supplyReady(supply.stateKey));
   const foodReadyOverride = feeding.interaction !== "choice" && activity.arrivalMealFoodReady
     ? feeding.scene.food.readyOverrides?.find((override) => supplyReady(override.when))
@@ -169,16 +169,16 @@ export function ArrivalMealActivity({
   function chooseMealChoice(id: string) {
     const item = choiceItems.find((entry) => entry.id === id);
     if (!item) return;
-    if (activity.hamsterMealSelected.includes(id) && window.matchMedia("(max-width: 720px)").matches) {
+    if (activity.arrivalMealSelectedChoiceIds.includes(id) && window.matchMedia("(max-width: 720px)").matches) {
       setMobileInfo({ title: item.label, description: interpolatePetName(item.feedback, petName) });
       return;
     }
-    const isNewSafeChoice = item.result !== "incorrect" && !activity.hamsterMealSelected.includes(id);
+    const isNewSafeChoice = item.result !== "incorrect" && !activity.arrivalMealSelectedChoiceIds.includes(id);
     if (isNewSafeChoice) {
-      onChange({ hamsterMealSelected: [...activity.hamsterMealSelected, id], hamsterMealFeedbackId: id });
+      onChange({ arrivalMealSelectedChoiceIds: [...activity.arrivalMealSelectedChoiceIds, id], arrivalMealFeedbackChoiceId: id });
       return;
     }
-    onChange({ hamsterMealFeedbackId: id });
+    onChange({ arrivalMealFeedbackChoiceId: id });
   }
   return (
     <section className={`arrival-meal-activity${feeding.interaction === "choice" ? " arrival-meal-activity--choice" : ""}${mobileStarted ? " is-mobile-started" : " is-mobile-intro"}`} aria-label={`為${petName}準備第一餐`}>
@@ -189,10 +189,10 @@ export function ArrivalMealActivity({
         <p>{mealDescription}</p>
       </div>
       <aside className={`arrival-meal-supplies${feeding.interaction === "choice" ? " arrival-meal-supplies--choice" : ""}`} aria-label="晚餐用品">
-        {feeding.interaction === "choice" ? choiceItems.map((item) => <button key={item.id} type="button" draggable={!activity.hamsterMealSelected.includes(item.id)}
+        {feeding.interaction === "choice" ? choiceItems.map((item) => <button key={item.id} type="button" draggable={!activity.arrivalMealSelectedChoiceIds.includes(item.id)}
           onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} onClick={() => chooseMealChoice(item.id)}
-          className={`arrival-meal-choice-button ${item.result === "incorrect" ? "is-unsafe" : ""} ${activity.hamsterMealSelected.includes(item.id) ? "done" : ""}`}>
-          <b>{item.result === "caution" ? "▲ " : ""}{item.label}</b><small>{activity.hamsterMealSelected.includes(item.id) ? "已放入食碗" : item.result === "incorrect" ? "點擊查看原因" : "點擊或拖曳放入"}</small><MobileItemInfoBadge />{activity.hamsterMealSelected.includes(item.id) && <MobileItemPlacedCheck />}
+          className={`arrival-meal-choice-button ${item.result === "incorrect" ? "is-unsafe" : ""} ${activity.arrivalMealSelectedChoiceIds.includes(item.id) ? "done" : ""}`}>
+          <b>{item.result === "caution" ? "▲ " : ""}{item.label}</b><small>{activity.arrivalMealSelectedChoiceIds.includes(item.id) ? "已放入食碗" : item.result === "incorrect" ? "點擊查看原因" : "點擊或拖曳放入"}</small><MobileItemInfoBadge />{activity.arrivalMealSelectedChoiceIds.includes(item.id) && <MobileItemPlacedCheck />}
         </button>) : <>{sceneSupplies.map((supply) => {
           const ready = supply.stateKey === "food" ? activity.arrivalMealFoodReady : supply.stateKey === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady;
           const imageClassName = supply.stateKey === "food" ? "arrival-meal-supply-food" : supply.stateKey === "water" ? "arrival-meal-supply-water" : undefined;
@@ -201,13 +201,13 @@ export function ArrivalMealActivity({
           return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? <>{note}<button type="button" className="arrival-meal-mobile-done" onClick={() => openMobileSupplyInfo(supply)} aria-label={`查看${supply.label}說明`}><img style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><MobileItemInfoBadge /><MobileItemPlacedCheck /></button></> : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><MobileItemInfoBadge /></button><ItemDescriptionCard className="arrival-meal-desktop-note arrival-meal-desktop-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
         })}{sceneUnsafeFoods.map((food) => {
           const caution = food.presentation === "caution";
-          return <button key={food.id} type="button" className={`arrival-meal-unsafe${caution ? " caution" : ""}${unsafeFoodIds.includes(food.id) ? " warning" : ""}`} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={food.image} alt="" />{unsafeFoodIds.includes(food.id) && (caution ? <WarningTriangle className="unsafe-food-warning-icon" /> : <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>)}</span><span>{food.label}</span></button>;
+          return <button key={food.id} type="button" className={`arrival-meal-unsafe${caution ? " caution" : ""}${unsafeFoodIds.includes(food.id) ? " warning" : ""}`} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={food.image} alt="" />{unsafeFoodIds.includes(food.id) && (caution ? <WarningTriangle className="unsafe-food-warning-icon" /> : <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>)}</span><span>{food.label}</span><MobileItemInfoBadge /></button>;
         })}</>}
       </aside>
       </div>
       <div className={`arrival-meal-scene${feeding.interaction !== "choice" && feeding.scene.mobileBackgroundStyle ? " arrival-meal-scene--own-mobile-bg" : ""}`} role={feeding.interaction === "choice" ? "group" : undefined} aria-label={feeding.interaction === "choice" ? "第一餐食碗" : undefined} onDragOver={feeding.interaction === "choice" ? (event) => event.preventDefault() : undefined} onDrop={feeding.interaction === "choice" ? (event) => { event.preventDefault(); chooseMealChoice(event.dataTransfer.getData("text/plain")); } : undefined}>
         {mobileStarted && !hasMealItemPlaced && <p className="mobile-item-operation-cue">{feeding.interaction === "choice" ? "點擊食物，放入食碗" : "點擊用品，準備第一餐"}</p>}
-        {feeding.interaction === "choice" ? <div className="scene-media-placeholder" aria-live="polite"><small>互動場景</small><b>食碗</b><p>{activity.hamsterMealSelected.length ? choiceItems.filter((item) => activity.hamsterMealSelected.includes(item.id)).map((item) => item.label).join("、") : feeding.emptyBowlText}</p></div> : <>
+        {feeding.interaction === "choice" ? <div className="scene-media-placeholder" aria-live="polite"><small>互動場景</small><b>食碗</b><p>{activity.arrivalMealSelectedChoiceIds.length ? choiceItems.filter((item) => activity.arrivalMealSelectedChoiceIds.includes(item.id)).map((item) => item.label).join("、") : feeding.emptyBowlText}</p></div> : <>
         <img className="arrival-meal-room arrival-meal-room--desktop" src={feeding.scene.desktopBackground} alt={`${feeding.animalName}的新家房間`} />
         <img className="arrival-meal-room arrival-meal-room--mobile" src={feeding.scene.mobileBackground} style={feeding.scene.mobileBackgroundStyle} alt="" />
         {foodWarning && <div className="arrival-meal-warning-overlay">

@@ -9,7 +9,8 @@
     "gecko-busy-care": {
       "activityKey": "busy-care",
       "itemId": "gecko-busy-care",
-      "resetKey": "busy-care"
+      "resetKey": "busy-care",
+      "transition": "busy-care"
     },
     "gecko-daily-care": {
       "activityKey": "daily-behavior",
@@ -36,6 +37,7 @@
       "activityKey": "video-scenario",
       "itemId": "gecko-sick",
       "scenarioId": "gecko-health-emergency",
+      "transition": "time-pass",
       "triggerExpenseOnFeedback": true
     }
   },
@@ -85,11 +87,29 @@
         "tailNormal": "/assets/gecko/HealthInspectionActivity/gecko-tail-normal.webp",
         "tailWarning": "/assets/gecko/HealthInspectionActivity/gecko-tail-warning.webp",
         "terrariumBackground": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+        "terrariumBackgroundMobile": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
         "toeNormal": "/assets/gecko/HealthInspectionActivity/gecko-toe-normal.webp",
         "toeWarning": "/assets/gecko/HealthInspectionActivity/gecko-toe-warning.webp",
         "warmThermometer": "/assets/gecko/room/thermometer-hygrometer-warm.webp",
         "waterClean": "/assets/gecko/feeding/shallow-water-dish-full.webp",
         "waterDirty": "/assets/gecko/HealthInspectionActivity/water-dish-dirty.webp"
+      },
+      "petJourney": {
+        "arrivalTransition": "/assets/gecko/pet-journey/arrival-transition.mp4",
+        "arrivalTransitionMobile": "/assets/gecko/pet-journey/arrival-transition-mobile.mp4",
+        "busyDailyCare": "/assets/gecko/pet-journey/busy-daily-care.mp4",
+        "busyDayTransition": "/assets/gecko/pet-journey/busy-day-transition.mp4",
+        "busyDayTransitionMobile": "/assets/gecko/pet-journey/busy-day-transition-mobile.mp4",
+        "correctPrimary": "/assets/gecko/pet-journey/correct-answer.mp4",
+        "correctSecondary": "/assets/gecko/pet-journey/correct-answer2.mp4",
+        "firstDay": "/assets/gecko/pet-journey/first-day.mp4",
+        "refuseFood": "/assets/gecko/pet-journey/refuse-food.mp4",
+        "seniorLife": "/assets/gecko/pet-journey/senior-life.mp4",
+        "sheddingStuck": "/assets/gecko/pet-journey/shedding-stuck.mp4",
+        "sick": "/assets/gecko/pet-journey/sick.mp4",
+        "temperatureCheck": "/assets/gecko/pet-journey/temperature-check.mp4",
+        "timePassesAging": "/assets/gecko/pet-journey/time-passes-aging.mp4",
+        "timePassesAgingMobile": "/assets/gecko/pet-journey/time-passes-aging-mobile.mp4"
       },
       "preparation": {
         "heatPack": "/assets/car/hand-warmer-or-heat-pack.webp",
@@ -120,8 +140,11 @@
         "terrarium": "/assets/gecko/room/gecko-terrarium.webp",
         "terrariumFront": "/assets/gecko/room/gecko-terrarium-front.webp",
         "terrariumHeatMat": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+        "terrariumHeatMatMobile": "/assets/gecko/room/bg-gecko-terrarium-heat-mat-mobile.webp",
         "terrariumInterior": "/assets/gecko/room/bg-gecko-terrarium-interior.webp",
+        "terrariumInteriorMobile": "/assets/gecko/room/bg-gecko-terrarium-interior-mobile.webp",
         "terrariumSubstrate": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
+        "terrariumSubstrateMobile": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
         "thermometerHygrometer": "/assets/gecko/room/thermometer-hygrometer.webp",
         "thermometerHygrometerCool": "/assets/gecko/room/thermometer-hygrometer-cool.webp",
         "thermometerHygrometerWarm": "/assets/gecko/room/thermometer-hygrometer-warm.webp",
@@ -320,7 +343,7 @@
         }
       },
       "roomTitle": "先替牠布置安全的生活空間",
-      "selectionTitle": "選擇想認識的小型地棲性守宮",
+      "selectionTitle": "你想飼養哪一種動物？",
       "typeLabel": "小型地棲性守宮"
     },
     "feeding": {
@@ -354,28 +377,28 @@
         },
         "mobile": {
           "food": {
-            "bottom": 29,
-            "left": 55,
+            "bottom": 10,
+            "left": 47,
             "maxHeight": 30,
             "width": 25
           },
           "pet": {
             "bottom": 17,
-            "left": 20,
+            "left": 55,
             "maxHeight": 64,
-            "width": 47
+            "width": 35
           },
           "veggie": {
             "bottom": 16,
-            "left": 45,
+            "left": 10,
             "maxHeight": 24,
-            "width": 20
+            "width": 18
           },
           "water": {
             "bottom": 16,
-            "left": 68,
+            "left": 30,
             "maxHeight": 24,
-            "width": 20
+            "width": 18
           }
         }
       },
@@ -449,6 +472,10 @@
           ]
         },
         "mobileBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
+        "mobileBackgroundStyle": {
+          "objectFit": "cover",
+          "objectPosition": "center"
+        },
         "pet": {
           "ready": "/assets/gecko/feeding/gecko-happy.webp",
           "waiting": "/assets/gecko/feeding/gecko-unhappy.webp"
@@ -575,7 +602,11 @@
               "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
               "knowledgeContent": [
                 {
-                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
+                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
                   "type": "paragraph"
                 }
               ],
@@ -583,7 +614,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "守宮接回後需要5–14天的適應期，應保持缸蓋蓋好、減少干擾，不強迫觸碰，等牠主動出現探索後再緩慢建立信任。"
@@ -593,7 +626,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "維持安靜與穩定環境，讓守宮自行探索。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮到家第一天情境影片",
+              "src": "/assets/gecko/pet-journey/first-day.mp4",
+              "type": "video"
             },
             "stage": "接回家",
             "stageId": "arrival",
@@ -615,7 +650,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-temperature",
                 "result": "correct",
-                "text": "確認溫度計讀數，確保暖側底部溫度在 28–32°C、涼側在 22–25°C"
+                "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
               },
               {
                 "effects": {
@@ -639,7 +674,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-adaption-or-shed",
                 "result": "correct",
-                "text": "評估是否仍在適應期（接回未滿 2 週）或即將蛻皮（皮膚變灰白）"
+                "text": "評估是否仍在適應期或即將蛻皮"
               },
               {
                 "effects": {
@@ -817,7 +852,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "warm-water-soak",
                 "result": "correct",
-                "text": "用溫水輕輕浸泡守宮趾端（水溫不超過 30°C），後以軟濕棉棒輕輕協助移除軟化的殘皮"
+                "text": "用溫水輕輕浸泡守宮趾端，後以軟濕棉棒輕輕協助移除軟化的殘皮"
               },
               {
                 "effects": {
@@ -840,7 +875,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水軟化後協助去除，避免血液循環受阻。",
+                  "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水（水溫不超過 30°C）軟化後協助去除，避免血液循環受阻。",
                   "type": "paragraph"
                 }
               ],
@@ -936,10 +971,20 @@
             "busyCarePresentation": {
               "animalName": "小型地棲性守宮",
               "feedbackMedia": {
-                "type": "placeholder"
+                "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+                "type": "video"
               },
               "sceneMedia": {
-                "type": "placeholder"
+                "ariaLabel": "守宮等待日常照顧情境影片",
+                "fallback": {
+                  "backgroundAlt": "守宮爬蟲缸",
+                  "backgroundSrc": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+                  "characterAlt": "{petName}在爬蟲缸中等待照顧",
+                  "characterSrc": "/assets/gecko/room/gecko.webp",
+                  "type": "image-layers"
+                },
+                "src": "/assets/gecko/pet-journey/busy-daily-care.mp4",
+                "type": "video"
               }
             },
             "choices": [
@@ -1108,7 +1153,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "守宮出現後腿無力顫抖或持續拒食等異常時，應立刻記錄並諮詢熟悉爬蟲的獸醫，不可自行給藥、給人用藥物或等待觀察。"
@@ -1118,7 +1165,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "出現明顯異常時，記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮身體不適情境影片",
+              "src": "/assets/gecko/pet-journey/sick.mp4",
+              "type": "video"
             },
             "stage": "生活變化",
             "stageId": "life-change",
@@ -1202,7 +1251,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "高齡守宮應提前規劃醫療基金、定期諮詢獸醫安排健康檢查，並學習老年照護重點，不可等到症狀嚴重才處理，也不應使用人用藥物或網路偏方。"
@@ -1212,7 +1263,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "提高健康檢查頻率並調整環境與餵食觀察。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "高齡守宮照護情境影片",
+              "src": "/assets/gecko/pet-journey/senior-life.mp4",
+              "type": "video"
             },
             "stage": "生活變化",
             "stageId": "life-change",
@@ -1282,7 +1335,11 @@
               "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
               "knowledgeContent": [
                 {
-                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
+                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
                   "type": "paragraph"
                 }
               ],
@@ -1290,7 +1347,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "守宮接回後需要5–14天的適應期，應保持缸蓋蓋好、減少干擾，不強迫觸碰，等牠主動出現探索後再緩慢建立信任。"
@@ -1300,7 +1359,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "維持安靜與穩定環境，讓守宮自行探索。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮到家第一天情境影片",
+              "src": "/assets/gecko/pet-journey/first-day.mp4",
+              "type": "video"
             },
             "stage": "接回家",
             "stageId": "arrival",
@@ -1322,7 +1383,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-temperature",
                 "result": "correct",
-                "text": "確認溫度計讀數，確保暖側底部溫度在 28–32°C、涼側在 22–25°C"
+                "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
               },
               {
                 "effects": {
@@ -1346,7 +1407,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-adaption-or-shed",
                 "result": "correct",
-                "text": "評估是否仍在適應期（接回未滿 2 週）或即將蛻皮（皮膚變灰白）"
+                "text": "評估是否仍在適應期或即將蛻皮"
               },
               {
                 "effects": {
@@ -1524,7 +1585,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "warm-water-soak",
                 "result": "correct",
-                "text": "用溫水輕輕浸泡守宮趾端（水溫不超過 30°C），後以軟濕棉棒輕輕協助移除軟化的殘皮"
+                "text": "用溫水輕輕浸泡守宮趾端，後以軟濕棉棒輕輕協助移除軟化的殘皮"
               },
               {
                 "effects": {
@@ -1547,7 +1608,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水軟化後協助去除，避免血液循環受阻。",
+                  "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水（水溫不超過 30°C）軟化後協助去除，避免血液循環受阻。",
                   "type": "paragraph"
                 }
               ],
@@ -1643,10 +1704,20 @@
             "busyCarePresentation": {
               "animalName": "小型地棲性守宮",
               "feedbackMedia": {
-                "type": "placeholder"
+                "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+                "type": "video"
               },
               "sceneMedia": {
-                "type": "placeholder"
+                "ariaLabel": "守宮等待日常照顧情境影片",
+                "fallback": {
+                  "backgroundAlt": "守宮爬蟲缸",
+                  "backgroundSrc": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+                  "characterAlt": "{petName}在爬蟲缸中等待照顧",
+                  "characterSrc": "/assets/gecko/room/gecko.webp",
+                  "type": "image-layers"
+                },
+                "src": "/assets/gecko/pet-journey/busy-daily-care.mp4",
+                "type": "video"
               }
             },
             "choices": [
@@ -1815,7 +1886,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "守宮出現後腿無力顫抖或持續拒食等異常時，應立刻記錄並諮詢熟悉爬蟲的獸醫，不可自行給藥、給人用藥物或等待觀察。"
@@ -1825,7 +1898,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "出現明顯異常時，記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮身體不適情境影片",
+              "src": "/assets/gecko/pet-journey/sick.mp4",
+              "type": "video"
             },
             "stage": "生活變化",
             "stageId": "life-change",
@@ -1909,7 +1984,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "高齡守宮應提前規劃醫療基金、定期諮詢獸醫安排健康檢查，並學習老年照護重點，不可等到症狀嚴重才處理，也不應使用人用藥物或網路偏方。"
@@ -1919,7 +1996,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "提高健康檢查頻率並調整環境與餵食觀察。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "高齡守宮照護情境影片",
+              "src": "/assets/gecko/pet-journey/senior-life.mp4",
+              "type": "video"
             },
             "stage": "生活變化",
             "stageId": "life-change",
@@ -1993,7 +2072,11 @@
               "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
               "knowledgeContent": [
                 {
-                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
+                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
                   "type": "paragraph"
                 }
               ],
@@ -2001,7 +2084,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "守宮接回後需要5–14天的適應期，應保持缸蓋蓋好、減少干擾，不強迫觸碰，等牠主動出現探索後再緩慢建立信任。"
@@ -2011,7 +2096,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "維持安靜與穩定環境，讓守宮自行探索。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮到家第一天情境影片",
+              "src": "/assets/gecko/pet-journey/first-day.mp4",
+              "type": "video"
             },
             "stage": "接回家",
             "stageId": "arrival",
@@ -2033,7 +2120,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-temperature",
                 "result": "correct",
-                "text": "確認溫度計讀數，確保暖側底部溫度在 28–32°C、涼側在 22–25°C"
+                "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
               },
               {
                 "effects": {
@@ -2057,7 +2144,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-adaption-or-shed",
                 "result": "correct",
-                "text": "評估是否仍在適應期（接回未滿 2 週）或即將蛻皮（皮膚變灰白）"
+                "text": "評估是否仍在適應期或即將蛻皮"
               },
               {
                 "effects": {
@@ -2235,7 +2322,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "warm-water-soak",
                 "result": "correct",
-                "text": "用溫水輕輕浸泡守宮趾端（水溫不超過 30°C），後以軟濕棉棒輕輕協助移除軟化的殘皮"
+                "text": "用溫水輕輕浸泡守宮趾端，後以軟濕棉棒輕輕協助移除軟化的殘皮"
               },
               {
                 "effects": {
@@ -2258,7 +2345,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水軟化後協助去除，避免血液循環受阻。",
+                  "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水（水溫不超過 30°C）軟化後協助去除，避免血液循環受阻。",
                   "type": "paragraph"
                 }
               ],
@@ -2354,10 +2441,20 @@
             "busyCarePresentation": {
               "animalName": "小型地棲性守宮",
               "feedbackMedia": {
-                "type": "placeholder"
+                "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+                "type": "video"
               },
               "sceneMedia": {
-                "type": "placeholder"
+                "ariaLabel": "守宮等待日常照顧情境影片",
+                "fallback": {
+                  "backgroundAlt": "守宮爬蟲缸",
+                  "backgroundSrc": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+                  "characterAlt": "{petName}在爬蟲缸中等待照顧",
+                  "characterSrc": "/assets/gecko/room/gecko.webp",
+                  "type": "image-layers"
+                },
+                "src": "/assets/gecko/pet-journey/busy-daily-care.mp4",
+                "type": "video"
               }
             },
             "choices": [
@@ -2526,7 +2623,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "守宮出現後腿無力顫抖或持續拒食等異常時，應立刻記錄並諮詢熟悉爬蟲的獸醫，不可自行給藥、給人用藥物或等待觀察。"
@@ -2536,7 +2635,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "出現明顯異常時，記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮身體不適情境影片",
+              "src": "/assets/gecko/pet-journey/sick.mp4",
+              "type": "video"
             },
             "stage": "生活變化",
             "stageId": "life-change",
@@ -2620,7 +2721,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "高齡守宮應提前規劃醫療基金、定期諮詢獸醫安排健康檢查，並學習老年照護重點，不可等到症狀嚴重才處理，也不應使用人用藥物或網路偏方。"
@@ -2630,7 +2733,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "提高健康檢查頻率並調整環境與餵食觀察。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "高齡守宮照護情境影片",
+              "src": "/assets/gecko/pet-journey/senior-life.mp4",
+              "type": "video"
             },
             "stage": "生活變化",
             "stageId": "life-change",
@@ -2700,7 +2805,11 @@
               "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
               "knowledgeContent": [
                 {
-                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
+                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+                  "type": "paragraph"
+                },
+                {
+                  "text": "**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
                   "type": "paragraph"
                 }
               ],
@@ -2708,7 +2817,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "守宮接回後需要5–14天的適應期，應保持缸蓋蓋好、減少干擾，不強迫觸碰，等牠主動出現探索後再緩慢建立信任。"
@@ -2718,7 +2829,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "維持安靜與穩定環境，讓守宮自行探索。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮到家第一天情境影片",
+              "src": "/assets/gecko/pet-journey/first-day.mp4",
+              "type": "video"
             },
             "stage": "接回家",
             "stageId": "arrival",
@@ -2740,7 +2853,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-temperature",
                 "result": "correct",
-                "text": "確認溫度計讀數，確保暖側底部溫度在 28–32°C、涼側在 22–25°C"
+                "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
               },
               {
                 "effects": {
@@ -2764,7 +2877,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-adaption-or-shed",
                 "result": "correct",
-                "text": "評估是否仍在適應期（接回未滿 2 週）或即將蛻皮（皮膚變灰白）"
+                "text": "評估是否仍在適應期或即將蛻皮"
               },
               {
                 "effects": {
@@ -2942,7 +3055,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "warm-water-soak",
                 "result": "correct",
-                "text": "用溫水輕輕浸泡守宮趾端（水溫不超過 30°C），後以軟濕棉棒輕輕協助移除軟化的殘皮"
+                "text": "用溫水輕輕浸泡守宮趾端，後以軟濕棉棒輕輕協助移除軟化的殘皮"
               },
               {
                 "effects": {
@@ -2965,7 +3078,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水軟化後協助去除，避免血液循環受阻。",
+                  "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水（水溫不超過 30°C）軟化後協助去除，避免血液循環受阻。",
                   "type": "paragraph"
                 }
               ],
@@ -3061,10 +3174,20 @@
             "busyCarePresentation": {
               "animalName": "小型地棲性守宮",
               "feedbackMedia": {
-                "type": "placeholder"
+                "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+                "type": "video"
               },
               "sceneMedia": {
-                "type": "placeholder"
+                "ariaLabel": "守宮等待日常照顧情境影片",
+                "fallback": {
+                  "backgroundAlt": "守宮爬蟲缸",
+                  "backgroundSrc": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+                  "characterAlt": "{petName}在爬蟲缸中等待照顧",
+                  "characterSrc": "/assets/gecko/room/gecko.webp",
+                  "type": "image-layers"
+                },
+                "src": "/assets/gecko/pet-journey/busy-daily-care.mp4",
+                "type": "video"
               }
             },
             "choices": [
@@ -3233,7 +3356,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "守宮出現後腿無力顫抖或持續拒食等異常時，應立刻記錄並諮詢熟悉爬蟲的獸醫，不可自行給藥、給人用藥物或等待觀察。"
@@ -3243,7 +3368,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "出現明顯異常時，記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮身體不適情境影片",
+              "src": "/assets/gecko/pet-journey/sick.mp4",
+              "type": "video"
             },
             "stage": "生活變化",
             "stageId": "life-change",
@@ -3327,7 +3454,9 @@
               "title": "做得很好！"
             },
             "correctFeedbackMedia": {
-              "type": "placeholder"
+              "ariaLabel": "守宮答對回饋影片",
+              "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+              "type": "video"
             },
             "correctSummary": [
               "高齡守宮應提前規劃醫療基金、定期諮詢獸醫安排健康檢查，並學習老年照護重點，不可等到症狀嚴重才處理，也不應使用人用藥物或網路偏方。"
@@ -3337,7 +3466,9 @@
             "questionText": "你會怎麼做？",
             "reportSummary": "提高健康檢查頻率並調整環境與餵食觀察。",
             "sceneMedia": {
-              "type": "placeholder"
+              "ariaLabel": "高齡守宮照護情境影片",
+              "src": "/assets/gecko/pet-journey/senior-life.mp4",
+              "type": "video"
             },
             "stage": "生活變化",
             "stageId": "life-change",
@@ -3359,8 +3490,8 @@
         "label": "殺蟲劑噴霧",
         "mobilePlacement": {
           "width": 13,
-          "x": 57,
-          "y": 38
+          "x": 20,
+          "y": 60
         },
         "placement": {
           "layer": 4,
@@ -3377,9 +3508,9 @@
         "image": "/assets/gecko/room/essential-oil-diffuser.webp",
         "label": "精油擴香器",
         "mobilePlacement": {
-          "width": 13,
+          "width": 16,
           "x": 73,
-          "y": 38
+          "y": 45
         },
         "placement": {
           "layer": 4,
@@ -3397,7 +3528,7 @@
         "label": "細沙/爬蟲沙",
         "mobilePlacement": {
           "width": 22,
-          "x": 30,
+          "x": 40,
           "y": 76
         },
         "placement": {
@@ -3418,15 +3549,25 @@
             "y": 40
           },
           "mobile": {
-            "height": 30,
-            "width": 20,
-            "x": 74,
-            "y": 57
+            "height": 62,
+            "width": 16,
+            "x": 92,
+            "y": 42
           }
         },
         "icon": "↗",
         "id": "openings",
         "label": "牆縫/管道開口",
+        "mobilePlacement": {
+          "width": 1,
+          "x": 91,
+          "y": 67
+        },
+        "mobileThumbnailCrop": {
+          "size": 24,
+          "x": 92,
+          "y": 42
+        },
         "placement": {
           "layer": 4,
           "width": 1,
@@ -3638,7 +3779,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "特寵獸醫院"
+                  "text": "非犬貓動物醫院"
                 },
                 {
                   "text": "，並提前建立"
@@ -3725,7 +3866,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "特寵獸醫院"
+                  "text": "非犬貓動物醫院"
                 },
                 {
                   "text": "，並提前建立"
@@ -3823,6 +3964,10 @@
               "id": "eyes",
               "instruction": "點擊眼睛，觀察是否清亮、有無腫脹或殘皮。",
               "label": "眼睛",
+              "mobileHotspot": {
+                "x": 17,
+                "y": 30
+              },
               "prompt": "{petName} 的眼睛看起來……？",
               "states": {
                 "normal": {
@@ -3872,6 +4017,10 @@
               "id": "tail",
               "instruction": "點擊尾巴，確認是否飽滿並觀察近期體況。",
               "label": "尾巴",
+              "mobileHotspot": {
+                "x": 85,
+                "y": 51
+              },
               "prompt": "{petName} 的尾巴看起來……？",
               "states": {
                 "normal": {
@@ -3922,6 +4071,10 @@
               "id": "skin",
               "instruction": "點擊身體皮膚，確認目前的脫皮狀態。",
               "label": "皮膚",
+              "mobileHotspot": {
+                "x": 58,
+                "y": 50
+              },
               "prompt": "{petName} 的皮膚看起來……？",
               "states": {
                 "normal": {
@@ -3978,6 +4131,10 @@
               "id": "toes",
               "instruction": "點擊趾端，確認是否有環狀殘皮。",
               "label": "趾端",
+              "mobileHotspot": {
+                "x": 42,
+                "y": 77
+              },
               "prompt": "{petName} 的趾端看起來……？",
               "states": {
                 "normal": {
@@ -4037,6 +4194,11 @@
           "id": "feces",
           "instruction": "點擊底材上的糞便，觀察今天的排泄狀態並辨識需要留意的變化。",
           "label": "排泄觀察",
+          "mobileScenePlacement": {
+            "width": 18,
+            "x": 72,
+            "y": 66
+          },
           "prompt": "今天的排泄狀況看起來……？",
           "scenePlacement": {
             "layer": 3,
@@ -4093,6 +4255,7 @@
         ],
         "scene": {
           "background": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+          "backgroundMobile": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
           "body": "/assets/gecko/room/gecko.webp",
           "bodyAlt": "等待進行眼睛、尾巴、皮膚與趾端檢查的守宮",
           "completedItems": [
@@ -4104,8 +4267,8 @@
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
                 "width": 100,
-                "x": 50,
-                "y": 47
+                "x": 85,
+                "y": 36
               },
               "placement": {
                 "layer": 2,
@@ -4126,9 +4289,9 @@
               "image": "/assets/gecko/room/enrichment-decor-plant.webp",
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
-                "width": 12,
-                "x": 74,
-                "y": 50
+                "width": 40,
+                "x": 0,
+                "y": 55
               },
               "placement": {
                 "layer": 2,
@@ -4144,9 +4307,9 @@
               "image": "/assets/gecko/room/enrichment-decor-stone.webp",
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
-                "width": 10,
-                "x": 20,
-                "y": 68
+                "width": 30,
+                "x": 100,
+                "y": 76
               },
               "placement": {
                 "layer": 4,
@@ -4162,8 +4325,8 @@
               "image": "/assets/gecko/room/enrichment-decor-wooden.webp",
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
-                "width": 20,
-                "x": 56,
+                "width": 35,
+                "x": 10,
                 "y": 62
               },
               "placement": {
@@ -4179,9 +4342,9 @@
               "id": "thermometer-hygrometer-cool",
               "image": "/assets/gecko/room/thermometer-hygrometer-cool.webp",
               "mobilePlacement": {
-                "width": 9,
-                "x": 12,
-                "y": 40
+                "width": 35,
+                "x": 18,
+                "y": 45
               },
               "placement": {
                 "layer": 6,
@@ -4195,9 +4358,9 @@
               "id": "thermometer-hygrometer-warm",
               "image": "/assets/gecko/room/thermometer-hygrometer-warm.webp",
               "mobilePlacement": {
-                "width": 12,
+                "width": 35,
                 "x": 89,
-                "y": 40
+                "y": 90
               },
               "placement": {
                 "layer": 6,
@@ -4211,9 +4374,9 @@
               "id": "cool-hide",
               "image": "/assets/gecko/room/cool-hide.webp",
               "mobilePlacement": {
-                "width": 16,
-                "x": 20,
-                "y": 58
+                "width": 40,
+                "x": -10,
+                "y": 70
               },
               "placement": {
                 "layer": 3,
@@ -4227,9 +4390,9 @@
               "id": "moist-hide",
               "image": "/assets/gecko/room/moist-hide.webp",
               "mobilePlacement": {
-                "width": 14,
-                "x": 40,
-                "y": 56
+                "width": 40,
+                "x": 50,
+                "y": 60
               },
               "placement": {
                 "layer": 2,
@@ -4243,8 +4406,8 @@
               "id": "warm-hide",
               "image": "/assets/gecko/room/warm-hide.webp",
               "mobilePlacement": {
-                "width": 15,
-                "x": 84,
+                "width": 40,
+                "x": 95,
                 "y": 60
               },
               "placement": {
@@ -4259,9 +4422,9 @@
               "id": "shallow-water-dish",
               "image": "/assets/gecko/room/shallow-water-dish.webp",
               "mobilePlacement": {
-                "width": 10,
-                "x": 46,
-                "y": 68
+                "width": 15,
+                "x": 55,
+                "y": 80
               },
               "placement": {
                 "layer": 6,
@@ -4275,9 +4438,9 @@
               "id": "calcium-dish",
               "image": "/assets/gecko/room/calcium-dish.webp",
               "mobilePlacement": {
-                "width": 9,
-                "x": 36,
-                "y": 68
+                "width": 15,
+                "x": 40,
+                "y": 80
               },
               "placement": {
                 "layer": 6,
@@ -4307,14 +4470,27 @@
             "left": "-30px",
             "top": "-330px"
           },
+          "coolMobileLabelPlacement": {
+            "x": "-17px",
+            "y": "95px"
+          },
+          "coolMobilePlacement": {
+            "width": 35,
+            "x": 18,
+            "y": 48
+          },
+          "coolMobileReadingPlacement": {
+            "x": "38%",
+            "y": "22%"
+          },
           "coolPlacement": {
             "width": 25,
             "x": 22,
             "y": 47
           },
           "coolReadingPlacement": {
-            "right": "50%",
-            "top": "10%"
+            "right": "53%",
+            "top": "11%"
           },
           "coolThermometer": "/assets/gecko/room/thermometer-hygrometer-cool.webp",
           "correctTemperatures": {
@@ -4391,13 +4567,26 @@
             "left": "-5px",
             "top": "60px"
           },
+          "warmMobileLabelPlacement": {
+            "x": "0px",
+            "y": "35px"
+          },
+          "warmMobilePlacement": {
+            "width": 35,
+            "x": 88,
+            "y": 67
+          },
+          "warmMobileReadingPlacement": {
+            "x": "45%",
+            "y": "60%"
+          },
           "warmPlacement": {
             "width": 25,
             "x": 90,
             "y": 87
           },
           "warmReadingPlacement": {
-            "right": "35%",
+            "right": "45%",
             "top": "55%"
           },
           "warmThermometer": "/assets/gecko/room/thermometer-hygrometer-warm.webp"
@@ -4417,6 +4606,11 @@
             "width": 15,
             "x": 53,
             "y": 66
+          },
+          "mobileInteractivePlacement": {
+            "width": 15,
+            "x": 55,
+            "y": 72
           },
           "sceneItemId": "shallow-water-dish",
           "successFeedback": "✅ 水碟已清洗，今天的新鮮飲水也補好了。"
@@ -4483,7 +4677,15 @@
           "title": "{petName} 進入高齡期了",
           "type": "senior-room"
         }
-      ]
+      ],
+      "transitionMedia": {
+        "arrival": "/assets/gecko/pet-journey/arrival-transition.mp4",
+        "arrivalMobile": "/assets/gecko/pet-journey/arrival-transition-mobile.mp4",
+        "busyCare": "/assets/gecko/pet-journey/busy-day-transition.mp4",
+        "busyCareMobile": "/assets/gecko/pet-journey/busy-day-transition-mobile.mp4",
+        "timePass": "/assets/gecko/pet-journey/time-passes-aging.mp4",
+        "timePassMobile": "/assets/gecko/pet-journey/time-passes-aging-mobile.mp4"
+      }
     },
     "masteredCareThemes": [
       {
@@ -4612,8 +4814,8 @@
           "label": "殺蟲劑噴霧",
           "mobilePlacement": {
             "width": 13,
-            "x": 57,
-            "y": 38
+            "x": 20,
+            "y": 60
           },
           "placement": {
             "layer": 4,
@@ -4630,9 +4832,9 @@
           "image": "/assets/gecko/room/essential-oil-diffuser.webp",
           "label": "精油擴香器",
           "mobilePlacement": {
-            "width": 13,
+            "width": 16,
             "x": 73,
-            "y": 38
+            "y": 45
           },
           "placement": {
             "layer": 4,
@@ -4650,7 +4852,7 @@
           "label": "細沙/爬蟲沙",
           "mobilePlacement": {
             "width": 22,
-            "x": 30,
+            "x": 40,
             "y": 76
           },
           "placement": {
@@ -4671,15 +4873,25 @@
               "y": 40
             },
             "mobile": {
-              "height": 30,
-              "width": 20,
-              "x": 74,
-              "y": 57
+              "height": 62,
+              "width": 16,
+              "x": 92,
+              "y": 42
             }
           },
           "icon": "↗",
           "id": "openings",
           "label": "牆縫/管道開口",
+          "mobilePlacement": {
+            "width": 1,
+            "x": 91,
+            "y": 67
+          },
+          "mobileThumbnailCrop": {
+            "size": 24,
+            "x": 92,
+            "y": 42
+          },
           "placement": {
             "layer": 4,
             "width": 1,
@@ -4742,6 +4954,22 @@
           }
         ],
         "interiorItemId": "safe-substrate",
+        "interiorMobileBackground": "/assets/gecko/room/bg-gecko-terrarium-interior-mobile.webp",
+        "interiorMobileBackgroundStates": [
+          {
+            "background": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
+            "whenItemIds": [
+              "safe-substrate"
+            ]
+          },
+          {
+            "background": "/assets/gecko/room/bg-gecko-terrarium-heat-mat-mobile.webp",
+            "whenItemIds": [
+              "safe-substrate",
+              "heat-mat"
+            ]
+          }
+        ],
         "interiorRequiredItemIds": [
           "safe-substrate",
           "heat-mat",
@@ -4755,7 +4983,12 @@
           "calcium-dish"
         ],
         "interiorSafeBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
+        "interiorSafeMobileBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
         "interiorUnlockItemId": "safe-substrate",
+        "mobileEntryHintPlacement": {
+          "x": 34,
+          "y": 44
+        },
         "outsideItemIds": [
           "gecko-terrarium",
           "first-feeder-insects",
@@ -4772,9 +5005,9 @@
           "image": "/assets/gecko/room/gecko-terrarium.webp",
           "label": "爬蟲專用玻璃缸",
           "mobilePlacement": {
-            "width": 52,
-            "x": 56,
-            "y": 61
+            "width": 25,
+            "x": 64,
+            "y": 44
           },
           "need": "安全",
           "placement": {
@@ -4795,8 +5028,8 @@
           "label": "首批活體餌料昆蟲及飼育容器",
           "mobilePlacement": {
             "width": 18,
-            "x": 65,
-            "y": 70
+            "x": 25,
+            "y": 60
           },
           "need": "飲食",
           "placement": {
@@ -4809,16 +5042,16 @@
           "sceneImage": "/assets/gecko/room/first-feeder-insects-front.webp"
         },
         {
-          "description": "每次餵食前以鈣粉沾裹昆蟲；每週 1–2 次改用含 D3 鈣粉或綜合維他命粉輪替使用，維持鈣磷平衡。",
+          "description": "餵食時沾裹昆蟲用；需備純鈣粉與含 D3 版本及綜合維他命粉，依週次輪替。",
           "expenseId": "gecko-supplements-initial",
           "icon": "✦",
           "id": "calcium-and-vitamin-supplement",
           "image": "/assets/gecko/room/calcium-and-vitamin-supplement.webp",
           "label": "鈣粉與綜合維他命粉",
           "mobilePlacement": {
-            "width": 15,
-            "x": 45,
-            "y": 71
+            "width": 12,
+            "x": 10,
+            "y": 62
           },
           "need": "飲食",
           "placement": {
@@ -4851,7 +5084,7 @@
           "required": true
         },
         {
-          "description": "貼附缸底一側，建立暖側（底部溫度約 28–32°C），另一側保持涼側，讓守宮自行選擇溫度。",
+          "description": "貼附缸底一側，建立暖側，另一側保持涼側，讓守宮自行選擇溫度。",
           "expenseId": "gecko-heat-mat",
           "icon": "♨",
           "id": "heat-mat",
@@ -4880,9 +5113,9 @@
           "label": "光源設備（UVB 燈 + 日夜節律燈）",
           "mobilePlacement": {
             "transform": "translate(-50%, -50%)",
-            "width": 100,
-            "x": 50,
-            "y": 50
+            "width": 82,
+            "x": 69,
+            "y": 48
           },
           "need": "安全",
           "placement": {
@@ -4928,8 +5161,8 @@
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
                 "width": 21,
-                "x": 82,
-                "y": 47
+                "x": 30,
+                "y": 52
               },
               "placement": {
                 "layer": 2,
@@ -4944,9 +5177,9 @@
               "image": "/assets/gecko/room/enrichment-decor-stone.webp",
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
-                "width": 20,
-                "x": 29,
-                "y": 80
+                "width": 18,
+                "x": 74,
+                "y": 65
               },
               "placement": {
                 "layer": 4,
@@ -4961,9 +5194,9 @@
               "image": "/assets/gecko/room/enrichment-decor-wooden.webp",
               "mobilePlacement": {
                 "transform": "translate(-50%, -50%)",
-                "width": 29,
-                "x": 55,
-                "y": 68
+                "width": 20,
+                "x": 32,
+                "y": 58
               },
               "placement": {
                 "layer": 3,
@@ -4982,6 +5215,11 @@
           "id": "thermometer-hygrometer",
           "image": "/assets/gecko/room/thermometer-hygrometer.webp",
           "label": "數位溫濕度計",
+          "mobilePlacement": {
+            "width": 12,
+            "x": 72,
+            "y": 25
+          },
           "need": "安全",
           "placement": {
             "layer": 6,
@@ -4995,9 +5233,9 @@
               "id": "cool-side",
               "image": "/assets/gecko/room/thermometer-hygrometer-cool.webp",
               "mobilePlacement": {
-                "width": 16,
+                "width": 25,
                 "x": 18,
-                "y": 32
+                "y": 49
               },
               "placement": {
                 "layer": 6,
@@ -5010,9 +5248,9 @@
               "id": "warm-side",
               "image": "/assets/gecko/room/thermometer-hygrometer-warm.webp",
               "mobilePlacement": {
-                "width": 16,
-                "x": 78,
-                "y": 32
+                "width": 25,
+                "x": 90,
+                "y": 75
               },
               "placement": {
                 "layer": 6,
@@ -5032,8 +5270,8 @@
           "label": "暖側躲避屋",
           "mobilePlacement": {
             "width": 25,
-            "x": 25,
-            "y": 57
+            "x": 75,
+            "y": 55
           },
           "need": "休息",
           "placement": {
@@ -5053,8 +5291,8 @@
           "label": "涼側躲避屋",
           "mobilePlacement": {
             "width": 25,
-            "x": 73,
-            "y": 58
+            "x": 20,
+            "y": 61
           },
           "need": "休息",
           "placement": {
@@ -5073,9 +5311,9 @@
           "image": "/assets/gecko/room/moist-hide.webp",
           "label": "濕躲避屋",
           "mobilePlacement": {
-            "width": 24,
+            "width": 25,
             "x": 51,
-            "y": 54
+            "y": 56
           },
           "need": "休息",
           "placement": {
@@ -5094,9 +5332,9 @@
           "image": "/assets/gecko/room/shallow-water-dish.webp",
           "label": "淺水碟",
           "mobilePlacement": {
-            "width": 15,
-            "x": 67,
-            "y": 70
+            "width": 12,
+            "x": 58,
+            "y": 66
           },
           "need": "飲食",
           "placement": {
@@ -5115,9 +5353,9 @@
           "image": "/assets/gecko/room/calcium-dish.webp",
           "label": "補鈣碟",
           "mobilePlacement": {
-            "width": 14,
-            "x": 38,
-            "y": 70
+            "width": 12,
+            "x": 45,
+            "y": 66
           },
           "need": "飲食",
           "placement": {
@@ -5161,7 +5399,11 @@
             }
           }
         },
-        "interiorBackgroundAlt": "守宮爬蟲缸內部配置"
+        "interiorBackgroundAlt": "守宮爬蟲缸內部配置",
+        "mobileExteriorBackgroundStyle": {
+          "objectFit": "cover",
+          "objectPosition": "right center"
+        }
       },
       "trunkItems": [
         {
@@ -5339,6 +5581,22 @@
         }
       ],
       "interiorItemId": "safe-substrate",
+      "interiorMobileBackground": "/assets/gecko/room/bg-gecko-terrarium-interior-mobile.webp",
+      "interiorMobileBackgroundStates": [
+        {
+          "background": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
+          "whenItemIds": [
+            "safe-substrate"
+          ]
+        },
+        {
+          "background": "/assets/gecko/room/bg-gecko-terrarium-heat-mat-mobile.webp",
+          "whenItemIds": [
+            "safe-substrate",
+            "heat-mat"
+          ]
+        }
+      ],
       "interiorRequiredItemIds": [
         "safe-substrate",
         "heat-mat",
@@ -5352,7 +5610,12 @@
         "calcium-dish"
       ],
       "interiorSafeBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
+      "interiorSafeMobileBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
       "interiorUnlockItemId": "safe-substrate",
+      "mobileEntryHintPlacement": {
+        "x": 34,
+        "y": 44
+      },
       "outsideItemIds": [
         "gecko-terrarium",
         "first-feeder-insects",
@@ -5369,9 +5632,9 @@
         "image": "/assets/gecko/room/gecko-terrarium.webp",
         "label": "爬蟲專用玻璃缸",
         "mobilePlacement": {
-          "width": 52,
-          "x": 56,
-          "y": 61
+          "width": 25,
+          "x": 64,
+          "y": 44
         },
         "need": "安全",
         "placement": {
@@ -5392,8 +5655,8 @@
         "label": "首批活體餌料昆蟲及飼育容器",
         "mobilePlacement": {
           "width": 18,
-          "x": 65,
-          "y": 70
+          "x": 25,
+          "y": 60
         },
         "need": "飲食",
         "placement": {
@@ -5406,16 +5669,16 @@
         "sceneImage": "/assets/gecko/room/first-feeder-insects-front.webp"
       },
       {
-        "description": "每次餵食前以鈣粉沾裹昆蟲；每週 1–2 次改用含 D3 鈣粉或綜合維他命粉輪替使用，維持鈣磷平衡。",
+        "description": "餵食時沾裹昆蟲用；需備純鈣粉與含 D3 版本及綜合維他命粉，依週次輪替。",
         "expenseId": "gecko-supplements-initial",
         "icon": "✦",
         "id": "calcium-and-vitamin-supplement",
         "image": "/assets/gecko/room/calcium-and-vitamin-supplement.webp",
         "label": "鈣粉與綜合維他命粉",
         "mobilePlacement": {
-          "width": 15,
-          "x": 45,
-          "y": 71
+          "width": 12,
+          "x": 10,
+          "y": 62
         },
         "need": "飲食",
         "placement": {
@@ -5448,7 +5711,7 @@
         "required": true
       },
       {
-        "description": "貼附缸底一側，建立暖側（底部溫度約 28–32°C），另一側保持涼側，讓守宮自行選擇溫度。",
+        "description": "貼附缸底一側，建立暖側，另一側保持涼側，讓守宮自行選擇溫度。",
         "expenseId": "gecko-heat-mat",
         "icon": "♨",
         "id": "heat-mat",
@@ -5477,9 +5740,9 @@
         "label": "光源設備（UVB 燈 + 日夜節律燈）",
         "mobilePlacement": {
           "transform": "translate(-50%, -50%)",
-          "width": 100,
-          "x": 50,
-          "y": 50
+          "width": 82,
+          "x": 69,
+          "y": 48
         },
         "need": "安全",
         "placement": {
@@ -5525,8 +5788,8 @@
             "mobilePlacement": {
               "transform": "translate(-50%, -50%)",
               "width": 21,
-              "x": 82,
-              "y": 47
+              "x": 30,
+              "y": 52
             },
             "placement": {
               "layer": 2,
@@ -5541,9 +5804,9 @@
             "image": "/assets/gecko/room/enrichment-decor-stone.webp",
             "mobilePlacement": {
               "transform": "translate(-50%, -50%)",
-              "width": 20,
-              "x": 29,
-              "y": 80
+              "width": 18,
+              "x": 74,
+              "y": 65
             },
             "placement": {
               "layer": 4,
@@ -5558,9 +5821,9 @@
             "image": "/assets/gecko/room/enrichment-decor-wooden.webp",
             "mobilePlacement": {
               "transform": "translate(-50%, -50%)",
-              "width": 29,
-              "x": 55,
-              "y": 68
+              "width": 20,
+              "x": 32,
+              "y": 58
             },
             "placement": {
               "layer": 3,
@@ -5579,6 +5842,11 @@
         "id": "thermometer-hygrometer",
         "image": "/assets/gecko/room/thermometer-hygrometer.webp",
         "label": "數位溫濕度計",
+        "mobilePlacement": {
+          "width": 12,
+          "x": 72,
+          "y": 25
+        },
         "need": "安全",
         "placement": {
           "layer": 6,
@@ -5592,9 +5860,9 @@
             "id": "cool-side",
             "image": "/assets/gecko/room/thermometer-hygrometer-cool.webp",
             "mobilePlacement": {
-              "width": 16,
+              "width": 25,
               "x": 18,
-              "y": 32
+              "y": 49
             },
             "placement": {
               "layer": 6,
@@ -5607,9 +5875,9 @@
             "id": "warm-side",
             "image": "/assets/gecko/room/thermometer-hygrometer-warm.webp",
             "mobilePlacement": {
-              "width": 16,
-              "x": 78,
-              "y": 32
+              "width": 25,
+              "x": 90,
+              "y": 75
             },
             "placement": {
               "layer": 6,
@@ -5629,8 +5897,8 @@
         "label": "暖側躲避屋",
         "mobilePlacement": {
           "width": 25,
-          "x": 25,
-          "y": 57
+          "x": 75,
+          "y": 55
         },
         "need": "休息",
         "placement": {
@@ -5650,8 +5918,8 @@
         "label": "涼側躲避屋",
         "mobilePlacement": {
           "width": 25,
-          "x": 73,
-          "y": 58
+          "x": 20,
+          "y": 61
         },
         "need": "休息",
         "placement": {
@@ -5670,9 +5938,9 @@
         "image": "/assets/gecko/room/moist-hide.webp",
         "label": "濕躲避屋",
         "mobilePlacement": {
-          "width": 24,
+          "width": 25,
           "x": 51,
-          "y": 54
+          "y": 56
         },
         "need": "休息",
         "placement": {
@@ -5691,9 +5959,9 @@
         "image": "/assets/gecko/room/shallow-water-dish.webp",
         "label": "淺水碟",
         "mobilePlacement": {
-          "width": 15,
-          "x": 67,
-          "y": 70
+          "width": 12,
+          "x": 58,
+          "y": 66
         },
         "need": "飲食",
         "placement": {
@@ -5712,9 +5980,9 @@
         "image": "/assets/gecko/room/calcium-dish.webp",
         "label": "補鈣碟",
         "mobilePlacement": {
-          "width": 14,
-          "x": 38,
-          "y": 70
+          "width": 12,
+          "x": 45,
+          "y": 66
         },
         "need": "飲食",
         "placement": {
@@ -5729,12 +5997,45 @@
     "scenarioPresentation": {
       "defaults": {
         "correctFeedbackMedia": {
-          "type": "placeholder"
+          "ariaLabel": "守宮答對回饋影片",
+          "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+          "type": "video"
         },
+        "correctFeedbackMediaVariants": [
+          {
+            "ariaLabel": "守宮答對回饋影片",
+            "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+            "type": "video"
+          },
+          {
+            "ariaLabel": "守宮答對回饋影片",
+            "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+            "type": "video"
+          }
+        ],
         "defaultPetName": "小守",
         "knowledgeTitle": "守宮小知識"
       },
-      "scenarios": {}
+      "scenarios": {
+        "gecko-refuse-food": {
+          "sceneVideo": {
+            "ariaLabel": "守宮拒食情境影片",
+            "src": "/assets/gecko/pet-journey/refuse-food.mp4"
+          }
+        },
+        "gecko-shedding": {
+          "sceneVideo": {
+            "ariaLabel": "守宮脫皮殘留情境影片",
+            "src": "/assets/gecko/pet-journey/shedding-stuck.mp4"
+          }
+        },
+        "gecko-temperature-check": {
+          "sceneVideo": {
+            "ariaLabel": "守宮低溫情境影片",
+            "src": "/assets/gecko/pet-journey/temperature-check.mp4"
+          }
+        }
+      }
     },
     "scenarios": [
       {
@@ -5796,7 +6097,11 @@
           "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
           "knowledgeContent": [
             {
-              "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
+              "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+              "type": "paragraph"
+            },
+            {
+              "text": "**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
               "type": "paragraph"
             }
           ],
@@ -5804,7 +6109,9 @@
           "title": "做得很好！"
         },
         "correctFeedbackMedia": {
-          "type": "placeholder"
+          "ariaLabel": "守宮答對回饋影片",
+          "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+          "type": "video"
         },
         "correctSummary": [
           "守宮接回後需要5–14天的適應期，應保持缸蓋蓋好、減少干擾，不強迫觸碰，等牠主動出現探索後再緩慢建立信任。"
@@ -5814,7 +6121,9 @@
         "questionText": "你會怎麼做？",
         "reportSummary": "維持安靜與穩定環境，讓守宮自行探索。",
         "sceneMedia": {
-          "type": "placeholder"
+          "ariaLabel": "守宮到家第一天情境影片",
+          "src": "/assets/gecko/pet-journey/first-day.mp4",
+          "type": "video"
         },
         "stage": "接回家",
         "stageId": "arrival",
@@ -5836,7 +6145,7 @@
             "feedbackTitle": "做得很好！",
             "id": "check-temperature",
             "result": "correct",
-            "text": "確認溫度計讀數，確保暖側底部溫度在 28–32°C、涼側在 22–25°C"
+            "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
           },
           {
             "effects": {
@@ -5860,7 +6169,7 @@
             "feedbackTitle": "做得很好！",
             "id": "check-adaption-or-shed",
             "result": "correct",
-            "text": "評估是否仍在適應期（接回未滿 2 週）或即將蛻皮（皮膚變灰白）"
+            "text": "評估是否仍在適應期或即將蛻皮"
           },
           {
             "effects": {
@@ -6038,7 +6347,7 @@
             "feedbackTitle": "做得很好！",
             "id": "warm-water-soak",
             "result": "correct",
-            "text": "用溫水輕輕浸泡守宮趾端（水溫不超過 30°C），後以軟濕棉棒輕輕協助移除軟化的殘皮"
+            "text": "用溫水輕輕浸泡守宮趾端，後以軟濕棉棒輕輕協助移除軟化的殘皮"
           },
           {
             "effects": {
@@ -6061,7 +6370,7 @@
               "type": "paragraph"
             },
             {
-              "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水軟化後協助去除，避免血液循環受阻。",
+              "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水（水溫不超過 30°C）軟化後協助去除，避免血液循環受阻。",
               "type": "paragraph"
             }
           ],
@@ -6157,10 +6466,20 @@
         "busyCarePresentation": {
           "animalName": "小型地棲性守宮",
           "feedbackMedia": {
-            "type": "placeholder"
+            "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+            "type": "video"
           },
           "sceneMedia": {
-            "type": "placeholder"
+            "ariaLabel": "守宮等待日常照顧情境影片",
+            "fallback": {
+              "backgroundAlt": "守宮爬蟲缸",
+              "backgroundSrc": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+              "characterAlt": "{petName}在爬蟲缸中等待照顧",
+              "characterSrc": "/assets/gecko/room/gecko.webp",
+              "type": "image-layers"
+            },
+            "src": "/assets/gecko/pet-journey/busy-daily-care.mp4",
+            "type": "video"
           }
         },
         "choices": [
@@ -6329,7 +6648,9 @@
           "title": "做得很好！"
         },
         "correctFeedbackMedia": {
-          "type": "placeholder"
+          "ariaLabel": "守宮答對回饋影片",
+          "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+          "type": "video"
         },
         "correctSummary": [
           "守宮出現後腿無力顫抖或持續拒食等異常時，應立刻記錄並諮詢熟悉爬蟲的獸醫，不可自行給藥、給人用藥物或等待觀察。"
@@ -6339,7 +6660,9 @@
         "questionText": "你會怎麼做？",
         "reportSummary": "出現明顯異常時，記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**。",
         "sceneMedia": {
-          "type": "placeholder"
+          "ariaLabel": "守宮身體不適情境影片",
+          "src": "/assets/gecko/pet-journey/sick.mp4",
+          "type": "video"
         },
         "stage": "生活變化",
         "stageId": "life-change",
@@ -6423,7 +6746,9 @@
           "title": "做得很好！"
         },
         "correctFeedbackMedia": {
-          "type": "placeholder"
+          "ariaLabel": "守宮答對回饋影片",
+          "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+          "type": "video"
         },
         "correctSummary": [
           "高齡守宮應提前規劃醫療基金、定期諮詢獸醫安排健康檢查，並學習老年照護重點，不可等到症狀嚴重才處理，也不應使用人用藥物或網路偏方。"
@@ -6433,7 +6758,9 @@
         "questionText": "你會怎麼做？",
         "reportSummary": "提高健康檢查頻率並調整環境與餵食觀察。",
         "sceneMedia": {
-          "type": "placeholder"
+          "ariaLabel": "高齡守宮照護情境影片",
+          "src": "/assets/gecko/pet-journey/senior-life.mp4",
+          "type": "video"
         },
         "stage": "生活變化",
         "stageId": "life-change",
@@ -6524,6 +6851,7 @@
       "maxAmount": 3000,
       "name": "到家第一週健康檢查",
       "recurring": false,
+      "showPlusSuffix": true,
       "stage": "寵物到家後"
     },
     "gecko-calcium-dish": {
@@ -6914,7 +7242,11 @@
         "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
         "knowledgeContent": [
           {
-            "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
+            "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+            "type": "paragraph"
+          },
+          {
+            "text": "**出現在外頭探索、主動接近食物**，是牠開始適應的好信號。",
             "type": "paragraph"
           }
         ],
@@ -6922,7 +7254,9 @@
         "title": "做得很好！"
       },
       "correctFeedbackMedia": {
-        "type": "placeholder"
+        "ariaLabel": "守宮答對回饋影片",
+        "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+        "type": "video"
       },
       "correctSummary": [
         "守宮接回後需要5–14天的適應期，應保持缸蓋蓋好、減少干擾，不強迫觸碰，等牠主動出現探索後再緩慢建立信任。"
@@ -6932,7 +7266,9 @@
       "questionText": "你會怎麼做？",
       "reportSummary": "維持安靜與穩定環境，讓守宮自行探索。",
       "sceneMedia": {
-        "type": "placeholder"
+        "ariaLabel": "守宮到家第一天情境影片",
+        "src": "/assets/gecko/pet-journey/first-day.mp4",
+        "type": "video"
       },
       "stage": "接回家",
       "stageId": "arrival",
@@ -6954,7 +7290,7 @@
           "feedbackTitle": "做得很好！",
           "id": "check-temperature",
           "result": "correct",
-          "text": "確認溫度計讀數，確保暖側底部溫度在 28–32°C、涼側在 22–25°C"
+          "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
         },
         {
           "effects": {
@@ -6978,7 +7314,7 @@
           "feedbackTitle": "做得很好！",
           "id": "check-adaption-or-shed",
           "result": "correct",
-          "text": "評估是否仍在適應期（接回未滿 2 週）或即將蛻皮（皮膚變灰白）"
+          "text": "評估是否仍在適應期或即將蛻皮"
         },
         {
           "effects": {
@@ -7156,7 +7492,7 @@
           "feedbackTitle": "做得很好！",
           "id": "warm-water-soak",
           "result": "correct",
-          "text": "用溫水輕輕浸泡守宮趾端（水溫不超過 30°C），後以軟濕棉棒輕輕協助移除軟化的殘皮"
+          "text": "用溫水輕輕浸泡守宮趾端，後以軟濕棉棒輕輕協助移除軟化的殘皮"
         },
         {
           "effects": {
@@ -7179,7 +7515,7 @@
             "type": "paragraph"
           },
           {
-            "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水軟化後協助去除，避免血液循環受阻。",
+            "text": "**趾端和眼周是最容易殘留的位置**，若超過 48 小時仍有殘皮，請主動用溫水（水溫不超過 30°C）軟化後協助去除，避免血液循環受阻。",
             "type": "paragraph"
           }
         ],
@@ -7275,10 +7611,20 @@
       "busyCarePresentation": {
         "animalName": "小型地棲性守宮",
         "feedbackMedia": {
-          "type": "placeholder"
+          "src": "/assets/gecko/pet-journey/correct-answer.mp4",
+          "type": "video"
         },
         "sceneMedia": {
-          "type": "placeholder"
+          "ariaLabel": "守宮等待日常照顧情境影片",
+          "fallback": {
+            "backgroundAlt": "守宮爬蟲缸",
+            "backgroundSrc": "/assets/gecko/room/bg-gecko-terrarium-heat-mat.webp",
+            "characterAlt": "{petName}在爬蟲缸中等待照顧",
+            "characterSrc": "/assets/gecko/room/gecko.webp",
+            "type": "image-layers"
+          },
+          "src": "/assets/gecko/pet-journey/busy-daily-care.mp4",
+          "type": "video"
         }
       },
       "choices": [
@@ -7447,7 +7793,9 @@
         "title": "做得很好！"
       },
       "correctFeedbackMedia": {
-        "type": "placeholder"
+        "ariaLabel": "守宮答對回饋影片",
+        "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+        "type": "video"
       },
       "correctSummary": [
         "守宮出現後腿無力顫抖或持續拒食等異常時，應立刻記錄並諮詢熟悉爬蟲的獸醫，不可自行給藥、給人用藥物或等待觀察。"
@@ -7457,7 +7805,9 @@
       "questionText": "你會怎麼做？",
       "reportSummary": "出現明顯異常時，記錄症狀並盡快諮詢**熟悉爬蟲類醫療的獸醫師**。",
       "sceneMedia": {
-        "type": "placeholder"
+        "ariaLabel": "守宮身體不適情境影片",
+        "src": "/assets/gecko/pet-journey/sick.mp4",
+        "type": "video"
       },
       "stage": "生活變化",
       "stageId": "life-change",
@@ -7541,7 +7891,9 @@
         "title": "做得很好！"
       },
       "correctFeedbackMedia": {
-        "type": "placeholder"
+        "ariaLabel": "守宮答對回饋影片",
+        "src": "/assets/gecko/pet-journey/correct-answer2.mp4",
+        "type": "video"
       },
       "correctSummary": [
         "高齡守宮應提前規劃醫療基金、定期諮詢獸醫安排健康檢查，並學習老年照護重點，不可等到症狀嚴重才處理，也不應使用人用藥物或網路偏方。"
@@ -7551,7 +7903,9 @@
       "questionText": "你會怎麼做？",
       "reportSummary": "提高健康檢查頻率並調整環境與餵食觀察。",
       "sceneMedia": {
-        "type": "placeholder"
+        "ariaLabel": "高齡守宮照護情境影片",
+        "src": "/assets/gecko/pet-journey/senior-life.mp4",
+        "type": "video"
       },
       "stage": "生活變化",
       "stageId": "life-change",
@@ -7563,8 +7917,11 @@
   ],
   "petNameFallback": "小守宮",
   "transitionMedia": {
-    "arrival": "/assets/dog/pet-journey/shiba/arrival-transition.mp4",
-    "busyCare": "/assets/dog/pet-journey/shiba/busy-day-transition.mp4",
-    "timePass": "/assets/dog/pet-journey/shiba/time-passes-aging.mp4"
+    "arrival": "/assets/gecko/pet-journey/arrival-transition.mp4",
+    "arrivalMobile": "/assets/gecko/pet-journey/arrival-transition-mobile.mp4",
+    "busyCare": "/assets/gecko/pet-journey/busy-day-transition.mp4",
+    "busyCareMobile": "/assets/gecko/pet-journey/busy-day-transition-mobile.mp4",
+    "timePass": "/assets/gecko/pet-journey/time-passes-aging.mp4",
+    "timePassMobile": "/assets/gecko/pet-journey/time-passes-aging-mobile.mp4"
   }
 }

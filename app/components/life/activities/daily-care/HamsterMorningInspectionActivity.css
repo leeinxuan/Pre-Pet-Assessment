@@ -156,7 +156,7 @@
   .hamster-mobile-action-progress > div span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e0a01d, #85bd9b); transition: width .2s ease; }
 
   .hamster-cage-check-scene {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     width: 100vw;
     min-height: 0;
     height: auto;
@@ -202,6 +202,9 @@
   .hamster-cleaning-tool.is-tap-selected { transform: scale(1.08); filter: drop-shadow(0 0 12px rgba(224, 160, 29, .72)); }
   .hamster-sand-bath-stage { min-height: 0; cursor: pointer; touch-action: manipulation; }
   .hamster-sand-bath-stage.is-tap-target .hamster-sand-bath { animation: hamster-mobile-sand-prompt 1.35s ease-in-out infinite; }
+  .hamster-sand-bath-stage.is-shaking .hamster-sand-bath,
+  .hamster-sand-bath-stage.is-tap-target.is-shaking .hamster-sand-bath,
+  .hamster-sand-bath-stage.is-clean.is-shaking .hamster-sand-bath { animation: hamster-sand-shake .56s cubic-bezier(.35, .05, .2, 1) both; }
   .hamster-sand-bath { width: 96%; max-height: 80%; }
   .hamster-sand-debris { width: 16%; height: 16%; padding: 0; border: 0; background: transparent; cursor: pointer; }
   .hamster-sand-debris.is-tap-target { animation: hamster-mobile-tap-guide 1.35s ease-in-out infinite; }

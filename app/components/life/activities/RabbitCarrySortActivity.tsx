@@ -6,16 +6,20 @@ import { rabbitActivityScenarios, rabbitCarrySortSteps } from "../../../data/spe
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
 import { CompletionReminderBlock, CorrectFeedbackLayout } from "./scenario-ui";
+import { useMobileLayout } from "../../shared/useMobileLayout";
 
 function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { scenario: Scenario; petName: string; onReplay?: () => void; onContinue: () => void }) {
   const completionFeedback = scenario.completionFeedback;
-  return <div className="rabbit-activity-feedback">
+  const isCarrySort = scenario.id === "rabbit-carry-sort";
+  const [videoFailed, setVideoFailed] = useState(false);
+  const carryVideo = isCarrySort && scenario.correctFeedbackMedia?.type === "video" ? scenario.correctFeedbackMedia.src : "";
+  return <div className={`rabbit-activity-feedback${isCarrySort ? " rabbit-activity-feedback--carry" : ""}`}>
     <CorrectFeedbackLayout
       variant="single"
-      videoSrc=""
-      videoFailed
+      videoSrc={carryVideo}
+      videoFailed={!isCarrySort || videoFailed}
       fallbackText="兔子日常照護完成"
-      mediaPlaceholder={<div className="scene-media-placeholder"><span>兔子日常照護</span><strong>{withPetName(scenario.title, petName)}</strong><small>每一個穩定的日常，都是牠的安全感。</small></div>}
+      mediaPlaceholder={isCarrySort ? undefined : <div className="scene-media-placeholder"><span>兔子日常照護</span><strong>{withPetName(scenario.title, petName)}</strong><small>每一個穩定的日常，都是牠的安全感。</small></div>}
       title={completionFeedback?.title}
       intro={<p>{completionFeedback
         ? renderKnowledgeText(withPetName(completionFeedback.encouragement, petName))
@@ -23,24 +27,13 @@ function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { s
       knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "兔子小知識"}
       knowledgeContent={completionFeedback?.knowledgeContent}
       correctItems={completionFeedback ? undefined : scenario.id === "rabbit-carry-sort" ? scenario.learningPoints?.map((text) => withPetName(text, petName)) : scenario.learningPoints}
+      extraCopy={isCarrySort && scenario.completionReminder ? <CompletionReminderBlock reminder={scenario.completionReminder} petName={petName} /> : undefined}
       onReplay={onReplay}
-      onVideoError={() => undefined}
+      onVideoError={() => setVideoFailed(true)}
       onContinue={onContinue}
     />
-    {scenario.completionReminder && <CompletionReminderBlock reminder={scenario.completionReminder} petName={petName} />}
+    {!isCarrySort && scenario.completionReminder && <CompletionReminderBlock reminder={scenario.completionReminder} petName={petName} />}
   </div>;
-}
-
-function useMobileLayout() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 720px)");
-    const update = () => setIsMobile(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-  return isMobile;
 }
 
 export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose, onContinue, onReplay }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void; onReplay?: () => void }) {

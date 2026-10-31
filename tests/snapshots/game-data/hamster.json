@@ -73,6 +73,7 @@
         "dirtyBedding": "/assets/hamster/CageCheckActivity/bedding-dirty-main.webp",
         "droppings": "/assets/hamster/CageCheckActivity/droppings.webp",
         "floorView": "/assets/hamster/CageCheckActivity/cage-floor-view.webp",
+        "floorViewMobile": "/assets/hamster/room/bg-bedding-mobile.webp",
         "sandBathClean": "/assets/hamster/CageCheckActivity/sand-bath-clean.webp",
         "sandBathDirty": "/assets/hamster/CageCheckActivity/sand-bath-dirty.webp",
         "sandBathMess": "/assets/hamster/CageCheckActivity/sand-bath-mess.webp",
@@ -94,8 +95,10 @@
       },
       "petJourney": {
         "arrivalTransition": "/assets/hamster/pet-journey/arrival-transition.mp4",
+        "arrivalTransitionMobile": "/assets/hamster/pet-journey/arrival-transition-mobile.mp4",
         "busyDailyCare": "/assets/hamster/pet-journey/busy-daily-care.mp4",
         "busyDayTransition": "/assets/hamster/pet-journey/busy-day-transition.mp4",
+        "busyDayTransitionMobile": "/assets/hamster/pet-journey/busy-day-transition-mobile.mp4",
         "correctPrimary": "/assets/hamster/pet-journey/correct-answer.mp4",
         "correctSecondary": "/assets/hamster/pet-journey/correct-answer2.mp4",
         "firstDay": "/assets/hamster/pet-journey/first-day.mp4",
@@ -104,7 +107,8 @@
         "seniorLife": "/assets/hamster/pet-journey/senior-life.mp4",
         "sick": "/assets/hamster/pet-journey/sick.mp4",
         "solitary": "/assets/hamster/pet-journey/solitary.mp4",
-        "timePassesAging": "/assets/hamster/pet-journey/time-passes-aging.mp4"
+        "timePassesAging": "/assets/hamster/pet-journey/time-passes-aging.mp4",
+        "timePassesAgingMobile": "/assets/hamster/pet-journey/time-passes-aging-mobile.mp4"
       },
       "preparation": {
         "bedding": "/assets/hamster/room/bedding.webp",
@@ -117,7 +121,9 @@
         "cage": "/assets/hamster/room/hamster-cage.webp",
         "cageFront": "/assets/hamster/room/hamster-cage-front.webp",
         "cageInterior": "/assets/hamster/room/bg-cage-interior.webp",
+        "cageInteriorMobile": "/assets/hamster/room/bg-cage-interior-mobile.webp",
         "cageInteriorWithBedding": "/assets/hamster/room/bg-bedding.webp",
+        "cageInteriorWithBeddingMobile": "/assets/hamster/room/bg-bedding-mobile.webp",
         "exerciseWheel": "/assets/hamster/room/exercise-wheel.webp",
         "foodBowl": "/assets/hamster/room/food-bowl.webp",
         "gnawStick": "/assets/hamster/room/gnaw-stick.webp",
@@ -129,7 +135,9 @@
         },
         "hideout": "/assets/hamster/room/hideout.webp",
         "initialBackground": "/assets/hamster/room/direct-sunlight-spot.webp",
+        "initialMobileBackground": "/assets/hamster/room/direct-sunlight-spot-mobile.webp",
         "safeBackground": "/assets/hamster/room/hamster-safe-room.webp",
+        "safeMobileBackground": "/assets/hamster/room/hamster-safe-room-mobile.webp",
         "sand": "/assets/hamster/room/hamster-sand.webp",
         "sandBathBox": "/assets/hamster/room/sand-bath-box.webp",
         "waterBottle": "/assets/hamster/room/water-bottle.webp"
@@ -363,14 +371,14 @@
         "mobile": {
           "food": {
             "bottom": 5,
-            "left": 28,
-            "width": 24
+            "left": 25,
+            "width": 30
           },
           "pet": {
             "bottom": 10,
-            "left": 32,
+            "left": 50,
             "maxHeight": 58,
-            "width": 50
+            "width": 35
           },
           "veggie": {
             "bottom": 7,
@@ -378,9 +386,9 @@
             "width": 20
           },
           "water": {
-            "bottom": 10,
+            "bottom": 35,
             "left": 10,
-            "width": 24
+            "width": 45
           }
         }
       },
@@ -446,6 +454,12 @@
           "ready": "/assets/hamster/feeding/food-bowl-full.webp"
         },
         "mobileBackground": "/assets/hamster/room/bg-bedding.webp",
+        "mobileBackgroundStyle": {
+          "objectFit": "cover",
+          "objectPosition": "left center",
+          "transform": "scale(1.7)",
+          "transformOrigin": "14% 33%"
+        },
         "pet": {
           "ready": "/assets/hamster/feeding/hamster-happy.webp",
           "waiting": "/assets/hamster/feeding/hamster-unhappy.webp"
@@ -457,17 +471,17 @@
       },
       "supplies": [
         {
-          "alt": "倉鼠專用綜合飼料（定量）",
+          "alt": "倉鼠專用綜合飼料",
           "description": "倉鼠需要均衡的綜合飼料；每天固定餵食量，不要因為「碗空了」就補充，因為牠可能把食物藏進頰囊或巢穴了。",
           "image": "/assets/hamster/feeding/pellet.webp",
-          "label": "倉鼠專用綜合飼料（定量）",
+          "label": "倉鼠專用綜合飼料",
           "stateKey": "food"
         },
         {
-          "alt": "乾淨飲水（飲水器）",
+          "alt": "乾淨飲水",
           "description": "每天確認飲水器正常出水，並提供乾淨飲水。",
           "image": "/assets/shared/waterbottle.webp",
-          "label": "乾淨飲水（飲水器）",
+          "label": "乾淨飲水",
           "stateKey": "water"
         }
       ],
@@ -3432,6 +3446,11 @@
         "id": "cable",
         "image": "/assets/hamster/room/cable.webp",
         "label": "電線",
+        "mobilePlacement": {
+          "width": 20,
+          "x": 14,
+          "y": 77
+        },
         "placement": {
           "layer": 5,
           "width": 13,
@@ -3441,11 +3460,16 @@
       },
       {
         "danger": "倉鼠擅長利用縫隙逃脫，格柵過寬或薄壁塑膠籠都難以防逃。",
-        "handling": "更換為格柵間距適當、不易啃穿的金屬籠具。",
+        "handling": "更換為格柵間距適當、不易啃穿的籠具。",
         "icon": "▥",
         "id": "loose-gap-cage",
         "image": "/assets/hamster/room/loose-gap-cage.webp",
         "label": "格柵過大的舊籠",
+        "mobilePlacement": {
+          "width": 20,
+          "x": 84,
+          "y": 84
+        },
         "placement": {
           "layer": 5,
           "width": 15,
@@ -3460,6 +3484,17 @@
         "id": "direct-sunlight-spot",
         "image": "/assets/hamster/room/direct-sunlight-spot.webp",
         "label": "陽光直曬的位置",
+        "mobilePlacement": {
+          "width": 18,
+          "x": 24,
+          "y": 43
+        },
+        "mobileThumbnailCrop": {
+          "includeSprite": false,
+          "size": 27,
+          "x": 83,
+          "y": 50
+        },
         "placement": {
           "layer": 5,
           "width": 18,
@@ -3474,6 +3509,11 @@
         "id": "strong-scent-item",
         "image": "/assets/hamster/room/strong-scent-item.webp",
         "label": "強烈氣味物品",
+        "mobilePlacement": {
+          "width": 10,
+          "x": 24,
+          "y": 48
+        },
         "placement": {
           "layer": 5,
           "width": 6,
@@ -3503,7 +3543,7 @@
                   "text": "照護責任落在不願承擔的人身上"
                 },
                 {
-                  "text": "，也可能在你不在時對{petName}造成干擾。請在領養前與所有同住者"
+                  "text": "，也可能在你不在時對{petName}造成干擾。請在飼養前與所有同住者"
                 },
                 {
                   "emphasis": true,
@@ -3706,7 +3746,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "特寵獸醫院"
+                  "text": "非犬貓動物醫院"
                 },
                 {
                   "text": "，並提前建立"
@@ -3793,7 +3833,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "特寵獸醫院"
+                  "text": "非犬貓動物醫院"
                 },
                 {
                   "text": "，並提前建立"
@@ -3931,8 +3971,11 @@
       ],
       "transitionMedia": {
         "arrival": "/assets/hamster/pet-journey/arrival-transition.mp4",
+        "arrivalMobile": "/assets/hamster/pet-journey/arrival-transition-mobile.mp4",
         "busyCare": "/assets/hamster/pet-journey/busy-day-transition.mp4",
-        "timePass": "/assets/hamster/pet-journey/time-passes-aging.mp4"
+        "busyCareMobile": "/assets/hamster/pet-journey/busy-day-transition-mobile.mp4",
+        "timePass": "/assets/hamster/pet-journey/time-passes-aging.mp4",
+        "timePassMobile": "/assets/hamster/pet-journey/time-passes-aging-mobile.mp4"
       }
     },
     "masteredCareThemes": [
@@ -4051,6 +4094,11 @@
           "id": "cable",
           "image": "/assets/hamster/room/cable.webp",
           "label": "電線",
+          "mobilePlacement": {
+            "width": 20,
+            "x": 14,
+            "y": 77
+          },
           "placement": {
             "layer": 5,
             "width": 13,
@@ -4060,11 +4108,16 @@
         },
         {
           "danger": "倉鼠擅長利用縫隙逃脫，格柵過寬或薄壁塑膠籠都難以防逃。",
-          "handling": "更換為格柵間距適當、不易啃穿的金屬籠具。",
+          "handling": "更換為格柵間距適當、不易啃穿的籠具。",
           "icon": "▥",
           "id": "loose-gap-cage",
           "image": "/assets/hamster/room/loose-gap-cage.webp",
           "label": "格柵過大的舊籠",
+          "mobilePlacement": {
+            "width": 20,
+            "x": 84,
+            "y": 84
+          },
           "placement": {
             "layer": 5,
             "width": 15,
@@ -4079,6 +4132,17 @@
           "id": "direct-sunlight-spot",
           "image": "/assets/hamster/room/direct-sunlight-spot.webp",
           "label": "陽光直曬的位置",
+          "mobilePlacement": {
+            "width": 18,
+            "x": 24,
+            "y": 43
+          },
+          "mobileThumbnailCrop": {
+            "includeSprite": false,
+            "size": 27,
+            "x": 83,
+            "y": 50
+          },
           "placement": {
             "layer": 5,
             "width": 18,
@@ -4093,6 +4157,11 @@
           "id": "strong-scent-item",
           "image": "/assets/hamster/room/strong-scent-item.webp",
           "label": "強烈氣味物品",
+          "mobilePlacement": {
+            "width": 10,
+            "x": 24,
+            "y": 48
+          },
           "placement": {
             "layer": 5,
             "width": 6,
@@ -4129,14 +4198,16 @@
           "mobile": {
             "height": 32,
             "width": 27,
-            "x": 74,
+            "x": 83,
             "y": 50
           }
         },
         "initialBackground": "/assets/hamster/room/direct-sunlight-spot.webp",
+        "initialMobileBackground": "/assets/hamster/room/direct-sunlight-spot-mobile.webp",
         "interiorBackground": "/assets/hamster/room/bg-cage-interior.webp",
         "interiorBackgroundAspectRatio": "match-room",
         "interiorItemId": "bedding",
+        "interiorMobileBackground": "/assets/hamster/room/bg-cage-interior-mobile.webp",
         "interiorRequiredItemIds": [
           "bedding",
           "exercise-wheel",
@@ -4146,22 +4217,33 @@
           "sand-bath-box"
         ],
         "interiorSafeBackground": "/assets/hamster/room/bg-bedding.webp",
+        "interiorSafeMobileBackground": "/assets/hamster/room/bg-bedding-mobile.webp",
         "interiorUnlockItemId": "bedding",
+        "mobileEntryHintPlacement": {
+          "x": 38,
+          "y": 60
+        },
         "outsideItemIds": [
           "hamster-cage",
           "pellet",
           "hamster-sand"
         ],
-        "safeBackground": "/assets/hamster/room/hamster-safe-room.webp"
+        "safeBackground": "/assets/hamster/room/hamster-safe-room.webp",
+        "safeMobileBackground": "/assets/hamster/room/hamster-safe-room-mobile.webp"
       },
       "roomItems": [
         {
-          "description": "防逃金屬籠；有足夠空間放置滾輪、巢穴與砂浴盆。",
+          "description": "有足夠空間放置滾輪、巢穴與砂浴盆。",
           "expenseId": "hamster-cage-setup",
           "icon": "▥",
           "id": "hamster-cage",
           "image": "/assets/hamster/room/hamster-cage.webp",
           "label": "倉鼠籠",
+          "mobilePlacement": {
+            "width": 16,
+            "x": 11,
+            "y": 60
+          },
           "need": "安全",
           "placement": {
             "layer": 2,
@@ -4179,6 +4261,11 @@
           "id": "pellet",
           "image": "/assets/hamster/feeding/pellet.webp",
           "label": "倉鼠綜合飼料",
+          "mobilePlacement": {
+            "width": 15,
+            "x": 18,
+            "y": 78
+          },
           "need": "飲食",
           "placement": {
             "layer": 4,
@@ -4198,6 +4285,11 @@
           "id": "hamster-sand",
           "image": "/assets/hamster/room/hamster-sand.webp",
           "label": "倉鼠沙",
+          "mobilePlacement": {
+            "width": 12,
+            "x": 28,
+            "y": 80
+          },
           "need": "清潔",
           "placement": {
             "layer": 4,
@@ -4217,6 +4309,11 @@
           "id": "bedding",
           "image": "/assets/hamster/room/bedding.webp",
           "label": "紙質墊料",
+          "mobilePlacement": {
+            "width": 38,
+            "x": 72,
+            "y": 60
+          },
           "need": "休息",
           "placement": {
             "layer": 1,
@@ -4233,6 +4330,11 @@
           "id": "exercise-wheel",
           "image": "/assets/hamster/room/exercise-wheel.webp",
           "label": "滾輪",
+          "mobilePlacement": {
+            "width": 35,
+            "x": 72,
+            "y": 45
+          },
           "need": "活動",
           "placement": {
             "layer": 3,
@@ -4249,6 +4351,11 @@
           "id": "water-bottle",
           "image": "/assets/hamster/room/water-bottle.webp",
           "label": "飲水器",
+          "mobilePlacement": {
+            "width": 23,
+            "x": 11,
+            "y": 42
+          },
           "need": "飲食",
           "placement": {
             "layer": 3,
@@ -4265,6 +4372,11 @@
           "id": "food-bowl",
           "image": "/assets/hamster/room/food-bowl.webp",
           "label": "食碗",
+          "mobilePlacement": {
+            "width": 18,
+            "x": 18,
+            "y": 60
+          },
           "need": "飲食",
           "placement": {
             "layer": 3,
@@ -4281,6 +4393,11 @@
           "id": "hideout",
           "image": "/assets/hamster/room/hideout.webp",
           "label": "巢箱",
+          "mobilePlacement": {
+            "width": 21,
+            "x": 83,
+            "y": 59
+          },
           "need": "休息",
           "placement": {
             "layer": 3,
@@ -4297,6 +4414,11 @@
           "id": "sand-bath-box",
           "image": "/assets/hamster/room/sand-bath-box.webp",
           "label": "砂浴盆",
+          "mobilePlacement": {
+            "width": 25,
+            "x": 42,
+            "y": 53
+          },
           "need": "清潔",
           "placement": {
             "layer": 3,
@@ -4316,6 +4438,11 @@
           "id": "gnaw-stick",
           "image": "/assets/hamster/room/gnaw-stick.webp",
           "label": "磨牙棒",
+          "mobilePlacement": {
+            "width": 15,
+            "x": 65,
+            "y": 63
+          },
           "need": "活動",
           "placement": {
             "layer": 4,
@@ -4345,15 +4472,15 @@
               "width": 70
             },
             "mobile": {
-              "width": 40,
-              "x": 33,
-              "y": 20
+              "width": 30,
+              "x": 45,
+              "y": 25
             },
             "mobileText": {
-              "fontSize": 16,
+              "fontSize": 12,
               "height": 20,
               "left": 4,
-              "top": 56,
+              "top": 58,
               "width": 95
             }
           }
@@ -4523,14 +4650,16 @@
         "mobile": {
           "height": 32,
           "width": 27,
-          "x": 74,
+          "x": 83,
           "y": 50
         }
       },
       "initialBackground": "/assets/hamster/room/direct-sunlight-spot.webp",
+      "initialMobileBackground": "/assets/hamster/room/direct-sunlight-spot-mobile.webp",
       "interiorBackground": "/assets/hamster/room/bg-cage-interior.webp",
       "interiorBackgroundAspectRatio": "match-room",
       "interiorItemId": "bedding",
+      "interiorMobileBackground": "/assets/hamster/room/bg-cage-interior-mobile.webp",
       "interiorRequiredItemIds": [
         "bedding",
         "exercise-wheel",
@@ -4540,22 +4669,33 @@
         "sand-bath-box"
       ],
       "interiorSafeBackground": "/assets/hamster/room/bg-bedding.webp",
+      "interiorSafeMobileBackground": "/assets/hamster/room/bg-bedding-mobile.webp",
       "interiorUnlockItemId": "bedding",
+      "mobileEntryHintPlacement": {
+        "x": 38,
+        "y": 60
+      },
       "outsideItemIds": [
         "hamster-cage",
         "pellet",
         "hamster-sand"
       ],
-      "safeBackground": "/assets/hamster/room/hamster-safe-room.webp"
+      "safeBackground": "/assets/hamster/room/hamster-safe-room.webp",
+      "safeMobileBackground": "/assets/hamster/room/hamster-safe-room-mobile.webp"
     },
     "roomItems": [
       {
-        "description": "防逃金屬籠；有足夠空間放置滾輪、巢穴與砂浴盆。",
+        "description": "有足夠空間放置滾輪、巢穴與砂浴盆。",
         "expenseId": "hamster-cage-setup",
         "icon": "▥",
         "id": "hamster-cage",
         "image": "/assets/hamster/room/hamster-cage.webp",
         "label": "倉鼠籠",
+        "mobilePlacement": {
+          "width": 16,
+          "x": 11,
+          "y": 60
+        },
         "need": "安全",
         "placement": {
           "layer": 2,
@@ -4573,6 +4713,11 @@
         "id": "pellet",
         "image": "/assets/hamster/feeding/pellet.webp",
         "label": "倉鼠綜合飼料",
+        "mobilePlacement": {
+          "width": 15,
+          "x": 18,
+          "y": 78
+        },
         "need": "飲食",
         "placement": {
           "layer": 4,
@@ -4592,6 +4737,11 @@
         "id": "hamster-sand",
         "image": "/assets/hamster/room/hamster-sand.webp",
         "label": "倉鼠沙",
+        "mobilePlacement": {
+          "width": 12,
+          "x": 28,
+          "y": 80
+        },
         "need": "清潔",
         "placement": {
           "layer": 4,
@@ -4611,6 +4761,11 @@
         "id": "bedding",
         "image": "/assets/hamster/room/bedding.webp",
         "label": "紙質墊料",
+        "mobilePlacement": {
+          "width": 38,
+          "x": 72,
+          "y": 60
+        },
         "need": "休息",
         "placement": {
           "layer": 1,
@@ -4627,6 +4782,11 @@
         "id": "exercise-wheel",
         "image": "/assets/hamster/room/exercise-wheel.webp",
         "label": "滾輪",
+        "mobilePlacement": {
+          "width": 35,
+          "x": 72,
+          "y": 45
+        },
         "need": "活動",
         "placement": {
           "layer": 3,
@@ -4643,6 +4803,11 @@
         "id": "water-bottle",
         "image": "/assets/hamster/room/water-bottle.webp",
         "label": "飲水器",
+        "mobilePlacement": {
+          "width": 23,
+          "x": 11,
+          "y": 42
+        },
         "need": "飲食",
         "placement": {
           "layer": 3,
@@ -4659,6 +4824,11 @@
         "id": "food-bowl",
         "image": "/assets/hamster/room/food-bowl.webp",
         "label": "食碗",
+        "mobilePlacement": {
+          "width": 18,
+          "x": 18,
+          "y": 60
+        },
         "need": "飲食",
         "placement": {
           "layer": 3,
@@ -4675,6 +4845,11 @@
         "id": "hideout",
         "image": "/assets/hamster/room/hideout.webp",
         "label": "巢箱",
+        "mobilePlacement": {
+          "width": 21,
+          "x": 83,
+          "y": 59
+        },
         "need": "休息",
         "placement": {
           "layer": 3,
@@ -4691,6 +4866,11 @@
         "id": "sand-bath-box",
         "image": "/assets/hamster/room/sand-bath-box.webp",
         "label": "砂浴盆",
+        "mobilePlacement": {
+          "width": 25,
+          "x": 42,
+          "y": 53
+        },
         "need": "清潔",
         "placement": {
           "layer": 3,
@@ -4710,6 +4890,11 @@
         "id": "gnaw-stick",
         "image": "/assets/hamster/room/gnaw-stick.webp",
         "label": "磨牙棒",
+        "mobilePlacement": {
+          "width": 15,
+          "x": 65,
+          "y": 63
+        },
         "need": "活動",
         "placement": {
           "layer": 4,
@@ -5583,6 +5768,7 @@
       "id": "hamster-arrival-checkup",
       "name": "到家後首次健康檢查",
       "recurring": false,
+      "showPlusSuffix": true,
       "stage": "寵物到家後"
     },
     "hamster-bedding-initial": {
@@ -6588,7 +6774,10 @@
   "petNameFallback": "芝麻",
   "transitionMedia": {
     "arrival": "/assets/hamster/pet-journey/arrival-transition.mp4",
+    "arrivalMobile": "/assets/hamster/pet-journey/arrival-transition-mobile.mp4",
     "busyCare": "/assets/hamster/pet-journey/busy-day-transition.mp4",
-    "timePass": "/assets/hamster/pet-journey/time-passes-aging.mp4"
+    "busyCareMobile": "/assets/hamster/pet-journey/busy-day-transition-mobile.mp4",
+    "timePass": "/assets/hamster/pet-journey/time-passes-aging.mp4",
+    "timePassMobile": "/assets/hamster/pet-journey/time-passes-aging-mobile.mp4"
   }
 }

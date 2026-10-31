@@ -152,6 +152,15 @@
     border-radius: 0;
   }
   .correct-feedback-media video { object-fit: cover; }
+  .rabbit-activity-feedback--carry .correct-feedback-layout--text-only { display: block; height: 100%; min-height: 0; overflow: hidden; }
+  .rabbit-activity-feedback--carry .correct-feedback-copy { height: 100%; overflow-y: auto; background: #e8f3e6; }
+  html:has(.rabbit-activity-feedback--carry),
+  body:has(.rabbit-activity-feedback--carry) { height: 100%; overflow: hidden; }
+  .stage-layout:has(.rabbit-activity-feedback--carry) { height: 100dvh; min-height: 0; grid-template-rows: auto minmax(0, 1fr); overflow: hidden; }
+  .stage-layout:has(.rabbit-activity-feedback--carry) > .stage { display: flex; min-height: 0; overflow: hidden; }
+  .life-journey-page:has(> .activity-feedback-focus .rabbit-activity-feedback--carry) { display: flex; width: 100%; max-width: none; min-height: 0; flex: 1; margin: 0; padding: 0; }
+  .activity-feedback-focus:has(.rabbit-activity-feedback--carry),
+  .rabbit-activity-feedback--carry { width: 100%; min-height: 0; height: 100%; }
   .correct-feedback-copy,
   .correct-feedback-layout--single .correct-feedback-copy {
     box-sizing: border-box;
@@ -959,6 +968,8 @@
     min-height: 46px;
     padding-inline: 24px;
   }
+  .home-readiness-mobile-housing-action { animation: none; }
+  .home-readiness-mobile-housing-action .primary:disabled { opacity: .5; cursor: not-allowed; }
 
   @keyframes home-readiness-continue-reveal {
     from { opacity: 0; transform: translateY(16px) scale(.98); }

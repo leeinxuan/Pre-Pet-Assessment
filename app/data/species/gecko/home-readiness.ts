@@ -7,7 +7,7 @@ const housingChoices: HomeReadinessHousingChoice[] = [
     followUpContent: [
       item(text("社區或公寓管委會可能有"), text("寵物相關規定", true), text("（如禁止進出公共空間、寵物體重上限、須繫牽繩等），請事先確認，避免日後糾紛。")),
       item(text("確認住家溫度環境適合守宮飼養（環境溫度不低於 18°C）；並確認飼養空間"), text("防逃措施", true), text("（爬蟲缸蓋緊固、空間無縫隙）——守宮逃脫後極難尋回。")),
-      item(text("了解住家附近是否有合格的"), text("特寵獸醫院", true), text("，並提前建立"), text("動物醫院口袋名單", true), text("（24 小時急診、就近可達、平時信任的動物醫院）。")),
+      item(text("了解住家附近是否有合格的"), text("非犬貓動物醫院", true), text("，並提前建立"), text("動物醫院口袋名單", true), text("（24 小時急診、就近可達、平時信任的動物醫院）。")),
     ],
     reviewSummary: [text("已確認住處規範、溫控條件與"), text("防逃措施", true), text("，以及住家附近"), text("熟悉爬蟲類醫療的動物醫院口袋名單", true), text("（含 24 小時急診）。")],
   },
@@ -17,7 +17,7 @@ const housingChoices: HomeReadinessHousingChoice[] = [
       item(text("房東是否已"), text("書面", true), text("同意飼養？口頭同意在發生爭議事件時較無保障。")),
       item(text("台灣「寵物友善租屋」比例較低，若未來因故需要搬家，找尋寵物友善住宅的難度相對較高——請提前評估。")),
       item(text("確認租屋允許放置爬蟲缸；守宮雖無叫聲，但活體昆蟲飼料（蟋蟀）有聲音與氣味；並確認"), text("防逃措施", true), text("（缸蓋緊固、空間無縫隙）——守宮逃脫後極難尋回。")),
-      item(text("了解住家附近是否有合格的"), text("特寵獸醫院", true), text("，並提前建立"), text("動物醫院口袋名單", true), text("（24 小時急診、就近可達、平時信任的動物醫院）。")),
+      item(text("了解住家附近是否有合格的"), text("非犬貓動物醫院", true), text("，並提前建立"), text("動物醫院口袋名單", true), text("（24 小時急診、就近可達、平時信任的動物醫院）。")),
     ],
     reviewSummary: [text("已確認"), text("房東書面同意", true), text("、穩定電力與爬蟲缸擺放條件，以及住家附近"), text("熟悉爬蟲類醫療的動物醫院口袋名單", true), text("（含 24 小時急診）。")],
   },

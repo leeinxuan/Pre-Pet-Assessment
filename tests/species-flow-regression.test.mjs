@@ -209,7 +209,7 @@ test("test-mode next signal cannot leak into the following journey item", async 
   assert.match(page, /setTestNextTargetIndex\(journeyIndex\)/);
   assert.match(page, /testNextSignal=\{testNextTargetIndex === journeyIndex \? testNextSignal : 0\}/);
   assert.match(page, /onIndex=\{selectJourneyIndex\}/);
-  assert.match(page, /function selectJourneyIndex\(nextIndex: number\) \{\n\s*setTestNextTargetIndex\(null\);/);
+  assert.match(page, /function selectJourneyIndex\(nextIndex: number\) \{\n(?:\s*if[^\n]*\n)?\s*setTestNextTargetIndex\(null\);/);
   assert.match(lifeJourney, /transition === "busy-care" && busyCareTransitionIndex !== index[\s\S]*setBusyCareTransitionIndex\(index\)[\s\S]*return/);
   assert.match(lifeJourney, /timePassOpen && activityConfig\?\.transition === "time-pass"[\s\S]*sickTimePassComplete: true[\s\S]*selectItem\(index \+ 1\)/);
   assert.doesNotMatch(lifeJourney, /stageForIndex|species === "hamster"/);

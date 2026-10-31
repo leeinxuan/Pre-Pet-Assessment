@@ -21,7 +21,7 @@ function getBusyCareChecklist(items: readonly BusyCareChecklistQuestion[] | unde
   return (items ?? []).map((item) => ({
     ...item,
     prompt: item.prompt.replaceAll("{petName}", petName),
-    reviewHint: item.reviewHint?.replaceAll("{petName}", petName),
+    reviewHint: item.reviewHint.replaceAll("{petName}", petName),
   }));
 }
 
@@ -70,12 +70,7 @@ export function BusyCareActivity({
   const helperQuestions = getBusyCareChecklist(scenario.busyCareChecklist, displayPetName).map((item) => ({
     ...item,
     text: item.prompt,
-    short: item.reviewHint ?? {
-      "daily-care": "每日餵食、換水、排泄與活動安排還需要先交接",
-      "support-confirmed": "協助者的時間還需要先確認",
-      "care-willing": "協助者的意願還需要先確認",
-      "emergency-contact": "緊急聯絡方式還需要補充確認",
-    }[item.id] ?? "交接內容還需要先確認",
+    short: item.reviewHint,
     accepted: [item.correctAnswer],
   }));
   const allHelperChecksAnswered = helperQuestions.every((question) => Boolean(helperChecks[question.id]));

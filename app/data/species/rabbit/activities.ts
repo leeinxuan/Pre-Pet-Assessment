@@ -2,6 +2,7 @@ import type { ActivityIntroConfig, Scenario } from "../../../game-types";
 import type { InteractionCompletionContent } from "../../shared/species-config-types";
 import { incorrect, positive } from "../../shared/scenario-feedback";
 import { rabbitReport } from "./report";
+import { rabbitAssets } from "./assets";
 
 /** 所有兔子專屬互動遊戲的資料、素材、步驟與完成內容皆集中於此。 */
 export const rabbitDailyCheckConfig = {
@@ -99,6 +100,7 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
   "rabbit-carry-sort": {
     id: "rabbit-carry-sort", stage: "日常照護", stageId: "daily", stageTitle: "日常照護", timeLabel: "日常照護", title: "和{petName} 成為好朋友吧！",
     description: "{petName} 已經到家一段時間了，跟你越來越熟悉。\n今天，你想試著第一次把牠抱起來。你慢慢靠近，{petName} 停下來看著你，鬍鬚輕輕一動。",
+    correctFeedbackMedia: { type: "video", src: rabbitAssets.petJourney.correctPrimary, ariaLabel: "兔子安全抱起完成影片" },
     topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
     questionText: "請把這 5 個動作拖曳到正確的順序，安全地抱起 {petName}。", activityCompletionTitle: "你已學會安全抱起 {petName} 的方式！", activityRevealNotice: "不用擔心，抱兔子確實需要練習～我們一起看看正確的步驟吧！",
     completionFeedback: { title: "做得很好！", encouragement: "你知道怎麼讓 {petName} 安心被抱起，做得很好！每一個步驟都是在幫牠建立對你的信任。", knowledgeTitle: "兔兔小知識", knowledgeContent: [{ type: "paragraph", text: "**緩慢靠近、先讓牠嗅聞**，再確認牠沒有緊張或後退。抱起時要**同時托住胸口與臀部，讓牠靠著身體**；不可拎耳朵或讓腹部朝上。" }] },

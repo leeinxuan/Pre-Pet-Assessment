@@ -21,7 +21,7 @@ function isArrivalMealComplete(species: string, activity: LifeActivityState) {
   }
   return feeding.choices
     .filter((choice) => choice.result !== "incorrect")
-    .every((choice) => activity.hamsterMealSelected.includes(choice.id));
+    .every((choice) => activity.arrivalMealSelectedChoiceIds.includes(choice.id));
 }
 
 /** 報告版型只呼叫 selector key；各 selector 可各自認識其所屬活動的 state。 */

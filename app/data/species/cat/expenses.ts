@@ -15,7 +15,7 @@ export const catExpenses: Record<string, ExpenseRecord> = {
   "cat-carrier-pad": { id: "cat-carrier-pad", name: "尿墊（外出用）", amount: 250, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "途中防止意外弄髒外出籠；選擇吸水性佳、不易移位的款式" },
   "cat-water-kit": { id: "cat-water-kit", name: "外出用水碗＋飲水", amount: 250, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "長途移動備用飲水；折疊式水碗方便攜帶" },
   "cat-cleaner-kit": { id: "cat-cleaner-kit", name: "外出清潔組（濕紙巾）", amount: 150, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "途中清潔與到家後基本清理用" },
-  "cat-arrival-checkup": { id: "cat-arrival-checkup", name: "到家後首次健康檢查", amount: 2000, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "到家後盡快安排，確認整體狀態與驅蟲需求；" },
+  "cat-arrival-checkup": { id: "cat-arrival-checkup", name: "到家後首次健康檢查", amount: 2000, showPlusSuffix: true, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "到家後盡快安排，確認整體狀態與驅蟲需求；" },
   "cat-microchip": { id: "cat-microchip", name: "晶片植入與寵物登記", amount: 1500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "台灣法規要求貓咪植入晶片並完成寵物登記；**規費金額，請以所在縣市（動保處或防疫所）最新規費公告為準**" },
   "cat-rabies-vaccine": { id: "cat-rabies-vaccine", name: "狂犬病疫苗", amount: 600, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "台灣法規要求貓咪每年施打狂犬病疫苗；到家後應確認接種狀態並補打；**規費金額，請以所在縣市（動保處或防疫所）最新規費公告為準**" },
   "cat-sterilization": { id: "cat-sterilization", name: "絕育手術費用（公）", amount: 3500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "台灣法規規定無繁殖計畫貓咪應絕育；可預防多種生殖系統疾病，並大幅減少發情嚎叫；母貓費用較高，約 3,000–6,000 元" },

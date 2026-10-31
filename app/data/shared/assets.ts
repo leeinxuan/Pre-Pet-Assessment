@@ -6,3 +6,9 @@ export const sharedAssets = {
     homeowner: "/assets/shared/homeownership.webp",
   },
 } as const;
+
+/** Housing choice artwork used by the shared readiness screen. */
+export const housingChoiceImages = {
+  owner: sharedAssets.housing.homeowner,
+  renter: sharedAssets.housing.tenant,
+} as const;

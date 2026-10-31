@@ -351,16 +351,16 @@
 .correct-feedback-layout--multiple .daily-behavior-correct-list li { padding-left: 2px; }
 .daily-behavior-positive-copy small { display: block; margin-top: 18px; color: #547257; line-height: 1.7; }
 .daily-behavior-positive-copy .primary, .busy-care-positive-copy .primary, .video-scenario-positive-copy .primary { align-self: flex-start; margin-top: 18px; }
-.busy-care-activity { margin-top: 4px; }
-.busy-care-heading { margin: 0 0 20px; }
-.busy-care-heading h1 { margin: 0 0 9px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(30px, 4vw, 43px); }
-.busy-care-heading p { max-width: 720px; margin: 0; color: var(--muted); line-height: 1.8; }
-.busy-care-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(310px, .88fr); gap: 20px; align-items: stretch; }
-.busy-care-room { position: relative; min-height: 420px; overflow: hidden; border-radius: 26px; background: var(--cream); box-shadow: var(--shadow); }
-.busy-care-room-video { display: block; width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
-.busy-care-room-background { display: block; width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
+.busy-care-activity { margin: 0; }
+.busy-care-heading { margin: 0; padding: 8px 2px 2px; }
+.busy-care-heading h1 { margin: 7px 0 10px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(29px, 4vw, 42px); }
+.busy-care-heading p { max-width: 740px; margin: 0; color: var(--muted); line-height: 1.8; }
+.busy-care-layout { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(280px, .98fr); gap: 18px; align-items: stretch; margin-top: 18px; }
+.busy-care-room { position: relative; min-height: 330px; overflow: hidden; border-radius: 25px; background: var(--cream); box-shadow: var(--shadow); }
+.busy-care-room-video { display: block; width: 100%; height: 100%; min-height: 330px; object-fit: cover; }
+.busy-care-room-background { display: block; width: 100%; height: 100%; min-height: 330px; object-fit: cover; }
 .busy-care-hungry-dog { position: absolute; width: 42%; max-height: 58%; left: 25%; bottom: 0%; z-index: 2; object-fit: contain; }
-.busy-care-options, .busy-care-members, .busy-care-feedback { padding: 25px; border: 1px solid var(--line); border-radius: 26px; background: white; box-shadow: var(--shadow); }
+.busy-care-options, .busy-care-members, .busy-care-feedback { padding: 23px; border: 1px solid var(--line); border-radius: 25px; background: white; box-shadow: var(--shadow); }
 .busy-care-options, .video-scenario-options { display: grid; gap: 14px; align-content: start; }
 .busy-care-options h2, .busy-care-members h2, .busy-care-feedback h2 { margin: 0 0 16px; font-size: 23px; }
 .busy-care-options > button { display: flex; width: 100%; flex-direction: column; gap: 7px; margin-top: 11px; padding: 16px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); text-align: left; cursor: pointer; transition: .2s; }
@@ -425,11 +425,11 @@
 .video-pause-icon { width: 15px; height: 18px; display: block; border-left: 5px solid currentColor; border-right: 5px solid currentColor; border-radius: 1px; }
 .video-play-icon { width: 0; height: 0; display: block; margin-left: 3px; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-left: 14px solid currentColor; }
 
-.breed-challenge-heading { margin-bottom: 26px; }.breed-challenge-heading .life-stage-label { margin: 0 0 8px; color: #8a7964; }
-.breed-challenge-heading h1 { margin: 0 0 10px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(31px, 4vw, 44px); line-height: 1.15; }
+.breed-challenge-heading { margin: 0; padding: 8px 2px 2px; }.breed-challenge-heading .life-stage-label { margin: 0; color: #8a7964; }
+.breed-challenge-heading h1 { margin: 7px 0 10px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(29px, 4vw, 42px); line-height: 1.15; }
 .breed-challenge-description { max-width: 760px; margin: 0; color: var(--muted); line-height: 1.8; }.breed-challenge-description p { margin: 0; }.breed-challenge-description p + p { margin-top: 8px; }.breed-challenge-heading small { display: block; max-width: 720px; margin-top: 8px; margin-bottom: 20px; color: var(--gold-dark); font-size: 13px; font-weight: 750; line-height: 1.6; }
-.breed-challenge-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(340px, .95fr); gap: 20px; align-items: stretch; }
-.breed-challenge-video-placeholder { min-height: 470px; display: grid; place-content: center; justify-items: center; gap: 10px; padding: 34px; border: 2px dashed rgba(142,128,101,.42); border-radius: 26px; background: linear-gradient(145deg, #f4efe3, #e7eee2); color: #746955; text-align: center; }
+.breed-challenge-layout { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(280px, .98fr); gap: 18px; align-items: stretch; margin-top: 18px; }
+.breed-challenge-video-placeholder { min-height: 330px; display: grid; place-content: center; justify-items: center; gap: 10px; padding: 34px; border: 2px dashed rgba(142,128,101,.42); border-radius: 25px; background: linear-gradient(145deg, #f4efe3, #e7eee2); color: #746955; text-align: center; }
 .breed-challenge-video-frame { position: relative; overflow: hidden; padding: 0; border: 0; background: #2f2a22; }
 .breed-challenge-video { display: block; width: 100%; height: 100%; min-height: inherit; object-fit: cover; }
 .correct-feedback-media > .breed-challenge-video-placeholder { height: 100%; min-height: 560px; border: 0; border-radius: 0; }
@@ -437,11 +437,11 @@
 .breed-challenge-video-placeholder b { color: var(--ink); font-size: clamp(24px, 3vw, 34px); }
 .breed-challenge-video-placeholder p { max-width: 300px; margin: 0; line-height: 1.7; }
 .breed-challenge-cat-art { display: block; width: min(72%, 300px); max-height: 230px; margin: 0 auto 14px; object-fit: contain; }
-.breed-challenge-options, .breed-challenge-retry { padding: 26px; border: 1px solid var(--line); border-radius: 26px; background: #fff; box-shadow: var(--shadow); }
-.breed-challenge-options h2, .breed-challenge-retry h2 { margin: 0 0 8px; font-size: 25px; }
+.breed-challenge-options, .breed-challenge-retry { padding: 23px; border: 1px solid var(--line); border-radius: 25px; background: #fff; box-shadow: var(--shadow); }
+.breed-challenge-options h2, .breed-challenge-retry h2 { margin: 0 0 16px; font-size: 23px; }
 .breed-challenge-options > p, .breed-challenge-retry > p { margin: 0 0 18px; color: var(--muted); line-height: 1.75; }
-.breed-challenge-options > div { display: grid; gap: 11px; }
-.breed-challenge-options .scenario-option-card { padding: 16px 18px; background: #fffdf7; }
+.breed-challenge-options > div { display: grid; gap: 17px; }
+.breed-challenge-options .scenario-option-card { padding: 18px 20px; background: #fffdf7; }
 .breed-challenge-retry { border: 2px solid var(--orange); background: var(--orange-soft); }
 .breed-challenge-retry .secondary { margin-top: 18px; }
 .busy-care-positive { min-height: 560px; display: grid; grid-template-columns: 1.08fr .92fr; overflow: hidden; border: 1px solid var(--mint); border-radius: 28px; background: var(--mint-soft); box-shadow: var(--shadow); }
@@ -451,15 +451,15 @@
 .busy-care-positive-copy h2 { margin: 9px 0 16px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(30px, 4vw, 45px); }
 .busy-care-positive-copy p { margin: 0; line-height: 1.85; font-size: 17px; }
 .busy-care-positive-copy small { margin-top: 18px; color: #547257; line-height: 1.7; }
-.video-scenario-heading { margin: 0 0 20px; }
+.video-scenario-heading { margin: 0; padding: 8px 2px 2px; }
 .video-scenario-heading > span { color: var(--gold-dark); font-size: 12px; font-weight: 900; letter-spacing: .06em; }
-.video-scenario-heading h1 { margin: 7px 0 9px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(30px, 4vw, 43px); }
-.video-scenario-heading p { max-width: 720px; margin: 0; color: var(--muted); line-height: 1.8; }
-.video-scenario-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(310px, .88fr); gap: 20px; align-items: stretch; }
-.video-scenario-visual { position: relative; min-height: 420px; overflow: hidden; border-radius: 26px; background: #2f2a22; box-shadow: var(--shadow); }
-.video-scenario-visual video { display: block; width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
+.video-scenario-heading h1 { margin: 7px 0 10px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(29px, 4vw, 42px); }
+.video-scenario-heading p { max-width: 740px; margin: 0; color: var(--muted); line-height: 1.8; }
+.video-scenario-layout { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(280px, .98fr); gap: 18px; align-items: stretch; margin-top: 18px; }
+.video-scenario-visual { position: relative; min-height: 330px; overflow: hidden; border-radius: 25px; background: #2f2a22; box-shadow: var(--shadow); }
+.video-scenario-visual video { display: block; width: 100%; height: 100%; min-height: 330px; object-fit: cover; }
 .video-scenario-visual .scene-video-fallback { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); }
-.video-scenario-options, .video-scenario-retry { padding: 25px; border: 1px solid var(--line); border-radius: 26px; background: white; box-shadow: var(--shadow); }
+.video-scenario-options, .video-scenario-retry { padding: 23px; border: 1px solid var(--line); border-radius: 25px; background: white; box-shadow: var(--shadow); }
 .video-scenario-options h2, .video-scenario-retry h2 { margin: 0 0 16px; font-size: 23px; }
 .video-scenario-options > button { display: flex; width: 100%; flex-direction: column; gap: 7px; margin-top: 11px; padding: 16px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); text-align: left; cursor: pointer; transition: .2s; }
 .video-scenario-options > button:hover, .video-scenario-options > button:focus-visible { border-color: var(--gold); background: #fff9e7; transform: translateY(-2px); }
@@ -490,6 +490,22 @@
 .video-scenario-positive-copy h2 { margin: 9px 0 16px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(30px, 4vw, 45px); }
 .video-scenario-positive-copy p { margin: 0; line-height: 1.85; font-size: 17px; }
 .video-scenario-positive-copy small { margin-top: 18px; color: #547257; line-height: 1.7; }
+
+/* 桌機單選題沿用日常照護多選題的選項節奏；行為差異仍由元件處理。 */
+@media (min-width: 721px) {
+  .video-scenario-choice-list,
+  .busy-care-choice-list { gap: 17px; }
+
+  /* 媒體高度與多選題一致：右側選項變多時，左側影片不可被同一列撐高。 */
+  .video-scenario-visual,
+  .busy-care-room,
+  .breed-challenge-video-placeholder {
+    height: clamp(330px, 32vw, 430px);
+    align-self: start;
+  }
+
+  .breed-challenge-video-placeholder { box-sizing: border-box; }
+}
 
 /* 兔子專屬活動僅補足互動內容，沿用情境頁的雙欄閱讀節奏。 */
 .rabbit-activity { padding: clamp(24px, 4vw, 52px); border: 1px solid var(--line); border-radius: 28px; background: var(--paper); box-shadow: var(--shadow); }
@@ -535,6 +551,10 @@
 .rabbit-unsafe-list b { color: #a83f38; }
 .knowledge-danger { color: #a83f38; font-weight: 950; }
 .rabbit-activity-feedback { display: grid; gap: 22px; }
+.rabbit-activity-feedback--carry { display: block; }
+.rabbit-activity-feedback--carry .correct-feedback-layout--text-only { display: block; min-height: 0; border: 0; border-radius: 0; background: #e8f3e6; box-shadow: none; overflow: visible; }
+.rabbit-activity-feedback--carry .correct-feedback-copy { min-height: 0; }
+.rabbit-activity-feedback--carry .completion-reminder-block { margin-top: 24px; border: 0; border-radius: 0; background: transparent; padding: 0; }
 .completion-reminder-block { padding: clamp(22px, 4vw, 34px); border: 1px solid #e6c779; border-radius: 24px; background: #fff8e9; color: var(--ink); }
 .completion-reminder-block > header { margin-bottom: 18px; }
 .completion-reminder-block h2 { margin: 0; font-size: clamp(22px, 3vw, 30px); line-height: 1.3; }

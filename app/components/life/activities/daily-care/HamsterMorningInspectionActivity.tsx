@@ -49,6 +49,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
   const sandDebrisRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const [mobileTool, setMobileTool] = useState<MobileTool>(null);
   const [mobileShakePulse, setMobileShakePulse] = useState(false);
+  const [mobileShakeCycle, setMobileShakeCycle] = useState(0);
   const [mobileTargetPulse, setMobileTargetPulse] = useState<string | null>(null);
   const mobileAnimationTimer = useRef<number | null>(null);
   const mergeStates = (patch: Record<string, string | number>) => onChange({ hamsterInspectionStates: { ...states, ...patch } });
@@ -87,6 +88,8 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
     setDragPoint({ x: event.clientX, y: event.clientY });
     if (kind === "shake") {
       setShakeOffset(0);
+      // This runs only in a pointer event; keep the existing wall-clock timing for drag progress.
+      // eslint-disable-next-line react-hooks/purity
       shakeTracking.current = { previousX: event.clientX, lastMovedAt: Date.now(), activeDurationMs: 0, baseProgress: shakeProgressRef.current };
     }
     setDragging(kind);
@@ -96,8 +99,12 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
     shakeProgressRef.current = config.interaction.shakeProgressTarget;
     setShakeProgress(config.interaction.shakeProgressTarget);
     setDragging(null); dragStart.current = null; setDragPoint(null); setShakeOffset(0);
-    mergeStates({ shakeProgress: config.interaction.shakeProgressTarget, statusMessage: config.interaction.shakeCompleteHint });
-    completeStep(steps[2].id);
+    onChange({
+      hamsterInspectionStates: { ...states, shakeProgress: config.interaction.shakeProgressTarget, statusMessage: config.interaction.shakeCompleteHint },
+      hamsterInspectionCompleted: activity.hamsterInspectionCompleted.includes(steps[2].id)
+        ? activity.hamsterInspectionCompleted
+        : [...activity.hamsterInspectionCompleted, steps[2].id],
+    });
   }
 
   function updateDrag(event: ReactPointerEvent<HTMLElement>) {
@@ -110,6 +117,8 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       const movement = Math.abs(event.clientX - shakeTracking.current.previousX);
       shakeTracking.current.previousX = event.clientX;
       if (movement < 2) return;
+      // This runs only in a pointer event and uses the same clock as startDrag.
+      // eslint-disable-next-line react-hooks/purity
       const now = Date.now();
       const gapSinceLastMovement = now - shakeTracking.current.lastMovedAt;
       // 停住一段時間後不回溯累積，只有實際持續拖曳才會讓進度前進。
@@ -192,6 +201,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
 
   function tapMobileSandBath() {
     if (!isMobile || !siftAcknowledged || shakeComplete) return;
+    setMobileShakeCycle((cycle) => cycle + 1);
     setMobileShakePulse(true);
     if (mobileAnimationTimer.current !== null) window.clearTimeout(mobileAnimationTimer.current);
     mobileAnimationTimer.current = window.setTimeout(() => {
@@ -322,7 +332,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       {!isMobile && (!siftAcknowledged || shakeComplete) && <p className="hamster-cage-check-prompt" role={shakeComplete ? "status" : undefined}>{render(desktopPromptText)}</p>}
       {!isMobile && siftAcknowledged && !shakeComplete && <div className="hamster-shake-progress" aria-label="砂浴盆整理進度"><b>搖晃進度</b><div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}><span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} /></div></div>}
       {!toiletSummaryAcknowledged ? <>
-        <img className="hamster-cage-floor" src={isMobile ? hamsterAssets.cageCheckActivity.floorViewMobile : hamsterAssets.cageCheckActivity.floorView} alt={`${displayPetName}的籠具底部`} />
+        <img className="hamster-cage-floor" src={hamsterAssets.cageCheckActivity.floorView} alt={`${displayPetName}的籠具底部`} />
         <div className="hamster-cage-prepared-items" aria-hidden="true">
           {cleanedCageItems.map((item) => <img
             key={item.id}
@@ -342,6 +352,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       </> : <>
         <div className={`hamster-sand-bath-stage ${siftAcknowledged ? "is-ready-to-shake" : ""} ${shakeComplete ? "is-clean" : ""} ${mobileShakePulse ? "is-shaking" : ""} ${isMobile && siftAcknowledged && !shakeComplete ? "is-tap-target" : ""}`} role={siftAcknowledged && !shakeComplete ? "button" : undefined} tabIndex={siftAcknowledged && !shakeComplete ? 0 : undefined} aria-label={siftAcknowledged && !shakeComplete ? "完成水平搖晃砂浴盆" : undefined} onPointerDown={isMobile ? undefined : (event) => siftAcknowledged && !shakeComplete && startDrag("shake", event)} onClick={isMobile ? tapMobileSandBath : undefined} onKeyDown={(event) => { if (!isMobile && (event.key === "Enter" || event.key === " ") && siftAcknowledged && !shakeComplete) { event.preventDefault(); completeKeyboardCleaning("shake"); } }}>
           <img
+            key={isMobile ? mobileShakeCycle : "desktop"}
             className="hamster-sand-bath"
             style={sandBathStyle}
             src={sandBathImage}

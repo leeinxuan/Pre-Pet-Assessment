@@ -251,8 +251,10 @@
       },
       "petJourney": {
         "arrivalTransition": "/assets/cat/pet-journey/arrival-transition.mp4",
+        "arrivalTransitionMobile": "/assets/cat/pet-journey/arrival-transition-mobile.mp4",
         "busyDailyCare": "/assets/cat/pet-journey/busy-daily-care.mp4",
         "busyDayTransition": "/assets/cat/pet-journey/busy-day-transition.mp4",
+        "busyDayTransitionMobile": "/assets/cat/pet-journey/busy-day-transition-mobile.mp4",
         "climbing": "/assets/cat/pet-journey/climbing.mp4",
         "correctPrimary": "/assets/cat/pet-journey/correct-answer.mp4",
         "correctSecondary": "/assets/cat/pet-journey/correct-answer2.mp4",
@@ -261,7 +263,8 @@
         "scratching": "/assets/cat/pet-journey/scratching.mp4",
         "seniorLife": "/assets/cat/pet-journey/senior-life.mp4",
         "sick": "/assets/cat/pet-journey/sick.mp4",
-        "timePassesAging": "/assets/cat/pet-journey/time-passes-aging.mp4"
+        "timePassesAging": "/assets/cat/pet-journey/time-passes-aging.mp4",
+        "timePassesAgingMobile": "/assets/cat/pet-journey/time-passes-aging-mobile.mp4"
       },
       "preparation": {
         "carrier": "/assets/car/carrier.webp",
@@ -886,7 +889,7 @@
             "bottom": 10,
             "left": 32,
             "maxHeight": 58,
-            "width": 50
+            "width": 40
           },
           "veggie": {
             "bottom": 7,
@@ -962,7 +965,13 @@
           "empty": "/assets/cat/feeding/empty-food-bowl.webp",
           "ready": "/assets/cat/feeding/cat-food-bowl.webp"
         },
-        "mobileBackground": "/assets/cat/room/cat-safe-room.webp",
+        "mobileBackground": "/assets/cat/room/cat-safe-room-secured.webp",
+        "mobileBackgroundStyle": {
+          "objectFit": "cover",
+          "objectPosition": "center",
+          "transform": "scale(1.9)",
+          "transformOrigin": "45% 90%"
+        },
         "pet": {
           "ready": "/assets/cat/feeding/orange-cat-happy.webp",
           "waiting": "/assets/cat/feeding/orange-cat-hungry-scared.webp"
@@ -982,7 +991,7 @@
         },
         {
           "alt": "乾淨飲水",
-          "description": "每天提供新鮮飲水並清洗容器。貓咪天性飲水量少，可嘗試流動飲水器增加飲水意願。",
+          "description": "✅ 必要！每天提供新鮮飲水並清洗容器。貓咪天性飲水量少，可嘗試流動飲水器增加飲水意願。",
           "image": "/assets/shared/waterbottle.webp",
           "label": "乾淨飲水",
           "stateKey": "water"
@@ -1544,7 +1553,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "cat-health-complete-response",
                 "result": "correct",
-                "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫"
+                "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
               },
               {
                 "effects": {
@@ -2275,7 +2284,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "cat-health-complete-response",
                 "result": "correct",
-                "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫"
+                "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
               },
               {
                 "effects": {
@@ -3010,7 +3019,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "cat-health-complete-response",
                 "result": "correct",
-                "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫"
+                "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
               },
               {
                 "effects": {
@@ -3741,7 +3750,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "cat-health-complete-response",
                 "result": "correct",
-                "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫"
+                "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
               },
               {
                 "effects": {
@@ -3954,8 +3963,8 @@
         "label": "百合／有毒植物",
         "mobilePlacement": {
           "width": 17,
-          "x": 28,
-          "y": 52
+          "x": 50,
+          "y": 60
         },
         "placement": {
           "layer": 5,
@@ -3972,9 +3981,9 @@
         "image": "/assets/cat/room/human-medicine.webp",
         "label": "人類藥品",
         "mobilePlacement": {
-          "width": 15,
-          "x": 83,
-          "y": 76
+          "width": 13,
+          "x": 38,
+          "y": 65
         },
         "placement": {
           "layer": 5,
@@ -3991,7 +4000,7 @@
         "image": "/assets/cat/room/yarn.webp",
         "label": "線狀異物",
         "mobilePlacement": {
-          "width": 24,
+          "width": 20,
           "x": 13,
           "y": 80
         },
@@ -4010,9 +4019,9 @@
         "image": "/assets/cat/room/fragrance.webp",
         "label": "精油／薰香",
         "mobilePlacement": {
-          "width": 15,
-          "x": 58,
-          "y": 66
+          "width": 12,
+          "x": 60,
+          "y": 64
         },
         "placement": {
           "layer": 5,
@@ -4027,10 +4036,10 @@
         "icon": "🧴",
         "id": "cat-cleaner",
         "image": "/assets/dog/room/detergent.webp",
-        "label": "清潔劑",
+        "label": "一般清潔劑",
         "mobilePlacement": {
           "width": 15,
-          "x": 70,
+          "x": 85,
           "y": 70
         },
         "placement": {
@@ -4049,8 +4058,8 @@
         "label": "涼感產品",
         "mobilePlacement": {
           "width": 17,
-          "x": 86,
-          "y": 45
+          "x": 74,
+          "y": 85
         },
         "placement": {
           "layer": 5,
@@ -4628,6 +4637,84 @@
             "tool": "/assets/cat/cleaning/litter-scoop.webp"
           }
         },
+        "mobileTapSteps": [
+          {
+            "id": "collect-urine",
+            "outcome": {
+              "itemId": "urine-1",
+              "type": "reveal"
+            },
+            "prompts": {
+              "idle": "點擊貓砂鏟，準備鏟出尿團。",
+              "toolSelected": "點擊尿團，鏟起尿團。"
+            },
+            "target": "urine-1",
+            "tool": "scoop"
+          },
+          {
+            "id": "discard-urine",
+            "initialPhase": "itemCollected",
+            "outcome": {
+              "itemId": "urine-1",
+              "type": "discard"
+            },
+            "prompts": {
+              "completed": "正在丟棄尿團…",
+              "itemCollected": "點擊垃圾桶，將尿團丟棄。"
+            },
+            "target": "bin"
+          },
+          {
+            "id": "collect-poop",
+            "outcome": {
+              "itemId": "poop-1",
+              "type": "reveal"
+            },
+            "prompts": {
+              "idle": "點擊貓砂鏟，準備鏟出便便。",
+              "toolSelected": "點擊便便，鏟起便便。"
+            },
+            "target": "poop-1",
+            "tool": "scoop"
+          },
+          {
+            "id": "discard-poop",
+            "initialPhase": "itemCollected",
+            "outcome": {
+              "itemId": "poop-1",
+              "type": "discard"
+            },
+            "prompts": {
+              "completed": "正在丟棄便便…",
+              "itemCollected": "點擊垃圾桶，將便便丟棄。"
+            },
+            "target": "bin"
+          },
+          {
+            "id": "refill-litter",
+            "outcome": {
+              "type": "fill"
+            },
+            "prompts": {
+              "idle": "點擊乾淨貓砂，準備補砂。",
+              "toolSelected": "點擊貓砂盆，補上新貓砂。"
+            },
+            "target": "litter-box",
+            "tool": "clean-litter"
+          },
+          {
+            "id": "replace-box",
+            "outcome": {
+              "type": "backup"
+            },
+            "prompts": {
+              "idle": "點擊備用貓砂盆，準備替換。",
+              "toolSelected": "點擊貓砂盆，換上乾淨的備用盆。"
+            },
+            "target": "litter-box",
+            "tool": "backup-box"
+          }
+        ],
         "targetStamps": 3,
         "wasteItems": [
           {
@@ -4651,8 +4738,11 @@
       },
       "transitionMedia": {
         "arrival": "/assets/cat/pet-journey/arrival-transition.mp4",
+        "arrivalMobile": "/assets/cat/pet-journey/arrival-transition-mobile.mp4",
         "busyCare": "/assets/cat/pet-journey/busy-day-transition.mp4",
-        "timePass": "/assets/cat/pet-journey/time-passes-aging.mp4"
+        "busyCareMobile": "/assets/cat/pet-journey/busy-day-transition-mobile.mp4",
+        "timePass": "/assets/cat/pet-journey/time-passes-aging.mp4",
+        "timePassMobile": "/assets/cat/pet-journey/time-passes-aging-mobile.mp4"
       }
     },
     "masteredCareThemes": [
@@ -4775,8 +4865,8 @@
           "label": "百合／有毒植物",
           "mobilePlacement": {
             "width": 17,
-            "x": 28,
-            "y": 52
+            "x": 50,
+            "y": 60
           },
           "placement": {
             "layer": 5,
@@ -4793,9 +4883,9 @@
           "image": "/assets/cat/room/human-medicine.webp",
           "label": "人類藥品",
           "mobilePlacement": {
-            "width": 15,
-            "x": 83,
-            "y": 76
+            "width": 13,
+            "x": 38,
+            "y": 65
           },
           "placement": {
             "layer": 5,
@@ -4812,7 +4902,7 @@
           "image": "/assets/cat/room/yarn.webp",
           "label": "線狀異物",
           "mobilePlacement": {
-            "width": 24,
+            "width": 20,
             "x": 13,
             "y": 80
           },
@@ -4831,9 +4921,9 @@
           "image": "/assets/cat/room/fragrance.webp",
           "label": "精油／薰香",
           "mobilePlacement": {
-            "width": 15,
-            "x": 58,
-            "y": 66
+            "width": 12,
+            "x": 60,
+            "y": 64
           },
           "placement": {
             "layer": 5,
@@ -4848,10 +4938,10 @@
           "icon": "🧴",
           "id": "cat-cleaner",
           "image": "/assets/dog/room/detergent.webp",
-          "label": "清潔劑",
+          "label": "一般清潔劑",
           "mobilePlacement": {
             "width": 15,
-            "x": 70,
+            "x": 85,
             "y": 70
           },
           "placement": {
@@ -4870,8 +4960,8 @@
           "label": "涼感產品",
           "mobilePlacement": {
             "width": 17,
-            "x": 86,
-            "y": 45
+            "x": 74,
+            "y": 85
           },
           "placement": {
             "layer": 5,
@@ -4911,9 +5001,9 @@
           "image": "/assets/cat/room/cat-hideaway.webp",
           "label": "可退避的安全躲藏空間",
           "mobilePlacement": {
-            "width": 32,
-            "x": 58,
-            "y": 74
+            "width": 20,
+            "x": 65,
+            "y": 85
           },
           "need": "安全",
           "placement": {
@@ -4933,8 +5023,8 @@
           "label": "休息空間",
           "mobilePlacement": {
             "width": 28,
-            "x": 70,
-            "y": 84
+            "x": 80,
+            "y": 70
           },
           "need": "休息",
           "placement": {
@@ -4953,9 +5043,9 @@
           "image": "/assets/cat/room/cat-litter-box.webp",
           "label": "貓砂盆",
           "mobilePlacement": {
-            "width": 30,
+            "width": 25,
             "x": 15,
-            "y": 78
+            "y": 87
           },
           "need": "排泄",
           "placement": {
@@ -4977,9 +5067,9 @@
           "image": "/assets/cat/room/cat-litter.webp",
           "label": "貓砂",
           "mobilePlacement": {
-            "width": 22,
-            "x": 28,
-            "y": 78
+            "width": 15,
+            "x": 32,
+            "y": 85
           },
           "need": "清潔",
           "placement": {
@@ -4998,9 +5088,9 @@
           "image": "/assets/cat/feeding/cat-food-bowl.webp",
           "label": "食盆",
           "mobilePlacement": {
-            "width": 17,
-            "x": 37,
-            "y": 87
+            "width": 12,
+            "x": 53,
+            "y": 93
           },
           "need": "飲食",
           "placement": {
@@ -5019,13 +5109,13 @@
           "image": "/assets/cat/feeding/cat-water-bowl.webp",
           "label": "水碗",
           "mobilePlacement": {
-            "width": 18,
-            "x": 22,
-            "y": 88
+            "width": 12,
+            "x": 40,
+            "y": 93
           },
           "need": "飲食",
           "placement": {
-            "layer": 3,
+            "layer": 5,
             "width": 10,
             "x": 42,
             "y": 89
@@ -5041,8 +5131,8 @@
           "label": "抓板",
           "mobilePlacement": {
             "width": 20,
-            "x": 68,
-            "y": 83
+            "x": 10,
+            "y": 68
           },
           "need": "活動",
           "placement": {
@@ -5062,8 +5152,8 @@
           "label": "跳台",
           "mobilePlacement": {
             "width": 27,
-            "x": 78,
-            "y": 66
+            "x": 86,
+            "y": 82
           },
           "need": "活動",
           "placement": {
@@ -5084,7 +5174,7 @@
           "mobilePlacement": {
             "width": 17,
             "x": 49,
-            "y": 83
+            "y": 65
           },
           "need": "活動",
           "placement": {
@@ -5229,9 +5319,9 @@
           "label": "寵物專用清潔用品",
           "placement": {
             "layer": 8,
-            "width": 12,
+            "width": 14,
             "x": 35,
-            "y": 68
+            "y": 65
           },
           "preparedLabel": "已準備"
         }
@@ -5353,9 +5443,9 @@
         "image": "/assets/cat/room/cat-hideaway.webp",
         "label": "可退避的安全躲藏空間",
         "mobilePlacement": {
-          "width": 32,
-          "x": 58,
-          "y": 74
+          "width": 20,
+          "x": 65,
+          "y": 85
         },
         "need": "安全",
         "placement": {
@@ -5375,8 +5465,8 @@
         "label": "休息空間",
         "mobilePlacement": {
           "width": 28,
-          "x": 70,
-          "y": 84
+          "x": 80,
+          "y": 70
         },
         "need": "休息",
         "placement": {
@@ -5395,9 +5485,9 @@
         "image": "/assets/cat/room/cat-litter-box.webp",
         "label": "貓砂盆",
         "mobilePlacement": {
-          "width": 30,
+          "width": 25,
           "x": 15,
-          "y": 78
+          "y": 87
         },
         "need": "排泄",
         "placement": {
@@ -5419,9 +5509,9 @@
         "image": "/assets/cat/room/cat-litter.webp",
         "label": "貓砂",
         "mobilePlacement": {
-          "width": 22,
-          "x": 28,
-          "y": 78
+          "width": 15,
+          "x": 32,
+          "y": 85
         },
         "need": "清潔",
         "placement": {
@@ -5440,9 +5530,9 @@
         "image": "/assets/cat/feeding/cat-food-bowl.webp",
         "label": "食盆",
         "mobilePlacement": {
-          "width": 17,
-          "x": 37,
-          "y": 87
+          "width": 12,
+          "x": 53,
+          "y": 93
         },
         "need": "飲食",
         "placement": {
@@ -5461,13 +5551,13 @@
         "image": "/assets/cat/feeding/cat-water-bowl.webp",
         "label": "水碗",
         "mobilePlacement": {
-          "width": 18,
-          "x": 22,
-          "y": 88
+          "width": 12,
+          "x": 40,
+          "y": 93
         },
         "need": "飲食",
         "placement": {
-          "layer": 3,
+          "layer": 5,
           "width": 10,
           "x": 42,
           "y": 89
@@ -5483,8 +5573,8 @@
         "label": "抓板",
         "mobilePlacement": {
           "width": 20,
-          "x": 68,
-          "y": 83
+          "x": 10,
+          "y": 68
         },
         "need": "活動",
         "placement": {
@@ -5504,8 +5594,8 @@
         "label": "跳台",
         "mobilePlacement": {
           "width": 27,
-          "x": 78,
-          "y": 66
+          "x": 86,
+          "y": 82
         },
         "need": "活動",
         "placement": {
@@ -5526,7 +5616,7 @@
         "mobilePlacement": {
           "width": 17,
           "x": 49,
-          "y": 83
+          "y": 65
         },
         "need": "活動",
         "placement": {
@@ -6115,7 +6205,7 @@
             "feedbackTitle": "做得很好！",
             "id": "cat-health-complete-response",
             "result": "correct",
-            "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫"
+            "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
           },
           {
             "effects": {
@@ -6427,9 +6517,9 @@
         "label": "寵物專用清潔用品",
         "placement": {
           "layer": 8,
-          "width": 12,
+          "width": 14,
           "x": 35,
-          "y": 68
+          "y": 65
         },
         "preparedLabel": "已準備"
       }
@@ -6454,6 +6544,7 @@
       "id": "cat-arrival-checkup",
       "name": "到家後首次健康檢查",
       "recurring": false,
+      "showPlusSuffix": true,
       "stage": "寵物到家後"
     },
     "cat-carrier": {
@@ -7272,7 +7363,7 @@
           "feedbackTitle": "做得很好！",
           "id": "cat-health-complete-response",
           "result": "correct",
-          "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，準備外出籠與可用資料，並立即聯繫獸醫"
+          "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
         },
         {
           "effects": {
@@ -7476,7 +7567,10 @@
   "petNameFallback": "貓咪",
   "transitionMedia": {
     "arrival": "/assets/cat/pet-journey/arrival-transition.mp4",
+    "arrivalMobile": "/assets/cat/pet-journey/arrival-transition-mobile.mp4",
     "busyCare": "/assets/cat/pet-journey/busy-day-transition.mp4",
-    "timePass": "/assets/cat/pet-journey/time-passes-aging.mp4"
+    "busyCareMobile": "/assets/cat/pet-journey/busy-day-transition-mobile.mp4",
+    "timePass": "/assets/cat/pet-journey/time-passes-aging.mp4",
+    "timePassMobile": "/assets/cat/pet-journey/time-passes-aging-mobile.mp4"
   }
 }

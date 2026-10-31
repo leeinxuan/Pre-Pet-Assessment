@@ -131,7 +131,8 @@ test("contains the five-unit journey and current project-owned artwork", async (
   assert.match(dogJourney, /一起生活的第一天[\s\S]*日常行為照顧[\s\S]*今天也要出門散步[\s\S]*品種的考驗[\s\S]*疲憊忙碌的日子[\s\S]*生病與就醫[\s\S]*小狗逐漸老去/);
 
   assert.match(dogJourney, /arrival-transition\.mp4/);
-  assert.match(journeyTransitions, /getJourneyTransitionMedia\(species\)\.arrival/);
+  assert.match(journeyTransitions, /const transitionMedia = getJourneyTransitionMedia\(species\)/);
+  assert.match(journeyTransitions, /transitionMedia\.arrivalMobile\) \|\| transitionMedia\.arrival/);
   assert.match(journeyTransitions, /arrival-video-screen/);
   assert.match(journeyTransitions, /autoPlay/);
   assert.match(journeyTransitions, /muted/);

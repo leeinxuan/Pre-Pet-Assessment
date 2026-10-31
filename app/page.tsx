@@ -38,6 +38,7 @@ import {
   Welcome,
 } from "./components/shared/SharedComponents";
 import { FlowLoadErrorBoundary, FlowLoadingFallback } from "./components/shared/AsyncFlowState";
+import { isTestModeEntryUrl } from "./components/shared/useTestModeEntry";
 
 const dynamicFlowOptions = { loading: FlowLoadingFallback };
 
@@ -494,10 +495,7 @@ export default function Home() {
   function answerScenario(scenario: Scenario, choice: ScenarioChoice) {
     setScenarioAnswers((current) => {
       const previous = current[scenario.id];
-      const discussionFlag = scenario.id === "busy-daily-care" && choice.id.startsWith("family-helper-") ? "unsuitable-family-helper" : "";
-      const discussionFlags = discussionFlag
-        ? Array.from(new Set([...(previous?.discussionFlags ?? []), discussionFlag]))
-        : previous?.discussionFlags;
+      const discussionFlags = previous?.discussionFlags;
       return {
         ...current,
         [scenario.id]: previous
@@ -663,6 +661,10 @@ export default function Home() {
   }
 
   function startFreshJourney() {
+    if (isTestModeEntryUrl(window.location.search)) {
+      startTestJourney();
+      return;
+    }
     resetJourney();
     setTestMode(false);
     setStep(1);
@@ -778,7 +780,7 @@ export default function Home() {
   return (
     <main ref={mainContentRef} id="main-content" className="app-shell" tabIndex={-1}>
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{flowAnnouncement}</p>
-      {step === 0 && <Welcome onStart={startFreshJourney} onTestStart={startTestJourney} />}
+      {step === 0 && <Welcome onStart={startFreshJourney} />}
 
       {step > 0 && !introOpen && (
         <div className="stage-layout">

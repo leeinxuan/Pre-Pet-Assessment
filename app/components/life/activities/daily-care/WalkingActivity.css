@@ -71,7 +71,8 @@
 .walking-scene-alert { position: absolute; left: 18px; top: 18px; z-index: 6; max-width: min(420px, calc(100% - 36px)); padding: 12px 15px; border: 1px solid #e5a54a; border-radius: 16px; background: rgba(255, 248, 229, .94); color: #69420f; font-size: 15px; font-weight: 900; line-height: 1.55; box-shadow: 0 12px 28px rgba(62, 43, 20, .16); backdrop-filter: blur(4px); }
 .walking-character { position: absolute; left: var(--walk-left, 5%); top: var(--walk-top, 58%); width: min(45%, 580px); max-height: 88%; transform: translate(-50%, -50%) scale(var(--walk-scale, 1)); transform-origin: center center; z-index: 3; transition: left .06s linear, top .06s linear, transform .06s linear; filter: drop-shadow(0 16px 18px rgba(48, 41, 31, .16)); }
 .walking-character > img { display: block; width: 100%; height: auto; max-height: 88%; object-fit: contain; }
-.walking-scene.is-moving .walking-character { will-change: left, top, transform; }
+/* 長按以約 175ms 一步前進；移動中拉長過渡時間，讓每一步銜接成連續行走。 */
+.walking-scene.is-moving .walking-character { will-change: left, top, transform; transition: left .18s linear, top .18s linear, transform .18s linear; }
 .walking-poop { position: absolute; left: var(--walk-poop-left, 52%); top: var(--walk-poop-top, 78%); transform: translate(-50%, -50%); z-index: 4; padding: 0; border: 0; background: transparent; cursor: default; }
 .walking-poop img { display: block; width: var(--walk-poop-size, 8%); max-width: none; min-width: 0; height: auto; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(48, 41, 31, .18)); }
 .walking-poop:hover img, .walking-poop:focus-visible img { transform: translateY(-3px) scale(1.05); }
@@ -98,6 +99,8 @@
   cursor: pointer;
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   transform: translateY(-50%);
 }
 

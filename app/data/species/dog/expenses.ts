@@ -14,7 +14,7 @@ export const dogExpenses: Record<string, ExpenseRecord> = {
   "water-kit": { id: "water-kit", name: "水碗（外出用）", amount: 250, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "路程中保持水分供應；折疊式水碗方便攜帶" },
   "dog-leash": { id: "dog-leash", name: "牽繩", amount: 600, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "移動安全必備；選擇適合體型的牽繩長度與扣環強度" },
   "dog-cleaner-kit": { id: "dog-cleaner-kit", name: "外出清潔組", amount: 250, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false, description: "路程中若發生排泄可即時清理；公共場所清潔為基本禮儀與法規義務" },
-  "dog-arrival-checkup": { id: "dog-arrival-checkup", name: "到家後首次健康檢查", amount: 2000, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "到家後盡快安排，建立健康基準，確認整體狀態" },
+  "dog-arrival-checkup": { id: "dog-arrival-checkup", name: "到家後首次健康檢查", amount: 2000, showPlusSuffix: true, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "到家後盡快安排，建立健康基準，確認整體狀態" },
   "dog-microchip": { id: "dog-microchip", name: "晶片植入與寵物登記", amount: 1500, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "台灣法規要求犬隻植入晶片並完成寵物登記；**規費金額，請以所在縣市（動保處或防疫所）最新規費公告為準**" },
   "dog-rabies-vaccine": { id: "dog-rabies-vaccine", name: "狂犬病疫苗", amount: 600, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "台灣法規要求犬隻每年施打狂犬病疫苗；初次到家後應確認接種狀態並補打。**規費金額，請以所在縣市（動保處或防疫所）最新規費公告為準**" },
   "dog-sterilization": { id: "dog-sterilization", name: "絕育手術費用（公）", amount: 6000, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "台灣法規規定無繁殖計畫犬隻應絕育；可預防多種生殖系統疾病、減少發情期行為問題；母犬費用較高，約 5,000–15,000 元（依體型差異大）" },

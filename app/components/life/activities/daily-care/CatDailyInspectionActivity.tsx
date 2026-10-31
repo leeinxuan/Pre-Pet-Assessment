@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { catLitterRescueConfig } from "../../../../data/species/cat/activities";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
+import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { ActivityIntroPage, withPetName } from "../activity-ui";
 import { useTapSequence } from "../useTapSequence";
 
@@ -25,7 +26,7 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
   const binCloseTimerRef = useRef<number | null>(null);
   const discardTimerRef = useRef<number | null>(null);
   const tapBusyRef = useRef(false);
-  const [isMobileTap, setIsMobileTap] = useState(false);
+  const isMobileTap = useMobileLayout();
   const [discardingWaste, setDiscardingWaste] = useState<string | null>(null);
   const [litterFilled, setLitterFilled] = useState(false);
   const [backupInstalled, setBackupInstalled] = useState(false);
@@ -35,13 +36,6 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
   useEffect(() => () => {
     if (binCloseTimerRef.current !== null) window.clearTimeout(binCloseTimerRef.current);
     if (discardTimerRef.current !== null) window.clearTimeout(discardTimerRef.current);
-  }, []);
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 720px)");
-    const syncMode = () => setIsMobileTap(query.matches);
-    syncMode();
-    query.addEventListener("change", syncMode);
-    return () => query.removeEventListener("change", syncMode);
   }, []);
   const [wastePositions] = useState(() => config.wasteItems.map((item) => ({ ...item })));
   const complete = selected.includes("litter-complete");

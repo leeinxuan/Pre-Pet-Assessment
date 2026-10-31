@@ -358,8 +358,10 @@
       },
       "petJourney": {
         "arrivalTransition": "/assets/bird/pet-journey/arrival-transition.mp4",
+        "arrivalTransitionMobile": "/assets/bird/pet-journey/arrival-transition-mobile.mp4",
         "busyDailyCare": "/assets/bird/pet-journey/busy-daily-care.mp4",
         "busyDayTransition": "/assets/bird/pet-journey/busy-day-transition.mp4",
+        "busyDayTransitionMobile": "/assets/bird/pet-journey/busy-day-transition-mobile.mp4",
         "correctPrimary": "/assets/bird/pet-journey/correct-answer.mp4",
         "correctSecondary": "/assets/bird/pet-journey/correct-answer2.mp4",
         "excessiveCalling": "/assets/bird/pet-journey/excessive-calling.mp4",
@@ -368,7 +370,8 @@
         "seniorLife": "/assets/bird/pet-journey/senior-life.mp4",
         "sick": "/assets/bird/pet-journey/sick.mp4",
         "stereotypy": "/assets/bird/pet-journey/stereotypy.mp4",
-        "timePassesAging": "/assets/bird/pet-journey/time-passes-aging.mp4"
+        "timePassesAging": "/assets/bird/pet-journey/time-passes-aging.mp4",
+        "timePassesAgingMobile": "/assets/bird/pet-journey/time-passes-aging-mobile.mp4"
       },
       "preparation": {
         "carrier": "/assets/car/bird-carrier.webp",
@@ -1246,25 +1249,25 @@
         },
         "mobile": {
           "food": {
-            "bottom": 5,
-            "left": 28,
-            "width": 24
+            "bottom": 38,
+            "left": 40,
+            "width": 35
           },
           "pet": {
-            "bottom": 10,
-            "left": 32,
+            "bottom": 40,
+            "left": -5,
             "maxHeight": 58,
-            "width": 50
+            "width": 55
           },
           "veggie": {
-            "bottom": 7,
+            "bottom": 0,
             "left": 52,
-            "width": 20
+            "width": 40
           },
           "water": {
-            "bottom": 10,
-            "left": 10,
-            "width": 24
+            "bottom": 40,
+            "left": 65,
+            "width": 45
           }
         }
       },
@@ -1354,17 +1357,17 @@
           "stateKey": "food"
         },
         {
-          "alt": "乾淨飲水（適當大小容器）",
+          "alt": "乾淨飲水",
           "description": "每天提供新鮮飲水並清洗容器。容器不可過大過深，避免鳥跌入。注意觀察每日飲水量，飲水變化是健康的重要指標。",
           "image": "/assets/shared/waterbottle.webp",
-          "label": "乾淨飲水（適當大小容器）",
+          "label": "乾淨飲水",
           "stateKey": "water"
         },
         {
-          "alt": "新鮮蔬菜（如胡蘿蔔、深綠色蔬菜）",
-          "description": "適量新鮮蔬果可補充種子飼料缺乏的維生素 A——胡蘿蔔、深綠色蔬菜都是好選擇。注意限制份量，讓鳥以專用飼料為主食，新鮮食材為補充。",
+          "alt": "新鮮蔬菜",
+          "description": "如胡蘿蔔、深綠色蔬菜等適量新鮮蔬果可補充種子飼料缺乏的維生素 A——胡蘿蔔、深綠色蔬菜都是好選擇。注意限制份量，讓鳥以專用飼料為主食，新鮮食材為補充。",
           "image": "/assets/bird/feeding/fresh-veggie.webp",
-          "label": "新鮮蔬菜（如胡蘿蔔、深綠色蔬菜）",
+          "label": "新鮮蔬菜",
           "stateKey": "veggie"
         }
       ],
@@ -4572,6 +4575,11 @@
         "id": "teflon-pan",
         "image": "/assets/bird/room/teflon-pan.webp",
         "label": "鐵氟龍不沾鍋",
+        "mobilePlacement": {
+          "width": 15,
+          "x": 15,
+          "y": 65
+        },
         "placement": {
           "layer": 5,
           "width": 10,
@@ -4586,8 +4594,13 @@
         "id": "incense-candle",
         "image": "/assets/bird/room/incense-candle.webp",
         "label": "線香／薰香蠟燭",
+        "mobilePlacement": {
+          "width": 12,
+          "x": 80,
+          "y": 65
+        },
         "placement": {
-          "layer": 5,
+          "layer": 6,
           "width": 8,
           "x": 34,
           "y": 63
@@ -4600,6 +4613,11 @@
         "id": "spray-aerosol",
         "image": "/assets/bird/room/spray-aerosol.webp",
         "label": "噴霧清潔劑／芳香劑",
+        "mobilePlacement": {
+          "width": 15,
+          "x": 70,
+          "y": 85
+        },
         "placement": {
           "layer": 5,
           "width": 10,
@@ -4614,6 +4632,11 @@
         "id": "toxic-plant",
         "image": "/assets/bird/room/toxic-plant.webp",
         "label": "有毒植物",
+        "mobilePlacement": {
+          "width": 15,
+          "x": 60,
+          "y": 60
+        },
         "placement": {
           "layer": 5,
           "width": 15,
@@ -4628,6 +4651,11 @@
         "id": "mirror-toy",
         "image": "/assets/bird/room/mirror-toy.webp",
         "label": "鏡子／身形相似玩具",
+        "mobilePlacement": {
+          "width": 18,
+          "x": 40,
+          "y": 75
+        },
         "placement": {
           "layer": 5,
           "width": 12,
@@ -4642,6 +4670,11 @@
         "id": "round-cage",
         "image": "/assets/bird/room/round-cage.webp",
         "label": "圓形鳥籠",
+        "mobilePlacement": {
+          "width": 20,
+          "x": 85,
+          "y": 42
+        },
         "placement": {
           "layer": 5,
           "width": 18,
@@ -4888,7 +4921,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "特寵獸醫院"
+                  "text": "非犬貓動物醫院"
                 },
                 {
                   "text": "，並提前建立"
@@ -4982,7 +5015,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "特寵獸醫院"
+                  "text": "非犬貓動物醫院"
                 },
                 {
                   "text": "，並提前建立"
@@ -5154,8 +5187,11 @@
       ],
       "transitionMedia": {
         "arrival": "/assets/bird/pet-journey/arrival-transition.mp4",
+        "arrivalMobile": "/assets/bird/pet-journey/arrival-transition-mobile.mp4",
         "busyCare": "/assets/bird/pet-journey/busy-day-transition.mp4",
-        "timePass": "/assets/bird/pet-journey/time-passes-aging.mp4"
+        "busyCareMobile": "/assets/bird/pet-journey/busy-day-transition-mobile.mp4",
+        "timePass": "/assets/bird/pet-journey/time-passes-aging.mp4",
+        "timePassMobile": "/assets/bird/pet-journey/time-passes-aging-mobile.mp4"
       }
     },
     "masteredCareThemes": [
@@ -5280,6 +5316,11 @@
           "id": "teflon-pan",
           "image": "/assets/bird/room/teflon-pan.webp",
           "label": "鐵氟龍不沾鍋",
+          "mobilePlacement": {
+            "width": 15,
+            "x": 15,
+            "y": 65
+          },
           "placement": {
             "layer": 5,
             "width": 10,
@@ -5294,8 +5335,13 @@
           "id": "incense-candle",
           "image": "/assets/bird/room/incense-candle.webp",
           "label": "線香／薰香蠟燭",
+          "mobilePlacement": {
+            "width": 12,
+            "x": 80,
+            "y": 65
+          },
           "placement": {
-            "layer": 5,
+            "layer": 6,
             "width": 8,
             "x": 34,
             "y": 63
@@ -5308,6 +5354,11 @@
           "id": "spray-aerosol",
           "image": "/assets/bird/room/spray-aerosol.webp",
           "label": "噴霧清潔劑／芳香劑",
+          "mobilePlacement": {
+            "width": 15,
+            "x": 70,
+            "y": 85
+          },
           "placement": {
             "layer": 5,
             "width": 10,
@@ -5322,6 +5373,11 @@
           "id": "toxic-plant",
           "image": "/assets/bird/room/toxic-plant.webp",
           "label": "有毒植物",
+          "mobilePlacement": {
+            "width": 15,
+            "x": 60,
+            "y": 60
+          },
           "placement": {
             "layer": 5,
             "width": 15,
@@ -5336,6 +5392,11 @@
           "id": "mirror-toy",
           "image": "/assets/bird/room/mirror-toy.webp",
           "label": "鏡子／身形相似玩具",
+          "mobilePlacement": {
+            "width": 18,
+            "x": 40,
+            "y": 75
+          },
           "placement": {
             "layer": 5,
             "width": 12,
@@ -5350,6 +5411,11 @@
           "id": "round-cage",
           "image": "/assets/bird/room/round-cage.webp",
           "label": "圓形鳥籠",
+          "mobilePlacement": {
+            "width": 20,
+            "x": 85,
+            "y": 42
+          },
           "placement": {
             "layer": 5,
             "width": 18,
@@ -5390,6 +5456,7 @@
         "initialBackground": "/assets/bird/room/bird-safe-room.webp",
         "interiorBackground": "/assets/bird/room/bg-cage-interior.webp",
         "interiorBackgroundAspectRatio": "2 / 3",
+        "interiorBackgroundMobileFit": "cover",
         "interiorItemId": "bird-feces-tray",
         "interiorRequiredItemIds": [
           "perch-set",
@@ -5398,6 +5465,10 @@
           "bird-feces-tray"
         ],
         "interiorSafeBackground": "/assets/bird/room/bg-cage-interior-feces-tray.webp",
+        "mobileEntryHintPlacement": {
+          "x": 54,
+          "y": 40
+        },
         "outsideItemIds": [
           "bird-cage",
           "food-initial"
@@ -5413,6 +5484,11 @@
           "id": "bird-cage",
           "image": "/assets/bird/room/bird-cage.webp",
           "label": "方形金屬鳥籠",
+          "mobilePlacement": {
+            "width": 25,
+            "x": 85,
+            "y": 40
+          },
           "need": "安全",
           "placement": {
             "layer": 2,
@@ -5430,6 +5506,11 @@
           "id": "food-initial",
           "image": "/assets/bird/feeding/bird-seed-mix.webp",
           "label": "主食飼料",
+          "mobilePlacement": {
+            "width": 15,
+            "x": 65,
+            "y": 60
+          },
           "need": "飲食",
           "placement": {
             "layer": 4,
@@ -5446,6 +5527,11 @@
           "id": "perch-set",
           "image": "/assets/bird/room/perch-set.webp",
           "label": "不同材質的棲木",
+          "mobilePlacement": {
+            "width": 30,
+            "x": 50,
+            "y": 54
+          },
           "need": "休息",
           "placement": {
             "layer": 3,
@@ -5461,7 +5547,7 @@
               "mobilePlacement": {
                 "width": 42,
                 "x": 31,
-                "y": 31
+                "y": 40
               },
               "placement": {
                 "layer": 5,
@@ -5475,8 +5561,8 @@
               "image": "/assets/bird/room/perch-set-2.webp",
               "mobilePlacement": {
                 "width": 36,
-                "x": 63,
-                "y": 51
+                "x": 75,
+                "y": 77
               },
               "placement": {
                 "layer": 5,
@@ -5491,7 +5577,7 @@
               "mobilePlacement": {
                 "width": 38,
                 "x": 35,
-                "y": 72
+                "y": 62
               },
               "placement": {
                 "layer": 5,
@@ -5509,6 +5595,11 @@
           "id": "bird-food-bowl",
           "image": "/assets/bird/room/food-bowl.webp",
           "label": "專用食碗",
+          "mobilePlacement": {
+            "width": 30,
+            "x": 85,
+            "y": 60
+          },
           "need": "飲食",
           "placement": {
             "layer": 4,
@@ -5525,6 +5616,11 @@
           "id": "bird-water-bowl",
           "image": "/assets/bird/room/water-bowl.webp",
           "label": "飲水器",
+          "mobilePlacement": {
+            "width": 30,
+            "x": 77,
+            "y": 52
+          },
           "need": "飲食",
           "placement": {
             "layer": 3,
@@ -5541,6 +5637,11 @@
           "id": "bird-chew-toy",
           "image": "/assets/bird/room/chew-toy.webp",
           "label": "天然啃咬玩具",
+          "mobilePlacement": {
+            "width": 35,
+            "x": 75,
+            "y": 20
+          },
           "need": "活動",
           "placement": {
             "layer": 4,
@@ -5557,6 +5658,11 @@
           "id": "bird-climbing-toy",
           "image": "/assets/bird/room/climbing-toy.webp",
           "label": "攀爬玩具",
+          "mobilePlacement": {
+            "width": 40,
+            "x": 12,
+            "y": 65
+          },
           "need": "活動",
           "placement": {
             "layer": 4,
@@ -5573,6 +5679,11 @@
           "id": "bird-sleeping-tent",
           "image": "/assets/bird/room/parrot-nest.webp",
           "label": "布窩",
+          "mobilePlacement": {
+            "width": 30,
+            "x": 55,
+            "y": 15
+          },
           "need": "休息",
           "placement": {
             "layer": 4,
@@ -5592,6 +5703,11 @@
           "id": "bird-feces-tray",
           "image": "/assets/bird/room/feces-tray.webp",
           "label": "籠底墊料",
+          "mobilePlacement": {
+            "width": 28,
+            "x": 50,
+            "y": 79
+          },
           "need": "清潔",
           "placement": {
             "layer": 3,
@@ -5608,6 +5724,11 @@
           "id": "bird-thermometer",
           "image": "/assets/bird/room/thermometer.webp",
           "label": "溫度計",
+          "mobilePlacement": {
+            "width": 20,
+            "x": 27,
+            "y": 16
+          },
           "need": "安全",
           "placement": {
             "layer": 4,
@@ -5638,7 +5759,7 @@
             },
             "mobile": {
               "width": 40,
-              "x": 33,
+              "x": 50,
               "y": 20
             },
             "mobileText": {
@@ -5836,6 +5957,7 @@
       "initialBackground": "/assets/bird/room/bird-safe-room.webp",
       "interiorBackground": "/assets/bird/room/bg-cage-interior.webp",
       "interiorBackgroundAspectRatio": "2 / 3",
+      "interiorBackgroundMobileFit": "cover",
       "interiorItemId": "bird-feces-tray",
       "interiorRequiredItemIds": [
         "perch-set",
@@ -5844,6 +5966,10 @@
         "bird-feces-tray"
       ],
       "interiorSafeBackground": "/assets/bird/room/bg-cage-interior-feces-tray.webp",
+      "mobileEntryHintPlacement": {
+        "x": 54,
+        "y": 40
+      },
       "outsideItemIds": [
         "bird-cage",
         "food-initial"
@@ -5859,6 +5985,11 @@
         "id": "bird-cage",
         "image": "/assets/bird/room/bird-cage.webp",
         "label": "方形金屬鳥籠",
+        "mobilePlacement": {
+          "width": 25,
+          "x": 85,
+          "y": 40
+        },
         "need": "安全",
         "placement": {
           "layer": 2,
@@ -5876,6 +6007,11 @@
         "id": "food-initial",
         "image": "/assets/bird/feeding/bird-seed-mix.webp",
         "label": "主食飼料",
+        "mobilePlacement": {
+          "width": 15,
+          "x": 65,
+          "y": 60
+        },
         "need": "飲食",
         "placement": {
           "layer": 4,
@@ -5892,6 +6028,11 @@
         "id": "perch-set",
         "image": "/assets/bird/room/perch-set.webp",
         "label": "不同材質的棲木",
+        "mobilePlacement": {
+          "width": 30,
+          "x": 50,
+          "y": 54
+        },
         "need": "休息",
         "placement": {
           "layer": 3,
@@ -5907,7 +6048,7 @@
             "mobilePlacement": {
               "width": 42,
               "x": 31,
-              "y": 31
+              "y": 40
             },
             "placement": {
               "layer": 5,
@@ -5921,8 +6062,8 @@
             "image": "/assets/bird/room/perch-set-2.webp",
             "mobilePlacement": {
               "width": 36,
-              "x": 63,
-              "y": 51
+              "x": 75,
+              "y": 77
             },
             "placement": {
               "layer": 5,
@@ -5937,7 +6078,7 @@
             "mobilePlacement": {
               "width": 38,
               "x": 35,
-              "y": 72
+              "y": 62
             },
             "placement": {
               "layer": 5,
@@ -5955,6 +6096,11 @@
         "id": "bird-food-bowl",
         "image": "/assets/bird/room/food-bowl.webp",
         "label": "專用食碗",
+        "mobilePlacement": {
+          "width": 30,
+          "x": 85,
+          "y": 60
+        },
         "need": "飲食",
         "placement": {
           "layer": 4,
@@ -5971,6 +6117,11 @@
         "id": "bird-water-bowl",
         "image": "/assets/bird/room/water-bowl.webp",
         "label": "飲水器",
+        "mobilePlacement": {
+          "width": 30,
+          "x": 77,
+          "y": 52
+        },
         "need": "飲食",
         "placement": {
           "layer": 3,
@@ -5987,6 +6138,11 @@
         "id": "bird-chew-toy",
         "image": "/assets/bird/room/chew-toy.webp",
         "label": "天然啃咬玩具",
+        "mobilePlacement": {
+          "width": 35,
+          "x": 75,
+          "y": 20
+        },
         "need": "活動",
         "placement": {
           "layer": 4,
@@ -6003,6 +6159,11 @@
         "id": "bird-climbing-toy",
         "image": "/assets/bird/room/climbing-toy.webp",
         "label": "攀爬玩具",
+        "mobilePlacement": {
+          "width": 40,
+          "x": 12,
+          "y": 65
+        },
         "need": "活動",
         "placement": {
           "layer": 4,
@@ -6019,6 +6180,11 @@
         "id": "bird-sleeping-tent",
         "image": "/assets/bird/room/parrot-nest.webp",
         "label": "布窩",
+        "mobilePlacement": {
+          "width": 30,
+          "x": 55,
+          "y": 15
+        },
         "need": "休息",
         "placement": {
           "layer": 4,
@@ -6038,6 +6204,11 @@
         "id": "bird-feces-tray",
         "image": "/assets/bird/room/feces-tray.webp",
         "label": "籠底墊料",
+        "mobilePlacement": {
+          "width": 28,
+          "x": 50,
+          "y": 79
+        },
         "need": "清潔",
         "placement": {
           "layer": 3,
@@ -6054,6 +6225,11 @@
         "id": "bird-thermometer",
         "image": "/assets/bird/room/thermometer.webp",
         "label": "溫度計",
+        "mobilePlacement": {
+          "width": 20,
+          "x": 27,
+          "y": 16
+        },
         "need": "安全",
         "placement": {
           "layer": 4,
@@ -6992,6 +7168,7 @@
       "id": "bird-arrival-checkup",
       "name": "到家後首次健康檢查",
       "recurring": false,
+      "showPlusSuffix": true,
       "stage": "寵物到家後"
     },
     "bird-cage": {
@@ -8024,7 +8201,10 @@
   "petNameFallback": "小啾",
   "transitionMedia": {
     "arrival": "/assets/bird/pet-journey/arrival-transition.mp4",
+    "arrivalMobile": "/assets/bird/pet-journey/arrival-transition-mobile.mp4",
     "busyCare": "/assets/bird/pet-journey/busy-day-transition.mp4",
-    "timePass": "/assets/bird/pet-journey/time-passes-aging.mp4"
+    "busyCareMobile": "/assets/bird/pet-journey/busy-day-transition-mobile.mp4",
+    "timePass": "/assets/bird/pet-journey/time-passes-aging.mp4",
+    "timePassMobile": "/assets/bird/pet-journey/time-passes-aging-mobile.mp4"
   }
 }

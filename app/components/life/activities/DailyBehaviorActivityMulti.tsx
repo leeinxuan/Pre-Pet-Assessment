@@ -204,7 +204,7 @@ export function DailyBehaviorActivityMulti({
   }
 
   return (
-    <section className={`daily-behavior-activity${species === "dog" && scenario.id === "behavior-barking" ? " daily-behavior-activity--dog-barking" : ""}`}>
+    <section className={`daily-behavior-activity${presentation.questionClassName ? ` ${presentation.questionClassName}` : ""}`}>
       <div className="daily-behavior-head">
         <p className="life-stage-label">{lifeStageLabelForScenario(scenario)}</p>
         <h1>{withPetName(scenario.title, petName, species)}</h1>

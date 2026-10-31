@@ -12,13 +12,13 @@ export const hamsterRoomDoorplatePlacement = {
 
 export const hamsterHazards: HazardItem[] = [
   { id: "cable", label: "電線", icon: "⌁", image: hamsterAssets.room.hazards.cable, placement: { x: 14, y: 77, width: 13, layer: 5 }, mobilePlacement: { x: 14, y: 77, width: 20 }, danger: "倉鼠有強烈啃咬天性，咬電線可能觸電或食入絕緣皮層。", handling: "整理固定電線或收入線槽，讓{petName}的活動區域無電線可及。" },
-  { id: "loose-gap-cage", label: "格柵過大的舊籠", icon: "▥", image: hamsterAssets.room.hazards.looseGapCage, placement: { x: 84, y:84, width: 15, layer: 5 }, mobilePlacement: { x: 84, y: 84, width: 20 }, danger: "倉鼠擅長利用縫隙逃脫，格柵過寬或薄壁塑膠籠都難以防逃。", handling: "更換為格柵間距適當、不易啃穿的金屬籠具。" },
+  { id: "loose-gap-cage", label: "格柵過大的舊籠", icon: "▥", image: hamsterAssets.room.hazards.looseGapCage, placement: { x: 84, y:84, width: 15, layer: 5 }, mobilePlacement: { x: 84, y: 84, width: 20 }, danger: "倉鼠擅長利用縫隙逃脫，格柵過寬或薄壁塑膠籠都難以防逃。", handling: "更換為格柵間距適當、不易啃穿的籠具。" },
   { id: "direct-sunlight-spot", label: "陽光直曬的位置", icon: "☀", image: hamsterAssets.room.hazards.directSunlightSpot, placement: { x: 24, y: 43, width: 18, layer: 5 }, mobilePlacement: { x: 24, y: 43, width: 18 }, mobileThumbnailCrop: { x: 83, y: 50, size: 27, includeSprite: false }, danger: "倉鼠靠耳朵的微血管散熱，對高溫耐受性低，直曬可能導致中暑。", handling: "將籠具位置移至陰涼、通風、無直曬的穩定角落。" },
   { id: "strong-scent-item", label: "強烈氣味物品", icon: "◌", image: hamsterAssets.room.hazards.strongScentItem, placement: { x: 24, y: 50, width: 6, layer: 5 }, mobilePlacement: { x: 24, y: 48, width: 10 }, danger: "小型哺乳類嗅覺靈敏，強烈香薰、化學揮發物可能刺激呼吸道。", handling: "籠具附近應避免使用香薰、殺蟲劑或強烈清潔劑。" },
 ];
 
 export const hamsterRoomItems: RoomItem[] = [
-  { id: "hamster-cage", label: "倉鼠籠", icon: "▥", image: hamsterAssets.room.cage, sceneImage: hamsterAssets.room.cageFront, placement: { x: 11, y: 60, width: 15, layer: 2 }, mobilePlacement: { x: 11, y: 60, width: 16 }, required: true, need: "安全", expenseId: "hamster-cage-setup", description: "防逃金屬籠；有足夠空間放置滾輪、巢穴與砂浴盆。" },
+  { id: "hamster-cage", label: "倉鼠籠", icon: "▥", image: hamsterAssets.room.cage, sceneImage: hamsterAssets.room.cageFront, placement: { x: 11, y: 60, width: 15, layer: 2 }, mobilePlacement: { x: 11, y: 60, width: 16 }, required: true, need: "安全", expenseId: "hamster-cage-setup", description: "有足夠空間放置滾輪、巢穴與砂浴盆。" },
   { id: "pellet", label: "倉鼠綜合飼料", icon: "◉", image: hamsterAssets.feeding.pellet, placement: { x: 20, y: 78, width: 10, layer: 4 }, mobilePlacement: { x: 18, y: 78, width: 15 }, required: true, need: "飲食", expenseId: "hamster-pellet-initial", description: "倉鼠專用飼料為主食；入住前備妥足量，每日固定量餵食。" },
   { id: "hamster-sand", label: "倉鼠沙", icon: "◌", image: hamsterAssets.room.sand, placement: { x: 28, y: 80, width: 8, layer: 4 }, mobilePlacement: { x: 28, y: 80, width: 12 }, required: true, need: "清潔", expenseIds: ["hamster-sand-initial", "hamster-sand-monthly"], description: "填入砂浴盆使用；之後每月補充。" },
   { id: "bedding", label: "紙質墊料", icon: "▤", image: hamsterAssets.room.bedding, placement: { x: 72, y: 60, width: 38, layer: 1 }, mobilePlacement: { x: 72, y: 60, width: 38 }, required: true, need: "休息", expenseIds: ["hamster-bedding-initial", "hamster-bedding-monthly"], description: "足夠深度讓{petName}挖掘保暖；安全吸附力佳。" },
