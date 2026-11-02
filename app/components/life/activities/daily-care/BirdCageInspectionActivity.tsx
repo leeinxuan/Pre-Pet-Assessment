@@ -21,6 +21,7 @@ function BirdCageAsset({ src, alt, fallback, className, width, height }: { src: 
 }
 
 export function BirdCageInspectionActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
+  const render = (value: string) => interpolatePetName(value, petName);
   const displayPetName = petName || birdCopy.animalNameFallback;
   const { healthPoints, droppingOptions } = birdCageInspectionActivityData;
   const done = activity.birdCageInspectionSteps;
@@ -282,8 +283,8 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
       </ObservationCard>
   ) : null;
 
-  return <section className="life-activity bird-cage-activity" aria-label="鳥籠日常巡視">
-    <div className="activity-heading"><p className="life-stage-label">日常照護</p><h1>{displayPetName} 的鳥籠日常巡視</h1><p className="bird-cage-message">今天早上，你走近 {displayPetName} 的鳥籠，牠正在棲木上整理羽毛，籠底也留下了昨天使用過的痕跡。開始一天前，先陪牠完成清潔、糞便觀察、健康巡視與籠外互動吧。</p></div>
+  return <section className="life-activity bird-cage-activity" aria-label={render(birdCageInspectionConfig.title)}>
+    <div className="activity-heading"><p className="life-stage-label">日常照護</p><h1>{render(birdCageInspectionConfig.title)}</h1><p className="bird-cage-message">今天早上，你走近 {displayPetName} 的鳥籠，牠正在棲木上整理羽毛，籠底也留下了昨天使用過的痕跡。開始一天前，先陪牠完成清潔、糞便觀察、健康巡視與籠外互動吧。</p></div>
     <ol className="rabbit-grooming-progress" aria-label="鳥籠巡視進度">{stageLabels.map((label, index) => {
       const isComplete = (index === 0 && cleanComplete) || (index === 1 && has("feces-observed")) || (index === 2 && healthComplete) || (index === 3 && has("social-time"));
       return <li key={label} className={isComplete ? "done" : index === currentStage ? "active" : ""} aria-current={!isComplete && index === currentStage ? "step" : undefined}><span>{isComplete ? "✓" : index + 1}</span>{label}</li>;

@@ -82,6 +82,7 @@ export function WalkingActivity({
   onContinue: () => void;
 }) {
   const { assets, copy, interaction, prepNotes } = walkingActivityConfig;
+  const render = (value: string) => withPetName(value, petName, "dog");
   const forwardHoldStepMs = Math.round((interaction.stepDistance / interaction.holdSpeed) * 1000);
   const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
   const [safetyStep, setSafetyStep] = useState<"question" | "law" | "correct" | "prepared">(
@@ -454,7 +455,7 @@ export function WalkingActivity({
       <div className="walking-head">
         <div>
           <p className="life-stage-label">{copy.stageLabel}</p>
-          <h1>{copy.heading}</h1>
+          <h1>{render(walkingActivityConfig.title)}</h1>
           {!started && safetyStep === "question" && <p>{copy.beforeChoice}</p>}
           {!started && safetyStep !== "question" && <p>{copy.afterChoice}</p>}
         </div>

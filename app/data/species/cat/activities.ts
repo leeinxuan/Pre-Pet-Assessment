@@ -2,8 +2,9 @@ import type { ActivityIntroConfig } from "../../../game-types";
 import { catAssets } from "./assets";
 import { catReport } from "./report";
 
-/** 貓砂盆救援隊的內容、素材與固定操作資料。 */
+/** 貓砂盆清潔隊的內容、素材與固定操作資料。 */
 export const catLitterRescueConfig = {
+  title: "貓砂盆清潔隊",
   intro: {
     eyebrow: "日常照護",
     title: "每天清砂盆，是給 {petName} 最基本的照顧",

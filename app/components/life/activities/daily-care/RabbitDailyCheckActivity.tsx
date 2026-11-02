@@ -14,6 +14,7 @@ type RabbitObservationStatus = ObservationAnswerStatus | "comparison";
 
 export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
   const scenario = rabbitActivityScenarios["rabbit-daily-check"];
+  const render = (value: string) => withPetName(value, petName);
   const completed = activity.rabbitDailyCheckSteps;
   const state = activity.rabbitGroomingState || rabbitGroomingConfig.initialState;
   const [draggingBrush, setDraggingBrush] = useState(false);
@@ -150,7 +151,7 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     </>}
   </ObservationCard> : null;
   return <section className="rabbit-activity rabbit-grooming-activity" onPointerMove={(event) => draggingBrush && setPoint({ x: event.clientX, y: event.clientY })} onPointerUp={finishBrush} onPointerCancel={() => { setDraggingBrush(false); setPoint(null); }} aria-labelledby="rabbit-grooming-title">
-    <header><p>日常照護</p><h1 id="rabbit-grooming-title">{withPetName(scenario.title, petName)}</h1><p className="rabbit-grooming-scene-description">{withPetName(firstPart ? rabbitGroomingConfig.sceneDescriptions.part1 : rabbitGroomingConfig.sceneDescriptions.part2, petName)}</p><span>{firstPart ? "第一部分：梳毛與足底確認" : "第二部分：進食與指甲外觀觀察"}</span></header>
+    <header><p>日常照護</p><h1 id="rabbit-grooming-title">{render(rabbitGroomingConfig.title)}</h1><p className="rabbit-grooming-scene-description">{withPetName(firstPart ? rabbitGroomingConfig.sceneDescriptions.part1 : rabbitGroomingConfig.sceneDescriptions.part2, petName)}</p><span>{firstPart ? "第一部分：梳毛與足底確認" : "第二部分：進食與指甲外觀觀察"}</span></header>
     {isTransition ? <div className="rabbit-grooming-transition" role="status"><span aria-hidden="true">✓</span><div><p>第一部分完成</p><strong>梳毛與足底檢查都完成了</strong><small>接著一起觀察 {petName || "兔兔"} 的進食與指甲狀況。</small></div></div> : <>
       <div className={`rabbit-grooming-scene ${isInspection ? "is-inspection-stage" : ""} ${current?.id === "groom-footpad" ? "has-observation-layout" : ""} ${observation ? "has-observation" : ""}`}>
         {!observation && <p className="rabbit-grooming-scene-prompt">{isInspection ? "點擊進食畫面與前腳，完成外觀觀察。" : mobileBrushInstruction}</p>}

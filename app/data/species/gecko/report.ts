@@ -5,7 +5,7 @@ export const geckoReport: SpeciesReportConfig = {
     {
       title: "每日照顧",
       items: [
-        "確認溫度計（暖側 28–32°C、涼側 22–25°C）",
+        "確認溫度計（熱區 28–32°C、冷區 22–25°C）",
         "更換飲水",
         "清除缸內排泄物並確認底材狀態",
         "觀察守宮精神、活動、眼睛、尾巴、皮膚與後腿狀態",
@@ -16,8 +16,8 @@ export const geckoReport: SpeciesReportConfig = {
       title: "家中環境",
       items: [
         "使用安全底材，避免細沙或鬆散顆粒底材",
-        "確認加熱片、暖側與涼側溫度計正常運作",
-        "備妥暖側、涼側與濕躲避屋",
+        "確認加熱片、熱區與冷區溫度計正常運作",
+        "備妥熱區、冷區與濕躲避屋",
         "維持淺水碟與補鈣碟清潔，補充鈣粉",
         "每週量體重並確認濕躲避屋濕度",
       ],
@@ -40,7 +40,7 @@ export const geckoReport: SpeciesReportConfig = {
   dailyCareTimeNote: "以餵食日計算；非餵食日約 8～15 分鐘，時間分散在溫度確認、飲水更換、排泄物清理與外觀觀察。",
   // 與 gecko-game-planning.md §5.3.2 巡視完成頁、§6.4 一致；巡視完成頁與報告共用此資料。
   dailyCareBreakdown: [
-    { title: "溫度確認（暖側 / 涼側）", detail: "約 1～2 分鐘" },
+    { title: "溫度確認（熱區 / 冷區）", detail: "約 1～2 分鐘" },
     { title: "飲水更換", detail: "約 2～3 分鐘" },
     { title: "排泄物清理", detail: "約 2～5 分鐘" },
     { title: "外觀觀察（眼睛、尾巴、皮膚、趾端）", detail: "約 3～5 分鐘" },

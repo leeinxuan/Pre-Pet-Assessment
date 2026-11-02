@@ -12,6 +12,7 @@ export const walkingPrepItems = [
 ] as const;
 
 export const walkingActivityConfig = {
+  title: "今天也要出門散步",
   assets: {
     poopBag: "/assets/dog/walking/poop-bag-1.webp",
     poop: "/assets/dog/walking/poop.webp",

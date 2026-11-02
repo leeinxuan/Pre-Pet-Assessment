@@ -359,6 +359,7 @@ export function RoomPreparation({
   const [activeHazardInfo, setActiveHazardInfo] = useState<string | null>(null);
   const [activeMobileItemInfo, setActiveMobileItemInfo] = useState<string | null>(null);
   const [exitingItems, setExitingItems] = useState<string[]>([]);
+  const [desktopSupplyPagination, setDesktopSupplyPagination] = useState({ species, page: 0 });
   const roomSceneRef = useRef<HTMLDivElement>(null);
   const mobileRoomSceneRef = useRef<HTMLDivElement>(null);
   const hazardInFlight = useRef<string | null>(null);
@@ -444,10 +445,15 @@ export function RoomPreparation({
       : outsideItemIds.includes(item.id);
   });
   const mobileEntryItem = visiblePlacedItems.find((item) => item.id === roomFlow?.fenceItemId);
-  // 依目前物種資料切列，不能假設每種動物只有八件用品；否則第九件起會存在資料卻無法操作。
+  // 桌機用品欄每頁四列；切頁只改變顯示範圍，不改動用品與場景狀態。
+  const desktopSupplyPageCount = Math.ceil(activeRoomItems.length / 8);
+  const desktopSupplyPage = desktopSupplyPagination.species === species
+    ? Math.min(desktopSupplyPagination.page, Math.max(0, desktopSupplyPageCount - 1))
+    : 0;
+  const desktopVisibleRoomItems = activeRoomItems.slice(desktopSupplyPage * 8, (desktopSupplyPage + 1) * 8);
   const supplyRows = Array.from(
-    { length: Math.ceil(activeRoomItems.length / 2) },
-    (_, index) => activeRoomItems.slice(index * 2, index * 2 + 2),
+    { length: Math.ceil(desktopVisibleRoomItems.length / 2) },
+    (_, index) => desktopVisibleRoomItems.slice(index * 2, index * 2 + 2),
   ).filter((row) => row.length > 0);
 
   useEffect(() => {
@@ -654,6 +660,15 @@ export function RoomPreparation({
               })}
             </div>)}
           </div>
+          {desktopSupplyPageCount > 1 && <nav className="room-supply-pagination" aria-label="用品準備箱分頁">
+            <button type="button" aria-label="上一頁用品" disabled={desktopSupplyPage === 0} onClick={() => setDesktopSupplyPagination({ species, page: desktopSupplyPage - 1 })}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+            </button>
+            <span aria-live="polite">{desktopSupplyPage + 1} / {desktopSupplyPageCount}</span>
+            <button type="button" aria-label="下一頁用品" disabled={desktopSupplyPage === desktopSupplyPageCount - 1} onClick={() => setDesktopSupplyPagination({ species, page: desktopSupplyPage + 1 })}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+            </button>
+          </nav>}
         </section>
 
         <div className="room-interaction-column">

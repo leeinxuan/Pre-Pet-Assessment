@@ -10,7 +10,7 @@ export { catLitterRescueConfig } from "./activities";
 export const catJourneyItems: JourneyItem[] = [
   { id: "cat-arrival", type: "scenario", timeLabel: "一起生活的第一天", title: "第一天適應新家", scenarioId: "cat-arrival-adjustment", stageId: "arrival", stageLabel: "接回家", expenseIds: [...arrivalRequiredExpenseIdsBySpecies.cat] },
   { id: "cat-daily-care", type: "scenario", timeLabel: "日常照護", title: "貓咪日常照護", stageId: "daily", stageLabel: "日常照護" },
-  { id: "cat-daily-inspection", type: "daily-inspection", timeLabel: "日常照護", title: "貓砂盆救援隊", stageId: "daily", stageLabel: "日常照護" },
+  { id: "cat-daily-inspection", type: "daily-inspection", timeLabel: "日常照護", title: "貓砂盆清潔隊", stageId: "daily", stageLabel: "日常照護" },
   { id: "breed-challenge", type: "breed-challenge", timeLabel: "品種的考驗", title: "品種的考驗", stageId: "breed", stageLabel: "品種的考驗" },
   { id: "cat-busy-care", type: "scenario", timeLabel: "當生活發生變化", title: "臨時晚歸，誰來接手？", scenarioId: "cat-busy-care", stageId: "life-change", stageLabel: "生活變化" },
   { id: "cat-sick", type: "scenario", timeLabel: "生病與就醫", title: "生病與就醫", scenarioId: "cat-illness-vet", stageId: "life-change", stageLabel: "生活變化" },

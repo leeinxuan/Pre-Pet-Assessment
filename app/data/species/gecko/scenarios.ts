@@ -55,7 +55,7 @@ export const geckoLifeScenarios: Scenario[] = [
       knowledgeContent: [
         {
           type: "paragraph",
-          text: "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。"
+          text: "守宮對新環境的適應需要時間，**通常需要3天左右**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。"
         },
         {
           type: "paragraph",
@@ -69,8 +69,8 @@ export const geckoLifeScenarios: Scenario[] = [
     stage: "日常照護",
     stageId: "daily",
     timeLabel: "日常照護",
-    title: "{petName} 已經三天沒吃東西了",
-    description: "你每天傍晚放昆蟲進缸，但{petName}躲在暖側躲避屋完全不出來，昆蟲在缸裡爬了一晚最後死掉，牠一口都沒吃。這已經是第三天了。",
+    title: "{petName} 已經七天沒吃東西了",
+    description: "你每天傍晚用長夾將昆蟲放入缸中，但{petName}躲在熱區躲避屋完全不出來，牠一口都沒吃。這已經是第七天了。",
     questionText: "你應該怎麼做？（複選）",
     topic: "拒食觀察",
     reportSummary: "先確認溫度與適應／蛻皮狀態，不強迫餵食。",
@@ -83,7 +83,7 @@ export const geckoLifeScenarios: Scenario[] = [
       "force-feed", "switch-to-fruit"
     ],
     choices: [
-      correct("check-temperature", "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內", "溫度不足是守宮拒食的最常見原因之一。環境溫度偏低時，守宮的消化與食慾都會大幅下降，確認溫度是第一步。"), wrong("force-feed", "強迫將昆蟲夾到{petName}嘴邊，逼牠吃", "強迫餵食會造成壓力，讓守宮更難建立正常的進食行為。若牠真的不吃，應先排查環境因素，而不是強迫餵食。"), correct("check-adaption-or-shed", "評估是否仍在適應期或即將蛻皮", "接回初期拒食和脫皮前拒食都屬於正常生理行為。若皮膚開始變灰白，守宮正在準備蛻皮，蛻皮後通常會恢復食慾。"), wrong("switch-to-fruit", "把昆蟲換成水果，看看牠會不會喜歡", "守宮是肉食性動物，不吃植物性食物。改換食物種類不是解決拒食的方式，反而可能讓問題更複雜。")
+      correct("check-temperature", "確認溫度計讀數，確保熱區與冷區溫度在正常範圍內", "溫度不足是守宮拒食的最常見原因之一。環境溫度偏低時，守宮的消化與食慾都會大幅下降，確認溫度是第一步。"), wrong("force-feed", "強迫將昆蟲夾到{petName}嘴邊，逼牠吃", "強迫餵食會造成壓力，讓守宮更難建立正常的進食行為。若牠真的不吃，應先排查環境因素，而不是強迫餵食。"), correct("check-adaption-or-shed", "評估是否仍在適應期或即將蛻皮", "接回初期拒食和脫皮前拒食都屬於正常生理行為。若皮膚開始變灰白，守宮正在準備蛻皮，蛻皮後通常會恢復食慾。"), wrong("switch-to-fruit", "把昆蟲換成水果，看看牠會不會喜歡", "守宮是肉食性動物，不吃植物性食物。改換食物種類不是解決拒食的方式，反而可能讓問題更複雜。")
     ],
     correctSummary: ["守宮在適應期、蛻皮前、繁殖季或溫度不足時會正常拒食，應先排查這四個原因，超過14天仍未進食才需就醫，不可強迫餵食。"],
     completionFeedback: {
@@ -108,7 +108,7 @@ export const geckoLifeScenarios: Scenario[] = [
     stageId: "daily",
     timeLabel: "日常照護",
     title: "缸裡的加熱片是否夠用？",
-    description: "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現暖側底部才 24°C，涼側只有 19°C，都比建議溫度低不少。{petName}縮在暖側躲避屋裡完全沒動靜。",
+    description: "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現熱區底部才 24°C，冷區只有 19°C，都比建議溫度低不少。{petName}縮在熱區躲避屋裡完全沒動靜。",
     questionText: "你應該怎麼做？（複選）",
     topic: "低溫處理",
     reportSummary: "提升室溫並使用適當加熱設備，持續監控溫度。",
@@ -123,7 +123,7 @@ export const geckoLifeScenarios: Scenario[] = [
     choices: [
       correct("room-heating", "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升", "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。"), correct("add-heating-device", "再增加一片加熱片或使用爬蟲專用陶瓷燈泡加熱，同時監控溫度不超標", "在嚴冬或室溫偏低時，單片加熱片可能不夠用，增加輔助加熱設備是合理的做法，但務必搭配溫度計監控，避免過熱。"), wrong("cover-terrarium", "用棉被或厚布蓋住整個爬蟲缸保溫", "覆蓋整個缸體會阻礙通風，導致缸內濕度飆升、氣體無法流通，對守宮反而有害。保溫應透過適當的加熱設備，而非封閉缸體。"), wrong("wait-and-see", "先觀察幾天，看牠能不能自己撐過去", "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。")
     ],
-    correctSummary: ["守宮缸暖側應維持28–32°C、涼側22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"],
+    correctSummary: ["守宮缸熱區應維持28–32°C、冷區22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"],
     completionFeedback: {
       title: "做得很好！",
       encouragement: "你即時注意到溫度問題並採取了正確的行動，{petName}今晚能暖暖的了！",
@@ -131,7 +131,7 @@ export const geckoLifeScenarios: Scenario[] = [
       knowledgeContent: [
         {
           type: "paragraph",
-          text: "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**暖側底部應維持 28–32°C，涼側維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。"
+          text: "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**熱區底部應維持 28–32°C，冷區維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。"
         },
         {
           type: "paragraph",
@@ -314,7 +314,7 @@ export const geckoLifeScenarios: Scenario[] = [
         },
         {
           type: "paragraph",
-          text: "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每次餵食確實沾鈣粉是預防關鍵。"
+          text: "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每週 1–2 次餵食前確實沾鈣粉是預防關鍵。"
         },
         {
           type: "paragraph",
@@ -326,7 +326,7 @@ export const geckoLifeScenarios: Scenario[] = [
         },
         {
           type: "paragraph",
-          text: "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成無精卵，卵無法排出時需就醫。"
+          text: "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成未受精卵，卵無法排出時需就醫。"
         },
         {
           type: "paragraph",

@@ -28,19 +28,10 @@ export const geckoHazards: HazardItem[] = [
     image: geckoAssets.room.essentialOilDiffuser,
     placement: { x: 45, y: 56, width: 12, layer: 4 },
     mobilePlacement: { x: 73, y: 45, width: 16 },
-    danger: "精油揮發物對爬蟲類呼吸道有刺激性，長期暴露可能導致呼吸異常。",
-    handling: "使用時請關閉爬蟲缸所在空間，保持通風。",
+    danger: "精油揮發物對爬蟲類呼吸道有刺激性，長期暴露易影響呼吸道健康。",
+    handling: "使用精油時，請移至爬蟲缸所在空間以外，避免揮發物累積。",
   },
-  {
-    id: "loose-sand-substrate",
-    label: "細沙/爬蟲沙",
-    icon: "⚠",
-    image: geckoAssets.room.looseSandSubstrate,
-    placement: { x: 52, y: 75, width: 16, layer: 4 },
-    mobilePlacement: { x: 40, y: 76, width: 22 },
-    danger: "守宮覓食時會誤食鬆散底材，細沙積在腸道可能造成腸阻塞，嚴重時致命。",
-    handling: "請替換為安全底材（椰子纖維、紙巾或磁磚）。",
-  },
+
   {
     id: "openings",
     label: "牆縫/管道開口",
@@ -61,7 +52,7 @@ export const geckoRoomItems: RoomItem[] = [
   {
     id: "gecko-terrarium", label: "爬蟲專用玻璃缸", icon: "▣", image: geckoAssets.room.terrarium, sceneImage: geckoAssets.room.terrariumFront,
     placement: { x: 80, y: 43, width: 15, layer: 2 }, mobilePlacement: { x: 64, y: 44, width: 25 }, required: true, need: "安全", expenseId: "gecko-terrarium",
-    description: "建議至少 60×45×30 cm，附緊固式網蓋，防止逃脫。",
+    description: "選擇附緊固式網蓋的玻璃缸，確保頂部通風良好；缸體尺寸依守宮體型彈性選配。",
   },
   {
     id: "first-feeder-insects", label: "首批活體餌料昆蟲及飼育容器", icon: "◉", image: geckoAssets.room.feederInsects, sceneImage: geckoAssets.room.feederInsectsFront,
@@ -69,31 +60,36 @@ export const geckoRoomItems: RoomItem[] = [
     description: "守宮接回後第 3–7 天適應穩定再開始餵食；餌料昆蟲須先備好，存放於通氣飼育盒避免逃脫。",
   },
   {
-    id: "calcium-and-vitamin-supplement", label: "鈣粉與綜合維他命粉", icon: "✦", image: geckoAssets.room.calciumSupplement,
-    placement: { x: 45, y: 63, width: 6, layer: 5 }, mobilePlacement: { x: 10, y: 62, width: 12 }, required: true, need: "飲食", expenseId: "gecko-supplements-initial",
-    description: "餵食時沾裹昆蟲用；需備純鈣粉與含 D3 版本及綜合維他命粉，依週次輪替。",
+    id: "feeding-tongs", label: "餵食用長夾", icon: "✂", image: geckoAssets.room.calciumSupplement, // TODO: replace with feeding-tongs asset
+    placement: { x: 38, y: 63, width: 6, layer: 5 }, mobilePlacement: { x: 10, y: 72, width: 12 }, required: true, need: "飲食", expenseId: "gecko-feeding-tongs",
+    description: "夾取昆蟲餵食用，避免守宮誤咬人手。",
   },
   {
-    id: "safe-substrate", label: "安全底材（椰子纖維磚/紙巾/磁磚）", icon: "▤", image: geckoAssets.room.safeSubstrate,
+    id: "calcium-and-vitamin-supplement", label: "鈣粉與綜合維他命粉", icon: "✦", image: geckoAssets.room.calciumSupplement,
+    placement: { x: 45, y: 63, width: 6, layer: 5 }, mobilePlacement: { x: 10, y: 62, width: 12 }, required: true, need: "飲食", expenseId: "gecko-supplements-initial",
+    description: "依守宮種類選用適合的鈣粉。",
+  },
+  {
+    id: "safe-substrate", label: "安全底材", icon: "▤", image: geckoAssets.room.safeSubstrate,
     placement: { x: 50, y: 77, width: 50, layer: 1 }, mobilePlacement: { x: 50, y: 78, width: 65 }, required: true, need: "安全", expenseId: "gecko-substrate",
-    description: "鋪設全缸底部，不可使用細沙或鬆散顆粒底材，避免誤食造成腸阻塞。",
+    description: "鋪設全缸底部，選用椰子纖維磚、木屑、樹皮塊或赤玉土，滿足守宮挖掘天性；部分物種不建議使用細沙，以防誤食造成腸阻塞。",
   },
   {
     id: "heat-mat", label: "加熱片（爬蟲專用）", icon: "♨", image: geckoAssets.room.heatMat,
     placement: { x: 20, y: 72, width: 16, layer: 3 }, mobilePlacement: { x: 21, y: 73, width: 23 }, required: true, need: "安全", expenseId: "gecko-heat-mat",
-    description: "貼附缸底一側，建立暖側，另一側保持涼側，讓守宮自行選擇溫度。",
+    description: "貼附缸底一側，建立熱區，另一側保持冷區，讓守宮自行選擇溫度。",
   },
   {
-    id: "lighting-setup", label: "光源設備（UVB 燈 + 日夜節律燈）", icon: "☼", image: geckoAssets.room.lightingSetup, sceneImage: geckoAssets.room.lightingSetupOverlay,
+    id: "lighting-setup", label: "光源設備（UVB燈+日夜節律燈）", icon: "☼", image: geckoAssets.room.lightingSetup, sceneImage: geckoAssets.room.lightingSetupOverlay,
     // 黑底燈光圖以 screen 去背；位置與亮度均由物種設定調整，不攔截缸內互動。
     placement: { x: 70, y: 50, width: 84, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 69, y: 48, width: 82, transform: "translate(-50%, -50%)" }, sceneVisual: { mixBlendMode: "screen", opacity: 0.4, pointerEvents: "none" }, sceneClassName: "light-overlay", required: true, need: "安全", expenseId: "gecko-lighting-setup",
-    description: "提供低強度 UVB 有助 D3 合成與鈣質代謝；照明設備搭配定時器模擬 12 小時明／暗週期，維持正常活動節律，並定期更換燈管。",
+    description: "提供低強度UVB有助D3合成與鈣質代謝；照明設備搭配定時器模擬12小時明／暗週期，維持正常活動節律，並定期更換燈管。",
   },
   {
     id: "enrichment-decor", label: "環境豐富化物件", icon: "✦", image: geckoAssets.room.enrichmentDecor,
     // 一個用品、三個場景素材：每一張都可在此分別調整桌機／手機位置與圖層。
     placement: { x: 50, y: 50, width: 1, layer: 2 }, mobilePlacement: { x: 50, y: 50, width: 1 }, required: true, need: "活動", expenseId: "gecko-enrichment-decor",
-    description: "提供視覺遮蔽與活動刺激，有助降低守宮緊張壓力。可依預算選擇石板、沉木或人造植物搭配布置。",
+    description: "提供視覺遮蔽與活動刺激，有助降低守宮緊迫感。可依預算選擇石板、沉木或人造植物搭配布置。",
     sceneParts: [
       { id: "plant", image: geckoAssets.room.enrichmentDecorPlant, placement: { x: 23, y: 47, width: 35, layer: 2, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 30, y: 52, width: 21, transform: "translate(-50%, -50%)" } },
       { id: "stone", image: geckoAssets.room.enrichmentDecorStone, placement: { x: 80, y: 78, width: 20, layer: 4, transform: "translate(-50%, -50%)" }, mobilePlacement: { x: 74, y: 65, width: 18, transform: "translate(-50%, -50%)" } },
@@ -103,26 +99,26 @@ export const geckoRoomItems: RoomItem[] = [
   {
     id: "thermometer-hygrometer", label: "數位溫濕度計", icon: "◷", image: geckoAssets.room.thermometerHygrometer,
     placement: { x: 72, y: 25, width: 12, layer: 6 }, mobilePlacement: { x: 72, y: 25, width: 12 }, required: true, need: "安全", expenseId: "gecko-thermometer-2",
-    description: "至少兩個分別置於暖側與涼側，隨時確認溫度梯度是否正確，濕度維持 30–50%。",
+    description: "至少兩個分別置於熱區與冷區，隨時確認溫度梯度是否正確，濕度維持 30–50%。",
     sceneParts: [
       { id: "cool-side", image: geckoAssets.room.thermometerHygrometerCool, placement: { x: 22, y: 47, width: 22, layer: 6 }, mobilePlacement: { x: 18, y: 49, width: 25 } },
       { id: "warm-side", image: geckoAssets.room.thermometerHygrometerWarm, placement: { x: 90, y: 88, width: 23, layer: 6 }, mobilePlacement: { x: 90, y: 75, width: 25 } },
     ],
   },
   {
-    id: "warm-hide", label: "暖側躲避屋", icon: "⌂", image: geckoAssets.room.warmHide,
+    id: "warm-hide", label: "熱區躲避屋", icon: "⌂", image: geckoAssets.room.warmHide,
     placement: { x: 77, y: 60, width: 25, layer: 3 }, mobilePlacement: { x: 75, y: 55, width: 25 }, required: true, need: "休息", expenseId: "gecko-warm-hide",
-    description: "放置於加熱片正上方，讓守宮在需要溫暖時有隱蔽空間休息消化。",
-  },
-  {
-    id: "cool-hide", label: "涼側躲避屋", icon: "⌂", image: geckoAssets.room.coolHide,
-    placement: { x: 16, y: 70, width: 25, layer: 3 }, mobilePlacement: { x: 20, y: 61, width: 25 }, required: true, need: "休息", expenseId: "gecko-cool-hide",
-    description: "放置於缸內涼側，讓守宮在過熱時能快速退到陰涼處。",
+    description: "靠角落放置於熱區，讓守宮在需要溫暖時有隱蔽空間安心休息。",
   },
   {
     id: "moist-hide", label: "濕躲避屋", icon: "◒", image: geckoAssets.room.moistHide,
     placement: { x: 51, y: 58, width: 25, layer: 2 }, mobilePlacement: { x: 51, y: 56, width: 25 }, required: true, need: "休息", expenseId: "gecko-moist-hide",
-    description: "內部鋪濕潤椰子纖維或水苔，維持局部高濕度，協助守宮完整蛻皮，避免趾端殘皮。",
+    description: "置於中段或稍近冷區側，在頂部凹槽加水，讓多孔材質吸水維持內部濕度；協助守宮順利蛻皮，避免趾端殘皮。",
+  },
+  {
+    id: "cool-hide", label: "冷區躲避屋", icon: "⌂", image: geckoAssets.room.coolHide,
+    placement: { x: 16, y: 70, width: 25, layer: 3 }, mobilePlacement: { x: 20, y: 61, width: 25 }, required: false, need: "休息", expenseId: "gecko-cool-hide",
+    description: "靠角落放置於冷區，提供第二個隱蔽空間讓守宮自由調節體溫；非必須，但備有更理想。",
   },
   {
     id: "shallow-water-dish", label: "淺水碟", icon: "◡", image: geckoAssets.room.shallowWaterDish,
@@ -131,13 +127,14 @@ export const geckoRoomItems: RoomItem[] = [
   },
   {
     id: "calcium-dish", label: "補鈣碟", icon: "◌", image: geckoAssets.room.calciumDish,
-    placement: { x: 50, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 45, y: 66, width: 12 }, required: true, need: "飲食", expenseId: "gecko-calcium-dish",
-    description: "在缸內常備一小碟無 D3 鈣粉，讓守宮可依需求自行舔食補充。",
+    placement: { x: 50, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 45, y: 66, width: 12 }, required: false, need: "飲食", expenseId: "gecko-calcium-dish",
+    description: "補充鈣質最常見的做法是直接在餌料上撒粉；補鈣碟為選配，可在缸內備一小碟無 D3 鈣粉，讓守宮視需求自行舔食。",
   },
 ];
 
 export const geckoTrunkItems: TrunkItem[] = [
-  { id: "gecko-transport-box", label: "爬蟲專用運輸盒（附通氣孔）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "選用可遮光的小型塑膠盒或布袋，減少運輸途中的視覺刺激，讓守宮保持冷靜。", preparedLabel: "已準備", expenseIds: ["gecko-transport-box"], placement: { x: 48, y: 60, width: 20, layer: 5 } },
+  { id: "gecko-transport-box", label: "爬蟲專用運輸盒（附通氣孔）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "選用附通氣孔的小型不透明塑膠盒，盒底鋪一層毛巾或紙巾，避免碰撞並提供視覺遮蔽，降低守宮緊迫感。", preparedLabel: "已準備", expenseIds: ["gecko-transport-box"], placement: { x: 48, y: 60, width: 20, layer: 5 } },
+  { id: "gecko-soft-padding", label: "柔軟墊材（毛巾／擦手紙）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "在運輸盒底部鋪一層毛巾、擦手紙或紙墊料，提供防碰撞緩衝並遮蔽光線，有效降低守宮緊迫感。", preparedLabel: "已準備", expenseIds: ["gecko-soft-padding"], placement: { x: 30, y: 62, width: 14, layer: 4 } },
   { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 35, y: 65, width: 12, layer: 6 } },
 ];
 
@@ -164,9 +161,9 @@ export const geckoRoomFlow: RoomFlowConfig = {
   fenceItemId: "gecko-terrarium",
   mobileEntryHintPlacement: { x: 34, y: 44 },
   interiorItemId: "safe-substrate",
-  interiorRequiredItemIds: ["safe-substrate", "heat-mat", "lighting-setup", "enrichment-decor", "thermometer-hygrometer", "warm-hide", "cool-hide", "moist-hide", "shallow-water-dish", "calcium-dish"],
-  outsideItemIds: ["gecko-terrarium", "first-feeder-insects", "calcium-and-vitamin-supplement"],
-  entryRequiredItemIds: ["gecko-terrarium", "first-feeder-insects", "calcium-and-vitamin-supplement"],
+  interiorRequiredItemIds: ["safe-substrate", "heat-mat", "lighting-setup", "enrichment-decor", "thermometer-hygrometer", "warm-hide", "moist-hide", "shallow-water-dish"],
+  outsideItemIds: ["gecko-terrarium", "first-feeder-insects", "feeding-tongs", "calcium-and-vitamin-supplement"],
+  entryRequiredItemIds: ["gecko-terrarium", "first-feeder-insects", "feeding-tongs", "calcium-and-vitamin-supplement"],
   floorHotspot: { desktop: { x: 0, y: 0, width: 0, height: 0 }, mobile: { x: 0, y: 0, width: 0, height: 0 } },
   copy: {
     hazardInstruction: "在把{petName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。",

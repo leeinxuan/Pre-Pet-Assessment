@@ -28,7 +28,7 @@ export const hamsterLifeScenarios: Scenario[] = [
     stageTitle: "適應新家與安全感",
     timeLabel: "接回家",
     title: "第一天適應新家",
-    description: "等了這麼久，{petName} 終於到家了。你打開運輸容器，牠小心翼翼地探出頭，鼻子快速抽動嗅聞，然後一個箭步衝進了巢箱，縮在最深處，一動也不動。你看著牠，不確定是不是該做點什麼。",
+    description: "等了這麼久，{petName}終於到家了。你打開運輸容器，牠小心翼翼地探出頭，鼻子快速抽動嗅聞，然後一個箭步衝進了巢箱，縮在最深處，一動也不動。你看著牠，不確定是不是該做點什麼。",
     questionText: "你會怎麼做？",
     topic: "新環境安置",
     reportSummary: "讓倉鼠用自己的節奏探索新家，不強迫牠離開巢箱。",
@@ -44,7 +44,7 @@ export const hamsterLifeScenarios: Scenario[] = [
       ariaLabel: "倉鼠答對回饋影片"
     },
     choices: [
-      wrong("hamster-arrival-force", "把 {petName} 從巢箱裡拿出來，讓牠多接觸新環境", "躲藏是面對新環境的正常壓力反應，不是失敗。強迫出來只會增加緊迫；倉鼠需要自己決定何時探索。"),
+      wrong("hamster-arrival-force", "把 {petName} 從巢箱裡拿出來，讓牠多接觸新環境", "躲藏是面對新環境的正常壓力反應，不是對你佈置的環境感到不滿。強迫出來只會增加緊迫；倉鼠需要自己決定何時探索。"),
       correct("hamster-arrival-quiet", "保持安靜，讓牠自己慢慢適應", "對！讓{petName}用自己的節奏探索新家是建立信任的第一步。提供可隨時躲藏的巢穴，減少外界干擾。", [
         "hamster-arrival-checkup"
       ]),
@@ -54,7 +54,7 @@ export const hamsterLifeScenarios: Scenario[] = [
     correctSummary: ["倉鼠剛到家躲在巢箱是正常壓力反應，應保持安靜讓牠用自己的節奏探索新家，不可強迫拿出或大聲呼喚。"],
     completionFeedback: {
       title: "做得很好！",
-      encouragement: "**躲藏**是面對新環境的正常**壓力反應**，不是不友善，也不需要「做點什麼」來安慰",
+      encouragement: "**躲藏**是面對新環境的正常**壓力反應**，不是對你佈置的環境不滿意，也不需要做點什麼來安慰",
       knowledgeTitle: "倉鼠小知識",
       knowledgeContent: [
         {
@@ -69,8 +69,8 @@ export const hamsterLifeScenarios: Scenario[] = [
     stage: "日常照護",
     stageId: "daily",
     timeLabel: "日常照護",
-    title: "白天 {petName} 都不動，牠是生病了嗎？",
-    description: "你買了{petName}來之後，發現每次在白天去看牠，牠都縮在巢箱裡，幾乎一動也不動。明明前一天晚上你還聽到滾輪聲，但白天就是看不到牠活動。你開始擔心：牠是不是生病了？",
+    title: "白天{petName}都不動，牠是生病了嗎？",
+    description: "把{petName}帶回家安頓好後，發現每次在白天去看牠，牠都縮在巢箱裡，幾乎一動也不動。明明前一天晚上你還聽到滾輪聲，但白天就是看不到牠活動。你開始擔心：牠是不是生病了？",
     questionText: "你應該怎麼理解和應對這個情況？（複選）",
     topic: "夜行性與健康觀察",
     reportSummary: "尊重夜行性作息，晚間確認活動與進食跡象。",
@@ -100,7 +100,7 @@ export const hamsterLifeScenarios: Scenario[] = [
         },
         {
           type: "paragraph",
-          text: "飼主日常健康觀察的最佳時間是**傍晚或夜間**——觀察{petName}是否有在轉動滾輪、進食、整理毛髮。若連續幾天夜間都沒有活動跡象，加上食量明顯減少，才是需要關注的訊號。"
+          text: "飼主日常健康觀察的最佳時間是**傍晚或夜間**——觀察{petName}是否有在使用滾輪、進食、整理毛髮。若連續幾天夜間都沒有活動跡象，加上食量明顯減少，才是需要關注的訊號。"
         },
       ]
     }
@@ -110,8 +110,8 @@ export const hamsterLifeScenarios: Scenario[] = [
     stage: "日常照護",
     stageId: "daily",
     timeLabel: "日常照護",
-    title: "{petName} 食碗裡只剩堅果，其他的都不見了？",
-    description: "你每天固定量餵食，但發現 {petName} 的食碗裡每次都只剩下幾顆葵瓜子以外的食物全部不見了——牠似乎只吃特定食物，其他的全部消失了。你不確定是不是要換成牠喜歡的食物。",
+    title: "{petName}好像在挑食？",
+    description: "你每天固定量餵食，但食碗裡的穀類和壓縮飼料每次都原封不動，{petName} 似乎把喜歡的先挑走了，其他的就不理了。你不確定是不是該換成牠更喜歡的食物。",
     questionText: "下列哪些是正確的應對方式？（複選）",
     topic: "囤食與固定份量",
     reportSummary: "固定份量餵食，檢查巢穴囤食，不因食碗空了就持續補充。",
@@ -124,7 +124,7 @@ export const hamsterLifeScenarios: Scenario[] = [
       "hamster-food-change-nuts", "hamster-food-add-more"
     ],
     choices: [
-      wrong("hamster-food-change-nuts", "改成全部換成葵瓜子，因為{petName}最喜歡那個", "全面改成葵瓜子會讓{petName}的飲食嚴重不均衡；堅果類脂肪高，只吃堅果會造成肥胖和營養缺乏。繼續提供均衡的綜合飼料才正確。"),
+      wrong("hamster-food-change-nuts", "改成全部換成葵瓜子，因為{petName}最喜歡那個", "全面改成葵瓜子會讓{petName}的飲食嚴重不均衡；高油脂種子熱量高，過量攝取會造成肥胖和營養失衡。繼續提供均衡的綜合飼料才正確。"),
       correct("hamster-food-fixed-portion", "繼續每天固定量餵食，不額外補充被清空的食物", "對！倉鼠有囤食習性，食碗空了不代表吃完了——牠可能把食物塞進頰囊藏回巢穴。固定餵食量是避免挑食和過度囤積的關鍵。"),
       correct("hamster-food-check-hoard", "定期檢查巢穴，清除過多囤積的食物避免發霉", "倉鼠會大量囤食在巢穴中；新鮮食物或容易發霉的食材大量堆積可能有衛生問題，定期清理巢穴囤積物是必要的。"),
       wrong("hamster-food-add-more", "食碗空了就繼續補充，確保{petName}隨時有足夠的食物", "食碗空了不代表吃光了——可能是囤進巢穴了。持續補充反而讓牠囤積更多，也讓你無法掌握實際進食量。固定量才能觀察食量變化。"),
@@ -151,7 +151,7 @@ export const hamsterLifeScenarios: Scenario[] = [
     stage: "日常照護",
     stageId: "daily",
     timeLabel: "日常照護",
-    title: "{petName} 需要一個同伴嗎？",
+    title: "{petName}需要一個同伴嗎？",
     description: "你的朋友看到 {petName}，說：「只養一隻倉鼠不會很孤單嗎？要不要再領養一隻，讓牠們互相作伴？」你有點猶豫——{petName} 平時獨自在籠裡玩，真的沒問題嗎？",
     questionText: "你會怎麼做？",
     topic: "獨居與合籠風險",

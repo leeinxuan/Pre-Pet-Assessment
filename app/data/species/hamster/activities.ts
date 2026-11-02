@@ -7,14 +7,15 @@ export { hamsterReport } from "./report";
 
 /** docs/hamster-game-planning.md §5.3.2 的倉鼠清潔日常狀態機資料。 */
 export const hamsterCageCheck = {
+  title: "每日{petName}健康日記",
   sceneDescription: "今天早上，你走近 {petName} 的籠子，牠剛結束一夜的探索，正窩在熟悉的墊料裡休息。先花幾分鐘整理牠最常使用的角落和砂浴盆，讓牠醒來後有個乾淨舒適的小家吧。",
   intro: {
     eyebrow: "日常照護",
-    title: "早晨巡視——每天替 {petName} 確認一次",
+    title: "每日{petName}健康日記",
     paragraphs: [
-      "倉鼠是**夜行性動物**，**早晨**是一天一次確認 {petName} 一切安好的最佳時機。",
+      "倉鼠是**夜行性動物**，每天找個固定時間確認 {petName} 一切安好，是最重要的照護習慣。",
       "{petName} 有**固定的廁所角落**——**每天清**那個角落的髒墊料，是維持衛生最有效的方式。**砂浴盆**也要**定期篩除結塊**，讓牠隨時都能正常使用。",
-      "這兩件事，就是每天早晨為 {petName} 做的最重要的照顧。",
+      "這兩件事，就是每天為 {petName} 做的最重要的照顧。",
     ],
     startLabel: "開始今天的清潔 →",
     visualAssets: {
@@ -33,9 +34,9 @@ export const hamsterCageCheck = {
     },
     {
       id: "sift-sand",
-      label: "撈出砂浴盆雜質",
+      label: "撈出砂浴盆排泄物",
       prompt: "用漏勺篩掉 {petName} 在砂浴盆裡留下的糞便和結塊！",
-      completion: "細孔漏勺的孔洞比浴沙顆粒小，可以讓細沙通過、只留下糞便和結塊。烘焙用的小型茶葉濾網就很好用。",
+      completion: "可以挑選市售的倉鼠專用砂鏟，篩孔細密、砂粒不易漏出，最適合清理浴砂中的排泄物。",
     },
     {
       id: "settle-sand",
@@ -62,11 +63,11 @@ export const hamsterCageCheck = {
         targetPrompt: "點擊髒污，完成清理。",
       },
       sieve: {
-        selectPrompt: "點擊細孔漏勺，準備篩除雜質。",
-        targetPrompt: "點擊砂盆中的雜質，將它篩出。",
+        selectPrompt: "點擊細孔漏勺，準備篩除排洩物。",
+        targetPrompt: "點擊砂盆中的排泄物，將它篩出。",
       },
       shake: {
-        prompt: "輕點砂盆，讓墊材鬆動並找出雜質。",
+        prompt: "輕點砂盆，讓墊材鬆動並找出排泄物。",
         progressLabel: "搖晃進度",
         progressIncrement: 25,
       },
@@ -77,12 +78,32 @@ export const hamsterCageCheck = {
    * 這裡只描述清潔畫面要顯示的已布置用品，不會影響飼養前準備的物品欄或房間配置。
    */
   preparedCageItems: [
-    { id: "exercise-wheel", image: hamsterAssets.room.exerciseWheel, placement: { x: 57, y: 40, width: 35, layer: 3 } },
-    { id: "water-bottle", image: hamsterAssets.room.waterBottle, placement: { x: 11, y: 31, width: 23, layer: 3 } },
-    { id: "food-bowl", image: hamsterAssets.room.foodBowl, placement: { x: 16, y: 70, width: 20, layer: 4 } },
-    { id: "hideout", image: hamsterAssets.room.hideout, placement: { x: 83, y: 70, width: 21, layer: 3 } },
-    { id: "sand-bath-box", image: hamsterAssets.room.sandBathBox, placement: { x: 30, y: 55, width: 25, layer: 3 } },
+    { id: "exercise-wheel", image: hamsterAssets.room.exerciseWheel, placement: { x: 57, y: 40, width: 35, layer: 3 }, mobilePlacement: { x:25, y: 42, width: 60 }, mobileVisible: true },
+    { id: "water-bottle", image: hamsterAssets.room.waterBottle, placement: { x: 11, y: 31, width: 23, layer: 3 }, mobilePlacement: { x: 11, y: 31, width: 23 }, mobileVisible: false },
+    { id: "food-bowl", image: hamsterAssets.room.foodBowl, placement: { x: 16, y: 70, width: 20, layer: 4 }, mobilePlacement: { x: 16, y: 70, width: 20 }, mobileVisible: false },
+    { id: "hideout", image: hamsterAssets.room.hideout, placement: { x: 83, y: 72, width: 20, layer: 3 }, mobilePlacement: { x: 72, y: 75, width: 30 }, mobileVisible: true },
+    { id: "sand-bath-box", image: hamsterAssets.room.sandBathBox, placement: { x: 30, y: 55, width: 25, layer: 3 }, mobilePlacement: { x: 30, y: 55, width: 25 }, mobileVisible: false },
   ] as const,
+  /** 桌機版髒墊料與乾淨墊料的位置及大小；top/right/width 為場景百分比，最小／最大寬度為 px。 */
+  desktopBeddingPlacement: {
+    dirtyBedding: { top: 48, right: 12, width: 18, minWidth: 94, maxWidth: 176 },
+    cleanBedding: { top: 48, right: 12, width: 18, minWidth: 94, maxWidth: 176 },
+  },
+  /** 手機版清潔場景的獨立座標與尺寸，單位為場景百分比；不影響桌機拖拉位置。 */
+  mobileScenePlacement: {
+    // 髒墊料與乾淨墊料可分別調整：left/top 是場景左上角起算的百分比，width 是寬度百分比。
+    dirtyBedding: { left: 50, top: 50, width: 25 },
+    cleanBedding: { left: 50, top: 50, width: 25 },
+    scoop: { bottom: 5, left: 2, width: 29 },
+    beddingPackage: { bottom: 5, left: 2, width: 29 },
+    sieve: { bottom: 7, left: 2, width: 27 },
+    sandBath: { width: 96, maxHeight: 80, offsetX: 0, offsetY: 0 },
+    debris: [
+      { left: 31, top: 42, width: 16 },
+      { left: 48, top: 55, width: 16 },
+      { left: 62, top: 42, width: 16 },
+    ],
+  },
   completion: {
     title: "清潔完成！{petName} 的小小家整理好了",
     subtitle: "你清理了廁所角落的髒墊料，也篩好了砂浴盆。",

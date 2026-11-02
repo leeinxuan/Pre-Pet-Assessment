@@ -12,6 +12,7 @@ export const rabbitDailyCheckConfig = {
 const rabbitGroomingAsset = (fileName: string) => `/assets/rabbit/weekly-grooming/${fileName}`;
 
 export const rabbitGroomingConfig = {
+  title: "{petName} 的美容時間到了！",
   initialState: "part-1-step-1-head-ears",
   intro: {
     eyebrow: "日常照護",

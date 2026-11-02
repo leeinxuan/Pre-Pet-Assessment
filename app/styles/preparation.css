@@ -16,6 +16,13 @@
 .room-phase-progress li.done { border-color: #90b18c; background: #f0f8ef; color: #4e7653; }
 .room-phase-progress li.locked { opacity: .65; }
 .room-supply-rows { display: flex; flex-direction: column; gap: 8px; min-height: 394px; }
+.room-preparation-desktop .room-supply-pagination { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 14px; color: var(--ink); font-size: 13px; font-weight: 800; }
+.room-preparation-desktop .room-supply-pagination button { display: grid; width: 36px; height: 36px; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--ink); cursor: pointer; }
+.room-preparation-desktop .room-supply-pagination button:hover:not(:disabled) { border-color: var(--gold-dark); color: var(--gold-dark); }
+.room-preparation-desktop .room-supply-pagination button:focus-visible { outline: 2px solid var(--gold-dark); outline-offset: 2px; }
+.room-preparation-desktop .room-supply-pagination button:disabled { opacity: .4; cursor: not-allowed; }
+.room-preparation-desktop .room-supply-pagination svg { width: 17px; height: 17px; }
+.room-preparation-desktop .room-supply-pagination span { min-width: 42px; text-align: center; }
 .room-supply-row { display: flex; flex: 0 0 auto; min-height: 126px; justify-content: flex-start; align-items: stretch; gap: 8px; }
 .room-supply-row--2 { width: 100%; align-self: stretch; gap: 8px; }
 .supply-slot { min-height: 126px; display: flex; align-items: center; justify-content: center; }
@@ -164,6 +171,15 @@
 @media (max-width: 1000px) {
   .simplified-room-layout, .departure-layout { grid-template-columns: 1fr; }
   .departure-car { justify-self: center; width: min(100%, 650px); }
+}
+
+/* 平板先呈現互動場景；1024px 橫向平板也避免桌機雙欄把場景壓窄。 */
+@media (min-width: 721px) and (max-width: 1180px) {
+  .simplified-room-layout,
+  .departure-layout { grid-template-columns: 1fr; }
+  .simplified-room-layout > .room-interaction-column,
+  .departure-layout > .departure-car { order: -1; }
+  .departure-car { justify-self: center; max-width: 560px; }
 }
 
 @media (max-width: 720px) {
