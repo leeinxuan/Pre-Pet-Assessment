@@ -128,7 +128,6 @@
   .stage-layout .busy-care-choice-list,
   .stage-layout .daily-behavior-choices .choice-grid,
   .stage-layout .breed-challenge-options > div:not(.mobile-choice-context),
-  .stage-layout .correct-feedback-copy,
   .stage-layout .video-scenario-retry,
   .stage-layout .daily-behavior-retry,
   .stage-layout .busy-care-members,
@@ -141,9 +140,22 @@
    * BottomBleedColor 會辨識同一個面板並略過 document touchmove 的阻擋。
    */
   .stage-layout .correct-feedback-copy {
+    padding-bottom: calc(28px + env(safe-area-inset-bottom)) !important;
     overflow-y: auto !important;
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
+  }
+  /*
+   * 即使內容剛好放得下，也在按鈕後方建立真正屬於面板內容的透明尾端空間。
+   * 不能使用最後一個 flex item 的 margin：iOS Safari 不一定會將它算進 scrollHeight，
+   * 導致短頁看似無須捲動，實際上按鈕卻被浮動工具列蓋住。
+   */
+  .stage-layout .correct-feedback-copy::after {
+    content: "";
+    display: block;
+    flex: 0 0 max(24px, calc(var(--bottom-bleed) - 20px));
+    width: 100%;
+    pointer-events: none;
   }
   /*
    * 過場狀態切換時，Safari 可能暫時讓舊的影片節點留在 DOM；若祖先仍是
