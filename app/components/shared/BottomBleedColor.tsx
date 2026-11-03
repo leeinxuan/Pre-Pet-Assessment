@@ -45,8 +45,13 @@ export default function BottomBleedColor() {
       const color = media.matches ? sampleBottomColor() : "";
       if (color === last) return;
       last = color;
-      if (color) root.style.setProperty("background-color", color);
-      else root.style.removeProperty("background-color");
+      if (color) {
+        root.style.setProperty("background-color", color);
+        root.style.setProperty("--bottom-bleed-color", color);
+      } else {
+        root.style.removeProperty("background-color");
+        root.style.removeProperty("--bottom-bleed-color");
+      }
     };
     const schedule = () => {
       if (!frame) frame = window.setTimeout(apply, 16);
@@ -68,6 +73,7 @@ export default function BottomBleedColor() {
       document.removeEventListener("transitionend", schedule, true);
       if (frame) window.clearTimeout(frame);
       root.style.removeProperty("background-color");
+      root.style.removeProperty("--bottom-bleed-color");
     };
   }, []);
 
