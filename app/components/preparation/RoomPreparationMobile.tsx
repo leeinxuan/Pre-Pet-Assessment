@@ -6,6 +6,8 @@ import { createPortal } from "react-dom";
 import type { HazardItem, RoomItem } from "../../game-types";
 import { renderKnowledgeText } from "../life/activities/activity-ui";
 import { MobileStageIntro } from "../shared/MobileStageIntro";
+import { useDialogFocus } from "../shared/useDialogFocus";
+import { handleTabListKeyDown } from "../shared/tabKeyboardNavigation";
 
 type RoomPreparationMobileProps = {
   petName: string;
@@ -83,6 +85,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   const [started, setStarted] = useState(false);
   const [chosenTab, setChosenTab] = useState<"hazards" | "items" | null>(null);
   const [tabletPortrait, setTabletPortrait] = useState(false);
+  const [sheetViewport, setSheetViewport] = useState(false);
   const [supplyPage, setSupplyPage] = useState(0);
   // The supplies are intentionally unavailable until every hazard is secured.
   // Keep the rendered panel on hazards as well, so an old tab selection cannot
@@ -90,6 +93,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   const tab = hazardsCleared ? (chosenTab ?? "items") : "hazards";
   const activeInfo = activeHazard ?? activeItem;
   const touchStart = useRef<number | null>(null);
+  const dialogRef = useRef<HTMLElement>(null);
   const pageCount = Math.ceil(items.length / 8);
   const currentPage = Math.min(supplyPage, Math.max(0, pageCount - 1));
   const visibleItems = tabletPortrait ? items.slice(currentPage * 8, (currentPage + 1) * 8) : items;
@@ -97,6 +101,14 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   useEffect(() => {
     const query = window.matchMedia("(min-width: 721px) and (max-width: 1024px) and (orientation: portrait)");
     const update = () => setTabletPortrait(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 720px), (min-width: 721px) and (max-width: 1024px) and (orientation: portrait)");
+    const update = () => setSheetViewport(query.matches);
     update();
     query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
@@ -114,17 +126,18 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
     onCloseInfo();
   }, [onCloseInfo]);
 
-  useEffect(() => {
-    if (!activeInfo || !window.matchMedia("(max-width: 720px), (min-width: 721px) and (max-width: 1024px) and (orientation: portrait)").matches) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const handleEscape = (event: KeyboardEvent) => { if (event.key === "Escape") closeInfo(); };
-    window.addEventListener("keydown", handleEscape);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, [activeInfo, closeInfo]);
+  const getInfoReturnFocus = useCallback(() => {
+    if (!activeInfo) return null;
+    return Array.from(document.querySelectorAll<HTMLElement>("[data-room-info-id]"))
+      .find((element) => element.dataset.roomInfoId === activeInfo.id && element.getClientRects().length > 0) ?? null;
+  }, [activeInfo]);
+
+  useDialogFocus({
+    isOpen: Boolean(activeInfo && started && sheetViewport),
+    dialogRef,
+    onClose: closeInfo,
+    getReturnFocus: getInfoReturnFocus,
+  });
 
   return <div className={`room-preparation-mobile${started ? " is-started" : ""}`}>
     {!started ? <MobileStageIntro id="room-mobile-intro-title" className="room-mobile-intro" icon={<RoomIntroIcon />} title={`先替 ${petName} 布置安全的生活空間`} description={`在迎接 ${petName} 前，先收好生活空間中的危險物品，再準備好牠每天需要的用品。`} actionLabel="開始整理空間" onStart={() => setStarted(true)} /> : <>
@@ -132,18 +145,18 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
         {scene()}
         {tab === "items" && selectedItems.length === 0 && <p className="room-mobile-supply-cue">點擊用品，放入房間</p>}
       </div>
-      <div className="room-mobile-tabs" role="tablist" aria-label="房間佈置階段">
-        <button type="button" role="tab" aria-selected={tab === "hazards"} className={tab === "hazards" ? "is-active" : ""} onClick={() => setChosenTab("hazards")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{hazardIcon}</span>危險物品</span><span>{securedHazards.filter((id) => hazards.some((item) => item.id === id)).length} / {hazards.length}</span></button>
-        <button type="button" role="tab" aria-selected={tab === "items"} className={tab === "items" ? "is-active" : ""} onClick={() => setChosenTab("items")} disabled={!hazardsCleared} aria-label={hazardsCleared ? "用品準備箱" : "請先收好所有危險物品才能使用用品準備箱"}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{supplyIcon}</span>用品準備箱</span><span>{selectedItems.filter((id) => items.some((item) => item.id === id)).length} / {items.length}</span></button>
+      <div className="room-mobile-tabs" role="tablist" aria-label="房間佈置階段" onKeyDown={handleTabListKeyDown}>
+        <button id="room-tab-hazards" type="button" role="tab" aria-selected={tab === "hazards"} aria-controls="room-tabpanel" tabIndex={tab === "hazards" ? 0 : -1} className={tab === "hazards" ? "is-active" : ""} onClick={() => setChosenTab("hazards")}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{hazardIcon}</span>危險物品</span><span>{securedHazards.filter((id) => hazards.some((item) => item.id === id)).length} / {hazards.length}</span></button>
+        <button id="room-tab-items" type="button" role="tab" aria-selected={tab === "items"} aria-controls="room-tabpanel" tabIndex={tab === "items" ? 0 : -1} className={tab === "items" ? "is-active" : ""} onClick={() => setChosenTab("items")} disabled={!hazardsCleared} aria-label={hazardsCleared ? "用品準備箱" : "請先收好所有危險物品才能使用用品準備箱"}><span className="room-mobile-tab-title"><span className="room-mobile-tab-icon" aria-hidden="true">{supplyIcon}</span>用品準備箱</span><span>{selectedItems.filter((id) => items.some((item) => item.id === id)).length} / {items.length}</span></button>
       </div>
-      <section className="room-mobile-inventory" role="tabpanel" aria-label={tab === "hazards" ? "已收好的危險物品" : "準備用品"}>
+      <section id="room-tabpanel" className="room-mobile-inventory" role="tabpanel" aria-labelledby={tab === "hazards" ? "room-tab-hazards" : "room-tab-items"}>
         {tab === "hazards" ? securedHazards.filter((id) => hazards.some((item) => item.id === id)).length === 0
           ? <div className="room-mobile-empty"><PointingHandIcon /><p>點擊場景中的危險物品收起</p></div>
-          : <div className="room-mobile-grid">{securedHazards.map((id) => hazards.find((item) => item.id === id)).filter((item): item is HazardItem => Boolean(item)).map((item) => <button type="button" key={item.id} className="room-mobile-tile room-mobile-hazard-tile" onClick={() => onSelectHazard(item.id)} aria-label={`${item.label}已收好，查看說明`}><HazardThumbnail hazard={item} background={hazardBackground} backgroundPosition={hazardBackgroundPosition} /><span className="room-mobile-tile-label">{item.label}</span><InfoBadge /></button>)}</div>
+          : <div className="room-mobile-grid">{securedHazards.map((id) => hazards.find((item) => item.id === id)).filter((item): item is HazardItem => Boolean(item)).map((item) => <button type="button" key={item.id} data-room-info-id={item.id} className="room-mobile-tile room-mobile-hazard-tile" onClick={() => onSelectHazard(item.id)} aria-label={`${item.label}已收好，查看說明`}><HazardThumbnail hazard={item} background={hazardBackground} backgroundPosition={hazardBackgroundPosition} /><span className="room-mobile-tile-label">{item.label}</span><InfoBadge /></button>)}</div>
           : <div className="room-mobile-grid">{visibleItems.map((item) => {
             const placed = selectedItems.includes(item.id);
             const locked = !placed && lockedItemIds.includes(item.id);
-            return <button type="button" key={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}`} onClick={() => handleSupplyClick(item.id, placed)} disabled={!placed && (!hazardsCleared || locked)} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
+            return <button type="button" key={item.id} data-room-info-id={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}`} onClick={() => handleSupplyClick(item.id, placed)} disabled={!placed && (!hazardsCleared || locked)} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
               <ItemThumbnail image={item.image} label={item.label} /><span className="room-mobile-tile-label">{item.label}</span>
               {!locked && <InfoBadge />}
               {placed && <span className="room-mobile-supply-check" aria-hidden="true"><CheckIcon /></span>}
@@ -159,7 +172,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
       {roomComplete && <div className="room-mobile-footer"><button type="button" className="primary room-mobile-complete" onClick={onComplete}>完成房間檢查，準備出發 <span aria-hidden="true">→</span></button></div>}
     </>}
     {activeInfo && started && typeof document !== "undefined" && createPortal(<div className="room-mobile-sheet-overlay" onClick={closeInfo}>
-      <section className="room-mobile-sheet" role="dialog" aria-modal="true" aria-label={`${activeInfo.label}說明`} onClick={(event) => event.stopPropagation()} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientY ?? null; }} onTouchEnd={(event) => { if (touchStart.current !== null && event.currentTarget.scrollTop <= 0 && (event.changedTouches[0]?.clientY ?? 0) - touchStart.current > 70) closeInfo(); touchStart.current = null; }}>
+      <section ref={dialogRef} className="room-mobile-sheet" role="dialog" aria-modal="true" aria-label={`${activeInfo.label}說明`} tabIndex={-1} onClick={(event) => event.stopPropagation()} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientY ?? null; }} onTouchEnd={(event) => { if (touchStart.current !== null && event.currentTarget.scrollTop <= 0 && (event.changedTouches[0]?.clientY ?? 0) - touchStart.current > 70) closeInfo(); touchStart.current = null; }}>
         <span className="room-mobile-sheet-handle" aria-hidden="true" />
         <button type="button" className="room-mobile-sheet-close" onClick={closeInfo} aria-label="關閉說明">×</button>
         <header>{activeHazard ? <HazardThumbnail hazard={activeHazard} background={hazardBackground} backgroundPosition={hazardBackgroundPosition} /> : <ItemThumbnail image={activeInfo.image} label={activeInfo.label} />}<div><h2>{activeInfo.label}</h2>{activeItem && <p className="room-mobile-price">{itemPrice(activeItem)}</p>}</div></header>

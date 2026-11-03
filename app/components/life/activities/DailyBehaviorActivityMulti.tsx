@@ -74,6 +74,12 @@ export function DailyBehaviorActivityMulti({
   const behaviorVideoAriaLabel = scenarioSceneMedia?.type === "video"
     ? scenarioSceneMedia.ariaLabel
     : presentation.sceneVideo?.ariaLabel ?? "日常行為照顧影片";
+  const behaviorVideoTextAlternative = scenarioSceneMedia?.type === "video"
+    ? scenarioSceneMedia.textAlternative
+    : presentation.sceneVideo?.textAlternative;
+  const behaviorVideoCaptions = scenarioSceneMedia?.type === "video"
+    ? scenarioSceneMedia
+    : presentation.sceneVideo;
   const feedbackMedia = getAlternatingCorrectFeedbackMedia(presentation, currentIndex, scenario?.correctFeedbackMedia);
   const correctFeedbackVideo = feedbackMedia.type === "video" ? feedbackMedia.src : undefined;
   const nextBehaviorScenario = scenarios[currentIndex + 1];
@@ -216,6 +222,9 @@ export function DailyBehaviorActivityMulti({
             src={behaviorVideoSource}
             autoPlayId={`${species}:${scenario.id}:scene`}
             ariaLabel={behaviorVideoAriaLabel}
+            textAlternative={behaviorVideoTextAlternative ?? scenario.description}
+            captionsSrc={behaviorVideoCaptions?.captionsSrc}
+            captionsLabel={behaviorVideoCaptions?.captionsLabel}
             onError={() => setVideoFailed(true)}
           />
         ) : (

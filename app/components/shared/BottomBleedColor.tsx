@@ -57,9 +57,21 @@ export default function BottomBleedColor() {
     };
     // 鎖定頁（touch-action: none）不允許整頁被捲動：延伸區塊讓文件變長，iOS 仍可能把它捲動（例如 scrollIntoView），
     // 一旦偏離 0 就拉回，避免底部空白越捲越高。
+    const isPageLocked = () => getComputedStyle(root).getPropertyValue("--page-lock").trim() === "1";
+    // 鎖定頁：手指若不在「可捲動的內部清單」上，就不讓整頁被拖動。
+    const onTouchMove = (event: TouchEvent) => {
+      if (!media.matches || event.touches.length > 1 || !isPageLocked()) return;
+      let el = event.target instanceof Element ? event.target : null;
+      while (el && el !== document.body && el !== root) {
+        const style = getComputedStyle(el);
+        if ((style.overflowY === "auto" || style.overflowY === "scroll") && el.scrollHeight > el.clientHeight + 1) return;
+        el = el.parentElement;
+      }
+      if (event.cancelable) event.preventDefault();
+    };
     const keepLocked = () => {
       if (!media.matches || window.scrollY === 0) return;
-      if (getComputedStyle(root).touchAction !== "none") return;
+      if (!isPageLocked()) return;
       window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
     };
     const onScroll = () => {
@@ -74,6 +86,7 @@ export default function BottomBleedColor() {
     observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["class", "style", "hidden"] });
     window.addEventListener("resize", schedule);
     window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
     media.addEventListener("change", schedule);
     document.addEventListener("transitionend", schedule, true);
     schedule();
@@ -82,6 +95,7 @@ export default function BottomBleedColor() {
       observer.disconnect();
       window.removeEventListener("resize", schedule);
       window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("touchmove", onTouchMove);
       media.removeEventListener("change", schedule);
       document.removeEventListener("transitionend", schedule, true);
       if (frame) window.clearTimeout(frame);

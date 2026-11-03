@@ -20,7 +20,7 @@
 .profile-panel input, .profile-panel select, .profile-panel textarea { width: 100%; min-height: 46px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 13px; background: #fffdf8; color: var(--ink); }
 .profile-panel textarea { min-height: 96px; resize: vertical; }
 .supplement-choice, .housing-options button { min-height: 48px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 13px; background: #fffdf8; color: var(--ink); font: inherit; font-weight: 850; text-align: left; cursor: pointer; }
-.supplement-choice.selected, .housing-options button.selected { border-color: var(--gold); background: #fff3cb; box-shadow: inset 4px 0 0 var(--gold); }
+.supplement-choice.selected, .housing-options button.selected { border-color: var(--gold-dark); background: #fff3cb; box-shadow: inset 4px 0 0 var(--gold-dark); }
 .supplement-followup, .housemate-entry-row, .pet-experience-block { display: grid; gap: 12px; margin-top: 16px; }
 .supplement-checkbox { display: flex; align-items: center; gap: 8px; font-weight: 800; }.supplement-checkbox input { width: 18px; min-height: 18px; }
 .home-space-dropzone { min-height: 170px; display: grid; place-items: center; gap: 8px; padding: 24px; border: 1px dashed #b9ab93; border-radius: 18px; background: #fffaf0; color: var(--muted); text-align: center; cursor: pointer; }
@@ -1076,7 +1076,7 @@
 .care-commitment { margin-top: 26px; padding: 24px; border: 1px solid var(--line); border-radius: 22px; background: var(--cream); }
 .care-commitment h2 { margin: 0 0 14px; font-size: 24px; }
 .care-commitment label { display: grid; grid-template-columns: 24px 1fr; gap: 12px; align-items: start; font-weight: 800; line-height: 1.8; }
-.care-commitment input { width: 20px; height: 20px; margin-top: 4px; accent-color: var(--gold); }
+.care-commitment input { width: 20px; height: 20px; margin-top: 4px; accent-color: var(--gold-dark); }
 .report-level { display: grid; grid-template-columns: auto 1fr; gap: 3px 16px; align-items: center; margin-bottom: 20px; padding: 20px 22px; border-radius: 18px; background: var(--ink); color: white; }
 .report-level span { grid-row: span 2; color: #d8cfbf; font-size: 12px; }
 .report-level b { font-size: 22px; }

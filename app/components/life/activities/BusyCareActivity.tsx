@@ -172,7 +172,7 @@ export function BusyCareActivity({
           {presentation.sceneMedia.type === "placeholder" ? (
             <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} />
           ) : presentation.sceneMedia.type === "video" && !sceneVideoFailed ? (
-            <VideoWithToggle className="busy-care-room-video" src={presentation.sceneMedia.src} autoPlayId={`${species}:${scenario.id}:scene`} ariaLabel={presentation.sceneMedia.ariaLabel} onError={() => setSceneVideoFailed(true)} />
+            <VideoWithToggle className="busy-care-room-video" src={presentation.sceneMedia.src} autoPlayId={`${species}:${scenario.id}:scene`} ariaLabel={presentation.sceneMedia.ariaLabel} textAlternative={presentation.sceneMedia.textAlternative ?? scenario.description} captionsSrc={presentation.sceneMedia.captionsSrc} captionsLabel={presentation.sceneMedia.captionsLabel} onError={() => setSceneVideoFailed(true)} />
           ) : (
             (() => {
               const imageScene: BusyCareImageScene = presentation.sceneMedia.type === "video" ? presentation.sceneMedia.fallback : presentation.sceneMedia;

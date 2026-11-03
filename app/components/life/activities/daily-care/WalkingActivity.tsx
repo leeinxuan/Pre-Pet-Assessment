@@ -7,6 +7,7 @@ import { walkingActivityConfig, walkingLawCopy, walkingPreloadImages, walkingPre
 import type { LifeActivityState } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
+import { handleTabListKeyDown } from "../../../shared/tabKeyboardNavigation";
 import { renderKnowledgeText, withPetName } from "../activity-ui";
 import { useTapSequence } from "../useTapSequence";
 
@@ -466,11 +467,11 @@ export function WalkingActivity({
           <section className="walking-safety-choice" aria-labelledby="walking-safety-title">
             <h2 id="walking-safety-title">{copy.safetyQuestion}</h2>
             {isMobileWalkingLayout ? <>
-              <div className="walking-safety-tabs" role="tablist" aria-label={copy.safetyQuestion}>
-                <button type="button" role="tab" aria-selected={mobileSafetyChoice === "leash"} aria-controls="walking-safety-preview" className={mobileSafetyChoice === "leash" ? "is-selected" : ""} onClick={() => setMobileSafetyChoice("leash")}>{copy.choices.leash.title}</button>
-                <button type="button" role="tab" aria-selected={mobileSafetyChoice === "offLeash"} aria-controls="walking-safety-preview" className={mobileSafetyChoice === "offLeash" ? "is-selected" : ""} onClick={() => setMobileSafetyChoice("offLeash")}>{copy.choices.offLeash.title}</button>
+              <div className="walking-safety-tabs" role="tablist" aria-label={copy.safetyQuestion} onKeyDown={handleTabListKeyDown}>
+                <button id="walking-safety-tab-leash" type="button" role="tab" aria-selected={mobileSafetyChoice === "leash"} aria-controls="walking-safety-preview" tabIndex={mobileSafetyChoice === "leash" || !mobileSafetyChoice ? 0 : -1} className={mobileSafetyChoice === "leash" ? "is-selected" : ""} onClick={() => setMobileSafetyChoice("leash")}>{copy.choices.leash.title}</button>
+                <button id="walking-safety-tab-off-leash" type="button" role="tab" aria-selected={mobileSafetyChoice === "offLeash"} aria-controls="walking-safety-preview" tabIndex={mobileSafetyChoice === "offLeash" ? 0 : -1} className={mobileSafetyChoice === "offLeash" ? "is-selected" : ""} onClick={() => setMobileSafetyChoice("offLeash")}>{copy.choices.offLeash.title}</button>
               </div>
-              <div className="walking-safety-preview" id="walking-safety-preview" role="tabpanel" hidden={!mobileSafetyChoice}>
+              <div className="walking-safety-preview" id="walking-safety-preview" role="tabpanel" aria-labelledby={mobileSafetyChoice === "offLeash" ? "walking-safety-tab-off-leash" : "walking-safety-tab-leash"} hidden={!mobileSafetyChoice}>
                 {mobileSafetyChoice && <img src={mobileSafetyChoice === "leash" ? assets.leashChoice : assets.offLeashChoice} alt={mobileSafetyChoice === "leash" ? copy.choices.leash.title : copy.choices.offLeash.title} />}
               </div>
             </> : <div className="walking-safety-grid">

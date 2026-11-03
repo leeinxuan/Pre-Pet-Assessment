@@ -14,21 +14,29 @@ export function useDialogFocus({
   isOpen,
   dialogRef,
   onClose,
+  getReturnFocus,
 }: {
   isOpen: boolean;
   dialogRef: RefObject<HTMLElement | null>;
   onClose: () => void;
+  getReturnFocus?: () => HTMLElement | null;
 }) {
   const onCloseRef = useRef(onClose);
+  const getReturnFocusRef = useRef(getReturnFocus);
 
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
 
   useEffect(() => {
+    getReturnFocusRef.current = getReturnFocus;
+  }, [getReturnFocus]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const resolveReturnFocus = getReturnFocusRef.current;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -67,7 +75,18 @@ export function useDialogFocus({
       window.clearTimeout(timer);
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
-      previouslyFocused?.focus();
+      // Some interactions replace their opener while the dialog is open (for
+      // example, a room hazard becomes an "already secured" review button).
+      // Let those dialogs identify the equivalent control instead of dropping
+      // keyboard focus back onto <body>.
+      window.setTimeout(() => {
+        const returnTarget = resolveReturnFocus?.();
+        if (returnTarget?.isConnected) {
+          returnTarget.focus();
+        } else if (previouslyFocused?.isConnected) {
+          previouslyFocused.focus();
+        }
+      }, 0);
     };
   }, [dialogRef, isOpen]);
 }

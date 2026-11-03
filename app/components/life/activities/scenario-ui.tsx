@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Scenario artwork and video fallbacks intentionally preserve the existing native media markup. */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { money, getExpenseForSpecies } from "../../../data/shared/expenses";
 import { getSpeciesConfig } from "../../../data/species";
@@ -308,6 +308,9 @@ export function VideoWithToggle({
   autoPlay = true,
   autoPlayId,
   ariaLabel,
+  textAlternative,
+  captionsSrc,
+  captionsLabel = "繁體中文字幕",
   onError,
   onEnded,
 }: {
@@ -318,10 +321,14 @@ export function VideoWithToggle({
   /** 題目識別值存在時，同一輪旅程只允許第一次自動播放。 */
   autoPlayId?: string;
   ariaLabel: string;
+  textAlternative?: string;
+  captionsSrc?: string;
+  captionsLabel?: string;
   onError?: () => void;
   onEnded?: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const descriptionId = useId();
   const prefersReducedMotion = usePrefersReducedMotion();
   const shouldAutoPlay = autoPlay && !prefersReducedMotion && (!autoPlayId || !autoPlayedQuestionVideos.has(autoPlayId));
   const playbackKey = `${src}:${autoPlayId ?? "default"}`;
@@ -367,6 +374,7 @@ export function VideoWithToggle({
         playsInline
         preload="metadata"
         aria-label={ariaLabel}
+        aria-describedby={descriptionId}
         onPlay={() => setPlayback({ key: playbackKey, paused: false, ended: false })}
         onPause={() => updatePaused(true)}
         onEnded={() => {
@@ -374,7 +382,10 @@ export function VideoWithToggle({
           onEnded?.();
         }}
         onError={onError}
-      />
+      >
+        {captionsSrc && <track kind="captions" src={captionsSrc} srcLang="zh-Hant" label={captionsLabel} default />}
+      </video>
+      <span id={descriptionId} className="sr-only">{textAlternative ?? `${ariaLabel}。影片的重要照護資訊也會由同頁標題、說明、題目或回饋文字提供。`}</span>
       <button type="button" className="video-toggle-button" onClick={toggleVideo} aria-label={ended ? "重新播放影片" : paused ? "播放影片" : "暫停影片"} title={ended ? "重新播放" : paused ? "播放" : "暫停"}>
         {paused ? <span className="video-play-icon" aria-hidden="true" /> : <span className="video-pause-icon" aria-hidden="true" />}
       </button>
@@ -515,7 +526,7 @@ export function ScenarioCard({
           {sceneMedia.type === "video" ? (
             sceneVideoFailed
               ? <div className="scene-video-fallback" role="status">這段情境影片目前無法播放。</div>
-              : <VideoWithToggle className="scene-video" src={sceneMedia.src} autoPlayId={`${species ?? "dog"}:${scenario.id}:scene`} ariaLabel={sceneMedia.ariaLabel} onError={() => setFailedSceneVideoFor(scenario.id)} />
+              : <VideoWithToggle className="scene-video" src={sceneMedia.src} autoPlayId={`${species ?? "dog"}:${scenario.id}:scene`} ariaLabel={sceneMedia.ariaLabel} textAlternative={sceneMedia.textAlternative} captionsSrc={sceneMedia.captionsSrc} captionsLabel={sceneMedia.captionsLabel} onError={() => setFailedSceneVideoFor(scenario.id)} />
           ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} />}
           <p>{scenario.timeLabel}</p>
         </div>

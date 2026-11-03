@@ -250,7 +250,7 @@
 .daily-behavior-choices h2 { margin: 0; line-height: 1.4; }
 .daily-behavior-choices .choice-grid { grid-template-columns: 1fr; gap: 17px; }
 .daily-behavior-choices .choice-grid button { position: relative; }
-.daily-behavior-choices .choice-grid button.selected { border-color: var(--gold); background: #fffaf0; box-shadow: 0 0 0 4px rgba(217, 170, 79, .22), inset 0 0 0 1px rgba(217, 170, 79, .28); }
+.daily-behavior-choices .choice-grid button.selected { border-color: var(--gold-dark); background: #fffaf0; box-shadow: 0 0 0 4px rgba(217, 170, 79, .22), inset 0 0 0 1px rgba(217, 170, 79, .28); }
 .daily-behavior-choices .choice-grid button > span:not(.scenario-option-selected-mark) { position: absolute; right: 14px; top: 12px; color: var(--gold-dark); font-weight: 900; }
 .daily-behavior-submit { margin-top: 18px; justify-self: end; }
 .daily-behavior-submit:disabled { opacity: .45; cursor: not-allowed; transform: none; }
@@ -371,11 +371,11 @@
 .busy-care-members > div:first-child > p { margin: 0 0 15px; color: var(--muted); line-height: 1.7; font-size: 14px; }
 .busy-care-member-list { display: grid; gap: 9px; margin: 14px 0; }
 .busy-care-member-list label { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
-.busy-care-member-list label.selected { border-color: var(--mint); background: var(--mint-soft); }
+.busy-care-member-list label.selected { border-color: var(--mint-dark); background: var(--mint-soft); }
 .busy-care-family-options button { display: grid; gap: 4px; width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); text-align: left; cursor: pointer; transition: .2s; }
 .busy-care-family-options button:hover, .busy-care-family-options button:focus-visible { border-color: var(--gold); background: #fff9e7; transform: translateY(-2px); }
 .busy-care-family-options button span { color: var(--muted); font-size: 13px; }
-.busy-care-family-options button small { color: var(--orange); font-weight: 900; }
+.busy-care-family-options button small { color: var(--orange-dark); font-weight: 900; }
 .busy-care-family-feedback { margin-top: 14px; padding: 15px 16px; border: 1px solid #e6b664; border-radius: 14px; background: #fff4dc; }
 .busy-care-family-feedback b { color: #6f4a18; }
 .busy-care-family-feedback p { margin: 6px 0 0; color: #6f4a18; line-height: 1.7; }
@@ -407,8 +407,8 @@
 .scenario-option-card, .choice-grid .scenario-option-card, .video-scenario-options > .scenario-option-card, .busy-care-options > .scenario-option-card, .busy-care-family-options .scenario-option-card, .breed-challenge-options .scenario-option-card { position: relative; display: flex; width: 100%; min-height: 68px; align-items: flex-start; justify-content: flex-start; margin: 0; padding: 18px 20px; border: 1.5px solid #d8c7aa; border-radius: 19px; background: #fffdf8; color: var(--ink); text-align: left; cursor: pointer; box-shadow: 0 10px 24px rgba(72,53,31,.05); transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease; }
 .scenario-option-card p { width: 100%; margin: 0; color: inherit; font: inherit; font-weight: 850; line-height: 1.6; text-align: left; }
 .scenario-option-card:hover:not(:disabled), .scenario-option-card:focus-visible { border-color: var(--gold); background: #fffaf0; box-shadow: 0 14px 28px rgba(72,53,31,.08); transform: translateY(-2px); }
-.scenario-option-card.selected { border-color: var(--gold); background: #fff3cb; box-shadow: inset 4px 0 0 var(--gold), 0 10px 24px rgba(72,53,31,.07); }
-.scenario-option-card--multiple .scenario-option-selected-mark { position: absolute; top: 50%; right: 17px; display: grid; width: 26px; height: 26px; place-items: center; border: 1px solid rgba(255,255,255,.72); border-radius: 50%; background: var(--mint); color: white; box-shadow: 0 3px 9px rgba(70, 96, 72, .18); line-height: 1; pointer-events: none; transform: translateY(-50%); }
+.scenario-option-card.selected { border-color: var(--gold-dark); background: #fff3cb; box-shadow: inset 4px 0 0 var(--gold-dark), 0 10px 24px rgba(72,53,31,.07); }
+.scenario-option-card--multiple .scenario-option-selected-mark { position: absolute; top: 50%; right: 17px; display: grid; width: 26px; height: 26px; place-items: center; border: 1px solid rgba(255,255,255,.72); border-radius: 50%; background: var(--mint-dark); color: white; box-shadow: 0 3px 9px rgba(70, 96, 72, .18); line-height: 1; pointer-events: none; transform: translateY(-50%); }
 .scenario-option-selected-mark svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
 .scenario-option-card--multiple.selected p { padding-right: 36px; }
 .scenario-option-card:disabled { cursor: not-allowed; opacity: .55; background: #eeeae1; transform: none; }

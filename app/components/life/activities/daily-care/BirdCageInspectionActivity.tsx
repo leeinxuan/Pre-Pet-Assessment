@@ -10,6 +10,7 @@ import { interpolatePetName } from "../../../../data/shared/pet-text";
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
+import { useDialogFocus } from "../../../shared/useDialogFocus";
 import { ActivityIntroPage, ObservationReturnButton, plainChoiceText, renderKnowledgeText, type ObservationAnswerStatus } from "../activity-ui";
 import { InspectionHotspot } from "../InspectionHotspot";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
@@ -51,6 +52,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   const [showHealthComparison, setShowHealthComparison] = useState(false);
   const [magnifierPosition, setMagnifierPosition] = useState<{ x: number; y: number } | null>(null);
   const isMobile = useMobileLayout();
+  const observationSheetRef = useRef<HTMLElement>(null);
   const [sheetPointerStart, setSheetPointerStart] = useState<number | null>(null);
   const heartTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const singTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -63,6 +65,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   const inspectionCompleteFeedback = completionChoice.explanation;
   const selectedDropping = droppingOptions.find(({ id }) => id === selectedDroppingId) ?? droppingOptions[0];
   const selectedHealthPoint = activeObservation === "feces" ? null : healthPoints.find(({ id }) => id === activeObservation);
+  useDialogFocus({ isOpen: Boolean(isMobile && activeObservation), dialogRef: observationSheetRef, onClose: dismissObservation });
   const [generatedHealthStates] = useState<Record<(typeof healthPoints)[number]["id"], "normal" | "warning">>(() => ({
     eyes: Math.random() < .5 ? "normal" : "warning",
     feathers: Math.random() < .5 ? "normal" : "warning",
@@ -331,7 +334,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
         <button type="button" className={`bird-cage-main-hotspot bird-cage-main-hotspot--lock ${doorOpening ? "is-opening" : ""}`} disabled={doorOpening} onClick={openDoor} aria-label="點擊鳥籠鎖扣開啟鳥籠" />
       </>}
       {doorOpening && <div className={`bird-cage-door-transition${isCageOutGuidance ? " is-guidance" : ""}`} role="status" aria-label={isCageOutGuidance ? "籠外互動提醒" : "鳥籠門正在打開"}>
-        <video autoPlay muted playsInline src={birdAssets.dailyGame.cageOutTransition} onEnded={finishCageOutTransition} onError={finishCageOutTransition} />
+        <video autoPlay muted playsInline aria-hidden="true" src={birdAssets.dailyGame.cageOutTransition} onEnded={finishCageOutTransition} onError={finishCageOutTransition} />
         {isCageOutGuidance && <section className="bird-cage-out-guidance">
           <p>{interpolatePetName(cageOut.outOfCagePrompt, displayPetName).split("\n").map((line, index) => <span key={`${line}-${index}`}>{renderKnowledgeText(line)}</span>)}</p>
           <button type="button" className="primary" onClick={continueCageOutInteraction}>{cageOut.outOfCageConfirmLabel}</button>
@@ -356,7 +359,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
     </div>}
     {isMobile && observationCard && <div className="rabbit-observation-sheet-layer bird-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) dismissObservation(); setSheetPointerStart(null); }}>
       <button type="button" className="rabbit-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={dismissObservation} />
-      <aside className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={activeObservation === "feces" ? "糞便觀察" : `${selectedHealthPoint?.label ?? "健康部位"}觀察`}>
+      <aside ref={observationSheetRef} className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={activeObservation === "feces" ? "糞便觀察" : `${selectedHealthPoint?.label ?? "健康部位"}觀察`} tabIndex={-1}>
         <div className="rabbit-observation-sheet-handle" aria-hidden="true" />
         <button type="button" className="rabbit-observation-sheet-close" aria-label="關閉觀察說明" onClick={dismissObservation}>×</button>
         {observationCard}

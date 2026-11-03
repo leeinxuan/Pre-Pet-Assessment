@@ -15,6 +15,7 @@ import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, renderKnowledgeText, type ObservationAnswerStatus } from "../activity-ui";
 import { InspectionHotspot } from "../InspectionHotspot";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
+import { useDialogFocus } from "../../../shared/useDialogFocus";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 
 type Change = (patch: Partial<LifeActivityState>) => void;
@@ -144,6 +145,8 @@ function buildInitialStates(config: GeckoHealthInspectionConfig): Record<string,
 /** 手機版底部說明欄（外觀沿用兔子／鸚鵡的 .rabbit-observation-sheet*）；桌機版不會渲染，維持原本置中 Modal。 */
 function GeckoMobileSheet({ label, onDismiss, children }: { label: string; onDismiss: () => void; children: ReactNode }) {
   const [pointerStart, setPointerStart] = useState<number | null>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  useDialogFocus({ isOpen: true, dialogRef, onClose: onDismiss });
   return (
     <div
       className="rabbit-observation-sheet-layer gecko-observation-sheet-layer"
@@ -154,7 +157,7 @@ function GeckoMobileSheet({ label, onDismiss, children }: { label: string; onDis
       }}
     >
       <button type="button" className="rabbit-observation-sheet-backdrop" aria-label="關閉說明" onClick={onDismiss} />
-      <aside className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={label}>
+      <aside ref={dialogRef} className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={label} tabIndex={-1}>
         <div className="rabbit-observation-sheet-handle" aria-hidden="true" />
         <button type="button" className="rabbit-observation-sheet-close" aria-label="關閉說明" onClick={onDismiss}>×</button>
         {children}

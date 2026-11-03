@@ -178,7 +178,16 @@ export type CareMember = {
 export type ScenarioResult = "correct" | "partial" | "incorrect";
 
 export type ScenarioMediaConfig =
-  | { type: "video"; src: string; ariaLabel: string }
+  | {
+      type: "video";
+      src: string;
+      ariaLabel: string;
+      /** Equivalent text for users who cannot perceive the video. */
+      textAlternative?: string;
+      /** Optional WebVTT captions when the source contains speech or meaningful audio. */
+      captionsSrc?: string;
+      captionsLabel?: string;
+    }
   | { type: "placeholder" };
 
 export type ScenarioChoice = {
@@ -271,7 +280,7 @@ export type BusyCarePresentationConfig = {
   sceneMedia:
     | { type: "placeholder" }
     | BusyCareImageScene
-    | { type: "video"; src: string; ariaLabel: string; fallback: BusyCareImageScene };
+    | { type: "video"; src: string; ariaLabel: string; textAlternative?: string; captionsSrc?: string; captionsLabel?: string; fallback: BusyCareImageScene };
   feedbackMedia: { type: "video"; src: string } | { type: "placeholder" };
 };
 
@@ -339,7 +348,7 @@ export type ScenarioPresentationConfig = {
   preserveGenericAnimalTerms?: boolean;
   /** Optional class for a scenario's question layout, supplied by species presentation data. */
   questionClassName?: string;
-  sceneVideo?: { src: string; ariaLabel: string };
+  sceneVideo?: { src: string; ariaLabel: string; textAlternative?: string; captionsSrc?: string; captionsLabel?: string };
   correctFeedbackMedia: ScenarioMediaConfig;
   /** 題目正確回饋依序輪播的媒體；未設定時沿用單一 correctFeedbackMedia。 */
   correctFeedbackMediaVariants?: readonly ScenarioMediaConfig[];

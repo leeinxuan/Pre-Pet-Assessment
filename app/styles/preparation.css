@@ -104,7 +104,7 @@
 .car-preparation-group > p { margin: 7px 0 13px; color: var(--muted); font-size: 11px; line-height: 1.55; }
 .car-preparation-items { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .car-preparation-items button { min-width: 0; min-height: 130px; padding: 10px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 10px; text-align: left; cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
-.car-preparation-items button:hover, .car-preparation-items button:focus-visible, .car-preparation-items button.active { border-color: var(--gold); background: #fff6d9; transform: translateY(-1px); }
+.car-preparation-items button:hover, .car-preparation-items button:focus-visible, .car-preparation-items button.active { border-color: var(--gold-dark); background: #fff6d9; transform: translateY(-1px); }
 .car-preparation-items button.prepared { background: var(--mint-soft); border-color: #91b193; }
 .car-preparation-items button.prepared.active { box-shadow: 0 0 0 3px rgba(145,177,147,.2); }
 .car-preparation-items img { width: 90px; height: 90px; object-fit: contain; }
@@ -345,7 +345,7 @@
 .room-hazard-alert-close:hover { background: #fff; transform: scale(1.06); }
 .room-hazard-alert-close:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .room-hazard-review-list { display: flex; align-items: center; gap: 9px; margin-top: 11px; padding: 8px 10px; border: 1px solid rgba(154,185,155,.28); border-radius: 16px; background: rgba(227,238,225,.42); color: var(--muted); font-size: 12px; }
-.room-hazard-review-icon { display: grid; flex: 0 0 30px; width: 30px; height: 30px; place-items: center; border-radius: 10px; background: var(--mint-soft); color: var(--mint); }
+.room-hazard-review-icon { display: grid; flex: 0 0 30px; width: 30px; height: 30px; place-items: center; border-radius: 10px; background: var(--mint-soft); color: var(--mint-dark); }
 .room-hazard-review-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .room-hazard-review-icon svg circle { fill: currentColor; stroke: none; }
 .room-hazard-review-items { display: flex; min-width: 0; flex-wrap: wrap; gap: 6px; }
@@ -476,7 +476,7 @@
 .arrival-meal-supplies button:hover img, .arrival-meal-supplies button:focus-visible img { transform: translateY(-4px) scale(1.04); }
 .arrival-meal-supplies button:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; border-radius: 9px; }
 .arrival-meal-supplies img { width: var(--arrival-meal-supply-width); height: var(--arrival-meal-supply-height); object-fit: contain; transition: transform .2s ease; }
-.arrival-meal-supplies p { grid-column: 1 / -1; margin: 0; color: var(--mint); font-size: 13px; font-weight: 900; text-align: center; }
+.arrival-meal-supplies p { grid-column: 1 / -1; margin: 0; color: var(--mint-dark); font-size: 13px; font-weight: 900; text-align: center; }
 .arrival-meal-supplies .arrival-meal-unsafe.warning img { animation: chocolateNudge .38s ease-in-out 2; }
 .unsafe-food-visual { position: relative; display: grid; place-items: center; }
 .unsafe-food-warning-icon {
@@ -540,7 +540,7 @@
 
 .feeding-steps { display: grid; grid-template-columns: 1.15fr .9fr .75fr; gap: 14px; }
 .feeding-steps > article { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
-.feeding-steps > article > span { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 50%; background: var(--gold); color: white; font-weight: 900; }
+.feeding-steps > article > span { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 50%; background: var(--gold-dark); color: white; font-weight: 900; }
 .feeding-steps h2 { margin: 12px 0; font-size: 18px; }
 .food-options { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 .food-options button { min-height: 88px; border: 1px solid var(--line); border-radius: 11px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; }
@@ -550,7 +550,7 @@
 .water-sequence { display: grid; gap: 7px; }
 .water-sequence button { padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: white; display: flex; align-items: center; gap: 8px; text-align: left; font-size: 11px; cursor: pointer; }
 .water-sequence button:disabled { opacity: .45; cursor: not-allowed; }
-.water-sequence button.done { border-color: var(--mint); background: var(--mint-soft); }
+.water-sequence button.done { border-color: var(--mint-dark); background: var(--mint-soft); }
 .water-sequence i { min-width: 23px; height: 23px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-style: normal; }
 .dinner-scene { min-height: 190px; display: flex; align-items: flex-end; justify-content: center; gap: 2px; border-radius: 14px; background: var(--cream); overflow: hidden; }
 .dinner-scene i { font-style: normal; font-size: 92px; }

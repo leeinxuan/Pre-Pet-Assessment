@@ -9,6 +9,8 @@ import { ItemDescriptionCard } from "../../shared/ItemDescriptionCard";
 import { MobileInfoSheet, type MobileInfoSheetContent } from "../../shared/MobileInfoSheet";
 import { MobileStageIntro } from "../../shared/MobileStageIntro";
 import { MobileItemInfoBadge, MobileItemPlacedCheck } from "../../shared/MobileItemMarks";
+import { useDialogFocus } from "../../shared/useDialogFocus";
+import { useMobileLayout } from "../../shared/useMobileLayout";
 import type {
   ArrivalMealSceneItemKey,
   ArrivalMealSceneLayout,
@@ -101,6 +103,8 @@ export function ArrivalMealActivity({
   const [mobileInfo, setMobileInfo] = useState<MobileInfoSheetContent | null>(null);
   const [mobileStarted, setMobileStarted] = useState(false);
   const [unsafeFoodIds, setUnsafeFoodIds] = useState<string[]>([]);
+  const warningDialogRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMobileLayout();
   const choiceItems = feeding.interaction === "choice" ? feeding.choices : [];
   const sceneSupplies = feeding.interaction === "scene" ? feeding.supplies : [];
   const sceneUnsafeFoods = feeding.interaction === "scene" ? feeding.unsafeFoods : [];
@@ -134,6 +138,7 @@ export function ArrivalMealActivity({
     ? (activity.arrivalMealVeggieReady ? feeding.scene.veggie.ready : feeding.scene.veggie.empty)
     : undefined;
   const [readyPetDisplayed, setReadyPetDisplayed] = useState(false);
+  useDialogFocus({ isOpen: Boolean(foodWarning && !isMobile), dialogRef: warningDialogRef, onClose: () => setFoodWarning(null) });
   useEffect(() => {
     if (!complete || hasRecordedMeal.current || (!mobileStarted && window.matchMedia("(max-width: 720px)").matches)) return;
     hasRecordedMeal.current = true;
@@ -211,7 +216,7 @@ export function ArrivalMealActivity({
         <img className="arrival-meal-room arrival-meal-room--desktop" src={feeding.scene.desktopBackground} alt={`${feeding.animalName}的新家房間`} />
         <img className="arrival-meal-room arrival-meal-room--mobile" src={feeding.scene.mobileBackground} style={feeding.scene.mobileBackgroundStyle} alt="" />
         {foodWarning && <div className="arrival-meal-warning-overlay">
-          <div className="arrival-meal-warning" role="dialog" onClick={() => setFoodWarning(null)}>
+          <div ref={warningDialogRef} className="arrival-meal-warning" role="dialog" aria-modal="true" aria-label={foodWarning.title} tabIndex={-1} onClick={() => setFoodWarning(null)}>
             <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
             <b>{foodWarning.title}</b>
             <p>{foodWarning.text}</p>

@@ -155,6 +155,9 @@ export function VideoScenarioActivity({
               src={source}
               autoPlayId={`${species}:${scenario.id}:scene`}
               ariaLabel={sceneMedia.type === "video" ? sceneMedia.ariaLabel : scenario.title}
+              textAlternative={sceneMedia.type === "video" ? sceneMedia.textAlternative : scenario.description}
+              captionsSrc={sceneMedia.type === "video" ? sceneMedia.captionsSrc : undefined}
+              captionsLabel={sceneMedia.type === "video" ? sceneMedia.captionsLabel : undefined}
               onError={() => setVideoFailed(true)}
             />
           ) : <SceneMediaPlaceholder title={withPetName(scenario.title, petName, species)} />}

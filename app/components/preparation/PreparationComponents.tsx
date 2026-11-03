@@ -13,6 +13,8 @@ import { ItemDescriptionCard } from "../shared/ItemDescriptionCard";
 import { MobileInfoSheet, type MobileInfoSheetContent } from "../shared/MobileInfoSheet";
 import { MobileStageIntro } from "../shared/MobileStageIntro";
 import { MobileItemInfoBadge, MobileItemPlacedCheck } from "../shared/MobileItemMarks";
+import { useDialogFocus } from "../shared/useDialogFocus";
+import { handleTabListKeyDown } from "../shared/tabKeyboardNavigation";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
 import { housingChoiceImages } from "../../data/shared/assets";
 import { RoomPreparationMobile } from "./RoomPreparationMobile";
@@ -158,10 +160,10 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
             </section>
           : <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question">
               <p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2>
-              <div className="home-readiness-housing-tabs" role="tablist" aria-label="選擇居住狀況">
-                {config.housingChoices.map((choice) => <button type="button" role="tab" aria-selected={state.housing === choice.id} className={state.housing === choice.id ? "selected" : ""} key={choice.id} onClick={() => { setMobileReminderOpen(false); onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false }); }}>{choice.label}</button>)}
+              <div className="home-readiness-housing-tabs" role="tablist" aria-label="選擇居住狀況" onKeyDown={handleTabListKeyDown}>
+                {config.housingChoices.map((choice, index) => <button id={`housing-tab-${choice.id}`} type="button" role="tab" aria-selected={state.housing === choice.id} aria-controls={`housing-panel-${choice.id}`} tabIndex={state.housing === choice.id || (!state.housing && index === 0) ? 0 : -1} className={state.housing === choice.id ? "selected" : ""} key={choice.id} onClick={() => { setMobileReminderOpen(false); onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false }); }}>{choice.label}</button>)}
               </div>
-              {selectedHousing && <div className="home-readiness-housing-detail" role="tabpanel"><img src={housingChoiceImages[selectedHousing.id]} alt="" /></div>}
+              {selectedHousing && <div id={`housing-panel-${selectedHousing.id}`} className="home-readiness-housing-detail" role="tabpanel" aria-labelledby={`housing-tab-${selectedHousing.id}`}><img src={housingChoiceImages[selectedHousing.id]} alt="" /></div>}
             </article></section>)
           : <>
             {activeCard && <article className="home-readiness-commitment-card">
@@ -315,9 +317,17 @@ function RoomItemVisual({ item, scene = false }: { item: RoomItem; scene?: boole
 }
 
 function HazardInfoPanel({ hazard, petName, onClose }: { hazard: HazardItem; petName: string; onClose: () => void }) {
+  const dialogRef = useRef<HTMLElement>(null);
+  useDialogFocus({
+    isOpen: true,
+    dialogRef,
+    onClose,
+    getReturnFocus: () => Array.from(document.querySelectorAll<HTMLElement>("[data-room-info-id]"))
+      .find((element) => element.dataset.roomInfoId === hazard.id && element.getClientRects().length > 0) ?? null,
+  });
   return (
-    <div className="room-hazard-overlay">
-      <section className="room-hazard-alert" role="dialog" aria-labelledby={`hazard-info-${hazard.id}`} onClick={onClose}>
+    <div className="room-hazard-overlay" onClick={onClose}>
+      <section ref={dialogRef} className="room-hazard-alert" role="dialog" aria-modal="true" aria-labelledby={`hazard-info-${hazard.id}`} tabIndex={-1} onClick={(event) => event.stopPropagation()}>
         <button type="button" className="room-hazard-alert-close" onClick={onClose} aria-label={`關閉${hazard.label}說明`}>×</button>
         <h2 id={`hazard-info-${hazard.id}`}>{hazard.label}已收起</h2>
         <p><b>為什麼危險：</b>{hazard.danger.replaceAll("{petName}", petName)}</p>
@@ -679,7 +689,7 @@ export function RoomPreparation({
             </span>
             <div className="room-hazard-review-items">
               {activeHazards.filter((hazard) => securedHazards.includes(hazard.id)).map((hazard) => (
-                <button type="button" key={hazard.id} onClick={() => setActiveHazardInfo(hazard.id)}>{hazard.label}</button>
+                <button type="button" key={hazard.id} data-room-info-id={hazard.id} onClick={() => setActiveHazardInfo(hazard.id)}>{hazard.label}</button>
               ))}
             </div>
           </div>}

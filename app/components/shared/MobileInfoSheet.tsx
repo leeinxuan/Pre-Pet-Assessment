@@ -2,8 +2,10 @@
 
 /* eslint-disable @next/next/no-img-element -- Item thumbnails use the existing public asset paths. */
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { createPortal } from "react-dom";
+import { useDialogFocus } from "./useDialogFocus";
+import { useMobileLayout } from "./useMobileLayout";
 
 export type MobileInfoSheetContent = {
   title: string;
@@ -15,18 +17,14 @@ export type MobileInfoSheetContent = {
 /** Informational only: all placement and expense actions remain in the activity. */
 export function MobileInfoSheet({ content, onClose }: { content: MobileInfoSheetContent | null; onClose: () => void }) {
   const touchStart = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!content) return;
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") onClose(); };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [content, onClose]);
+  const dialogRef = useRef<HTMLElement>(null);
+  const isMobile = useMobileLayout();
+  useDialogFocus({ isOpen: Boolean(content && isMobile), dialogRef, onClose });
 
   if (!content || typeof document === "undefined") return null;
   return createPortal(
     <div className="mobile-info-sheet-overlay" onClick={onClose}>
-      <section className="mobile-info-sheet" role="dialog" aria-modal="true" aria-label={`${content.title}說明`}
+      <section ref={dialogRef} className="mobile-info-sheet" role="dialog" aria-modal="true" aria-label={`${content.title}說明`} tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
         onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientY ?? null; }}
         onTouchEnd={(event) => {

@@ -857,8 +857,8 @@
   }
 
   .home-readiness-mobile-progress button.is-current span {
-    border-color: var(--gold);
-    background: var(--gold);
+    border-color: var(--gold-dark);
+    background: var(--gold-dark);
     color: #fff;
     box-shadow: 0 0 0 3px rgba(212, 154, 36, .16);
   }
@@ -868,8 +868,8 @@
   }
 
   .home-readiness-mobile-progress button.is-complete span {
-    border-color: #6d9f76;
-    background: #6d9f76;
+    border-color: var(--mint-dark);
+    background: var(--mint-dark);
     color: #fff;
   }
 

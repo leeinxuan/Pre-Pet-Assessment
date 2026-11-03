@@ -9,6 +9,7 @@ import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, type ObservationAnswerStatus, renderKnowledgeText, withPetName } from "../activity-ui";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
+import { useDialogFocus } from "../../../shared/useDialogFocus";
 
 type RabbitObservationStatus = ObservationAnswerStatus | "comparison";
 
@@ -25,6 +26,7 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
   const [sheetPointerStart, setSheetPointerStart] = useState<number | null>(null);
   const [observation, setObservation] = useState<{ key: keyof typeof rabbitGroomingConfig.observations; displayState: "normal" | "warning"; status: RabbitObservationStatus } | null>(null);
   const brushTargetRef = useRef<HTMLButtonElement>(null);
+  const observationSheetRef = useRef<HTMLElement>(null);
   const isMobile = useMobileLayout();
   const groomingSteps = rabbitGroomingConfig.groomingSteps;
   const current = groomingSteps.find((step) => step.stateId === state)
@@ -109,6 +111,7 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     if (!current || !isBrushStep) return;
     setMobileBrushSelectedFor(current.id);
   };
+  useDialogFocus({ isOpen: Boolean(isMobile && observation), dialogRef: observationSheetRef, onClose: () => setObservation(null) });
   if (!activity.rabbitGroomingIntroStarted) return <ActivityIntroPage
     config={rabbitGroomingConfig.intro}
     petName={petName}
@@ -172,7 +175,7 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     {magnifierPosition && <img className="activity-magnifier-hint" src={rabbitGroomingConfig.assets.magnifier} alt="" aria-hidden="true" style={{ left: magnifierPosition.x, top: magnifierPosition.y }} />}
     {isMobile && observationContent && <div className="rabbit-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) setObservation(null); setSheetPointerStart(null); }}>
       <button type="button" className="rabbit-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={() => setObservation(null)} />
-      <aside className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={observationData?.title}>
+      <aside ref={observationSheetRef} className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={observationData?.title} tabIndex={-1}>
         <div className="rabbit-observation-sheet-handle" aria-hidden="true" />
         <button type="button" className="rabbit-observation-sheet-close" aria-label="關閉觀察說明" onClick={() => setObservation(null)}>×</button>
         {observationContent}

@@ -93,6 +93,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
         playsInline
         preload="auto"
         aria-label={`${animalLabel}搭乘外出籠抵達新家的過場動畫`}
+        aria-describedby="arrival-transition-description"
         onPlaying={handlePlaying}
         onEnded={handleArrivalEnded}
         onError={() => {
@@ -100,6 +101,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
           handleVideoError();
         }}
       />
+      <p id="arrival-transition-description" className="sr-only">這段影片表示{animalLabel}已抵達新家，不包含額外作答資訊；播放結束後會自動進入飼養生活。</p>
       {needsManualPlay && <button type="button" className="primary arrival-video-play" onClick={startVideoManually}>播放影片</button>}
     </section>
   );
@@ -140,7 +142,8 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 
   return (
     <section className="time-pass-transition" aria-label="時間流逝過場動畫">
-      <video ref={videoRef} src={timePassVideoSource} autoPlay={!prefersReducedMotion} playsInline preload="metadata" aria-label="時間流逝過場動畫" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      <video ref={videoRef} src={timePassVideoSource} autoPlay={!prefersReducedMotion} playsInline preload="metadata" aria-label="時間流逝過場動畫" aria-describedby="time-pass-transition-description" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      <p id="time-pass-transition-description" className="sr-only">這段影片表示時間經過與寵物年齡增長，不包含額外作答資訊；播放結束後會自動繼續。</p>
       {needsManualPlay && <button type="button" className="time-pass-play" onClick={playManually}>播放影片</button>}
     </section>
   );
@@ -172,9 +175,12 @@ export function BusyCareTransition({ onComplete, species = "dog" }: { onComplete
         autoPlay={!prefersReducedMotion}
         playsInline
         preload="auto"
+        aria-label="疲憊忙碌的日子過場影片"
+        aria-describedby="busy-care-transition-description"
         onEnded={onComplete}
         onError={onComplete}
       />
+      <p id="busy-care-transition-description" className="sr-only">這段影片表示照顧者進入疲憊忙碌的生活時期，不包含額外作答資訊；播放結束後會進入照護安排題目。</p>
     </section>
   );
 }
