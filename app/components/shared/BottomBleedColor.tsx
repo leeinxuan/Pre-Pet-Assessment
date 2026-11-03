@@ -46,7 +46,7 @@ export default function BottomBleedColor() {
     let frame = 0;
     let last: string | null = null;
 
-    // 鎖定頁的可捲動清單：不論 class 名稱，一律在尾端留出 --bottom-bleed 的空間，
+    // 鎖定頁的可捲動清單：不論 class 名稱，一律在尾端留出實際工具列高度，
     // 讓內容「剛好放得下」的頁面也能捲動一點，按鈕才會停在工具列上方而不是被蓋住。
     const markPanes = () => {
       const active = media.matches && isPageLocked();
@@ -67,6 +67,7 @@ export default function BottomBleedColor() {
       const isIPhone = /iPhone|iPad|iPod/.test(navigator.userAgent);
       const needsBleed = media.matches && isIPhone && window.screen.height - window.innerHeight >= 100;
       root.style.setProperty("--bottom-bleed", needsBleed ? "140px" : "0px");
+      root.style.setProperty("--bottom-toolbar-safe", needsBleed ? "max(0px, calc(100lvh - 100dvh))" : "0px");
     };
     const apply = () => {
       frame = 0;
@@ -140,6 +141,7 @@ export default function BottomBleedColor() {
       root.style.removeProperty("background-color");
       root.style.removeProperty("--bottom-bleed-color");
       root.style.removeProperty("--bottom-bleed");
+      root.style.removeProperty("--bottom-toolbar-safe");
     };
   }, []);
 
