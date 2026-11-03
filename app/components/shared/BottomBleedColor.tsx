@@ -8,10 +8,9 @@ import { useEffect } from "react";
  * 與裝置尺寸無關；遇到圖片／影片／漸層背景時不套用，維持預設底色。
  */
 const MOBILE_QUERY = "(max-width: 768px)";
-// These panes live inside a page whose document scroll is intentionally locked.
-// Check them explicitly before the generic overflow walk: iOS Safari can report
-// a text node or a retargeted descendant as touchmove's target, which otherwise
-// makes a valid inner scroll gesture look like a document drag.
+// This pane supplies its own contained vertical scrolling while the document is
+// locked. When it exists, native iOS scrolling must not be cancelled at the
+// document level, even if Safari retargets touchmove outside the original child.
 const LOCKED_PAGE_SCROLL_PANE_SELECTOR = ".correct-feedback-copy";
 
 function opaqueBackground(el: Element): string | null {
@@ -47,9 +46,24 @@ export default function BottomBleedColor() {
     let frame = 0;
     let last: string | null = null;
 
+    // 鎖定頁的可捲動清單：不論 class 名稱，一律在尾端留出 --bottom-bleed 的空間，
+    // 讓內容「剛好放得下」的頁面也能捲動一點，按鈕才會停在工具列上方而不是被蓋住。
+    const markPanes = () => {
+      const active = media.matches && isPageLocked();
+      document.querySelectorAll(".bleed-pane").forEach((el) => {
+        if (!active) el.classList.remove("bleed-pane");
+      });
+      if (!active) return;
+      document.querySelectorAll(".stage-layout *").forEach((el) => {
+        if (el.classList.contains("bleed-pane") || el.matches(".stage, .content-wrap, .stage-layout")) return;
+        const overflowY = getComputedStyle(el).overflowY;
+        if ((overflowY === "auto" || overflowY === "scroll") && el.getBoundingClientRect().bottom >= window.innerHeight - 40) el.classList.add("bleed-pane");
+      });
+    };
     const apply = () => {
       frame = 0;
       keepLocked();
+      markPanes();
       const color = media.matches ? sampleBottomColor() : "";
       if (color === last) return;
       last = color;
@@ -67,11 +81,9 @@ export default function BottomBleedColor() {
     // 鎖定頁：手指若不在「可捲動的內部清單」上，就不讓整頁被拖動。
     const onTouchMove = (event: TouchEvent) => {
       if (!media.matches || event.touches.length > 1 || !isPageLocked()) return;
-      const explicitPane = event.composedPath().find((target): target is Element => (
-        target instanceof Element && target.matches(LOCKED_PAGE_SCROLL_PANE_SELECTOR)
-      ));
+      const explicitPane = document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR);
       if (explicitPane) {
-        (window as unknown as { __touchDbg?: string }).__touchDbg = `pass ${String(explicitPane.className).slice(0, 24)} ${explicitPane.scrollHeight}/${explicitPane.clientHeight}`;
+        (window as unknown as { __touchDbg?: string }).__touchDbg = `pass-page ${String(explicitPane.className).slice(0, 19)} ${explicitPane.scrollHeight}/${explicitPane.clientHeight}`;
         return;
       }
       let el = event.target instanceof Element ? event.target : null;

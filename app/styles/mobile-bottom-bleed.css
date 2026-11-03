@@ -145,6 +145,20 @@
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
   }
+  /*
+   * 過場狀態切換時，Safari 可能暫時讓舊的影片節點留在 DOM；若祖先仍是
+   * touch-action:none，子面板的 pan-y 無法生效。回饋頁存在時明確解除祖先鎖定，
+   * 整頁位置仍由 BottomBleedColor 的 scrollY=0 保護。
+   */
+  html:has(.correct-feedback-copy),
+  body:has(.correct-feedback-copy) {
+    touch-action: pan-y !important;
+  }
+  /* 由 BottomBleedColor 標記：鎖定頁中、底緣貼近螢幕底部的可捲動區（不依賴 class 名稱）。 */
+  .stage-layout .bleed-pane {
+    padding-bottom: calc(var(--bottom-bleed) - 20px) !important;
+  }
+
   /* 底部的「下一步／完成」按鈕列：多出的高度加在按鈕下方，按鈕留在工具列上方。 */
   .stage-layout .room-mobile-footer,
   .stage-layout .departure-actions,
