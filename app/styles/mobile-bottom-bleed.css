@@ -1,0 +1,40 @@
+/*
+ * iPhone Safari 底部延伸（full-bleed）
+ *
+ * 實機數值（iPhone，工具列展開）：svh = dvh = 695、lvh = 735、螢幕可視高度約 793。
+ * 版面高度只算到 695，所以場景在工具列下方會留下約 98px 的底色空白；
+ * 可捲動頁面不受影響，因為內容是正常流動、會一路畫到最底。
+ *
+ * 作法：
+ * 1. 首頁、過場影片這類「底部是場景圖」的頁面，把背景／場景往下多畫 --bottom-bleed（取比實測更大的值，
+ *    涵蓋各機型），不改變內容的定位基準，底部按鈕與內容仍留在原本位置。
+ * 2. 其餘「底部是面板」的鎖定頁面，由 BottomBleedColor 取畫面最底端元素的背景色套到 <html>，
+ *    讓面板顏色延伸到螢幕最底（不依賴裝置尺寸）。
+ */
+:root { --bottom-bleed: 140px; }
+
+@media (max-width: 768px) {
+  /* 首頁：用 border 把背景圖多畫到底；絕對定位的標題與按鈕以 padding box 為準，位置不變。 */
+  section.welcome {
+    box-sizing: border-box;
+    height: calc(100dvh + var(--bottom-bleed));
+    min-height: 0;
+    border-bottom: var(--bottom-bleed) solid transparent;
+    background-origin: border-box;
+  }
+
+  /* 過場影片：版面本身加高，影片以 cover 填滿（畫面上沒有需要避開工具列的控制項）。 */
+  .stage-layout:has(.arrival-video-screen),
+  .stage-layout:has(.time-pass-transition) {
+    height: calc(100dvh + var(--bottom-bleed));
+    min-height: calc(100dvh + var(--bottom-bleed));
+  }
+
+  @supports (height: 100lvh) {
+    .stage-layout:has(.arrival-video-screen),
+    .stage-layout:has(.time-pass-transition) {
+      height: calc(100lvh + var(--bottom-bleed));
+      min-height: calc(100lvh + var(--bottom-bleed));
+    }
+  }
+}

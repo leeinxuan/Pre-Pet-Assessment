@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ViewportDebug from "./components/shared/ViewportDebug";
+import BottomBleedColor from "./components/shared/BottomBleedColor";
 
 export const metadata: Metadata = {
   // 本機開發時不設定 metadataBase，圖示與分享圖才會指向 localhost 而不是線上網址
@@ -22,11 +23,11 @@ export const metadata: Metadata = {
   },
 };
 
-// vinext 的 viewport 輸出不支援 viewportFit，所以 viewport meta 改在 <head> 手寫（見下方）；這裡只保留主題色。
+// 注意：不使用 viewport-fit=cover（vinext 的 viewport 輸出不支援，且會讓內容延伸到狀態列下方）。
 export const viewport: Viewport = {
   themeColor: "#fffdf7",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /></head><body><a className="skip-link" href="#main-content">跳到主要內容</a>{children}<ViewportDebug /></body></html>;
+  return <html lang="zh-Hant"><body><a className="skip-link" href="#main-content">跳到主要內容</a>{children}<BottomBleedColor /><ViewportDebug /></body></html>;
 }
