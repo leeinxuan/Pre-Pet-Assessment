@@ -41,6 +41,11 @@ export default function ViewportDebug() {
         `scrollY ${Math.round(window.scrollY)} · docH ${document.documentElement.scrollHeight} · screen ${screen.height}`,
         `safe top ${cs.paddingTop} bottom ${cs.paddingBottom}`,
         `stage-layout ${stage ? Math.round(stage.getBoundingClientRect().height) : "-"}`,
+        `lock ${getComputedStyle(document.documentElement).getPropertyValue("--page-lock").trim() || "-"} · touch ${(window as unknown as { __touchDbg?: string }).__touchDbg ?? "-"}`,
+        (() => {
+          const pane = document.querySelector(".correct-feedback-copy, .room-mobile-inventory, .departure-supply-rows, .video-scenario-choice-list");
+          return pane ? `pane ${String(pane.className).slice(0, 22)} top ${Math.round(pane.scrollTop)} sh ${pane.scrollHeight} ch ${pane.clientHeight}` : "pane -";
+        })(),
       ].join("\n"));
     };
     update();

@@ -64,9 +64,13 @@ export default function BottomBleedColor() {
       let el = event.target instanceof Element ? event.target : null;
       while (el && el !== document.body && el !== root) {
         const style = getComputedStyle(el);
-        if ((style.overflowY === "auto" || style.overflowY === "scroll") && el.scrollHeight > el.clientHeight + 1) return;
+        if ((style.overflowY === "auto" || style.overflowY === "scroll") && el.scrollHeight > el.clientHeight + 1) {
+          (window as unknown as { __touchDbg?: string }).__touchDbg = `pass ${String(el.className).slice(0, 24)} ${el.scrollHeight}/${el.clientHeight}`;
+          return;
+        }
         el = el.parentElement;
       }
+      (window as unknown as { __touchDbg?: string }).__touchDbg = `BLOCK ${event.target instanceof Element ? String(event.target.className).slice(0, 24) : "?"}`;
       if (event.cancelable) event.preventDefault();
     };
     const keepLocked = () => {
