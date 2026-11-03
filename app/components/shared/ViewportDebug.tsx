@@ -44,7 +44,7 @@ export default function ViewportDebug() {
         `lock ${getComputedStyle(document.documentElement).getPropertyValue("--page-lock").trim() || "-"} · touch ${(window as unknown as { __touchDbg?: string }).__touchDbg ?? "-"}`,
         (() => {
           const pane = document.querySelector(".correct-feedback-copy, .room-mobile-inventory, .departure-supply-rows, .video-scenario-choice-list");
-          return pane ? `pane ${String(pane.className).slice(0, 22)} top ${Math.round(pane.scrollTop)} sh ${pane.scrollHeight} ch ${pane.clientHeight}` : "pane -";
+          return pane ? `pane ${String(pane.className).slice(0, 22)} top ${Math.round(pane.scrollTop)} sh ${pane.scrollHeight} ch ${pane.clientHeight} pb ${getComputedStyle(pane).paddingBottom} v3` : "pane -";
         })(),
       ].join("\n"));
     };
