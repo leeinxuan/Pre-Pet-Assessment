@@ -48,8 +48,7 @@
   /*
    * 鎖定頁（佈置房間、出發前準備、第一餐、選擇題、互動遊戲…）：
    * 實機：iOS 只會畫到「文件高度」為止，文件之外（工具列下方）是系統主題色，所以只改 <html> 底色沒用。
-   * 作法與首頁相同——讓文件實際比版面多一段：在 body 尾端補一段 --bottom-bleed 高、顏色同底部面板
-   * （--bottom-bleed-color 由 BottomBleedColor 取得）的區塊，版面與按鈕位置完全不動。
+   * 作法與首頁相同——讓文件實際比版面多一段（見下方各規則）。
    * 整頁不可被拖動：html/body 不裁切（裁切會把補的這段一起裁掉），改用 touch-action 禁止，
    * 內部可捲動的清單用 overscroll-behavior: contain 避免捲到底後把整頁帶著走。
    */
@@ -75,11 +74,7 @@
     touch-action: none;
     overscroll-behavior: none;
   }
-  html:has(.departure-preparation-page) body::after,
-  html:has(.room-preparation-page) body::after,
   html:has(.home-readiness-mobile-flow) body::after,
-  html:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) body::after,
-  html:has(.rabbit-activity-feedback--carry) body::after,
   html:has(.gecko-health-inspection) body::after,
   html:has(.hamster-cage-check) body::after,
   html:has(.bird-cage-activity) body::after,
@@ -88,6 +83,24 @@
     display: block;
     height: var(--bottom-bleed);
     background: var(--bottom-bleed-color, var(--paper));
+  }
+
+  /*
+   * 佈置房間、出發前準備、第一餐、選擇題等：版面本身加高 --bottom-bleed，
+   * 讓底部可捲動的清單一路延伸到螢幕最底（和選擇物種頁一樣，內容在工具列下方也看得到、不被裁掉），
+   * 清單尾端留出同等的 padding，捲到底時最後一項會停在工具列上方、不會被蓋住。
+   */
+  .stage-layout:has(.departure-preparation-page),
+  .stage-layout:has(.room-preparation-page),
+  .stage-layout:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
+  .stage-layout:has(.rabbit-activity-feedback--carry) {
+    height: calc(100dvh + var(--bottom-bleed)) !important;
+  }
+  .stage-layout:has(.departure-preparation-page) :is(.room-mobile-inventory, .departure-supply-rows, .arrival-meal-inventory, .video-scenario-choice-list, .busy-care-choice-list, .daily-behavior-choices .choice-grid, .breed-challenge-options > div:not(.mobile-choice-context), .correct-feedback-copy),
+  .stage-layout:has(.room-preparation-page) :is(.room-mobile-inventory, .departure-supply-rows, .arrival-meal-inventory, .video-scenario-choice-list, .busy-care-choice-list, .daily-behavior-choices .choice-grid, .breed-challenge-options > div:not(.mobile-choice-context), .correct-feedback-copy),
+  .stage-layout:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) :is(.room-mobile-inventory, .departure-supply-rows, .arrival-meal-inventory, .video-scenario-choice-list, .busy-care-choice-list, .daily-behavior-choices .choice-grid, .breed-challenge-options > div:not(.mobile-choice-context), .correct-feedback-copy),
+  .stage-layout:has(.rabbit-activity-feedback--carry) :is(.room-mobile-inventory, .departure-supply-rows, .arrival-meal-inventory, .video-scenario-choice-list, .busy-care-choice-list, .daily-behavior-choices .choice-grid, .breed-challenge-options > div:not(.mobile-choice-context), .correct-feedback-copy) {
+    padding-bottom: calc(var(--bottom-bleed) - 20px) !important;
   }
   html:has(.departure-preparation-page) .stage-layout *,
   html:has(.room-preparation-page) .stage-layout *,

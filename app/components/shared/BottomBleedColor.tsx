@@ -20,7 +20,9 @@ function opaqueBackground(el: Element): string | null {
 
 function sampleBottomColor(): string {
   const x = Math.round(window.innerWidth / 2);
-  const y = Math.max(0, window.innerHeight - 3);
+  // 以版面（stage-layout）的底緣取樣，不是視窗底緣：頁面被捲動或補了延伸區塊時，視窗底緣會落在延伸區塊上。
+  const layoutBottom = document.querySelector(".stage-layout")?.getBoundingClientRect().bottom ?? window.innerHeight;
+  const y = Math.max(0, Math.min(window.innerHeight, layoutBottom) - 3);
   let el: Element | null = document.elementFromPoint(x, y);
   while (el && el !== document.documentElement) {
     if (el instanceof HTMLImageElement || el instanceof HTMLVideoElement || el instanceof HTMLCanvasElement) return "";
@@ -53,6 +55,17 @@ export default function BottomBleedColor() {
         root.style.removeProperty("--bottom-bleed-color");
       }
     };
+    // 鎖定頁（touch-action: none）不允許整頁被捲動：延伸區塊讓文件變長，iOS 仍可能把它捲動（例如 scrollIntoView），
+    // 一旦偏離 0 就拉回，避免底部空白越捲越高。
+    const keepLocked = () => {
+      if (!media.matches || window.scrollY === 0) return;
+      if (getComputedStyle(root).touchAction !== "none") return;
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    };
+    const onScroll = () => {
+      keepLocked();
+      schedule();
+    };
     const schedule = () => {
       if (!frame) frame = window.setTimeout(apply, 16);
     };
@@ -60,7 +73,7 @@ export default function BottomBleedColor() {
     const observer = new MutationObserver(schedule);
     observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["class", "style", "hidden"] });
     window.addEventListener("resize", schedule);
-    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     media.addEventListener("change", schedule);
     document.addEventListener("transitionend", schedule, true);
     schedule();
@@ -68,7 +81,7 @@ export default function BottomBleedColor() {
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", schedule);
-      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("scroll", onScroll);
       media.removeEventListener("change", schedule);
       document.removeEventListener("transitionend", schedule, true);
       if (frame) window.clearTimeout(frame);
