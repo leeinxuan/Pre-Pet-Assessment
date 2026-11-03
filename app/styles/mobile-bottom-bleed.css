@@ -121,17 +121,25 @@
   .stage-layout:has(.rabbit-activity-feedback--carry) {
     height: calc(100dvh + var(--bottom-bleed)) !important;
   }
-  .stage-layout:has(.departure-preparation-page) :is(.room-mobile-inventory, .departure-supply-rows, .arrival-meal-inventory, .video-scenario-choice-list, .busy-care-choice-list, .daily-behavior-choices .choice-grid, .breed-challenge-options > div:not(.mobile-choice-context), .correct-feedback-copy, .video-scenario-retry, .daily-behavior-retry, .busy-care-members, .busy-care-feedback, .breed-challenge-retry),
-  .stage-layout:has(.room-preparation-page) :is(.room-mobile-inventory, .departure-supply-rows, .arrival-meal-inventory, .video-scenario-choice-list, .busy-care-choice-list, .daily-behavior-choices .choice-grid, .breed-challenge-options > div:not(.mobile-choice-context), .correct-feedback-copy, .video-scenario-retry, .daily-behavior-retry, .busy-care-members, .busy-care-feedback, .breed-challenge-retry),
-  .stage-layout:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) :is(.room-mobile-inventory, .departure-supply-rows, .arrival-meal-inventory, .video-scenario-choice-list, .busy-care-choice-list, .daily-behavior-choices .choice-grid, .breed-challenge-options > div:not(.mobile-choice-context), .correct-feedback-copy, .video-scenario-retry, .daily-behavior-retry, .busy-care-members, .busy-care-feedback, .breed-challenge-retry),
-  .stage-layout:has(.rabbit-activity-feedback--carry) :is(.room-mobile-inventory, .departure-supply-rows, .arrival-meal-inventory, .video-scenario-choice-list, .busy-care-choice-list, .daily-behavior-choices .choice-grid, .breed-challenge-options > div:not(.mobile-choice-context), .correct-feedback-copy, .video-scenario-retry, .daily-behavior-retry, .busy-care-members, .busy-care-feedback, .breed-challenge-retry) {
+  .stage-layout .room-mobile-inventory,
+  .stage-layout .departure-supply-rows,
+  .stage-layout .arrival-meal-inventory,
+  .stage-layout .video-scenario-choice-list,
+  .stage-layout .busy-care-choice-list,
+  .stage-layout .daily-behavior-choices .choice-grid,
+  .stage-layout .breed-challenge-options > div:not(.mobile-choice-context),
+  .stage-layout .correct-feedback-copy,
+  .stage-layout .video-scenario-retry,
+  .stage-layout .daily-behavior-retry,
+  .stage-layout .busy-care-members,
+  .stage-layout .busy-care-feedback,
+  .stage-layout .breed-challenge-retry {
     padding-bottom: calc(var(--bottom-bleed) - 20px) !important;
   }
   /* 底部的「下一步／完成」按鈕列：多出的高度加在按鈕下方，按鈕留在工具列上方。 */
-  .stage-layout:has(.departure-preparation-page) :is(.room-mobile-footer, .departure-actions, .arrival-meal-footer),
-  .stage-layout:has(.room-preparation-page) :is(.room-mobile-footer, .departure-actions, .arrival-meal-footer),
-  .stage-layout:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) :is(.room-mobile-footer, .departure-actions, .arrival-meal-footer),
-  .stage-layout:has(.rabbit-activity-feedback--carry) :is(.room-mobile-footer, .departure-actions, .arrival-meal-footer) {
+  .stage-layout .room-mobile-footer,
+  .stage-layout .departure-actions,
+  .stage-layout .arrival-meal-footer {
     padding-bottom: calc(var(--bottom-bleed) - 40px) !important;
   }
   html:has(.departure-preparation-page) .stage-layout *,

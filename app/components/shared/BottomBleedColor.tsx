@@ -44,6 +44,7 @@ export default function BottomBleedColor() {
 
     const apply = () => {
       frame = 0;
+      keepLocked();
       const color = media.matches ? sampleBottomColor() : "";
       if (color === last) return;
       last = color;
