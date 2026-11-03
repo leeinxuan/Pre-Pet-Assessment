@@ -50,13 +50,25 @@
    * 實機：iOS 只會畫到「文件高度」為止，文件之外（工具列下方）是系統主題色，所以只改 <html> 底色沒用。
    * 作法與首頁相同——讓文件實際比版面多一段（見下方各規則）。
    * html/body 不裁切（裁切會把加高的這段一起裁掉）。
-   * 佈置房間等「加高」的頁面不鎖定整頁：往下捲時 iOS 會收起工具列（同選擇物種頁）；
-   * 其餘仍用色塊填底的頁面才用 touch-action 禁止整頁拖動。
+   * 這些頁面整頁不可被拖動（touch-action: none；被捲離頂端會由 BottomBleedColor 拉回 0），
+   * 只有物品欄、選項列表等內部清單可以捲動。
    */
   html:has(.departure-preparation-page),
   html:has(.room-preparation-page),
   html:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
   html:has(.rabbit-activity-feedback--carry),
+  html:has(.departure-preparation-page),
+  html:has(.room-preparation-page),
+  html:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
+  html:has(.rabbit-activity-feedback--carry),
+  body:has(.departure-preparation-page),
+  body:has(.room-preparation-page),
+  body:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
+  body:has(.rabbit-activity-feedback--carry) {
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
   html:has(.home-readiness-mobile-flow),
   html:has(.gecko-health-inspection),
   html:has(.hamster-cage-check),
@@ -121,6 +133,13 @@
   .stage-layout:has(.rabbit-activity-feedback--carry) :is(.room-mobile-footer, .departure-actions, .arrival-meal-footer) {
     padding-bottom: calc(var(--bottom-bleed) - 40px) !important;
   }
+  html:has(.departure-preparation-page) .stage-layout *,
+  html:has(.room-preparation-page) .stage-layout *,
+  html:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)) .stage-layout *,
+  html:has(.rabbit-activity-feedback--carry) .stage-layout * {
+    overscroll-behavior: contain;
+  }
+
   html:has(.home-readiness-mobile-flow) .stage-layout *,
   html:has(.gecko-health-inspection) .stage-layout *,
   html:has(.hamster-cage-check) .stage-layout *,
