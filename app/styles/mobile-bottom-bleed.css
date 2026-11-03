@@ -134,7 +134,7 @@
   .stage-layout .busy-care-members,
   .stage-layout .busy-care-feedback,
   .stage-layout .breed-challenge-retry {
-    padding-bottom: calc(var(--bottom-bleed) - 20px) !important;
+    padding-bottom: max(24px, calc(var(--bottom-bleed) - 20px)) !important;
   }
   /*
    * iOS Safari：整頁鎖定時仍要明確允許回饋面板接收垂直平移。
@@ -156,14 +156,14 @@
   }
   /* 由 BottomBleedColor 標記：鎖定頁中、底緣貼近螢幕底部的可捲動區（不依賴 class 名稱）。 */
   .stage-layout .bleed-pane {
-    padding-bottom: calc(var(--bottom-bleed) - 20px) !important;
+    padding-bottom: max(24px, calc(var(--bottom-bleed) - 20px)) !important;
   }
 
   /* 底部的「下一步／完成」按鈕列：多出的高度加在按鈕下方，按鈕留在工具列上方。 */
   .stage-layout .room-mobile-footer,
   .stage-layout .departure-actions,
   .stage-layout .arrival-meal-footer {
-    padding-bottom: calc(var(--bottom-bleed) - 40px) !important;
+    padding-bottom: max(8px, calc(var(--bottom-bleed) - 40px)) !important;
   }
   html:has(.departure-preparation-page) .stage-layout *,
   html:has(.room-preparation-page) .stage-layout *,

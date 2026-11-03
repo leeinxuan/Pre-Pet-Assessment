@@ -60,8 +60,17 @@ export default function BottomBleedColor() {
         if ((overflowY === "auto" || overflowY === "scroll") && el.getBoundingClientRect().bottom >= window.innerHeight - 40) el.classList.add("bleed-pane");
       });
     };
+    // 底部延伸只在「工具列浮在網頁上方」的 iPhone Safari 才需要：
+    // 此時 screen.height 比可用高度多出一截（含工具列）。開發者工具的手機模擬、Android、
+    // 主畫面 App（standalone）都沒有這一截，延伸高度會把按鈕推到畫面外，所以設為 0。
+    const updateBleed = () => {
+      const isIPhone = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      const needsBleed = media.matches && isIPhone && window.screen.height - window.innerHeight >= 100;
+      root.style.setProperty("--bottom-bleed", needsBleed ? "140px" : "0px");
+    };
     const apply = () => {
       frame = 0;
+      updateBleed();
       keepLocked();
       markPanes();
       const color = media.matches ? sampleBottomColor() : "";
@@ -130,6 +139,7 @@ export default function BottomBleedColor() {
       if (frame) window.clearTimeout(frame);
       root.style.removeProperty("background-color");
       root.style.removeProperty("--bottom-bleed-color");
+      root.style.removeProperty("--bottom-bleed");
     };
   }, []);
 
