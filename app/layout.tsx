@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import ViewportDebug from "./components/shared/ViewportDebug";
 
 export const metadata: Metadata = {
   // 本機開發時不設定 metadataBase，圖示與分享圖才會指向 localhost 而不是線上網址
@@ -27,5 +28,5 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /></head><body><a className="skip-link" href="#main-content">跳到主要內容</a>{children}</body></html>;
+  return <html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /></head><body><a className="skip-link" href="#main-content">跳到主要內容</a>{children}<ViewportDebug /></body></html>;
 }

@@ -8,7 +8,7 @@ export const geckoExpenses: Record<string, ExpenseRecord> = {
   "gecko-enrichment-decor": { ...initial("gecko-enrichment-decor", "環境豐富化物件（石板、沉木或人造植物）", 300), maxAmount: 500 },
   "gecko-thermometer-2": { ...initial("gecko-thermometer-2", "數位溫濕度計 × 2", 800), maxAmount: 800 },
   "gecko-warm-hide": { ...initial("gecko-warm-hide", "熱區躲避屋", 600), maxAmount: 600 },
-  "gecko-cool-hide": { ...initial("gecko-cool-hide", "冷區躲避屋", 400), maxAmount: 400 },
+  "gecko-cool-hide": { ...initial("gecko-cool-hide", "冷區躲避屋", 600), maxAmount: 600 },
   "gecko-moist-hide": { ...initial("gecko-moist-hide", "濕躲避屋（脫皮盒）", 600), maxAmount: 600 },
   "gecko-substrate": { ...initial("gecko-substrate", "安全底材", 500), maxAmount: 500 },
   "gecko-water-dish": { ...initial("gecko-water-dish", "淺水碟", 200), maxAmount: 200 },
