@@ -8,6 +8,11 @@ import { useEffect } from "react";
  * 與裝置尺寸無關；遇到圖片／影片／漸層背景時不套用，維持預設底色。
  */
 const MOBILE_QUERY = "(max-width: 768px)";
+// These panes live inside a page whose document scroll is intentionally locked.
+// Check them explicitly before the generic overflow walk: iOS Safari can report
+// a text node or a retargeted descendant as touchmove's target, which otherwise
+// makes a valid inner scroll gesture look like a document drag.
+const LOCKED_PAGE_SCROLL_PANE_SELECTOR = ".correct-feedback-copy";
 
 function opaqueBackground(el: Element): string | null {
   const style = getComputedStyle(el);
@@ -62,6 +67,13 @@ export default function BottomBleedColor() {
     // 鎖定頁：手指若不在「可捲動的內部清單」上，就不讓整頁被拖動。
     const onTouchMove = (event: TouchEvent) => {
       if (!media.matches || event.touches.length > 1 || !isPageLocked()) return;
+      const explicitPane = event.composedPath().find((target): target is Element => (
+        target instanceof Element && target.matches(LOCKED_PAGE_SCROLL_PANE_SELECTOR)
+      ));
+      if (explicitPane) {
+        (window as unknown as { __touchDbg?: string }).__touchDbg = `pass ${String(explicitPane.className).slice(0, 24)} ${explicitPane.scrollHeight}/${explicitPane.clientHeight}`;
+        return;
+      }
       let el = event.target instanceof Element ? event.target : null;
       while (el && el !== document.body && el !== root) {
         const style = getComputedStyle(el);

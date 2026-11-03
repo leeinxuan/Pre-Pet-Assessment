@@ -136,6 +136,15 @@
   .stage-layout .breed-challenge-retry {
     padding-bottom: calc(var(--bottom-bleed) - 20px) !important;
   }
+  /*
+   * iOS Safari：整頁鎖定時仍要明確允許回饋面板接收垂直平移。
+   * BottomBleedColor 會辨識同一個面板並略過 document touchmove 的阻擋。
+   */
+  .stage-layout .correct-feedback-copy {
+    overflow-y: auto !important;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
   /* 底部的「下一步／完成」按鈕列：多出的高度加在按鈕下方，按鈕留在工具列上方。 */
   .stage-layout .room-mobile-footer,
   .stage-layout .departure-actions,
