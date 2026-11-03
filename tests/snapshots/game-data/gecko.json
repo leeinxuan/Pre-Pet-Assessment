@@ -3957,7 +3957,7 @@
                 "imageAlt": "需要留意的守宮眼睛異常",
                 "title": "眼睛異常"
               },
-              "hotspot": {
+              "desktopHotspot": {
                 "x": 27,
                 "y": 32
               },
@@ -4010,7 +4010,7 @@
                 "imageAlt": "需要留意的守宮尾巴消瘦",
                 "title": "尾巴異常"
               },
-              "hotspot": {
+              "desktopHotspot": {
                 "x": 77,
                 "y": 51
               },
@@ -4064,7 +4064,7 @@
                 "imageAlt": "守宮脫皮卡住的異常狀態",
                 "title": "皮膚異常"
               },
-              "hotspot": {
+              "desktopHotspot": {
                 "x": 49,
                 "y": 44
               },
@@ -4124,7 +4124,7 @@
                 "imageAlt": "需要留意的守宮趾端殘皮",
                 "title": "趾端異常"
               },
-              "hotspot": {
+              "desktopHotspot": {
                 "x": 42,
                 "y": 74
               },
@@ -4230,7 +4230,7 @@
             "每天的觀察，是守宮健康的**第一道防線**。**溫度**、**飲水**、**排泄**、**眼睛**、**尾巴**、**皮膚**——每天確認這些細節，才能在**問題還小的時候**先發現它。"
           ],
           "startLabel": "開始今日巡視",
-          "title": "{petName} 看起來沒事，不代表牠真的沒事",
+          "title": "{petName}出沒注意！",
           "visualAssets": {
             "character": "/assets/gecko/room/gecko.webp"
           }

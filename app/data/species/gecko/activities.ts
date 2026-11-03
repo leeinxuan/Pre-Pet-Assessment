@@ -6,6 +6,7 @@ import type {
 import { geckoAssets } from "./assets";
 
 const health = geckoAssets.healthInspection;
+const healthInspectionTitle = "{petName}出沒注意！";
 
 const binaryChoices = (normal: string, warning: string) => [
   { id: "normal", text: normal, correctStates: ["normal"] },
@@ -52,7 +53,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
     label: "眼睛",
     instruction: "點擊眼睛，觀察是否清亮、有無腫脹或殘皮。",
     prompt: "{petName} 的眼睛看起來……？",
-    hotspot: { x: 27, y: 32 },
+    desktopHotspot: { x: 33, y: 30 },
     mobileHotspot: { x: 17, y: 30 },
     choices: binaryChoices("眼睛清亮，今天沒有問題", "眼睛有異常，需要留意"),
     states: {
@@ -84,7 +85,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
     label: "尾巴",
     instruction: "點擊尾巴，確認是否飽滿並觀察近期體況。",
     prompt: "{petName} 的尾巴看起來……？",
-    hotspot: { x: 77, y: 51 },
+    desktopHotspot: { x: 70, y: 51 },
     mobileHotspot: { x: 85, y: 51 },
     choices: binaryChoices("尾巴看起來健康，體況正常", "尾巴有異常，需要留意"),
     states: {
@@ -116,7 +117,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
     label: "皮膚",
     instruction: "點擊身體皮膚，確認目前的脫皮狀態。",
     prompt: "{petName} 的皮膚看起來……？",
-    hotspot: { x: 49, y: 44 },
+    desktopHotspot: { x: 55, y: 50 },
     mobileHotspot: { x: 58, y: 50 },
     choices: [
       { id: "normal", text: "皮膚狀況正常或即將脫皮，不需特別處理", correctStates: ["normal", "shedding"] },
@@ -158,7 +159,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
     label: "趾端",
     instruction: "點擊趾端，確認是否有環狀殘皮。",
     prompt: "{petName} 的趾端看起來……？",
-    hotspot: { x: 42, y: 74 },
+    desktopHotspot: { x: 45, y: 80 },
     mobileHotspot: { x: 42, y: 77 },
     choices: binaryChoices("趾端乾淨，沒有殘皮", "趾端有殘皮，需要處理"),
     states: {
@@ -190,7 +191,7 @@ const bodyPoints: readonly GeckoBodyInspectionPoint[] = [
 export const geckoHealthInspection: GeckoHealthInspectionConfig = {
   intro: {
     eyebrow: "日常照護",
-    title: "{petName} 看起來沒事，不代表牠真的沒事",
+    title: healthInspectionTitle,
     paragraphs: [
       "守宮非常**善於隱藏不適**——即使牠不舒服，也幾乎不會主動表現出來。",
       "每天的觀察，是守宮健康的**第一道防線**。**溫度**、**飲水**、**排泄**、**眼睛**、**尾巴**、**皮膚**——每天確認這些細節，才能在**問題還小的時候**先發現它。",
@@ -198,7 +199,7 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     startLabel: "開始今日巡視",
     visualAssets: { character: health.body },
   },
-  title: "{petName}出沒注意！",
+  title: healthInspectionTitle,
   description: "守宮善於隱藏不適，每天固定巡視，確認熱區底部與冷區溫度、飲水是否乾淨、排泄狀態，並觀察眼睛、尾巴、皮膚與趾端，是在問題還小的時候先發現它的第一道防線。",
   progress: [
     { id: "temperature", label: "溫度確認" },

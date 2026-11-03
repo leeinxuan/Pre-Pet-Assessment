@@ -30,6 +30,21 @@
     min-height: calc(100dvh + var(--bottom-bleed));
   }
 
+  /*
+   * 首頁與過場影片不可捲動：
+   * 多畫的 bleed 會讓文件比視窗高，這裡用 touch-action 關掉觸控平移（不使用 overflow:hidden，
+   * 否則 iOS 可能把超出版面的 bleed 一起裁掉，底部又會露出空白）。點擊、按鈕與影片播放不受影響。
+   */
+  html:has(section.welcome),
+  body:has(section.welcome),
+  html:has(.arrival-video-screen),
+  body:has(.arrival-video-screen),
+  html:has(.time-pass-transition),
+  body:has(.time-pass-transition) {
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
   @supports (height: 100lvh) {
     .stage-layout:has(.arrival-video-screen),
     .stage-layout:has(.time-pass-transition) {

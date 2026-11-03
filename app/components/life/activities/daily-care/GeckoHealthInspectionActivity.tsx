@@ -555,10 +555,10 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                     showOrder={config.body.showPointNumbers}
                     order={index + 1}
                     style={{
-                      left: `${point.hotspot.x}%`,
-                      top: `${point.hotspot.y}%`,
-                      "--gecko-mobile-hotspot-left": `${(point.mobileHotspot ?? point.hotspot).x}%`,
-                      "--gecko-mobile-hotspot-top": `${(point.mobileHotspot ?? point.hotspot).y}%`,
+                      left: `${point.desktopHotspot.x}%`,
+                      top: `${point.desktopHotspot.y}%`,
+                      "--gecko-mobile-hotspot-left": `${point.mobileHotspot.x}%`,
+                      "--gecko-mobile-hotspot-top": `${point.mobileHotspot.y}%`,
                     } as CSSProperties}
                     disabled={!isAvailable}
                     aria-label={pointComplete ? `${point.label}已完成` : point.instruction}

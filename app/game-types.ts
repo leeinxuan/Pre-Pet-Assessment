@@ -490,9 +490,10 @@ export type GeckoFecesInspection = GeckoHealthJudgement & {
 };
 
 export type GeckoBodyInspectionPoint = GeckoHealthJudgement & {
-  hotspot: { x: number; y: number };
-  /** Position in the square mobile inspection scene; desktop uses hotspot. */
-  mobileHotspot?: { x: number; y: number };
+  /** Position in the desktop inspection scene. */
+  desktopHotspot: { x: number; y: number };
+  /** Position in the square mobile inspection scene; independent from desktopHotspot. */
+  mobileHotspot: { x: number; y: number };
 };
 
 export type GeckoHealthInspectionConfig = {
