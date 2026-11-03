@@ -24,7 +24,9 @@ function sampleBottomColor(): string {
   let el: Element | null = document.elementFromPoint(x, y);
   while (el && el !== document.documentElement) {
     if (el instanceof HTMLImageElement || el instanceof HTMLVideoElement || el instanceof HTMLCanvasElement) return "";
-    const color = opaqueBackground(el);
+    // 只認「橫跨整個畫面寬」的面板，避免取到面板裡的卡片／按鈕（選取狀態的卡片色會與面板不同）。
+    const fullWidth = el.getBoundingClientRect().width >= window.innerWidth - 2;
+    const color = fullWidth ? opaqueBackground(el) : el instanceof HTMLElement && getComputedStyle(el).backgroundImage !== "none" ? "" : null;
     if (color !== null) return color;
     el = el.parentElement;
   }
