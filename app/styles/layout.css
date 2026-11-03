@@ -64,6 +64,13 @@
   .stage-layout { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
   .station-rail { display: none; }
   .mobile-progress-nav { display: block; position: sticky; top: 0; z-index: 45; border-bottom: 1px solid var(--line); background: rgba(255,253,247,.98); box-shadow: 0 7px 20px rgba(70,53,26,.07); }
+}
+@media (min-width: 1001px) and (max-width: 1024px) and (orientation: portrait) {
+  .stage-layout:has(.room-preparation-page) { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+  .stage-layout:has(.room-preparation-page) > .station-rail { display: none; }
+  .stage-layout:has(.room-preparation-page) > .mobile-progress-nav { display: block; position: sticky; top: 0; z-index: 45; border-bottom: 1px solid var(--line); background: rgba(255,253,247,.98); box-shadow: 0 7px 20px rgba(70,53,26,.07); }
+}
+@media (max-width: 1000px), (min-width: 1001px) and (max-width: 1024px) and (orientation: portrait) {
   /* Some mobile browsers retain the details element's previous expanded
      height after it closes. Clamp the closed shell itself, not only its body. */
   .mobile-progress-nav:not([open]) { height: 52px; min-height: 52px; max-height: 52px; overflow: hidden; }
@@ -401,6 +408,11 @@
 
 /* Requested homepage + final overview refinements */
 .welcome {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  min-height: 100dvh;
+  margin: 0;
   background:
     linear-gradient(180deg, oklch(22% .045 50 / .18), oklch(22% .045 50 / .04) 45%, oklch(22% .045 50 / .22)),
     url("/assets/welcome/prep-room.webp") center / cover no-repeat;

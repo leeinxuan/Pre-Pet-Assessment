@@ -181,7 +181,7 @@ export function ArrivalMealActivity({
     onChange({ arrivalMealFeedbackChoiceId: id });
   }
   return (
-    <section className={`arrival-meal-activity${feeding.interaction === "choice" ? " arrival-meal-activity--choice" : ""}${mobileStarted ? " is-mobile-started" : " is-mobile-intro"}`} aria-label={`為${petName}準備第一餐`}>
+    <section className={`arrival-meal-activity${feeding.interaction === "choice" ? " arrival-meal-activity--choice" : ""}${mobileStarted ? " is-mobile-started" : " is-mobile-intro"}`} data-species={species} aria-label={`為${petName}準備第一餐`}>
       <MobileStageIntro id="arrival-meal-mobile-intro-title" icon={<FeedingIntroIcon />} title={mealTitle} description={mealDescription} actionLabel="開始準備第一餐" onStart={() => setMobileStarted(true)} />
       <div className="arrival-meal-inventory"><div className="arrival-meal-heading">
         <p className="life-stage-label">{lifeStageArrivalLabel}</p>

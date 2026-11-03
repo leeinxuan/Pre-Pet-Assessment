@@ -30,7 +30,7 @@ const cards: HomeReadinessCard[] = [
   },
   {
     id: "allergy-check", stepLabel: "爬蟲接受度", title: [text("同住者是否"), text("能接受爬蟲動物", true), text("同住在家中？")],
-    body: [paragraph(text("爬蟲類動物的"), text("接受度因人而異", true), text("——無論是守宮本身的外觀，還是需要準備"), text("活體昆蟲飼料", true), text("（蟋蟀、麵包蟲等）。若同住者對爬蟲"), text("接受度較低", true), text("，可能在日常生活中產生摩擦，甚至影響守宮的照護品質。請在飼養前"), text("充分溝通", true), text("，確認所有同住者都能接受與守宮共同生活。"))],
+    body: [paragraph(text("爬蟲類動物的"), text("接受度因人而異", true), text("——無論是守宮本身的外觀，還是需要準備"), text("活體昆蟲飼料", true), text("（蟋蟀、杜比亞蟑螂等）。若同住者對爬蟲"), text("接受度較低", true), text("，可能在日常生活中產生摩擦，甚至影響守宮的照護品質。請在飼養前"), text("充分溝通", true), text("，確認所有同住者都能接受與守宮共同生活。"))],
   },
   {
     id: "future-changes", stepLabel: "未來生活變化", title: [text("生涯規劃中可能出現的"), text("生活變化", true), text("，你提前想過了嗎？")],

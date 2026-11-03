@@ -575,6 +575,8 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
   const { environment, departure, afterArrival } = getInitialPreparationBreakdown(visibleExpenses);
   const oneTimePreparationItems = [...environment.items, ...departure.items];
   const oneTimePreparationTotal = environment.total + departure.total;
+  const initialPreparationHasPlus = [...oneTimePreparationItems, ...afterArrival.items].some((item) => item.showPlusSuffix);
+  const afterArrivalHasPlus = afterArrival.items.some((item) => item.showPlusSuffix);
   const monthlyExpenses = grouped.find((entry) => entry.group === expenseLabels.monthlyBasic)?.items ?? [];
   const temporaryExpenses = getTemporaryExpenses(visibleExpenses);
   const totalFor = (items: ExpenseRecord[]) => items.reduce((sum, item) => sum + item.amount, 0);
@@ -590,7 +592,7 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
       <section ref={modalRef} className="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-title" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}>
         <div className="expense-modal-head"><div><p className="eyebrow">{expenseLabels.detailEyebrow}</p><h2 id="expense-title">{expenseLabels.detailTitle}</h2></div><button onClick={onClose} aria-label={expenseLabels.closeDetails}>x</button></div>
         <div className="expense-modal-summary" aria-label="費用摘要">
-          <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}+</b></div>
+          <div><small>{expenseLabels.initialPreparation}</small><b>NT$ {money.format(preparationTotal)}{initialPreparationHasPlus ? "+" : ""}</b></div>
           <div><small>{expenseLabels.monthlyBasic}</small><b>NT$ {money.format(monthlyTotal)}</b></div>
           <div className="expense-modal-summary-reserve"><small>{expenseLabels.temporaryMedical}</small>{temporaryExpenses.length > 0
             ? <><b>{formatTemporaryExpenseReserve(temporaryExpenses)}</b><small className="expense-temporary-reserve-note">{temporaryExpenseReserveNote}</small></>
@@ -598,14 +600,14 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
         </div>
         <div className="expense-groups">
           <section className="expense-group expense-group--initial">
-            <h3>{expenseLabels.initialPreparation}<span>NT$ {money.format(preparationTotal)}+</span></h3>
+            <h3>{expenseLabels.initialPreparation}<span>NT$ {money.format(preparationTotal)}{initialPreparationHasPlus ? "+" : ""}</span></h3>
             <div className="expense-initial-subgroups">
               <section className="expense-initial-subgroup">
                 <h4>{expenseLabels.oneTimePrep}<span>NT$ {money.format(oneTimePreparationTotal)}</span></h4>
                 {renderItems(oneTimePreparationItems)}
               </section>
               <section className="expense-initial-subgroup">
-                <h4>{afterArrival.label}<span>NT$ {money.format(afterArrival.total)}+</span></h4>
+                <h4>{afterArrival.label}<span>NT$ {money.format(afterArrival.total)}{afterArrivalHasPlus ? "+" : ""}</span></h4>
                 {renderItems(afterArrival.items)}
               </section>
             </div>

@@ -21,14 +21,11 @@ export const metadata: Metadata = {
   },
 };
 
-// 讓頁面延伸到瀏海與底部安全區域（iOS 全螢幕呈現）；需要避開橫條的元素請用 env(safe-area-inset-*)
+// vinext 的 viewport 輸出不支援 viewportFit，所以 viewport meta 改在 <head> 手寫（見下方）；這裡只保留主題色。
 export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  viewportFit: "cover",
   themeColor: "#fffdf7",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="zh-Hant"><body><a className="skip-link" href="#main-content">跳到主要內容</a>{children}</body></html>;
+  return <html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /></head><body><a className="skip-link" href="#main-content">跳到主要內容</a>{children}</body></html>;
 }

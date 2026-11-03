@@ -44,8 +44,8 @@ export const birdHazards: HazardItem[] = [
 
 export const birdTrunkItems: TrunkItem[] = [
   { id: "bird-carrier", label: "外出籠／運輸箱", kind: "supply", image: birdAssets.preparation.carrier, visualScale: 1, preparedLabel: "已準備", description: "鳥必須在通風、堅固且間隙安全的外出籠中運送。", expenseIds: ["bird-carrier"], placement: { x: 45, y: 61, width: 25, layer: 5 } },
-  { id: "cover-cloth", label: "遮光布／透氣布", kind: "supply", image: birdAssets.preparation.cover, preparedLabel: "已準備", description: "覆蓋外出籠可減少視覺刺激與緊迫。", expenseIds: ["bird-cover-cloth"], placement: { x: 45, y: 56, width: 22, layer: 6 } },
-  { id: "species-food", label: "少量飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", expenseIds: ["bird-food-initial"], reusedExpenseIds: ["bird-food-initial"], description: "途中備少量符合食性的飼料，從家中現有存糧取用即可。", placement: { x: 28, y: 63, width: 16, layer: 6 } },
+  { id: "cover-cloth", label: "遮光布／透氣布", kind: "supply", image: birdAssets.preparation.cover, preparedLabel: "已準備", description: "覆蓋外出籠可減少視覺刺激與緊迫。", expenseIds: ["bird-cover-cloth"], priceNote: "可使用家中薄毛巾或布料", placement: { x: 45, y: 56, width: 22, layer: 6 } },
+  { id: "species-food", label: "少量飼料", kind: "supply", image: birdAssets.preparation.food, preparedLabel: "已準備", expenseIds: ["bird-food-initial"], reusedExpenseIds: ["bird-food-initial"], description: "依食性選購：種子飼料、滋養丸或吸蜜粉。", placement: { x: 28, y: 63, width: 16, layer: 6 } },
   { id: "water-supply", label: "飲水容器", kind: "supply", image: birdAssets.preparation.water, preparedLabel: "已準備", expenseIds: ["bird-water-supply"], description: "長途移動準備適量飲水，安全停靠時補充。", placement: { x: 57, y: 66, width: 12, layer: 6 } },
 ];
 export const birdRoomFlow: RoomFlowConfig = {

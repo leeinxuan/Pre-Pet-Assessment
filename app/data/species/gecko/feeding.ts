@@ -22,10 +22,10 @@ const imageSizes: ArrivalMealSupplyImageSizes = {
 /** 第一餐場景可在 desktop／mobile 分別調整素材位置與大小。 */
 export const geckoArrivalMealSceneLayout: ArrivalMealSceneLayout = {
   desktop: {
-    pet: { left: 40, bottom: 12, width: 31, maxHeight: 72 },
-    food: { left: 22, bottom: 18, width: 17, maxHeight: 30 },
-    water: { left: 10, bottom: 10, width: 14, maxHeight: 25 },
-    veggie: { left: 30, bottom: 10, width: 14, maxHeight: 25 },
+    pet: { left: 45, bottom: 10, width: 28, maxHeight: 72 },
+    food: { left: 22, bottom: 18, width: 18, maxHeight: 30 },
+    water: { left: 15, bottom: 5, width: 14, maxHeight: 25 },
+    veggie: { left: 30, bottom: 5, width: 14, maxHeight: 25 },
   },
   mobile: {
     pet: { left: 55, bottom: 17, width: 35, maxHeight: 64 },

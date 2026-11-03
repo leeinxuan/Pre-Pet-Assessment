@@ -19,6 +19,8 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; background: var(--paper); }
+/* viewport-fit=cover 後內容會延伸到底部橫條下方；可捲動頁面底部補上安全區域，避免按鈕貼著橫條。 */
+.app-shell { padding-bottom: env(safe-area-inset-bottom, 0px); }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Huninn", "jf open 粉圓", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 16px; }
 button, input, select, textarea { font: inherit; }
 button { color: inherit; }

@@ -11,6 +11,7 @@ import { useMobileLayout } from "../../shared/useMobileLayout";
 function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { scenario: Scenario; petName: string; onReplay?: () => void; onContinue: () => void }) {
   const completionFeedback = scenario.completionFeedback;
   const isCarrySort = scenario.id === "rabbit-carry-sort";
+  const isMobile = useMobileLayout();
   const [videoFailed, setVideoFailed] = useState(false);
   const carryVideo = isCarrySort && scenario.correctFeedbackMedia?.type === "video" ? scenario.correctFeedbackMedia.src : "";
   return <div className={`rabbit-activity-feedback${isCarrySort ? " rabbit-activity-feedback--carry" : ""}`}>
@@ -27,12 +28,12 @@ function RabbitActivityFeedback({ scenario, petName, onReplay, onContinue }: { s
       knowledgeTitle={completionFeedback?.knowledgeTitle ?? scenario.knowledgeTitle ?? "兔子小知識"}
       knowledgeContent={completionFeedback?.knowledgeContent}
       correctItems={completionFeedback ? undefined : scenario.id === "rabbit-carry-sort" ? scenario.learningPoints?.map((text) => withPetName(text, petName)) : scenario.learningPoints}
-      extraCopy={isCarrySort && scenario.completionReminder ? <CompletionReminderBlock reminder={scenario.completionReminder} petName={petName} /> : undefined}
+      extraCopy={isCarrySort && isMobile && scenario.completionReminder ? <CompletionReminderBlock reminder={scenario.completionReminder} petName={petName} /> : undefined}
       onReplay={onReplay}
       onVideoError={() => setVideoFailed(true)}
       onContinue={onContinue}
     />
-    {!isCarrySort && scenario.completionReminder && <CompletionReminderBlock reminder={scenario.completionReminder} petName={petName} />}
+    {(!isCarrySort || !isMobile) && scenario.completionReminder && <CompletionReminderBlock reminder={scenario.completionReminder} petName={petName} />}
   </div>;
 }
 

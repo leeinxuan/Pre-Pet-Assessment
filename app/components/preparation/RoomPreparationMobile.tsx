@@ -82,12 +82,26 @@ function HazardThumbnail({ hazard, background, backgroundPosition = "right cente
 export function RoomPreparationMobile({ petName, scene, hazardBackground, hazardBackgroundPosition, hazards, items, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, roomComplete, onComplete, itemPrice }: RoomPreparationMobileProps) {
   const [started, setStarted] = useState(false);
   const [chosenTab, setChosenTab] = useState<"hazards" | "items" | null>(null);
+  const [tabletPortrait, setTabletPortrait] = useState(false);
+  const [supplyPage, setSupplyPage] = useState(0);
   // The supplies are intentionally unavailable until every hazard is secured.
   // Keep the rendered panel on hazards as well, so an old tab selection cannot
   // expose supplies before the prerequisite is met.
   const tab = hazardsCleared ? (chosenTab ?? "items") : "hazards";
   const activeInfo = activeHazard ?? activeItem;
   const touchStart = useRef<number | null>(null);
+  const pageCount = Math.ceil(items.length / 8);
+  const currentPage = Math.min(supplyPage, Math.max(0, pageCount - 1));
+  const visibleItems = tabletPortrait ? items.slice(currentPage * 8, (currentPage + 1) * 8) : items;
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 721px) and (max-width: 1024px) and (orientation: portrait)");
+    const update = () => setTabletPortrait(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
   function handleSupplyClick(id: string, placed: boolean) {
     if (placed) {
       onSelectItem(id);
@@ -101,7 +115,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   }, [onCloseInfo]);
 
   useEffect(() => {
-    if (!activeInfo || !window.matchMedia("(max-width: 720px)").matches) return;
+    if (!activeInfo || !window.matchMedia("(max-width: 720px), (min-width: 721px) and (max-width: 1024px) and (orientation: portrait)").matches) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const handleEscape = (event: KeyboardEvent) => { if (event.key === "Escape") closeInfo(); };
@@ -126,7 +140,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
         {tab === "hazards" ? securedHazards.filter((id) => hazards.some((item) => item.id === id)).length === 0
           ? <div className="room-mobile-empty"><PointingHandIcon /><p>點擊場景中的危險物品收起</p></div>
           : <div className="room-mobile-grid">{securedHazards.map((id) => hazards.find((item) => item.id === id)).filter((item): item is HazardItem => Boolean(item)).map((item) => <button type="button" key={item.id} className="room-mobile-tile room-mobile-hazard-tile" onClick={() => onSelectHazard(item.id)} aria-label={`${item.label}已收好，查看說明`}><HazardThumbnail hazard={item} background={hazardBackground} backgroundPosition={hazardBackgroundPosition} /><span className="room-mobile-tile-label">{item.label}</span><InfoBadge /></button>)}</div>
-          : <div className="room-mobile-grid">{items.map((item) => {
+          : <div className="room-mobile-grid">{visibleItems.map((item) => {
             const placed = selectedItems.includes(item.id);
             const locked = !placed && lockedItemIds.includes(item.id);
             return <button type="button" key={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}`} onClick={() => handleSupplyClick(item.id, placed)} disabled={!placed && (!hazardsCleared || locked)} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
@@ -136,6 +150,11 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
               {locked && <span className="room-mobile-lock" aria-hidden="true"><LockIcon /></span>}
             </button>;
           })}</div>}
+        {tab === "items" && tabletPortrait && pageCount > 1 && <nav className="room-tablet-pagination" aria-label="用品分頁">
+          <button type="button" aria-label="上一頁用品" onClick={() => setSupplyPage(Math.max(0, currentPage - 1))} disabled={currentPage === 0}>←</button>
+          <span aria-live="polite">{currentPage + 1} / {pageCount}</span>
+          <button type="button" aria-label="下一頁用品" onClick={() => setSupplyPage(Math.min(pageCount - 1, currentPage + 1))} disabled={currentPage >= pageCount - 1}>→</button>
+        </nav>}
       </section>
       {roomComplete && <div className="room-mobile-footer"><button type="button" className="primary room-mobile-complete" onClick={onComplete}>完成房間檢查，準備出發 <span aria-hidden="true">→</span></button></div>}
     </>}

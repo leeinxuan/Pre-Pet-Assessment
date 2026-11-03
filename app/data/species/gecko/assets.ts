@@ -15,6 +15,7 @@ export const geckoAssets = {
     terrariumFront: "/assets/gecko/room/gecko-terrarium-front.webp",
     feederInsects: "/assets/gecko/room/first-feeder-insects.webp",
     feederInsectsFront: "/assets/gecko/room/first-feeder-insects-front.webp",
+    feedingTongs: "/assets/gecko/room/feeding-tongs.webp",
     calciumSupplement: "/assets/gecko/room/calcium-and-vitamin-supplement.webp",
     safeSubstrate: "/assets/gecko/room/safe-substrate.webp",
     heatMat: "/assets/gecko/room/heat-mat.webp",
@@ -62,6 +63,8 @@ export const geckoAssets = {
   preparation: {
     trunkBackground: "/assets/car/car-trunk.webp",
     transportBox: "/assets/car/gecko-transport-box.webp",
+    softPadding: "/assets/car/gecko-soft-padding.webp",
+    coverTowel: "/assets/car/gecko-cover-towel.webp",
     heatPack: "/assets/car/hand-warmer-or-heat-pack.webp",
   },
   feeding: {

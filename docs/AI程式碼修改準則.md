@@ -85,6 +85,7 @@ const feeding = config.feeding;
 
 - 正式費用查詢一定要傳入目前 `species`：`getExpenseForSpecies(id, species)`。
 - 費用 ID 由物種 `expenses.ts` 與資料設定提供，不要在元件手寫金額或 recurring 判定。
+- 「飼養前準備」「出發前準備」費用的 `description` 只改 `preparation.ts`，不要寫回 `expenses.ts`；由 `app/data/shared/expenses.ts` 的 `withPreparationDescriptions` 自動套用到費用明細。
 - 不可使用跨物種 flat catalog 作為正式流程的 fallback。
 
 ### 報告

@@ -142,7 +142,7 @@ export const catLifeScenarios: Scenario[] = [
     id: "cat-scratching-care",
     stage: "日常照護",
     timeLabel: "日常照護",
-    title: "抓沙發",
+    title: "牠把家具都抓壞了",
     description: "`{petName}` 最近比較常抓沙發、窗簾和衣櫃邊角，家人擔心家具一直被破壞。",
     questionText: "你會怎麼引導牠？（複選）",
     topic: "貓咪抓磨需求與居家安全",

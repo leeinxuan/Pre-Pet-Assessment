@@ -56,27 +56,27 @@ export const geckoRoomItems: RoomItem[] = [
   },
   {
     id: "first-feeder-insects", label: "首批活體餌料昆蟲及飼育容器", icon: "◉", image: geckoAssets.room.feederInsects, sceneImage: geckoAssets.room.feederInsectsFront,
-    placement: { x: 57, y: 60, width: 10, layer: 5 }, mobilePlacement: { x: 25, y: 60, width: 18 }, required: true, need: "飲食", expenseId: "gecko-feeder-insects-initial",
+    placement: { x: 53, y: 60, width: 10, layer: 5 }, mobilePlacement: { x: 22, y: 59, width: 18 }, required: true, need: "飲食", expenseId: "gecko-feeder-insects-initial",
     description: "守宮接回後第 3–7 天適應穩定再開始餵食；餌料昆蟲須先備好，存放於通氣飼育盒避免逃脫。",
   },
   {
-    id: "feeding-tongs", label: "餵食用長夾", icon: "✂", image: geckoAssets.room.calciumSupplement, // TODO: replace with feeding-tongs asset
-    placement: { x: 38, y: 63, width: 6, layer: 5 }, mobilePlacement: { x: 10, y: 72, width: 12 }, required: true, need: "飲食", expenseId: "gecko-feeding-tongs",
+    id: "feeding-tongs", label: "餵食用長夾", icon: "✂", image: geckoAssets.room.feedingTongs,
+    placement: { x: 60, y: 61, width: 6, layer: 6 }, mobilePlacement: { x: 29, y: 61, width: 12 }, required: true, need: "飲食", expenseId: "gecko-feeding-tongs",
     description: "夾取昆蟲餵食用，避免守宮誤咬人手。",
   },
   {
     id: "calcium-and-vitamin-supplement", label: "鈣粉與綜合維他命粉", icon: "✦", image: geckoAssets.room.calciumSupplement,
-    placement: { x: 45, y: 63, width: 6, layer: 5 }, mobilePlacement: { x: 10, y: 62, width: 12 }, required: true, need: "飲食", expenseId: "gecko-supplements-initial",
-    description: "依守宮種類選用適合的鈣粉。",
+    placement: { x: 45, y: 63, width: 6, layer: 5 }, mobilePlacement: { x: 8, y: 62, width: 12 }, required: true, need: "飲食", expenseIds: ["gecko-supplements-initial", "gecko-calcium-monthly"],
+    description: "依守宮種類選用適合的鈣粉，每週 1–2 次餵食前以鈣粉沾裹昆蟲；每隔 1–2 週換用綜合維他命粉輪替，維持營養均衡。",
   },
   {
     id: "safe-substrate", label: "安全底材", icon: "▤", image: geckoAssets.room.safeSubstrate,
-    placement: { x: 50, y: 77, width: 50, layer: 1 }, mobilePlacement: { x: 50, y: 78, width: 65 }, required: true, need: "安全", expenseId: "gecko-substrate",
+    placement: { x: 50, y: 77, width: 50, layer: 1 }, mobilePlacement: { x: 50, y: 78, width: 65 }, required: true, need: "安全", expenseIds: ["gecko-substrate", "gecko-substrate-replace"],
     description: "鋪設全缸底部，選用椰子纖維磚、木屑、樹皮塊或赤玉土，滿足守宮挖掘天性；部分物種不建議使用細沙，以防誤食造成腸阻塞。",
   },
   {
     id: "heat-mat", label: "加熱片（爬蟲專用）", icon: "♨", image: geckoAssets.room.heatMat,
-    placement: { x: 20, y: 72, width: 16, layer: 3 }, mobilePlacement: { x: 21, y: 73, width: 23 }, required: true, need: "安全", expenseId: "gecko-heat-mat",
+    placement: { x: 20, y: 72, width: 16, layer: 3 }, mobilePlacement: { x: 21, y: 73, width: 23 }, required: true, need: "安全", expenseIds: ["gecko-heat-mat", "gecko-electricity"],
     description: "貼附缸底一側，建立熱區，另一側保持冷區，讓守宮自行選擇溫度。",
   },
   {
@@ -133,9 +133,10 @@ export const geckoRoomItems: RoomItem[] = [
 ];
 
 export const geckoTrunkItems: TrunkItem[] = [
-  { id: "gecko-transport-box", label: "爬蟲專用運輸盒（附通氣孔）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "選用附通氣孔的小型不透明塑膠盒，盒底鋪一層毛巾或紙巾，避免碰撞並提供視覺遮蔽，降低守宮緊迫感。", preparedLabel: "已準備", expenseIds: ["gecko-transport-box"], placement: { x: 48, y: 60, width: 20, layer: 5 } },
-  { id: "gecko-soft-padding", label: "柔軟墊材（毛巾／擦手紙）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "在運輸盒底部鋪一層毛巾、擦手紙或紙墊料，提供防碰撞緩衝並遮蔽光線，有效降低守宮緊迫感。", preparedLabel: "已準備", expenseIds: ["gecko-soft-padding"], placement: { x: 30, y: 62, width: 14, layer: 4 } },
-  { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 35, y: 65, width: 12, layer: 6 } },
+  { id: "gecko-transport-box", label: "爬蟲專用運輸盒（附通氣孔）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "選用附通氣孔的小型塑膠盒，提供守宮安全的運輸空間。", preparedLabel: "已準備", expenseIds: ["gecko-transport-box"], placement: { x: 48, y: 60, width: 20, layer: 5 } },
+  { id: "gecko-soft-padding", label: "柔軟墊材", kind: "supply", image: geckoAssets.preparation.softPadding, description: "在運輸盒底部鋪一層毛巾、擦手紙或紙墊料，提供防碰撞緩衝，降低守宮緊迫感。", preparedLabel: "已準備", expenseIds: ["gecko-soft-padding"], priceNote: "可使用家中擦手紙", placement: { x: 53, y: 66, width: 14, layer: 6 } },
+  { id: "gecko-cover-towel", label: "小毛巾", kind: "supply", image: geckoAssets.preparation.coverTowel, description: "若運輸盒為透明材質，建議用小毛巾覆蓋部分盒身，增加隱蔽感，避免守宮因視覺刺激感到緊張。", preparedLabel: "已準備", expenseIds: ["gecko-cover-towel"], priceNote: "可使用家中毛巾", placement: { x: 40, y: 68, width: 18, layer: 6 } },
+  { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 30, y: 64, width: 12, layer: 4 } },
 ];
 
 export const geckoRoomFlow: RoomFlowConfig = {

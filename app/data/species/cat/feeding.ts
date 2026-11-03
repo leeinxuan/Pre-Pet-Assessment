@@ -4,7 +4,7 @@ import { catAssets } from "./assets";
 /** 貓咪第一餐場景素材的位置；可獨立於犬隻調整。 */
 export const catArrivalMealSceneLayout: ArrivalMealSceneLayout = {
   desktop: {
-    pet: { left: 47, bottom: 11, width: 33, maxHeight: 67 },
+    pet: { left: 47, bottom: 11, width: 25, maxHeight: 67 },
     water: { left: 25, bottom: 10, width: 15 },
     food: { left: 39, bottom: 8, width: 15 },
     veggie: { left: 55, bottom: 10, width: 13 },

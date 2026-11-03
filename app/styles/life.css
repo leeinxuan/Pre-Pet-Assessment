@@ -554,7 +554,21 @@
 .rabbit-activity-feedback--carry { display: block; }
 .rabbit-activity-feedback--carry .correct-feedback-layout--text-only { display: block; min-height: 0; border: 0; border-radius: 0; background: #e8f3e6; box-shadow: none; overflow: visible; }
 .rabbit-activity-feedback--carry .correct-feedback-copy { min-height: 0; }
-.rabbit-activity-feedback--carry .completion-reminder-block { margin-top: 24px; border: 0; border-radius: 0; background: transparent; padding: 0; }
+.rabbit-activity-feedback--carry .completion-reminder-block { margin-top: 24px; }
+@media (min-width: 721px) {
+  .rabbit-activity-feedback--carry .correct-feedback-media {
+    align-self: start;
+    height: 560px;
+    min-height: 0;
+  }
+  .rabbit-activity-feedback--carry .correct-feedback-media video {
+    height: 100%;
+    min-height: 0;
+  }
+}
+@media (max-width: 720px) {
+  .rabbit-activity-feedback--carry .completion-reminder-block { border: 0; border-radius: 0; background: transparent; padding: 0; }
+}
 .completion-reminder-block { padding: clamp(22px, 4vw, 34px); border: 1px solid #e6c779; border-radius: 24px; background: #fff8e9; color: var(--ink); }
 .completion-reminder-block > header { margin-bottom: 18px; }
 .completion-reminder-block h2 { margin: 0; font-size: clamp(22px, 3vw, 30px); line-height: 1.3; }

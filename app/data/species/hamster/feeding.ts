@@ -5,8 +5,8 @@ import { hamsterAssets } from "./assets";
 export const hamsterArrivalMealSceneLayout: ArrivalMealSceneLayout = {
   desktop: {
     pet: { left: 35, bottom: 20, width: 25, maxHeight: 67 },
-    water: { left: 1, bottom: 45, width: 25 },
-    food: { left: 10, bottom: 10, width: 25 },
+    water: { left: 1, bottom: 45, width: 30 },
+    food: { left: 15, bottom: 2, width: 25 },
     veggie: { left: 55, bottom: 10, width: 13 },
   },
   mobile: {

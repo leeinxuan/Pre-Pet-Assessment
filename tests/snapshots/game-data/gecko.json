@@ -7075,17 +7075,6 @@
       "recurring": false,
       "stage": "飼養前準備"
     },
-    "gecko-thermostat": {
-      "amount": 500,
-      "category": "一次性準備費",
-      "description": "防止加熱片過熱，精確維持設定溫度。",
-      "fromEmergency": false,
-      "id": "gecko-thermostat",
-      "maxAmount": 1200,
-      "name": "溫控器",
-      "recurring": false,
-      "stage": "飼養前準備"
-    },
     "gecko-transport-box": {
       "amount": 200,
       "category": "一次性準備費",

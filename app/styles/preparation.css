@@ -499,12 +499,44 @@
 @keyframes chocolateNudge { 0%, 100% { transform: translateX(0); } 35% { transform: translateX(-5px) rotate(-3deg); } 70% { transform: translateX(5px) rotate(3deg); } }
 .arrival-meal-scene { position: relative; aspect-ratio: 16 / 9; min-height: 0; overflow: hidden; background: #dbc28d; }
 .arrival-meal-room { display: block; width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 721px) {
+  /* Both background assets exist in the DOM. Only the desktop one may take up
+     space in this scene; the mobile crop has its own inline transform. */
+  .arrival-meal-scene > .arrival-meal-room--desktop {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .arrival-meal-scene > .arrival-meal-room--mobile { display: none; }
+}
+@media (max-width: 720px) {
+  .arrival-meal-room--desktop { display: none; }
+  .arrival-meal-room--mobile { display: block; }
+}
 .arrival-meal-dog, .arrival-meal-water, .arrival-meal-food, .arrival-meal-veggie { position: absolute; left: var(--arrival-meal-left); bottom: var(--arrival-meal-bottom); width: var(--arrival-meal-width); max-height: var(--arrival-meal-max-height); height: auto; object-fit: contain; }
 .arrival-meal-dog { z-index: 2; }
 .arrival-meal-water, .arrival-meal-food, .arrival-meal-veggie { z-index: 3; }
 .arrival-meal-footer { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 18px; min-height: 112px; padding: 14px 24px; border-top: 1px solid var(--line); }
 .arrival-meal-footer p { flex: 1; margin: 0; color: #3e6848; line-height: 1.6; }
 .arrival-meal-completion-message { min-height: calc(1.6em * 2); }
+
+@media (min-width: 1025px) {
+  .arrival-meal-activity[data-species="hamster"] {
+    grid-template-columns: 360px minmax(0, 1fr);
+  }
+  .arrival-meal-activity[data-species="hamster"] .arrival-meal-room--desktop,
+  .arrival-meal-activity[data-species="cat"] .arrival-meal-room--desktop,
+  .arrival-meal-activity[data-species="gecko"] .arrival-meal-room--desktop { transform: scale(1.28); }
+  .arrival-meal-activity[data-species="cat"] .arrival-meal-room--desktop {
+    object-position: center bottom;
+    transform-origin: center bottom;
+  }
+  .arrival-meal-activity[data-species="hamster"] .arrival-meal-room--desktop,
+  .arrival-meal-activity[data-species="gecko"] .arrival-meal-room--desktop {
+    object-position: left center;
+    transform-origin: left center;
+  }
+}
 
 .feeding-steps { display: grid; grid-template-columns: 1.15fr .9fr .75fr; gap: 14px; }
 .feeding-steps > article { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }

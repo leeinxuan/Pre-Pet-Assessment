@@ -14,13 +14,13 @@ export const dogRoomDoorplatePlacement = {
  * 桌機改 placement，手機改 mobilePlacement。
  */
 export const dogRoomItems: RoomItem[] = [
-  { id: "bed", label: "睡墊", icon: "🛏️", image: "/assets/dog/room/pet-bed.webp", placement: { x: 67, y: 83, width: 32, layer: 2 }, mobilePlacement: { x: 62, y: 85, width: 45 }, required: true, need: "休息", expenseId: "dog-bed", description: "提供固定、安靜的休息位置。" },
-  { id: "toy", label: "玩具", icon: "🦴", image: "/assets/dog/room/toy.webp", placement: { x: 73, y: 80, width: 10, layer: 4 }, mobilePlacement: { x: 69, y: 80, width: 15 }, required: true, need: "活動", expenseId: "dog-toy", description: "幫助小狗消耗精力與建立正向互動。" },
-  { id: "water-bowl", label: "水碗", icon: "💧", image: "/assets/dog/room/water-bowl.webp", placement: { x: 32, y: 90, width: 12, layer: 3 }, mobilePlacement: { x: 10, y: 90, width: 18 }, required: true, need: "飲食", expenseId: "dog-water-bowl", description: "每天確認有乾淨、足量的飲水。" },
-  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/assets/dog/room/food-bowl.webp", placement: { x: 41, y: 90, width: 10, layer: 3 }, mobilePlacement: { x: 25, y: 90, width: 15 }, required: true, need: "飲食", expenseId: "dog-food-bowl", description: "固定飲食器具，幫助建立規律餵食。" },
+  { id: "bed", label: "睡墊", icon: "🛏️", image: "/assets/dog/room/pet-bed.webp", placement: { x: 67, y: 83, width: 32, layer: 2 }, mobilePlacement: { x: 62, y: 85, width: 45 }, required: true, need: "休息", expenseId: "dog-bed", description: "提供安靜、安全的休息角落；可選擇犬用床或軟墊，依體型選擇適合尺寸" },
+  { id: "toy", label: "玩具", icon: "🦴", image: "/assets/dog/room/toy.webp", placement: { x: 73, y: 80, width: 10, layer: 4 }, mobilePlacement: { x: 69, y: 80, width: 15 }, required: true, need: "活動", expenseId: "dog-toy", description: "提供啃咬與互動的適當出口；選擇不易碎裂、無毒材質，避免誤食" },
+  { id: "water-bowl", label: "水碗", icon: "💧", image: "/assets/dog/room/water-bowl.webp", placement: { x: 32, y: 90, width: 12, layer: 3 }, mobilePlacement: { x: 10, y: 90, width: 18 }, required: true, need: "飲食", expenseId: "dog-water-bowl", description: "隨時保持乾淨飲水；選擇適合體型的碗，不易打翻為佳" },
+  { id: "food-bowl", label: "狗碗", icon: "🥣", image: "/assets/dog/room/food-bowl.webp", placement: { x: 41, y: 90, width: 10, layer: 3 }, mobilePlacement: { x: 25, y: 90, width: 15 }, required: true, need: "飲食", expenseId: "dog-food-bowl", description: "固定位置餵食，建立穩定作息；依體型選擇高度適中的食碗" },
   { id: "toilet", label: "尿墊", icon: "▧", image: "/assets/dog/room/pee-pad.webp", placement: { x: 15, y: 85, width: 20, layer: 1 }, mobilePlacement: { x: 35, y: 70, width: 25 }, required: true, need: "排泄", expenseId: "dog-toilet", description: "協助建立如廁位置，減少環境壓力。" },
-  { id: "cleaner", label: "寵物專用清潔用品", icon: "🧼", image: "/assets/dog/room/cleaner.webp", placement: { x: 39, y: 46, width: 10, layer: 3 }, mobilePlacement: { x: 10, y: 46, width: 18 }, required: true, need: "清潔", expenseId: "dog-cleaner", description: "維持居家清潔，降低病原與異味。" },
-  { id: "food", label: "飼料", icon: "🦴", image: "/assets/dog/room/food.webp", placement: { x: 50, y: 85, width: 9, layer: 3 }, mobilePlacement: { x: 39, y: 86, width: 13 }, required: true, need: "飲食", expenseId: "dog-food", description: "選擇符合年齡、體型與健康需求的主食。" },
+  { id: "cleaner", label: "寵物專用清潔用品", icon: "🧼", image: "/assets/dog/room/cleaner.webp", placement: { x: 39, y: 46, width: 10, layer: 3 }, mobilePlacement: { x: 10, y: 46, width: 18 }, required: true, need: "清潔", expenseId: "dog-cleaner", description: "清潔排泄物，避免殘留氣味引導錯誤如廁行為；需選用對犬無害的成分" },
+  { id: "food", label: "飼料", icon: "🦴", image: "/assets/dog/room/food.webp", placement: { x: 50, y: 85, width: 9, layer: 3 }, mobilePlacement: { x: 39, y: 86, width: 13 }, required: true, need: "飲食", expenseId: "dog-food", description: "依體型與年齡選擇適合的犬用飼料；初期維持原飼料、漸進換食以避免腸胃不適" },
 ];
 
 export const dogHazards: HazardItem[] = [
@@ -34,11 +34,11 @@ export const dogHazards: HazardItem[] = [
 export const dogDepartureTrunkItems: TrunkItem[] = [
   { id: "id", label: "身分證", kind: "document", visualRole: "identity-card", image: "/assets/car/id-card.webp", preparedLabel: "已攜帶", description: "辦理認養與核對身分時使用。", placement: { x: 20, y: 36, width: 15, layer: 4 } },
   { id: "documents", label: "飼養文件", kind: "document", visualRole: "document-folder", image: "/assets/car/adoption-documents.webp", preparedLabel: "已攜帶", description: "請攜帶家中環境照片；如有租屋，須提供房東許可之證明。", placement: { x: 22, y: 32, width: 24, layer: 3 } },
-  { id: "carrier", label: "運輸籠", kind: "supply", image: "/assets/car/carrier.webp", visualScale: 1.5, preparedLabel: "已準備", description: "讓小狗在移動途中有安全固定的空間。", expenseIds: ["carrier-kit"], placement: { x: 51, y: 60, width: 34, layer: 5 } },
+  { id: "carrier", label: "運輸籠", kind: "supply", image: "/assets/car/carrier.webp", visualScale: 1.5, preparedLabel: "已準備", description: "安全運送，避免車內跌倒或排泄污染；選擇通風、堅固且尺寸適當的運輸籠。", expenseIds: ["carrier-kit"], placement: { x: 51, y: 60, width: 34, layer: 5 } },
   { id: "pee-pad", label: "尿墊", kind: "supply", image: "/assets/car/pee-pad.webp", preparedLabel: "已準備", description: "接回途中可降低排泄與清潔壓力。", expenseIds: ["toilet"], reusedExpenseIds: ["toilet"], placement: { x: 49, y: 66, width: 20, layer: 6 } },
-  { id: "water-kit", label: "水碗", kind: "supply", image: "/assets/car/water-bottle.webp", preparedLabel: "已準備", description: "必要時補充飲水，避免長時間缺水。", expenseIds: ["water-kit"], placement: { x: 55, y: 67, width: 27, layer: 6 } },
-  { id: "leash", label: "牽繩", kind: "supply", image: "/assets/car/leash.webp", preparedLabel: "已準備", description: "下車或移動時維持安全防護。", expenseIds: ["dog-leash"], placement: { x: 30, y: 60, width: 25, layer: 4 } },
-  { id: "cleaner", label: "寵物專用清潔用品", kind: "supply", image: "/assets/dog/room/cleaner.webp", preparedLabel: "已準備", description: "處理接回途中可能發生的髒污。", expenseIds: ["dog-cleaner-kit"], placement: { x: 35, y: 65, width: 14, layer: 8 } },
+  { id: "water-kit", label: "水碗", kind: "supply", image: "/assets/car/water-bottle.webp", preparedLabel: "已準備", description: "路程中保持水分供應；折疊式水碗方便攜帶", expenseIds: ["water-kit"], placement: { x: 55, y: 67, width: 27, layer: 6 } },
+  { id: "leash", label: "牽繩", kind: "supply", image: "/assets/car/leash.webp", preparedLabel: "已準備", description: "移動安全必備；選擇適合體型的牽繩長度與扣環強度", expenseIds: ["dog-leash"], placement: { x: 30, y: 60, width: 25, layer: 4 } },
+  { id: "cleaner", label: "寵物專用清潔用品", kind: "supply", image: "/assets/dog/room/cleaner.webp", preparedLabel: "已準備", description: "路程中若發生排泄可即時清理；公共場所清潔為基本禮儀與法規義務", expenseIds: ["dog-cleaner-kit"], placement: { x: 35, y: 65, width: 14, layer: 8 } },
 ];
 
 /** 犬隻房間、危險物、接回與餵食的共用資料。 */
