@@ -382,7 +382,7 @@ export const rabbitLifeScenarios: Scenario[] = [
       careTimeItems: rabbitReport.dailyCareBreakdown,
       showCareTime: false,
       additionalAdvice: [
-        "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
+        "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
       ]
     },
     busyCareChecklist: [

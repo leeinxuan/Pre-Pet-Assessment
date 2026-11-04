@@ -176,7 +176,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
         <span className="room-mobile-sheet-handle" aria-hidden="true" />
         <button type="button" className="room-mobile-sheet-close" onClick={closeInfo} aria-label="關閉說明">×</button>
         <header>{activeHazard ? <HazardThumbnail hazard={activeHazard} background={hazardBackground} backgroundPosition={hazardBackgroundPosition} /> : <ItemThumbnail image={activeInfo.image} label={activeInfo.label} />}<div><h2>{activeInfo.label}</h2>{activeItem && <p className="room-mobile-price">{itemPrice(activeItem)}</p>}</div></header>
-        <div className="room-mobile-sheet-copy">{activeHazard ? <><div className="room-mobile-hazard-section"><h3>為什麼危險：</h3><p>{renderKnowledgeText(activeHazard.danger.replaceAll("{petName}", petName))}</p></div><div className="room-mobile-hazard-section"><h3>建議如何處理：</h3><p>{renderKnowledgeText(activeHazard.handling.replaceAll("{petName}", petName))}</p></div></> : activeItem && <p>{renderKnowledgeText(activeItem.description.replaceAll("{petName}", petName))}</p>}</div>
+        <div className="room-mobile-sheet-copy">{activeHazard ? <><div className="room-mobile-hazard-section"><h3>為什麼危險：</h3><p>{renderKnowledgeText(activeHazard.danger.replaceAll("{petName}", petName))}</p></div><div className="room-mobile-hazard-section"><h3>建議如何處理：</h3><p>{renderKnowledgeText(activeHazard.handling.replaceAll("{petName}", petName))}</p></div></> : activeItem && <>{activeItem.descriptionImage && <img src={activeItem.descriptionImage} alt="" className="room-mobile-sheet-desc-image" />}<p>{renderKnowledgeText(activeItem.description.replaceAll("{petName}", petName))}</p></>}</div>
       </section>
     </div>, document.body)}
   </div>;

@@ -34,17 +34,27 @@ export const hamsterCageCheck = {
     },
     {
       id: "sift-sand",
-      label: "撈出砂浴盆排泄物",
-      prompt: "用漏勺篩掉 {petName} 在砂浴盆裡留下的糞便和結塊！",
-      completion: "可以挑選市售的倉鼠專用砂鏟，篩孔細密、砂粒不易漏出，最適合清理浴砂中的排泄物。",
-    },
-    {
-      id: "settle-sand",
-      label: "水平搖晃砂盆",
-      prompt: "輕輕左右搖晃砂盆，讓細碎的粉塵沉到底部！",
-      completion: "篩完後一定要水平輕輕搖晃，讓剩餘的細碎粉塵沉到底部——否則 {petName} 下次打滾挖掘時會直接吸入粉塵，影響牠的呼吸道。",
+      label: "砂浴盆篩沙清潔",
+      prompt: "用砂鏟舀起浴沙、篩回細沙，再把排泄物丟進垃圾桶。",
+      completion: "浴沙裡的糞便和結塊都清乾淨了，{petName} 可以繼續在裡面打滾了！",
     },
   ] as const,
+  sandCleaning: {
+    rounds: [
+      {
+        scoopPrompt: "用砂鏟舀起一部分浴沙",
+        shakePrompt: "搖晃砂鏟，讓細沙漏回盆裡",
+        trashPrompt: "點擊垃圾桶，丟掉留在砂鏟上的排泄物",
+      },
+      {
+        scoopPrompt: "再舀一次浴沙！",
+        shakePrompt: "搖晃砂鏟，讓細沙漏回盆裡",
+        trashPrompt: "點擊垃圾桶，丟掉最後的排泄物！",
+      },
+    ],
+    shakeProgressLabel: "搖晃進度",
+    completion: "浴沙裡的糞便和結塊都清乾淨了，{petName} 可以繼續在裡面打滾了！",
+  },
   interaction: {
     // 固定廁所角落，讓每日清潔流程與畫面位置一致。
     toiletCorner: "top-right",
@@ -53,9 +63,9 @@ export const hamsterCageCheck = {
     shakeDurationMs: 2500,
     cleanCornerHint: "這裡還乾淨，再找找看",
     refillHint: "點擊剛清出的角落，補上乾淨的新墊料。",
-    siftHint: "按住漏勺，從砂盆一端拖曳到另一端。",
-    shakeHint: "在砂盆上左右拖曳，讓細碎粉塵沉到底部。",
-    shakeCompleteHint: "太好了！砂浴盆已經平整又乾淨，{petName} 可以舒服地使用了！",
+    siftHint: "把砂鏟移到砂浴盆上方，舀起一部分浴沙。",
+    shakeHint: "左右拖曳砂鏟，讓細沙從篩孔漏回盆裡。",
+    shakeCompleteHint: "細沙已經漏回盆裡，點擊垃圾桶丟掉砂鏟上的排泄物。",
     /** Touch-first instructions and thresholds. Desktop keeps the drag/hold interactions above. */
     mobileTap: {
       scoop: {
@@ -63,11 +73,11 @@ export const hamsterCageCheck = {
         targetPrompt: "點擊髒污，完成清理。",
       },
       sieve: {
-        selectPrompt: "點擊細孔漏勺，準備篩除排洩物。",
-        targetPrompt: "點擊砂盆中的排泄物，將它篩出。",
+        selectPrompt: "點擊砂鏟，準備舀起浴沙。",
+        targetPrompt: "點擊砂浴盆，舀起一部分浴沙。",
       },
       shake: {
-        prompt: "輕點砂盆，讓墊材鬆動並找出排泄物。",
+        prompt: "連續點擊砂鏟，讓細沙漏回砂浴盆裡。",
         progressLabel: "搖晃進度",
         progressIncrement: 25,
       },
@@ -106,7 +116,7 @@ export const hamsterCageCheck = {
   },
   completion: {
     title: "清潔完成！{petName} 的小小家整理好了",
-    subtitle: "你清理了廁所角落的髒墊料，也篩好了砂浴盆。",
+    subtitle: "浴沙裡的糞便和結塊都清乾淨了，{petName} 可以繼續在裡面打滾了！",
     description: "倉鼠的健康很難從外表立刻看出來——牠靠著這兩個乾淨的空間，每天維持身體的整潔與舒適。",
     reflectionTitle: "每天的小動作，是對 {petName} 最具體的照顧",
     reflection: "倉鼠不像貓狗會告訴你牠的需求。牠有固定的廁所角落、每天使用砂浴盆——保持這兩個地方的乾淨，就是你每天能給牠最直接的照顧，也是觀察牠使用習慣有無異常的時機。",

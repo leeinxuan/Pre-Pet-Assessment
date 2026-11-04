@@ -2,7 +2,7 @@ import type { MasteredCareTheme } from "../../shared/mastered-care-types";
 import { preparationThemes } from "../../shared/mastered-care-builder";
 
 export const birdMasteredCareThemes: readonly MasteredCareTheme[] = [
-  ...preparationThemes({ home: "確認住家無鐵氟龍、薰香等鳥類毒素，評估適合飼鳥的環境條件。", room: "選用適當尺寸的方形金屬籠，備好粗細合適的棲木、飲水器與安全玩具。", trunk: "帶上外出籠、透氣墊材，準備好接鳥的出發物品。" }),
+  ...preparationThemes({ home: "確認住家無鐵氟龍、薰香等鳥類毒素，評估適合飼鳥的環境條件。", room: "選用方形金屬籠，確認籠寬與高度能讓雙翼完全展開、站於棲木時尾羽不碰底；棲木粗細應能讓鳥抓握時足趾環繞約 2/3 圓周，另備飲水器與安全玩具。", trunk: "帶上外出籠、透氣墊材，準備好接鳥的出發物品。" }),
   { id: "arrival-meal", title: "安頓與第一餐", summary: "了解鳥類到家後需安靜適應，以及符合食性的第一餐食物。", category: "care-life", order: 40, sources: [{ kind: "scenario", scenarioIds: ["bird-arrival-adjustment"] }, { kind: "arrival-meal" }] },
   { id: "behavior-response", title: "行為情境應對", summary: "遇到挑食、刻板行為或持續鳴叫，了解背後原因與應對方式。", category: "care-life", order: 50, sources: [{ kind: "scenario", scenarioIds: ["bird-picky-eating", "bird-stereotypy", "bird-excessive-calling"] }] },
   { id: "cage-inspection", title: "外觀及鳥籠日常巡視", summary: "知道每天檢查棲木、玩具與糞便托盤的重要性與具體做法。", category: "care-life", order: 60, sources: [{ kind: "life-state", key: "bird-cage-inspection-complete", requiredStepIds: ["tray-clean", "feces-observed", "health-observed", "social-time"] }] },

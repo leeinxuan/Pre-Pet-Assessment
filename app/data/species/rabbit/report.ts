@@ -21,8 +21,7 @@ export const rabbitReport: SpeciesReportConfig = {
     { title: "牧草補充與飲水更換", detail: "約 5～10 分鐘" },
     { title: "便盆清潔與環境巡視", detail: "約 10～20 分鐘" },
     { title: "蔬菜備製與餵食", detail: "約 10 分鐘" },
-    { title: "觀察精神、食量與行為", detail: "約 5～10 分鐘" },
+    { title: "觀察精神、進食狀況等行為", detail: "約 5～10 分鐘" },
     { title: "放風陪伴與互動", detail: "約 30～60 分鐘" },
-    { title: "梳毛（依毛長與換毛期）", detail: "約 5～15 分鐘" },
   ],
 };

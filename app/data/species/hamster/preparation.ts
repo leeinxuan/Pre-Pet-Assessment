@@ -33,7 +33,7 @@ export const hamsterRoomItems: RoomItem[] = [
 export const hamsterTrunkItems: TrunkItem[] = [
   { id: "carrier", label: "防逃運輸容器", kind: "supply", image: hamsterAssets.preparation.carrier, visualScale: 1, description: "擅長啃咬與鑽縫隙，需選金屬或硬質材料。", preparedLabel: "已準備", expenseIds: ["hamster-carrier"], placement: { x: 45, y: 60, width: 20, layer: 5 } },
   { id: "bedding-in-carrier", label: "容器內墊料", kind: "supply", image: hamsterAssets.preparation.bedding, description: "足夠深度讓{petName}挖掘保暖；安全吸附力佳。", preparedLabel: "已準備", expenseIds: ["hamster-bedding-initial"], reusedExpenseIds: ["hamster-bedding-initial"], placement: { x: 50, y: 69, width: 12, layer: 6 } },
-  { id: "hideout-in-carrier", label: "小型躲藏物", kind: "supply", image: hamsterAssets.preparation.hideoutInCarrier, description: "提供可躲藏的空間，讓{petName}在移動過程中感到安心。", preparedLabel: "已準備", priceNote: "可使用紙捲", placement: { x: 30, y: 66, width: 12, layer: 4 } },
+  { id: "hideout-in-carrier", label: "小型躲藏物", kind: "supply", image: hamsterAssets.preparation.hideoutInCarrier, description: "提供可躲藏的空間，讓{petName}在移動過程中感到安心。建議選用紙捲或輕量材質，避免運輸搖晃時重物砸傷{petName}。", preparedLabel: "已準備", expenseIds: ["hamster-hideout-carrier"], priceNote: "可使用紙捲", placement: { x: 30, y: 66, width: 12, layer: 4 } },
 ];
 
 export const hamsterRoomFlow: RoomFlowConfig = {

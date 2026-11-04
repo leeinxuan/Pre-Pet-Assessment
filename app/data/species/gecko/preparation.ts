@@ -128,7 +128,7 @@ export const geckoRoomItems: RoomItem[] = [
   {
     id: "calcium-dish", label: "補鈣碟", icon: "◌", image: geckoAssets.room.calciumDish,
     placement: { x: 50, y: 77, width: 13, layer: 6 }, mobilePlacement: { x: 45, y: 66, width: 12 }, required: false, need: "飲食", expenseId: "gecko-calcium-dish",
-    description: "補充鈣質最常見的做法是直接在餌料上撒粉；補鈣碟為選配，可在缸內備一小碟無 D3 鈣粉，讓守宮視需求自行舔食。",
+    description: "在缸內常備一小碟無 D3 鈣粉，讓守宮可依需求自行舔食補充。也可選擇在日常餵食時，於餌料上撒鈣粉。",
   },
 ];
 

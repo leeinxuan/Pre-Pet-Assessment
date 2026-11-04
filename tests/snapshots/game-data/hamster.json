@@ -79,7 +79,12 @@
         "sandBathMess": "/assets/hamster/CageCheckActivity/sand-bath-mess.webp",
         "sandBathMiddle": "/assets/hamster/CageCheckActivity/sand-bath-middle.webp",
         "sandSieve": "/assets/hamster/CageCheckActivity/tool-sand-sieve.webp",
-        "scoop": "/assets/hamster/CageCheckActivity/tool-scoop.webp"
+        "sandSieveClean": "/assets/hamster/CageCheckActivity/tool-sand-sieve-clean.webp",
+        "sandSieveFull": "/assets/hamster/CageCheckActivity/tool-sand-sieve-full.webp",
+        "sandSieveMiddle": "/assets/hamster/CageCheckActivity/tool-sand-sieve-middle.webp",
+        "scoop": "/assets/hamster/CageCheckActivity/tool-scoop.webp",
+        "trashBin": "/assets/shared/trash-bin.webp",
+        "trashBinOpen": "/assets/shared/trash-bin-open.webp"
       },
       "feeding": {
         "background": "/assets/hamster/room/bg-bedding.webp",

@@ -12,6 +12,7 @@ export const hamsterExpenses: Record<string, ExpenseRecord> = {
   "hamster-bedding-initial": { id: "hamster-bedding-initial", name: "墊料（初期備量）", amount: 250, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false },
   "hamster-gnaw-initial": { id: "hamster-gnaw-initial", name: "磨牙棒（初期備量）", amount: 150, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false },
   "hamster-pellet-initial": { id: "hamster-pellet-initial", name: "倉鼠綜合飼料（初期備量）", amount: 300, category: "一次性準備費", stage: "飼養前準備", recurring: false, fromEmergency: false },
+  "hamster-hideout-carrier": { id: "hamster-hideout-carrier", name: "小型躲藏物（紙捲或輕量材質）", amount: 0, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false },
   "hamster-carrier": { id: "hamster-carrier", name: "防逃運輸容器（金屬或硬質外出盒）", amount: 600, category: "一次性準備費", stage: "出發前準備", recurring: false, fromEmergency: false },
   "hamster-arrival-checkup": { id: "hamster-arrival-checkup", name: "到家後首次健康檢查", amount: 1500, showPlusSuffix: true, category: "到家後必要支出", stage: "寵物到家後", recurring: false, fromEmergency: false, description: "建立第一份醫療紀錄，確認基本健康狀況；倉鼠體型小、體徵不易察覺，及早建立基準值很重要" },
   "hamster-pellet-monthly": { id: "hamster-pellet-monthly", name: "每月綜合飼料費用", amount: 300, category: "每月基本支出", stage: "日常照護", recurring: true, fromEmergency: false, description: "倉鼠專用飼料為主食；每日固定量餵食，觀察剩食情況" },

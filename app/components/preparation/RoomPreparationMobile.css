@@ -310,6 +310,9 @@
   .room-mobile-hazard-section h3 { margin: 0 0 5px; color: var(--room-mobile-ink); font-size: 14px; font-weight: 900; }
   .room-mobile-sheet-copy .knowledge-emphasis { color: var(--gold-dark); font-weight: 850; }
   .room-mobile-sheet-copy .knowledge-danger { color: #a83f38; font-weight: 900; }
+  .room-mobile-sheet-copy .knowledge-accent { color: var(--gold-dark); font-weight: 800; }
+  /* 手機版說明配圖：顯示於說明文字上方 */
+  .room-mobile-sheet-desc-image { display: block; width: 100%; border-radius: 12px; margin-bottom: 14px; }
   .room-preparation-mobile button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
   .room-preparation-mobile button:active:not(:disabled) { transform: scale(.985); }
 }

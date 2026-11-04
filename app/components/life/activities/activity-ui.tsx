@@ -16,13 +16,15 @@ export function withPetName(text: string, petName: string, species?: string) {
 }
 
 export function renderKnowledgeText(text: string) {
-  return text.split(/(\*\*.*?\*\*|<mark>.*?<\/mark>|<danger>.*?<\/danger>)/g).filter(Boolean).map((part, index) => (
+  return text.split(/(\*\*.*?\*\*|<mark>.*?<\/mark>|<danger>.*?<\/danger>|<accent>.*?<\/accent>)/g).filter(Boolean).map((part, index) => (
     part.startsWith("**") && part.endsWith("**")
       ? <strong className="knowledge-emphasis" key={`${part}-${index}`}>{part.slice(2, -2)}</strong>
       : part.startsWith("<mark>") && part.endsWith("</mark>")
         ? <strong className="knowledge-emphasis" key={`${part}-${index}`}>{part.slice(6, -7)}</strong>
       : part.startsWith("<danger>") && part.endsWith("</danger>")
         ? <strong className="knowledge-danger" key={`${part}-${index}`}>{part.slice(8, -9)}</strong>
+      : part.startsWith("<accent>") && part.endsWith("</accent>")
+        ? <span className="knowledge-accent" key={`${part}-${index}`}>{part.slice(8, -9)}</span>
       : <span key={`${part}-${index}`}>{part}</span>
   ));
 }

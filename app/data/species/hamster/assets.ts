@@ -61,6 +61,11 @@ export const hamsterAssets = {
     sandBathClean: "/assets/hamster/CageCheckActivity/sand-bath-clean.webp",
     scoop: "/assets/hamster/CageCheckActivity/tool-scoop.webp",
     sandSieve: "/assets/hamster/CageCheckActivity/tool-sand-sieve.webp",
+    sandSieveFull: "/assets/hamster/CageCheckActivity/tool-sand-sieve-full.webp",
+    sandSieveMiddle: "/assets/hamster/CageCheckActivity/tool-sand-sieve-middle.webp",
+    sandSieveClean: "/assets/hamster/CageCheckActivity/tool-sand-sieve-clean.webp",
+    trashBin: "/assets/shared/trash-bin.webp",
+    trashBinOpen: "/assets/shared/trash-bin-open.webp",
   },
   petJourney: {
     arrivalTransition: "/assets/hamster/pet-journey/arrival-transition.mp4",

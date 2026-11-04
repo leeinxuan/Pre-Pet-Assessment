@@ -745,6 +745,8 @@ export type RoomItem = {
   expenseIds?: string[];
   /** 物品完成放置後，顯示於用品卡中的簡短說明。 */
   description: string;
+  /** 說明文字配圖：電腦版點擊重點文字可彈出此圖，手機版顯示於說明區塊最上方。 */
+  descriptionImage?: string;
 };
 
 export type HazardItem = {

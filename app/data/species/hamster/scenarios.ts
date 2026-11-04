@@ -197,7 +197,7 @@ export const hamsterLifeScenarios: Scenario[] = [
     stageTitle: "當生活發生變化",
     timeLabel: "當生活發生變化",
     title: "臨時晚歸，{petName} 的照顧怎麼辦？",
-    description: "今天臨時需要加班，預計晚上九點才能到家。{petName} 傍晚開始活動，飲水器要確認出水、食碗需要補充今天的份量、砂浴盆也需要篩一下——而且每天傍晚確認牠的狀態，是你掌握健康的重要時機。你開始想：今晚誰來照顧牠？",
+    description: "今天臨時需要加班，預計晚上九點才能到家。{petName} 傍晚開始活動，飲水器要確認出水、食碗需要補充今天的份量、砂浴盆也需要篩一下——而且每天確認牠的狀態，是你掌握健康的重要時機。你開始想：今晚誰來照顧牠？",
     questionText: "你會怎麼做？",
     topic: "忙碌備援計畫",
     reportSummary: "晚歸時安排可信任的人照顧，交接飲水、餵食、砂浴與健康觀察。",
@@ -233,7 +233,7 @@ export const hamsterLifeScenarios: Scenario[] = [
       careTimeTitle: "每日照護時間",
       careTimeItems: hamsterReport.dailyCareBreakdown,
       additionalAdvice: [
-        "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉小型哺乳類照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
+        "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉小型哺乳類照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
       ]
     },
     busyCareChecklist: [

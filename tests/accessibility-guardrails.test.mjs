@@ -151,6 +151,7 @@ test("drag interactions stay keyboard-operable without separate keyboard-instruc
   assert.match(rabbitInspection, /aria-label="選取梳子"/);
   assert.match(rabbitInspection, /aria-label=\{`梳理\$\{current\.label\}`\}/);
   assert.match(hamsterInspection, /aria-label="清理髒污角落"/);
-  assert.match(hamsterInspection, /aria-label="篩除砂浴盆排泄物"/);
-  assert.match(hamsterInspection, /aria-label=\{siftAcknowledged && !shakeComplete \? "完成水平搖晃砂浴盆"/);
+  assert.match(hamsterInspection, /aria-label=\{roundCopy\.scoopPrompt\}/);
+  assert.match(hamsterInspection, /aria-label=\{sandPhase === "shake" \? roundCopy\.shakePrompt/);
+  assert.match(hamsterInspection, /aria-label=\{roundCopy\.trashPrompt\}/);
 });

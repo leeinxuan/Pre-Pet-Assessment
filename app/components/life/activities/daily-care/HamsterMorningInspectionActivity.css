@@ -8,16 +8,138 @@
   .hamster-cage-check-scene:has(> .hamster-cage-floor) { aspect-ratio: 1672 / 941; min-height: 0; }
   .hamster-cage-floor { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 }
+
+/* 砂浴盆清潔：兩輪「舀沙 → 搖篩 → 丟棄」共用同一個場景。 */
+.hamster-sand-bath-stage {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #fffaf0, #edf5e9);
+}
+.hamster-sand-bath-stage .hamster-sand-bath {
+  width: min(82%, 670px);
+  max-height: min(78%, 500px);
+  transition: opacity .28s ease, filter .28s ease, transform .28s ease;
+}
+.hamster-sand-bath-stage.is-shake .hamster-sand-bath,
+.hamster-sand-bath-stage.is-trash .hamster-sand-bath,
+.hamster-sand-bath-stage.is-shake .hamster-sand-debris,
+.hamster-sand-bath-stage.is-trash .hamster-sand-debris {
+  opacity: .28;
+  filter: saturate(.72);
+}
+.hamster-sand-bath-stage.is-tap-success .hamster-sand-bath { animation: hamster-mobile-target-clear .36s ease both; }
+.hamster-sand-sieve-focus {
+  position: absolute;
+  z-index: 6;
+  top: 49%;
+  left: 50%;
+  width: min(43%, 340px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  cursor: ew-resize;
+  touch-action: none;
+}
+.hamster-sand-sieve-focus:disabled { opacity: 1; cursor: default; }
+.hamster-sand-sieve-focus img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 310px;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 20px rgba(73, 49, 24, .25));
+}
+.hamster-sand-bath-stage.is-shaking .hamster-sand-sieve-focus img { animation: hamster-sieve-shake .52s ease-in-out infinite; }
+.hamster-sand-sieve-focus.is-discarding { animation: hamster-sieve-discard .5s ease-in forwards; }
+.hamster-sand-trash {
+  position: absolute;
+  z-index: 7;
+  right: 5%;
+  bottom: 10%;
+  width: min(16%, 126px);
+  min-width: 72px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  opacity: .42;
+  filter: grayscale(.45);
+  transition: opacity .24s ease, filter .24s ease, transform .24s ease;
+  cursor: default;
+}
+.hamster-sand-trash img { display: block; width: 100%; height: auto; object-fit: contain; }
+.hamster-sand-trash.is-ready {
+  opacity: 1;
+  filter: drop-shadow(0 0 16px rgba(224, 160, 29, .7));
+  cursor: pointer;
+  animation: hamster-trash-ready 1.25s ease-in-out infinite;
+}
+.hamster-sand-trash.is-open { animation: none; transform: scale(1.06); }
+.hamster-sieve-progress {
+  position: absolute;
+  z-index: 8;
+  right: 50%;
+  bottom: 4%;
+  display: grid;
+  grid-template-columns: auto minmax(170px, 1fr) auto;
+  align-items: center;
+  width: min(480px, calc(100% - 40px));
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(225, 209, 181, .88);
+  border-radius: 18px;
+  background: rgba(255, 253, 247, .96);
+  color: var(--gold-dark);
+  box-shadow: 0 8px 18px rgba(61, 44, 22, .12);
+  box-sizing: border-box;
+  font-size: 13px;
+  font-weight: 900;
+  transform: translateX(50%);
+  pointer-events: none;
+}
+.hamster-sieve-progress > div { height: 11px; overflow: hidden; border-radius: 999px; background: #eee3cc; box-shadow: inset 0 0 0 1px rgba(124, 94, 44, .12); }
+.hamster-sieve-progress > div span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e0a01d, #85bd9b); transition: width .15s linear; }
+.hamster-sieve-progress small { color: var(--muted); }
+
+@keyframes hamster-sieve-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  25% { transform: translateX(-18px) rotate(-3deg); }
+  75% { transform: translateX(18px) rotate(3deg); }
+}
+@keyframes hamster-sieve-discard {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
+  to { opacity: 0; transform: translate(24%, -8%) scale(.45) rotate(12deg); }
+}
+@keyframes hamster-trash-ready {
+  50% { transform: scale(1.06); }
+}
+
+@media (max-width: 720px) {
+  .hamster-sand-bath-stage .hamster-sand-bath { width: 100%; max-height: 82%; }
+  .hamster-sand-bath-stage .hamster-sand-debris { width: 14%; height: 14%; }
+  .hamster-sand-sieve-focus { top: 51%; width: 58%; min-width: 0; }
+  .hamster-sand-trash { right: 4%; bottom: 12%; width: 19%; min-width: 58px; }
+  .hamster-sieve-progress {
+    bottom: 3%;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    width: calc(100% - 24px);
+    gap: 7px;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  .hamster-sand-bath-stage .hamster-cleaning-tool--sieve { bottom: 7%; left: 3%; width: 27%; }
+}
 .hamster-cage-prepared-items { position: absolute; inset: 0; z-index: 2; pointer-events: none; }.hamster-cage-prepared-item { position: absolute; display: block; height: auto; max-height: 100%; object-fit: contain; filter: drop-shadow(0 5px 5px rgba(65, 45, 21, .2)); transform: translate(-50%, -50%); }
 .hamster-dirty-bedding, .hamster-filled-bedding { position: absolute; aspect-ratio: 1; }.hamster-dirty-bedding { z-index: 1; }.hamster-filled-bedding { z-index: 1; }.hamster-dirty-bedding img, .hamster-filled-bedding img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(73, 49, 24, .16)); }
 .hamster-dirty-bedding.is-scooped { opacity: 0; transform: scale(.7); transition: opacity .28s ease, transform .28s ease; }.hamster-cleaning-tool { position: absolute; z-index: 7; display: grid; width: min(19%, 142px); padding: 0; justify-items: center; gap: 5px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 12px; font-weight: 900; cursor: grab; touch-action: none; }.hamster-cleaning-tool:active { cursor: grabbing; }.hamster-cleaning-tool img { position: relative; z-index: 1; width: 100%; aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 8px 12px rgba(70, 53, 26, .18)); }.hamster-cleaning-tool span { position: relative; z-index: 2; padding: 5px 9px; border-radius: 999px; background: rgba(255, 253, 247, .95); box-shadow: 0 4px 12px rgba(70, 53, 26, .12); white-space: nowrap; }.hamster-cleaning-tool--scoop, .hamster-cleaning-tool--bedding { bottom: 7%; left: 4%; }.hamster-cleaning-tool--bedding { cursor: pointer; animation: hamster-refill-pulse 1.2s ease-in-out infinite; }.hamster-cleaning-tool--bedding::before { position: absolute; z-index: 0; top: -6%; right: -6%; bottom: 15%; left: -6%; border-radius: 50%; background: radial-gradient(circle at center, rgba(255, 238, 191, .58) 0 34%, rgba(255, 244, 217, .3) 53%, rgba(255, 244, 217, 0) 74%); content: ""; }.hamster-cleaning-tool--sieve { bottom: 8%; left: 5%; width: min(18%, 132px); }
 .hamster-cage-check-note { display: grid; width: min(760px, calc(100% - 44px)); margin: auto; align-self: center; justify-self: center; justify-items: center; gap: 14px; padding: 28px 34px; border: 1px solid rgba(158, 189, 144, .8); border-radius: 28px; background: linear-gradient(145deg, rgba(255, 254, 248, .99), rgba(239, 248, 234, .98)); color: #405e43; text-align: center; box-shadow: 0 18px 42px rgba(56, 86, 54, .2), 0 2px 0 rgba(255, 255, 255, .9) inset; box-sizing: border-box; }.hamster-cage-check-note > img { width: min(150px, 42%); height: 118px; object-fit: contain; }.hamster-cage-check-note-icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: linear-gradient(145deg, #8bc197, #4d8a61); color: white; font-size: 18px; font-weight: 950; box-shadow: 0 7px 14px rgba(62, 123, 79, .28); }.hamster-cage-check-note p { max-width: 560px; margin: 0; font-size: 16px; font-weight: 720; line-height: 1.8; }.hamster-cage-check-note .primary { min-width: 172px; justify-self: center; }.hamster-cage-check-note--compact { padding: 24px 30px; }.hamster-cage-check-note--scene { position: absolute; z-index: 6; top: 50%; bottom: auto; width: min(590px, calc(100% - 44px)); transform: translateY(-50%); animation: hamster-feedback-in .42s ease both; }
-.hamster-sand-bath-stage { position: relative; display: grid; width: 100%; height: 100%; min-height: inherit; place-items: center; }.hamster-sand-bath-stage.is-ready-to-shake { cursor: ew-resize; }.hamster-sand-bath { width: min(78%, 630px); max-height: min(76%, 470px); object-fit: contain; transform: translateX(var(--hamster-sand-offset, 0)); transition: transform .08s linear; }.hamster-sand-bath-stage.is-shaking .hamster-sand-bath { animation: hamster-sand-shake .56s cubic-bezier(.35, .05, .2, 1) both; }.hamster-sand-bath-stage.is-clean .hamster-sand-bath { animation: none; }
-.hamster-sand-debris { position: absolute; z-index: 3; width: min(11%, 76px); height: min(11vw, 76px); transition: opacity .22s ease, transform .28s ease; }.hamster-sand-debris img { width: 100%; height: 100%; object-fit: contain; }.hamster-sand-debris--1 { top: 43%; left: 39%; }.hamster-sand-debris--2 { top: 55%; left: 52%; }.hamster-sand-debris--3 { top: 42%; right: 32%; }.hamster-sand-debris.is-removed { opacity: 0; transform: translateY(-28px) scale(.65); }.hamster-sand-shake-label { position: absolute; z-index: 5; right: 50%; bottom: 15%; padding: 7px 12px; border-radius: 999px; background: rgba(255, 253, 247, .94); color: #705327; font-size: 13px; font-weight: 900; transform: translateX(50%); pointer-events: none; }
+.hamster-sand-bath-stage { position: relative; display: grid; width: 100%; height: 100%; min-height: inherit; place-items: center; }.hamster-sand-bath-stage.is-ready-to-shake { cursor: ew-resize; }.hamster-sand-bath { width: min(78%, 630px); max-height: min(76%, 470px); object-fit: contain; transform: translateX(var(--hamster-sand-offset, 0)); transition: transform .08s linear; }.hamster-sand-bath-stage.is-shaking .hamster-sand-bath, .hamster-sand-bath-stage.is-clean .hamster-sand-bath { animation: none; }
+.hamster-sand-debris { position: absolute; z-index: 3; width: min(22%, 152px); height: min(22vw, 152px); transition: opacity .22s ease, transform .28s ease; }.hamster-sand-debris img { width: 100%; height: 100%; object-fit: contain; }.hamster-sand-debris--1 { top: 50%; left: 31%; }.hamster-sand-debris--2 { top: 35%; left: 40%; }.hamster-sand-debris--3 { top: 35%; right: 35%; }.hamster-sand-debris--4 { top: 50%; right: 35%; }.hamster-sand-debris.is-removed { opacity: 0; transform: translateY(-28px) scale(.65); }.hamster-sand-shake-label { position: absolute; z-index: 5; right: 50%; bottom: 15%; padding: 7px 12px; border-radius: 999px; background: rgba(255, 253, 247, .94); color: #705327; font-size: 13px; font-weight: 900; transform: translateX(50%); pointer-events: none; }
 .hamster-cage-check-drag-ghost { position: fixed; z-index: 9999; width: min(18vw, 120px); height: min(18vw, 120px); object-fit: contain; pointer-events: none; transform: translate(-50%, -50%); filter: drop-shadow(0 10px 14px rgba(73, 49, 24, .24)); }.hamster-cage-check-finish { position: absolute; z-index: 8; right: 26px; bottom: 24px; }
 .hamster-shake-progress { position: absolute; z-index: 8; top: 82px; left: 50%; display: grid; grid-template-columns: auto minmax(160px, 1fr); align-items: center; width: min(430px, calc(100% - 36px)); gap: 10px; padding: 9px 12px; border: 1px solid rgba(225, 209, 181, .82); border-radius: 18px; background: rgba(255,253,247,.9); box-shadow: 0 8px 18px rgba(61,44,22,.1); box-sizing: border-box; color: var(--muted); font-size: 13px; font-weight: 900; pointer-events: none; transform: translateX(-50%); }.hamster-shake-progress b { color: var(--gold-dark); white-space: nowrap; }.hamster-shake-progress div { height: 12px; overflow: hidden; border-radius: 999px; background: #eee3cc; box-shadow: inset 0 0 0 1px rgba(124,94,44,.12); }.hamster-shake-progress div span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e0a01d, #85bd9b); transition: width .12s linear; }
-@keyframes hamster-refill-pulse { 50% { transform: scale(1.05); } } @keyframes hamster-sand-shake { 0%, 100% { transform: translateX(0) rotate(0); } 18% { transform: translateX(-32px) rotate(-4deg); } 40% { transform: translateX(34px) rotate(4deg); } 62% { transform: translateX(-24px) rotate(-3deg); } 82% { transform: translateX(18px) rotate(2deg); } } @keyframes hamster-feedback-in { from { opacity: 0; transform: translateY(calc(-50% + 14px)); } to { opacity: 1; transform: translateY(-50%); } }
-@media (max-width: 700px) { .hamster-cage-check-progress { justify-content: flex-start; }.hamster-cage-check-scene { min-height: 490px; border-radius: 20px; }.hamster-cage-check-prompt { top: 12px; max-width: calc(100% - 24px); min-height: 58px; padding: 10px 14px; font-size: 12px; }.hamster-cleaning-tool { width: 30%; }.hamster-cleaning-tool--scoop, .hamster-cleaning-tool--bedding { bottom: 5%; left: 2%; }.hamster-cleaning-tool--sieve { bottom: 7%; left: 2%; width: 28%; }.hamster-cage-check-note { width: calc(100% - 28px); padding: 25px 18px; }.hamster-cage-check-note--scene { top: 50%; bottom: auto; padding: 18px; }.hamster-cage-check-note p { font-size: 14px; line-height: 1.75; }.hamster-sand-bath { width: 96%; max-height: 66%; }.hamster-sand-debris { width: 16%; height: 16vw; }.hamster-sand-debris--1 { top: 42%; left: 31%; }.hamster-sand-debris--2 { top: 55%; left: 48%; }.hamster-sand-debris--3 { top: 42%; right: 22%; }.hamster-sand-shake-label { bottom: 12%; font-size: 12px; }.hamster-cage-check-finish { right: 14px; bottom: 14px; }.hamster-cage-check-drag-ghost { width: 88px; height: 88px; }.hamster-shake-progress { top: 82px; width: calc(100% - 24px); grid-template-columns: 1fr; gap: 7px; padding: 8px 10px; }.hamster-shake-progress b { justify-self: center; } }
+@keyframes hamster-refill-pulse { 50% { transform: scale(1.05); } } @keyframes hamster-feedback-in { from { opacity: 0; transform: translateY(calc(-50% + 14px)); } to { opacity: 1; transform: translateY(-50%); } }
+@media (max-width: 700px) { .hamster-cage-check-progress { justify-content: flex-start; }.hamster-cage-check-scene { min-height: 490px; border-radius: 20px; }.hamster-cage-check-prompt { top: 12px; max-width: calc(100% - 24px); min-height: 58px; padding: 10px 14px; font-size: 12px; }.hamster-cleaning-tool { width: 30%; }.hamster-cleaning-tool--scoop, .hamster-cleaning-tool--bedding { bottom: 5%; left: 2%; }.hamster-cleaning-tool--sieve { bottom: 7%; left: 2%; width: 28%; }.hamster-cage-check-note { width: calc(100% - 28px); padding: 25px 18px; }.hamster-cage-check-note--scene { top: 50%; bottom: auto; padding: 18px; }.hamster-cage-check-note p { font-size: 14px; line-height: 1.75; }.hamster-sand-bath { width: 96%; max-height: 66%; }.hamster-sand-debris { width: 32%; height: 32vw; }.hamster-sand-debris--1 { top: 43%; left: 18%; }.hamster-sand-debris--2 { top: 35%; left: 30%; }.hamster-sand-debris--3 { top: 33%; right: 19%; }.hamster-sand-debris--4 { top: 45%; right: 17%; }.hamster-sand-shake-label { bottom: 12%; font-size: 12px; }.hamster-cage-check-finish { right: 14px; bottom: 14px; }.hamster-cage-check-drag-ghost { width: 88px; height: 88px; }.hamster-shake-progress { top: 82px; width: calc(100% - 24px); grid-template-columns: 1fr; gap: 7px; padding: 8px 10px; }.hamster-shake-progress b { justify-self: center; } }
 
 /* The refill control uses the package artwork directly, without a decorative halo. */
 .hamster-cleaning-tool--bedding::before { content: none; }
@@ -202,9 +324,9 @@
   .hamster-sand-bath-stage.is-tap-target .hamster-sand-bath { animation: hamster-mobile-sand-prompt 1.35s ease-in-out infinite; }
   .hamster-sand-bath-stage.is-shaking .hamster-sand-bath,
   .hamster-sand-bath-stage.is-tap-target.is-shaking .hamster-sand-bath,
-  .hamster-sand-bath-stage.is-clean.is-shaking .hamster-sand-bath { animation: hamster-sand-shake .56s cubic-bezier(.35, .05, .2, 1) both; }
+  .hamster-sand-bath-stage.is-clean.is-shaking .hamster-sand-bath { animation: none; }
   .hamster-sand-bath { width: 96%; max-height: 80%; }
-  .hamster-sand-debris { width: 16%; height: 16%; padding: 0; border: 0; background: transparent; cursor: pointer; }
+  .hamster-sand-debris { width: 32%; height: 32%; padding: 0; border: 0; background: transparent; cursor: pointer; }
   .hamster-sand-debris.is-tap-target { animation: hamster-mobile-tap-guide 1.35s ease-in-out infinite; }
   .hamster-sand-debris.is-removed { pointer-events: none; }
   .hamster-sand-debris.is-tap-success { animation: hamster-mobile-target-clear .36s ease both; }
@@ -236,5 +358,36 @@
   }
   @keyframes hamster-mobile-target-clear {
     50% { opacity: .45; transform: scale(.86); }
+  }
+}
+
+/* 完成畫面恢復浴砂盆原色，不沿用搖篩階段的淡化效果。 */
+.hamster-sand-bath-stage.is-complete .hamster-sand-bath {
+  opacity: 1;
+  filter: none;
+}
+
+/* 便便（1、3）與結塊（2、4）可在此分開調整尺寸。 */
+.hamster-sand-bath-stage .hamster-sand-debris--1,
+.hamster-sand-bath-stage .hamster-sand-debris--3 {
+  width: min(22%, 152px);
+  height: min(22vw, 152px);
+}
+.hamster-sand-bath-stage .hamster-sand-debris--2,
+.hamster-sand-bath-stage .hamster-sand-debris--4 {
+  width: min(16%, 110px);
+  height: min(16vw, 110px);
+}
+
+@media (max-width: 720px) {
+  .hamster-sand-bath-stage .hamster-sand-debris--1,
+  .hamster-sand-bath-stage .hamster-sand-debris--3 {
+    width: 30%;
+    height: 30%;
+  }
+  .hamster-sand-bath-stage .hamster-sand-debris--2,
+  .hamster-sand-bath-stage .hamster-sand-debris--4 {
+    width: 20%;
+    height: 20%;
   }
 }

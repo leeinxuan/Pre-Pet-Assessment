@@ -446,7 +446,7 @@ export function AssessmentReport({
           {checklistGroups.map((group) => (
             <div key={group.title} className="care-a4-card">
               <h3>{group.title}</h3>
-              <ul>{group.items.map((item) => <li key={item}><span aria-hidden="true">□</span><b>{item}</b></li>)}</ul>
+              <ul>{group.items.map((item) => <li key={item}><span aria-hidden="true">□</span><b>{interpolatePetName(item, petName, species)}</b></li>)}</ul>
             </div>
           ))}
         </section>

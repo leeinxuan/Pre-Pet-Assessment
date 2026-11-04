@@ -24,6 +24,8 @@ export const birdAssets = {
     climbingToy: "/assets/bird/room/climbing-toy.webp",
     sleepingTent: "/assets/bird/room/parrot-nest.webp",
     tray: "/assets/bird/room/feces-tray.webp",
+    /** 棲木 2/3 趾環繞示意圖，用於棲木說明彈出視窗。 */
+    perchToe23: "/assets/bird/room/perch-toe-23.webp",
     thermometer: "/assets/bird/room/thermometer.webp",
     plant: "/assets/bird/room/toxic-plant.webp",
     hazards: {

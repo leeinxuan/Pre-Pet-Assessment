@@ -63,11 +63,22 @@ export default function BottomBleedColor() {
     // 底部延伸只在「工具列浮在網頁上方」的 iPhone Safari 才需要：
     // 此時 screen.height 比可用高度多出一截（含工具列）。開發者工具的手機模擬、Android、
     // 主畫面 App（standalone）都沒有這一截，延伸高度會把按鈕推到畫面外，所以設為 0。
+    const measureViewportHeight = (unit: "lvh" | "dvh") => {
+      const probe = document.createElement("div");
+      probe.style.cssText = `position:fixed;left:-9999px;top:0;width:1px;height:100${unit};visibility:hidden;pointer-events:none;`;
+      document.body.appendChild(probe);
+      const height = probe.getBoundingClientRect().height;
+      probe.remove();
+      return height;
+    };
     const updateBleed = () => {
       const isIPhone = /iPhone|iPad|iPod/.test(navigator.userAgent);
       const needsBleed = media.matches && isIPhone && window.screen.height - window.innerHeight >= 100;
+      const toolbarHeight = needsBleed
+        ? Math.max(0, Math.round(measureViewportHeight("lvh") - measureViewportHeight("dvh")))
+        : 0;
       root.style.setProperty("--bottom-bleed", needsBleed ? "140px" : "0px");
-      root.style.setProperty("--bottom-toolbar-safe", needsBleed ? "max(0px, calc(100lvh - 100dvh))" : "0px");
+      root.style.setProperty("--bottom-toolbar-safe", `${toolbarHeight}px`);
     };
     const apply = () => {
       frame = 0;

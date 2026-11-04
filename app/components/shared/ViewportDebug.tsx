@@ -39,7 +39,7 @@ export default function ViewportDebug() {
         `svh ${svh} · dvh ${dvh} · lvh ${lvh} (lvh-dvh ${lvh - dvh})`,
         `innerH ${window.innerHeight} · vv ${vv ? Math.round(vv.height) : "-"} · html ${document.documentElement.clientHeight}`,
         `scrollY ${Math.round(window.scrollY)} · docH ${document.documentElement.scrollHeight} · screen ${screen.height}`,
-        `safe top ${cs.paddingTop} bottom ${cs.paddingBottom}`,
+        `safe top ${cs.paddingTop} bottom ${cs.paddingBottom} · toolbar ${getComputedStyle(document.documentElement).getPropertyValue("--bottom-toolbar-safe").trim() || "-"}`,
         `stage-layout ${stage ? Math.round(stage.getBoundingClientRect().height) : "-"}`,
         `lock ${getComputedStyle(document.documentElement).getPropertyValue("--page-lock").trim() || "-"} · touch ${(window as unknown as { __touchDbg?: string }).__touchDbg ?? "-"}`,
         (() => {

@@ -105,9 +105,9 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
     topic: "安全抱兔", reportSummary: "抱兔前先讓牠放鬆，並以雙手支撐胸口與臀部、靠近身體保持穩定。", artIndex: 0,
     questionText: "請把這 5 個動作拖曳到正確的順序，安全地抱起 {petName}。", activityCompletionTitle: "你已學會安全抱起 {petName} 的方式！", activityRevealNotice: "不用擔心，抱兔子確實需要練習～我們一起看看正確的步驟吧！",
     completionFeedback: { title: "做得很好！", encouragement: "你知道怎麼讓 {petName} 安心被抱起，做得很好！每一個步驟都是在幫牠建立對你的信任。", knowledgeTitle: "兔兔小知識", knowledgeContent: [{ type: "paragraph", text: "**緩慢靠近、先讓牠嗅聞**，再確認牠沒有緊張或後退。抱起時要**同時托住胸口與臀部，讓牠靠著身體**；不可拎耳朵或讓腹部朝上。" }] },
-    completionReminder: { title: "<danger>請注意這樣抱兔兔</danger>", items: [
-      { title: "<danger>從耳朵拎起</danger>", description: "耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。", imagePlaceholderLabel: "從耳朵拎起示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.webp", imageAlt: "從耳朵拎起兔子的錯誤抱法示意" },
-      { title: "<danger>讓牠腹部朝上</danger>", description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不代表牠不緊張或害怕。", imagePlaceholderLabel: "腹部朝上示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp", imageAlt: "讓兔子腹部朝上的錯誤抱法示意" },
+    completionReminder: { title: "<danger>請注意！</danger>", items: [
+      { title: "<danger>不要從耳朵拎起</danger>", description: "耳朵是兔子的散熱器官，<danger>從耳朵拎起</danger>會造成劇烈疼痛，掙扎可能導致腰椎受損甚至下半身癱瘓。", imagePlaceholderLabel: "從耳朵拎起示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.webp", imageAlt: "從耳朵拎起兔子的錯誤抱法示意" },
+      { title: "<danger>不要讓牠腹部朝上</danger>", description: "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不代表牠不緊張或害怕。", imagePlaceholderLabel: "腹部朝上示意圖片待補", image: "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp", imageAlt: "讓兔子腹部朝上的錯誤抱法示意" },
     ], footer: "如果兔兔抗拒或退避，不要強迫互動" },
     choices: [
       { id: "rabbit-carry-incorrect", text: "需要重新思考順序", result: "incorrect", ...incorrect, explanation: "安全抱兔需要循序降低緊張感，確認每一步都完成後再往下。" },
@@ -134,7 +134,7 @@ export const rabbitActivityScenarios: Record<"rabbit-carry-sort" | "rabbit-daily
 export const rabbitGroomingCompletion: InteractionCompletionContent = {
   title: "{petName} 的美容時間到了！",
   subtitle: "你完成了今天的保養——梳毛、足底確認、進食與指甲觀察。",
-  description: "定期梳毛，尤其注意**後肢及尾根周圍**，能預防皮膚感染、降低**腸阻塞**風險。**進食及指甲至少一週觀察一次**——進食出現異常或指甲偏長時，請諮詢**熟悉兔子醫療的獸醫師**或專業人員。",
+  description: "定期梳毛，尤其注意**後肢及尾根周圍**，能預防皮膚感染、降低**腸阻塞**風險。**進食每日都要觀察，指甲至少一週觀察一次**——進食出現異常或指甲偏長時，請諮詢**熟悉兔子醫療的獸醫師**或專業人員。",
   reflectionTitle: "兔子需要的照護時間，比許多人想的還要長",
   reflectionContent: ["兔子的日常照護不只是補飼料、換水而已。牧草補充、便盆清潔、新鮮蔬菜備製、健康觀察，加上**每天至少 30–60 分鐘的放風與陪伴**——每一項都需要固定時間投入，無法用假日一次補回。請想一想：在接下來每一天的生活裡，你能為 {petName} 穩定留出這段時間嗎？"],
   careTimeTitle: "每天留給牠的照護時間",
@@ -144,7 +144,6 @@ export const rabbitGroomingCompletion: InteractionCompletionContent = {
     items: [
       { title: "梳毛（短毛兔）", detail: "每週 2–3 次；換毛期每日", description: "清除脫落毛髮，防止皮膚感染與腸阻塞" },
       { title: "梳毛（長毛兔）", detail: "每日", description: "換毛期尤其重要，每日梳毛" },
-      { title: "進食觀察", detail: "至少每週一次", description: "確認咀嚼順暢；出現遲疑、掉食或嘴邊潮濕時需諮詢**熟悉兔子醫療的獸醫師**" },
       { title: "指甲觀察", detail: "至少每週一次", description: "確認長度正常；修剪需由獸醫或專業人員協助" },
       { title: "足底檢查", detail: "每次梳毛時", description: "確認足底毛髮與皮膚無紅腫或脫毛" },
     ],

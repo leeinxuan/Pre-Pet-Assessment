@@ -329,7 +329,7 @@ export const birdLifeScenarios: Scenario[] = [
       careTimeItems: birdReport.dailyCareBreakdown,
       showCareTime: false,
       additionalAdvice: [
-        "如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
+        "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
       ]
     },
     busyCareChecklist: [

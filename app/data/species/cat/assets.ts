@@ -27,7 +27,7 @@ export const catAssets = {
     dirtyLitterBox: "/assets/cat/cleaning/dirty-litter-box.webp", cleanLitterBox: "/assets/cat/cleaning/clean-litter-box.webp",
     replacementLitterBox: "/assets/cat/cleaning/replacement-litter-box.webp", replacementLitterBoxIcon: "/assets/cat/cleaning/replacement-litter-box-icon.webp",
     litterScoop: "/assets/cat/cleaning/litter-scoop.webp", catPoop: "/assets/cat/cleaning/cat-poop.webp",
-    urineClump: "/assets/cat/cleaning/urine-clump.webp", trashBin: "/assets/cat/cleaning/trash-bin.webp", trashBinOpen: "/assets/cat/cleaning/trash-bin-open.webp",
+    urineClump: "/assets/cat/cleaning/urine-clump.webp", trashBin: "/assets/shared/trash-bin.webp", trashBinOpen: "/assets/shared/trash-bin-open.webp",
   },
   petJourney: {
     arrivalTransition: "/assets/cat/pet-journey/arrival-transition.mp4",

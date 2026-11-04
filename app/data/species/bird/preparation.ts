@@ -11,12 +11,13 @@ export const birdRoomDoorplatePlacement = {
 } as const;
 
 export const birdRoomItems: RoomItem[] = [
-  { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, mobilePlacement: { x: 85, y: 40, width: 25 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底；材質選白鐵，避免烤漆或鍍鋅。" },
+  { id: "bird-cage", label: "方形金屬鳥籠", icon: "▦", image: birdAssets.room.cage, sceneImage: birdAssets.room.cageFront, placement: { x: 70, y: 40, width: 15, layer: 2 }, mobilePlacement: { x: 85, y: 40, width: 25 }, required: true, need: "安全", expenseId: "bird-cage", description: "方形籠提供可倚靠的角落；<accent>籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底</accent>；材質選白鐵，避免烤漆或鍍鋅。" },
   { id: "food-initial", label: "主食飼料", icon: "◈", image: birdAssets.room.initialFood, placement: { x: 55, y: 60, width: 10, layer: 4 }, mobilePlacement: { x: 65, y: 60, width: 15 }, required: false, need: "飲食", expenseId: "bird-food-initial", description: "依食性選購：種子飼料、滋養丸或吸蜜粉。" },
   {
     id: "perch-set", label: "不同材質的棲木", icon: "━", image: birdAssets.room.perch,
     placement: { x: 50, y: 54, width: 30, layer: 3 }, mobilePlacement: { x: 50, y: 54, width: 30 }, required: true, need: "休息", expenseId: "bird-perch-set",
-    description: "足趾環繞棲木圓周約 2/3 為合適粗細；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
+    description: "<accent>足趾環繞棲木圓周約 2/3 為合適粗細</accent>；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
+    descriptionImage: "/assets/bird/room/perch-toe-23.webp",
     // 籠內三張棲木分開定位；每筆均可獨立調整桌機／手機位置、尺寸與圖層。
     sceneParts: [
       { id: "perch-1", image: birdAssets.room.perchParts[0], placement: { x: 30, y: 28, width: 42, layer: 5 }, mobilePlacement: { x: 31, y: 40, width: 42 } },

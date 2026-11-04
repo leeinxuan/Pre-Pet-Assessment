@@ -315,7 +315,7 @@ export const dogLifeScenarios: Scenario[] = [
         "忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"
       ],
       additionalAdvice: [
-        "如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
+        "如果未來臨時找不到合適的臨時照顧者，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
       ]
     },
     busyCareChecklist: [

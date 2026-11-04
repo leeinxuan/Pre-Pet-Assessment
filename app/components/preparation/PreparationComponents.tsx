@@ -665,7 +665,7 @@ export function RoomPreparation({
                   {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : interiorItemLocked ? (roomFlow?.copy.interiorLockedInstruction ?? roomFlow?.copy.lockedInstruction ?? "請先完成內部基礎配置").replaceAll("{petName}", displayName) : fencePlaced ? roomFlow?.copy.interiorInstruction ?? "請先進入圍欄內部" : roomFlow?.copy.lockedInstruction ?? "請先放置圍欄"}`} disabled={exitingItems.includes(item.id) || !canPrepare} onClick={() => prepareItem(item.id)}>
                     <span className="room-supply-visual"><RoomItemVisual item={item} /></span>
                     <b>{item.label}</b>
-                  </button> : <ItemDescriptionCard title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={price} />}
+                  </button> : <ItemDescriptionCard title={item.label} description={item.description.replaceAll("{petName}", displayName)} descriptionImage={item.descriptionImage} footer={price} />}
                 </div>;
               })}
             </div>)}
@@ -792,7 +792,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
               return <div key={item.id} className="supply-slot">
                 {!itemSelected ? <button type="button" className={exitingItems.includes(item.id) ? "departing" : ""} onClick={() => selectItem(item.id)} aria-label={`準備${item.label}`}>
                   <span className="departure-supply-visual">{item.image ? <img className={`departure-item-image departure-item-image--${item.visualClassName ?? item.id}`} style={item.visualScale === undefined ? undefined : { "--departure-item-image-scale": item.visualScale } as CSSProperties} src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-label={`${item.label}素材待補`}>素材待補</span>}</span><b>{item.label}</b><MobileItemInfoBadge />
-                </button> : <><ItemDescriptionCard className="departure-desktop-note" title={item.label} description={item.description.replaceAll("{petName}", displayName)} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} /><button type="button" className="departure-mobile-done" onClick={() => openMobileItemInfo(item, mobilePrice || undefined)} aria-label={`查看${item.label}說明`}><span className="departure-supply-visual">{item.image && <img src={item.image} alt="" />}</span><b>{item.label}</b><MobileItemInfoBadge /><MobileItemPlacedCheck /></button></>}
+                </button> : <><ItemDescriptionCard className="departure-desktop-note" title={item.label} description={item.description.replaceAll("{petName}", displayName)} descriptionImage={item.descriptionImage} footer={item.priceNote ?? (reusedExpense ? "已於房間準備計入" : price && !hidePriceForReusedItem ? price : undefined)} /><button type="button" className="departure-mobile-done" onClick={() => openMobileItemInfo(item, mobilePrice || undefined)} aria-label={`查看${item.label}說明`}><span className="departure-supply-visual">{item.image && <img src={item.image} alt="" />}</span><b>{item.label}</b><MobileItemInfoBadge /><MobileItemPlacedCheck /></button></>}
               </div>;
             })}
           </div>)}

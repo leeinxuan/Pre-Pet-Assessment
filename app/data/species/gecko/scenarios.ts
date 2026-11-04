@@ -218,7 +218,7 @@ export const geckoLifeScenarios: Scenario[] = [
         "忙完這段時間回到家，你還有心思確認{petName}的溫度、排泄狀況和精神，確認牠一切都好嗎？"
       ],
       additionalAdvice: [
-        "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
+        "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
       ],
       showCareTime: false,
       careTimeTitle: "每日照護時間",
@@ -227,7 +227,7 @@ export const geckoLifeScenarios: Scenario[] = [
     busyCareChecklist: [
       {
         id: "daily-care",
-        prompt: "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及了天是否為餵食日了嗎？",
+        prompt: "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及今天是否為餵食日了嗎？",
         reviewHint: "先確認溫度、餵食日、排泄清理與健康觀察的交接內容。",
         correctAnswer: "yes"
       },
