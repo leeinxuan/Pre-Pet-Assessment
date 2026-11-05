@@ -127,6 +127,20 @@
   .stage-layout:has(.rabbit-activity-feedback--carry) {
     height: calc(100dvh + var(--bottom-bleed)) !important;
   }
+  /*
+   * 正確回饋頁的可捲動面板不能跟著 bottom bleed 加高；否則真機 Safari
+   * 會把延伸背景也算進綠色內容區，產生大片空白。版面維持 100dvh，
+   * 工具列下方需要的顏色改由 body::after 單純補背景。
+   */
+  .stage-layout:has(.life-journey-page > .correct-feedback-layout) {
+    height: 100dvh !important;
+  }
+  html:has(.life-journey-page > .correct-feedback-layout) body::after {
+    content: "";
+    display: block;
+    height: var(--bottom-bleed);
+    background: var(--bottom-bleed-color, #e8f3e6);
+  }
   .stage-layout .room-mobile-inventory,
   .stage-layout .departure-supply-rows,
   .stage-layout .arrival-meal-inventory,
