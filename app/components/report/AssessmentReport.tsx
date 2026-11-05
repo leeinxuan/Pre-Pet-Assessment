@@ -28,6 +28,7 @@ import type { HomeReadinessState } from "../../data/shared/home-readiness-state"
 import { LazyPdfDownloadButton } from "./LazyPdfDownloadButton";
 import { useDialogFocus } from "../shared/useDialogFocus";
 import { useMobileLayout } from "../shared/useMobileLayout";
+import { ExternalLinkIcon } from "../shared/ExternalLinkIcon";
 
 function personalizeReportText(text: string, petName: string, species?: string) {
   return interpolatePetName(text, petName, species);
@@ -160,10 +161,6 @@ function DocumentIcon() {
 
 function MedicalCrossIcon() {
   return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" stroke="none" d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" /></svg>;
-}
-
-function ExternalLinkIcon() {
-  return <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M13 5h6v6M19 5l-9 9M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" /></svg>;
 }
 
 function knowledgePointsForScenario(scenario: Scenario, petName: string, species?: string) {

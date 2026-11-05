@@ -53,12 +53,22 @@ export default function BottomBleedColor() {
       document.querySelectorAll(".bleed-pane").forEach((el) => {
         if (!active) el.classList.remove("bleed-pane");
       });
+      const feedbackPane = document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR);
+      if (!active) feedbackPane?.style.removeProperty("--feedback-scroll-spacer");
       if (!active) return;
       document.querySelectorAll(".stage-layout *").forEach((el) => {
         if (el.classList.contains("bleed-pane") || el.matches(".stage, .content-wrap, .stage-layout")) return;
         const overflowY = getComputedStyle(el).overflowY;
         if ((overflowY === "auto" || overflowY === "scroll") && el.getBoundingClientRect().bottom >= window.innerHeight - 40) el.classList.add("bleed-pane");
       });
+      if (feedbackPane) {
+        const toolbarSafe = Number.parseFloat(getComputedStyle(root).getPropertyValue("--bottom-toolbar-safe")) || 0;
+        const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || toolbarSafe + 16;
+        const contentHeightWithoutSpacer = Math.max(0, feedbackPane.scrollHeight - currentSpacer);
+        const requiredScrollDistance = toolbarSafe + 16;
+        const nextSpacer = Math.ceil(Math.max(requiredScrollDistance, feedbackPane.clientHeight + requiredScrollDistance - contentHeightWithoutSpacer));
+        if (Math.abs(nextSpacer - currentSpacer) >= 1) feedbackPane.style.setProperty("--feedback-scroll-spacer", `${nextSpacer}px`);
+      }
     };
     // 底部延伸只在「工具列浮在網頁上方」的 iPhone Safari 才需要：
     // 此時 screen.height 比可用高度多出一截（含工具列）。開發者工具的手機模擬、Android、
@@ -153,6 +163,7 @@ export default function BottomBleedColor() {
       root.style.removeProperty("--bottom-bleed-color");
       root.style.removeProperty("--bottom-bleed");
       root.style.removeProperty("--bottom-toolbar-safe");
+      document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR)?.style.removeProperty("--feedback-scroll-spacer");
     };
   }, []);
 

@@ -8,6 +8,8 @@ import { contentLastUpdated } from "../../data/shared/content-meta";
 import type { Profile } from "../../game-types";
 import { useDialogFocus } from "../shared/useDialogFocus";
 import { FlowLoadingFallback, loadRetriableModule } from "../shared/AsyncFlowState";
+import { ExternalLinkIcon } from "../shared/ExternalLinkIcon";
+import { ShareIcon } from "../shared/ShareIcon";
 
 const importProfileForms = () => import("../report/ProfileForms");
 const ProfileSupplementForm = dynamic(
@@ -63,7 +65,7 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
           <p>{source.description}</p>
         </div>
         <a className="primary official-acquisition-link" href={source.url} target="_blank" rel="noopener noreferrer">
-          {source.linkLabel} <span>↗</span>
+          {source.linkLabel} <ExternalLinkIcon />
         </a>
       </section>)}
     </main>
@@ -74,7 +76,7 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
     <div className="nav-buttons official-acquisition-footer-actions">
       <button className="secondary" type="button" onClick={onBack}>← 返回飼養觀念回顧</button>
       <div className="official-final-actions">
-        <button className="secondary" type="button" onClick={shareWithOthers}>分享給他人 <span>↗</span></button>
+        <button className="secondary official-share-button" type="button" onClick={shareWithOthers}>分享給他人 <ShareIcon /></button>
         <button className="primary" type="button" onClick={onReset}>重新體驗 <span>↻</span></button>
       </div>
     </div>
