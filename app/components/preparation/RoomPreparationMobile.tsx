@@ -139,7 +139,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
     getReturnFocus: getInfoReturnFocus,
   });
 
-  return <div className={`room-preparation-mobile${started ? " is-started" : ""}`}>
+  return <div className={`room-preparation-mobile${started ? " is-started" : ""}${roomComplete ? " is-complete" : ""}`}>
     {!started ? <MobileStageIntro id="room-mobile-intro-title" className="room-mobile-intro" icon={<RoomIntroIcon />} title={`先替 ${petName} 布置安全的生活空間`} description={`在迎接 ${petName} 前，先收好生活空間中的危險物品，再準備好牠每天需要的用品。`} actionLabel="開始整理空間" onStart={() => setStarted(true)} /> : <>
       <div className="room-mobile-scene-shell">
         {scene()}

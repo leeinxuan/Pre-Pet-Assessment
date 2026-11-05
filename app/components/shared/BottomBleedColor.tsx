@@ -65,7 +65,9 @@ export default function BottomBleedColor() {
         const toolbarSafe = Number.parseFloat(getComputedStyle(root).getPropertyValue("--bottom-toolbar-safe")) || 0;
         const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || toolbarSafe + 16;
         const contentHeightWithoutSpacer = Math.max(0, feedbackPane.scrollHeight - currentSpacer);
-        const requiredScrollDistance = toolbarSafe + 16;
+        // Safari 沒有提供浮動工具列完整覆蓋高度；在量到的差值之外保留少量緩衝，
+        // 避免不同機型或工具列動畫狀態仍遮住按鈕底緣。
+        const requiredScrollDistance = toolbarSafe + 40;
         const nextSpacer = Math.ceil(Math.max(requiredScrollDistance, feedbackPane.clientHeight + requiredScrollDistance - contentHeightWithoutSpacer));
         if (Math.abs(nextSpacer - currentSpacer) >= 1) feedbackPane.style.setProperty("--feedback-scroll-spacer", `${nextSpacer}px`);
       }

@@ -188,7 +188,13 @@
     width: 100%;
     padding-bottom: calc(4px + env(safe-area-inset-bottom) + var(--bottom-toolbar-safe)) !important;
   }
-  .stage-layout .room-mobile-footer button,
+  .stage-layout .room-mobile-footer button {
+    box-sizing: border-box;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
   .stage-layout .departure-actions button,
   .stage-layout .arrival-meal-footer .primary {
     box-sizing: border-box;
@@ -199,7 +205,7 @@
   }
 
   /* 固定操作列會覆蓋清單底部；留下操作列高度，讓最後一排仍能完整捲到其上方。 */
-  .stage-layout .room-preparation-mobile:has(> .room-mobile-footer) .room-mobile-inventory,
+  .stage-layout .room-preparation-mobile.is-complete .room-mobile-inventory,
   .stage-layout .departure-preparation-page:has(> .departure-actions.is-complete) .departure-supply-rows {
     padding-bottom: calc(100px + var(--bottom-toolbar-safe)) !important;
   }
