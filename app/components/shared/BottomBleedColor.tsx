@@ -89,9 +89,15 @@ export default function BottomBleedColor() {
           ? action.getBoundingClientRect().bottom - paneRect.top + feedbackPane.scrollTop
           : feedbackPane.clientHeight;
         const requiredScrollTop = Math.max(0, actionBottomInContent - targetBottomInPane);
+        const panePaddingBottom = Number.parseFloat(getComputedStyle(feedbackPane).paddingBottom) || 0;
+        const contentFitsWithoutScrolling = actionBottomInContent + panePaddingBottom <= feedbackPane.clientHeight + 1;
+        const toolbarSafe = Number.parseFloat(getComputedStyle(root).getPropertyValue("--bottom-toolbar-safe")) || 0;
+        // 短內容即使全部位於可視範圍內，仍保留一小段原生捲動距離，讓 iPhone Safari
+        // 能藉由向上滑收起工具列。距離依實測工具列高度調整，且遠小於 140px 的 full bleed。
+        const minimumShortPageScroll = contentFitsWithoutScrolling ? Math.max(48, toolbarSafe + 16) : 0;
         // iOS Safari 不一定會把 flex 子項的百分比高度、偽元素或尾端 margin 算入 scrollHeight。
-        // 只在按鈕真的落到可視範圍下方時補足差額；已在安全位置時不撐高內容，避免大片空白。
-        const nextSpacer = Math.ceil(requiredScrollTop);
+        // 按鈕落到可視範圍下方時補足差額；短內容則只保留收起工具列所需的小幅滑距。
+        const nextSpacer = Math.ceil(Math.max(requiredScrollTop, minimumShortPageScroll));
         const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || 0;
         if (nextSpacer <= 1) {
           if (currentSpacer !== 0) feedbackPane.style.removeProperty("--feedback-scroll-spacer");
