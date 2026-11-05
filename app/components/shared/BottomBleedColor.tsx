@@ -57,7 +57,11 @@ export default function BottomBleedColor() {
         }
       });
       const feedbackPane = document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR);
-      if (!active) feedbackPane?.style.removeProperty("--feedback-scroll-spacer");
+      const feedbackContent = feedbackPane?.querySelector<HTMLElement>(".correct-feedback-content");
+      if (!active) {
+        feedbackPane?.style.removeProperty("--feedback-scroll-spacer");
+        feedbackContent?.style.removeProperty("min-height");
+      }
       if (!active) return;
       document.querySelectorAll(".stage-layout *").forEach((el) => {
         if (el.matches(".stage, .content-wrap, .stage-layout")) return;
@@ -78,23 +82,25 @@ export default function BottomBleedColor() {
       });
       if (feedbackPane) {
         const toolbarSafe = Number.parseFloat(getComputedStyle(root).getPropertyValue("--bottom-toolbar-safe")) || 0;
-        const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || toolbarSafe + 24;
         const action = feedbackPane.querySelector<HTMLElement>(".correct-feedback-actions");
         const paneRect = feedbackPane.getBoundingClientRect();
         const visiblePaneBottom = Math.min(paneRect.bottom, window.innerHeight);
         const targetBottomInPane = Math.max(0, visiblePaneBottom - paneRect.top - 16);
         const actionBottomInContent = action
           ? action.getBoundingClientRect().bottom - paneRect.top + feedbackPane.scrollTop
-          : feedbackPane.scrollHeight - currentSpacer;
+          : feedbackPane.clientHeight;
         const requiredScrollTop = Math.max(0, actionBottomInContent - targetBottomInPane);
-        // 內容剛好填滿時仍要保留一段 Safari 能實際捲動的距離；最低值只取實測工具列高度
-        // 加 24px。多選回饋的按鈕有 margin-top:auto，尾端空間可能先被自動空白吸收，
-        // 因此以目前真正產生的 scroll range 計算差額，而不是只設定固定 spacer 高度。
+        // iOS Safari 不一定會把 flex 子項的百分比高度、偽元素或尾端 margin 算入 scrollHeight。
+        // 直接以面板的實際像素高度建立內容層，確保短內容也一定擁有真正的捲動距離。
         const minimumScrollSpace = toolbarSafe + 24;
-        const requiredScrollRange = Math.max(minimumScrollSpace, requiredScrollTop);
-        const currentScrollRange = Math.max(0, feedbackPane.scrollHeight - feedbackPane.clientHeight);
-        const nextSpacer = Math.ceil(Math.max(minimumScrollSpace, currentSpacer + requiredScrollRange - currentScrollRange));
+        const nextSpacer = Math.ceil(Math.max(minimumScrollSpace, requiredScrollTop));
+        const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || 0;
         if (Math.abs(nextSpacer - currentSpacer) >= 1) feedbackPane.style.setProperty("--feedback-scroll-spacer", `${nextSpacer}px`);
+        if (feedbackContent) {
+          const nextMinHeight = Math.ceil(feedbackPane.clientHeight + nextSpacer);
+          const currentMinHeight = Number.parseFloat(feedbackContent.style.minHeight) || 0;
+          if (Math.abs(nextMinHeight - currentMinHeight) >= 1) feedbackContent.style.minHeight = `${nextMinHeight}px`;
+        }
       }
     };
     // 底部延伸只在「工具列浮在網頁上方」的 iPhone Safari 才需要：
@@ -191,6 +197,7 @@ export default function BottomBleedColor() {
       root.style.removeProperty("--bottom-bleed");
       root.style.removeProperty("--bottom-toolbar-safe");
       document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR)?.style.removeProperty("--feedback-scroll-spacer");
+      document.querySelector<HTMLElement>(`${LOCKED_PAGE_SCROLL_PANE_SELECTOR} .correct-feedback-content`)?.style.removeProperty("min-height");
       document.querySelectorAll<HTMLElement>(".bleed-pane").forEach((el) => el.style.removeProperty("--pane-bottom-obstruction"));
     };
   }, []);
