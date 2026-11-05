@@ -81,7 +81,6 @@ export default function BottomBleedColor() {
         }
       });
       if (feedbackPane) {
-        const toolbarSafe = Number.parseFloat(getComputedStyle(root).getPropertyValue("--bottom-toolbar-safe")) || 0;
         const action = feedbackPane.querySelector<HTMLElement>(".correct-feedback-actions");
         const paneRect = feedbackPane.getBoundingClientRect();
         const visiblePaneBottom = Math.min(paneRect.bottom, window.innerHeight);
@@ -91,15 +90,22 @@ export default function BottomBleedColor() {
           : feedbackPane.clientHeight;
         const requiredScrollTop = Math.max(0, actionBottomInContent - targetBottomInPane);
         // iOS Safari 不一定會把 flex 子項的百分比高度、偽元素或尾端 margin 算入 scrollHeight。
-        // 直接以面板的實際像素高度建立內容層，確保短內容也一定擁有真正的捲動距離。
-        const minimumScrollSpace = toolbarSafe + 24;
-        const nextSpacer = Math.ceil(Math.max(minimumScrollSpace, requiredScrollTop));
+        // 只在按鈕真的落到可視範圍下方時補足差額；已在安全位置時不撐高內容，避免大片空白。
+        const nextSpacer = Math.ceil(requiredScrollTop);
         const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || 0;
-        if (Math.abs(nextSpacer - currentSpacer) >= 1) feedbackPane.style.setProperty("--feedback-scroll-spacer", `${nextSpacer}px`);
+        if (nextSpacer <= 1) {
+          if (currentSpacer !== 0) feedbackPane.style.removeProperty("--feedback-scroll-spacer");
+        } else if (Math.abs(nextSpacer - currentSpacer) >= 1) {
+          feedbackPane.style.setProperty("--feedback-scroll-spacer", `${nextSpacer}px`);
+        }
         if (feedbackContent) {
-          const nextMinHeight = Math.ceil(feedbackPane.clientHeight + nextSpacer);
           const currentMinHeight = Number.parseFloat(feedbackContent.style.minHeight) || 0;
-          if (Math.abs(nextMinHeight - currentMinHeight) >= 1) feedbackContent.style.minHeight = `${nextMinHeight}px`;
+          if (nextSpacer <= 1) {
+            if (currentMinHeight !== 0) feedbackContent.style.removeProperty("min-height");
+          } else {
+            const nextMinHeight = Math.ceil(feedbackPane.clientHeight + nextSpacer);
+            if (Math.abs(nextMinHeight - currentMinHeight) >= 1) feedbackContent.style.minHeight = `${nextMinHeight}px`;
+          }
         }
       }
     };

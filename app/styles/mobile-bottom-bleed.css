@@ -161,7 +161,7 @@
     flex: 0 0 auto;
     flex-direction: column;
     width: 100%;
-    min-height: 100%;
+    min-height: 0;
   }
   /*
    * 過場狀態切換時，Safari 可能暫時讓舊的影片節點留在 DOM；若祖先仍是
