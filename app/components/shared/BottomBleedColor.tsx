@@ -87,12 +87,13 @@ export default function BottomBleedColor() {
           ? action.getBoundingClientRect().bottom - paneRect.top + feedbackPane.scrollTop
           : feedbackPane.scrollHeight - currentSpacer;
         const requiredScrollTop = Math.max(0, actionBottomInContent - targetBottomInPane);
-        const baseScrollHeight = Math.max(0, feedbackPane.scrollHeight - currentSpacer);
-        const baseMaxScroll = Math.max(0, baseScrollHeight - feedbackPane.clientHeight);
         // 內容剛好填滿時仍要保留一段 Safari 能實際捲動的距離；最低值只取實測工具列高度
-        // 加 24px，不再像舊作法把整個短內容空白重複補進尾端。
+        // 加 24px。多選回饋的按鈕有 margin-top:auto，尾端空間可能先被自動空白吸收，
+        // 因此以目前真正產生的 scroll range 計算差額，而不是只設定固定 spacer 高度。
         const minimumScrollSpace = toolbarSafe + 24;
-        const nextSpacer = Math.ceil(Math.max(minimumScrollSpace, requiredScrollTop - baseMaxScroll));
+        const requiredScrollRange = Math.max(minimumScrollSpace, requiredScrollTop);
+        const currentScrollRange = Math.max(0, feedbackPane.scrollHeight - feedbackPane.clientHeight);
+        const nextSpacer = Math.ceil(Math.max(minimumScrollSpace, currentSpacer + requiredScrollRange - currentScrollRange));
         if (Math.abs(nextSpacer - currentSpacer) >= 1) feedbackPane.style.setProperty("--feedback-scroll-spacer", `${nextSpacer}px`);
       }
     };
