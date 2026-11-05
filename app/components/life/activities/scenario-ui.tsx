@@ -221,6 +221,7 @@ export function CorrectFeedbackLayout({
         )}
       </div>}
       <div className="correct-feedback-copy">
+        <div className="correct-feedback-content">
         <h2>{title}</h2>
         <div className="correct-feedback-intro">{intro}</div>
         {breedHighlight}
@@ -252,7 +253,7 @@ export function CorrectFeedbackLayout({
           {onReplay && <button type="button" className="secondary correct-feedback-replay" onClick={onReplay}>↻ 再玩一次</button>}
           <DelayedContinueButton onContinue={onContinue} immediate={continueImmediately} disabled={continueDisabled} hint={continueHint} />
         </div>
-        <div className="correct-feedback-scroll-spacer" aria-hidden="true" />
+        </div>
       </div>
     </section>
   );

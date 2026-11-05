@@ -16,6 +16,9 @@
   --bottom-toolbar-safe: 0px;
 }
 
+/* 桌機維持原本的 flex 子項結構；手機才建立實際可捲動的內容層。 */
+.correct-feedback-content { display: contents; }
+
 @media (max-width: 768px) {
   /* 首頁：用 border 把背景圖多畫到底；絕對定位的標題與按鈕以 padding box 為準，位置不變。 */
   section.welcome {
@@ -149,17 +152,16 @@
     -webkit-overflow-scrolling: touch;
   }
   /*
-   * 即使內容剛好放得下，也在按鈕後方建立真正屬於面板內容的透明尾端空間。
-   * 不能使用最後一個 flex item 的 margin：iOS Safari 不一定會將它算進 scrollHeight，
-   * 導致短頁看似無須捲動，實際上按鈕卻被浮動工具列蓋住。
+   * 單選與多選回饋共用同一內容層。內容層固定比捲動視窗多出安全距離，
+   * 因此即使短內容的按鈕使用 margin-top:auto，也不會把留白吸收成不可捲動空間。
    */
-  .stage-layout .correct-feedback-scroll-spacer {
-    display: block;
-    flex: 0 0 var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 16px));
-    height: var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 16px));
-    min-height: var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 16px));
+  .stage-layout .correct-feedback-content {
+    box-sizing: border-box;
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
     width: 100%;
-    pointer-events: none;
+    min-height: calc(100% + var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 16px)));
   }
   /*
    * 過場狀態切換時，Safari 可能暫時讓舊的影片節點留在 DOM；若祖先仍是
