@@ -172,10 +172,10 @@
   }
   /* 由 BottomBleedColor 標記：鎖定頁中、底緣貼近螢幕底部的可捲動區（不依賴 class 名稱）。 */
   .stage-layout .bleed-pane {
-    padding-bottom: calc(24px + var(--bottom-toolbar-safe)) !important;
+    padding-bottom: calc(24px + var(--pane-bottom-obstruction, 0px)) !important;
   }
 
-  /* 底部操作列固定於視窗；按鈕下方只保留工具列實測高度與 4px 呼吸空間。 */
+  /* position: fixed 已以 Safari 可視區底緣定位，不再重複加一次工具列高度。 */
   .stage-layout .room-mobile-footer,
   .stage-layout .departure-actions,
   .stage-layout .arrival-meal-footer {
@@ -186,7 +186,7 @@
     left: 0;
     box-sizing: border-box;
     width: 100%;
-    padding-bottom: calc(4px + env(safe-area-inset-bottom) + var(--bottom-toolbar-safe)) !important;
+    padding-bottom: calc(4px + env(safe-area-inset-bottom)) !important;
   }
   .stage-layout .room-mobile-footer button {
     box-sizing: border-box;
@@ -207,10 +207,10 @@
   /* 固定操作列會覆蓋清單底部；留下操作列高度，讓最後一排仍能完整捲到其上方。 */
   .stage-layout .room-preparation-mobile.is-complete .room-mobile-inventory,
   .stage-layout .departure-preparation-page:has(> .departure-actions.is-complete) .departure-supply-rows {
-    padding-bottom: calc(100px + var(--bottom-toolbar-safe)) !important;
+    padding-bottom: calc(76px + var(--pane-bottom-obstruction, var(--bottom-bleed))) !important;
   }
   .stage-layout .arrival-meal-activity:has(> .arrival-meal-footer) .arrival-meal-inventory {
-    padding-bottom: calc(124px + var(--bottom-toolbar-safe)) !important;
+    padding-bottom: calc(116px + var(--pane-bottom-obstruction, var(--bottom-bleed))) !important;
   }
   html:has(.departure-preparation-page) .stage-layout *,
   html:has(.room-preparation-page) .stage-layout *,

@@ -51,23 +51,38 @@ export default function BottomBleedColor() {
     const markPanes = () => {
       const active = media.matches && isPageLocked();
       document.querySelectorAll(".bleed-pane").forEach((el) => {
-        if (!active) el.classList.remove("bleed-pane");
+        if (!active) {
+          el.classList.remove("bleed-pane");
+          if (el instanceof HTMLElement) el.style.removeProperty("--pane-bottom-obstruction");
+        }
       });
       const feedbackPane = document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR);
       if (!active) feedbackPane?.style.removeProperty("--feedback-scroll-spacer");
       if (!active) return;
       document.querySelectorAll(".stage-layout *").forEach((el) => {
-        if (el.classList.contains("bleed-pane") || el.matches(".stage, .content-wrap, .stage-layout")) return;
+        if (el.matches(".stage, .content-wrap, .stage-layout")) return;
         const overflowY = getComputedStyle(el).overflowY;
-        if ((overflowY === "auto" || overflowY === "scroll") && el.getBoundingClientRect().bottom >= window.innerHeight - 40) el.classList.add("bleed-pane");
+        const isScrollablePane = overflowY === "auto" || overflowY === "scroll";
+        const bottom = el.getBoundingClientRect().bottom;
+        if (isScrollablePane && bottom >= window.innerHeight - 40) {
+          el.classList.add("bleed-pane");
+          if (el instanceof HTMLElement) {
+            const obstruction = Math.ceil(Math.max(0, bottom - window.innerHeight));
+            const currentObstruction = Number.parseFloat(el.style.getPropertyValue("--pane-bottom-obstruction")) || 0;
+            if (Math.abs(obstruction - currentObstruction) >= 1) el.style.setProperty("--pane-bottom-obstruction", `${obstruction}px`);
+          }
+        } else if (el.classList.contains("bleed-pane")) {
+          el.classList.remove("bleed-pane");
+          if (el instanceof HTMLElement) el.style.removeProperty("--pane-bottom-obstruction");
+        }
       });
       if (feedbackPane) {
         const toolbarSafe = Number.parseFloat(getComputedStyle(root).getPropertyValue("--bottom-toolbar-safe")) || 0;
         const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || toolbarSafe + 16;
         const contentHeightWithoutSpacer = Math.max(0, feedbackPane.scrollHeight - currentSpacer);
-        // Safari 沒有提供浮動工具列完整覆蓋高度；在量到的差值之外保留少量緩衝，
-        // 避免不同機型或工具列動畫狀態仍遮住按鈕底緣。
-        const requiredScrollDistance = toolbarSafe + 40;
+        const hiddenBelowViewport = Math.max(0, feedbackPane.getBoundingClientRect().bottom - window.innerHeight);
+        // 以面板實際落在可視範圍下方的高度為主；若 Safari 回報不到，再使用工具列差值作保底。
+        const requiredScrollDistance = Math.max(hiddenBelowViewport + 16, toolbarSafe + 40);
         const nextSpacer = Math.ceil(Math.max(requiredScrollDistance, feedbackPane.clientHeight + requiredScrollDistance - contentHeightWithoutSpacer));
         if (Math.abs(nextSpacer - currentSpacer) >= 1) feedbackPane.style.setProperty("--feedback-scroll-spacer", `${nextSpacer}px`);
       }
@@ -166,6 +181,7 @@ export default function BottomBleedColor() {
       root.style.removeProperty("--bottom-bleed");
       root.style.removeProperty("--bottom-toolbar-safe");
       document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR)?.style.removeProperty("--feedback-scroll-spacer");
+      document.querySelectorAll<HTMLElement>(".bleed-pane").forEach((el) => el.style.removeProperty("--pane-bottom-obstruction"));
     };
   }, []);
 
