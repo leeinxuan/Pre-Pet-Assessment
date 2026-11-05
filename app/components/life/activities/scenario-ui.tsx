@@ -252,6 +252,7 @@ export function CorrectFeedbackLayout({
           {onReplay && <button type="button" className="secondary correct-feedback-replay" onClick={onReplay}>↻ 再玩一次</button>}
           <DelayedContinueButton onContinue={onContinue} immediate={continueImmediately} disabled={continueDisabled} hint={continueHint} />
         </div>
+        <div className="correct-feedback-scroll-spacer" aria-hidden="true" />
       </div>
     </section>
   );

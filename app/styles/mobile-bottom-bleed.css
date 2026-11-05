@@ -153,10 +153,10 @@
    * 不能使用最後一個 flex item 的 margin：iOS Safari 不一定會將它算進 scrollHeight，
    * 導致短頁看似無須捲動，實際上按鈕卻被浮動工具列蓋住。
    */
-  .stage-layout .correct-feedback-copy::after {
-    content: "";
+  .stage-layout .correct-feedback-scroll-spacer {
     display: block;
     flex: 0 0 var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 16px));
+    height: var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 16px));
     min-height: var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 16px));
     width: 100%;
     pointer-events: none;
