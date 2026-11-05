@@ -135,11 +135,15 @@
   .stage-layout:has(.life-journey-page > .correct-feedback-layout) {
     height: 100dvh !important;
   }
+  html:has(.life-journey-page > .correct-feedback-layout),
+  body:has(.life-journey-page > .correct-feedback-layout) {
+    background-color: #e8f3e6 !important;
+  }
   html:has(.life-journey-page > .correct-feedback-layout) body::after {
     content: "";
     display: block;
-    height: var(--bottom-bleed);
-    background: var(--bottom-bleed-color, #e8f3e6);
+    height: calc(var(--bottom-bleed) + var(--bottom-toolbar-safe));
+    background: #e8f3e6;
   }
   .stage-layout .room-mobile-inventory,
   .stage-layout .departure-supply-rows,
