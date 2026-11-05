@@ -78,7 +78,7 @@ export default function BottomBleedColor() {
       });
       if (feedbackPane) {
         const toolbarSafe = Number.parseFloat(getComputedStyle(root).getPropertyValue("--bottom-toolbar-safe")) || 0;
-        const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || toolbarSafe + 16;
+        const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || toolbarSafe + 24;
         const action = feedbackPane.querySelector<HTMLElement>(".correct-feedback-actions");
         const paneRect = feedbackPane.getBoundingClientRect();
         const visiblePaneBottom = Math.min(paneRect.bottom, window.innerHeight);
