@@ -174,6 +174,10 @@
   .stage-layout .bleed-pane {
     padding-bottom: calc(24px + var(--pane-bottom-obstruction, 0px)) !important;
   }
+  /* 多選題原本的三層選擇器較具體，需在這裡明確套用實測遮擋高度。 */
+  .stage-layout .daily-behavior-choices .choice-grid.bleed-pane {
+    padding-bottom: calc(24px + var(--pane-bottom-obstruction, 0px)) !important;
+  }
 
   /* position: fixed 已以 Safari 可視區底緣定位，不再重複加一次工具列高度。 */
   .stage-layout .room-mobile-footer,
@@ -190,10 +194,10 @@
   }
   .stage-layout .room-mobile-footer button {
     box-sizing: border-box;
-    height: 48px !important;
-    min-height: 48px !important;
-    padding-top: 6px !important;
-    padding-bottom: 6px !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
   }
   .stage-layout .departure-actions button,
   .stage-layout .arrival-meal-footer .primary {

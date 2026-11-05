@@ -18,6 +18,7 @@ type RoomPreparationMobileProps = {
   items: RoomItem[];
   securedHazards: string[];
   selectedItems: string[];
+  exitingItemIds: string[];
   activeHazard: HazardItem | undefined;
   activeItem: RoomItem | undefined;
   hazardsCleared: boolean;
@@ -81,7 +82,7 @@ function HazardThumbnail({ hazard, background, backgroundPosition = "right cente
   </span>;
 }
 
-export function RoomPreparationMobile({ petName, scene, hazardBackground, hazardBackgroundPosition, hazards, items, securedHazards, selectedItems, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, roomComplete, onComplete, itemPrice }: RoomPreparationMobileProps) {
+export function RoomPreparationMobile({ petName, scene, hazardBackground, hazardBackgroundPosition, hazards, items, securedHazards, selectedItems, exitingItemIds, activeHazard, activeItem, hazardsCleared, lockedItemIds, hazardIcon, supplyIcon, onSelectHazard, onSelectItem, onCloseInfo, onPrepare, roomComplete, onComplete, itemPrice }: RoomPreparationMobileProps) {
   const [started, setStarted] = useState(false);
   const [chosenTab, setChosenTab] = useState<"hazards" | "items" | null>(null);
   const [tabletPortrait, setTabletPortrait] = useState(false);
@@ -156,7 +157,8 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
           : <div className="room-mobile-grid">{visibleItems.map((item) => {
             const placed = selectedItems.includes(item.id);
             const locked = !placed && lockedItemIds.includes(item.id);
-            return <button type="button" key={item.id} data-room-info-id={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}`} onClick={() => handleSupplyClick(item.id, placed)} disabled={!placed && (!hazardsCleared || locked)} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
+            const exiting = exitingItemIds.includes(item.id);
+            return <button type="button" key={item.id} data-room-info-id={item.id} className={`room-mobile-tile room-mobile-supply-tile${placed ? " is-complete" : ""}${locked ? " is-locked" : ""}${exiting ? " departing" : ""}`} onClick={() => handleSupplyClick(item.id, placed)} disabled={exiting || (!placed && (!hazardsCleared || locked))} aria-label={locked ? `${item.label}，進入內部後可放置` : placed ? `${item.label}已放置，查看說明` : `${item.label}，放入生活空間`}>
               <ItemThumbnail image={item.image} label={item.label} /><span className="room-mobile-tile-label">{item.label}</span>
               {!locked && <InfoBadge />}
               {placed && <span className="room-mobile-supply-check" aria-hidden="true"><CheckIcon /></span>}

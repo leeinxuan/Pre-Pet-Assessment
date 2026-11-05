@@ -103,6 +103,7 @@ export function ArrivalMealActivity({
   const [mobileInfo, setMobileInfo] = useState<MobileInfoSheetContent | null>(null);
   const [mobileStarted, setMobileStarted] = useState(false);
   const [unsafeFoodIds, setUnsafeFoodIds] = useState<string[]>([]);
+  const [exitingItemIds, setExitingItemIds] = useState<string[]>([]);
   const warningDialogRef = useRef<HTMLDivElement>(null);
   const isMobile = useMobileLayout();
   const choiceItems = feeding.interaction === "choice" ? feeding.choices : [];
@@ -159,7 +160,18 @@ export function ArrivalMealActivity({
     const ready = key === "food" ? activity.arrivalMealFoodReady : key === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady;
     if (ready) return;
     setFoodWarning(null);
-    onChange(key === "food" ? { arrivalMealFoodReady: true } : key === "water" ? { arrivalMealWaterReady: true } : { arrivalMealVeggieReady: true });
+    const completeSelection = () => onChange(key === "food" ? { arrivalMealFoodReady: true } : key === "water" ? { arrivalMealWaterReady: true } : { arrivalMealVeggieReady: true });
+    if (!isMobile) {
+      completeSelection();
+      return;
+    }
+    const itemId = `supply-${key}`;
+    if (exitingItemIds.includes(itemId)) return;
+    setExitingItemIds((current) => [...current, itemId]);
+    window.setTimeout(() => {
+      completeSelection();
+      setExitingItemIds((current) => current.filter((id) => id !== itemId));
+    }, 360);
   }
 
   function openMobileSupplyInfo(supply: typeof sceneSupplies[number]) {
@@ -180,7 +192,18 @@ export function ArrivalMealActivity({
     }
     const isNewSafeChoice = item.result !== "incorrect" && !activity.arrivalMealSelectedChoiceIds.includes(id);
     if (isNewSafeChoice) {
-      onChange({ arrivalMealSelectedChoiceIds: [...activity.arrivalMealSelectedChoiceIds, id], arrivalMealFeedbackChoiceId: id });
+      const completeSelection = () => onChange({ arrivalMealSelectedChoiceIds: [...activity.arrivalMealSelectedChoiceIds, id], arrivalMealFeedbackChoiceId: id });
+      if (!isMobile) {
+        completeSelection();
+        return;
+      }
+      const itemId = `choice-${id}`;
+      if (exitingItemIds.includes(itemId)) return;
+      setExitingItemIds((current) => [...current, itemId]);
+      window.setTimeout(() => {
+        completeSelection();
+        setExitingItemIds((current) => current.filter((entry) => entry !== itemId));
+      }, 360);
       return;
     }
     onChange({ arrivalMealFeedbackChoiceId: id });
@@ -196,14 +219,15 @@ export function ArrivalMealActivity({
       <aside className={`arrival-meal-supplies${feeding.interaction === "choice" ? " arrival-meal-supplies--choice" : ""}`} aria-label="晚餐用品">
         {feeding.interaction === "choice" ? choiceItems.map((item) => <button key={item.id} type="button" draggable={!activity.arrivalMealSelectedChoiceIds.includes(item.id)}
           onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} onClick={() => chooseMealChoice(item.id)}
-          className={`arrival-meal-choice-button ${item.result === "incorrect" ? "is-unsafe" : ""} ${activity.arrivalMealSelectedChoiceIds.includes(item.id) ? "done" : ""}`}>
+          disabled={exitingItemIds.includes(`choice-${item.id}`)} className={`arrival-meal-choice-button ${item.result === "incorrect" ? "is-unsafe" : ""} ${activity.arrivalMealSelectedChoiceIds.includes(item.id) ? "done" : ""}${exitingItemIds.includes(`choice-${item.id}`) ? " departing" : ""}`}>
           <b>{item.result === "caution" ? "▲ " : ""}{item.label}</b><small>{activity.arrivalMealSelectedChoiceIds.includes(item.id) ? "已放入食碗" : item.result === "incorrect" ? "點擊查看原因" : "點擊或拖曳放入"}</small><MobileItemInfoBadge />{activity.arrivalMealSelectedChoiceIds.includes(item.id) && <MobileItemPlacedCheck />}
         </button>) : <>{sceneSupplies.map((supply) => {
           const ready = supply.stateKey === "food" ? activity.arrivalMealFoodReady : supply.stateKey === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady;
           const imageClassName = supply.stateKey === "food" ? "arrival-meal-supply-food" : supply.stateKey === "water" ? "arrival-meal-supply-water" : undefined;
           const imageStyle = arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, supply.stateKey);
           const note = <ItemDescriptionCard className="arrival-meal-desktop-note" title={supply.label} description={supply.description} footer="已準備完成" />;
-          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? <>{note}<button type="button" className="arrival-meal-mobile-done" onClick={() => openMobileSupplyInfo(supply)} aria-label={`查看${supply.label}說明`}><img style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><MobileItemInfoBadge /><MobileItemPlacedCheck /></button></> : <><button type="button" className={supply.stateKey === "food" ? "arrival-meal-supply-food-button" : undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><MobileItemInfoBadge /></button><ItemDescriptionCard className="arrival-meal-desktop-note arrival-meal-desktop-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
+          const exiting = exitingItemIds.includes(`supply-${supply.stateKey}`);
+          return <div key={supply.stateKey} className="arrival-meal-supply-slot arrival-meal-supply-slot--info-card" style={arrivalMealSupplySlotStyle(arrivalMealSupplyImageSizes, supply.stateKey)}>{ready ? <>{note}<button type="button" className="arrival-meal-mobile-done" onClick={() => openMobileSupplyInfo(supply)} aria-label={`查看${supply.label}說明`}><img style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><MobileItemInfoBadge /><MobileItemPlacedCheck /></button></> : <><button type="button" disabled={exiting} className={`${supply.stateKey === "food" ? "arrival-meal-supply-food-button " : ""}${exiting ? "departing" : ""}`.trim() || undefined} onClick={() => prepareSupply(supply.stateKey)}><img className={imageClassName} style={imageStyle} src={supply.image} alt="" /><span>{supply.label}</span><MobileItemInfoBadge /></button><ItemDescriptionCard className="arrival-meal-desktop-note arrival-meal-desktop-note--reserve" title={supply.label} description={supply.description} footer="已準備完成" /></>}</div>;
         })}{sceneUnsafeFoods.map((food) => {
           const caution = food.presentation === "caution";
           return <button key={food.id} type="button" className={`arrival-meal-unsafe${caution ? " caution" : ""}${unsafeFoodIds.includes(food.id) ? " warning" : ""}`} onClick={() => warnUnsafeFood(food.id)}><span className="unsafe-food-visual"><img style={arrivalMealSupplyImageStyle(arrivalMealSupplyImageSizes, "unsafe")} src={food.image} alt="" />{unsafeFoodIds.includes(food.id) && (caution ? <WarningTriangle className="unsafe-food-warning-icon" /> : <i className="unsafe-food-prohibition-icon" aria-hidden="true">🚫</i>)}</span><span>{food.label}</span><MobileItemInfoBadge /></button>;

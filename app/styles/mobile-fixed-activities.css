@@ -606,6 +606,7 @@
     background: #fffaf0;
     font-size: 12px;
   }
+  .arrival-meal-supplies button.departing { pointer-events: none; opacity: 0; transform: scale(.84); transition: opacity .2s ease, transform .2s ease; }
   .arrival-meal-mobile-done img { width: min(76px, 70%) !important; height: 72px !important; }
   /* Match the room supply shelf while preserving each stage's existing actions. */
   .departure-supply-row button,

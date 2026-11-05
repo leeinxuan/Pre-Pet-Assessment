@@ -79,11 +79,18 @@ export default function BottomBleedColor() {
       if (feedbackPane) {
         const toolbarSafe = Number.parseFloat(getComputedStyle(root).getPropertyValue("--bottom-toolbar-safe")) || 0;
         const currentSpacer = Number.parseFloat(feedbackPane.style.getPropertyValue("--feedback-scroll-spacer")) || toolbarSafe + 16;
-        const contentHeightWithoutSpacer = Math.max(0, feedbackPane.scrollHeight - currentSpacer);
-        const hiddenBelowViewport = Math.max(0, feedbackPane.getBoundingClientRect().bottom - window.innerHeight);
-        // 以面板實際落在可視範圍下方的高度為主；若 Safari 回報不到，再使用工具列差值作保底。
-        const requiredScrollDistance = Math.max(hiddenBelowViewport + 16, toolbarSafe + 40);
-        const nextSpacer = Math.ceil(Math.max(requiredScrollDistance, feedbackPane.clientHeight + requiredScrollDistance - contentHeightWithoutSpacer));
+        const action = feedbackPane.querySelector<HTMLElement>(".correct-feedback-actions");
+        const paneRect = feedbackPane.getBoundingClientRect();
+        const visiblePaneBottom = Math.min(paneRect.bottom, window.innerHeight);
+        const targetBottomInPane = Math.max(0, visiblePaneBottom - paneRect.top - 16);
+        const actionBottomInContent = action
+          ? action.getBoundingClientRect().bottom - paneRect.top + feedbackPane.scrollTop
+          : feedbackPane.scrollHeight - currentSpacer;
+        const requiredScrollTop = Math.max(0, actionBottomInContent - targetBottomInPane);
+        const baseScrollHeight = Math.max(0, feedbackPane.scrollHeight - currentSpacer);
+        const baseMaxScroll = Math.max(0, baseScrollHeight - feedbackPane.clientHeight);
+        // 只補足「按鈕移到可視範圍內」所缺的距離，不再把短內容本身的空白高度重複算進尾端。
+        const nextSpacer = Math.ceil(Math.max(16, requiredScrollTop - baseMaxScroll));
         if (Math.abs(nextSpacer - currentSpacer) >= 1) feedbackPane.style.setProperty("--feedback-scroll-spacer", `${nextSpacer}px`);
       }
     };

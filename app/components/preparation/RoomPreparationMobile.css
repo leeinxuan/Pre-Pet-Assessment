@@ -233,7 +233,9 @@
     color: var(--room-mobile-ink);
     font: inherit;
     cursor: pointer;
+    transition: opacity .2s ease, transform .2s ease;
   }
+  .room-mobile-supply-tile.departing { pointer-events: none; opacity: 0; transform: scale(.84); }
   .room-mobile-tile:disabled { cursor: default; }
   .room-mobile-tile.is-complete { background: var(--room-mobile-paper); color: var(--room-mobile-ink); }
   .room-mobile-supply-tile.is-complete .room-mobile-thumbnail,
