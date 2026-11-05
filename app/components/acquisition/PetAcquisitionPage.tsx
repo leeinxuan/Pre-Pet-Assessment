@@ -1,12 +1,19 @@
 "use client";
 
 import { useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { officialPetSources } from "../../data/shared/pet-sources";
 import { getSpeciesConfig } from "../../data/species";
 import { contentLastUpdated } from "../../data/shared/content-meta";
-import { ProfileSupplementForm } from "../report/ProfileForms";
 import type { Profile } from "../../game-types";
 import { useDialogFocus } from "../shared/useDialogFocus";
+import { FlowLoadingFallback, loadRetriableModule } from "../shared/AsyncFlowState";
+
+const importProfileForms = () => import("../report/ProfileForms");
+const ProfileSupplementForm = dynamic(
+  () => loadRetriableModule(importProfileForms).then((module) => module.ProfileSupplementForm),
+  { loading: FlowLoadingFallback },
+);
 
 export function PetAcquisitionPage({ profile, petName, breed, species, onProfileChange, onBack, onReset }: { profile: Profile; petName: string; breed: string; species: string; onProfileChange: (profile: Profile) => void; onBack: () => void; onReset: () => void }) {
   const [shareMessage, setShareMessage] = useState("");
@@ -44,7 +51,7 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
 
     <section className="official-profile-entry" aria-labelledby="official-profile-title">
       <div><h2 id="official-profile-title">準備聯繫前，先整理你的生活條件</h2><p>居住環境、可投入時間與照顧經驗，能幫助收容所、認養平台或合法業者更了解你是否適合迎接牠。</p></div>
-      <button type="button" className="secondary" onClick={() => setProfileModalOpen(true)}>填寫真實生活條件</button>
+      <button type="button" className="secondary" onPointerEnter={() => { void importProfileForms().catch(() => undefined); }} onFocus={() => { void importProfileForms().catch(() => undefined); }} onClick={() => setProfileModalOpen(true)}>填寫真實生活條件</button>
     </section>
     {profileEdited && <p className="official-profile-complete" role="status">已整理真實生活條件，可於聯繫前下載使用。</p>}
 

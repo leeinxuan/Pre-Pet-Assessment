@@ -25,7 +25,7 @@ import {
   temporaryExpenseReserveNote,
 } from "../shared/SharedComponents";
 import type { HomeReadinessState } from "../../data/shared/home-readiness-state";
-import { PdfDownloadButton } from "./PdfExportControls";
+import { LazyPdfDownloadButton } from "./LazyPdfDownloadButton";
 import { useDialogFocus } from "../shared/useDialogFocus";
 import { useMobileLayout } from "../shared/useMobileLayout";
 
@@ -236,6 +236,7 @@ export function AssessmentReport({
   const [expenseDetailsOpen, setExpenseDetailsOpen] = useState(false);
   const [dailyCareDetailsOpen, setDailyCareDetailsOpen] = useState(false);
   const [activeAdditionalNoteIndex, setActiveAdditionalNoteIndex] = useState<number | null>(null);
+  const [pdfExportPrepared, setPdfExportPrepared] = useState(false);
   const knowledgeModalRef = useRef<HTMLElement>(null);
   const dailyCareModalRef = useRef<HTMLElement>(null);
   const additionalNotesModalRef = useRef<HTMLElement>(null);
@@ -417,9 +418,17 @@ export function AssessmentReport({
     },
   ].map((section) => ({ ...section, rows: section.rows.slice(0, 6) })).filter((section) => section.rows.length > 0);
 
+  const preparePdfExport = () => new Promise<void>((resolve) => {
+    setPdfExportPrepared(true);
+    // Wait for the normally hidden A4 source pages to enter the DOM before
+    // the export engine queries and clones them.
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => resolve()));
+  });
+
   return (
     <>
     <div className="content-wrap summary-page assessment-report compact-assessment">
+      {pdfExportPrepared && <>
       <article className="care-a4-sheet" aria-label="伴日子照顧準備總覽 A4">
         <header className="care-a4-header">
           <div>
@@ -523,6 +532,7 @@ export function AssessmentReport({
           </section>
         </article>
       ))}
+      </>}
 
       <section className="care-review-page" aria-label="你的飼養觀念回顧">
         <header className="care-review-hero">
@@ -571,7 +581,7 @@ export function AssessmentReport({
 
         <section className="care-guide-download" aria-labelledby="care-guide-download-title">
           <div><span aria-hidden="true"><DocumentIcon /></span><h2 id="care-guide-download-title">帶走你的照護指南</h2><p>將這次體驗整理成可保存的照護指南，之後準備迎接牠時也能再次查看。</p><small>內容包含：照顧準備清單、需要留意的照顧重點、預估支出、每日時間投入與照顧承諾</small></div>
-          <PdfDownloadButton petName={petName} label="下載我的照護指南" />
+          <LazyPdfDownloadButton petName={petName} label="下載我的照護指南" onBeforeDownload={preparePdfExport} onAfterDownload={() => setPdfExportPrepared(false)} />
         </section>
         <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-official-title">
           <div><span aria-hidden="true"><img src="/care-guid-logo.svg" alt="" /></span><h2 id="care-guide-official-title">官方寵物照顧指南</h2><p>想再深入了解更詳細的飼養需求、照護方式與相關規範嗎？這裡整理了農業部的官方知識庫，提供更完整的資訊供你查閱。</p></div>
@@ -583,7 +593,7 @@ export function AssessmentReport({
         </section>
       </section>
 
-      <article className="care-print-profile" aria-label="使用者填寫的個人資料">
+      {pdfExportPrepared && <article className="care-print-profile" aria-label="使用者填寫的個人資料">
         <header className="care-a4-header">
           <div>
             <p>個人資料</p>
@@ -616,7 +626,7 @@ export function AssessmentReport({
             </div>
           ) : <p>尚未上傳居家空間照片</p>}
         </section>
-      </article>
+      </article>}
       {expenseDetailsOpen && <ExpenseDetails expenses={expenses} breed={breed} species={species} onClose={() => setExpenseDetailsOpen(false)} />}
       {knowledgeModal}
       {dailyCareModal}

@@ -44,6 +44,6 @@ export const geckoReport: SpeciesReportConfig = {
     { title: "飲水更換", detail: "約 2～3 分鐘" },
     { title: "排泄物清理", detail: "約 2～5 分鐘" },
     { title: "外觀觀察（眼睛、尾巴、皮膚、趾端）", detail: "約 3～5 分鐘" },
-    { title: "餵食（每 2–3 天一次，昆蟲沾鈣粉）", detail: "約 10～15 分鐘（餵食日）" },
+    { title: "餵食（每 3–7 天一次）", detail: "約 10～15 分鐘（餵食日）" },
   ],
 };

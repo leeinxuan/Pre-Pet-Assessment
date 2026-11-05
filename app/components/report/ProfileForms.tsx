@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { getSpeciesConfig } from "../../data/species/index";
 import type { Profile } from "../../game-types";
 import { NavButtons } from "../shared/SharedComponents";
-import { PdfDownloadButton } from "./PdfExportControls";
+import { LazyPdfDownloadButton } from "./LazyPdfDownloadButton";
 
 function OptionButton({ label, selected, onClick, icon, simple = false }: { label: string; selected: boolean; onClick: () => void; icon?: string; simple?: boolean }) {
   return (
@@ -329,7 +329,7 @@ export function ProfileSupplementForm({
         })}</div>{profile.reasons.includes("其他") && <label className="supplement-inline-input">其他飼養原因<input placeholder="請說明" value={profile.reasonOther} onChange={(event) => update("reasonOther", event.target.value)} /></label>}</fieldset>
       </section>
       <div className="profile-pdf-actions">
-        <PdfDownloadButton petName={petName} kind="profile" label="下載個人資料" profile={profile} selectedTypeLabel={selectedTypeLabel} />
+        <LazyPdfDownloadButton petName={petName} kind="profile" label="下載個人資料" profile={profile} selectedTypeLabel={selectedTypeLabel} />
         <p>下載後可提供給收容所、認養平台或合法寵物業者參考，協助他們了解你的居住環境與照顧安排。</p>
       </div>
     </section>

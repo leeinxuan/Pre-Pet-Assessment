@@ -37,18 +37,20 @@ import {
   TestSkipButton,
   Welcome,
 } from "./components/shared/SharedComponents";
-import { FlowLoadErrorBoundary, FlowLoadingFallback } from "./components/shared/AsyncFlowState";
+import { FlowLoadErrorBoundary, FlowLoadingFallback, loadRetriableModule } from "./components/shared/AsyncFlowState";
 import { isTestModeEntryUrl } from "./components/shared/useTestModeEntry";
 
 const dynamicFlowOptions = { loading: FlowLoadingFallback };
+const importAssessmentReport = () => import("./components/report/AssessmentReport");
+const importPetAcquisitionPage = () => import("./components/acquisition/PetAcquisitionPage");
 
 const ArrivalTransitionVideo = dynamic(() => import("./components/life/LifeJourneyComponents").then((module) => module.ArrivalTransitionVideo), dynamicFlowOptions);
 const LifeJourney = dynamic(() => import("./components/life/LifeJourneyComponents").then((module) => module.LifeJourney), dynamicFlowOptions);
 const HomeReadinessActivity = dynamic(() => import("./components/preparation/PreparationComponents").then((module) => module.HomeReadinessActivity), dynamicFlowOptions);
 const RoomPreparation = dynamic(() => import("./components/preparation/PreparationComponents").then((module) => module.RoomPreparation), dynamicFlowOptions);
 const CarTrunkPreparation = dynamic(() => import("./components/preparation/PreparationComponents").then((module) => module.CarTrunkPreparation), dynamicFlowOptions);
-const AssessmentReport = dynamic(() => import("./components/report/AssessmentReport").then((module) => module.AssessmentReport), dynamicFlowOptions);
-const PetAcquisitionPage = dynamic(() => import("./components/acquisition/PetAcquisitionPage").then((module) => module.PetAcquisitionPage), dynamicFlowOptions);
+const AssessmentReport = dynamic(() => loadRetriableModule(importAssessmentReport).then((module) => module.AssessmentReport), dynamicFlowOptions);
+const PetAcquisitionPage = dynamic(() => loadRetriableModule(importPetAcquisitionPage).then((module) => module.PetAcquisitionPage), dynamicFlowOptions);
 
 function IntroIcon({ step }: { step: number }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 2.1, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -161,6 +163,17 @@ export default function Home() {
       }
     };
   }, []);
+
+  // These pages are only needed near the end of the journey. Fetch them while
+  // the player is still reading the preceding stage so navigation does not
+  // have to wait for a first-time chunk request.
+  useEffect(() => {
+    if (step >= 3 && step <= 6) {
+      void importAssessmentReport().catch(() => undefined);
+    } else if (step === 7) {
+      void importPetAcquisitionPage().catch(() => undefined);
+    }
+  }, [step]);
 
   const backupNames = useMemo(() => {
     return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);

@@ -2,6 +2,48 @@
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
+type RetriableModuleOptions = {
+  timeoutMs?: number;
+  retries?: number;
+};
+
+function loadWithTimeout<T>(loader: () => Promise<T>, timeoutMs: number) {
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = globalThis.setTimeout(() => reject(new Error(`Content loading timed out after ${timeoutMs}ms`)), timeoutMs);
+    loader().then(
+      (module) => {
+        globalThis.clearTimeout(timeoutId);
+        resolve(module);
+      },
+      (error) => {
+        globalThis.clearTimeout(timeoutId);
+        reject(error);
+      },
+    );
+  });
+}
+
+/**
+ * Late-stage flows are separate browser chunks. Give transient mobile-network
+ * failures one automatic retry and stop an indefinitely pending request from
+ * leaving the loading animation on screen forever.
+ */
+export async function loadRetriableModule<T>(
+  loader: () => Promise<T>,
+  { timeoutMs = 15_000, retries = 1 }: RetriableModuleOptions = {},
+): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      return await loadWithTimeout(loader, timeoutMs);
+    } catch (error) {
+      lastError = error;
+      if (attempt < retries) await new Promise((resolve) => globalThis.setTimeout(resolve, 350));
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Content loading failed");
+}
+
 export function FlowLoadingFallback() {
   return (
     <section className="flow-load-state" role="status" aria-label="內容載入中" aria-live="polite" aria-busy="true">

@@ -509,7 +509,7 @@ function useMobileDownloadMode() {
   return mobile;
 }
 
-async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
+export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
   if (typeof window === "undefined" || typeof document === "undefined") throw new Error("PDF export requires a browser environment");
   if (kind === "profile" && profile) {
     const canvases = await createProfilePdfCanvases(profile, petName, selectedTypeLabel || "寵物");
