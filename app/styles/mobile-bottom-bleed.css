@@ -162,17 +162,8 @@
     flex-direction: column;
     width: 100%;
     min-height: 100%;
-  }
-  /*
-   * 用真正參與排版的尾端空間製造 scrollHeight；iOS Safari 對捲動容器內
-   * 「百分比 min-height + flex」的計算不穩定，內容剛好時可能把額外高度吸收掉。
-   */
-  .stage-layout .correct-feedback-content::after {
-    content: "";
-    display: block;
-    flex: 0 0 var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 24px));
-    width: 100%;
-    pointer-events: none;
+    /* flex 子項的外距不會折疊，能確保實際 scrollHeight 至少多出工具列安全距離。 */
+    margin-bottom: var(--feedback-scroll-spacer, calc(var(--bottom-toolbar-safe) + 24px));
   }
   /*
    * 過場狀態切換時，Safari 可能暫時讓舊的影片節點留在 DOM；若祖先仍是
