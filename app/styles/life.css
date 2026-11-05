@@ -317,7 +317,7 @@
 .delayed-continue.is-visible .primary { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); transition-delay: 0s; }
 .delayed-continue.is-visible .primary:disabled { opacity: .52; pointer-events: none; }
 .delayed-continue-hint { color: #5f735f; font-size: 12px; font-weight: 850; line-height: 1.45; }
-.correct-feedback-actions { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 18px; }
+.correct-feedback-actions { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; padding-top: 18px; }
 .correct-feedback-actions .delayed-continue { margin-top: 0; }
 .correct-feedback-actions.has-replay .delayed-continue { min-height: 0; }
 .correct-feedback-replay { margin-top: 0; }
