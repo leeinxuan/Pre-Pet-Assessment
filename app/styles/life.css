@@ -285,8 +285,6 @@
 .correct-feedback-copy h2 { margin: 0 0 22px; font-family: "Huninn", "jf open 粉圓", sans-serif; font-size: clamp(34px, 4.5vw, 50px); line-height: 1.15; }
 .correct-feedback-intro p { margin: 0; color: var(--ink); line-height: 1.9; font-size: clamp(17px, 2vw, 17px);  }
 .correct-feedback-intro p + p { margin-top: 12px; }
-.correct-feedback-layout--multiple .correct-feedback-copy h2 { margin-bottom: 16px; font-size: clamp(30px, 4vw, 45px); }
-.correct-feedback-layout--multiple .correct-feedback-intro p { line-height: 1.85; font-size: 17px; }
 .correct-feedback-suggestion {
   margin-top: 26px;
   padding: 0;
