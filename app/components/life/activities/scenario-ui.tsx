@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Scenario artwork and video fallbacks intentionally preserve the existing native media markup. */
 
 import { useEffect, useId, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 import { money, getExpenseForSpecies } from "../../../data/shared/expenses";
 import { getSpeciesConfig } from "../../../data/species";
 import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
@@ -162,6 +162,46 @@ export function CompletionReminderBlock({ reminder, petName }: { reminder: NonNu
 }
 
 
+const MOBILE_FEEDBACK_QUERY = "(max-width: 768px)";
+
+/**
+ * 手機版回饋面板：量測面板內容區的實際像素高度，寫入 --feedback-pane-content-height。
+ * 內容層以此值 + 60px 作為最小高度，短內容也一定有真實的滑動距離；
+ * 不依賴 iOS Safari 在 grid → height:100% → flex 子項下不穩定的百分比 min-height。
+ * 只在數值改變時寫入，避免與其他觀察 style 的 MutationObserver 互相觸發。
+ */
+function useFeedbackPaneHeight(paneRef: RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const pane = paneRef.current;
+    if (!pane || typeof ResizeObserver === "undefined") return;
+    const media = window.matchMedia(MOBILE_FEEDBACK_QUERY);
+    let last = "";
+    const update = () => {
+      if (!media.matches) {
+        if (last) pane.style.removeProperty("--feedback-pane-content-height");
+        last = "";
+        return;
+      }
+      const style = getComputedStyle(pane);
+      const height = Math.max(0, Math.floor(pane.clientHeight - Number.parseFloat(style.paddingTop) - Number.parseFloat(style.paddingBottom)));
+      const value = `${height}px`;
+      if (value === last) return;
+      last = value;
+      pane.style.setProperty("--feedback-pane-content-height", value);
+    };
+    // 頁面切換、旋轉、Safari 工具列展開／收合都會改變面板大小，由 ResizeObserver 統一重算。
+    const observer = new ResizeObserver(update);
+    observer.observe(pane);
+    media.addEventListener("change", update);
+    update();
+    return () => {
+      observer.disconnect();
+      media.removeEventListener("change", update);
+      pane.style.removeProperty("--feedback-pane-content-height");
+    };
+  }, [paneRef]);
+}
+
 export function CorrectFeedbackLayout({
   variant,
   title = "做得很好！",
@@ -211,6 +251,8 @@ export function CorrectFeedbackLayout({
   continueDisabled?: boolean;
   continueHint?: string;
 }) {
+  const copyRef = useRef<HTMLDivElement>(null);
+  useFeedbackPaneHeight(copyRef);
   return (
     <section className={`correct-feedback-layout correct-feedback-layout--${variant}${hideMedia ? " correct-feedback-layout--text-only" : ""}`} aria-live="polite">
       {!hideMedia && <div className="correct-feedback-media">
@@ -220,7 +262,7 @@ export function CorrectFeedbackLayout({
           <VideoWithToggle src={videoSrc} ariaLabel="正確處置後的正向結果影片" onEnded={onVideoEnded} onError={onVideoError} />
         )}
       </div>}
-      <div className="correct-feedback-copy">
+      <div className="correct-feedback-copy" ref={copyRef}>
         <div className="correct-feedback-content">
         <h2>{title}</h2>
         <div className="correct-feedback-intro">{intro}</div>

@@ -142,23 +142,37 @@
     padding-bottom: calc(24px + var(--bottom-toolbar-safe)) !important;
   }
   /*
-   * iOS Safari：整頁鎖定時仍要明確允許回饋面板接收垂直平移。
-   * BottomBleedColor 會辨識同一個面板並略過 document touchmove 的阻擋。
+   * 「做得很好」回饋頁：把「視覺延伸」與「捲動視窗」分開。
+   * - 版面（.stage-layout）照常加高 --bottom-bleed，淡綠底色由回饋頁自身的背景一路畫到工具列後方，
+   *   與面板同色、不是另外補的色塊。
+   * - 可捲動面板只算到工具列上緣（扣掉 --bottom-bleed），clientHeight 就是使用者實際看得到的高度，
+   *   不再把被工具列蓋住的 140px 算進可視範圍。
+   * - 面板不交給 BottomBleedColor 的 .bleed-pane 量測（它會依量測時機改寫 padding，造成部分頁面沒有滑動距離）。
    */
+  .stage-layout .correct-feedback-layout {
+    background: #e8f3e6;
+  }
   .stage-layout .correct-feedback-copy {
-    padding-bottom: calc(28px + env(safe-area-inset-bottom)) !important;
+    height: calc(100% - var(--bottom-bleed));
+    /* 捲到底時，繼續按鈕下方至少保留 60px。 */
+    padding-bottom: max(60px, calc(28px + env(safe-area-inset-bottom))) !important;
     overflow-y: auto !important;
+    /* iOS Safari：整頁鎖定時仍要明確允許面板接收垂直平移；BottomBleedColor 也會略過 touchmove 的阻擋。 */
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
   }
-  /* 單選與多選回饋共用同一內容層；即使內容很短，也固定保留至少 60px 的真實滑動距離。 */
+  /*
+   * 單選與多選回饋共用同一內容層。最小高度 = 面板內容區的實際像素高度（由 CorrectFeedbackLayout
+   * 以 ResizeObserver 寫入 --feedback-pane-content-height）+ 60px，短內容也一定有 60px 的真實滑動距離；
+   * 長內容依自然高度捲動，不會多出空白。變數尚未寫入前才退回百分比。
+   */
   .stage-layout .correct-feedback-content {
     box-sizing: border-box;
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
     width: 100%;
-    min-height: calc(100% + max(60px, var(--bottom-toolbar-safe)));
+    min-height: calc(var(--feedback-pane-content-height, 100%) + 60px);
   }
   /*
    * 過場狀態切換時，Safari 可能暫時讓舊的影片節點留在 DOM；若祖先仍是

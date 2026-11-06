@@ -44,7 +44,14 @@ export default function ViewportDebug() {
         `lock ${getComputedStyle(document.documentElement).getPropertyValue("--page-lock").trim() || "-"} · touch ${(window as unknown as { __touchDbg?: string }).__touchDbg ?? "-"}`,
         (() => {
           const pane = document.querySelector(".correct-feedback-copy, .room-mobile-inventory, .departure-supply-rows, .video-scenario-choice-list");
-          return pane ? `pane ${String(pane.className).slice(0, 22)} top ${Math.round(pane.scrollTop)} sh ${pane.scrollHeight} ch ${pane.clientHeight} pb ${getComputedStyle(pane).paddingBottom} v3` : "pane -";
+          if (!pane) return "pane -";
+          const content = pane.querySelector(".correct-feedback-content");
+          const actions = pane.querySelector(".correct-feedback-actions");
+          return [
+            `pane ${String(pane.className).slice(0, 22)} top ${Math.round(pane.scrollTop)} sh ${pane.scrollHeight} ch ${pane.clientHeight} pb ${getComputedStyle(pane).paddingBottom} bottom ${Math.round(pane.getBoundingClientRect().bottom)} v4`,
+            content ? `content h ${Math.round(content.getBoundingClientRect().height)} min ${getComputedStyle(content).minHeight} var ${(pane as HTMLElement).style.getPropertyValue("--feedback-pane-content-height") || "-"}` : "",
+            actions ? `actions bottom ${Math.round(actions.getBoundingClientRect().bottom)}` : "",
+          ].filter(Boolean).join("\n");
         })(),
       ].join("\n"));
     };

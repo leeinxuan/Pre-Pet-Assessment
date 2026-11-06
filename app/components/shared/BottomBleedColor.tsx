@@ -63,6 +63,14 @@ export default function BottomBleedColor() {
       if (!active) return;
       document.querySelectorAll(".stage-layout *").forEach((el) => {
         if (el.matches(".stage, .content-wrap, .stage-layout")) return;
+        // 回饋面板的高度與底部留白由 CSS 與 CorrectFeedbackLayout 的實測高度決定，不套用依量測時機變動的遮擋留白。
+        if (el.matches(LOCKED_PAGE_SCROLL_PANE_SELECTOR)) {
+          if (el.classList.contains("bleed-pane")) {
+            el.classList.remove("bleed-pane");
+            if (el instanceof HTMLElement) el.style.removeProperty("--pane-bottom-obstruction");
+          }
+          return;
+        }
         const overflowY = getComputedStyle(el).overflowY;
         const isScrollablePane = overflowY === "auto" || overflowY === "scroll";
         const bottom = el.getBoundingClientRect().bottom;
