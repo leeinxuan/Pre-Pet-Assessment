@@ -275,13 +275,13 @@ function roomHotspotStyle(placement: {
 
 function mobileHazardArea(item: HazardItem, floorHotspot?: { mobile: { x: number; y: number; width: number; height: number } }) {
   const specified = item.mobileHitArea ?? item.hotspot?.mobile ?? floorHotspot?.mobile;
-  if (specified) return { ...specified, width: Math.max(22, specified.width), height: Math.max(20, specified.height) };
+  if (specified) return { ...specified, width: Math.max(26, specified.width), height: Math.max(24, specified.height) };
   const visual = item.mobilePlacement ?? item.placement;
-  return { x: visual.x, y: visual.y, width: Math.min(40, Math.max(22, visual.width + 8)), height: Math.min(36, Math.max(20, visual.width * 1.15 + 8)) };
+  return { x: visual.x, y: visual.y, width: Math.min(44, Math.max(26, visual.width + 12)), height: Math.min(40, Math.max(24, visual.width * 1.15 + 12)) };
 }
 
 function mobileHazardAreaStyle(area: { x: number; y: number; width: number; height: number }): CSSProperties {
-  return { left: `${area.x}%`, top: `${area.y}%`, width: `max(52px, ${area.width}%)`, height: `max(52px, ${area.height}%)` };
+  return { left: `${area.x}%`, top: `${area.y}%`, width: `max(64px, ${area.width}%)`, height: `max(64px, ${area.height}%)` };
 }
 
 function roomDoorplatePlacementStyle(placement: {

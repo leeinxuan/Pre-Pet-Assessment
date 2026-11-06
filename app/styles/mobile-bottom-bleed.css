@@ -80,7 +80,9 @@
   html:has(.gecko-health-inspection),
   html:has(.hamster-cage-check),
   html:has(.bird-cage-activity),
-  html:has(.walking-activity.is-walking-game),
+  html:has(.walking-activity),
+  html:has(.rabbit-activity),
+  html:has(.life-journey-page > :is(.walking-complete, .rabbit-grooming-activity)),
   body:has(.departure-preparation-page),
   body:has(.room-preparation-page),
   body:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
@@ -89,27 +91,33 @@
   body:has(.gecko-health-inspection),
   body:has(.hamster-cage-check),
   body:has(.bird-cage-activity),
-  body:has(.walking-activity.is-walking-game) {
+  body:has(.walking-activity),
+  body:has(.rabbit-activity),
+  body:has(.life-journey-page > :is(.walking-complete, .rabbit-grooming-activity)) {
     overflow: visible !important;
   }
   html:has(.home-readiness-mobile-flow),
   html:has(.gecko-health-inspection),
   html:has(.hamster-cage-check),
   html:has(.bird-cage-activity),
-  html:has(.walking-activity.is-walking-game),
+  html:has(.walking-activity),
+  html:has(.rabbit-activity),
+  html:has(.life-journey-page > :is(.walking-complete, .rabbit-grooming-activity)),
   body:has(.home-readiness-mobile-flow),
   body:has(.gecko-health-inspection),
   body:has(.hamster-cage-check),
   body:has(.bird-cage-activity),
-  body:has(.walking-activity.is-walking-game) {
+  body:has(.walking-activity),
+  body:has(.rabbit-activity),
+  body:has(.life-journey-page > :is(.walking-complete, .rabbit-grooming-activity)) {
     --page-lock: 1;
     overscroll-behavior: none;
   }
   html:has(.home-readiness-mobile-flow) body::after,
-  html:has(.gecko-health-inspection) body::after,
   html:has(.hamster-cage-check) body::after,
-  html:has(.bird-cage-activity) body::after,
-  html:has(.walking-activity.is-walking-game) body::after {
+  html:has(.cat-litter-rescue) body::after,
+  html:has(.rabbit-carry-activity) body::after,
+  html:has(.walking-activity:not(.is-walking-game):not(.walking-complete)) body::after {
     content: "";
     display: block;
     height: var(--bottom-bleed);
@@ -124,7 +132,8 @@
   .stage-layout:has(.departure-preparation-page),
   .stage-layout:has(.room-preparation-page),
   .stage-layout:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
-  .stage-layout:has(.rabbit-activity-feedback--carry) {
+  .stage-layout:has(.rabbit-activity-feedback--carry),
+  .stage-layout:has(.life-journey-page > :is(.walking-complete, .walking-activity.is-walking-game, .bird-cage-activity, .gecko-health-inspection, .rabbit-grooming-activity)) {
     height: calc(100dvh + var(--bottom-bleed)) !important;
   }
   .stage-layout .room-mobile-inventory,
@@ -240,7 +249,9 @@
   html:has(.gecko-health-inspection) .stage-layout *,
   html:has(.hamster-cage-check) .stage-layout *,
   html:has(.bird-cage-activity) .stage-layout *,
-  html:has(.walking-activity.is-walking-game) .stage-layout * {
+  html:has(.walking-activity) .stage-layout *,
+  html:has(.rabbit-activity) .stage-layout *,
+  html:has(.life-journey-page > :is(.walking-complete, .rabbit-grooming-activity)) .stage-layout * {
     overscroll-behavior: contain;
   }
 

@@ -104,8 +104,8 @@
     position: absolute;
     z-index: 6;
     box-sizing: border-box;
-    min-width: 52px;
-    min-height: 52px;
+    min-width: 64px;
+    min-height: 64px;
     padding: 0;
     border: 0;
     border-radius: 10px;
@@ -114,7 +114,7 @@
     cursor: pointer;
   }
   .room-mobile-hazard-hit-area:focus-visible { outline: 3px solid var(--gold); outline-offset: -2px; }
-  .room-mobile-scene .room-floor-hazard-hotspot { min-width: 52px; min-height: 52px; }
+  .room-mobile-scene .room-floor-hazard-hotspot { min-width: 64px; min-height: 64px; }
   .room-mobile-entry-cue { position: absolute; z-index: 14; pointer-events: none; animation: roomMobileEntryNudge 1.8s ease-in-out infinite; }
   .room-mobile-entry-cue .interior-entry-hint { position: static; display: flex; flex-direction: row; align-items: center; gap: 5px; padding: 6px 10px 6px 13px; border: 1px solid rgba(191, 130, 27, .45); border-radius: 999px; background: rgba(255, 253, 248, .97); box-shadow: 0 3px 10px rgba(65, 45, 21, .2); animation: none; transform: translate(-50%, -50%); }
   .room-mobile-entry-cue--left .interior-entry-hint { flex-direction: row-reverse; }
@@ -366,8 +366,8 @@
     top: var(--mobile-room-hotspot-y) !important;
     width: var(--mobile-room-hotspot-width) !important;
     height: var(--mobile-room-hotspot-height) !important;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 64px;
+    min-height: 64px;
   }
   .room-mobile-scene .pet-doorplate {
     left: var(--mobile-doorplate-x) !important;

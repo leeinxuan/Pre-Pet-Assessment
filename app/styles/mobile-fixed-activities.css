@@ -579,7 +579,8 @@
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    background: var(--paper);
+    /* 底部捲動留白屬於物品欄本身，背景必須與用品格一致，避免出現異色區塊。 */
+    background: white;
   }
   .arrival-meal-warning-overlay { display: none; }
   .arrival-meal-heading { display: none; }
