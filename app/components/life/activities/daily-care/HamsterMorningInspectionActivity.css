@@ -52,6 +52,10 @@
   filter: drop-shadow(0 14px 20px rgba(73, 49, 24, .25));
 }
 .hamster-sand-bath-stage.is-shaking .hamster-sand-sieve-focus img { animation: hamster-sieve-shake .52s ease-in-out infinite; }
+.hamster-sand-sieve-focus.is-mobile-shaking img { animation: hamster-sieve-shake .4s ease-in-out; }
+@media (prefers-reduced-motion: reduce) {
+  .hamster-sand-sieve-focus.is-mobile-shaking img { animation: none; }
+}
 .hamster-sand-sieve-focus.is-discarding { animation: hamster-sieve-discard .5s ease-in forwards; }
 .hamster-sand-trash {
   position: absolute;
@@ -348,6 +352,15 @@
     min-height: 44px;
     padding: 11px 16px;
     font-size: 14px;
+  }
+  .hamster-sand-bath-stage > .hamster-cage-check-finish {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    box-sizing: border-box;
+    width: auto !important;
+    min-height: 52px;
+    justify-content: center;
   }
 
   @keyframes hamster-mobile-tap-guide {

@@ -44,8 +44,10 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
   const shakeTracking = useRef({ previousX: 0, lastMovedAt: 0, activeDurationMs: 0, baseProgress: 0 });
   const [mobileTool, setMobileTool] = useState<MobileTool>(null);
   const [mobileTargetPulse, setMobileTargetPulse] = useState<string | null>(null);
+  const [mobileSieveShaking, setMobileSieveShaking] = useState(false);
   const [trashAnimating, setTrashAnimating] = useState(false);
   const mobileAnimationTimer = useRef<number | null>(null);
+  const mobileSieveAnimationTimer = useRef<number | null>(null);
   const trashAnimationTimer = useRef<number | null>(null);
 
   const beddingStyle = (
@@ -76,6 +78,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
 
   useEffect(() => () => {
     if (mobileAnimationTimer.current !== null) window.clearTimeout(mobileAnimationTimer.current);
+    if (mobileSieveAnimationTimer.current !== null) window.clearTimeout(mobileSieveAnimationTimer.current);
     if (trashAnimationTimer.current !== null) window.clearTimeout(trashAnimationTimer.current);
   }, []);
 
@@ -195,6 +198,15 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
 
   function incrementSandShake() {
     if (sandPhase !== "shake") return;
+    if (isMobile) {
+      setMobileSieveShaking(false);
+      window.requestAnimationFrame(() => setMobileSieveShaking(true));
+      if (mobileSieveAnimationTimer.current !== null) window.clearTimeout(mobileSieveAnimationTimer.current);
+      mobileSieveAnimationTimer.current = window.setTimeout(() => {
+        setMobileSieveShaking(false);
+        mobileSieveAnimationTimer.current = null;
+      }, 420);
+    }
     const nextProgress = Math.min(
       config.interaction.shakeProgressTarget,
       shakeProgressRef.current + config.interaction.mobileTap.shake.progressIncrement,
@@ -313,7 +325,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
             <span className="hamster-sand-debris hamster-sand-debris--4" aria-hidden="true"><img src={hamsterAssets.cageCheckActivity.sandBathDirty} alt="" /></span>
           </>}
           {sandPhase === "scoop" && <button type="button" className={`hamster-cleaning-tool hamster-cleaning-tool--sieve ${isMobile && mobileTool === "sieve" ? "is-tap-selected" : ""} ${isMobile && !mobileTool ? "is-tap-target" : ""}`} style={mobileToolStyle(mobileScene.sieve)} onPointerDown={isMobile ? undefined : (event) => startDrag("sieve", event)} onClick={(event) => { event.stopPropagation(); if (isMobile) selectMobileTool("sieve"); else if (event.detail === 0) completeKeyboardCleaning("sieve"); }} aria-label={roundCopy.scoopPrompt}><img src={hamsterAssets.cageCheckActivity.sandSieve} alt="" /><span>{isMobile ? "點擊砂鏟" : "拖曳砂鏟舀沙"}</span></button>}
-          {sandPhase !== "scoop" && <button type="button" className={`hamster-sand-sieve-focus ${sandPhase === "shake" ? "is-shake-ready" : "is-clean"} ${trashAnimating ? "is-discarding" : ""}`} onPointerDown={isMobile || sandPhase !== "shake" ? undefined : (event) => startDrag("shake", event)} onClick={(event) => { event.stopPropagation(); if (sandPhase === "shake" && (isMobile || event.detail === 0)) incrementSandShake(); }} disabled={sandPhase === "trash"} aria-label={sandPhase === "shake" ? roundCopy.shakePrompt : "砂鏟上的排泄物等待丟棄"}><img src={sieveFocusImage} alt="" /></button>}
+          {sandPhase !== "scoop" && <button type="button" className={`hamster-sand-sieve-focus ${sandPhase === "shake" ? "is-shake-ready" : "is-clean"} ${mobileSieveShaking ? "is-mobile-shaking" : ""} ${trashAnimating ? "is-discarding" : ""}`} onPointerDown={isMobile || sandPhase !== "shake" ? undefined : (event) => startDrag("shake", event)} onClick={(event) => { event.stopPropagation(); if (sandPhase === "shake" && (isMobile || event.detail === 0)) incrementSandShake(); }} disabled={sandPhase === "trash"} aria-label={sandPhase === "shake" ? roundCopy.shakePrompt : "砂鏟上的排泄物等待丟棄"}><img src={sieveFocusImage} alt="" /></button>}
           <button type="button" className={`hamster-sand-trash ${sandPhase === "trash" ? "is-ready" : ""} ${trashAnimating ? "is-open" : ""}`} onClick={(event) => { event.stopPropagation(); discardSandWaste(); }} disabled={sandPhase !== "trash" || trashAnimating} aria-label={roundCopy.trashPrompt}><img src={trashAnimating ? hamsterAssets.cageCheckActivity.trashBinOpen : hamsterAssets.cageCheckActivity.trashBin} alt="" /></button>
           {sandPhase === "shake" && <div className="hamster-sieve-progress" aria-label={config.sandCleaning.shakeProgressLabel}><b>{config.sandCleaning.shakeProgressLabel}</b><div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}><span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} /></div><small>{Math.round(shakeProgress)}%</small></div>}
         </>}
