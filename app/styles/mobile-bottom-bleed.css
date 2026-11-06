@@ -151,17 +151,14 @@
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
   }
-  /*
-   * 單選與多選回饋共用同一內容層。內容層固定比捲動視窗多出安全距離，
-   * 因此即使短內容的按鈕使用 margin-top:auto，也不會把留白吸收成不可捲動空間。
-   */
+  /* 單選與多選回饋共用同一內容層；即使內容很短，也固定保留至少 60px 的真實滑動距離。 */
   .stage-layout .correct-feedback-content {
     box-sizing: border-box;
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
     width: 100%;
-    min-height: 0;
+    min-height: calc(100% + max(60px, var(--bottom-toolbar-safe)));
   }
   /*
    * 過場狀態切換時，Safari 可能暫時讓舊的影片節點留在 DOM；若祖先仍是
