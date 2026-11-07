@@ -293,6 +293,15 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       <span className="hamster-stage-dots" aria-hidden="true">{steps.map((step, index) => <i key={step.id} className={index < activeIndex ? "is-complete" : index === activeIndex ? "is-active" : ""}>{index < activeIndex ? "✓" : ""}</i>)}</span>
       <span className="hamster-stage-name">{activeStage.label}</span>
     </div>
+    {isMobile && toiletSummaryAcknowledged && sandPhase === "shake" && !sandComplete && (
+      <div className="hamster-mobile-action-progress" aria-label={config.sandCleaning.shakeProgressLabel}>
+        <b>{config.sandCleaning.shakeProgressLabel}</b>
+        <div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}>
+          <span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} />
+        </div>
+        <small>{Math.round(shakeProgress)}%</small>
+      </div>
+    )}
     <div className="hamster-cage-check-scene" onPointerMove={isMobile ? undefined : updateDrag} onPointerUp={isMobile ? undefined : (event) => {
       if (dragging === "scoop") finishToiletDrag(event);
       if (dragging === "sieve") finishSandScoopDrag(event);
@@ -327,11 +336,16 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
           {sandPhase === "scoop" && <button type="button" className={`hamster-cleaning-tool hamster-cleaning-tool--sieve ${isMobile && mobileTool === "sieve" ? "is-tap-selected" : ""} ${isMobile && !mobileTool ? "is-tap-target" : ""}`} style={mobileToolStyle(mobileScene.sieve)} onPointerDown={isMobile ? undefined : (event) => startDrag("sieve", event)} onClick={(event) => { event.stopPropagation(); if (isMobile) selectMobileTool("sieve"); else if (event.detail === 0) completeKeyboardCleaning("sieve"); }} aria-label={roundCopy.scoopPrompt}><img src={hamsterAssets.cageCheckActivity.sandSieve} alt="" /><span>{isMobile ? "點擊砂鏟" : "拖曳砂鏟舀沙"}</span></button>}
           {sandPhase !== "scoop" && <button type="button" className={`hamster-sand-sieve-focus ${sandPhase === "shake" ? "is-shake-ready" : "is-clean"} ${mobileSieveShaking ? "is-mobile-shaking" : ""} ${trashAnimating ? "is-discarding" : ""}`} onPointerDown={isMobile || sandPhase !== "shake" ? undefined : (event) => startDrag("shake", event)} onClick={(event) => { event.stopPropagation(); if (sandPhase === "shake" && (isMobile || event.detail === 0)) incrementSandShake(); }} disabled={sandPhase === "trash"} aria-label={sandPhase === "shake" ? roundCopy.shakePrompt : "砂鏟上的排泄物等待丟棄"}><img src={sieveFocusImage} alt="" /></button>}
           <button type="button" className={`hamster-sand-trash ${sandPhase === "trash" ? "is-ready" : ""} ${trashAnimating ? "is-open" : ""}`} onClick={(event) => { event.stopPropagation(); discardSandWaste(); }} disabled={sandPhase !== "trash" || trashAnimating} aria-label={roundCopy.trashPrompt}><img src={trashAnimating ? hamsterAssets.cageCheckActivity.trashBinOpen : hamsterAssets.cageCheckActivity.trashBin} alt="" /></button>
-          {sandPhase === "shake" && <div className="hamster-sieve-progress" aria-label={config.sandCleaning.shakeProgressLabel}><b>{config.sandCleaning.shakeProgressLabel}</b><div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}><span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} /></div><small>{Math.round(shakeProgress)}%</small></div>}
+          {!isMobile && sandPhase === "shake" && <div className="hamster-sieve-progress" aria-label={config.sandCleaning.shakeProgressLabel}><b>{config.sandCleaning.shakeProgressLabel}</b><div role="progressbar" aria-valuemin={0} aria-valuemax={config.interaction.shakeProgressTarget} aria-valuenow={Math.round(shakeProgress)}><span style={{ width: `${(shakeProgress / config.interaction.shakeProgressTarget) * 100}%` }} /></div><small>{Math.round(shakeProgress)}%</small></div>}
         </>}
-        {sandComplete && <button type="button" className="primary hamster-cage-check-finish" onClick={(event) => { event.stopPropagation(); setFeedback(steps[1].id, "correct"); }}>完成清潔 →</button>}
+        {sandComplete && !isMobile && <button type="button" className="primary hamster-cage-check-finish" onClick={(event) => { event.stopPropagation(); setFeedback(steps[1].id, "correct"); }}>完成清潔 →</button>}
       </div>}
     </div>
+    {sandComplete && isMobile && (
+      <div className="hamster-mobile-finish-row">
+        <button type="button" className="primary hamster-cage-check-finish" onClick={() => setFeedback(steps[1].id, "correct")}>完成清潔 →</button>
+      </div>
+    )}
     {ghostImage && dragPoint && <img className="hamster-cage-check-drag-ghost" src={ghostImage} alt="" aria-hidden="true" style={{ left: dragPoint.x, top: dragPoint.y }} />}
   </section>;
 }

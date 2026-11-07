@@ -143,6 +143,10 @@
   .bird-cage-activity .bird-cage-scene.is-window-stage {
     background: linear-gradient(145deg, #fbf4e5, #edf3e8);
   }
+  /* 開門影片播放期間只把影片上方的場景保留區改成白色；繼續互動後節點移除，原色自然恢復。 */
+  .bird-cage-activity .bird-cage-scene:has(.bird-cage-door-transition) {
+    background: #fff;
+  }
   .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-background,
   .bird-cage-activity .bird-cage-scene.is-window-stage .bird-cage-main-hotspot--lock {
     display: none;
@@ -185,7 +189,7 @@
     flex: 0 0 auto;
     align-self: stretch;
     min-height: 52px;
-    margin: 0 16px calc(12px + env(safe-area-inset-bottom));
+    margin: 0 16px calc(12px + var(--bottom-bleed) + env(safe-area-inset-bottom));
     justify-content: center;
     white-space: nowrap;
   }

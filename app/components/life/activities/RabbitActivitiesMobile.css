@@ -130,7 +130,7 @@
   .rabbit-grooming-activity .rabbit-grooming-scene.is-inspection-stage,
   .rabbit-grooming-activity .rabbit-grooming-scene.has-observation-layout { min-height: 0; }
   .rabbit-grooming-activity .rabbit-grooming-scene-prompt {
-    width: calc(100% - 24px);
+    width: fit-content;
     max-width: calc(100% - 24px);
   }
   .rabbit-grooming-activity .rabbit-grooming-character { width: min(84%, 390px); max-height: none; }

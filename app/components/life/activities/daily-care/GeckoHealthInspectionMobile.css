@@ -157,6 +157,16 @@
     transform: translate(-50%, -50%);
   }
 
+  /* 溫度提示先出現，接著才是控制器與確認按鈕。 */
+  .gecko-temperature-action-hint--mobile {
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 0;
+    padding: 10px 16px 4px;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    box-sizing: border-box;
+  }
   /* 控制器與點擊按鈕位於場景下方的獨立列。 */
   .gecko-temperature-controller-bar {
     flex: 0 0 auto;
@@ -165,7 +175,7 @@
     width: 100%;
     min-height: 116px;
     padding: 6px 16px;
-    border-top: 1px solid var(--line);
+    border-top: 0;
     background: var(--paper);
   }
   .gecko-temperature-controller-bar .gecko-temperature-controller {

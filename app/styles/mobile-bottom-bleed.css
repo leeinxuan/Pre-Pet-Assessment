@@ -114,7 +114,6 @@
     overscroll-behavior: none;
   }
   html:has(.home-readiness-mobile-flow) body::after,
-  html:has(.hamster-cage-check) body::after,
   html:has(.cat-litter-rescue) body::after,
   html:has(.rabbit-carry-activity) body::after,
   html:has(.walking-activity.is-walking-question) body::after {
@@ -133,7 +132,7 @@
   .stage-layout:has(.room-preparation-page),
   .stage-layout:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
   .stage-layout:has(.rabbit-activity-feedback--carry),
-  .stage-layout:has(.life-journey-page > :is(.walking-complete, .walking-activity.is-walking-game, .walking-activity.is-walking-law, .walking-activity.is-walking-correct, .walking-activity.is-walking-prep, .bird-cage-activity, .gecko-health-inspection, .rabbit-grooming-activity)) {
+  .stage-layout:has(.life-journey-page > :is(.walking-complete, .walking-activity.is-walking-game, .walking-activity.is-walking-law, .walking-activity.is-walking-correct, .walking-activity.is-walking-prepared, .gecko-health-inspection, .rabbit-grooming-activity)) {
     height: calc(100dvh + var(--bottom-bleed)) !important;
   }
   .stage-layout .room-mobile-inventory,
@@ -241,18 +240,15 @@
 
   /* 犬牽繩結果與出門確認：內容容器本身延伸，避免 Safari 工具列蓋住最末段。 */
   .stage-layout .walking-activity:is(.is-walking-law, .is-walking-correct) .walking-law-feedback,
-  .stage-layout .walking-activity.is-walking-prep .walking-prep {
+  .stage-layout .walking-activity.is-walking-prepared .walking-prep {
     padding-bottom: calc(24px + var(--bottom-bleed)) !important;
   }
 
-  /* 鸚鵡最後一步的按鈕位於同一個可捲動容器內，尾端必須留出工具列高度。 */
-  .stage-layout .bird-cage-activity:has(> .bird-cage-complete-button--mobile) {
-    padding-bottom: calc(20px + var(--bottom-bleed)) !important;
-  }
-
   /* 兔子、鸚鵡、守宮共用的知識卡底欄：以卡片本身的紙色延伸到 Safari 工具列後方。 */
-  html:has(.rabbit-observation-sheet) {
+  html:has(.rabbit-observation-sheet),
+  body:has(.rabbit-observation-sheet) {
     background-color: var(--paper) !important;
+    --bottom-bleed-color: var(--paper) !important;
   }
   .rabbit-observation-sheet {
     box-shadow:

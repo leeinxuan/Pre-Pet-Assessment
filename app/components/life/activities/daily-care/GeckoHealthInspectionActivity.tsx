@@ -588,14 +588,19 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
 
         {!isMobile && observationCard}
       </div>
+      {isMobile && activeStage === "temperature" && !temperatureConfirmed && (
+        <p className="gecko-temperature-action-hint gecko-temperature-action-hint--mobile" aria-live="polite">
+          {temperatureIsCorrect ? "溫度已調整完成，可以確認。" : "暖側底部應維持 28–32°C，涼側應維持 22–25°C。"}
+        </p>
+      )}
       {isMobile && activeStage === "temperature" && (
         <div className="gecko-temperature-controller-bar">{temperatureController}</div>
       )}
       {activeStage === "temperature" && !temperatureConfirmed && (
         <div className="gecko-temperature-actions">
-          <p className="gecko-temperature-action-hint" aria-live="polite">
+          {!isMobile && <p className="gecko-temperature-action-hint" aria-live="polite">
             {temperatureIsCorrect ? "溫度已調整完成，可以確認。" : "暖側底部應維持 28–32°C，涼側應維持 22–25°C。"}
-          </p>
+          </p>}
           <button
             type="button"
             className="primary gecko-temperature-confirm"
