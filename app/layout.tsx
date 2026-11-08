@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ViewportDebug from "./components/shared/ViewportDebug";
 import BottomBleedColor from "./components/shared/BottomBleedColor";
+import SiteEntryIntro from "./components/shared/SiteEntryIntro";
 
 export const metadata: Metadata = {
   // 本機開發時不設定 metadataBase，圖示與分享圖才會指向 localhost 而不是線上網址
@@ -29,5 +30,31 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="zh-Hant"><body><a className="skip-link" href="#main-content">跳到主要內容</a>{children}<BottomBleedColor /><ViewportDebug /></body></html>;
+  const entryIntroBootstrap = `
+    (function () {
+      try {
+        var forcePreview = new URLSearchParams(location.search).get("intro") === "1";
+        var seen = sessionStorage.getItem("pre-pet-entry-intro-v2");
+        var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!forcePreview && (seen || reduced)) {
+          document.documentElement.dataset.skipEntryIntro = "true";
+        } else {
+          delete document.documentElement.dataset.skipEntryIntro;
+        }
+      } catch (error) {}
+    })();
+  `;
+
+  return (
+    <html lang="zh-Hant">
+      <head><script dangerouslySetInnerHTML={{ __html: entryIntroBootstrap }} /></head>
+      <body>
+        <SiteEntryIntro />
+        <a className="skip-link" href="#main-content">跳到主要內容</a>
+        {children}
+        <BottomBleedColor />
+        <ViewportDebug />
+      </body>
+    </html>
+  );
 }

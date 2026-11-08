@@ -1,0 +1,112 @@
+.site-entry-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--paper, #fffdf7);
+  color: var(--ink, #30291f);
+  cursor: default;
+  touch-action: none;
+}
+
+html[data-skip-entry-intro="true"] .site-entry-intro {
+  display: none;
+}
+
+html.site-entry-intro-active,
+html.site-entry-intro-active body {
+  overflow: hidden !important;
+}
+
+.site-entry-intro__motion {
+  position: relative;
+  width: clamp(112px, 15vw, 156px);
+  aspect-ratio: 1;
+}
+
+.site-entry-intro__arrow,
+.site-entry-intro__logo {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.site-entry-intro__arrow {
+  animation: site-entry-arrow-move 1.2s linear both;
+  will-change: transform;
+}
+
+.site-entry-intro__logo {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.site-entry-intro__logo-body {
+  fill: currentColor;
+}
+
+.site-entry-intro__eye {
+  fill: var(--paper, #fffdf7);
+}
+
+.site-entry-intro__eyelid {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 8px;
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  transform-origin: center top;
+  animation: site-entry-eyelid-blink 1.5s ease-out both;
+}
+
+.site-entry-intro.is-leaving {
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+.site-entry-intro.is-leaving .site-entry-intro__arrow {
+  transform: translateX(3%) scaleX(1);
+}
+
+@keyframes site-entry-arrow-move {
+  0%, 17% {
+    transform: translateX(0) scaleX(1);
+    animation-timing-function: cubic-bezier(.32, 0, .35, 1);
+  }
+  42% {
+    transform: translateX(-4%) scaleX(.91);
+    animation-timing-function: cubic-bezier(.16, .76, .25, 1);
+  }
+  63% {
+    transform: translateX(10%) scaleX(1.04);
+    animation-timing-function: cubic-bezier(.22, .7, .3, 1);
+  }
+  82% {
+    transform: translateX(1.5%) scaleX(.99);
+    animation-timing-function: cubic-bezier(.2, .7, .28, 1);
+  }
+  100% { transform: translateX(3%) scaleX(1); }
+}
+
+@keyframes site-entry-eyelid-blink {
+  0%, 56% { opacity: 0; transform: scaleY(0); }
+  56.01% { opacity: 1; transform: scaleY(0); }
+  72%, 76% { opacity: 1; transform: scaleY(1); }
+  91.99% { opacity: 1; transform: scaleY(.01); }
+  92%, 100% { opacity: 0; transform: scaleY(0); }
+}
+
+@media (max-width: 768px) {
+  .site-entry-intro__motion {
+    width: 104px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-entry-intro {
+    display: none;
+  }
+}
