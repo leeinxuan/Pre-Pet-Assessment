@@ -18,6 +18,7 @@ import { handleTabListKeyDown } from "../shared/tabKeyboardNavigation";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
 import { housingChoiceImages } from "../../data/shared/assets";
 import { RoomPreparationMobile } from "./RoomPreparationMobile";
+import { logEvent } from "../../lib/event-log";
 
 export { initialHomeReadinessState };
 export type { HomeReadinessState };
@@ -92,11 +93,12 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
     if (!card) return;
     const isComplete = state.acknowledgedCardIds.includes(card.id);
     const canOpen = isComplete || index === firstIncompleteIndex;
-    if (canOpen) onChange({ ...state, openCardId: card.id });
+    if (canOpen) { logEvent("card_expanded", { cardId: card.id }); onChange({ ...state, openCardId: card.id }); }
   }
 
   function acknowledgeCommitmentCard() {
     if (!activeCard || state.acknowledgedCardIds.includes(activeCard.id)) return;
+    logEvent("card_confirmed", { cardId: activeCard.id });
     const acknowledgedCardIds = [...state.acknowledgedCardIds, activeCard.id];
     const nextCard = config.cards.find((card) => !acknowledgedCardIds.includes(card.id));
     onChange({ ...state, acknowledgedCardIds, openCardId: nextCard?.id ?? null });
@@ -108,14 +110,14 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
       <header className="home-readiness-heading"><h1>家庭與居住確認</h1><p>{arrivalLead}</p></header>
       {!selectedHousing ? <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question">
         <p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2>
-        <div className="home-readiness-choice-grid">{config.housingChoices.map((choice) => <button type="button" key={choice.id} onClick={() => onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false })}>
+        <div className="home-readiness-choice-grid">{config.housingChoices.map((choice) => <button type="button" key={choice.id} onClick={() => { logEvent("housing_choice", { housing: choice.id }); onChange({ ...state, housing: choice.id, housingReminderAcknowledged: false }); }}>
           <span className="home-readiness-choice-media"><img src={housingChoiceImages[choice.id]} alt="" /></span>
           <span className="home-readiness-choice-label">{choice.label}</span>
         </button>)}</div>
       </article></section> : <section className="home-readiness-workbench home-readiness-workbench--reminder"><article className="home-readiness-reminder-step">
         <p className="life-stage-label">第一步・居住提醒</p><h2>{selectedHousing.followUpTitle}</h2>
         <HomeReadinessRichText blocks={selectedHousing.followUpContent} replaceName={replaceName} />
-        <button type="button" className="primary" onClick={() => onChange({ ...state, housingReminderAcknowledged: true })}>我了解了</button>
+        <button type="button" className="primary" onClick={() => { logEvent("reminder_card_confirmed", { housing: state.housing }); onChange({ ...state, housingReminderAcknowledged: true }); }}>我了解了</button>
       </article></section>}
     </> : <>
       <header className="home-readiness-heading"><h1>家庭與居住確認</h1><p>還有一件事——同住的人都準備好了嗎？</p></header>
@@ -156,7 +158,7 @@ export function HomeReadinessActivity({ species = "dog", petName, state, onChang
               <p className="life-stage-label">第一步・居住提醒</p>
               <h2>{selectedHousing.followUpTitle}</h2>
               <HomeReadinessRichText blocks={selectedHousing.followUpContent} replaceName={replaceName} />
-              <button type="button" className="primary" onClick={() => onChange({ ...state, housingReminderAcknowledged: true })}>我了解了</button>
+              <button type="button" className="primary" onClick={() => { logEvent("reminder_card_confirmed", { housing: state.housing }); onChange({ ...state, housingReminderAcknowledged: true }); }}>我了解了</button>
             </section>
           : <section className="home-readiness-workbench home-readiness-workbench--housing"><article className="home-readiness-question">
               <p className="life-stage-label">第一步・居住條件</p><h2>你目前的居住狀況是？</h2>
@@ -501,6 +503,7 @@ export function RoomPreparation({
     // 危險物品已全部清除後放入第一件用品時，自動收起仍開著的危險物品說明框。
     const isFirstPlacedItem = !activeRoomItems.some((entry) => selectedItems.includes(entry.id));
     if (isFirstPlacedItem) setActiveHazardInfo(null);
+    logEvent("item_placed", { itemId: id });
     setExitingItems((current) => [...current, id]);
     onPrepare(id);
     window.setTimeout(() => setExitingItems((current) => current.filter((itemId) => itemId !== id)), 450);
@@ -512,11 +515,13 @@ export function RoomPreparation({
     const hazard = activeHazards.find((item) => item.id === id);
     if (!hazard) return;
     if (securedHazards.includes(id)) {
+      logEvent("hazard_info_reopened", { hazardId: id });
       setActiveHazardInfo(id);
       return;
     }
     if (hazardInFlight.current || dismissingHazard) return;
     hazardInFlight.current = id;
+    logEvent("hazard_removed", { hazardId: id });
     setDismissingHazard(id);
     setRoomCheckMessage("");
     window.setTimeout(() => {
@@ -761,6 +766,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
   ).filter((row) => row.length > 0);
   function selectItem(id: string) {
     if (selected.includes(id) || exitingItems.includes(id)) return;
+    logEvent("trunk_item_placed", { itemId: id });
     setExitingItems((current) => [...current, id]);
     window.setTimeout(() => {
       onSelect(id);
@@ -769,6 +775,7 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
   }
 
   function openMobileItemInfo(item: typeof activeTrunkItems[number], price: string | undefined) {
+    logEvent("item_info_opened", { itemId: item.id });
     setMobileInfo({ title: item.label, description: item.description.replaceAll("{petName}", displayName), image: item.image, price });
   }
 

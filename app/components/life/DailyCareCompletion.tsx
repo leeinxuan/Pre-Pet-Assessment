@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logEvent } from "../../lib/event-log";
 
 type CareTimeItem = { title: string; detail: string };
 type CareTimeSupplement = { title: string; items: readonly { title: string; detail: string; description: string }[] };
@@ -56,6 +57,7 @@ export function DailyCareCompletion({
   continueLabel?: string;
   onContinue: () => void;
 }) {
+  useEffect(() => { logEvent("daily_care_completion_viewed"); }, []);
   return <section className="walking-activity walking-complete">
     <div className="walking-complete-card">
       <h1>{title}</h1>

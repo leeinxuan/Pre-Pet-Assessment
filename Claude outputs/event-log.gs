@@ -17,6 +17,7 @@
 const EVENT_SECRET = 'eXTYp_m7_6DXF2IiT3hd2OaC';
 
 const EVENT_SHEET_NAME = '事件';
+const TIME_FORMAT = 'yyyy/mm/dd hh:mm:ss.000';
 const EVENT_COLUMNS = [
   '收到時間', '受測者編號', '物種', '裝置', '工作階段', '事件', '階段', '頁面', '客戶端時間', '內容'
 ];
@@ -83,7 +84,10 @@ function appendEvents_(events) {
   lock.waitLock(20000);
   try {
     const sheet = eventSheet_();
-    sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, EVENT_COLUMNS.length).setValues(rows);
+    const start = sheet.getLastRow() + 1;
+    sheet.getRange(start, 1, rows.length, EVENT_COLUMNS.length).setValues(rows);
+    sheet.getRange(start, 1, rows.length, 1).setNumberFormat(TIME_FORMAT);
+    sheet.getRange(start, 9, rows.length, 1).setNumberFormat(TIME_FORMAT);
     // 同時依受測者編號，寫進各自的工作表（沒有就自動建立）
     const ss = sheet.getParent();
     const byPid = {};
@@ -103,7 +107,10 @@ function appendEvents_(events) {
         ps.setColumnWidth(1, 190);
         ps.setColumnWidth(9, 190);
       }
-      ps.getRange(ps.getLastRow() + 1, 1, byPid[name].length, EVENT_COLUMNS.length).setValues(byPid[name]);
+      const ps0 = ps.getLastRow() + 1;
+      ps.getRange(ps0, 1, byPid[name].length, EVENT_COLUMNS.length).setValues(byPid[name]);
+      ps.getRange(ps0, 1, byPid[name].length, 1).setNumberFormat(TIME_FORMAT);
+      ps.getRange(ps0, 9, byPid[name].length, 1).setNumberFormat(TIME_FORMAT);
     });
   } finally {
     lock.releaseLock();

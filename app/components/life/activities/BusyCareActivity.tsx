@@ -2,7 +2,8 @@
 
 /* eslint-disable @next/next/no-img-element -- Existing layered busy-care scene uses native images for exact positioning. */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { logEvent } from "../../../lib/event-log";
 import { petNameFallback } from "../../../data/shared/pet-text";
 import type { BusyCareChecklistQuestion, BusyCareImageScene, CareMember, Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
@@ -80,7 +81,18 @@ export function BusyCareActivity({
   const hasUncertainHelperCheck = unsuitableHelperReasons.length > 0;
   const shouldShowHelperUncertainty = allHelperChecksAnswered && hasUncertainHelperCheck;
 
+  useEffect(() => {
+    if (mode === "family" && familyStep === "check" && shouldShowHelperUncertainty) logEvent("helper_warning_shown", { count: unsuitableHelperReasons.length });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldShowHelperUncertainty]);
+
+  function submitHelperName() {
+    logEvent("helper_name_submitted");
+    setFamilyStep("check");
+  }
+
   function selectHelperCheck(question: typeof helperQuestions[number], value: "yes" | "no") {
+    logEvent("helper_check_answered", { questionId: question.id, answer: value, suitable: question.accepted.includes(value) });
     setHelperChecks((current) => ({ ...current, [question.id]: value }));
     if (!question.accepted.includes(value)) onMarkForReview?.(scenario, "helper-details-to-confirm");
   }
@@ -99,6 +111,7 @@ export function BusyCareActivity({
   }
 
   function resetHelperCandidate() {
+    logEvent("helper_replaced");
     setFamilyStep("name");
     setHelperName("");
     setHelperChecks({});
@@ -108,6 +121,7 @@ export function BusyCareActivity({
     if (!allHelperChecksAnswered) return;
     if (hasUncertainHelperCheck) return;
     if (!familySupportChoice) return;
+    logEvent("helper_confirmed");
     const trimmedName = helperName.trim();
     if (trimmedName && !members.some((member) => member.name.trim().toLocaleLowerCase() === trimmedName.toLocaleLowerCase())) {
       onMembersChange([...members, { id: `busy-helper-${Date.now()}`, name: trimmedName, age: null, isPlayer: false }]);
@@ -188,8 +202,8 @@ export function BusyCareActivity({
             {familyStep === "name" ? (
               <>
                 <div><span>協助者 1 / 2</span><h2>你會找誰幫忙？</h2><p>可以是同住家人，也可以是你信任的朋友。先寫下一個實際可聯絡的人。</p></div>
-                <label className="busy-helper-name-field"><span>協助者姓名或稱呼</span><input type="text" value={helperName} placeholder="例如：姊姊、阿德" maxLength={20} onChange={(event) => setHelperName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && helperName.trim()) setFamilyStep("check"); }} /></label>
-                <div className="busy-care-member-actions"><button type="button" className="secondary" onClick={() => setMode("question")}>返回</button><button type="button" className="primary" disabled={!helperName.trim()} onClick={() => setFamilyStep("check")}>下一步，確認是否合適 <span>→</span></button></div>
+                <label className="busy-helper-name-field"><span>協助者姓名或稱呼</span><input type="text" value={helperName} placeholder="例如：姊姊、阿德" maxLength={20} onChange={(event) => setHelperName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && helperName.trim()) submitHelperName(); }} /></label>
+                <div className="busy-care-member-actions"><button type="button" className="secondary" onClick={() => { logEvent("helper_step_back"); setMode("question"); }}>返回</button><button type="button" className="primary" disabled={!helperName.trim()} onClick={submitHelperName}>下一步，確認是否合適 <span>→</span></button></div>
               </>
             ) : (
               <>
