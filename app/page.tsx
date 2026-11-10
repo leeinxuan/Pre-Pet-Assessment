@@ -40,6 +40,7 @@ import {
 import { FlowLoadErrorBoundary, FlowLoadingFallback, loadRetriableModule } from "./components/shared/AsyncFlowState";
 import { isTestModeEntryUrl } from "./components/shared/useTestModeEntry";
 import { matchesCompactPortraitLayout } from "./components/shared/responsive";
+import { logEvent, setEventContext, startEventLog } from "./lib/event-log";
 
 const dynamicFlowOptions = { loading: FlowLoadingFallback };
 const importAssessmentReport = () => import("./components/report/AssessmentReport");
@@ -106,6 +107,18 @@ function IntroIcon({ step }: { step: number }) {
     </svg>
   );
 }
+
+// 事件記錄用的階段名稱；以 step 數字為準，名稱只是方便閱讀。
+const STAGE_LABELS: Record<number, string> = {
+  0: "歡迎",
+  1: "選擇寵物",
+  2: "領養前準備",
+  3: "飼養生活",
+  4: "飼養生活",
+  5: "飼養生活",
+  6: "飼養生活",
+  7: "取得寵物",
+};
 
 export default function Home() {
   const [step, setStep] = useState(0);
@@ -180,6 +193,36 @@ export default function Home() {
     return members.filter((member) => !member.isPlayer && member.name.trim()).map((member) => member.name);
   }, [members]);
   const speciesConfig = getSpeciesConfig(category);
+
+  // ===== 研究事件記錄（只對網址帶 ?pid= 的受測者送出）=====
+  useEffect(() => { startEventLog(); }, []);
+
+  useEffect(() => {
+    setEventContext({ species: category });
+    if (category) logEvent("species_selected", { breed });
+  }, [category, breed]);
+
+  useEffect(() => {
+    setEventContext({ stage: STAGE_LABELS[step] ?? `step${step}`, page: "" });
+    logEvent("stage_enter", { step });
+    return () => { logEvent("stage_exit", { step }); };
+  }, [step]);
+
+  useEffect(() => {
+    if (step === 2) {
+      setEventContext({ page: `preparation:${preparationTask}` });
+      logEvent("page_enter", { step, task: preparationTask });
+    }
+  }, [step, preparationTask]);
+
+  useEffect(() => {
+    if (step >= 3 && step <= 6) {
+      const itemId = getJourneyItemsForSpecies(category)[journeyIndex]?.id ?? `index${journeyIndex}`;
+      setEventContext({ page: `life:${itemId}` });
+      logEvent("page_enter", { step, itemId, phase: lifePhase });
+    }
+  }, [step, journeyIndex, lifePhase, category]);
+
   const flowFocusKey = step === 0
     ? "welcome"
     : introOpen
@@ -507,6 +550,13 @@ export default function Home() {
   }
 
   function answerScenario(scenario: Scenario, choice: ScenarioChoice) {
+    logEvent("mcq_attempt", {
+      scenarioId: scenario.id,
+      stageId: scenario.stageId,
+      choice: choice.id,
+      result: choice.result,
+      attempt: (scenarioAnswers[scenario.id]?.attempts ?? 0) + 1,
+    });
     setScenarioAnswers((current) => {
       const previous = current[scenario.id];
       const discussionFlags = previous?.discussionFlags;
@@ -567,6 +617,13 @@ export default function Home() {
   function answerScenarioMultiple(scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) {
     const choiceIds = choices.map((choice) => choice.id);
     const joinedChoiceId = choiceIds.join(",");
+    logEvent("mcq_attempt", {
+      scenarioId: scenario.id,
+      stageId: scenario.stageId,
+      choices: choiceIds,
+      result,
+      attempt: (scenarioAnswers[scenario.id]?.attempts ?? 0) + 1,
+    });
     setScenarioAnswers((current) => {
       const previous = current[scenario.id];
       return {
