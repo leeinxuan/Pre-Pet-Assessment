@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
+import { PHONE_LAYOUT_QUERY } from "./responsive";
 
 /**
  * 手機底部延伸：版面高度只算到瀏覽器工具列上緣，工具列下方露出的是 <html> 底色。
  * 這裡取「畫面最底端那個元素」的實際背景色，套到 <html>，讓底部面板的顏色一路延伸到螢幕最底。
  * 與裝置尺寸無關；遇到圖片／影片／漸層背景時不套用，維持預設底色。
  */
-const MOBILE_QUERY = "(max-width: 768px)";
+const MOBILE_QUERY = PHONE_LAYOUT_QUERY;
 // This pane supplies its own contained vertical scrolling while the document is
 // locked. When it exists, native iOS scrolling must not be cancelled at the
 // document level, even if Safari retargets touchmove outside the original child.
@@ -104,7 +105,8 @@ export default function BottomBleedColor() {
       const toolbarHeight = needsBleed
         ? Math.max(0, Math.round(measureViewportHeight("lvh") - measureViewportHeight("dvh")))
         : 0;
-      root.style.setProperty("--bottom-bleed", needsBleed ? "140px" : "0px");
+      const bleedHeight = needsBleed ? 140 : 0;
+      root.style.setProperty("--bottom-bleed", `${bleedHeight}px`);
       root.style.setProperty("--bottom-toolbar-safe", `${toolbarHeight}px`);
     };
     const apply = () => {

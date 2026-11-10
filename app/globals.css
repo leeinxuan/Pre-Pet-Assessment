@@ -25,3 +25,5 @@
 @import "./components/life/activities/daily-care/GeckoHealthInspectionMobile.css";
 @import "./styles/site-entry-intro.css";
 @import "./styles/mobile-bottom-bleed.css";
+@import "./styles/tablet-portrait.css";
+@import "./styles/tablet-landscape.css";

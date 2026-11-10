@@ -7,6 +7,7 @@ import { walkingActivityConfig, walkingLawCopy, walkingPreloadImages, walkingPre
 import type { LifeActivityState } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
+import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../../../shared/responsive";
 import { handleTabListKeyDown } from "../../../shared/tabKeyboardNavigation";
 import { renderKnowledgeText, withPetName } from "../activity-ui";
 import { useTapSequence } from "../useTapSequence";
@@ -548,7 +549,7 @@ export function WalkingActivity({
             aria-label={copy.aria.scene}
           >
             <picture>
-              <source media="(max-width: 720px)" srcSet={scene.mobileImage} />
+              <source media={COMPACT_PORTRAIT_LAYOUT_QUERY} srcSet={scene.mobileImage} />
               <img className="walking-bg" src={scene.image} alt={scene.title} />
             </picture>
             {draggedBag && (

@@ -99,7 +99,7 @@ html.site-entry-intro-active body {
   92%, 100% { opacity: 0; transform: scaleY(0); }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .site-entry-intro__motion {
     width: 104px;
   }

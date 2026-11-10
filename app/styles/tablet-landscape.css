@@ -1,0 +1,86 @@
+/*
+ * 橫式平板保留桌機導覽，但將房間場景與用品欄改為上下排列。
+ * 這能避免場景與用品欄互相壓縮；手機、直式平板與一般桌機不套用。
+ */
+@media (min-width: 900px) and (max-width: 1180px) and (min-height: 600px) and (orientation: landscape) {
+  .room-preparation-page,
+  .departure-preparation-page {
+    max-width: none;
+    padding-inline: 18px;
+  }
+
+  /* 房間場景在上，用品欄在下。 */
+  .room-preparation-layout.simplified-room-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .room-preparation-layout.simplified-room-layout > .room-supply-shelf {
+    order: 2;
+    min-height: 0;
+  }
+
+  .room-preparation-layout.simplified-room-layout > .room-interaction-column {
+    order: 1;
+  }
+
+  /*
+   * 桌機 DOM 原本每列兩項；橫式平板攤平成每頁 4 欄 × 2 排。
+   * 用品超過 8 項時沿用既有分頁，不另建一套互動狀態。
+   */
+  .room-preparation-page .room-supply-rows {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(112px, auto));
+    gap: 9px;
+    min-height: 0;
+  }
+
+  .room-preparation-page .room-supply-row {
+    display: contents;
+  }
+
+  .room-preparation-page .room-supply-row .supply-slot,
+  .room-preparation-page .room-supply-row--1 .supply-slot,
+  .room-preparation-page .room-supply-row--2 .supply-slot {
+    width: auto;
+    min-width: 0;
+    min-height: 112px;
+    flex: initial;
+  }
+
+  .room-preparation-page .room-supply-row button,
+  .room-preparation-page .supply-slot-note {
+    min-height: 112px;
+  }
+
+  .room-preparation-page .room-supply-visual {
+    height: 72px;
+  }
+
+  .room-preparation-page .room-supply-row img {
+    width: 68px;
+    height: 70px;
+  }
+
+  .room-preparation-page .room-preparation-desktop .room-supply-pagination {
+    margin-top: 10px;
+  }
+
+  /* 出發準備同樣維持桌機左右關係，避免舊平板規則反轉欄位。 */
+  .departure-preparation-page .departure-layout {
+    grid-template-columns: minmax(204px, 216px) minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .departure-preparation-page .departure-supply-shelf {
+    order: 1;
+  }
+
+  .departure-preparation-page .departure-car {
+    order: 2;
+    justify-self: stretch;
+    width: 100%;
+    max-width: none;
+  }
+}

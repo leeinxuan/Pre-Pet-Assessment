@@ -87,7 +87,7 @@
 @keyframes experienceNextGlow { 0%,32% { opacity: .54; transform: translateY(5px); } 52%,100% { opacity: 1; transform: translateY(0); box-shadow: 0 0 0 4px rgba(117,166,123,.22), 0 18px 38px rgba(67,112,75,.14); } }
 @keyframes experienceArrowMove { 50% { transform: translateX(5px); } }
 
-@media (max-width: 760px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .previous-pet-choice { grid-template-columns: 1fr; }
   .previous-pet-choice button { min-height: 98px; }
   .pet-naming-page { min-height: auto; }
@@ -106,6 +106,14 @@
   .experience-story-line { font-size: 15px; line-height: 1.72; }
   .experience-transition-actions { flex-direction: column-reverse; }
   .experience-transition-actions button { width: 100%; justify-content: center; }
+}
+
+@media (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
+  /* 大型直式平板維持手機的兩欄結構，但將卡片群置中，避免右側留下單邊空白。 */
+  .species-page-grid {
+    width: 100%;
+    margin-inline: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -133,7 +141,7 @@
   .breed-row { grid-template-columns: repeat(3, 1fr); }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   /* 物種選擇標題保持單行，避免最後的「物？」被擠到下一列。 */
   .partner-selection-page .step-heading h1 {
     font-size: clamp(22px, 6.2vw, 27px);

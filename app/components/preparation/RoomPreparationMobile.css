@@ -2,7 +2,7 @@
 .room-preparation-mobile { display: none; }
 .room-mobile-sheet-overlay { display: none; }
 
-@media (max-width: 720px), (min-width: 721px) and (max-width: 1024px) and (orientation: portrait) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   html:has(.room-preparation-page),
   body:has(.room-preparation-page) { overflow-y: hidden; }
   .stage-layout:has(.room-preparation-page) {
@@ -321,7 +321,7 @@
 
 /* Portrait tablets share the mobile room flow, with space for two visible rows
    of four supplies and a pager that never changes the room's item state. */
-@media (min-width: 721px) and (max-width: 1024px) and (orientation: portrait) {
+@media (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .stage-layout:has(.room-preparation-page) { grid-template-columns: minmax(0, 1fr); }
   .stage-layout:has(.room-preparation-page) > .station-rail { display: none; }
   .stage-layout:has(.room-preparation-page) > .mobile-progress-nav { display: block; }

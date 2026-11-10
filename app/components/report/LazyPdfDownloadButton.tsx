@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Profile } from "../../game-types";
 import { loadRetriableModule } from "../shared/AsyncFlowState";
+import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../shared/responsive";
 
 type ReportPdfKind = "overview" | "profile";
 
@@ -10,7 +11,7 @@ function useMobileDownloadMode() {
   const [mobile, setMobile] = useState(false);
 
   useEffect(() => {
-    const query = window.matchMedia("(max-width: 720px)");
+    const query = window.matchMedia(COMPACT_PORTRAIT_LAYOUT_QUERY);
     const update = () => setMobile(query.matches);
     update();
     query.addEventListener?.("change", update);

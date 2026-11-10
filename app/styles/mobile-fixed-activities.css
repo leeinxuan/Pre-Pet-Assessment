@@ -24,6 +24,23 @@
 .arrival-meal-activity--choice > .arrival-meal-scene .scene-media-placeholder p { max-width: min(100%, 420px); overflow-wrap: anywhere; }
 
 @media (max-width: 720px) {
+  .cat-litter-rescue {
+    /* 手機版可見圖片尺寸：1 是原尺寸；例如 1.25 代表放大至 125%。 */
+    --cat-mobile-urine-clump-scale: 1.5;
+    --cat-mobile-poop-scale: 1.8;
+  }
+  .cat-litter-rescue .cat-rescue-waste[data-waste-kind="urine"] > img {
+    transform: scale(var(--cat-mobile-urine-clump-scale));
+  }
+  .cat-litter-rescue .cat-rescue-waste[data-waste-kind="poop"] > img {
+    transform: scale(var(--cat-mobile-poop-scale));
+  }
+  .cat-litter-rescue .cat-rescue-waste[data-waste-kind] > img {
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .departure-car > .mobile-item-operation-cue,
   .arrival-meal-scene > .mobile-item-operation-cue {
     position: absolute;
@@ -713,11 +730,11 @@
 
 /* 有指定手機背景裁切（mobileBackgroundStyle）的物種：手機版只顯示手機背景。
    否則桌機背景會因 .arrival-meal-room { display: block } 的優先順序而照常顯示，手機背景被擠到場景外，裁切設定不會生效。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .arrival-meal-scene--own-mobile-bg .arrival-meal-room--desktop { display: none; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .mobile-info-sheet-overlay { position: fixed; z-index: 999; inset: 0; display: flex; align-items: flex-end; background: rgba(33, 30, 25, .42); }
   .mobile-info-sheet { position: relative; box-sizing: border-box; width: 100%; max-height: min(74dvh, 680px); overflow-y: auto; overscroll-behavior: contain; padding: 20px 22px calc(24px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; background: white; box-shadow: 0 -12px 32px rgba(33, 30, 25, .14); }
   .mobile-info-sheet-handle { display: block; width: 44px; height: 5px; margin: -7px auto 20px; border-radius: 999px; background: var(--line); }
@@ -734,7 +751,7 @@
 .home-readiness-desktop-flow { display: contents; }
 .home-readiness-mobile-flow { display: none; }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   html:has(.home-readiness-mobile-flow),
   body:has(.home-readiness-mobile-flow) {
     height: 100%;

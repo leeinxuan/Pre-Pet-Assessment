@@ -1,6 +1,6 @@
-/* 守宮日常巡視：手機版（僅 max-width: 720px）。桌機版樣式維持在 GeckoHealthInspectionActivity.css。 */
+/* 守宮日常巡視：手機與直式平板共用；橫式平板／桌機樣式維持在 GeckoHealthInspectionActivity.css。 */
 /* 版面順序：標題與說明 → 階段摘要列 → 1:1 滿版場景（含提示）→ 場景下方操作按鈕。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   /* 整頁鎖定在可用視窗高度內，矮螢幕只在互動區內部捲動。 */
   html:has(.gecko-health-inspection),
   body:has(.gecko-health-inspection) { height: 100%; overflow: hidden; }
@@ -269,7 +269,8 @@
   }
 }
 
-@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+@media (max-width: 720px) and (prefers-reduced-motion: reduce),
+  (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) and (prefers-reduced-motion: reduce) {
   .gecko-water-target:not(:disabled) img,
   .gecko-feces-target img,
   .gecko-body-hotspot.is-available { animation: none; }

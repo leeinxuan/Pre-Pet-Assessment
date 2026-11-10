@@ -8,6 +8,7 @@ import { renderKnowledgeText } from "../life/activities/activity-ui";
 import { MobileStageIntro } from "../shared/MobileStageIntro";
 import { useDialogFocus } from "../shared/useDialogFocus";
 import { handleTabListKeyDown } from "../shared/tabKeyboardNavigation";
+import { COMPACT_PORTRAIT_LAYOUT_QUERY, TABLET_PORTRAIT_LAYOUT_QUERY } from "../shared/responsive";
 
 type RoomPreparationMobileProps = {
   petName: string;
@@ -100,7 +101,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   const visibleItems = tabletPortrait ? items.slice(currentPage * 8, (currentPage + 1) * 8) : items;
 
   useEffect(() => {
-    const query = window.matchMedia("(min-width: 721px) and (max-width: 1024px) and (orientation: portrait)");
+    const query = window.matchMedia(TABLET_PORTRAIT_LAYOUT_QUERY);
     const update = () => setTabletPortrait(query.matches);
     update();
     query.addEventListener("change", update);
@@ -108,7 +109,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   }, []);
 
   useEffect(() => {
-    const query = window.matchMedia("(max-width: 720px), (min-width: 721px) and (max-width: 1024px) and (orientation: portrait)");
+    const query = window.matchMedia(COMPACT_PORTRAIT_LAYOUT_QUERY);
     const update = () => setSheetViewport(query.matches);
     update();
     query.addEventListener("change", update);

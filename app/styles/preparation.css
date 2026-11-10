@@ -183,7 +183,7 @@
   .departure-car { justify-self: center; max-width: 560px; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .room-supply-rows { min-height: 370px; }
   .room-supply-row { flex-basis: 118px; }
   .room-supply-row button { min-height: 118px; padding-inline: 4px; }
@@ -214,7 +214,7 @@
 }
 
 /* 手機版準備互動：房間、後車廂與第一餐的版面、固定 slot 與位置變數。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .room-preparation-layout.simplified-room-layout { display: grid; grid-template-columns: 1fr; }
   .room-interaction-column { order: 1; }
   .room-supply-shelf { order: 2; }
@@ -424,7 +424,7 @@
   .trunk-shelf > div { grid-template-columns: repeat(4, 1fr); }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .room-phase-progress { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
   .room-phase-progress li { min-width: 0; gap: 4px; padding: 8px 7px; font-size: 10px; line-height: 1.25; }
   .room-phase-progress li span { flex: 0 0 20px; width: 20px; height: 20px; font-size: 10px; }
@@ -456,7 +456,7 @@
 .room-scene-background--dedicated-mobile img { object-fit: contain; object-position: center; }
 
 /* 犬隻的手機素材皆為 1:1，僅犬在手機依素材比例調整舞台。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .room-scene--dedicated-mobile-background { aspect-ratio: 1 / 1; }
 }
 
@@ -510,7 +510,7 @@
   }
   .arrival-meal-scene > .arrival-meal-room--mobile { display: none; }
 }
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .arrival-meal-room--desktop { display: none; }
   .arrival-meal-room--mobile { display: block; }
 }
@@ -566,7 +566,7 @@
   .serve-dinner { grid-column: 1 / -1; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .feeding-steps { grid-template-columns: 1fr; }
   .arrival-meal-activity { grid-template-columns: 1fr; }
   .arrival-meal-supplies { grid-template-columns: 1fr; min-height: 0; gap: 12px; padding: 16px; }

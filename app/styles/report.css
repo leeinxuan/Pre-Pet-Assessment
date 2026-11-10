@@ -54,7 +54,7 @@
 .official-acquisition-source-note { display: grid; gap: 14px; margin-top: 30px; padding: 22px 0 12px; border-top: 1px solid var(--line); color: #82745f; font-size: 12px; font-weight: 700; line-height: 1.75; }
 .official-acquisition-source-note p { margin: 0; }.official-acquisition-source-note__identity { display: grid; gap: 3px; color: #685942; font-size: 13px; font-weight: 800; }.official-acquisition-source-note__identity p:first-child { color: var(--ink); font-size: 14px; font-weight: 900; }.official-acquisition-source-note__details { display: grid; gap: 1px; }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .profile-wizard-head { align-items: flex-start; }.profile-wizard-head h1 { font-size: 35px; }.profile-panel { min-height: 0; padding: 22px 18px; border-radius: 20px; }.profile-time-grid, .supplement-choice-grid, .housing-options, .pet-experience-row { grid-template-columns: 1fr; }.home-space-gallery figure, .home-space-add-photo { width: min(100%,190px); }
   .official-acquisition-page { padding: 32px 16px 62px; }.official-profile-entry { display: grid; gap: 16px; padding: 18px; }.official-profile-entry .secondary { width: 100%; }.profile-modal-backdrop { padding: 14px; }.profile-modal { max-height: calc(100vh - 28px); padding: 22px 18px; }
   .official-acquisition-panel { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 20px; padding: 24px 20px; }
@@ -352,7 +352,7 @@
 }
 
 /* 總覽與下載指南的手機版覆寫，與桌機規則放在同一處以維持優先順序。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .profile-pdf-actions { align-items: stretch; flex-direction: column; gap: 10px; }.profile-pdf-actions > p { max-width: none; }
   .report-download-footer { padding-bottom: env(safe-area-inset-bottom); }
   .pdf-download-button { width: 100%; }
@@ -917,7 +917,7 @@
 .shared-result-footer small { flex: 1; color: #7d766b; }
 .shared-result-footer a { color: #416e4c; font-weight: 900; }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .overview-discussion,
   .overview-discussion-clear,
   .result-share-panel { border-radius: 18px; }
@@ -960,7 +960,7 @@
   .shared-result-costs dl { min-width: 0; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   html:has(.responsive-knowledge-sheet),
   body:has(.responsive-knowledge-sheet) { overflow: hidden; }
   .responsive-knowledge-sheet-backdrop {
@@ -1096,7 +1096,7 @@
 .action-list li { padding: 5px 0; line-height: 1.5; font-size: 13px; }
 
 /* 與上方總覽規則配對的 RWD 覆寫，避免匯入順序改變手機版版面。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .daily-care-modal { top: auto; bottom: 0; width: 100%; max-height: 92dvh; padding: 24px 20px 28px; border-radius: 24px 24px 0 0; transform: translateX(-50%); }
   .report-next-step-actions {
     align-items: stretch;
@@ -1143,10 +1143,10 @@
 .profile-supplement .pet-experience-row label { min-height: 70px; display: grid; grid-template-columns: auto max-content minmax(0,1fr); align-items: center; gap: 9px; padding: 10px 12px; border: 1px solid #ded8cf; border-radius: 14px; background: #fff; font-weight: 850; }
 .profile-supplement .pet-experience-row input[type="checkbox"] { width: 20px; min-height: 20px; margin: 0; accent-color: var(--gold-dark); }.profile-supplement .pet-experience-row input:not([type="checkbox"]) { min-width: 0; min-height: 44px; padding: 8px; background: #f4f3f1; }.profile-supplement .shiba-experience { width: min(310px,100%); margin-top: 18px; }
 .profile-supplement .experience-note textarea { min-height: 112px; }.profile-supplement .profile-pdf-actions { width: 100%; margin-top: 26px; }.profile-supplement .pdf-download-button { min-width: 236px; }
-@media (max-width: 720px) { .profile-supplement .profile-panel { padding: 24px 18px; }.profile-supplement .profile-panel legend { font-size: 20px; }.profile-supplement .profile-time-grid, .profile-supplement .housing-options, .profile-supplement .supplement-choice-grid, .profile-supplement .supplement-choice-grid.compact, .profile-supplement .pet-experience-row { grid-template-columns: 1fr; }.profile-supplement .profile-time-grid > label { min-height: 84px; padding: 16px; }.profile-supplement .housemate-presence-choice { grid-template-columns: 1fr 1fr; }.profile-supplement .supplement-choice, .profile-supplement .housing-options button { min-height: 60px; }.profile-supplement .pet-experience-block { padding: 17px; }.profile-supplement .pet-experience-row label { grid-template-columns: auto max-content minmax(0,1fr); }.profile-supplement .pdf-download-button { width: 100%; } }
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) { .profile-supplement .profile-panel { padding: 24px 18px; }.profile-supplement .profile-panel legend { font-size: 20px; }.profile-supplement .profile-time-grid, .profile-supplement .housing-options, .profile-supplement .supplement-choice-grid, .profile-supplement .supplement-choice-grid.compact, .profile-supplement .pet-experience-row { grid-template-columns: 1fr; }.profile-supplement .profile-time-grid > label { min-height: 84px; padding: 16px; }.profile-supplement .housemate-presence-choice { grid-template-columns: 1fr 1fr; }.profile-supplement .supplement-choice, .profile-supplement .housing-options button { min-height: 60px; }.profile-supplement .pet-experience-block { padding: 17px; }.profile-supplement .pet-experience-row label { grid-template-columns: auto max-content minmax(0,1fr); }.profile-supplement .pdf-download-button { width: 100%; } }
 
 /* Mobile review summary and the full-height personal-details form. */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .care-review-page { width: 100%; min-width: 0; gap: 10px; }
   .care-review-hero { gap: 17px; padding: 18px 20px 6px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
   .care-review-hero h1 { margin: 4px 0 8px; font-size: clamp(29px, 8vw, 36px); }
@@ -1186,7 +1186,7 @@
 }
 
 /* 回顧提醒：手機版將標題、摘要與細節入口分成獨立三列。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .care-review-followup .care-review-topic-grid article,
   .care-review-notes-entry .care-review-topic-grid article {
     display: grid;

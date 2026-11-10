@@ -16,10 +16,10 @@
   --bottom-toolbar-safe: 0px;
 }
 
-/* 桌機維持原本的 flex 子項結構；手機才建立實際可捲動的內容層。 */
+/* 桌機與平板維持原本結構；只有手機建立 Safari 工具列所需的延伸內容層。 */
 .correct-feedback-content { display: contents; }
 
-@media (max-width: 768px) {
+@media (max-width: 720px) {
   /* 首頁：用 border 把背景圖多畫到底；絕對定位的標題與按鈕以 padding box 為準，位置不變。 */
   section.welcome {
     box-sizing: border-box;

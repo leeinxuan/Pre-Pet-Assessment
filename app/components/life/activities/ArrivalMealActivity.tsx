@@ -11,6 +11,7 @@ import { MobileStageIntro } from "../../shared/MobileStageIntro";
 import { MobileItemInfoBadge, MobileItemPlacedCheck } from "../../shared/MobileItemMarks";
 import { useDialogFocus } from "../../shared/useDialogFocus";
 import { useMobileLayout } from "../../shared/useMobileLayout";
+import { matchesCompactPortraitLayout } from "../../shared/responsive";
 import type {
   ArrivalMealSceneItemKey,
   ArrivalMealSceneLayout,
@@ -141,7 +142,7 @@ export function ArrivalMealActivity({
   const [readyPetDisplayed, setReadyPetDisplayed] = useState(false);
   useDialogFocus({ isOpen: Boolean(foodWarning && !isMobile), dialogRef: warningDialogRef, onClose: () => setFoodWarning(null) });
   useEffect(() => {
-    if (!complete || hasRecordedMeal.current || (!mobileStarted && window.matchMedia("(max-width: 720px)").matches)) return;
+    if (!complete || hasRecordedMeal.current || (!mobileStarted && matchesCompactPortraitLayout())) return;
     hasRecordedMeal.current = true;
     let active = true;
     void (async () => {
@@ -152,7 +153,7 @@ export function ArrivalMealActivity({
   }, [complete, mobileStarted]);
   useEffect(() => {
     const delay = feeding.interaction === "scene" ? feeding.readyPetDelayMs : undefined;
-    if (!complete || delay === undefined || (!mobileStarted && window.matchMedia("(max-width: 720px)").matches)) return;
+    if (!complete || delay === undefined || (!mobileStarted && matchesCompactPortraitLayout())) return;
     const timer = window.setTimeout(() => setReadyPetDisplayed(true), delay);
     return () => window.clearTimeout(timer);
   }, [complete, feeding, mobileStarted]);
@@ -186,7 +187,7 @@ export function ArrivalMealActivity({
   function chooseMealChoice(id: string) {
     const item = choiceItems.find((entry) => entry.id === id);
     if (!item) return;
-    if (activity.arrivalMealSelectedChoiceIds.includes(id) && window.matchMedia("(max-width: 720px)").matches) {
+    if (activity.arrivalMealSelectedChoiceIds.includes(id) && matchesCompactPortraitLayout()) {
       setMobileInfo({ title: item.label, description: interpolatePetName(item.feedback, petName) });
       return;
     }

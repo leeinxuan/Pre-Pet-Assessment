@@ -100,7 +100,7 @@
 .busy-care-additional-advice p { margin: 0; color: #4f6d51; font-size: clamp(14px, 1.5vw, 14px); font-weight: 850; line-height: 1.72; }
 .busy-care-additional-advice b { color: inherit; }
 /* 散步與貓砂盆救援隊的共用手機版節奏。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .feedback-knowledge-card, .knowledge-card { padding: 18px; }
   .walking-time-commitment { grid-template-columns: 1fr 1fr; gap: 8px; }
   .walking-time-commitment > div { grid-template-columns: 1fr; gap: 4px; padding: 12px 12px; }
@@ -141,7 +141,7 @@
 /* Life and species-specific activity styles migrate here. */
 
 /* 手機版散步：背景、進度與事件框獨立於桌機版配置。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .walking-game { gap: 12px; }
   .walking-scene-shell {
     display: grid;
@@ -564,7 +564,7 @@
     min-height: 0;
   }
 }
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .rabbit-activity-feedback--carry .completion-reminder-block { border: 0; border-radius: 0; background: transparent; padding: 0; }
 }
 .completion-reminder-block { padding: clamp(22px, 4vw, 34px); border: 1px solid #e6c779; border-radius: 24px; background: #fff8e9; color: var(--ink); }
@@ -611,7 +611,7 @@
 .walking-care-supplement-grid > div { grid-template-columns: minmax(0, 1fr) max-content; }
 .walking-care-supplement-grid small { grid-column: 1 / -1; color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
 /* 情境題、回饋頁與生活變化的手機版佈局。 */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .daily-behavior-activity,
   .daily-behavior-positive,
   .correct-feedback-layout,

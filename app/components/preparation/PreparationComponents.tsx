@@ -588,7 +588,7 @@ export function RoomPreparation({
           <div ref={mobile ? mobileRoomSceneRef : roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${usesDedicatedMobileRoomBackground ? "room-scene--dedicated-mobile-background" : ""} ${floorHazardComplete ? "room-scene--floor-safe" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${interiorUsesOwnAspectRatio ? "room-flow-scene--custom-aspect" : ""} ${roomSceneReady || mobile ? "room-scene-ready" : ""} ${mobile ? "room-mobile-scene" : ""}`} style={interiorUsesOwnAspectRatio ? { "--room-flow-aspect-ratio": roomFlow?.interiorBackgroundAspectRatio } as CSSProperties : undefined} data-species={species} role="group" aria-label="寵物生活空間" onClick={mobile ? secureMobileHazardFromScene : undefined}>
             {!mobile && activeHazard && <HazardInfoPanel hazard={activeHazard} petName={displayName} onClose={() => setActiveHazardInfo(null)} />}
             {roomBackground ? usesDedicatedMobileRoomBackground ? <picture className="room-scene-background room-scene-background--dedicated-mobile">
-              <source media="(max-width: 720px), (min-width: 721px) and (max-width: 1024px) and (orientation: portrait)" srcSet={mobileRoomBackground} />
+              <source media="(max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait)" srcSet={mobileRoomBackground} />
               <img src={roomBackground} alt={roomScene.backgroundAlt} style={roomScene.backgroundStyle} />
             </picture> : <><img
               className={`room-scene-background room-scene-background--desktop ${roomScene.desktopBackgroundClass ?? ""} ${interiorUsesOwnAspectRatio ? "room-scene-background--portrait" : ""}`}

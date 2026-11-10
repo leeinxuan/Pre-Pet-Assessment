@@ -39,6 +39,7 @@ import {
 } from "./components/shared/SharedComponents";
 import { FlowLoadErrorBoundary, FlowLoadingFallback, loadRetriableModule } from "./components/shared/AsyncFlowState";
 import { isTestModeEntryUrl } from "./components/shared/useTestModeEntry";
+import { matchesCompactPortraitLayout } from "./components/shared/responsive";
 
 const dynamicFlowOptions = { loading: FlowLoadingFallback };
 const importAssessmentReport = () => import("./components/report/AssessmentReport");
@@ -258,7 +259,7 @@ export default function Home() {
   }
 
   function selectJourneyIndex(nextIndex: number) {
-    if (window.matchMedia("(max-width: 720px)").matches) setMobileJourneyEntry((current) => current + 1);
+    if (matchesCompactPortraitLayout()) setMobileJourneyEntry((current) => current + 1);
     setTestNextTargetIndex(null);
     enterJourneyReplayItem(getJourneyItemsForSpecies(category)[nextIndex]?.id);
     setJourneyIndex(nextIndex);
@@ -272,7 +273,7 @@ export default function Home() {
   }
 
   function goToStation(next: number) {
-    if (window.matchMedia("(max-width: 720px)").matches) {
+    if (matchesCompactPortraitLayout()) {
       if (next === 2) setMobilePreparationEntry((current) => current + 1);
       if (next >= 3 && next <= 6) setMobileJourneyEntry((current) => current + 1);
     }
@@ -286,7 +287,7 @@ export default function Home() {
   }
 
   function goToLifeStage(stageIndex: number) {
-    if (window.matchMedia("(max-width: 720px)").matches) setMobileJourneyEntry((current) => current + 1);
+    if (matchesCompactPortraitLayout()) setMobileJourneyEntry((current) => current + 1);
     const journeyItems = getJourneyItemsForSpecies(category);
     const stageStarts = journeyItems.reduce<number[]>((starts, item, index, all) => {
       if (index === 0 || item.stageId !== all[index - 1].stageId) starts.push(index);

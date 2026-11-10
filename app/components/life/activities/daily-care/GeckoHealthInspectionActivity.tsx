@@ -15,6 +15,7 @@ import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, renderKnowledgeText, type ObservationAnswerStatus } from "../activity-ui";
 import { InspectionHotspot } from "../InspectionHotspot";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
+import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../../../shared/responsive";
 import { useDialogFocus } from "../../../shared/useDialogFocus";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 
@@ -107,7 +108,7 @@ function CompletedTerrariumScene({ config, excludeItemIds = [] }: {
 }) {
   return <>
     <picture>
-      {config.scene.backgroundMobile && <source media="(max-width: 720px)" srcSet={config.scene.backgroundMobile} />}
+      {config.scene.backgroundMobile && <source media={COMPACT_PORTRAIT_LAYOUT_QUERY} srcSet={config.scene.backgroundMobile} />}
       <img className="gecko-health-background" src={config.scene.background} alt="" />
     </picture>
     {config.scene.completedItems.filter((item) => !excludeItemIds.includes(item.id)).map((item) => (

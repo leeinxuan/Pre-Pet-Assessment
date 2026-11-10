@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Profile } from "../../game-types";
+import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../shared/responsive";
 
 const a4PageWidthPt = 595.28;
 const a4PageHeightPt = 841.89;
@@ -499,7 +500,7 @@ function useMobileDownloadMode() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const query = window.matchMedia("(max-width: 720px)");
+    const query = window.matchMedia(COMPACT_PORTRAIT_LAYOUT_QUERY);
     const update = () => setMobile(query.matches);
     update();
     query.addEventListener?.("change", update);

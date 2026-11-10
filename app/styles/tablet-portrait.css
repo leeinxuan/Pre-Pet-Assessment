@@ -1,0 +1,455 @@
+/*
+ * 直式平板（721–1100px）採用觸控版流程，但不直接放大手機版。
+ * 這一層只調整版面密度與元件比例；手機、橫式平板及桌機不會套用。
+ */
+@media (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
+  :root {
+    --bottom-bleed: 0px;
+    --bottom-toolbar-safe: 0px;
+  }
+
+  /* 平板沒有 iPhone Safari 浮動工具列，不使用手機的額外延伸高度。 */
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  /* 頂部流程導覽：保留觸控操作，但提高可讀性與點擊範圍。 */
+  .mobile-progress-nav:not([open]) {
+    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
+  }
+
+  .mobile-progress-nav summary {
+    min-height: 60px;
+    grid-template-columns: max-content minmax(260px, 1fr) 34px;
+    gap: 14px;
+    padding: 9px 28px;
+  }
+
+  .mobile-progress-copy {
+    max-width: 210px;
+  }
+
+  .mobile-progress-copy b {
+    font-size: 14px;
+  }
+
+  .mobile-progress-toggle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mobile-progress-track {
+    padding-inline: 16px;
+  }
+
+  .mobile-progress-nav > div {
+    max-height: min(72dvh, 700px);
+    padding: 14px 32px 26px;
+  }
+
+  .mobile-progress-nav .station-navigation {
+    max-width: 620px;
+  }
+
+  /* 一般內容頁使用平板閱讀寬度，不再沿用手機的窄欄與小留白。 */
+  .content-wrap {
+    width: min(100%, 960px);
+    padding: 48px 40px 76px;
+  }
+
+  .content-wrap.compact {
+    max-width: 900px;
+  }
+
+  .step-heading {
+    margin-bottom: 34px;
+  }
+
+  .step-heading h1,
+  .partner-selection-page .step-heading h1 {
+    font-size: clamp(38px, 5.2vw, 48px);
+    letter-spacing: -.035em;
+    white-space: normal;
+  }
+
+  .step-heading > p:last-child {
+    max-width: 760px;
+    font-size: 16px;
+  }
+
+  /* 選擇物種：直式平板可容納三欄，避免手機兩欄被過度放大。 */
+  .species-page-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(100%, 860px);
+    gap: 18px;
+  }
+
+  .species-page-grid button {
+    min-height: 226px;
+  }
+
+  .species-page-grid .partner-card-image {
+    width: 146px;
+    height: 146px;
+  }
+
+  .category-grid:not(.species-page-grid),
+  .breed-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* 進場頁維持觸控流程，以較適合平板的尺寸置中。 */
+  .mobile-stage-intro {
+    justify-content: center;
+    padding: 48px 56px;
+  }
+
+  .mobile-stage-intro .intro-orbit {
+    width: 136px;
+    height: 136px;
+    margin-bottom: 30px;
+  }
+
+  .mobile-stage-intro h1 {
+    max-width: 720px;
+    font-size: clamp(42px, 6vw, 56px);
+  }
+
+  .mobile-stage-intro .intro-body {
+    max-width: 620px;
+    margin: 22px 0 32px;
+    font-size: 17px;
+  }
+
+  .mobile-stage-intro .primary {
+    min-width: 260px;
+    min-height: 58px;
+  }
+
+  /* 手機底部抽屜在平板改為置中對話框。 */
+  .mobile-info-sheet-overlay,
+  .room-mobile-sheet-overlay {
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+
+  .mobile-info-sheet,
+  .room-mobile-sheet {
+    width: min(680px, 100%);
+    max-height: min(80dvh, 780px);
+    padding: 30px 34px 34px;
+    border-radius: 28px;
+  }
+
+  .mobile-info-sheet-handle,
+  .room-mobile-sheet-handle {
+    display: none;
+  }
+
+  .mobile-info-sheet-close,
+  .room-mobile-sheet-close {
+    top: 22px;
+    right: 22px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .mobile-info-sheet header img,
+  .room-mobile-sheet header .room-mobile-thumbnail {
+    width: 88px;
+    height: 88px;
+  }
+
+  .mobile-info-sheet h2,
+  .room-mobile-sheet h2 {
+    font-size: 23px;
+  }
+
+  .mobile-info-sheet-copy p,
+  .room-mobile-sheet-copy p {
+    font-size: 16px;
+  }
+
+  /* 家庭與居住確認：保留單頁互動，增加內容寬度與雙欄選項。 */
+  .home-readiness-mobile-heading {
+    padding: 24px 96px 18px 40px;
+  }
+
+  .home-readiness-mobile-heading h1 {
+    font-size: 36px;
+  }
+
+  .home-readiness-mobile-heading p {
+    max-width: 720px;
+    font-size: 15px;
+  }
+
+  .home-readiness-mobile-progress {
+    gap: 12px;
+    padding: 10px 40px;
+  }
+
+  .home-readiness-mobile-progress button {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 8px;
+    min-height: 52px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .home-readiness-mobile-progress button span {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .home-readiness-mobile-content {
+    padding: 28px 40px 40px;
+  }
+
+  .home-readiness-mobile-content .home-readiness-workbench {
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  .home-readiness-mobile-content .home-readiness-question h2,
+  .home-readiness-mobile-content .home-readiness-reminder-step h2 {
+    font-size: 30px;
+  }
+
+  .home-readiness-mobile-content .home-readiness-workbench--housing .home-readiness-choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .home-readiness-mobile-content .home-readiness-choice-grid button {
+    min-height: 66px;
+    padding: 14px 18px;
+    font-size: 16px;
+  }
+
+  .home-readiness-mobile-complete-action {
+    padding: 12px 40px 16px;
+  }
+
+  .home-readiness-mobile-complete-action .primary {
+    width: min(360px, 100%);
+    min-height: 54px;
+    margin-inline: auto;
+  }
+
+  /* 房間佈置：上方場景、下方四欄物品，避免場景被固定成手機正方形。 */
+  .room-preparation-mobile.is-started {
+    grid-template-rows: minmax(380px, 1.15fr) 72px minmax(300px, .9fr) auto;
+  }
+
+  .room-mobile-inventory {
+    padding: 12px 24px 16px;
+  }
+
+  .room-mobile-grid {
+    gap: 12px;
+  }
+
+  .room-mobile-tile {
+    padding: 30px 10px 10px;
+  }
+
+  .room-mobile-footer {
+    padding: 10px 24px 14px;
+  }
+
+  .room-mobile-complete {
+    width: min(380px, 100%);
+    min-height: 54px;
+    font-size: 16px;
+  }
+
+  /* 出發前與第一餐：場景保留足夠高度，物品改為四欄。 */
+  .departure-preparation-page.is-mobile-started,
+  .arrival-meal-activity.is-mobile-started {
+    grid-template-rows: minmax(390px, 1.1fr) minmax(300px, .9fr) auto;
+  }
+
+  .departure-preparation-page.is-mobile-started .departure-car,
+  .arrival-meal-activity.is-mobile-started .arrival-meal-scene {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+
+  .departure-supply-rows,
+  .arrival-meal-supplies,
+  .arrival-meal-inventory {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    padding: 16px 24px 22px;
+  }
+
+  .departure-supply-row .supply-slot,
+  .arrival-meal-supplies .arrival-meal-supply-card,
+  .arrival-meal-inventory .arrival-meal-supply-card {
+    min-height: 132px;
+  }
+
+  .departure-actions,
+  .arrival-meal-footer {
+    min-height: 72px;
+    padding: 10px 24px 12px;
+  }
+
+  .departure-actions .primary,
+  .arrival-meal-footer .primary {
+    width: min(380px, 100%);
+    min-height: 54px;
+    margin-inline: auto;
+    font-size: 16px;
+  }
+
+  /* 情境題與答對回饋：媒體比例適中，選項在平板使用雙欄。 */
+  .correct-feedback-media,
+  .correct-feedback-media video,
+  .correct-feedback-media > .breed-challenge-video-placeholder,
+  .video-scenario-media,
+  .daily-behavior-media,
+  .busy-care-media,
+  .breed-challenge-media {
+    height: min(56.25vw, 40dvh);
+  }
+
+  .correct-feedback-copy,
+  .correct-feedback-layout--single .correct-feedback-copy {
+    padding: 32px 48px 40px;
+  }
+
+  .correct-feedback-copy h2 {
+    font-size: clamp(38px, 5.2vw, 48px);
+  }
+
+  .video-scenario-options > .mobile-choice-context,
+  .busy-care-options > .mobile-choice-context,
+  .breed-challenge-options > .mobile-choice-context,
+  .daily-behavior-question-row > .mobile-choice-context,
+  .mobile-choice-question,
+  .video-scenario-options h2,
+  .daily-behavior-question-row,
+  .busy-care-options h2,
+  .breed-challenge-options h2 {
+    padding-inline: 32px;
+  }
+
+  .video-scenario-choice-list,
+  .busy-care-choice-list,
+  .daily-behavior-choices .choice-grid,
+  .breed-challenge-options > div:not(.mobile-choice-context) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding: 18px 32px 30px;
+  }
+
+  .video-scenario-choice-list > .scenario-option-card,
+  .busy-care-choice-list > .scenario-option-card,
+  .choice-grid > .scenario-option-card,
+  .breed-challenge-options .scenario-option-card {
+    min-height: 92px;
+    padding: 18px 22px;
+    font-size: 16px;
+  }
+
+  /* 回顧頁在平板恢復資訊層級，不使用手機的滿版窄欄表單。 */
+  .care-review-page {
+    gap: 18px;
+  }
+
+  .care-review-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    align-items: center;
+    gap: 26px;
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: rgba(255, 253, 247, .82);
+  }
+
+  .care-review-hero h1 {
+    font-size: clamp(38px, 5vw, 48px);
+  }
+
+  .care-review-pet {
+    width: 220px;
+    min-height: 170px;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18px;
+    text-align: center;
+  }
+
+  .care-review-pet div {
+    align-items: center;
+    text-align: center;
+  }
+
+  .care-review-pet img {
+    width: 96px;
+    height: 96px;
+    flex-basis: 96px;
+  }
+
+  .profile-supplement .profile-time-grid,
+  .profile-supplement .housing-options,
+  .profile-supplement .supplement-choice-grid,
+  .profile-supplement .supplement-choice-grid.compact,
+  .profile-supplement .pet-experience-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-modal-backdrop {
+    display: grid;
+    place-items: center;
+    padding: 32px;
+    overflow: auto;
+  }
+
+  .profile-modal {
+    width: min(760px, 100%);
+    height: auto;
+    max-height: calc(100dvh - 64px);
+    margin: auto;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    background: var(--paper);
+    box-shadow: var(--shadow);
+  }
+
+  .profile-modal-close {
+    top: 18px;
+    right: 18px;
+  }
+
+  .profile-modal .profile-supplement--embedded {
+    height: min(860px, calc(100dvh - 64px));
+  }
+
+  .profile-modal .profile-wizard-head {
+    padding: 24px 82px 18px 30px;
+  }
+
+  .profile-modal .profile-wizard-head h1 {
+    font-size: 34px;
+  }
+
+  .profile-modal .profile-panel {
+    padding: 24px 30px 36px;
+  }
+
+  .profile-modal .profile-pdf-actions {
+    padding: 14px 30px 18px;
+  }
+}

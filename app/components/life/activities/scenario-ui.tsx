@@ -6,6 +6,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode, RefObject } from "react";
 import { money, getExpenseForSpecies } from "../../../data/shared/expenses";
 import { getSpeciesConfig } from "../../../data/species";
+import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../../shared/responsive";
 import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
 import type { ExpenseRecord, Scenario, ScenarioAnswer, ScenarioChoice, ScenarioMediaConfig, ScenarioPresentationConfig } from "../../../game-types";
 import { plainChoiceText, renderKnowledgeText, withPetName } from "./activity-ui";
@@ -162,7 +163,7 @@ export function CompletionReminderBlock({ reminder, petName }: { reminder: NonNu
 }
 
 
-const MOBILE_FEEDBACK_QUERY = "(max-width: 768px)";
+const MOBILE_FEEDBACK_QUERY = COMPACT_PORTRAIT_LAYOUT_QUERY;
 
 /**
  * 手機版回饋面板：量測面板內容區的實際像素高度，寫入 --feedback-pane-content-height。

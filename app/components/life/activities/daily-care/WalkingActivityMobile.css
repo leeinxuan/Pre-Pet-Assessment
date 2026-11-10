@@ -3,7 +3,7 @@
 /* The mobile walking game is a full-bleed sequence; desktop walking styles stay in WalkingActivity.css. */
 .walking-forward-button--mobile { display: none; }
 
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   /* The dog flow uses the same edge-to-edge mobile canvas as the other life activities. */
   html:has(.walking-activity),
   body:has(.walking-activity) { height: 100%; overflow-x: clip; }
@@ -357,7 +357,8 @@
   @keyframes walkingBagCollect { from { opacity: 0; transform: scale(.5); } to { opacity: 1; transform: scale(1); } }
 }
 
-@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+@media (max-width: 720px) and (prefers-reduced-motion: reduce),
+  (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) and (prefers-reduced-motion: reduce) {
   .walking-activity.is-walking-game .walking-drag-bag.is-tap-prompt img,
   .walking-activity.is-walking-game .walking-poop--mobile.is-tap-target > img:first-child,
   .walking-activity.is-walking-game .walking-poop--mobile.is-cleaning > img:first-child,

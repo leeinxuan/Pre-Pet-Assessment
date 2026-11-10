@@ -1,6 +1,6 @@
 /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 */
 /* Mobile rabbit activities keep task context fixed and make only dense task content scroll. */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .stage-layout:has(.rabbit-activity) {
     grid-template-rows: auto minmax(0, 1fr);
     height: 100dvh;

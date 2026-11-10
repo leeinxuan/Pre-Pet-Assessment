@@ -1,6 +1,6 @@
 /* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */
 /* Hallmark · component: cat litter step summary · tone: warm-practical · anchor: existing cream and gold */
-@media (max-width: 720px) {
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .cat-litter-rescue {
     display: flex;
     flex-direction: column;
