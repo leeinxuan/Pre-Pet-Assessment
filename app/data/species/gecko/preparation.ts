@@ -133,10 +133,10 @@ export const geckoRoomItems: RoomItem[] = [
 ];
 
 export const geckoTrunkItems: TrunkItem[] = [
-  { id: "gecko-transport-box", label: "爬蟲專用運輸盒（附通氣孔）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "選用附通氣孔的小型塑膠盒，提供守宮安全的運輸空間。", preparedLabel: "已準備", expenseIds: ["gecko-transport-box"], placement: { x: 48, y: 60, width: 20, layer: 5 } },
-  { id: "gecko-soft-padding", label: "柔軟墊材", kind: "supply", image: geckoAssets.preparation.softPadding, description: "在運輸盒底部鋪一層毛巾、擦手紙或紙墊料，提供防碰撞緩衝，降低守宮緊迫感。", preparedLabel: "已準備", expenseIds: ["gecko-soft-padding"], priceNote: "可使用家中擦手紙", placement: { x: 53, y: 66, width: 14, layer: 6 } },
-  { id: "gecko-cover-towel", label: "小毛巾", kind: "supply", image: geckoAssets.preparation.coverTowel, description: "若運輸盒為透明材質，建議用小毛巾覆蓋部分盒身，增加隱蔽感，避免守宮因視覺刺激感到緊張。", preparedLabel: "已準備", expenseIds: ["gecko-cover-towel"], priceNote: "可使用家中毛巾", placement: { x: 40, y: 68, width: 18, layer: 6 } },
-  { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 30, y: 64, width: 12, layer: 4 } },
+  { id: "gecko-transport-box", label: "爬蟲專用運輸盒（附通氣孔）", kind: "supply", image: geckoAssets.preparation.transportBox, description: "選用附通氣孔的小型塑膠盒，提供守宮安全的運輸空間。", preparedLabel: "已準備", expenseIds: ["gecko-transport-box"], placement: { x: 48, y: 63, width: 20, layer: 5 } },
+  { id: "gecko-soft-padding", label: "柔軟墊材", kind: "supply", image: geckoAssets.preparation.softPadding, description: "在運輸盒底部鋪一層毛巾、擦手紙或紙墊料，提供防碰撞緩衝，降低守宮緊迫感。", preparedLabel: "已準備", expenseIds: ["gecko-soft-padding"], priceNote: "可使用家中擦手紙", placement: { x: 53, y: 70, width: 14, layer: 6 } },
+  { id: "gecko-cover-towel", label: "不透明袋子", kind: "supply", image: geckoAssets.preparation.coverBag, description: "若運輸盒為透明材質，建議用不透明袋子或布覆蓋盒身，增加隱蔽感，避免守宮因視覺刺激感到緊張。", preparedLabel: "已準備", expenseIds: ["gecko-cover-towel"], priceNote: "可使用家中袋子", placement: { x: 40, y: 56, width: 18, layer: 4 } },
+  { id: "hand-warmer-or-heat-pack", label: "暖暖包（氣溫低時備用）", kind: "supply", image: geckoAssets.preparation.heatPack, description: "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。", preparedLabel: "已準備", expenseIds: ["gecko-heat-pack"], placement: { x: 33, y: 66, width: 12, layer: 4 } },
 ];
 
 export const geckoRoomFlow: RoomFlowConfig = {

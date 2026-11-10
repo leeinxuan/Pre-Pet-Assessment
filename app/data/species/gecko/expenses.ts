@@ -16,7 +16,7 @@ export const geckoExpenses: Record<string, ExpenseRecord> = {
   "gecko-feeding-tongs": { ...initial("gecko-feeding-tongs", "餵食用長夾", 300), maxAmount: 300 },
   "gecko-feeder-insects-initial": { ...initial("gecko-feeder-insects-initial", "首批活體餌料昆蟲及飼育容器", 300), maxAmount: 300 },
   "gecko-supplements-initial": { ...initial("gecko-supplements-initial", "鈣粉與綜合維他命粉", 400), maxAmount: 400 },
-  "gecko-cover-towel": { ...initial("gecko-cover-towel", "小毛巾", 0), stage: "出發前準備" },
+  "gecko-cover-towel": { ...initial("gecko-cover-towel", "不透明袋子", 0), stage: "出發前準備" },
   "gecko-soft-padding": { ...initial("gecko-soft-padding", "柔軟墊材", 0), stage: "出發前準備" },
   "gecko-transport-box": { ...initial("gecko-transport-box", "爬蟲運輸盒（附通氣孔）", 500), maxAmount: 500, stage: "出發前準備" },
   "gecko-heat-pack": { ...initial("gecko-heat-pack", "暖暖包（氣溫低時備用）", 100), maxAmount: 100, stage: "出發前準備" },

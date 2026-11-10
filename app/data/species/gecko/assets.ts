@@ -64,7 +64,7 @@ export const geckoAssets = {
     trunkBackground: "/assets/car/car-trunk.webp",
     transportBox: "/assets/car/gecko-transport-box.webp",
     softPadding: "/assets/car/gecko-soft-padding.webp",
-    coverTowel: "/assets/car/gecko-cover-towel.webp",
+    coverBag: "/assets/car/gecko-cover-bag.webp",
     heatPack: "/assets/car/hand-warmer-or-heat-pack.webp",
   },
   feeding: {
