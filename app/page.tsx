@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { initialMembers, initialProfile, intros } from "./data/shared/app-flow";
 import { getExpenseForSpecies, getExpenseRulesForSpecies, isTemporaryReserveExpense } from "./data/shared/expenses";
@@ -117,7 +117,8 @@ const STAGE_LABELS: Record<number, string> = {
   4: "飼養生活",
   5: "飼養生活",
   6: "飼養生活",
-  7: "取得寵物",
+  7: "飼養觀念回顧",
+  8: "取得寵物",
 };
 
 export default function Home() {
@@ -195,15 +196,21 @@ export default function Home() {
   const speciesConfig = getSpeciesConfig(category);
 
   // ===== 研究事件記錄（只對網址帶 ?pid= 的受測者送出）=====
-  useEffect(() => { startEventLog(); }, []);
+  // 題目出現的時間，用來算「題目出現到第一次作答」的毫秒數（含重新想一次後的再次作答）
+  const promptShownAt = useRef(0);
+  useEffect(() => { startEventLog(); promptShownAt.current = Date.now(); }, []);
 
   useEffect(() => {
     setEventContext({ species: category });
     if (category) logEvent("species_selected", { breed });
   }, [category, breed]);
 
-  useEffect(() => {
+  // 用 layout effect 先更新階段，子元件在畫面載入時記錄的事件才會帶到正確的階段
+  useLayoutEffect(() => {
     setEventContext({ stage: STAGE_LABELS[step] ?? `step${step}`, page: "" });
+  }, [step]);
+
+  useEffect(() => {
     logEvent("stage_enter", { step });
     return () => { logEvent("stage_exit", { step }); };
   }, [step]);
@@ -219,6 +226,7 @@ export default function Home() {
     if (step >= 3 && step <= 6) {
       const itemId = getJourneyItemsForSpecies(category)[journeyIndex]?.id ?? `index${journeyIndex}`;
       setEventContext({ page: `life:${itemId}` });
+      promptShownAt.current = Date.now();
       logEvent("page_enter", { step, itemId, phase: lifePhase });
     }
   }, [step, journeyIndex, lifePhase, category]);
@@ -550,7 +558,10 @@ export default function Home() {
   }
 
   function answerScenario(scenario: Scenario, choice: ScenarioChoice) {
+    const answerMs = Date.now() - promptShownAt.current;
+    promptShownAt.current = Date.now();
     logEvent("mcq_attempt", {
+      answerMs,
       scenarioId: scenario.id,
       stageId: scenario.stageId,
       choice: choice.id,
@@ -617,7 +628,10 @@ export default function Home() {
   function answerScenarioMultiple(scenario: Scenario, choices: ScenarioChoice[], result: ScenarioResult) {
     const choiceIds = choices.map((choice) => choice.id);
     const joinedChoiceId = choiceIds.join(",");
+    const answerMs = Date.now() - promptShownAt.current;
+    promptShownAt.current = Date.now();
     logEvent("mcq_attempt", {
+      answerMs,
       scenarioId: scenario.id,
       stageId: scenario.stageId,
       choices: choiceIds,

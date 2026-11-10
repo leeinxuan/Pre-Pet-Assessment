@@ -10,6 +10,7 @@ import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../../shared/responsive";
 import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
 import type { ExpenseRecord, Scenario, ScenarioAnswer, ScenarioChoice, ScenarioMediaConfig, ScenarioPresentationConfig } from "../../../game-types";
 import { plainChoiceText, renderKnowledgeText, withPetName } from "./activity-ui";
+import { logEvent } from "../../../lib/event-log";
 
 /** 題目影片只在同一輪旅程首次進入時自動播放；重播永遠由玩家主動觸發。 */
 const autoPlayedQuestionVideos = new Set<string>();
@@ -132,6 +133,7 @@ export function KnowledgeCard({ title, children, className = "", icon = "💡" }
 }
 
 export function IncorrectExplanation({ text }: { text: string }) {
+  useEffect(() => { logEvent("mcq_error_feedback"); }, []);
   const firstSentenceEnd = text.search(/[。！？]/);
   const keyPoint = firstSentenceEnd >= 0 ? text.slice(0, firstSentenceEnd + 1) : text;
   const detail = firstSentenceEnd >= 0 ? text.slice(firstSentenceEnd + 1) : "";
@@ -254,6 +256,7 @@ export function CorrectFeedbackLayout({
 }) {
   const copyRef = useRef<HTMLDivElement>(null);
   useFeedbackPaneHeight(copyRef);
+  useEffect(() => { logEvent("mcq_full_feedback"); }, []);
   return (
     <section className={`correct-feedback-layout correct-feedback-layout--${variant}${hideMedia ? " correct-feedback-layout--text-only" : ""}`} aria-live="polite">
       {!hideMedia && <div className="correct-feedback-media">

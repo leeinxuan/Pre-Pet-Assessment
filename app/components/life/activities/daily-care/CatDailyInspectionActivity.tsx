@@ -1,15 +1,18 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- The litter-box drag scene relies on native image coordinates and pointer targets. */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { catLitterRescueConfig } from "../../../../data/species/cat/activities";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { ActivityIntroPage, withPetName } from "../activity-ui";
 import { useTapSequence } from "../useTapSequence";
+import { logEvent } from "../../../../lib/event-log";
+import { useGameProgressLog } from "../../../../lib/useGameProgressLog";
 
 export function CatDailyInspectionActivity({ activity, petName, selected, onChange, onActivityChange, onContinue }: { activity: { catInspectionIntroStarted: boolean }; petName: string; selected: string[]; onChange: (selected: string[]) => void; onActivityChange: (patch: { catInspectionIntroStarted: boolean }) => void; onContinue: () => void }) {
+  useGameProgressLog("cat", useMemo(() => ({ ...activity, selected }), [activity, selected]));
   const config = catLitterRescueConfig;
   const { assets, copy } = config;
   const render = (value: string) => withPetName(value, petName, "cat");
@@ -93,6 +96,7 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
   function handleTapTarget(target: string) {
     if (!isMobileTap || tapBusyRef.current || backupInstalled) return;
     const outcome = completeTapTarget(target);
+    logEvent("game_interaction", { game: "cat", action: "tap_target", target, stage: stageIndex, result: outcome ? "success" : "fail" });
     if (!outcome) return;
     tapBusyRef.current = true;
     switch (outcome.type) {
@@ -153,11 +157,15 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
     setIsWasteOverBin(false);
     if (event.currentTarget.hasPointerCapture?.(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     if (dragKind === "litter") {
-      if (isInsideLitterBox(event.clientX, event.clientY)) setLitterFilled(true);
+      const ok = isInsideLitterBox(event.clientX, event.clientY);
+      logEvent("game_interaction", { game: "cat", action: "drag_litter", stage: stageIndex, result: ok ? "success" : "fail" });
+      if (ok) setLitterFilled(true);
       return;
     }
     if (dragKind && dragKind !== "scoop") {
-      if (isOverTrashBin(event.clientX, event.clientY)) {
+      const overBin = isOverTrashBin(event.clientX, event.clientY);
+      logEvent("game_interaction", { game: "cat", action: "drag_waste", stage: stageIndex, result: overBin ? "success" : "fail" });
+      if (overBin) {
         holdBinOpenForDiscard();
         onChange([...selected, `litter-waste:${dragKind}`]);
         setCarryingWaste(null);
@@ -166,11 +174,19 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
     }
     if (dragKind !== "scoop") return;
     if (!isInsideLitterBox(event.clientX, event.clientY)) {
+      logEvent("game_interaction", { game: "cat", action: "drag_scoop", stage: stageIndex, result: "fail" });
       return;
     }
-    if (!scoopHasLeftBoxRef.current) return;
+    if (!scoopHasLeftBoxRef.current) {
+      logEvent("game_interaction", { game: "cat", action: "drag_scoop", stage: stageIndex, result: "invalid" });
+      return;
+    }
     const nextWaste = stageIndex === 0 ? urineWaste : stageIndex === 2 ? poopWaste : undefined;
-    if (!nextWaste) return;
+    if (!nextWaste) {
+      logEvent("game_interaction", { game: "cat", action: "drag_scoop", stage: stageIndex, result: "invalid" });
+      return;
+    }
+    logEvent("game_interaction", { game: "cat", action: "drag_scoop", stage: stageIndex, result: "success" });
     scoopCountRef.current += 1;
     scoopHasLeftBoxRef.current = false;
     setRevealedWaste((current) => current.includes(nextWaste.id) ? current : [...current, nextWaste.id]);

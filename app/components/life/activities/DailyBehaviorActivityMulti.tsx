@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { logEvent } from "../../../lib/event-log";
 import { getDailyBehaviorScenarioIds, getLifeScenariosForSpecies, getScenarioPresentation } from "../../../data/species/journey";
 import type { Scenario, ScenarioAnswer, ScenarioChoice, ScenarioResult } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
@@ -146,6 +147,7 @@ export function DailyBehaviorActivityMulti({
       return;
     }
 
+    if (selectedIds.includes(choiceId)) logEvent("mcq_option_cancelled", { scenarioId: scenario.id, choice: choiceId });
     const nextIds = selectedIds.includes(choiceId) ? selectedIds.filter((id) => id !== choiceId) : [...selectedIds, choiceId];
     setSelectedIds(nextIds);
     setRetryCopy(null);

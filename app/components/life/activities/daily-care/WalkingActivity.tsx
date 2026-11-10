@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- The walking scene uses native layered images for animation and drag coordinates. */
 import { useCallback, useEffect, useRef, useState } from "react";
+import { logEvent } from "../../../../lib/event-log";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import { walkingActivityConfig, walkingLawCopy, walkingPreloadImages, walkingPrepItems, walkingSceneLayout, walkingScenes } from "../../../../data/species/dog/activities";
 import type { LifeActivityState } from "../../../../game-types";
@@ -86,6 +87,7 @@ export function WalkingActivity({
   const { assets, copy, interaction, prepNotes } = walkingActivityConfig;
   const render = (value: string) => withPetName(value, petName, "dog");
   const forwardHoldStepMs = Math.round((interaction.stepDistance / interaction.holdSpeed) * 1000);
+  useEffect(() => { logEvent("activity_intro_viewed", { game: "walking" }); }, []);
   const [started, setStarted] = useState(activity.walkingMinutes > 0 || activity.walkingComplete);
   const [safetyStep, setSafetyStep] = useState<"question" | "law" | "correct" | "prepared">(
     activity.walkingMinutes > 0 || activity.walkingComplete ? "prepared" : "question",
@@ -174,6 +176,7 @@ export function WalkingActivity({
 
   async function prepare(id: string) {
     if (prepared.includes(id)) return;
+    logEvent("game_interaction", { game: "walking", action: "prepare", itemId: id, result: "success" });
     onChange({ walkingPreparedItems: [...prepared, id] });
     setMessage("");
 
@@ -187,13 +190,16 @@ export function WalkingActivity({
 
   function startWalk() {
     if (!prepared.includes("leash")) {
+      logEvent("game_interaction", { game: "walking", action: "start", result: "invalid", reason: "leash_required" });
       setMessage(copy.messages.leashRequired);
       return;
     }
     if (!allPrepared) {
+      logEvent("game_interaction", { game: "walking", action: "start", result: "invalid", reason: "preparation_required" });
       setMessage(copy.messages.preparationRequired);
       return;
     }
+    logEvent("game_step_completed", { game: "walking", step: "prepare_done" });
     setStarted(true);
     setMessage("");
   }
@@ -203,6 +209,8 @@ export function WalkingActivity({
     completingSceneRef.current = completedIndex;
     stopForward();
     const complete = completedIndex >= walkingScenes.length - 1;
+    logEvent("game_step_completed", { game: "walking", step: "scene", sceneIndex: completedIndex });
+    if (complete) logEvent("game_completed", { game: "walking" });
     const nextMinutes = Math.min(20, activity.walkingMinutes + 5);
     onChange({
       walkingMinutes: nextMinutes,
@@ -340,6 +348,7 @@ export function WalkingActivity({
 
     draggingBagRef.current = false;
     setDraggedBag(null);
+    logEvent("game_interaction", { game: "walking", action: "drag_bag", result: hitPoop ? "success" : "fail" });
     if (hitPoop) cleanupPoop();
   }
 
@@ -353,6 +362,7 @@ export function WalkingActivity({
     stopForward();
     draggingBagRef.current = false;
     setDraggedBag(null);
+    logEvent("game_step_completed", { game: "walking", step: "cleanup_poop" });
     onChange({ walkingPoopCleaned: true });
     setMessage(copy.messages.cleanupComplete);
   }

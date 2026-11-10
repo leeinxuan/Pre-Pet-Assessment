@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- Rabbit grooming uses native images for anatomy hitboxes and drag positioning. */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { rabbitActivityScenarios, rabbitGroomingCompletion, rabbitGroomingConfig } from "../../../../data/species/rabbit/activities";
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../../game-types";
@@ -10,10 +10,13 @@ import { ActivityIntroPage, type ObservationAnswerStatus, renderKnowledgeText, w
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { useDialogFocus } from "../../../shared/useDialogFocus";
+import { logEvent } from "../../../../lib/event-log";
+import { useGameProgressLog } from "../../../../lib/useGameProgressLog";
 
 type RabbitObservationStatus = ObservationAnswerStatus | "comparison";
 
 export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
+  useGameProgressLog("rabbit", useMemo(() => (activity), [activity]));
   const scenario = rabbitActivityScenarios["rabbit-daily-check"];
   const render = (value: string) => withPetName(value, petName);
   const completed = activity.rabbitDailyCheckSteps;
@@ -95,6 +98,7 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     const inRect = (rect: DOMRect | undefined, padding = 0) => Boolean(rect && event.clientX >= rect.left - padding && event.clientX <= rect.right + padding && event.clientY >= rect.top - padding && event.clientY <= rect.bottom + padding);
     // 只接受目前局部提示對應的部位，避免梳到其他身體區域也被判定完成。
     const overTarget = inRect(brushTargetRef.current?.getBoundingClientRect(), 12);
+    logEvent("game_interaction", { game: "rabbit", action: "drag_brush", step: current.id, result: overTarget ? "success" : "fail" });
     if (!overTarget) return;
     completeBrush();
   };
@@ -109,6 +113,7 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
   };
   const selectMobileBrush = () => {
     if (!current || !isBrushStep) return;
+    logEvent("game_interaction", { game: "rabbit", action: "select_brush", step: current.id, result: "success" });
     setMobileBrushSelectedFor(current.id);
   };
   useDialogFocus({ isOpen: Boolean(isMobile && observation), dialogRef: observationSheetRef, onClose: () => setObservation(null) });

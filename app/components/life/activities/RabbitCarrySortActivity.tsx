@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Rabbit carry sorting keeps native image dimensions inside pointer-sort rows. */
 import { useEffect, useRef, useState } from "react";
+import { logEvent } from "../../../lib/event-log";
 import { rabbitActivityScenarios, rabbitCarrySortSteps } from "../../../data/species/rabbit/activities";
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../game-types";
 import { renderKnowledgeText, withPetName } from "./activity-ui";
@@ -87,6 +88,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
     if (isCompletionState || isLockedAfterFailures || submittedRef.current) return;
     submittedRef.current = true;
     const incorrectIndex = order.findIndex((value, index) => value !== String(index));
+    logEvent("sort_submitted", { attempt: attempts + 1, result: incorrectIndex === -1 ? "success" : "fail", firstWrongStep: incorrectIndex === -1 ? null : incorrectIndex + 1 });
     if (incorrectIndex !== -1) {
       const nextAttempts = attempts + 1;
       onChoose(scenario, scenario.choices[0]);
@@ -105,6 +107,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
 
   function revealCorrectWay() {
     if (!isLockedAfterFailures) return;
+    logEvent("sort_answer_revealed", { attempts });
     onChange({ rabbitCarryAnswerRevealed: true, rabbitCarryOrder: ["0", "1", "2", "3", "4"] });
     setMessage("");
   }

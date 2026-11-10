@@ -370,6 +370,11 @@ export function RoomPreparation({
   const [dismissingHazard, setDismissingHazard] = useState<string | null>(null);
   const [activeHazardInfo, setActiveHazardInfo] = useState<string | null>(null);
   const [activeMobileItemInfo, setActiveMobileItemInfo] = useState<string | null>(null);
+  useEffect(() => {
+    if (!activeMobileItemInfo) return;
+    logEvent("item_info_opened", { itemId: activeMobileItemInfo });
+    return () => { logEvent("item_info_closed", { itemId: activeMobileItemInfo }); };
+  }, [activeMobileItemInfo]);
   const [exitingItems, setExitingItems] = useState<string[]>([]);
   const [desktopSupplyPagination, setDesktopSupplyPagination] = useState({ species, page: 0 });
   const roomSceneRef = useRef<HTMLDivElement>(null);
@@ -818,6 +823,6 @@ export function CarTrunkPreparation({ selected, petName, species = "dog", onSele
       {reviewing && <button type="button" className="secondary departure-return-button is-replay" onClick={onReplay}>↻ 再玩一次</button>}
       <div><button type="button" className="primary" onClick={depart} disabled={!complete}>出發接牠 <span>→</span></button></div>
     </div>
-    <MobileInfoSheet content={mobileInfo} onClose={() => setMobileInfo(null)} />
+    <MobileInfoSheet content={mobileInfo} onClose={() => { logEvent("item_info_closed"); setMobileInfo(null); }} />
   </div>;
 }

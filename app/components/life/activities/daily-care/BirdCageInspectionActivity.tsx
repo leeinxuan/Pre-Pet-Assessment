@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Layered bird-cage interaction uses native images for exact positioning. */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { birdActivityScenarios, birdAssets, birdCageInspectionActivityData, birdCageInspectionConfig, birdReport } from "../../../../data/species/bird/activities";
 import { birdCopy } from "../../../../data/species/bird/copy";
@@ -14,6 +14,8 @@ import { useDialogFocus } from "../../../shared/useDialogFocus";
 import { ActivityIntroPage, ObservationReturnButton, plainChoiceText, renderKnowledgeText, type ObservationAnswerStatus } from "../activity-ui";
 import { InspectionHotspot } from "../InspectionHotspot";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
+import { logEvent } from "../../../../lib/event-log";
+import { useGameProgressLog } from "../../../../lib/useGameProgressLog";
 
 function BirdCageAsset({ src, alt, fallback, className, width, height }: { src: string; alt: string; fallback: string; className?: string; width: number; height: number }) {
   const [failed, setFailed] = useState(false);
@@ -22,6 +24,7 @@ function BirdCageAsset({ src, alt, fallback, className, width, height }: { src: 
 }
 
 export function BirdCageInspectionActivity({ activity, petName, onChange, onChoose, onContinue }: { activity: LifeActivityState; petName: string; onChange: (patch: Partial<LifeActivityState>) => void; onChoose: (scenario: Scenario, choice: ScenarioChoice) => void; onContinue: () => void }) {
+  useGameProgressLog("bird", useMemo(() => (activity), [activity]));
   const render = (value: string) => interpolatePetName(value, petName);
   const displayPetName = petName || birdCopy.animalNameFallback;
   const { healthPoints, droppingOptions } = birdCageInspectionActivityData;
@@ -90,6 +93,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   />;
 
   function pullOutTray() {
+    logEvent("game_interaction", { game: "bird", action: "pull_tray", result: "success" });
     if (Object.keys(activity.birdCageInspectionStates).length !== healthPoints.length) {
       onChange({ birdCageInspectionStates: generatedHealthStates });
     }
@@ -98,6 +102,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   }
 
   function replaceBedding() {
+    logEvent("game_interaction", { game: "bird", action: "replace_bedding", result: "success" });
     addMany("tray-scraped", "tray-lined");
     setMessage("點擊墊紙，看看今天的糞便狀態。");
   }
@@ -140,6 +145,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   function answerHealthPoint(answer: "normal" | "warning") {
     if (!selectedHealthPoint) return;
     const isCorrect = healthStates[selectedHealthPoint.id] === answer;
+    logEvent("game_interaction", { game: "bird", action: "health_answer", point: selectedHealthPoint.id, result: isCorrect ? "success" : "fail" });
     setHealthFeedback((current) => ({ ...current, [selectedHealthPoint.id]: isCorrect ? "correct" : "incorrect" }));
   }
 
@@ -153,6 +159,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
 
   function answerDroppings(answer: "normal" | "warning") {
     const isCorrect = (selectedDropping.id === "healthy") === (answer === "normal");
+    logEvent("game_interaction", { game: "bird", action: "dropping_answer", result: isCorrect ? "success" : "fail" });
     setDroppingFeedback(isCorrect ? "correct" : "incorrect");
   }
 
@@ -162,6 +169,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
 
   function closeWindow(side: "left" | "right") {
     if (doorOpening || has(`window-${side}-closed`)) return;
+    logEvent("game_interaction", { game: "bird", action: "close_window", side, result: "success" });
     const otherSide = side === "left" ? "right" : "left";
     add(`window-${side}-closed`);
     const bothWindowsClosed = has(`window-${otherSide}-closed`);
@@ -197,9 +205,11 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   function openDoor() {
     if (doorOpening) return;
     if (!has("window-left-closed") || !has("window-right-closed")) {
+      logEvent("game_interaction", { game: "bird", action: "open_door", result: "invalid", reason: "windows_not_closed" });
       setMessage(interpolatePetName(cageOut.unsafeDoorPrompt, displayPetName));
       return;
     }
+    logEvent("game_interaction", { game: "bird", action: "open_door", result: "success" });
     setCageOutTransitionEnded(false);
     setDoorOpening(true);
   }
@@ -214,6 +224,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
     if (heartTimer.current) clearTimeout(heartTimer.current);
     heartTimer.current = setTimeout(() => setShowHearts(false), 650);
     const nextTouch = socialTouches + 1;
+    logEvent("game_interaction", { game: "bird", action: "pet_bird", count: nextTouch, result: "success" });
     add(`social-touch-${nextTouch}`);
     if (nextTouch < 5) return;
     add("social-time");

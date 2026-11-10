@@ -1,6 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import { logEvent } from "../../../lib/event-log";
 import { ObservationReturnButton, plainChoiceText, type ObservationAnswerStatus } from "./activity-ui";
 
 /**
@@ -62,6 +63,9 @@ export function ObservationCardFlow({
   onReturn: () => void;
   correctAction?: ReactNode;
 }) {
+  useEffect(() => {
+    if (status === "correct" || status === "incorrect") logEvent("observation_feedback_viewed", { result: status });
+  }, [status]);
   return (
     <>
       {image}
@@ -75,7 +79,7 @@ export function ObservationCardFlow({
       </> : <>
         <p className="observation-card-question">{question}</p>
         <div className="observation-card-choices">
-          {choices.map((choice) => <button type="button" key={choice.id} onClick={() => onChoose(choice.id)}>{typeof choice.label === "string" ? plainChoiceText(choice.label) : choice.label}</button>)}
+          {choices.map((choice) => <button type="button" key={choice.id} onClick={() => { logEvent("knowledge_card_attempt", { choiceId: choice.id }); onChoose(choice.id); }}>{typeof choice.label === "string" ? plainChoiceText(choice.label) : choice.label}</button>)}
         </div>
       </>}
     </>

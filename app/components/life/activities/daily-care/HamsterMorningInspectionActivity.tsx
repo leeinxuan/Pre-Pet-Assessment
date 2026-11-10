@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- The activity uses data-owned interactive artwork. */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import type { LifeActivityState } from "../../../../game-types";
 import { hamsterAssets, hamsterCageCheck, hamsterReport } from "../../../../data/species/hamster/activities";
@@ -10,6 +10,8 @@ import { hamsterCopy } from "../../../../data/species/hamster/copy";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { ActivityIntroPage, renderKnowledgeText, withPetName } from "../activity-ui";
+import { logEvent } from "../../../../lib/event-log";
+import { useGameProgressLog } from "../../../../lib/useGameProgressLog";
 
 type Change = (patch: Partial<LifeActivityState>) => void;
 type DragKind = "scoop" | "sieve" | "shake";
@@ -20,6 +22,7 @@ type SandPhase = "scoop" | "shake" | "trash";
 export function HamsterMorningInspectionActivity({ activity, petName, onChange, onContinue }: {
   activity: LifeActivityState; petName: string; onChange: Change; onContinue: () => void;
 }) {
+  useGameProgressLog("hamster", useMemo(() => (activity), [activity]));
   const isMobile = useMobileLayout();
   const config = hamsterCageCheck;
   const mobileScene = config.mobileScenePlacement;
@@ -137,12 +140,14 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
     if (dragging !== "scoop" || !dragStart.current) return;
     const selectedCorner = isToiletCornerPoint(event);
     setDragging(null); dragStart.current = null; setDragPoint(null);
+    logEvent("game_interaction", { game: "hamster", action: "drag_scoop", result: selectedCorner ? "success" : "fail" });
     if (!selectedCorner) return mergeStates({ statusMessage: config.interaction.cleanCornerHint });
     mergeStates({ toiletScooped: "yes", statusMessage: config.interaction.refillHint });
   }
 
   function refillToiletCorner() {
     if (!dirtyCornerIsScooped) return;
+    logEvent("game_interaction", { game: "hamster", action: "refill_toilet", result: "success" });
     onChange({
       hamsterInspectionStates: { ...states, toiletRefilled: "yes", statusMessage: "✅ 廁所角落已整理乾淨", toiletFeedbackAt: Date.now() + 1000 },
       hamsterInspectionCompleted: activity.hamsterInspectionCompleted.includes(steps[0].id)
@@ -168,6 +173,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
 
   function tapMobileDirtyBedding() {
     if (!isMobile || mobileTool !== "scoop" || dirtyCornerIsScooped || toiletComplete) return;
+    logEvent("game_interaction", { game: "hamster", action: "tap_dirty_bedding", result: "success" });
     setMobileTool(null);
     playMobileTargetPulse("dirty-bedding");
     mergeStates({ toiletScooped: "yes", statusMessage: config.interaction.refillHint });
@@ -186,12 +192,15 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
     const x = (event.clientX - bounds.left) / bounds.width;
     const y = (event.clientY - bounds.top) / bounds.height;
     setDragging(null); dragStart.current = null; setDragPoint(null);
+    const sieveHit = !(x < .14 || x > .88 || y < .18 || y > .88);
+    logEvent("game_interaction", { game: "hamster", action: "drag_sieve", result: sieveHit ? "success" : "fail" });
     if (x < .14 || x > .88 || y < .18 || y > .88) return mergeStates({ statusMessage: config.interaction.siftHint });
     beginSandShake();
   }
 
   function tapMobileSandBath() {
     if (!isMobile || mobileTool !== "sieve" || sandPhase !== "scoop") return;
+    logEvent("game_interaction", { game: "hamster", action: "tap_sand_bath", result: "success" });
     playMobileTargetPulse("sand-bath");
     beginSandShake();
   }
@@ -220,11 +229,13 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
   function finishShakeDrag() {
     if (dragging !== "shake" || !dragStart.current || sandPhase !== "shake") return;
     setDragging(null); dragStart.current = null; setDragPoint(null);
+    logEvent("game_interaction", { game: "hamster", action: "shake_sieve", progress: Math.round(shakeProgressRef.current), result: "success" });
     mergeStates({ sandShakeProgress: Math.round(shakeProgressRef.current), statusMessage: roundCopy.shakePrompt });
   }
 
   function discardSandWaste() {
     if (sandPhase !== "trash" || trashAnimating) return;
+    logEvent("game_interaction", { game: "hamster", action: "discard_waste", round: sandRound, result: "success" });
     setTrashAnimating(true);
     trashAnimationTimer.current = window.setTimeout(() => {
       setTrashAnimating(false);

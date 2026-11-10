@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Shared game artwork uses CSS-controlled intrinsic sizing that must remain unchanged. */
 
 import React, { useEffect, useRef, useState } from "react";
+import { logEvent } from "../../lib/event-log";
 import { sharedAssets } from "../../data/shared/assets";
 import { previousPetHistoryCopy } from "../../data/shared/app-flow";
 import { isTemporaryReserveExpense, money } from "../../data/shared/expenses";
@@ -199,17 +200,30 @@ export function StageRail({
     },
   ];
 
+  // 側邊欄跳頁的方向：把「大關卡 + 子頁」排成一個先後順序，比較目前位置與目標位置
+  const currentSidebarOrder = currentMain * 100 + (
+    currentMain === 0 ? ({ species: 0, breed: 1, name: 2, history: 3, transition: 4 } as const)[selectionPage]
+      : currentMain === 1 ? preparationTask
+        : currentMain === 2 ? Math.max(0, currentLifeStage)
+          : 0
+  );
+  function logSidebarNavigation(target: string, mainIndex: number, childOrder: number) {
+    const targetOrder = mainIndex * 100 + childOrder;
+    const direction = targetOrder > currentSidebarOrder ? "forward" : targetOrder < currentSidebarOrder ? "backward" : "same";
+    logEvent("sidebar_navigated", { target, from: navigation[currentMain].id, direction });
+  }
+
   function renderNavigation() {
     return (
       <nav className="station-navigation">
         <p className="sr-only">每個關卡按鈕都會標示目前位置、已完成或尚未解鎖狀態。</p>
         {testMode && <p className="test-mode-badge">測試模式・關卡已解鎖</p>}
-        {navigation.map((item) => (
+        {navigation.map((item, mainIndex) => (
           <div className={`nav-main ${item.status}`} key={item.id}>
             <button
               className="nav-main-button"
               disabled={item.status === "locked"}
-              onClick={item.onClick}
+              onClick={() => { logSidebarNavigation(item.id, mainIndex, 0); item.onClick(); }}
               aria-current={item.status === "current" ? "step" : undefined}
               aria-label={`${item.number} ${item.label}，${navigationStatusText(item.status)}`}
             >
@@ -221,7 +235,7 @@ export function StageRail({
                   <div className={`nav-child ${child.status}`} key={child.id}>
                     <button
                       disabled={child.status === "locked"}
-                      onClick={child.onClick}
+                      onClick={() => { logSidebarNavigation(child.id, mainIndex, mainIndex === 0 ? (selectionNavigationPages[childIndex]?.progress ?? childIndex) : childIndex); child.onClick(); }}
                       aria-current={child.status === "current" ? "step" : undefined}
                       aria-label={`${childIndex + 1} ${child.label}，${navigationStatusText(child.status)}`}
                     >
@@ -240,7 +254,7 @@ export function StageRail({
   return (
     <>
       <aside className="station-rail" aria-label="體驗進度">{renderNavigation()}</aside>
-      <details className="mobile-progress-nav">
+      <details className="mobile-progress-nav" onToggle={(event) => logEvent(event.currentTarget.open ? "sidebar_opened" : "sidebar_closed")}>
         <summary aria-label={`目前在第 ${currentMain + 1} 站：${navigation[currentMain].label}。點擊查看完整進度`}>
           <span className="mobile-progress-copy">
             <b>{navigation[currentMain].number} {navigation[currentMain].label}</b>

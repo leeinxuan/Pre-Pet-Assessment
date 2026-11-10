@@ -18,6 +18,8 @@ import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../../../shared/responsive";
 import { useDialogFocus } from "../../../shared/useDialogFocus";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
+import { logEvent } from "../../../../lib/event-log";
+import { useGameProgressLog } from "../../../../lib/useGameProgressLog";
 
 type Change = (patch: Partial<LifeActivityState>) => void;
 type PointerPosition = { id: string; x: number; y: number } | null;
@@ -175,6 +177,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   onChange: Change;
   onContinue: () => void;
 }) {
+  useGameProgressLog("gecko", useMemo(() => (activity), [activity]));
   const generatedInitialStates = useMemo(() => buildInitialStates(config), [config]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [magnifier, setMagnifier] = useState<PointerPosition>(null);
@@ -315,6 +318,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
         : activeBodyPoint?.instruction ?? config.body.instruction;
 
   const adjustTemperature = (direction: 1 | -1) => {
+    logEvent("game_interaction", { game: "gecko", action: "adjust_temperature", direction, result: "success" });
     setHasAdjustedTemperature(true);
     persistStates({
       "temperature-warm": warm + config.temperature.adjustment.warm * direction,
@@ -505,6 +509,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
               style={mobileScenePlacementStyle(config.water.interactivePlacement, config.water.mobileInteractivePlacement)}
               onClick={() => {
                 if (waterFilled || waterReplacementInProgress.current) return;
+                logEvent("game_interaction", { game: "gecko", action: "replace_water", result: "success" });
                 waterReplacementInProgress.current = true;
                 setClosedSheet(null);
                 waterFeedbackTimeout.current = setTimeout(() => {
@@ -532,7 +537,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
               type="button"
               className="gecko-feces-target"
               style={mobileScenePlacementStyle(config.feces.scenePlacement, config.feces.mobileScenePlacement)}
-              onClick={() => setOpenId(config.feces.id)}
+              onClick={() => { logEvent("game_interaction", { game: "gecko", action: "open_point", point: config.feces.id, result: "success" }); setOpenId(config.feces.id); }}
               aria-label="點擊底材上的排泄物進行觀察"
             >
               {activeStateContent
@@ -566,7 +571,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
                     } as CSSProperties}
                     disabled={!isAvailable}
                     aria-label={pointComplete ? `${point.label}已完成` : point.instruction}
-                    onClick={() => setOpenId(point.id)}
+                    onClick={() => { logEvent("game_interaction", { game: "gecko", action: "open_point", point: point.id, result: "success" }); setOpenId(point.id); }}
                     onPointerEnter={isAvailable ? (event) => trackMagnifier(point.id, event) : undefined}
                     onPointerMove={isAvailable ? (event) => trackMagnifier(point.id, event) : undefined}
                     onPointerLeave={() => setMagnifier(null)}

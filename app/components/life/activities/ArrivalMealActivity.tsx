@@ -12,6 +12,7 @@ import { MobileItemInfoBadge, MobileItemPlacedCheck } from "../../shared/MobileI
 import { useDialogFocus } from "../../shared/useDialogFocus";
 import { useMobileLayout } from "../../shared/useMobileLayout";
 import { matchesCompactPortraitLayout } from "../../shared/responsive";
+import { logEvent } from "../../../lib/event-log";
 import type {
   ArrivalMealSceneItemKey,
   ArrivalMealSceneLayout,
@@ -140,7 +141,7 @@ export function ArrivalMealActivity({
     ? (activity.arrivalMealVeggieReady ? feeding.scene.veggie.ready : feeding.scene.veggie.empty)
     : undefined;
   const [readyPetDisplayed, setReadyPetDisplayed] = useState(false);
-  useDialogFocus({ isOpen: Boolean(foodWarning && !isMobile), dialogRef: warningDialogRef, onClose: () => setFoodWarning(null) });
+  useDialogFocus({ isOpen: Boolean(foodWarning && !isMobile), dialogRef: warningDialogRef, onClose: closeFoodWarning });
   useEffect(() => {
     if (!complete || hasRecordedMeal.current || (!mobileStarted && matchesCompactPortraitLayout())) return;
     hasRecordedMeal.current = true;
@@ -176,11 +177,17 @@ export function ArrivalMealActivity({
   }
 
   function openMobileSupplyInfo(supply: typeof sceneSupplies[number]) {
+    logEvent("item_info_opened", { itemId: supply.stateKey });
     setMobileInfo({ title: supply.label, description: supply.description, image: supply.image });
+  }
+  function closeFoodWarning() {
+    logEvent("food_warning_closed");
+    setFoodWarning(null);
   }
   function warnUnsafeFood(kind: string) {
     const unsafeFood = sceneUnsafeFoods.find((item) => item.id === kind);
     if (!unsafeFood) return;
+    logEvent("wrong_food_clicked", { foodId: kind });
     setUnsafeFoodIds((current) => current.includes(kind) ? current : [...current, kind]);
     setFoodWarning({ title: interpolatePetName(unsafeFood.title, petName, species), text: interpolatePetName(unsafeFood.text, petName, species), image: unsafeFood.image });
   }
@@ -241,8 +248,8 @@ export function ArrivalMealActivity({
         <img className="arrival-meal-room arrival-meal-room--desktop" src={feeding.scene.desktopBackground} alt={`${feeding.animalName}的新家房間`} />
         <img className="arrival-meal-room arrival-meal-room--mobile" src={feeding.scene.mobileBackground} style={feeding.scene.mobileBackgroundStyle} alt="" />
         {foodWarning && <div className="arrival-meal-warning-overlay">
-          <div ref={warningDialogRef} className="arrival-meal-warning" role="dialog" aria-modal="true" aria-label={foodWarning.title} tabIndex={-1} onClick={() => setFoodWarning(null)}>
-            <button type="button" className="arrival-meal-warning-close" onClick={() => setFoodWarning(null)} aria-label="關閉不適合食物提示">×</button>
+          <div ref={warningDialogRef} className="arrival-meal-warning" role="dialog" aria-modal="true" aria-label={foodWarning.title} tabIndex={-1} onClick={closeFoodWarning}>
+            <button type="button" className="arrival-meal-warning-close" onClick={closeFoodWarning} aria-label="關閉不適合食物提示">×</button>
             <b>{foodWarning.title}</b>
             <p>{foodWarning.text}</p>
           </div>
@@ -258,7 +265,7 @@ export function ArrivalMealActivity({
         {complete && <p className="arrival-meal-completion-message" role="status">{feeding.completionMessage}</p>}
         <button className="primary arrival-meal-continue-button" disabled={!complete || !expenseSequenceComplete} onClick={onContinue}>繼續生活旅程 <span>→</span></button>
       </div>
-      <MobileInfoSheet content={mobileInfo ?? (foodWarning ? { title: foodWarning.title, description: foodWarning.text, image: foodWarning.image } : null)} onClose={() => { setMobileInfo(null); setFoodWarning(null); }} />
+      <MobileInfoSheet content={mobileInfo ?? (foodWarning ? { title: foodWarning.title, description: foodWarning.text, image: foodWarning.image } : null)} onClose={() => { logEvent(foodWarning ? "food_warning_closed" : "food_info_closed"); setMobileInfo(null); setFoodWarning(null); }} />
     </section>
   );
 }
