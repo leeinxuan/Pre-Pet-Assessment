@@ -41,6 +41,11 @@ function setupEventLog() {
     sheet.getRange(1, 1, 1, EVENT_COLUMNS.length).setValues([EVENT_COLUMNS]).setFontWeight('bold');
     sheet.setFrozenRows(1);
   }
+  // 時間欄位顯示到毫秒，才能計算停留秒數（只改顯示格式，不影響資料）
+  sheet.getRange('A:A').setNumberFormat('yyyy/mm/dd hh:mm:ss.000');
+  sheet.getRange('I:I').setNumberFormat('yyyy/mm/dd hh:mm:ss.000');
+  sheet.setColumnWidth(1, 190);
+  sheet.setColumnWidth(9, 190);
   Logger.log('事件記錄試算表：' + ss.getUrl());
 }
 
@@ -48,6 +53,13 @@ function eventSheet_() {
   const id = PropertiesService.getScriptProperties().getProperty('EVENT_LOG_SHEET_ID');
   if (!id) throw new Error('尚未執行 setupEventLog');
   return SpreadsheetApp.openById(id).getSheetByName(EVENT_SHEET_NAME);
+}
+
+// 工作表名稱：不能有 : \\ / ? * [ ]，也不能和總表同名
+function pidSheetName_(pid) {
+  let name = String(pid || '').replace(/[:\\\/?*\[\]]/g, '_').trim().slice(0, 50);
+  if (!name || name === EVENT_SHEET_NAME) return '';
+  return name;
 }
 
 function appendEvents_(events) {
@@ -72,6 +84,27 @@ function appendEvents_(events) {
   try {
     const sheet = eventSheet_();
     sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, EVENT_COLUMNS.length).setValues(rows);
+    // 同時依受測者編號，寫進各自的工作表（沒有就自動建立）
+    const ss = sheet.getParent();
+    const byPid = {};
+    rows.forEach(function (r) {
+      const name = pidSheetName_(r[1]);
+      if (!name) return;
+      (byPid[name] = byPid[name] || []).push(r);
+    });
+    Object.keys(byPid).forEach(function (name) {
+      let ps = ss.getSheetByName(name);
+      if (!ps) {
+        ps = ss.insertSheet(name);
+        ps.getRange(1, 1, 1, EVENT_COLUMNS.length).setValues([EVENT_COLUMNS]).setFontWeight('bold');
+        ps.setFrozenRows(1);
+        ps.getRange('A:A').setNumberFormat('yyyy/mm/dd hh:mm:ss.000');
+        ps.getRange('I:I').setNumberFormat('yyyy/mm/dd hh:mm:ss.000');
+        ps.setColumnWidth(1, 190);
+        ps.setColumnWidth(9, 190);
+      }
+      ps.getRange(ps.getLastRow() + 1, 1, byPid[name].length, EVENT_COLUMNS.length).setValues(byPid[name]);
+    });
   } finally {
     lock.releaseLock();
   }

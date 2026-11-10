@@ -10,6 +10,7 @@ import { useDialogFocus } from "../shared/useDialogFocus";
 import { FlowLoadingFallback, loadRetriableModule } from "../shared/AsyncFlowState";
 import { ExternalLinkIcon } from "../shared/ExternalLinkIcon";
 import { ShareIcon } from "../shared/ShareIcon";
+import { logEvent } from "../../lib/event-log";
 
 const importProfileForms = () => import("../report/ProfileForms");
 const ProfileSupplementForm = dynamic(
@@ -25,7 +26,7 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
   const acquisition = getSpeciesConfig(species).acquisition;
   const visibleSources = officialPetSources.filter((source) => acquisition.sourceIds.includes(source.id));
 
-  useDialogFocus({ isOpen: profileModalOpen, dialogRef: profileModalRef, onClose: () => setProfileModalOpen(false) });
+  useDialogFocus({ isOpen: profileModalOpen, dialogRef: profileModalRef, onClose: () => { logEvent("profile_form_closed"); setProfileModalOpen(false); } });
 
   async function shareWithOthers() {
     const url = new URL("/", window.location.href).toString();
@@ -53,7 +54,7 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
 
     <section className="official-profile-entry" aria-labelledby="official-profile-title">
       <div><h2 id="official-profile-title">準備聯繫前，先整理你的生活條件</h2><p>居住環境、可投入時間與照顧經驗，能幫助收容所、認養平台或合法業者更了解你是否適合迎接牠。</p></div>
-      <button type="button" className="secondary" onPointerEnter={() => { void importProfileForms().catch(() => undefined); }} onFocus={() => { void importProfileForms().catch(() => undefined); }} onClick={() => setProfileModalOpen(true)}>填寫真實生活條件</button>
+      <button type="button" className="secondary" onPointerEnter={() => { void importProfileForms().catch(() => undefined); }} onFocus={() => { void importProfileForms().catch(() => undefined); }} onClick={() => { logEvent("profile_form_opened"); setProfileModalOpen(true); }}>填寫真實生活條件</button>
     </section>
     {profileEdited && <p className="official-profile-complete" role="status">已整理真實生活條件，可於聯繫前下載使用。</p>}
 
@@ -74,10 +75,10 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
       : <span key={`${segment.text}-${index}`}>{segment.text}</span>)}</p>
 
     <div className="nav-buttons official-acquisition-footer-actions">
-      <button className="secondary" type="button" onClick={onBack}>← 返回飼養觀念回顧</button>
+      <button className="secondary" type="button" onClick={() => { logEvent("acquisition_back_clicked"); onBack(); }}>← 返回飼養觀念回顧</button>
       <div className="official-final-actions">
-        <button className="secondary official-share-button" type="button" onClick={shareWithOthers}>分享給他人 <ShareIcon /></button>
-        <button className="primary" type="button" onClick={onReset}>重新體驗 <span>↻</span></button>
+        <button className="secondary official-share-button" type="button" onClick={() => { logEvent("share_clicked"); void shareWithOthers(); }}>分享給他人 <ShareIcon /></button>
+        <button className="primary" type="button" onClick={() => { logEvent("restart_clicked"); onReset(); }}>重新體驗 <span>↻</span></button>
       </div>
     </div>
     {shareMessage && <p className="official-share-status" role="status">{shareMessage}</p>}
@@ -91,6 +92,6 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
       </div>
       <p>最後更新：{contentLastUpdated}</p>
     </footer>
-    {profileModalOpen && <div className="profile-modal-backdrop" role="presentation" onMouseDown={() => setProfileModalOpen(false)}><section ref={profileModalRef} className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-supplement-title" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}><button type="button" className="profile-modal-close" aria-label="關閉真實生活條件表單" onClick={() => setProfileModalOpen(false)}>×</button><ProfileSupplementForm embedded profile={profile} petName={petName} breed={breed} species={species} onChange={(nextProfile) => { setProfileEdited(true); onProfileChange(nextProfile); }} onBack={() => undefined} onReset={() => undefined} /></section></div>}
+    {profileModalOpen && <div className="profile-modal-backdrop" role="presentation" onMouseDown={() => setProfileModalOpen(false)}><section ref={profileModalRef} className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-supplement-title" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}><button type="button" className="profile-modal-close" aria-label="關閉真實生活條件表單" onClick={() => { logEvent("profile_form_closed"); setProfileModalOpen(false); }}>×</button><ProfileSupplementForm embedded profile={profile} petName={petName} breed={breed} species={species} onChange={(nextProfile) => { setProfileEdited(true); onProfileChange(nextProfile); }} onBack={() => undefined} onReset={() => undefined} /></section></div>}
   </div>;
 }

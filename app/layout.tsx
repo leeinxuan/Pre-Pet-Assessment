@@ -61,7 +61,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         if (pid) localStorage.setItem("pre-pet-pid", pid);
         pid = localStorage.getItem("pre-pet-pid");
         if (pid) {
-          window.clarity("identify", pid);
+          window.clarity("identify", pid, undefined, undefined, pid); // 第 4 個參數是顯示用名稱，Clarity 介面才看得到完整編號
           window.clarity("set", "pid", pid);
         }
       } catch (error) {}

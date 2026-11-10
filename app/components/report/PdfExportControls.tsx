@@ -1,4 +1,5 @@
 "use client";
+import { logEvent } from "../../lib/event-log";
 
 import { useEffect, useState } from "react";
 import type { Profile } from "../../game-types";
@@ -605,6 +606,7 @@ export function PdfDownloadButton({ petName, kind = "overview", label, profile, 
         className={`primary pdf-download-button ${generating ? "is-generating" : ""}`}
         onClick={async () => {
           if (generating) return;
+          logEvent("pdf_download_clicked", { kind });
           setGenerating(true);
           setCompleted(false);
           setError("");

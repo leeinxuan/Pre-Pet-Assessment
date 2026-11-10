@@ -2,8 +2,9 @@
 
 /* eslint-disable @next/next/no-img-element -- Report artwork is consumed by the capture/export flow and must retain native image rendering. */
 
-import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode, type RefObject } from "react";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
+import { logEvent } from "../../lib/event-log";
 import { money } from "../../data/shared/expenses";
 import type { HomeReadinessTextBlock, HomeReadinessTextSegment } from "../../data/shared/home-readiness-types";
 import type { MasteredCareSource } from "../../data/shared/mastered-care-types";
@@ -229,6 +230,7 @@ export function AssessmentReport({
   onBack: () => void;
   onReset: () => void;
 }) {
+  useEffect(() => { logEvent("review_cards_shown"); }, []);
   const [activeDiscussionId, setActiveDiscussionId] = useState("");
   const [expenseDetailsOpen, setExpenseDetailsOpen] = useState(false);
   const [dailyCareDetailsOpen, setDailyCareDetailsOpen] = useState(false);
@@ -562,17 +564,17 @@ export function AssessmentReport({
         <section className="care-review-section care-review-followup" aria-labelledby="followup-care-title">
           <header><span aria-hidden="true"><ReviewAlertIcon /></span><div><h2 id="followup-care-title">建議再留意的觀念</h2><p>以下主題在體驗中曾出現不同選擇，建議在真正飼養前，再多花一些時間了解。</p></div></header>
           {discussionTopics.length ? <div className="care-review-topic-grid">
-            {discussionTopics.map((topic) => <article key={topic.id}><span aria-hidden="true"><ReviewAlertIcon /></span><div><b>{topic.title}</b><p>{topic.summary ?? topic.topic}</p></div><button type="button" className="discussion-info-button" onClick={() => setActiveDiscussionId(topic.id)} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button></article>)}
+            {discussionTopics.map((topic) => <article key={topic.id}><span aria-hidden="true"><ReviewAlertIcon /></span><div><b>{topic.title}</b><p>{topic.summary ?? topic.topic}</p></div><button type="button" className="discussion-info-button" onClick={() => { logEvent("review_followup_opened", { topicId: topic.id }); setActiveDiscussionId(topic.id); }} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button></article>)}
           </div> : <div className="care-review-all-clear"><span aria-hidden="true">✓</span><p>你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。</p></div>}
         </section>
 
-        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true"><ReviewBookIcon /></span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true"><ReviewBookIcon /></span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} species={species} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} species={species} /></p></div><button type="button" className="discussion-info-button" onClick={() => setActiveAdditionalNoteIndex(index)} aria-label={`查看「${homeReadinessText(note.title, petName, species)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
+        {careReviewAdditionalNotes.length > 0 && <section className="care-review-section care-review-notes-entry" aria-labelledby="care-review-notes-entry-title"><header><span aria-hidden="true"><ReviewBookIcon /></span><div><h2 id="care-review-notes-entry-title">照顧路上的提醒</h2><p>這些是補充的照顧觀念，非每位飼主都會遇到的情況，但事先了解能幫助你在需要時更從容判斷。</p></div></header><div className="care-review-topic-grid">{careReviewAdditionalNotes.map((note, index) => <article key={`additional-note-${index}`}><span aria-hidden="true"><ReviewBookIcon /></span><div><b><HomeReadinessReviewText segments={note.title} petName={petName} species={species} /></b><p><HomeReadinessReviewText segments={note.summary} petName={petName} species={species} /></p></div><button type="button" className="discussion-info-button" onClick={() => { logEvent("review_note_opened", { noteIndex: index }); setActiveAdditionalNoteIndex(index); }} aria-label={`查看「${homeReadinessText(note.title, petName, species)}」的提醒細節`}><i aria-hidden="true">i</i> 查看細節</button></article>)}</div></section>}
 
         <section className="care-review-section care-review-resources" aria-labelledby="care-resource-title">
           <header><div><h2 id="care-resource-title">預估支出與每日投入時間</h2><p>飼養不只有金錢支出，也需要穩定安排每天的照顧時間。</p></div></header>
           <div className="care-resource-grid">
-            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><section><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></section><section><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}+</b></section></div><button type="button" className="secondary care-expense-button" onClick={() => setExpenseDetailsOpen(true)}>查看費用細項</button></div></article>
-            <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><section className="care-time-summary"><small>每日約需安排</small><b>{dailyCareDurationLabel(speciesConfig.report.dailyCareTime)}</b></section><button type="button" className="secondary care-expense-button" onClick={() => setDailyCareDetailsOpen(true)}>查看每日照護細項</button></div></article>
+            <article className="care-resource-cost"><span aria-hidden="true">$</span><div><h3>預估支出</h3><div className="care-cost-summary"><section><small>每月預估支出</small><b>NT$ {money.format(monthlyBasicTotal)}<em>／月</em></b></section><section><small>初期準備金</small><b>NT$ {money.format(initialPreparationTotal)}+</b></section></div><button type="button" className="secondary care-expense-button" onClick={() => { logEvent("review_expense_detail_opened"); setExpenseDetailsOpen(true); }}>查看費用細項</button></div></article>
+            <article className="care-resource-time"><span aria-hidden="true">◷</span><div><h3>每日投入時間</h3><section className="care-time-summary"><small>每日約需安排</small><b>{dailyCareDurationLabel(speciesConfig.report.dailyCareTime)}</b></section><button type="button" className="secondary care-expense-button" onClick={() => { logEvent("review_daily_care_opened"); setDailyCareDetailsOpen(true); }}>查看每日照護細項</button></div></article>
           </div>
         </section>
 
@@ -582,11 +584,11 @@ export function AssessmentReport({
         </section>
         <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-official-title">
           <div><span aria-hidden="true"><img src="/care-guid-logo.svg" alt="" /></span><h2 id="care-guide-official-title">官方寵物照顧指南</h2><p>想再深入了解更詳細的飼養需求、照護方式與相關規範嗎？這裡整理了農業部的官方知識庫，提供更完整的資訊供你查閱。</p></div>
-          <a className="secondary care-guide-official-link" href="https://pet-care-guide-six.vercel.app/" target="_blank" rel="noopener noreferrer">查看官方指南 <ExternalLinkIcon /></a>
+          <a className="secondary care-guide-official-link" href="https://pet-care-guide-six.vercel.app/" onClick={() => logEvent("external_link_clicked", { link: "official_guide" })} target="_blank" rel="noopener noreferrer">查看官方指南 <ExternalLinkIcon /></a>
         </section>
         <section className="care-guide-download care-guide-official" aria-labelledby="care-guide-veterinary-title">
           <div><span aria-hidden="true"><MedicalCrossIcon /></span><h2 id="care-guide-veterinary-title">全國獸醫師職業、診療機構開業查詢</h2><p>可透過全國獸醫師執業、診療機構開業查詢網站搜尋合法的獸醫診療機構，並了解各獸醫診療機構可提供的醫療項目。</p></div>
-          <a className="secondary care-guide-official-link" href="https://ahis9.aphia.gov.tw/Veter/OD/HLIndex.aspx" target="_blank" rel="noopener noreferrer">前往查詢網站 <ExternalLinkIcon /></a>
+          <a className="secondary care-guide-official-link" href="https://ahis9.aphia.gov.tw/Veter/OD/HLIndex.aspx" onClick={() => logEvent("external_link_clicked", { link: "veterinary_search" })} target="_blank" rel="noopener noreferrer">前往查詢網站 <ExternalLinkIcon /></a>
         </section>
       </section>
 
