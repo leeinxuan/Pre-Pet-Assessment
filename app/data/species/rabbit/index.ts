@@ -12,9 +12,11 @@ import { rabbitHomeReadiness } from "./home-readiness";
 import { rabbitMasteredCareThemes } from "./mastered-care-themes";
 import { rabbitCareReviewAdditionalNotes } from "./care-review-notes";
 import { rabbitAcquisition } from "./acquisition";
+import type { SpeciesConfigContract } from "../../shared/species-config-types";
 
 export const rabbitConfig = {
   id: "rabbit" as const,
+  mobileActivityLayout: "full-bleed" as const,
   selection: rabbitSelection,
   preparation: rabbitPreparation,
   journey: rabbitJourney,
@@ -31,6 +33,6 @@ export const rabbitConfig = {
   masteredCareThemes: rabbitMasteredCareThemes,
   careReviewAdditionalNotes: rabbitCareReviewAdditionalNotes,
   acquisition: rabbitAcquisition,
-} as const;
+} as const satisfies SpeciesConfigContract;
 
 export { rabbitAssets, rabbitJourney, rabbitPreparation, rabbitReport, rabbitLifeScenarios, getRabbitBreedChallengeScenarios, rabbitFeeding, rabbitSelection };

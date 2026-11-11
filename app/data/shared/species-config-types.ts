@@ -1,4 +1,18 @@
-import type { HazardItem, RoomItem, TrunkItem } from "../../game-types";
+import type {
+  DepartureSceneConfig,
+  FeedingConfig,
+  HazardItem,
+  RoomItem,
+  RoomSceneConfig,
+  Scenario,
+  SpeciesScenarioPresentationConfig,
+  TrunkItem,
+} from "../../game-types";
+import type { CareReviewAdditionalNote } from "./care-review-note-types";
+import type { HomeReadinessConfig } from "./home-readiness-types";
+import type { MasteredCareTheme } from "./mastered-care-types";
+import type { PetAcquisitionConfig } from "./pet-sources";
+import type { SpeciesId } from "./types";
 
 export type SpeciesCopy = {
   animalName: string; animalNameFallback: string; typeLabel: string;
@@ -51,6 +65,57 @@ export type RoomFlowConfig = {
   copy: { fenceInstruction?: string; fencePlacedInstruction?: string; entryReadyInstruction?: string; interiorInstruction?: string; completeInstruction?: string; hazardInstruction?: string; lockedInstruction?: string;
     /** 內部用品因 interiorUnlockItemId 尚未放置而鎖定時的提示；未提供時沿用 lockedInstruction。 */
     interiorLockedInstruction?: string; entryLabel?: string };
+};
+
+export type SpeciesSelectionConfig = {
+  skipBreedPage: boolean;
+  category: { active: boolean };
+  breeds: readonly {
+    id: string;
+    species: SpeciesId;
+    label: string;
+    icon: string;
+    image?: string;
+    size: string;
+    shortDescription: string;
+  }[];
+};
+
+export type SpeciesPreparationConfig = {
+  roomItems: readonly RoomItem[];
+  hazards: readonly HazardItem[];
+  trunkItems: readonly TrunkItem[];
+  roomFlow?: RoomFlowConfig;
+  roomScene: RoomSceneConfig;
+  departureScene: DepartureSceneConfig;
+};
+
+/**
+ * 每個正式物種資料夾都必須提供的共同契約。
+ *
+ * `journey`、`assets` 與專屬活動仍保留各物種精確的推論型別；這份契約只負責
+ * 確認共用元件所依賴的入口完整存在，避免新增物種時漏掉設定或拼錯欄位。
+ */
+export type SpeciesConfigContract = {
+  id: SpeciesId;
+  /** 手機日常互動是否移除共用卡片外框並延伸為滿版；由物種資料決定，避免共用 CSS 辨識物種名稱。 */
+  mobileActivityLayout: "standard" | "full-bleed";
+  selection: SpeciesSelectionConfig;
+  preparation: SpeciesPreparationConfig;
+  journey: unknown;
+  scenarios: readonly Scenario[];
+  getLifeScenarios: (...args: never[]) => readonly Scenario[];
+  getReportScenarios: (...args: never[]) => readonly Scenario[];
+  scenarioPresentation: SpeciesScenarioPresentationConfig;
+  breedChallenges?: unknown;
+  report: SpeciesReportConfig;
+  assets: unknown;
+  feeding: FeedingConfig;
+  copy: SpeciesCopy;
+  homeReadiness: HomeReadinessConfig;
+  masteredCareThemes: readonly MasteredCareTheme[];
+  careReviewAdditionalNotes: readonly CareReviewAdditionalNote[];
+  acquisition: PetAcquisitionConfig;
 };
 
 export type SpeciesGameConfig = {

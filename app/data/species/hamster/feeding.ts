@@ -37,6 +37,8 @@ export const hamsterFeeding: FeedingConfig = {
   ],
   scene: {
     desktopBackground: hamsterAssets.feeding.background,
+    desktopSupplyColumnWidth: 360,
+    desktopBackgroundStyle: { objectPosition: "left center", transform: "scale(1.28)", transformOrigin: "left center" },
     mobileBackground: hamsterAssets.feeding.background,
     // 手機版只顯示籠角與墊料區域：靠左對齊後放大，基準點對準該區域。
     mobileBackgroundStyle: { objectFit: "cover", objectPosition: "left center", transform: "scale(1.7)", transformOrigin: "14% 33%" },

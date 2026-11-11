@@ -10,9 +10,11 @@ import { hamsterHomeReadiness } from "./home-readiness";
 import { hamsterMasteredCareThemes } from "./mastered-care-themes";
 import { hamsterCareReviewAdditionalNotes } from "./care-review-notes";
 import { hamsterAcquisition } from "./acquisition";
+import type { SpeciesConfigContract } from "../../shared/species-config-types";
 
 export const hamsterConfig = {
   id: "hamster" as const,
+  mobileActivityLayout: "full-bleed" as const,
   selection: hamsterSelection,
   preparation: hamsterPreparation,
   journey: hamsterJourney,
@@ -28,6 +30,6 @@ export const hamsterConfig = {
   masteredCareThemes: hamsterMasteredCareThemes,
   careReviewAdditionalNotes: hamsterCareReviewAdditionalNotes,
   acquisition: hamsterAcquisition,
-} as const;
+} as const satisfies SpeciesConfigContract;
 
 export { hamsterSelection };

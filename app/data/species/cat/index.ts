@@ -12,9 +12,11 @@ import { catMasteredCareThemes } from "./mastered-care-themes";
 import { catCareReviewAdditionalNotes } from "./care-review-notes";
 import { catAcquisition } from "./acquisition";
 import { catLitterRescueConfig } from "./activities";
+import type { SpeciesConfigContract } from "../../shared/species-config-types";
 
 export const catConfig = {
   id: "cat" as const,
+  mobileActivityLayout: "full-bleed" as const,
   selection: catSelection,
   preparation: catPreparation,
   journey: catJourney,
@@ -31,6 +33,6 @@ export const catConfig = {
   masteredCareThemes: catMasteredCareThemes,
   careReviewAdditionalNotes: catCareReviewAdditionalNotes,
   acquisition: catAcquisition,
-} as const;
+} as const satisfies SpeciesConfigContract;
 
 export { catAssets, catJourney, catPreparation, catReport, catSelection, catLifeScenarios, getCatBreedChallengeScenarios, catFeeding, catLitterRescueConfig };

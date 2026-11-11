@@ -212,7 +212,7 @@ export default function Home() {
 
   useEffect(() => {
     logEvent("stage_enter", { step });
-    return () => { logEvent("stage_exit", { step }); };
+    return () => { logEvent("stage_exit", { step }, { stage: STAGE_LABELS[step] ?? `step${step}`, page: "" }); };
   }, [step]);
 
   useEffect(() => {

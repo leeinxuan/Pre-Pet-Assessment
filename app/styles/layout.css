@@ -94,8 +94,8 @@
   .mobile-progress-nav .station-navigation { max-width: 430px; margin: auto; }
   .mobile-progress-nav .nav-main.current > .nav-main-button { border: 1px solid var(--sand); }
   .mobile-progress-nav .nav-children { margin-left: 27px; }
-  /* ≤ 768px：縮小 summary 尺寸，但保留三欄佈局（階段名稱｜進度點｜箭頭）。 */
-  @media (max-width: 768px) {
+  /* 手機：縮小 summary 尺寸；直式平板尺寸由 tablet-portrait.css 管理。 */
+  @media (max-width: 720px) {
     .mobile-progress-nav:not([open]) { height: 44px; min-height: 44px; max-height: 44px; }
     .mobile-progress-nav summary { min-height: 44px; grid-template-columns: max-content minmax(80px, 1fr) 24px; gap: 6px; padding: 6px 12px; }
     .mobile-progress-copy { max-width: 120px; }

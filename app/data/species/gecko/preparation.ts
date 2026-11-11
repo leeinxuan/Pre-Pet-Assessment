@@ -180,6 +180,7 @@ export const geckoRoomFlow: RoomFlowConfig = {
 export const geckoRoomScene: RoomSceneConfig = {
   backgroundAlt: "守宮生活空間",
   interiorBackgroundAlt: "守宮爬蟲缸內部配置",
+  backgroundStyle: { objectPosition: "right" },
   mobileExteriorBackgroundStyle: { objectFit: "cover", objectPosition: "right center" },
   doorplate: { image: sharedAssets.nameplate, alt: "守宮名字名牌", placement: geckoRoomDoorplatePlacement },
 };

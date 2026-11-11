@@ -404,23 +404,23 @@
   .breed-challenge-options .scenario-option-card p { min-width: 0; overflow-wrap: anywhere; }
 
   /* 互動與完成頁的背景延伸至手機畫面底部，避免外框移除後露出區塊接縫。 */
-  .stage-layout:has(.life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > .activity-intro-page),
+  .stage-layout:has(.life-journey-page[data-mobile-activity-layout="full-bleed"] > .activity-intro-page),
   .stage-layout:has(.life-journey-page > .walking-complete),
-  .stage-layout:has(.life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > :is(.life-activity, .guided-activity, .rabbit-activity)) {
+  .stage-layout:has(.life-journey-page[data-mobile-activity-layout="full-bleed"] > :is(.life-activity, .guided-activity, .rabbit-activity)) {
     grid-template-rows: auto minmax(0, 1fr);
     min-height: 100dvh;
   }
-  .stage-layout:has(.life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > .activity-intro-page) > .stage,
+  .stage-layout:has(.life-journey-page[data-mobile-activity-layout="full-bleed"] > .activity-intro-page) > .stage,
   .stage-layout:has(.life-journey-page > .walking-complete) > .stage,
-  .stage-layout:has(.life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > :is(.life-activity, .guided-activity, .rabbit-activity)) > .stage {
+  .stage-layout:has(.life-journey-page[data-mobile-activity-layout="full-bleed"] > :is(.life-activity, .guided-activity, .rabbit-activity)) > .stage {
     display: flex;
     min-height: 0;
     flex-direction: column;
     background: var(--paper);
   }
   .content-wrap.life-journey-page:has(> .walking-complete),
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]):has(> .activity-intro-page),
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]):has(> :is(.life-activity, .guided-activity, .rabbit-activity)) {
+  .life-journey-page[data-mobile-activity-layout="full-bleed"]:has(> .activity-intro-page),
+  .life-journey-page[data-mobile-activity-layout="full-bleed"]:has(> :is(.life-activity, .guided-activity, .rabbit-activity)) {
     box-sizing: border-box;
     display: flex;
     width: 100%;
@@ -433,14 +433,14 @@
     animation: none;
   }
   /* 犬以外五個物種的日常互動：手機滿版，不使用包住圖文的外層卡片。 */
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]):has(> :is(.activity-intro-page, .walking-complete, .life-activity, .guided-activity, .rabbit-activity)) {
+  .life-journey-page[data-mobile-activity-layout="full-bleed"]:has(> :is(.activity-intro-page, .walking-complete, .life-activity, .guided-activity, .rabbit-activity)) {
     box-sizing: border-box;
     width: 100%;
     max-width: none;
     margin: 0;
     padding: 0;
   }
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > .activity-intro-page {
+  .life-journey-page[data-mobile-activity-layout="full-bleed"] > .activity-intro-page {
     display: block;
     width: 100%;
     min-height: 0;
@@ -450,7 +450,7 @@
     overflow: visible;
     background: var(--paper);
   }
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-card {
+  .life-journey-page[data-mobile-activity-layout="full-bleed"] .activity-intro-page-card {
     display: block;
     width: 100%;
     border: 0;
@@ -459,18 +459,18 @@
     background: transparent;
     box-shadow: none;
   }
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-visual {
+  .life-journey-page[data-mobile-activity-layout="full-bleed"] .activity-intro-page-visual {
     width: 100%;
     min-height: 0;
     aspect-ratio: 4 / 3;
     border: 0;
   }
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-pet {
+  .life-journey-page[data-mobile-activity-layout="full-bleed"] .activity-intro-page-pet {
     bottom: 2%;
     max-height: 94%;
   }
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) .activity-intro-page-content { padding: 28px 24px calc(32px + env(safe-area-inset-bottom)); }
-  .life-journey-page:is([data-species="cat"], [data-species="rabbit"], [data-species="bird"], [data-species="hamster"], [data-species="gecko"]) > :is(.life-activity, .guided-activity, .rabbit-activity) {
+  .life-journey-page[data-mobile-activity-layout="full-bleed"] .activity-intro-page-content { padding: 28px 24px calc(32px + env(safe-area-inset-bottom)); }
+  .life-journey-page[data-mobile-activity-layout="full-bleed"] > :is(.life-activity, .guided-activity, .rabbit-activity) {
     box-sizing: border-box;
     width: 100%;
     max-width: none;

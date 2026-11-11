@@ -2,6 +2,13 @@
 @import "../tokens.css";
 @import "tailwindcss";
 
+/*
+ * RWD 責任範圍：
+ * - ≤ 720px：手機版。
+ * - 721–1100px portrait：直式平板，由 tablet-portrait.css 作最後覆寫。
+ * - 900–1180px landscape：橫式平板，由 tablet-landscape.css 作最後覆寫。
+ * 個別元件可共用「手機 + 直式平板」結構，但不得自行發明重疊斷點。
+ */
 /* The functional styles are progressively separated below; import order preserves existing rendering. */
 @import "./styles/base.css";
 @import "./styles/layout.css";

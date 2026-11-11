@@ -12,7 +12,9 @@
  *    讓面板顏色延伸到螢幕最底（不依賴裝置尺寸）。
  */
 :root {
-  --bottom-bleed: 140px;
+  /* 唯一的 Safari 底部延伸目標值；JS 會讀取此變數，勿在元件中另寫數字。 */
+  --bottom-bleed-target: 140px;
+  --bottom-bleed: var(--bottom-bleed-target);
   --bottom-toolbar-safe: 0px;
 }
 
@@ -64,10 +66,6 @@
   html:has(.room-preparation-page),
   html:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
   html:has(.rabbit-activity-feedback--carry),
-  html:has(.departure-preparation-page),
-  html:has(.room-preparation-page),
-  html:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
-  html:has(.rabbit-activity-feedback--carry),
   body:has(.departure-preparation-page),
   body:has(.room-preparation-page),
   body:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
@@ -83,10 +81,6 @@
   html:has(.walking-activity),
   html:has(.rabbit-activity),
   html:has(.life-journey-page > :is(.walking-complete, .rabbit-grooming-activity)),
-  body:has(.departure-preparation-page),
-  body:has(.room-preparation-page),
-  body:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
-  body:has(.rabbit-activity-feedback--carry),
   body:has(.home-readiness-mobile-flow),
   body:has(.gecko-health-inspection),
   body:has(.hamster-cage-check),

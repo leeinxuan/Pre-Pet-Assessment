@@ -120,6 +120,25 @@ export function ArrivalMealActivity({
   const mealDescription = feeding.interaction === "choice"
     ? interpolatePetName(feeding.intro, petName || "牠")
     : `${petName || feeding.animalName}剛到新家，還有些不安。先幫${petName || "牠"}準備合適的主食與乾淨飲水，讓牠慢慢安心下來。`;
+  const arrivalMealActivityStyle = feeding.interaction === "scene"
+    ? {
+      ...(feeding.scene.desktopSupplyColumnWidth === undefined ? {} : {
+        "--arrival-meal-supply-column-width": `${feeding.scene.desktopSupplyColumnWidth}px`,
+      }),
+      ...(feeding.scene.desktopBackgroundStyle?.objectFit ? {
+        "--arrival-meal-desktop-background-fit": feeding.scene.desktopBackgroundStyle.objectFit,
+      } : {}),
+      ...(feeding.scene.desktopBackgroundStyle?.objectPosition ? {
+        "--arrival-meal-desktop-background-position": feeding.scene.desktopBackgroundStyle.objectPosition,
+      } : {}),
+      ...(feeding.scene.desktopBackgroundStyle?.transform ? {
+        "--arrival-meal-desktop-background-transform": feeding.scene.desktopBackgroundStyle.transform,
+      } : {}),
+      ...(feeding.scene.desktopBackgroundStyle?.transformOrigin ? {
+        "--arrival-meal-desktop-background-origin": feeding.scene.desktopBackgroundStyle.transformOrigin,
+      } : {}),
+    } as CSSProperties
+    : undefined;
   const supplyReady = (key: "food" | "water" | "veggie") => key === "food"
     ? activity.arrivalMealFoodReady
     : key === "water"
@@ -217,7 +236,7 @@ export function ArrivalMealActivity({
     onChange({ arrivalMealFeedbackChoiceId: id });
   }
   return (
-    <section className={`arrival-meal-activity${feeding.interaction === "choice" ? " arrival-meal-activity--choice" : ""}${mobileStarted ? " is-mobile-started" : " is-mobile-intro"}`} data-species={species} aria-label={`為${petName}準備第一餐`}>
+    <section className={`arrival-meal-activity${feeding.interaction === "choice" ? " arrival-meal-activity--choice" : ""}${mobileStarted ? " is-mobile-started" : " is-mobile-intro"}`} data-species={species} style={arrivalMealActivityStyle} aria-label={`為${petName}準備第一餐`}>
       <MobileStageIntro id="arrival-meal-mobile-intro-title" icon={<FeedingIntroIcon />} title={mealTitle} description={mealDescription} actionLabel="開始準備第一餐" onStart={() => setMobileStarted(true)} />
       <div className="arrival-meal-inventory"><div className="arrival-meal-heading">
         <p className="life-stage-label">{lifeStageArrivalLabel}</p>

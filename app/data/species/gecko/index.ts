@@ -10,9 +10,11 @@ import { geckoHomeReadiness } from "./home-readiness";
 import { geckoMasteredCareThemes } from "./mastered-care-themes";
 import { geckoCareReviewAdditionalNotes } from "./care-review-notes";
 import { geckoAcquisition } from "./acquisition";
+import type { SpeciesConfigContract } from "../../shared/species-config-types";
 
 export const geckoConfig = {
   id: "gecko" as const,
+  mobileActivityLayout: "full-bleed" as const,
   selection: geckoSelection,
   preparation: geckoPreparation,
   journey: geckoJourney,
@@ -28,6 +30,6 @@ export const geckoConfig = {
   masteredCareThemes: geckoMasteredCareThemes,
   careReviewAdditionalNotes: geckoCareReviewAdditionalNotes,
   acquisition: geckoAcquisition,
-} as const;
+} as const satisfies SpeciesConfigContract;
 
 export { geckoSelection };

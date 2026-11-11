@@ -73,15 +73,17 @@ test("contains the five-unit journey and current project-owned artwork", async (
   const roomSection = preparation.slice(preparation.indexOf("export function RoomPreparation"), preparation.indexOf("export function CareMemberSetup"));
   assert.match(roomSection, /const activeRoomItems = speciesConfig\.roomItems/);
   assert.match(roomSection, /const requiredRoomItems = activeRoomItems\.filter/);
-  assert.match(roomSection, /Math\.ceil\(activeRoomItems\.length \/ 2\)/);
-  assert.match(roomSection, /activeRoomItems\.slice\(index \* 2, index \* 2 \+ 2\)/);
+  assert.match(roomSection, /Math\.ceil\(activeRoomItems\.length \/ 8\)/);
+  assert.match(roomSection, /activeRoomItems\.slice\(desktopSupplyPage \* 8, \(desktopSupplyPage \+ 1\) \* 8\)/);
+  assert.match(roomSection, /Math\.ceil\(desktopVisibleRoomItems\.length \/ 2\)/);
+  assert.match(roomSection, /desktopVisibleRoomItems\.slice\(index \* 2, index \* 2 \+ 2\)/);
   assert.match(roomSection, /room-supply-row--\$\{row\.length\}/);
   assert.match(preparation, /room-hazard-alert/);
   assert.match(preparation, /hazard\.label\}已收起/);
   assert.match(preparation, /為什麼危險/);
   assert.match(preparation, /建議如何處理/);
   assert.match(roomSection, /room-actions-right[\s\S]*roomCheckMessage[\s\S]*完成房間檢查，準備出發/);
-  assert.doesNotMatch(roomSection, /species\s*===|isDog|isCat|isRabbit|isBird|isHamster/);
+  assert.doesNotMatch(roomSection, /species\s*[!=]==?\s*["']|isDog|isCat|isRabbit|isBird|isHamster/);
   assert.doesNotMatch(roomSection, /draggable|onDragStart|onDragOver|onDrop/);
 
   const roomData = dogPreparation.slice(dogPreparation.indexOf("export const dogRoomItems"), dogPreparation.indexOf("export const dogHazards"));

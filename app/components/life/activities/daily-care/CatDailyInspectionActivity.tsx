@@ -12,7 +12,8 @@ import { logEvent } from "../../../../lib/event-log";
 import { useGameProgressLog } from "../../../../lib/useGameProgressLog";
 
 export function CatDailyInspectionActivity({ activity, petName, selected, onChange, onActivityChange, onContinue }: { activity: { catInspectionIntroStarted: boolean }; petName: string; selected: string[]; onChange: (selected: string[]) => void; onActivityChange: (patch: { catInspectionIntroStarted: boolean }) => void; onContinue: () => void }) {
-  useGameProgressLog("cat", useMemo(() => ({ ...activity, selected }), [activity, selected]));
+  // 貓的進度同時存在 activity.catInspectionSteps 與 selected（內容相同），只追蹤 activity 避免重複記錄
+  useGameProgressLog("cat", useMemo(() => (activity), [activity]));
   const config = catLitterRescueConfig;
   const { assets, copy } = config;
   const render = (value: string) => withPetName(value, petName, "cat");

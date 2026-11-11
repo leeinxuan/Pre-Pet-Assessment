@@ -124,7 +124,8 @@ export function LifeJourney({
   const answer = scenario ? answers[scenario.id] : undefined;
   const activityConfig = getJourneyActivityConfig(species, item.id);
   const activityKey = activityConfig?.activityKey ?? "scenario";
-  const speciesJourney = getSpeciesConfig(species).journey;
+  const speciesConfig = getSpeciesConfig(species);
+  const speciesJourney = speciesConfig.journey;
   const geckoHealthInspectionConfig = "geckoHealthInspection" in speciesJourney ? speciesJourney.geckoHealthInspection : undefined;
   const isActivityWithSubQuestions = activityKey === "daily-behavior" || activityKey === "daily-behavior-single" || activityKey === "breed-challenge";
   const [activityNextSignal, setActivityNextSignal] = useState(0);
@@ -428,7 +429,11 @@ export function LifeJourney({
   };
 
   return (
-    <div className={`content-wrap life-journey-page ${canReplayCurrent ? "is-reviewing" : ""}`} data-species={species}>
+    <div
+      className={`content-wrap life-journey-page ${canReplayCurrent ? "is-reviewing" : ""}`}
+      data-species={species}
+      data-mobile-activity-layout={speciesConfig.mobileActivityLayout}
+    >
       {activityRenderers[activityKey]()}
     </div>
   );

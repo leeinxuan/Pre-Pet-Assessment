@@ -30,6 +30,8 @@ let timer: number | null = null;
 let started = false;
 let pidCache: string | null = null;
 let sessionCache: string | null = null;
+// 最近一次作答的題目代號：回饋事件（答錯說明／完整回饋）沒有自己的題目資訊，由這裡補上
+let lastScenarioId = "";
 
 function isLocal() {
   const host = location.hostname;
@@ -77,18 +79,21 @@ export function setEventContext(next: Partial<typeof context>) {
   Object.assign(context, next);
 }
 
-export function logEvent(event: string, props?: Record<string, unknown>) {
+// override：離開事件要帶「離開的那一頁」的階段，不能用已經切到下一階段的 context
+export function logEvent(event: string, props?: Record<string, unknown>, override?: { stage?: string; page?: string }) {
   if (typeof window === "undefined") return;
   const pid = readPid();
   if (!pid) return;
+  if (event === "mcq_attempt" && typeof props?.scenarioId === "string") lastScenarioId = props.scenarioId;
+  if ((event === "mcq_error_feedback" || event === "mcq_full_feedback") && !props) props = { scenarioId: lastScenarioId };
   const row: EventRow = {
     pid,
     species: context.species,
     device: deviceType(),
     session: readSession(),
     event,
-    stage: context.stage,
-    page: context.page || location.pathname,
+    stage: override?.stage ?? context.stage,
+    page: override?.page ?? (context.page || location.pathname),
     ts: Date.now(),
     props,
   };

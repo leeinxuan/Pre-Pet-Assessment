@@ -11,9 +11,11 @@ import { dogHomeReadiness } from "./home-readiness";
 import { dogMasteredCareThemes } from "./mastered-care-themes";
 import { dogCareReviewAdditionalNotes } from "./care-review-notes";
 import { dogAcquisition } from "./acquisition";
+import type { SpeciesConfigContract } from "../../shared/species-config-types";
 
 export const dogConfig = {
   id: "dog" as const,
+  mobileActivityLayout: "standard" as const,
   selection: dogSelection,
   preparation: dogPreparation,
   journey: dogJourney,
@@ -30,6 +32,6 @@ export const dogConfig = {
   masteredCareThemes: dogMasteredCareThemes,
   careReviewAdditionalNotes: dogCareReviewAdditionalNotes,
   acquisition: dogAcquisition,
-} as const;
+} as const satisfies SpeciesConfigContract;
 
 export { dogAssets, dogJourney, dogPreparation, dogReport, dogSelection, dogLifeScenarios, getDogBreedChallengeScenarios, dogFeeding };

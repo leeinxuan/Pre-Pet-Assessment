@@ -105,7 +105,12 @@ export default function BottomBleedColor() {
       const toolbarHeight = needsBleed
         ? Math.max(0, Math.round(measureViewportHeight("lvh") - measureViewportHeight("dvh")))
         : 0;
-      const bleedHeight = needsBleed ? 140 : 0;
+      const configuredBleed = Number.parseFloat(
+        getComputedStyle(root).getPropertyValue("--bottom-bleed-target"),
+      );
+      const bleedHeight = needsBleed && Number.isFinite(configuredBleed)
+        ? Math.max(0, configuredBleed)
+        : 0;
       root.style.setProperty("--bottom-bleed", `${bleedHeight}px`);
       root.style.setProperty("--bottom-toolbar-safe", `${toolbarHeight}px`);
     };

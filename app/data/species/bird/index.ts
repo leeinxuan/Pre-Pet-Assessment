@@ -12,9 +12,11 @@ import { birdMasteredCareThemes } from "./mastered-care-themes";
 import { birdCareReviewAdditionalNotes } from "./care-review-notes";
 import { birdAcquisition } from "./acquisition";
 import { birdActivityScenarios, birdCageInspectionActivityData, birdCageInspectionConfig } from "./activities";
+import type { SpeciesConfigContract } from "../../shared/species-config-types";
 
 export const birdConfig = {
   id: "bird" as const,
+  mobileActivityLayout: "full-bleed" as const,
   selection: birdSelection,
   preparation: birdPreparation,
   journey: birdJourney,
@@ -31,6 +33,6 @@ export const birdConfig = {
   masteredCareThemes: birdMasteredCareThemes,
   careReviewAdditionalNotes: birdCareReviewAdditionalNotes,
   acquisition: birdAcquisition,
-} as const;
+} as const satisfies SpeciesConfigContract;
 
 export { birdAssets, birdJourney, birdPreparation, birdReport, birdLifeScenarios, getBirdChallengeScenarios, birdFeeding, birdCageInspectionActivityData, birdCageInspectionConfig, birdSelection };

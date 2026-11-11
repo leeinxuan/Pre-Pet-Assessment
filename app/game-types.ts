@@ -85,6 +85,10 @@ export type ArrivalMealSupply = {
 export type ArrivalMealSceneAssets = {
   desktopBackground: string;
   mobileBackground: string;
+  /** 桌機版場景背景的裁切與縮放；物種差異由 feeding 資料維護。 */
+  desktopBackgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string; transform?: string; transformOrigin?: string };
+  /** 桌機版用品欄寬度；省略時使用共用版型預設值。 */
+  desktopSupplyColumnWidth?: number;
   /** 手機版場景背景的裁切設定；省略時沿用共用樣式。 */
   mobileBackgroundStyle?: { objectFit?: "contain" | "cover"; objectPosition?: string; transform?: string; transformOrigin?: string };
   pet: { waiting: string; ready: string };
@@ -786,6 +790,8 @@ export type TrunkItem = {
   /** 物品欄圖片的個別縮放倍率；各物種可獨立調整。 */
   visualScale?: number;
   description: string;
+  /** 說明文字配圖：與房間用品共用相同的說明面板呈現方式。 */
+  descriptionImage?: string;
   preparedLabel: "已攜帶" | "已準備";
   expenseIds?: string[];
   /** 已在前一個準備階段計入、此處僅重複使用的穩定費用 id；畫面顯示「已於房間準備計入」。 */

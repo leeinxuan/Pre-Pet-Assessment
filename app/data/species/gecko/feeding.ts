@@ -53,6 +53,7 @@ export const geckoFeeding: FeedingConfig = {
   ],
   scene: {
     desktopBackground: geckoAssets.room.terrariumSubstrate,
+    desktopBackgroundStyle: { objectPosition: "left center", transform: "scale(1.28)", transformOrigin: "left center" },
     // 手機沿用桌機橫幅背景，以 cover 保留原始比例、不壓縮變形。
     mobileBackground: geckoAssets.room.terrariumSubstrate,
     mobileBackgroundStyle: { objectFit: "cover", objectPosition: "center" },
