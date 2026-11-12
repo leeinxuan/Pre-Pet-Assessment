@@ -79,6 +79,25 @@
     overscroll-behavior: none;
   }
 
+  /*
+   * mobile-fixed-activities.css 原本把這些頁面的 html/body 固定為 100% 高，
+   * 因此即使 stage-layout 已加上 bottom bleed，超出動態視窗的內容仍會被
+   * 根層裁掉，Safari 浮動工具列後方只剩網站底色。佈置房間沒有固定根層
+   * 高度，所以能讓實際內容一路畫到工具列後方；這裡統一採用相同方式。
+   * 整頁拖動仍由 --page-lock 的 JS 控制，內部物品欄／選項清單照常捲動。
+   */
+  html:has(.departure-preparation-page),
+  body:has(.departure-preparation-page),
+  html:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
+  body:has(.life-journey-page > :is(.correct-feedback-layout, .video-scenario-activity, .daily-behavior-activity, .busy-care-activity, .breed-challenge-activity, .arrival-meal-activity)),
+  html:has(.rabbit-activity-feedback--carry),
+  body:has(.rabbit-activity-feedback--carry) {
+    height: auto !important;
+    min-height: calc(100dvh + var(--bottom-bleed)) !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+  }
+
   html:has(.home-readiness-mobile-flow),
   html:has(.gecko-health-inspection),
   html:has(.hamster-cage-check),
