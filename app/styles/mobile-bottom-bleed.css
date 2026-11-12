@@ -134,19 +134,62 @@
   .stage-layout:has(.life-journey-page > :is(.walking-complete, .walking-activity.is-walking-game, .walking-activity.is-walking-law, .walking-activity.is-walking-correct, .walking-activity.is-walking-prepared, .gecko-health-inspection, .rabbit-grooming-activity)) {
     height: calc(100dvh + var(--bottom-bleed)) !important;
   }
+
+  /*
+   * 與已正常運作的佈置房間採相同分工：
+   * - 外層 stage-layout 多畫 bleed，負責把頁面底色延伸到 Safari 工具列後方。
+   * - 真正的互動版面維持原本可視高度，不跟著外層一起增高。
+   *
+   * 若內外層同時增加 bleed，清單的底部留白會被多出的版面高度吃掉，短清單就不會產生
+   * 可捲距離；這正是出發準備、第一餐、選項與回饋頁和佈置房間行為不同的原因。
+   */
+  .stage-layout .departure-preparation-page.is-mobile-started,
+  .stage-layout .life-journey-page > :is(
+    .correct-feedback-layout,
+    .video-scenario-activity,
+    .daily-behavior-activity,
+    .busy-care-activity,
+    .breed-challenge-activity,
+    .arrival-meal-activity.is-mobile-started
+  ) {
+    height: calc(100% - var(--bottom-bleed)) !important;
+    max-height: calc(100% - var(--bottom-bleed));
+    min-height: 0;
+  }
+
   .stage-layout .room-mobile-inventory,
-  .stage-layout .departure-supply-rows,
-  .stage-layout .arrival-meal-inventory,
-  .stage-layout .video-scenario-choice-list,
-  .stage-layout .busy-care-choice-list,
-  .stage-layout .daily-behavior-choices .choice-grid,
-  .stage-layout .breed-challenge-options > div:not(.mobile-choice-context),
   .stage-layout .video-scenario-retry,
   .stage-layout .daily-behavior-retry,
   .stage-layout .busy-care-members,
   .stage-layout .busy-care-feedback,
   .stage-layout .breed-challenge-retry {
     padding-bottom: calc(24px + var(--bottom-scroll-safe)) !important;
+  }
+
+  /*
+   * 這些是真正負責捲動的清單。底部安全距離用內容中的尾端項目建立，而不是只加在
+   * 同時被加高的容器 padding 上；Safari 因此一定會把它計入 scrollHeight。
+   */
+  .stage-layout .departure-supply-rows,
+  .stage-layout .arrival-meal-inventory,
+  .stage-layout .video-scenario-choice-list,
+  .stage-layout .busy-care-choice-list,
+  .stage-layout .daily-behavior-choices .choice-grid,
+  .stage-layout .breed-challenge-options > div:not(.mobile-choice-context) {
+    padding-bottom: 24px !important;
+  }
+  .stage-layout .departure-supply-rows::after,
+  .stage-layout .arrival-meal-supplies::after,
+  .stage-layout .video-scenario-choice-list::after,
+  .stage-layout .busy-care-choice-list::after,
+  .stage-layout .daily-behavior-choices .choice-grid::after,
+  .stage-layout .breed-challenge-options > div:not(.mobile-choice-context)::after {
+    content: "";
+    display: block;
+    grid-column: 1 / -1;
+    width: 100%;
+    height: max(60px, var(--bottom-scroll-safe));
+    pointer-events: none;
   }
   /*
    * 「做得很好」回饋頁：把「視覺延伸」與「捲動視窗」分開。
@@ -157,10 +200,12 @@
    * - 面板不交給 BottomBleedColor 的 .bleed-pane 量測（它會依量測時機改寫 padding，造成部分頁面沒有滑動距離）。
    */
   .stage-layout .correct-feedback-layout {
+    height: calc(100% - var(--bottom-bleed)) !important;
+    max-height: calc(100% - var(--bottom-bleed));
     background: #e8f3e6;
   }
   .stage-layout .correct-feedback-copy {
-    height: calc(100% - var(--bottom-bleed));
+    height: 100%;
     /* 尾端安全距離由內容層的 ::after 提供，避免 padding 被其他版型規則覆蓋。 */
     padding-bottom: 0 !important;
     overflow-y: auto !important;
@@ -206,6 +251,16 @@
     padding-bottom: calc(24px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px))) !important;
   }
 
+  /* 上方清單已有實體尾端項目，不再讓動態 bleed-pane 重複增加 padding。 */
+  .stage-layout .departure-supply-rows.bleed-pane,
+  .stage-layout .arrival-meal-inventory.bleed-pane,
+  .stage-layout .video-scenario-choice-list.bleed-pane,
+  .stage-layout .busy-care-choice-list.bleed-pane,
+  .stage-layout .daily-behavior-choices .choice-grid.bleed-pane,
+  .stage-layout .breed-challenge-options > div:not(.mobile-choice-context).bleed-pane {
+    padding-bottom: 24px !important;
+  }
+
   /* position: fixed 已以 Safari 可視區底緣定位，不再重複加一次工具列高度。 */
   .stage-layout .room-mobile-footer,
   .stage-layout .departure-actions,
@@ -236,12 +291,14 @@
   }
 
   /* 固定操作列會覆蓋清單底部；留下操作列高度，讓最後一排仍能完整捲到其上方。 */
-  .stage-layout .room-preparation-mobile.is-complete .room-mobile-inventory,
-  .stage-layout .departure-preparation-page:has(> .departure-actions.is-complete) .departure-supply-rows {
+  .stage-layout .room-preparation-mobile.is-complete .room-mobile-inventory {
     padding-bottom: calc(76px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px))) !important;
   }
-  .stage-layout .arrival-meal-activity:has(> .arrival-meal-footer) .arrival-meal-inventory {
-    padding-bottom: calc(116px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px))) !important;
+  .stage-layout .departure-preparation-page:has(> .departure-actions.is-complete) .departure-supply-rows::after {
+    height: calc(76px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px)));
+  }
+  .stage-layout .arrival-meal-activity:has(> .arrival-meal-footer) .arrival-meal-supplies::after {
+    height: calc(116px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px)));
   }
 
   /* 犬牽繩結果與出門確認：內容容器本身延伸，避免 Safari 工具列蓋住最末段。 */
