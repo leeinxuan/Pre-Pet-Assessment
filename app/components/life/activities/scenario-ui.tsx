@@ -169,7 +169,8 @@ const MOBILE_FEEDBACK_QUERY = COMPACT_PORTRAIT_LAYOUT_QUERY;
 
 /**
  * 手機版回饋面板：量測面板內容區的實際像素高度，寫入 --feedback-pane-content-height。
- * 內容層以此值 + 60px 作為最小高度，短內容也一定有真實的滑動距離；
+ * 內容層至少維持此高度，尾端安全距離再由 CSS 的 ::after 提供，
+ * 讓短內容也一定有真實的滑動距離；
  * 不依賴 iOS Safari 在 grid → height:100% → flex 子項下不穩定的百分比 min-height。
  * 只在數值改變時寫入，避免與其他觀察 style 的 MutationObserver 互相觸發。
  */

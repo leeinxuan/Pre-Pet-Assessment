@@ -112,7 +112,9 @@
         "timePassesAgingMobile": "/assets/gecko/pet-journey/time-passes-aging-mobile.mp4"
       },
       "preparation": {
+        "coverBag": "/assets/car/gecko-cover-bag.webp",
         "heatPack": "/assets/car/hand-warmer-or-heat-pack.webp",
+        "softPadding": "/assets/car/gecko-soft-padding.webp",
         "transportBox": "/assets/car/gecko-transport-box.webp",
         "trunkBackground": "/assets/car/car-trunk.webp"
       },
@@ -127,6 +129,7 @@
         "essentialOilDiffuser": "/assets/gecko/room/essential-oil-diffuser.webp",
         "feederInsects": "/assets/gecko/room/first-feeder-insects.webp",
         "feederInsectsFront": "/assets/gecko/room/first-feeder-insects-front.webp",
+        "feedingTongs": "/assets/gecko/room/feeding-tongs.webp",
         "heatMat": "/assets/gecko/room/heat-mat.webp",
         "initial": "/assets/gecko/room/gecko-room.webp",
         "insecticideSpray": "/assets/gecko/room/insecticide-spray.webp",
@@ -354,23 +357,23 @@
             "bottom": 18,
             "left": 22,
             "maxHeight": 30,
-            "width": 17
+            "width": 18
           },
           "pet": {
-            "bottom": 12,
-            "left": 40,
+            "bottom": 10,
+            "left": 45,
             "maxHeight": 72,
-            "width": 31
+            "width": 28
           },
           "veggie": {
-            "bottom": 10,
+            "bottom": 5,
             "left": 30,
             "maxHeight": 25,
             "width": 14
           },
           "water": {
-            "bottom": 10,
-            "left": 10,
+            "bottom": 5,
+            "left": 15,
             "maxHeight": 25,
             "width": 14
           }
@@ -448,7 +451,7 @@
           }
         }
       },
-      "completionMessage": "第一餐準備好了！你準備了沾好鈣粉的活昆蟲，還有乾淨的飲水。守宮不需要每天餵食。成體每 2–3 天餵一次就夠了，每天餵反而容易造成肥胖與脂肪肝。尾巴粗細是判斷體況最直接的指標。",
+      "completionMessage": "第一餐準備好了！你準備了沾好鈣粉的活昆蟲，還有乾淨的飲水。守宮不需要每天餵食，成體每 3–7 天餵一次就夠了，每天餵反而容易造成肥胖與脂肪肝。尾巴粗細是判斷體況最直接的指標。",
       "interaction": "scene",
       "recurringExpenseIds": [
         "gecko-food-monthly"
@@ -460,6 +463,11 @@
       ],
       "scene": {
         "desktopBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
+        "desktopBackgroundStyle": {
+          "objectPosition": "left center",
+          "transform": "scale(1.28)",
+          "transformOrigin": "left center"
+        },
         "food": {
           "alt": "活體餌料昆蟲",
           "ready": "/assets/gecko/feeding/gecko-live-insect.webp",
@@ -493,14 +501,14 @@
       "supplies": [
         {
           "alt": "活體餌料昆蟲",
-          "description": "守宮為肉食性，主食為活昆蟲（蟋蟀、杜比亞蟑螂或麵包蟲）。選擇大小約為守宮兩眼間距的昆蟲，避免過大造成消化負擔。",
+          "description": "守宮為肉食性，主食為活昆蟲（蟋蟀、杜比亞蟑螂或櫻桃紅蟑）。選擇大小約為守宮兩眼間距的昆蟲，避免過大造成消化負擔。",
           "image": "/assets/gecko/feeding/gecko-live-insect.webp",
           "label": "活體餌料昆蟲",
           "stateKey": "food"
         },
         {
           "alt": "鈣粉與綜合維他命粉",
-          "description": "每次餵食前以鈣粉沾裹昆蟲，每週 1–2 次改用含 D3 鈣粉或綜合維他命粉輪替，維持鈣磷平衡。",
+          "description": "每週 1–2 次餵食前以鈣粉沾裹昆蟲；每隔 1–2 週換用綜合維他命粉輪替，維持營養均衡。",
           "image": "/assets/gecko/room/calcium-and-vitamin-supplement.webp",
           "label": "鈣粉",
           "stateKey": "veggie"
@@ -527,7 +535,7 @@
           "image": "/assets/gecko/feeding/human-food.webp",
           "label": "人類食物（剩飯、麵包等）",
           "presentation": "warning",
-          "text": "人類食物中的調味料、油脂、糖分對守宮有毒，絕對不可餵食任何人類食品。",
+          "text": "人類食物中的調味料、油脂、糖分會對守宮造成嚴重的腸胃與代謝負擔。",
           "title": "人類食物有危險"
         },
         {
@@ -602,7 +610,7 @@
               "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
               "knowledgeContent": [
                 {
-                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+                  "text": "守宮對新環境的適應需要時間，**通常需要3天左右**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
                   "type": "paragraph"
                 },
                 {
@@ -650,7 +658,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-temperature",
                 "result": "correct",
-                "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
+                "text": "確認溫度計讀數，確保熱區與冷區溫度在正常範圍內"
               },
               {
                 "effects": {
@@ -707,7 +715,7 @@
             "correctSummary": [
               "守宮在適應期、蛻皮前、繁殖季或溫度不足時會正常拒食，應先排查這四個原因，超過14天仍未進食才需就醫，不可強迫餵食。"
             ],
-            "description": "你每天傍晚放昆蟲進缸，但{petName}躲在暖側躲避屋完全不出來，昆蟲在缸裡爬了一晚最後死掉，牠一口都沒吃。這已經是第三天了。",
+            "description": "你每天傍晚用長夾將昆蟲放入缸中，但{petName}躲在熱區躲避屋完全不出來，牠一口都沒吃。這已經是第七天了。",
             "id": "gecko-refuse-food",
             "multipleChoice": true,
             "questionText": "你應該怎麼做？（複選）",
@@ -719,7 +727,7 @@
             "stage": "日常照護",
             "stageId": "daily",
             "timeLabel": "日常照護",
-            "title": "{petName} 已經三天沒吃東西了",
+            "title": "{petName} 已經七天沒吃東西了",
             "topic": "拒食觀察",
             "wrongOptionIds": [
               "force-feed",
@@ -782,7 +790,7 @@
               "encouragement": "你即時注意到溫度問題並採取了正確的行動，{petName}今晚能暖暖的了！",
               "knowledgeContent": [
                 {
-                  "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**暖側底部應維持 28–32°C，涼側維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
+                  "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**熱區底部應維持 28–32°C，冷區維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
                   "type": "paragraph"
                 },
                 {
@@ -794,9 +802,9 @@
               "title": "做得很好！"
             },
             "correctSummary": [
-              "守宮缸暖側應維持28–32°C、涼側22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
+              "守宮缸熱區應維持28–32°C、冷區22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
             ],
-            "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現暖側底部才 24°C，涼側只有 19°C，都比建議溫度低不少。{petName}縮在暖側躲避屋裡完全沒動靜。",
+            "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現熱區底部才 24°C，冷區只有 19°C，都比建議溫度低不少。{petName}縮在熱區躲避屋裡完全沒動靜。",
             "id": "gecko-temperature-check",
             "multipleChoice": true,
             "questionText": "你應該怎麼做？（複選）",
@@ -910,7 +918,7 @@
               {
                 "correctAnswer": "yes",
                 "id": "daily-care",
-                "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及了天是否為餵食日了嗎？",
+                "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及今天是否為餵食日了嗎？",
                 "reviewHint": "先確認溫度、餵食日、排泄清理與健康觀察的交接內容。"
               },
               {
@@ -934,12 +942,12 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
               ],
               "careTimeItems": [
                 {
                   "detail": "約 1～2 分鐘",
-                  "title": "溫度確認（暖側 / 涼側）"
+                  "title": "溫度確認（熱區 / 冷區）"
                 },
                 {
                   "detail": "約 2～3 分鐘",
@@ -955,7 +963,7 @@
                 },
                 {
                   "detail": "約 10～15 分鐘（餵食日）",
-                  "title": "餵食（每 2–3 天一次，昆蟲沾鈣粉）"
+                  "title": "餵食（每 3–7 天一次）"
                 }
               ],
               "careTimeTitle": "每日照護時間",
@@ -1128,7 +1136,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每次餵食確實沾鈣粉是預防關鍵。",
+                  "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每週 1–2 次餵食前確實沾鈣粉是預防關鍵。",
                   "type": "paragraph"
                 },
                 {
@@ -1140,7 +1148,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成無精卵，卵無法排出時需就醫。",
+                  "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成未受精卵，卵無法排出時需就醫。",
                   "type": "paragraph"
                 },
                 {
@@ -1335,7 +1343,7 @@
               "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
               "knowledgeContent": [
                 {
-                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+                  "text": "守宮對新環境的適應需要時間，**通常需要3天左右**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
                   "type": "paragraph"
                 },
                 {
@@ -1383,7 +1391,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-temperature",
                 "result": "correct",
-                "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
+                "text": "確認溫度計讀數，確保熱區與冷區溫度在正常範圍內"
               },
               {
                 "effects": {
@@ -1440,7 +1448,7 @@
             "correctSummary": [
               "守宮在適應期、蛻皮前、繁殖季或溫度不足時會正常拒食，應先排查這四個原因，超過14天仍未進食才需就醫，不可強迫餵食。"
             ],
-            "description": "你每天傍晚放昆蟲進缸，但{petName}躲在暖側躲避屋完全不出來，昆蟲在缸裡爬了一晚最後死掉，牠一口都沒吃。這已經是第三天了。",
+            "description": "你每天傍晚用長夾將昆蟲放入缸中，但{petName}躲在熱區躲避屋完全不出來，牠一口都沒吃。這已經是第七天了。",
             "id": "gecko-refuse-food",
             "multipleChoice": true,
             "questionText": "你應該怎麼做？（複選）",
@@ -1452,7 +1460,7 @@
             "stage": "日常照護",
             "stageId": "daily",
             "timeLabel": "日常照護",
-            "title": "{petName} 已經三天沒吃東西了",
+            "title": "{petName} 已經七天沒吃東西了",
             "topic": "拒食觀察",
             "wrongOptionIds": [
               "force-feed",
@@ -1515,7 +1523,7 @@
               "encouragement": "你即時注意到溫度問題並採取了正確的行動，{petName}今晚能暖暖的了！",
               "knowledgeContent": [
                 {
-                  "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**暖側底部應維持 28–32°C，涼側維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
+                  "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**熱區底部應維持 28–32°C，冷區維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
                   "type": "paragraph"
                 },
                 {
@@ -1527,9 +1535,9 @@
               "title": "做得很好！"
             },
             "correctSummary": [
-              "守宮缸暖側應維持28–32°C、涼側22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
+              "守宮缸熱區應維持28–32°C、冷區22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
             ],
-            "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現暖側底部才 24°C，涼側只有 19°C，都比建議溫度低不少。{petName}縮在暖側躲避屋裡完全沒動靜。",
+            "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現熱區底部才 24°C，冷區只有 19°C，都比建議溫度低不少。{petName}縮在熱區躲避屋裡完全沒動靜。",
             "id": "gecko-temperature-check",
             "multipleChoice": true,
             "questionText": "你應該怎麼做？（複選）",
@@ -1643,7 +1651,7 @@
               {
                 "correctAnswer": "yes",
                 "id": "daily-care",
-                "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及了天是否為餵食日了嗎？",
+                "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及今天是否為餵食日了嗎？",
                 "reviewHint": "先確認溫度、餵食日、排泄清理與健康觀察的交接內容。"
               },
               {
@@ -1667,12 +1675,12 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
               ],
               "careTimeItems": [
                 {
                   "detail": "約 1～2 分鐘",
-                  "title": "溫度確認（暖側 / 涼側）"
+                  "title": "溫度確認（熱區 / 冷區）"
                 },
                 {
                   "detail": "約 2～3 分鐘",
@@ -1688,7 +1696,7 @@
                 },
                 {
                   "detail": "約 10～15 分鐘（餵食日）",
-                  "title": "餵食（每 2–3 天一次，昆蟲沾鈣粉）"
+                  "title": "餵食（每 3–7 天一次）"
                 }
               ],
               "careTimeTitle": "每日照護時間",
@@ -1861,7 +1869,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每次餵食確實沾鈣粉是預防關鍵。",
+                  "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每週 1–2 次餵食前確實沾鈣粉是預防關鍵。",
                   "type": "paragraph"
                 },
                 {
@@ -1873,7 +1881,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成無精卵，卵無法排出時需就醫。",
+                  "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成未受精卵，卵無法排出時需就醫。",
                   "type": "paragraph"
                 },
                 {
@@ -2072,7 +2080,7 @@
               "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
               "knowledgeContent": [
                 {
-                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+                  "text": "守宮對新環境的適應需要時間，**通常需要3天左右**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
                   "type": "paragraph"
                 },
                 {
@@ -2120,7 +2128,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-temperature",
                 "result": "correct",
-                "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
+                "text": "確認溫度計讀數，確保熱區與冷區溫度在正常範圍內"
               },
               {
                 "effects": {
@@ -2177,7 +2185,7 @@
             "correctSummary": [
               "守宮在適應期、蛻皮前、繁殖季或溫度不足時會正常拒食，應先排查這四個原因，超過14天仍未進食才需就醫，不可強迫餵食。"
             ],
-            "description": "你每天傍晚放昆蟲進缸，但{petName}躲在暖側躲避屋完全不出來，昆蟲在缸裡爬了一晚最後死掉，牠一口都沒吃。這已經是第三天了。",
+            "description": "你每天傍晚用長夾將昆蟲放入缸中，但{petName}躲在熱區躲避屋完全不出來，牠一口都沒吃。這已經是第七天了。",
             "id": "gecko-refuse-food",
             "multipleChoice": true,
             "questionText": "你應該怎麼做？（複選）",
@@ -2189,7 +2197,7 @@
             "stage": "日常照護",
             "stageId": "daily",
             "timeLabel": "日常照護",
-            "title": "{petName} 已經三天沒吃東西了",
+            "title": "{petName} 已經七天沒吃東西了",
             "topic": "拒食觀察",
             "wrongOptionIds": [
               "force-feed",
@@ -2252,7 +2260,7 @@
               "encouragement": "你即時注意到溫度問題並採取了正確的行動，{petName}今晚能暖暖的了！",
               "knowledgeContent": [
                 {
-                  "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**暖側底部應維持 28–32°C，涼側維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
+                  "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**熱區底部應維持 28–32°C，冷區維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
                   "type": "paragraph"
                 },
                 {
@@ -2264,9 +2272,9 @@
               "title": "做得很好！"
             },
             "correctSummary": [
-              "守宮缸暖側應維持28–32°C、涼側22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
+              "守宮缸熱區應維持28–32°C、冷區22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
             ],
-            "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現暖側底部才 24°C，涼側只有 19°C，都比建議溫度低不少。{petName}縮在暖側躲避屋裡完全沒動靜。",
+            "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現熱區底部才 24°C，冷區只有 19°C，都比建議溫度低不少。{petName}縮在熱區躲避屋裡完全沒動靜。",
             "id": "gecko-temperature-check",
             "multipleChoice": true,
             "questionText": "你應該怎麼做？（複選）",
@@ -2380,7 +2388,7 @@
               {
                 "correctAnswer": "yes",
                 "id": "daily-care",
-                "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及了天是否為餵食日了嗎？",
+                "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及今天是否為餵食日了嗎？",
                 "reviewHint": "先確認溫度、餵食日、排泄清理與健康觀察的交接內容。"
               },
               {
@@ -2404,12 +2412,12 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
               ],
               "careTimeItems": [
                 {
                   "detail": "約 1～2 分鐘",
-                  "title": "溫度確認（暖側 / 涼側）"
+                  "title": "溫度確認（熱區 / 冷區）"
                 },
                 {
                   "detail": "約 2～3 分鐘",
@@ -2425,7 +2433,7 @@
                 },
                 {
                   "detail": "約 10～15 分鐘（餵食日）",
-                  "title": "餵食（每 2–3 天一次，昆蟲沾鈣粉）"
+                  "title": "餵食（每 3–7 天一次）"
                 }
               ],
               "careTimeTitle": "每日照護時間",
@@ -2598,7 +2606,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每次餵食確實沾鈣粉是預防關鍵。",
+                  "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每週 1–2 次餵食前確實沾鈣粉是預防關鍵。",
                   "type": "paragraph"
                 },
                 {
@@ -2610,7 +2618,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成無精卵，卵無法排出時需就醫。",
+                  "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成未受精卵，卵無法排出時需就醫。",
                   "type": "paragraph"
                 },
                 {
@@ -2805,7 +2813,7 @@
               "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
               "knowledgeContent": [
                 {
-                  "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+                  "text": "守宮對新環境的適應需要時間，**通常需要3天左右**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
                   "type": "paragraph"
                 },
                 {
@@ -2853,7 +2861,7 @@
                 "feedbackTitle": "做得很好！",
                 "id": "check-temperature",
                 "result": "correct",
-                "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
+                "text": "確認溫度計讀數，確保熱區與冷區溫度在正常範圍內"
               },
               {
                 "effects": {
@@ -2910,7 +2918,7 @@
             "correctSummary": [
               "守宮在適應期、蛻皮前、繁殖季或溫度不足時會正常拒食，應先排查這四個原因，超過14天仍未進食才需就醫，不可強迫餵食。"
             ],
-            "description": "你每天傍晚放昆蟲進缸，但{petName}躲在暖側躲避屋完全不出來，昆蟲在缸裡爬了一晚最後死掉，牠一口都沒吃。這已經是第三天了。",
+            "description": "你每天傍晚用長夾將昆蟲放入缸中，但{petName}躲在熱區躲避屋完全不出來，牠一口都沒吃。這已經是第七天了。",
             "id": "gecko-refuse-food",
             "multipleChoice": true,
             "questionText": "你應該怎麼做？（複選）",
@@ -2922,7 +2930,7 @@
             "stage": "日常照護",
             "stageId": "daily",
             "timeLabel": "日常照護",
-            "title": "{petName} 已經三天沒吃東西了",
+            "title": "{petName} 已經七天沒吃東西了",
             "topic": "拒食觀察",
             "wrongOptionIds": [
               "force-feed",
@@ -2985,7 +2993,7 @@
               "encouragement": "你即時注意到溫度問題並採取了正確的行動，{petName}今晚能暖暖的了！",
               "knowledgeContent": [
                 {
-                  "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**暖側底部應維持 28–32°C，涼側維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
+                  "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**熱區底部應維持 28–32°C，冷區維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
                   "type": "paragraph"
                 },
                 {
@@ -2997,9 +3005,9 @@
               "title": "做得很好！"
             },
             "correctSummary": [
-              "守宮缸暖側應維持28–32°C、涼側22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
+              "守宮缸熱區應維持28–32°C、冷區22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
             ],
-            "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現暖側底部才 24°C，涼側只有 19°C，都比建議溫度低不少。{petName}縮在暖側躲避屋裡完全沒動靜。",
+            "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現熱區底部才 24°C，冷區只有 19°C，都比建議溫度低不少。{petName}縮在熱區躲避屋裡完全沒動靜。",
             "id": "gecko-temperature-check",
             "multipleChoice": true,
             "questionText": "你應該怎麼做？（複選）",
@@ -3113,7 +3121,7 @@
               {
                 "correctAnswer": "yes",
                 "id": "daily-care",
-                "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及了天是否為餵食日了嗎？",
+                "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及今天是否為餵食日了嗎？",
                 "reviewHint": "先確認溫度、餵食日、排泄清理與健康觀察的交接內容。"
               },
               {
@@ -3137,12 +3145,12 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
               ],
               "careTimeItems": [
                 {
                   "detail": "約 1～2 分鐘",
-                  "title": "溫度確認（暖側 / 涼側）"
+                  "title": "溫度確認（熱區 / 冷區）"
                 },
                 {
                   "detail": "約 2～3 分鐘",
@@ -3158,7 +3166,7 @@
                 },
                 {
                   "detail": "約 10～15 分鐘（餵食日）",
-                  "title": "餵食（每 2–3 天一次，昆蟲沾鈣粉）"
+                  "title": "餵食（每 3–7 天一次）"
                 }
               ],
               "careTimeTitle": "每日照護時間",
@@ -3331,7 +3339,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每次餵食確實沾鈣粉是預防關鍵。",
+                  "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每週 1–2 次餵食前確實沾鈣粉是預防關鍵。",
                   "type": "paragraph"
                 },
                 {
@@ -3343,7 +3351,7 @@
                   "type": "paragraph"
                 },
                 {
-                  "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成無精卵，卵無法排出時需就醫。",
+                  "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成未受精卵，卵無法排出時需就醫。",
                   "type": "paragraph"
                 },
                 {
@@ -3501,8 +3509,8 @@
         }
       },
       {
-        "danger": "精油揮發物對爬蟲類呼吸道有刺激性，長期暴露可能導致呼吸異常。",
-        "handling": "使用時請關閉爬蟲缸所在空間，保持通風。",
+        "danger": "精油揮發物對爬蟲類呼吸道有刺激性，長期暴露易影響呼吸道健康。",
+        "handling": "使用精油時，請移至爬蟲缸所在空間以外，避免揮發物累積。",
         "icon": "⚠",
         "id": "essential-oil-diffuser",
         "image": "/assets/gecko/room/essential-oil-diffuser.webp",
@@ -3517,25 +3525,6 @@
           "width": 12,
           "x": 45,
           "y": 56
-        }
-      },
-      {
-        "danger": "守宮覓食時會誤食鬆散底材，細沙積在腸道可能造成腸阻塞，嚴重時致命。",
-        "handling": "請替換為安全底材（椰子纖維、紙巾或磁磚）。",
-        "icon": "⚠",
-        "id": "loose-sand-substrate",
-        "image": "/assets/gecko/room/loose-sand-substrate.webp",
-        "label": "細沙/爬蟲沙",
-        "mobilePlacement": {
-          "width": 22,
-          "x": 40,
-          "y": 76
-        },
-        "placement": {
-          "layer": 4,
-          "width": 16,
-          "x": 52,
-          "y": 75
         }
       },
       {
@@ -3587,7 +3576,7 @@
                 },
                 {
                   "emphasis": true,
-                  "text": "爬蟲缸器材聲音（加熱片運作聲）、活體昆蟲飼料、夜行性作息"
+                  "text": "設備（燈具光線、加熱設備讓空間溫度提升）、活體昆蟲飼料，以及守宮的夜行性作息"
                 },
                 {
                   "text": "會影響每一位同住者。若有人反對，可能在飼主不在時對寵物產生排斥，也可能讓"
@@ -3637,14 +3626,28 @@
             {
               "segments": [
                 {
-                  "text": "爬蟲類對部分人而言在心理上存在排斥感——無論是守宮本身的外觀，還是需要準備"
+                  "text": "爬蟲類動物的"
+                },
+                {
+                  "emphasis": true,
+                  "text": "接受度因人而異"
+                },
+                {
+                  "text": "——無論是守宮本身的外觀，還是需要準備"
                 },
                 {
                   "emphasis": true,
                   "text": "活體昆蟲飼料"
                 },
                 {
-                  "text": "（蟋蟀、麵包蟲等）。若同住者對爬蟲有強烈排斥感，可能在日常生活中產生摩擦，甚至影響守宮的照護品質。請在飼養前"
+                  "text": "（蟋蟀、杜比亞蟑螂等）。若同住者對爬蟲"
+                },
+                {
+                  "emphasis": true,
+                  "text": "接受度較低"
+                },
+                {
+                  "text": "，可能在日常生活中產生摩擦，甚至影響守宮的照護品質。請在飼養前"
                 },
                 {
                   "emphasis": true,
@@ -3760,7 +3763,35 @@
             {
               "segments": [
                 {
-                  "text": "確認住家溫度環境適合守宮飼養（環境溫度不低於 18°C）；並確認飼養空間"
+                  "text": "請評估居住空間是否有"
+                },
+                {
+                  "emphasis": true,
+                  "text": "足夠空間"
+                },
+                {
+                  "text": "放置爬蟲缸；守宮本身無叫聲，但若選用活體蟋蟀作為飼料，蟋蟀夜間會"
+                },
+                {
+                  "emphasis": true,
+                  "text": "持續鳴叫"
+                },
+                {
+                  "text": "，存放時也可能帶有"
+                },
+                {
+                  "emphasis": true,
+                  "text": "氣味"
+                },
+                {
+                  "text": "，需評估鄰居接受度，並確保有"
+                },
+                {
+                  "emphasis": true,
+                  "text": "合適空間單獨存放飼料昆蟲"
+                },
+                {
+                  "text": "；此外，請確認飼養空間的"
                 },
                 {
                   "emphasis": true,
@@ -3847,14 +3878,42 @@
             {
               "segments": [
                 {
-                  "text": "確認租屋允許放置爬蟲缸；守宮雖無叫聲，但活體昆蟲飼料（蟋蟀）有聲音與氣味；並確認"
+                  "text": "請評估租屋空間是否有"
+                },
+                {
+                  "emphasis": true,
+                  "text": "足夠空間"
+                },
+                {
+                  "text": "放置爬蟲缸；守宮本身無叫聲，但若選用活體蟋蟀作為飼料，蟋蟀夜間會"
+                },
+                {
+                  "emphasis": true,
+                  "text": "持續鳴叫"
+                },
+                {
+                  "text": "，存放時也可能帶有"
+                },
+                {
+                  "emphasis": true,
+                  "text": "氣味"
+                },
+                {
+                  "text": "，需評估鄰居接受度，並確保有"
+                },
+                {
+                  "emphasis": true,
+                  "text": "合適空間單獨存放飼料昆蟲"
+                },
+                {
+                  "text": "；此外，請確認飼養空間的"
                 },
                 {
                   "emphasis": true,
                   "text": "防逃措施"
                 },
                 {
-                  "text": "（缸蓋緊固、空間無縫隙）——守宮逃脫後極難尋回。"
+                  "text": "（爬蟲缸蓋緊固、空間無縫隙）——守宮逃脫後極難尋回。"
                 }
               ],
               "type": "item"
@@ -3958,8 +4017,8 @@
                 "title": "眼睛異常"
               },
               "desktopHotspot": {
-                "x": 27,
-                "y": 32
+                "x": 33,
+                "y": 30
               },
               "id": "eyes",
               "instruction": "點擊眼睛，觀察是否清亮、有無腫脹或殘皮。",
@@ -4011,7 +4070,7 @@
                 "title": "尾巴異常"
               },
               "desktopHotspot": {
-                "x": 77,
+                "x": 70,
                 "y": 51
               },
               "id": "tail",
@@ -4059,14 +4118,14 @@
               ],
               "comparison": {
                 "actionLabel": "了解脫皮異常",
-                "description": "⚠️ 脫皮卡住（stuck shed）最危險的位置是趾端——殘留皮膚乾燥後收縮，可能阻斷血液循環造成趾頭壞死，請在脫皮後 24 小時內確認趾端狀況。",
+                "description": "⚠️ 脫皮後若身體（軀幹、四肢、尾巴根部）仍留有成片殘皮，表示環境濕度不足或個體脫水，殘皮若久留可能藏污納垢引發皮膚感染。建議立刻提供濕躲避屋（陶瓷守宮屋加水）並確認飼養環境濕度；若溫水泡腳後殘皮仍無法去除，請諮詢熟悉爬蟲類醫療的獸醫師。",
                 "image": "/assets/gecko/HealthInspectionActivity/gecko-skin-stuck-shed.webp",
                 "imageAlt": "守宮脫皮卡住的異常狀態",
                 "title": "皮膚異常"
               },
               "desktopHotspot": {
-                "x": 49,
-                "y": 44
+                "x": 55,
+                "y": 50
               },
               "id": "skin",
               "instruction": "點擊身體皮膚，確認目前的脫皮狀態。",
@@ -4092,11 +4151,11 @@
                   "incorrectFeedback": "其實表面的灰白霧狀是正常的脫皮前兆，不需要強行介入。你可以確認缸內有濕躲避屋，讓 {petName} 在需要時自行使用。"
                 },
                 "stuck-shed": {
-                  "correctFeedback": "✅ 正確！你發現了脫皮殘留——請用溫熱濕毛巾包裹 {petName} 的腳 5–10 分鐘使皮膚軟化，再用濕棉棒輕柔地從趾端基部向外捲動去除殘皮，若無法去除請諮詢熟悉爬蟲類醫療的獸醫師。",
+                  "correctFeedback": "✅ 正確！你發現了全身性脫皮殘留——請立刻補充濕躲避屋（陶瓷守宮屋頂加水），並將 {petName} 放入 28–30°C 溫水中浸泡 5–10 分鐘，讓殘皮充分吸水軟化後通常可自行脫落；浸泡後仍無法去除的頑固殘皮請諮詢熟悉爬蟲類醫療的獸醫師。",
                   "detail": "脫皮後仍有殘留皮膚，特別在趾端或尾巴根部。",
                   "image": "/assets/gecko/HealthInspectionActivity/gecko-skin-stuck-shed.webp",
                   "imageAlt": "仍有殘留皮膚的守宮",
-                  "incorrectFeedback": "仔細再看——{petName} 有脫皮殘留（特別注意趾端區域）。殘留的皮膚不會自行脫落，若卡在趾端可能造成趾頭永久損傷，請立刻輕柔協助去除或聯繫獸醫。"
+                  "incorrectFeedback": "仔細再看——{petName} 身上有脫皮殘留（軀幹、四肢或尾巴根部仍有舊皮）。殘皮不會自行消失，請提供濕躲避屋並用溫水浸泡協助去除，以防皮膚感染或進一步的脫皮問題。"
                 }
               }
             },
@@ -4125,8 +4184,8 @@
                 "title": "趾端異常"
               },
               "desktopHotspot": {
-                "x": 42,
-                "y": 74
+                "x": 45,
+                "y": 80
               },
               "id": "toes",
               "instruction": "點擊趾端，確認是否有環狀殘皮。",
@@ -4166,7 +4225,7 @@
           "subtitle": "你確認了溫度梯度、飲水、排泄角落，還有 {petName} 的眼睛、尾巴與趾端。",
           "title": "今日巡視完成！{petName} 的爬蟲缸記錄好了"
         },
-        "description": "守宮善於隱藏不適，每天固定巡視，確認暖側底部與涼側溫度、飲水是否乾淨、排泄狀態，並觀察眼睛、尾巴、皮膚與趾端，是在問題還小的時候先發現它的第一道防線。",
+        "description": "守宮善於隱藏不適，每天固定巡視，確認熱區底部與冷區溫度、飲水是否乾淨、排泄狀態，並觀察眼睛、尾巴、皮膚與趾端，是在問題還小的時候先發現它的第一道防線。",
         "feces": {
           "choices": [
             {
@@ -4338,7 +4397,7 @@
               }
             },
             {
-              "alt": "涼側溫濕度計",
+              "alt": "冷區溫濕度計",
               "id": "thermometer-hygrometer-cool",
               "image": "/assets/gecko/room/thermometer-hygrometer-cool.webp",
               "mobilePlacement": {
@@ -4354,7 +4413,7 @@
               }
             },
             {
-              "alt": "暖側溫濕度計",
+              "alt": "熱區溫濕度計",
               "id": "thermometer-hygrometer-warm",
               "image": "/assets/gecko/room/thermometer-hygrometer-warm.webp",
               "mobilePlacement": {
@@ -4370,7 +4429,7 @@
               }
             },
             {
-              "alt": "涼側躲避屋",
+              "alt": "冷區躲避屋",
               "id": "cool-hide",
               "image": "/assets/gecko/room/cool-hide.webp",
               "mobilePlacement": {
@@ -4402,7 +4461,7 @@
               }
             },
             {
-              "alt": "暖側躲避屋",
+              "alt": "熱區躲避屋",
               "id": "warm-hide",
               "image": "/assets/gecko/room/warm-hide.webp",
               "mobilePlacement": {
@@ -4465,7 +4524,7 @@
             "left": "0",
             "top": "0"
           },
-          "coolLabel": "涼側溫度",
+          "coolLabel": "冷區溫度",
           "coolLabelPlacement": {
             "left": "-30px",
             "top": "-330px"
@@ -4503,8 +4562,8 @@
               "min": 28
             }
           },
-          "fixedWarning": "⚠️ 暖側超過 35°C 可能引發熱衰竭；涼側低於 18°C 守宮消化與免疫功能都會受影響。加熱設備須搭配溫度計持續監控，不可使用電熱石（無法精準控溫且易燙傷）。",
-          "instruction": "確認暖側底部與涼側溫度，調整加熱設備後再確認今日溫度。",
+          "fixedWarning": "⚠️ 熱區超過 35°C 可能引發熱衰竭；冷區低於 18°C 守宮消化與免疫功能都會受影響。加熱設備須搭配溫度計持續監控，不可使用電熱石（無法精準控溫且易燙傷）。",
+          "instruction": "確認熱區底部與冷區溫度，調整加熱設備後再確認今日溫度。",
           "presets": {
             "in-range": [
               {
@@ -4555,14 +4614,14 @@
           },
           "successFeedback": {
             "in-range": "✅ 今天溫度梯度良好，不需要調整。持續每天確認，是對 {petName} 最基本的保障。",
-            "too-cold": "✅ 調整完成！暖側升至 28–32°C、涼側 22–25°C——{petName} 現在可以在冷熱兩側之間自由選擇最舒適的溫度了。",
-            "too-hot": "✅ 調整完成！過高的溫度已調回安全範圍——暖側超過 35°C 可能引發熱衰竭，定期確認很重要。"
+            "too-cold": "✅ 調整完成！熱區升至 28–32°C、冷區 22–25°C——{petName} 現在可以在兩區之間自由選擇最舒適的溫度了。",
+            "too-hot": "✅ 調整完成！過高的溫度已調回安全範圍——熱區超過 35°C 可能引發熱衰竭，定期確認很重要。"
           },
           "warmImagePlacement": {
             "left": "0",
             "top": "0"
           },
-          "warmLabel": "暖側溫度",
+          "warmLabel": "熱區溫度",
           "warmLabelPlacement": {
             "left": "-5px",
             "top": "60px"
@@ -4591,7 +4650,7 @@
           },
           "warmThermometer": "/assets/gecko/room/thermometer-hygrometer-warm.webp"
         },
-        "title": "{petName} 的每日健康巡視",
+        "title": "{petName}出沒注意！",
         "water": {
           "cleanImage": "/assets/gecko/feeding/shallow-water-dish-full.webp",
           "cleanImageAlt": "已換上新鮮飲水的乾淨水碟",
@@ -4647,7 +4706,7 @@
           "stageId": "daily",
           "stageLabel": "日常照護",
           "timeLabel": "日常照護",
-          "title": "{petName} 的每日健康巡視",
+          "title": "{petName}出沒注意！",
           "type": "guided-inspection"
         },
         {
@@ -4709,7 +4768,7 @@
             "kind": "room-preparation"
           }
         ],
-        "summary": "清除危險物品（細沙、殺蟲劑），備好爬蟲缸及三個躲避屋、加熱設備與安全底材。",
+        "summary": "清除危險物品與環境檢查，備好爬蟲缸及三個躲避屋、加熱設備與安全底材。",
         "title": "安全空間佈置"
       },
       {
@@ -4721,7 +4780,7 @@
             "kind": "trunk-preparation"
           }
         ],
-        "summary": "帶上運輸盒、餌料昆蟲、鈣粉，做好接回守宮的準備。",
+        "summary": "帶上爬蟲專用運輸盒、柔軟墊材與小毛巾，低溫時備暖暖包，做好接回守宮的準備。",
         "title": "出發前整備"
       },
       {
@@ -4799,6 +4858,7 @@
         "title": "生活變化應對"
       }
     ],
+    "mobileActivityLayout": "full-bleed",
     "preparation": {
       "departureScene": {
         "trunkBackground": "/assets/car/car-trunk.webp",
@@ -4825,8 +4885,8 @@
           }
         },
         {
-          "danger": "精油揮發物對爬蟲類呼吸道有刺激性，長期暴露可能導致呼吸異常。",
-          "handling": "使用時請關閉爬蟲缸所在空間，保持通風。",
+          "danger": "精油揮發物對爬蟲類呼吸道有刺激性，長期暴露易影響呼吸道健康。",
+          "handling": "使用精油時，請移至爬蟲缸所在空間以外，避免揮發物累積。",
           "icon": "⚠",
           "id": "essential-oil-diffuser",
           "image": "/assets/gecko/room/essential-oil-diffuser.webp",
@@ -4841,25 +4901,6 @@
             "width": 12,
             "x": 45,
             "y": 56
-          }
-        },
-        {
-          "danger": "守宮覓食時會誤食鬆散底材，細沙積在腸道可能造成腸阻塞，嚴重時致命。",
-          "handling": "請替換為安全底材（椰子纖維、紙巾或磁磚）。",
-          "icon": "⚠",
-          "id": "loose-sand-substrate",
-          "image": "/assets/gecko/room/loose-sand-substrate.webp",
-          "label": "細沙/爬蟲沙",
-          "mobilePlacement": {
-            "width": 22,
-            "x": 40,
-            "y": 76
-          },
-          "placement": {
-            "layer": 4,
-            "width": 16,
-            "x": 52,
-            "y": 75
           }
         },
         {
@@ -4913,6 +4954,7 @@
         "entryRequiredItemIds": [
           "gecko-terrarium",
           "first-feeder-insects",
+          "feeding-tongs",
           "calcium-and-vitamin-supplement"
         ],
         "fenceItemId": "gecko-terrarium",
@@ -4977,10 +5019,8 @@
           "enrichment-decor",
           "thermometer-hygrometer",
           "warm-hide",
-          "cool-hide",
           "moist-hide",
-          "shallow-water-dish",
-          "calcium-dish"
+          "shallow-water-dish"
         ],
         "interiorSafeBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
         "interiorSafeMobileBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
@@ -4992,13 +5032,14 @@
         "outsideItemIds": [
           "gecko-terrarium",
           "first-feeder-insects",
+          "feeding-tongs",
           "calcium-and-vitamin-supplement"
         ],
         "safeBackground": "/assets/gecko/room/gecko-room-sealed.webp"
       },
       "roomItems": [
         {
-          "description": "建議至少 60×45×30 cm，附緊固式網蓋，防止逃脫。",
+          "description": "選擇附緊固式網蓋的玻璃缸，確保頂部通風良好；缸體尺寸依守宮體型彈性選配。",
           "expenseId": "gecko-terrarium",
           "icon": "▣",
           "id": "gecko-terrarium",
@@ -5028,29 +5069,53 @@
           "label": "首批活體餌料昆蟲及飼育容器",
           "mobilePlacement": {
             "width": 18,
-            "x": 25,
-            "y": 60
+            "x": 22,
+            "y": 59
           },
           "need": "飲食",
           "placement": {
             "layer": 5,
             "width": 10,
-            "x": 57,
+            "x": 53,
             "y": 60
           },
           "required": true,
           "sceneImage": "/assets/gecko/room/first-feeder-insects-front.webp"
         },
         {
-          "description": "餵食時沾裹昆蟲用；需備純鈣粉與含 D3 版本及綜合維他命粉，依週次輪替。",
-          "expenseId": "gecko-supplements-initial",
+          "description": "夾取昆蟲餵食用，避免守宮誤咬人手。",
+          "expenseId": "gecko-feeding-tongs",
+          "icon": "✂",
+          "id": "feeding-tongs",
+          "image": "/assets/gecko/room/feeding-tongs.webp",
+          "label": "餵食用長夾",
+          "mobilePlacement": {
+            "width": 12,
+            "x": 29,
+            "y": 61
+          },
+          "need": "飲食",
+          "placement": {
+            "layer": 6,
+            "width": 6,
+            "x": 60,
+            "y": 61
+          },
+          "required": true
+        },
+        {
+          "description": "依守宮種類選用適合的鈣粉，每週 1–2 次餵食前以鈣粉沾裹昆蟲；每隔 1–2 週換用綜合維他命粉輪替，維持營養均衡。",
+          "expenseIds": [
+            "gecko-supplements-initial",
+            "gecko-calcium-monthly"
+          ],
           "icon": "✦",
           "id": "calcium-and-vitamin-supplement",
           "image": "/assets/gecko/room/calcium-and-vitamin-supplement.webp",
           "label": "鈣粉與綜合維他命粉",
           "mobilePlacement": {
             "width": 12,
-            "x": 10,
+            "x": 8,
             "y": 62
           },
           "need": "飲食",
@@ -5063,12 +5128,15 @@
           "required": true
         },
         {
-          "description": "鋪設全缸底部，不可使用細沙或鬆散顆粒底材，避免誤食造成腸阻塞。",
-          "expenseId": "gecko-substrate",
+          "description": "鋪設全缸底部，選用椰子纖維磚、木屑、樹皮塊或赤玉土，滿足守宮挖掘天性；部分物種不建議使用細沙，以防誤食造成腸阻塞。",
+          "expenseIds": [
+            "gecko-substrate",
+            "gecko-substrate-replace"
+          ],
           "icon": "▤",
           "id": "safe-substrate",
           "image": "/assets/gecko/room/safe-substrate.webp",
-          "label": "安全底材（椰子纖維磚/紙巾/磁磚）",
+          "label": "安全底材",
           "mobilePlacement": {
             "width": 65,
             "x": 50,
@@ -5084,8 +5152,11 @@
           "required": true
         },
         {
-          "description": "貼附缸底一側，建立暖側，另一側保持涼側，讓守宮自行選擇溫度。",
-          "expenseId": "gecko-heat-mat",
+          "description": "貼附缸底一側，建立熱區，另一側保持冷區，讓守宮自行選擇溫度。",
+          "expenseIds": [
+            "gecko-heat-mat",
+            "gecko-electricity"
+          ],
           "icon": "♨",
           "id": "heat-mat",
           "image": "/assets/gecko/room/heat-mat.webp",
@@ -5105,12 +5176,12 @@
           "required": true
         },
         {
-          "description": "提供低強度 UVB 有助 D3 合成與鈣質代謝；照明設備搭配定時器模擬 12 小時明／暗週期，維持正常活動節律，並定期更換燈管。",
+          "description": "提供低強度UVB有助D3合成與鈣質代謝；照明設備搭配定時器模擬12小時明／暗週期，維持正常活動節律，並定期更換燈管。",
           "expenseId": "gecko-lighting-setup",
           "icon": "☼",
           "id": "lighting-setup",
           "image": "/assets/gecko/room/lighting-setup.webp",
-          "label": "光源設備（UVB 燈 + 日夜節律燈）",
+          "label": "光源設備（UVB燈+日夜節律燈）",
           "mobilePlacement": {
             "transform": "translate(-50%, -50%)",
             "width": 82,
@@ -5135,7 +5206,7 @@
           }
         },
         {
-          "description": "提供視覺遮蔽與活動刺激，有助降低守宮緊張壓力。可依預算選擇石板、沉木或人造植物搭配布置。",
+          "description": "提供視覺遮蔽與活動刺激，有助降低守宮緊迫感。可依預算選擇石板、沉木或人造植物搭配布置。",
           "expenseId": "gecko-enrichment-decor",
           "icon": "✦",
           "id": "enrichment-decor",
@@ -5209,7 +5280,7 @@
           ]
         },
         {
-          "description": "至少兩個分別置於暖側與涼側，隨時確認溫度梯度是否正確，濕度維持 30–50%。",
+          "description": "至少兩個分別置於熱區與冷區，隨時確認溫度梯度是否正確，濕度維持 30–50%。",
           "expenseId": "gecko-thermometer-2",
           "icon": "◷",
           "id": "thermometer-hygrometer",
@@ -5262,12 +5333,12 @@
           ]
         },
         {
-          "description": "放置於加熱片正上方，讓守宮在需要溫暖時有隱蔽空間休息消化。",
+          "description": "靠角落放置於熱區，讓守宮在需要溫暖時有隱蔽空間安心休息。",
           "expenseId": "gecko-warm-hide",
           "icon": "⌂",
           "id": "warm-hide",
           "image": "/assets/gecko/room/warm-hide.webp",
-          "label": "暖側躲避屋",
+          "label": "熱區躲避屋",
           "mobilePlacement": {
             "width": 25,
             "x": 75,
@@ -5283,28 +5354,7 @@
           "required": true
         },
         {
-          "description": "放置於缸內涼側，讓守宮在過熱時能快速退到陰涼處。",
-          "expenseId": "gecko-cool-hide",
-          "icon": "⌂",
-          "id": "cool-hide",
-          "image": "/assets/gecko/room/cool-hide.webp",
-          "label": "涼側躲避屋",
-          "mobilePlacement": {
-            "width": 25,
-            "x": 20,
-            "y": 61
-          },
-          "need": "休息",
-          "placement": {
-            "layer": 3,
-            "width": 25,
-            "x": 16,
-            "y": 70
-          },
-          "required": true
-        },
-        {
-          "description": "內部鋪濕潤椰子纖維或水苔，維持局部高濕度，協助守宮完整蛻皮，避免趾端殘皮。",
+          "description": "置於中段或稍近冷區側，在頂部凹槽加水，讓多孔材質吸水維持內部濕度；協助守宮順利蛻皮，避免趾端殘皮。",
           "expenseId": "gecko-moist-hide",
           "icon": "◒",
           "id": "moist-hide",
@@ -5323,6 +5373,27 @@
             "y": 58
           },
           "required": true
+        },
+        {
+          "description": "靠角落放置於冷區，提供第二個隱蔽空間讓守宮自由調節體溫；非必須，但備有更理想。",
+          "expenseId": "gecko-cool-hide",
+          "icon": "⌂",
+          "id": "cool-hide",
+          "image": "/assets/gecko/room/cool-hide.webp",
+          "label": "冷區躲避屋",
+          "mobilePlacement": {
+            "width": 25,
+            "x": 20,
+            "y": 61
+          },
+          "need": "休息",
+          "placement": {
+            "layer": 3,
+            "width": 25,
+            "x": 16,
+            "y": 70
+          },
+          "required": false
         },
         {
           "description": "每日換新鮮水，守宮飲水量少但仍需固定供水；水碟不可太深，以免守宮溺水。",
@@ -5346,7 +5417,7 @@
           "required": true
         },
         {
-          "description": "在缸內常備一小碟無 D3 鈣粉，讓守宮可依需求自行舔食補充。",
+          "description": "在缸內常備一小碟無 D3 鈣粉，讓守宮可依需求自行舔食補充。也可選擇在日常餵食時，於餌料上撒鈣粉。",
           "expenseId": "gecko-calcium-dish",
           "icon": "◌",
           "id": "calcium-dish",
@@ -5364,11 +5435,14 @@
             "x": 50,
             "y": 77
           },
-          "required": true
+          "required": false
         }
       ],
       "roomScene": {
         "backgroundAlt": "守宮生活空間",
+        "backgroundStyle": {
+          "objectPosition": "right"
+        },
         "doorplate": {
           "alt": "守宮名字名牌",
           "image": "/assets/shared/nameplate.webp",
@@ -5407,7 +5481,7 @@
       },
       "trunkItems": [
         {
-          "description": "選用可遮光的小型塑膠盒或布袋，減少運輸途中的視覺刺激，讓守宮保持冷靜。",
+          "description": "選用附通氣孔的小型塑膠盒，提供守宮安全的運輸空間。",
           "expenseIds": [
             "gecko-transport-box"
           ],
@@ -5419,9 +5493,45 @@
             "layer": 5,
             "width": 20,
             "x": 48,
-            "y": 60
+            "y": 63
           },
           "preparedLabel": "已準備"
+        },
+        {
+          "description": "在運輸盒底部鋪一層毛巾、擦手紙或紙墊料，提供防碰撞緩衝，降低守宮緊迫感。",
+          "expenseIds": [
+            "gecko-soft-padding"
+          ],
+          "id": "gecko-soft-padding",
+          "image": "/assets/car/gecko-soft-padding.webp",
+          "kind": "supply",
+          "label": "柔軟墊材",
+          "placement": {
+            "layer": 6,
+            "width": 14,
+            "x": 53,
+            "y": 70
+          },
+          "preparedLabel": "已準備",
+          "priceNote": "可使用家中擦手紙"
+        },
+        {
+          "description": "若運輸盒為透明材質，建議用不透明袋子或布覆蓋盒身，增加隱蔽感，避免守宮因視覺刺激感到緊張。",
+          "expenseIds": [
+            "gecko-cover-towel"
+          ],
+          "id": "gecko-cover-towel",
+          "image": "/assets/car/gecko-cover-bag.webp",
+          "kind": "supply",
+          "label": "不透明袋子",
+          "placement": {
+            "layer": 4,
+            "width": 18,
+            "x": 40,
+            "y": 56
+          },
+          "preparedLabel": "已準備",
+          "priceNote": "可使用家中袋子"
         },
         {
           "description": "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。",
@@ -5433,10 +5543,10 @@
           "kind": "supply",
           "label": "暖暖包（氣溫低時備用）",
           "placement": {
-            "layer": 6,
+            "layer": 4,
             "width": 12,
-            "x": 35,
-            "y": 65
+            "x": 33,
+            "y": 66
           },
           "preparedLabel": "已準備"
         }
@@ -5446,7 +5556,7 @@
       "checklistGroups": [
         {
           "items": [
-            "確認溫度計（暖側 28–32°C、涼側 22–25°C）",
+            "確認溫度計（熱區 28–32°C、冷區 22–25°C）",
             "更換飲水",
             "清除缸內排泄物並確認底材狀態",
             "觀察守宮精神、活動、眼睛、尾巴、皮膚與後腿狀態",
@@ -5457,8 +5567,8 @@
         {
           "items": [
             "使用安全底材，避免細沙或鬆散顆粒底材",
-            "確認加熱片、暖側與涼側溫度計正常運作",
-            "備妥暖側、涼側與濕躲避屋",
+            "確認加熱片、熱區與冷區溫度計正常運作",
+            "備妥熱區、冷區與濕躲避屋",
             "維持淺水碟與補鈣碟清潔，補充鈣粉",
             "每週量體重並確認濕躲避屋濕度"
           ],
@@ -5467,6 +5577,8 @@
         {
           "items": [
             "爬蟲專用運輸盒（附通氣孔）",
+            "柔軟墊材（運輸盒底部鋪毛巾或紙墊料）",
+            "不透明袋子（覆蓋透明盒身，減少視覺刺激）",
             "暖暖包（氣溫低時備用，放在運輸盒外層）"
           ],
           "title": "外出與接回"
@@ -5475,7 +5587,7 @@
       "dailyCareBreakdown": [
         {
           "detail": "約 1～2 分鐘",
-          "title": "溫度確認（暖側 / 涼側）"
+          "title": "溫度確認（熱區 / 冷區）"
         },
         {
           "detail": "約 2～3 分鐘",
@@ -5491,7 +5603,7 @@
         },
         {
           "detail": "約 10～15 分鐘（餵食日）",
-          "title": "餵食（每 2–3 天一次，昆蟲沾鈣粉）"
+          "title": "餵食（每 3–7 天一次）"
         }
       ],
       "dailyCareTime": "每日約需安排 18～30 分鐘",
@@ -5540,6 +5652,7 @@
       "entryRequiredItemIds": [
         "gecko-terrarium",
         "first-feeder-insects",
+        "feeding-tongs",
         "calcium-and-vitamin-supplement"
       ],
       "fenceItemId": "gecko-terrarium",
@@ -5604,10 +5717,8 @@
         "enrichment-decor",
         "thermometer-hygrometer",
         "warm-hide",
-        "cool-hide",
         "moist-hide",
-        "shallow-water-dish",
-        "calcium-dish"
+        "shallow-water-dish"
       ],
       "interiorSafeBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
       "interiorSafeMobileBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
@@ -5619,13 +5730,14 @@
       "outsideItemIds": [
         "gecko-terrarium",
         "first-feeder-insects",
+        "feeding-tongs",
         "calcium-and-vitamin-supplement"
       ],
       "safeBackground": "/assets/gecko/room/gecko-room-sealed.webp"
     },
     "roomItems": [
       {
-        "description": "建議至少 60×45×30 cm，附緊固式網蓋，防止逃脫。",
+        "description": "選擇附緊固式網蓋的玻璃缸，確保頂部通風良好；缸體尺寸依守宮體型彈性選配。",
         "expenseId": "gecko-terrarium",
         "icon": "▣",
         "id": "gecko-terrarium",
@@ -5655,29 +5767,53 @@
         "label": "首批活體餌料昆蟲及飼育容器",
         "mobilePlacement": {
           "width": 18,
-          "x": 25,
-          "y": 60
+          "x": 22,
+          "y": 59
         },
         "need": "飲食",
         "placement": {
           "layer": 5,
           "width": 10,
-          "x": 57,
+          "x": 53,
           "y": 60
         },
         "required": true,
         "sceneImage": "/assets/gecko/room/first-feeder-insects-front.webp"
       },
       {
-        "description": "餵食時沾裹昆蟲用；需備純鈣粉與含 D3 版本及綜合維他命粉，依週次輪替。",
-        "expenseId": "gecko-supplements-initial",
+        "description": "夾取昆蟲餵食用，避免守宮誤咬人手。",
+        "expenseId": "gecko-feeding-tongs",
+        "icon": "✂",
+        "id": "feeding-tongs",
+        "image": "/assets/gecko/room/feeding-tongs.webp",
+        "label": "餵食用長夾",
+        "mobilePlacement": {
+          "width": 12,
+          "x": 29,
+          "y": 61
+        },
+        "need": "飲食",
+        "placement": {
+          "layer": 6,
+          "width": 6,
+          "x": 60,
+          "y": 61
+        },
+        "required": true
+      },
+      {
+        "description": "依守宮種類選用適合的鈣粉，每週 1–2 次餵食前以鈣粉沾裹昆蟲；每隔 1–2 週換用綜合維他命粉輪替，維持營養均衡。",
+        "expenseIds": [
+          "gecko-supplements-initial",
+          "gecko-calcium-monthly"
+        ],
         "icon": "✦",
         "id": "calcium-and-vitamin-supplement",
         "image": "/assets/gecko/room/calcium-and-vitamin-supplement.webp",
         "label": "鈣粉與綜合維他命粉",
         "mobilePlacement": {
           "width": 12,
-          "x": 10,
+          "x": 8,
           "y": 62
         },
         "need": "飲食",
@@ -5690,12 +5826,15 @@
         "required": true
       },
       {
-        "description": "鋪設全缸底部，不可使用細沙或鬆散顆粒底材，避免誤食造成腸阻塞。",
-        "expenseId": "gecko-substrate",
+        "description": "鋪設全缸底部，選用椰子纖維磚、木屑、樹皮塊或赤玉土，滿足守宮挖掘天性；部分物種不建議使用細沙，以防誤食造成腸阻塞。",
+        "expenseIds": [
+          "gecko-substrate",
+          "gecko-substrate-replace"
+        ],
         "icon": "▤",
         "id": "safe-substrate",
         "image": "/assets/gecko/room/safe-substrate.webp",
-        "label": "安全底材（椰子纖維磚/紙巾/磁磚）",
+        "label": "安全底材",
         "mobilePlacement": {
           "width": 65,
           "x": 50,
@@ -5711,8 +5850,11 @@
         "required": true
       },
       {
-        "description": "貼附缸底一側，建立暖側，另一側保持涼側，讓守宮自行選擇溫度。",
-        "expenseId": "gecko-heat-mat",
+        "description": "貼附缸底一側，建立熱區，另一側保持冷區，讓守宮自行選擇溫度。",
+        "expenseIds": [
+          "gecko-heat-mat",
+          "gecko-electricity"
+        ],
         "icon": "♨",
         "id": "heat-mat",
         "image": "/assets/gecko/room/heat-mat.webp",
@@ -5732,12 +5874,12 @@
         "required": true
       },
       {
-        "description": "提供低強度 UVB 有助 D3 合成與鈣質代謝；照明設備搭配定時器模擬 12 小時明／暗週期，維持正常活動節律，並定期更換燈管。",
+        "description": "提供低強度UVB有助D3合成與鈣質代謝；照明設備搭配定時器模擬12小時明／暗週期，維持正常活動節律，並定期更換燈管。",
         "expenseId": "gecko-lighting-setup",
         "icon": "☼",
         "id": "lighting-setup",
         "image": "/assets/gecko/room/lighting-setup.webp",
-        "label": "光源設備（UVB 燈 + 日夜節律燈）",
+        "label": "光源設備（UVB燈+日夜節律燈）",
         "mobilePlacement": {
           "transform": "translate(-50%, -50%)",
           "width": 82,
@@ -5762,7 +5904,7 @@
         }
       },
       {
-        "description": "提供視覺遮蔽與活動刺激，有助降低守宮緊張壓力。可依預算選擇石板、沉木或人造植物搭配布置。",
+        "description": "提供視覺遮蔽與活動刺激，有助降低守宮緊迫感。可依預算選擇石板、沉木或人造植物搭配布置。",
         "expenseId": "gecko-enrichment-decor",
         "icon": "✦",
         "id": "enrichment-decor",
@@ -5836,7 +5978,7 @@
         ]
       },
       {
-        "description": "至少兩個分別置於暖側與涼側，隨時確認溫度梯度是否正確，濕度維持 30–50%。",
+        "description": "至少兩個分別置於熱區與冷區，隨時確認溫度梯度是否正確，濕度維持 30–50%。",
         "expenseId": "gecko-thermometer-2",
         "icon": "◷",
         "id": "thermometer-hygrometer",
@@ -5889,12 +6031,12 @@
         ]
       },
       {
-        "description": "放置於加熱片正上方，讓守宮在需要溫暖時有隱蔽空間休息消化。",
+        "description": "靠角落放置於熱區，讓守宮在需要溫暖時有隱蔽空間安心休息。",
         "expenseId": "gecko-warm-hide",
         "icon": "⌂",
         "id": "warm-hide",
         "image": "/assets/gecko/room/warm-hide.webp",
-        "label": "暖側躲避屋",
+        "label": "熱區躲避屋",
         "mobilePlacement": {
           "width": 25,
           "x": 75,
@@ -5910,28 +6052,7 @@
         "required": true
       },
       {
-        "description": "放置於缸內涼側，讓守宮在過熱時能快速退到陰涼處。",
-        "expenseId": "gecko-cool-hide",
-        "icon": "⌂",
-        "id": "cool-hide",
-        "image": "/assets/gecko/room/cool-hide.webp",
-        "label": "涼側躲避屋",
-        "mobilePlacement": {
-          "width": 25,
-          "x": 20,
-          "y": 61
-        },
-        "need": "休息",
-        "placement": {
-          "layer": 3,
-          "width": 25,
-          "x": 16,
-          "y": 70
-        },
-        "required": true
-      },
-      {
-        "description": "內部鋪濕潤椰子纖維或水苔，維持局部高濕度，協助守宮完整蛻皮，避免趾端殘皮。",
+        "description": "置於中段或稍近冷區側，在頂部凹槽加水，讓多孔材質吸水維持內部濕度；協助守宮順利蛻皮，避免趾端殘皮。",
         "expenseId": "gecko-moist-hide",
         "icon": "◒",
         "id": "moist-hide",
@@ -5950,6 +6071,27 @@
           "y": 58
         },
         "required": true
+      },
+      {
+        "description": "靠角落放置於冷區，提供第二個隱蔽空間讓守宮自由調節體溫；非必須，但備有更理想。",
+        "expenseId": "gecko-cool-hide",
+        "icon": "⌂",
+        "id": "cool-hide",
+        "image": "/assets/gecko/room/cool-hide.webp",
+        "label": "冷區躲避屋",
+        "mobilePlacement": {
+          "width": 25,
+          "x": 20,
+          "y": 61
+        },
+        "need": "休息",
+        "placement": {
+          "layer": 3,
+          "width": 25,
+          "x": 16,
+          "y": 70
+        },
+        "required": false
       },
       {
         "description": "每日換新鮮水，守宮飲水量少但仍需固定供水；水碟不可太深，以免守宮溺水。",
@@ -5973,7 +6115,7 @@
         "required": true
       },
       {
-        "description": "在缸內常備一小碟無 D3 鈣粉，讓守宮可依需求自行舔食補充。",
+        "description": "在缸內常備一小碟無 D3 鈣粉，讓守宮可依需求自行舔食補充。也可選擇在日常餵食時，於餌料上撒鈣粉。",
         "expenseId": "gecko-calcium-dish",
         "icon": "◌",
         "id": "calcium-dish",
@@ -5991,7 +6133,7 @@
           "x": 50,
           "y": 77
         },
-        "required": true
+        "required": false
       }
     ],
     "scenarioPresentation": {
@@ -6097,7 +6239,7 @@
           "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
           "knowledgeContent": [
             {
-              "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+              "text": "守宮對新環境的適應需要時間，**通常需要3天左右**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
               "type": "paragraph"
             },
             {
@@ -6145,7 +6287,7 @@
             "feedbackTitle": "做得很好！",
             "id": "check-temperature",
             "result": "correct",
-            "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
+            "text": "確認溫度計讀數，確保熱區與冷區溫度在正常範圍內"
           },
           {
             "effects": {
@@ -6202,7 +6344,7 @@
         "correctSummary": [
           "守宮在適應期、蛻皮前、繁殖季或溫度不足時會正常拒食，應先排查這四個原因，超過14天仍未進食才需就醫，不可強迫餵食。"
         ],
-        "description": "你每天傍晚放昆蟲進缸，但{petName}躲在暖側躲避屋完全不出來，昆蟲在缸裡爬了一晚最後死掉，牠一口都沒吃。這已經是第三天了。",
+        "description": "你每天傍晚用長夾將昆蟲放入缸中，但{petName}躲在熱區躲避屋完全不出來，牠一口都沒吃。這已經是第七天了。",
         "id": "gecko-refuse-food",
         "multipleChoice": true,
         "questionText": "你應該怎麼做？（複選）",
@@ -6214,7 +6356,7 @@
         "stage": "日常照護",
         "stageId": "daily",
         "timeLabel": "日常照護",
-        "title": "{petName} 已經三天沒吃東西了",
+        "title": "{petName} 已經七天沒吃東西了",
         "topic": "拒食觀察",
         "wrongOptionIds": [
           "force-feed",
@@ -6277,7 +6419,7 @@
           "encouragement": "你即時注意到溫度問題並採取了正確的行動，{petName}今晚能暖暖的了！",
           "knowledgeContent": [
             {
-              "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**暖側底部應維持 28–32°C，涼側維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
+              "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**熱區底部應維持 28–32°C，冷區維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
               "type": "paragraph"
             },
             {
@@ -6289,9 +6431,9 @@
           "title": "做得很好！"
         },
         "correctSummary": [
-          "守宮缸暖側應維持28–32°C、涼側22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
+          "守宮缸熱區應維持28–32°C、冷區22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
         ],
-        "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現暖側底部才 24°C，涼側只有 19°C，都比建議溫度低不少。{petName}縮在暖側躲避屋裡完全沒動靜。",
+        "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現熱區底部才 24°C，冷區只有 19°C，都比建議溫度低不少。{petName}縮在熱區躲避屋裡完全沒動靜。",
         "id": "gecko-temperature-check",
         "multipleChoice": true,
         "questionText": "你應該怎麼做？（複選）",
@@ -6405,7 +6547,7 @@
           {
             "correctAnswer": "yes",
             "id": "daily-care",
-            "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及了天是否為餵食日了嗎？",
+            "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及今天是否為餵食日了嗎？",
             "reviewHint": "先確認溫度、餵食日、排泄清理與健康觀察的交接內容。"
           },
           {
@@ -6429,12 +6571,12 @@
         ],
         "busyCareCompletion": {
           "additionalAdvice": [
-            "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
+            "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
           ],
           "careTimeItems": [
             {
               "detail": "約 1～2 分鐘",
-              "title": "溫度確認（暖側 / 涼側）"
+              "title": "溫度確認（熱區 / 冷區）"
             },
             {
               "detail": "約 2～3 分鐘",
@@ -6450,7 +6592,7 @@
             },
             {
               "detail": "約 10～15 分鐘（餵食日）",
-              "title": "餵食（每 2–3 天一次，昆蟲沾鈣粉）"
+              "title": "餵食（每 3–7 天一次）"
             }
           ],
           "careTimeTitle": "每日照護時間",
@@ -6623,7 +6765,7 @@
               "type": "paragraph"
             },
             {
-              "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每次餵食確實沾鈣粉是預防關鍵。",
+              "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每週 1–2 次餵食前確實沾鈣粉是預防關鍵。",
               "type": "paragraph"
             },
             {
@@ -6635,7 +6777,7 @@
               "type": "paragraph"
             },
             {
-              "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成無精卵，卵無法排出時需就醫。",
+              "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成未受精卵，卵無法排出時需就醫。",
               "type": "paragraph"
             },
             {
@@ -6789,7 +6931,7 @@
     },
     "trunkItems": [
       {
-        "description": "選用可遮光的小型塑膠盒或布袋，減少運輸途中的視覺刺激，讓守宮保持冷靜。",
+        "description": "選用附通氣孔的小型塑膠盒，提供守宮安全的運輸空間。",
         "expenseIds": [
           "gecko-transport-box"
         ],
@@ -6801,9 +6943,45 @@
           "layer": 5,
           "width": 20,
           "x": 48,
-          "y": 60
+          "y": 63
         },
         "preparedLabel": "已準備"
+      },
+      {
+        "description": "在運輸盒底部鋪一層毛巾、擦手紙或紙墊料，提供防碰撞緩衝，降低守宮緊迫感。",
+        "expenseIds": [
+          "gecko-soft-padding"
+        ],
+        "id": "gecko-soft-padding",
+        "image": "/assets/car/gecko-soft-padding.webp",
+        "kind": "supply",
+        "label": "柔軟墊材",
+        "placement": {
+          "layer": 6,
+          "width": 14,
+          "x": 53,
+          "y": 70
+        },
+        "preparedLabel": "已準備",
+        "priceNote": "可使用家中擦手紙"
+      },
+      {
+        "description": "若運輸盒為透明材質，建議用不透明袋子或布覆蓋盒身，增加隱蔽感，避免守宮因視覺刺激感到緊張。",
+        "expenseIds": [
+          "gecko-cover-towel"
+        ],
+        "id": "gecko-cover-towel",
+        "image": "/assets/car/gecko-cover-bag.webp",
+        "kind": "supply",
+        "label": "不透明袋子",
+        "placement": {
+          "layer": 4,
+          "width": 18,
+          "x": 40,
+          "y": 56
+        },
+        "preparedLabel": "已準備",
+        "priceNote": "可使用家中袋子"
       },
       {
         "description": "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。",
@@ -6815,10 +6993,10 @@
         "kind": "supply",
         "label": "暖暖包（氣溫低時備用）",
         "placement": {
-          "layer": 6,
+          "layer": 4,
           "width": 12,
-          "x": 35,
-          "y": 65
+          "x": 33,
+          "y": 66
         },
         "preparedLabel": "已準備"
       }
@@ -6831,17 +7009,6 @@
   ],
   "expenseRules": {},
   "expenses": {
-    "gecko-annual-checkup-avg": {
-      "amount": 250,
-      "category": "每月基本支出",
-      "description": "建議每年一次（含糞便寄生蟲篩檢），異寵健檢費 1,000–3,000 元/次。",
-      "fromEmergency": false,
-      "id": "gecko-annual-checkup-avg",
-      "maxAmount": 400,
-      "name": "定期健康檢查（年均攤）",
-      "recurring": true,
-      "stage": "日常照護"
-    },
     "gecko-arrival-checkup": {
       "amount": 1500,
       "category": "到家後必要支出",
@@ -6855,9 +7022,9 @@
       "stage": "寵物到家後"
     },
     "gecko-calcium-dish": {
-      "amount": 50,
+      "amount": 150,
       "category": "一次性準備費",
-      "description": "常備散裝鈣粉供守宮自行補充。",
+      "description": "在缸內常備一小碟無 D3 鈣粉，讓守宮可依需求自行舔食補充。也可選擇在日常餵食時，於餌料上撒鈣粉。",
       "fromEmergency": false,
       "id": "gecko-calcium-dish",
       "maxAmount": 150,
@@ -6866,9 +7033,9 @@
       "stage": "飼養前準備"
     },
     "gecko-calcium-monthly": {
-      "amount": 100,
+      "amount": 300,
       "category": "每月基本支出",
-      "description": "每次餵食消耗，定期補充。",
+      "description": "每週 1–2 次餵食前以鈣粉沾裹昆蟲，定期補充。",
       "fromEmergency": false,
       "id": "gecko-calcium-monthly",
       "maxAmount": 300,
@@ -6877,18 +7044,28 @@
       "stage": "日常照護"
     },
     "gecko-cool-hide": {
-      "amount": 200,
+      "amount": 600,
       "category": "一次性準備費",
-      "description": "讓守宮在涼側休息。",
+      "description": "靠角落放置於冷區，提供第二個隱蔽空間讓守宮自由調節體溫；非必須，但備有更理想。",
       "fromEmergency": false,
       "id": "gecko-cool-hide",
-      "maxAmount": 400,
-      "name": "涼側躲避屋",
+      "maxAmount": 600,
+      "name": "冷區躲避屋",
       "recurring": false,
       "stage": "飼養前準備"
     },
+    "gecko-cover-towel": {
+      "amount": 0,
+      "category": "一次性準備費",
+      "description": "若運輸盒為透明材質，建議用不透明袋子或布覆蓋盒身，增加隱蔽感，避免守宮因視覺刺激感到緊張。",
+      "fromEmergency": false,
+      "id": "gecko-cover-towel",
+      "name": "不透明袋子",
+      "recurring": false,
+      "stage": "出發前準備"
+    },
     "gecko-electricity": {
-      "amount": 300,
+      "amount": 500,
       "category": "每月基本支出",
       "description": "加熱片 24 小時運作；冬天若加輔助加熱燈電費增加。",
       "fromEmergency": false,
@@ -6899,9 +7076,9 @@
       "stage": "日常照護"
     },
     "gecko-enrichment-decor": {
-      "amount": 200,
+      "amount": 300,
       "category": "一次性準備費",
-      "description": "石板供吸熱與脫皮摩擦；沉木或人造植物提供視覺遮蔽，降低壓力。",
+      "description": "提供視覺遮蔽與活動刺激，有助降低守宮緊迫感。可依預算選擇石板、沉木或人造植物搭配布置。",
       "fromEmergency": false,
       "id": "gecko-enrichment-decor",
       "maxAmount": 500,
@@ -6910,31 +7087,42 @@
       "stage": "飼養前準備"
     },
     "gecko-feeder-insects-initial": {
-      "amount": 200,
+      "amount": 300,
       "category": "一次性準備費",
-      "description": "接回後適應穩定再開始餵食。",
+      "description": "守宮接回後第 3–7 天適應穩定再開始餵食；餌料昆蟲須先備好，存放於通氣飼育盒避免逃脫。",
       "fromEmergency": false,
       "id": "gecko-feeder-insects-initial",
       "maxAmount": 300,
-      "name": "首批活體餌料昆蟲",
+      "name": "首批活體餌料昆蟲及飼育容器",
+      "recurring": false,
+      "stage": "飼養前準備"
+    },
+    "gecko-feeding-tongs": {
+      "amount": 300,
+      "category": "一次性準備費",
+      "description": "夾取昆蟲餵食用，避免守宮誤咬人手。",
+      "fromEmergency": false,
+      "id": "gecko-feeding-tongs",
+      "maxAmount": 300,
+      "name": "餵食用長夾",
       "recurring": false,
       "stage": "飼養前準備"
     },
     "gecko-food-monthly": {
-      "amount": 300,
+      "amount": 800,
       "category": "每月基本支出",
-      "description": "依守宮體型與餵食頻率，成體每 2–3 天餵食一次。",
+      "description": "依守宮體型與餵食頻率，成體每 3–7 天餵食一次。",
       "fromEmergency": false,
       "id": "gecko-food-monthly",
       "maxAmount": 800,
-      "name": "活體餌料昆蟲（蟋蟀/杜比亞蟑螂/麵包蟲）",
+      "name": "活體餌料昆蟲",
       "recurring": true,
       "stage": "日常照護"
     },
     "gecko-heat-mat": {
-      "amount": 500,
+      "amount": 1500,
       "category": "一次性準備費",
-      "description": "建立暖側溫度，需搭配溫控器使用。",
+      "description": "貼附缸底一側，建立熱區，另一側保持冷區，讓守宮自行選擇溫度。",
       "fromEmergency": false,
       "id": "gecko-heat-mat",
       "maxAmount": 1500,
@@ -6943,7 +7131,7 @@
       "stage": "飼養前準備"
     },
     "gecko-heat-pack": {
-      "amount": 50,
+      "amount": 100,
       "category": "一次性準備費",
       "description": "氣溫低於 20°C 時，在運輸盒外層放置暖暖包維持溫度，避免守宮受寒，不可直接接觸守宮。",
       "fromEmergency": false,
@@ -6966,9 +7154,9 @@
       "stage": "生活變化"
     },
     "gecko-lighting-setup": {
-      "amount": 600,
+      "amount": 1300,
       "category": "一次性準備費",
-      "description": "提供低強度 UVB 助 D3 合成；搭配定時器模擬 12 小時明／暗週期，定期更換燈管。",
+      "description": "提供低強度UVB有助D3合成與鈣質代謝；照明設備搭配定時器模擬12小時明／暗週期，維持正常活動節律，並定期更換燈管。",
       "fromEmergency": false,
       "id": "gecko-lighting-setup",
       "maxAmount": 1300,
@@ -6999,9 +7187,9 @@
       "stage": "生活變化"
     },
     "gecko-moist-hide": {
-      "amount": 200,
+      "amount": 600,
       "category": "一次性準備費",
-      "description": "協助守宮完整蛻皮，防止殘皮問題。",
+      "description": "置於中段或稍近冷區側，在頂部凹槽加水，讓多孔材質吸水維持內部濕度；協助守宮順利蛻皮，避免趾端殘皮。",
       "fromEmergency": false,
       "id": "gecko-moist-hide",
       "maxAmount": 600,
@@ -7020,32 +7208,42 @@
       "recurring": false,
       "stage": "生活變化"
     },
-    "gecko-substrate": {
-      "amount": 100,
+    "gecko-soft-padding": {
+      "amount": 0,
       "category": "一次性準備費",
-      "description": "禁用細沙，避免腸阻塞。",
+      "description": "在運輸盒底部鋪一層毛巾、擦手紙或紙墊料，提供防碰撞緩衝，降低守宮緊迫感。",
+      "fromEmergency": false,
+      "id": "gecko-soft-padding",
+      "name": "柔軟墊材",
+      "recurring": false,
+      "stage": "出發前準備"
+    },
+    "gecko-substrate": {
+      "amount": 500,
+      "category": "一次性準備費",
+      "description": "鋪設全缸底部，選用椰子纖維磚、木屑、樹皮塊或赤玉土，滿足守宮挖掘天性；部分物種不建議使用細沙，以防誤食造成腸阻塞。",
       "fromEmergency": false,
       "id": "gecko-substrate",
       "maxAmount": 500,
-      "name": "安全底材（椰子纖維/磁磚）",
+      "name": "安全底材",
       "recurring": false,
       "stage": "飼養前準備"
     },
     "gecko-substrate-replace": {
-      "amount": 100,
+      "amount": 300,
       "category": "每月基本支出",
-      "description": "建議每月全缸更換一次，紙巾底材費用更低。",
+      "description": "建議每月全缸更換一次；椰子纖維磚或紙巾底材均適用。",
       "fromEmergency": false,
       "id": "gecko-substrate-replace",
       "maxAmount": 300,
-      "name": "底材更換（椰子纖維）",
+      "name": "底材更換",
       "recurring": true,
       "stage": "日常照護"
     },
     "gecko-supplements-initial": {
-      "amount": 200,
+      "amount": 400,
       "category": "一次性準備費",
-      "description": "每次餵食必備，每週輪替使用。",
+      "description": "依守宮種類選用適合的鈣粉，每週 1–2 次餵食前以鈣粉沾裹昆蟲；每隔 1–2 週換用綜合維他命粉輪替，維持營養均衡。",
       "fromEmergency": false,
       "id": "gecko-supplements-initial",
       "maxAmount": 400,
@@ -7054,20 +7252,20 @@
       "stage": "飼養前準備"
     },
     "gecko-terrarium": {
-      "amount": 3000,
+      "amount": 8000,
       "category": "一次性準備費",
-      "description": "附緊固式網蓋，是守宮主要生活空間。",
+      "description": "選擇附緊固式網蓋的玻璃缸，確保頂部通風良好；缸體尺寸依守宮體型彈性選配。",
       "fromEmergency": false,
       "id": "gecko-terrarium",
       "maxAmount": 8000,
-      "name": "爬蟲專用玻璃缸（60×45×30 cm 以上）",
+      "name": "爬蟲專用玻璃缸",
       "recurring": false,
       "stage": "飼養前準備"
     },
     "gecko-thermometer-2": {
-      "amount": 300,
+      "amount": 800,
       "category": "一次性準備費",
-      "description": "分別置於暖側與涼側監控。",
+      "description": "至少兩個分別置於熱區與冷區，隨時確認溫度梯度是否正確，濕度維持 30–50%。",
       "fromEmergency": false,
       "id": "gecko-thermometer-2",
       "maxAmount": 800,
@@ -7076,9 +7274,9 @@
       "stage": "飼養前準備"
     },
     "gecko-transport-box": {
-      "amount": 200,
+      "amount": 500,
       "category": "一次性準備費",
-      "description": "可遮光小型塑膠盒，減少運輸視覺壓力。",
+      "description": "選用附通氣孔的小型塑膠盒，提供守宮安全的運輸空間。",
       "fromEmergency": false,
       "id": "gecko-transport-box",
       "maxAmount": 500,
@@ -7087,20 +7285,20 @@
       "stage": "出發前準備"
     },
     "gecko-warm-hide": {
-      "amount": 200,
+      "amount": 600,
       "category": "一次性準備費",
-      "description": "讓守宮在暖側有隱蔽空間。",
+      "description": "靠角落放置於熱區，讓守宮在需要溫暖時有隱蔽空間安心休息。",
       "fromEmergency": false,
       "id": "gecko-warm-hide",
       "maxAmount": 600,
-      "name": "暖側躲避屋",
+      "name": "熱區躲避屋",
       "recurring": false,
       "stage": "飼養前準備"
     },
     "gecko-water-dish": {
-      "amount": 100,
+      "amount": 200,
       "category": "一次性準備費",
-      "description": "每日換水。",
+      "description": "每日換新鮮水，守宮飲水量少但仍需固定供水；水碟不可太深，以免守宮溺水。",
       "fromEmergency": false,
       "id": "gecko-water-dish",
       "maxAmount": 200,
@@ -7140,7 +7338,7 @@
       "stageId": "daily",
       "stageLabel": "日常照護",
       "timeLabel": "日常照護",
-      "title": "{petName} 的每日健康巡視",
+      "title": "{petName}出沒注意！",
       "type": "guided-inspection"
     },
     {
@@ -7231,7 +7429,7 @@
         "encouragement": "你給了{petName}最需要的東西——安靜和空間，做得很好！",
         "knowledgeContent": [
           {
-            "text": "守宮對新環境的適應需要時間，**通常需要 5–14 天**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
+            "text": "守宮對新環境的適應需要時間，**通常需要3天左右**才會開始穩定進食。這段期間請維持穩定溫度、減少缸外干擾，不強迫觸碰或餵食。",
             "type": "paragraph"
           },
           {
@@ -7279,7 +7477,7 @@
           "feedbackTitle": "做得很好！",
           "id": "check-temperature",
           "result": "correct",
-          "text": "確認溫度計讀數，確保暖側與涼側溫度在正常範圍內"
+          "text": "確認溫度計讀數，確保熱區與冷區溫度在正常範圍內"
         },
         {
           "effects": {
@@ -7336,7 +7534,7 @@
       "correctSummary": [
         "守宮在適應期、蛻皮前、繁殖季或溫度不足時會正常拒食，應先排查這四個原因，超過14天仍未進食才需就醫，不可強迫餵食。"
       ],
-      "description": "你每天傍晚放昆蟲進缸，但{petName}躲在暖側躲避屋完全不出來，昆蟲在缸裡爬了一晚最後死掉，牠一口都沒吃。這已經是第三天了。",
+      "description": "你每天傍晚用長夾將昆蟲放入缸中，但{petName}躲在熱區躲避屋完全不出來，牠一口都沒吃。這已經是第七天了。",
       "id": "gecko-refuse-food",
       "multipleChoice": true,
       "questionText": "你應該怎麼做？（複選）",
@@ -7348,7 +7546,7 @@
       "stage": "日常照護",
       "stageId": "daily",
       "timeLabel": "日常照護",
-      "title": "{petName} 已經三天沒吃東西了",
+      "title": "{petName} 已經七天沒吃東西了",
       "topic": "拒食觀察",
       "wrongOptionIds": [
         "force-feed",
@@ -7411,7 +7609,7 @@
         "encouragement": "你即時注意到溫度問題並採取了正確的行動，{petName}今晚能暖暖的了！",
         "knowledgeContent": [
           {
-            "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**暖側底部應維持 28–32°C，涼側維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
+            "text": "守宮是**外溫動物**，體溫完全依賴環境溫度。爬蟲缸的**熱區底部應維持 28–32°C，冷區維持 22–25°C**。冬天室溫過低時，加熱效率明顯下降，需增設輔助加熱設備。",
             "type": "paragraph"
           },
           {
@@ -7423,9 +7621,9 @@
         "title": "做得很好！"
       },
       "correctSummary": [
-        "守宮缸暖側應維持28–32°C、涼側22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
+        "守宮缸熱區應維持28–32°C、冷區22–25°C，冬天室溫過低時應開暖氣或增設加熱設備，不可覆蓋缸體保溫，所有加熱設備應搭配溫度計監控。"
       ],
-      "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現暖側底部才 24°C，涼側只有 19°C，都比建議溫度低不少。{petName}縮在暖側躲避屋裡完全沒動靜。",
+      "description": "今天特別冷，室溫只有 16°C。你查了一下溫度計，發現熱區底部才 24°C，冷區只有 19°C，都比建議溫度低不少。{petName}縮在熱區躲避屋裡完全沒動靜。",
       "id": "gecko-temperature-check",
       "multipleChoice": true,
       "questionText": "你應該怎麼做？（複選）",
@@ -7539,7 +7737,7 @@
         {
           "correctAnswer": "yes",
           "id": "daily-care",
-          "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及了天是否為餵食日了嗎？",
+          "prompt": "你已經向協助者說明 {petName} 的每日溫度確認、排泄清理、健康觀察以及今天是否為餵食日了嗎？",
           "reviewHint": "先確認溫度、餵食日、排泄清理與健康觀察的交接內容。"
         },
         {
@@ -7563,12 +7761,12 @@
       ],
       "busyCareCompletion": {
         "additionalAdvice": [
-          "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
+          "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉爬蟲照護的寵物旅館或獸醫診所提供的住宿服務，作為備用方案。"
         ],
         "careTimeItems": [
           {
             "detail": "約 1～2 分鐘",
-            "title": "溫度確認（暖側 / 涼側）"
+            "title": "溫度確認（熱區 / 冷區）"
           },
           {
             "detail": "約 2～3 分鐘",
@@ -7584,7 +7782,7 @@
           },
           {
             "detail": "約 10～15 分鐘（餵食日）",
-            "title": "餵食（每 2–3 天一次，昆蟲沾鈣粉）"
+            "title": "餵食（每 3–7 天一次）"
           }
         ],
         "careTimeTitle": "每日照護時間",
@@ -7757,7 +7955,7 @@
             "type": "paragraph"
           },
           {
-            "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每次餵食確實沾鈣粉是預防關鍵。",
+            "text": "**後腿無力與顫抖**：後腿走路不穩、顫抖，或脊椎彎曲、下頜變軟——需立即就醫；每週 1–2 次餵食前確實沾鈣粉是預防關鍵。",
             "type": "paragraph"
           },
           {
@@ -7769,7 +7967,7 @@
             "type": "paragraph"
           },
           {
-            "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成無精卵，卵無法排出時需就醫。",
+            "text": "**腹部腫脹與拒食（雌守宮）**：腹部異常腫脹、行動困難、完全拒食——未交配的雌守宮仍可能形成未受精卵，卵無法排出時需就醫。",
             "type": "paragraph"
           },
           {

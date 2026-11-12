@@ -16,6 +16,11 @@
   --bottom-bleed-target: 140px;
   --bottom-bleed: var(--bottom-bleed-target);
   --bottom-toolbar-safe: 0px;
+  /*
+   * 內部清單真正需要保留的是 Safari 完整覆蓋區，而不只是 lvh/dvh 的差值。
+   * 在不需要延伸的桌機、Android 與裝置模擬器中，JS 會把兩者都設為 0。
+   */
+  --bottom-scroll-safe: max(var(--bottom-bleed), var(--bottom-toolbar-safe));
 }
 
 /* 桌機與平板維持原本結構；只有手機建立 Safari 工具列所需的延伸內容層。 */
@@ -141,7 +146,7 @@
   .stage-layout .busy-care-members,
   .stage-layout .busy-care-feedback,
   .stage-layout .breed-challenge-retry {
-    padding-bottom: calc(24px + var(--bottom-toolbar-safe)) !important;
+    padding-bottom: calc(24px + var(--bottom-scroll-safe)) !important;
   }
   /*
    * 「做得很好」回饋頁：把「視覺延伸」與「捲動視窗」分開。
@@ -156,8 +161,8 @@
   }
   .stage-layout .correct-feedback-copy {
     height: calc(100% - var(--bottom-bleed));
-    /* 捲到底時，繼續按鈕下方至少保留 60px。 */
-    padding-bottom: max(60px, calc(28px + env(safe-area-inset-bottom))) !important;
+    /* 尾端安全距離由內容層的 ::after 提供，避免 padding 被其他版型規則覆蓋。 */
+    padding-bottom: 0 !important;
     overflow-y: auto !important;
     /* iOS Safari：整頁鎖定時仍要明確允許面板接收垂直平移；BottomBleedColor 也會略過 touchmove 的阻擋。 */
     touch-action: pan-y;
@@ -165,8 +170,8 @@
   }
   /*
    * 單選與多選回饋共用同一內容層。最小高度 = 面板內容區的實際像素高度（由 CorrectFeedbackLayout
-   * 以 ResizeObserver 寫入 --feedback-pane-content-height）+ 60px，短內容也一定有 60px 的真實滑動距離；
-   * 長內容依自然高度捲動，不會多出空白。變數尚未寫入前才退回百分比。
+   * 以 ResizeObserver 寫入 --feedback-pane-content-height）。尾端的同色 flex spacer 另外保留 Safari
+   * 工具列安全距離；短內容也會真的高於捲動視窗，長內容則只在按鈕後方多出一次安全距離。
    */
   .stage-layout .correct-feedback-content {
     box-sizing: border-box;
@@ -174,7 +179,14 @@
     flex: 0 0 auto;
     flex-direction: column;
     width: 100%;
-    min-height: calc(var(--feedback-pane-content-height, 100%) + 60px);
+    min-height: var(--feedback-pane-content-height, 100%);
+  }
+  .stage-layout .correct-feedback-content::after {
+    content: "";
+    display: block;
+    flex: 0 0 max(60px, var(--bottom-scroll-safe));
+    width: 100%;
+    pointer-events: none;
   }
   /*
    * 過場狀態切換時，Safari 可能暫時讓舊的影片節點留在 DOM；若祖先仍是
@@ -187,11 +199,11 @@
   }
   /* 由 BottomBleedColor 標記：鎖定頁中、底緣貼近螢幕底部的可捲動區（不依賴 class 名稱）。 */
   .stage-layout .bleed-pane {
-    padding-bottom: calc(24px + var(--pane-bottom-obstruction, 0px)) !important;
+    padding-bottom: calc(24px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px))) !important;
   }
   /* 多選題原本的三層選擇器較具體，需在這裡明確套用實測遮擋高度。 */
   .stage-layout .daily-behavior-choices .choice-grid.bleed-pane {
-    padding-bottom: calc(24px + var(--pane-bottom-obstruction, 0px)) !important;
+    padding-bottom: calc(24px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px))) !important;
   }
 
   /* position: fixed 已以 Safari 可視區底緣定位，不再重複加一次工具列高度。 */
@@ -226,10 +238,10 @@
   /* 固定操作列會覆蓋清單底部；留下操作列高度，讓最後一排仍能完整捲到其上方。 */
   .stage-layout .room-preparation-mobile.is-complete .room-mobile-inventory,
   .stage-layout .departure-preparation-page:has(> .departure-actions.is-complete) .departure-supply-rows {
-    padding-bottom: calc(76px + var(--pane-bottom-obstruction, var(--bottom-bleed))) !important;
+    padding-bottom: calc(76px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px))) !important;
   }
   .stage-layout .arrival-meal-activity:has(> .arrival-meal-footer) .arrival-meal-inventory {
-    padding-bottom: calc(116px + var(--pane-bottom-obstruction, var(--bottom-bleed))) !important;
+    padding-bottom: calc(116px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px))) !important;
   }
 
   /* 犬牽繩結果與出門確認：內容容器本身延伸，避免 Safari 工具列蓋住最末段。 */

@@ -1774,7 +1774,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
               ],
               "careTimeItems": [
                 {
@@ -1791,15 +1791,11 @@
                 },
                 {
                   "detail": "約 5～10 分鐘",
-                  "title": "觀察精神、食量與行為"
+                  "title": "觀察精神、進食狀況等行為"
                 },
                 {
                   "detail": "約 30～60 分鐘",
                   "title": "放風陪伴與互動"
-                },
-                {
-                  "detail": "約 5～15 分鐘",
-                  "title": "梳毛（依毛長與換毛期）"
                 }
               ],
               "careTimeTitle": "每日照護時間",
@@ -2581,7 +2577,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
               ],
               "careTimeItems": [
                 {
@@ -2598,15 +2594,11 @@
                 },
                 {
                   "detail": "約 5～10 分鐘",
-                  "title": "觀察精神、食量與行為"
+                  "title": "觀察精神、進食狀況等行為"
                 },
                 {
                   "detail": "約 30～60 分鐘",
                   "title": "放風陪伴與互動"
-                },
-                {
-                  "detail": "約 5～15 分鐘",
-                  "title": "梳毛（依毛長與換毛期）"
                 }
               ],
               "careTimeTitle": "每日照護時間",
@@ -3392,7 +3384,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
               ],
               "careTimeItems": [
                 {
@@ -3409,15 +3401,11 @@
                 },
                 {
                   "detail": "約 5～10 分鐘",
-                  "title": "觀察精神、食量與行為"
+                  "title": "觀察精神、進食狀況等行為"
                 },
                 {
                   "detail": "約 30～60 分鐘",
                   "title": "放風陪伴與互動"
-                },
-                {
-                  "detail": "約 5～15 分鐘",
-                  "title": "梳毛（依毛長與換毛期）"
                 }
               ],
               "careTimeTitle": "每日照護時間",
@@ -3780,17 +3768,17 @@
                   "image": "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.webp",
                   "imageAlt": "從耳朵拎起兔子的錯誤抱法示意",
                   "imagePlaceholderLabel": "從耳朵拎起示意圖片待補",
-                  "title": "<danger>從耳朵拎起</danger>"
+                  "title": "<danger>不要從耳朵拎起</danger>"
                 },
                 {
                   "description": "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不代表牠不緊張或害怕。",
                   "image": "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp",
                   "imageAlt": "讓兔子腹部朝上的錯誤抱法示意",
                   "imagePlaceholderLabel": "腹部朝上示意圖片待補",
-                  "title": "<danger>讓牠腹部朝上</danger>"
+                  "title": "<danger>不要讓牠腹部朝上</danger>"
                 }
               ],
-              "title": "<danger>請注意這樣抱兔兔</danger>"
+              "title": "<danger>請注意！</danger>"
             },
             "correctFeedbackMedia": {
               "ariaLabel": "兔子安全抱起完成影片",
@@ -4341,7 +4329,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
               ],
               "careTimeItems": [
                 {
@@ -4358,15 +4346,11 @@
                 },
                 {
                   "detail": "約 5～10 分鐘",
-                  "title": "觀察精神、食量與行為"
+                  "title": "觀察精神、進食狀況等行為"
                 },
                 {
                   "detail": "約 30～60 分鐘",
                   "title": "放風陪伴與互動"
-                },
-                {
-                  "detail": "約 5～15 分鐘",
-                  "title": "梳毛（依毛長與換毛期）"
                 }
               ],
               "careTimeTitle": "每日照護時間",
@@ -4729,17 +4713,17 @@
                   "image": "/assets/rabbit/weekly-grooming/rabbit-lifted-by-ears.webp",
                   "imageAlt": "從耳朵拎起兔子的錯誤抱法示意",
                   "imagePlaceholderLabel": "從耳朵拎起示意圖片待補",
-                  "title": "<danger>從耳朵拎起</danger>"
+                  "title": "<danger>不要從耳朵拎起</danger>"
                 },
                 {
                   "description": "<danger>腹部朝上</danger>對兔子造成極大緊迫，可能引發驚嚇性休克，即使牠看起來沒有掙扎也不代表牠不緊張或害怕。",
                   "image": "/assets/rabbit/weekly-grooming/rabbit-held-belly-up.webp",
                   "imageAlt": "讓兔子腹部朝上的錯誤抱法示意",
                   "imagePlaceholderLabel": "腹部朝上示意圖片待補",
-                  "title": "<danger>讓牠腹部朝上</danger>"
+                  "title": "<danger>不要讓牠腹部朝上</danger>"
                 }
               ],
-              "title": "<danger>請注意這樣抱兔兔</danger>"
+              "title": "<danger>請注意！</danger>"
             },
             "correctFeedbackMedia": {
               "ariaLabel": "兔子安全抱起完成影片",
@@ -5152,21 +5136,21 @@
             {
               "segments": [
                 {
-                  "text": "兔子"
-                },
-                {
-                  "emphasis": true,
-                  "text": "不發出明顯叫聲"
-                },
-                {
-                  "text": "，但代謝旺盛、排泄頻繁，氣味管理是主要課題；請評估通風條件與清潔動線，並確認是否有"
+                  "text": "請評估居住空間是否有"
                 },
                 {
                   "emphasis": true,
                   "text": "足夠空間"
                 },
                 {
-                  "text": "供兔子在圍欄內自由活動（長期缺乏活動空間可能影響腸道蠕動與骨骼健康）。"
+                  "text": "供兔子在圍欄內自由活動，長期缺乏活動空間可能影響腸道蠕動與骨骼健康；兔子不發出明顯叫聲，但"
+                },
+                {
+                  "emphasis": true,
+                  "text": "代謝旺盛、排泄頻繁，氣味管理是主要課題"
+                },
+                {
+                  "text": "，請評估通風條件與清潔動線。"
                 }
               ],
               "type": "item"
@@ -5246,14 +5230,21 @@
             {
               "segments": [
                 {
-                  "text": "評估租屋空間是否有"
+                  "text": "請評估租屋空間是否有"
                 },
                 {
                   "emphasis": true,
                   "text": "足夠空間"
                 },
                 {
-                  "text": "讓兔子在圍欄內自由活動；長期缺乏活動空間可能影響兔子的腸道蠕動與骨骼健康。"
+                  "text": "供兔子在圍欄內自由活動，長期缺乏活動空間可能影響腸道蠕動與骨骼健康；兔子不發出明顯叫聲，但"
+                },
+                {
+                  "emphasis": true,
+                  "text": "代謝旺盛、排泄頻繁，氣味管理是主要課題"
+                },
+                {
+                  "text": "，請評估通風條件與清潔動線。"
                 }
               ],
               "type": "item"
@@ -5530,6 +5521,7 @@
         "title": "生活變化應對"
       }
     ],
+    "mobileActivityLayout": "full-bleed",
     "preparation": {
       "departureScene": {
         "trunkBackground": "/assets/car/car-trunk.webp",
@@ -5984,7 +5976,7 @@
           "preparedLabel": "已準備"
         },
         {
-          "description": "途中提供少量牧草，讓兔子可以進食與磨牙，也有助穩定情緒。",
+          "description": "主食，無限量供應；入住前需備妥足量牧草，是兔子每日最重要的食物。",
           "expenseIds": [
             "rabbit-hay-initial"
           ],
@@ -6087,15 +6079,11 @@
         },
         {
           "detail": "約 5～10 分鐘",
-          "title": "觀察精神、食量與行為"
+          "title": "觀察精神、進食狀況等行為"
         },
         {
           "detail": "約 30～60 分鐘",
           "title": "放風陪伴與互動"
-        },
-        {
-          "detail": "約 5～15 分鐘",
-          "title": "梳毛（依毛長與換毛期）"
         }
       ],
       "dailyCareTime": "每日約需安排 1～2 小時",
@@ -6877,7 +6865,7 @@
         ],
         "busyCareCompletion": {
           "additionalAdvice": [
-            "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
+            "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
           ],
           "careTimeItems": [
             {
@@ -6894,15 +6882,11 @@
             },
             {
               "detail": "約 5～10 分鐘",
-              "title": "觀察精神、食量與行為"
+              "title": "觀察精神、進食狀況等行為"
             },
             {
               "detail": "約 30～60 分鐘",
               "title": "放風陪伴與互動"
-            },
-            {
-              "detail": "約 5～15 分鐘",
-              "title": "梳毛（依毛長與換毛期）"
             }
           ],
           "careTimeTitle": "每日照護時間",
@@ -7271,7 +7255,7 @@
         "preparedLabel": "已準備"
       },
       {
-        "description": "途中提供少量牧草，讓兔子可以進食與磨牙，也有助穩定情緒。",
+        "description": "主食，無限量供應；入住前需備妥足量牧草，是兔子每日最重要的食物。",
         "expenseIds": [
           "rabbit-hay-initial"
         ],
@@ -7365,7 +7349,7 @@
     "rabbit-anti-slip-mat": {
       "amount": 400,
       "category": "一次性準備費",
-      "description": "鋪設於圍欄內，便於清理排泄物與食物殘渣，可清洗或拋棄式皆可",
+      "description": "鋪設在圍欄內部，方便清理排泄物、食物殘渣或飲水潑濺。",
       "fromEmergency": false,
       "id": "rabbit-anti-slip-mat",
       "name": "寵物保潔墊",
@@ -7386,7 +7370,7 @@
     "rabbit-carrier": {
       "amount": 1800,
       "category": "一次性準備費",
-      "description": "通風良好、兔子能站立轉身；外出就醫、移動時使用",
+      "description": "兔子必須在適當外出籠或提袋中運送，不可散放；籠內要能讓牠自然站立。",
       "fromEmergency": false,
       "id": "rabbit-carrier",
       "name": "安全外出籠／提袋",
@@ -7396,7 +7380,7 @@
     "rabbit-carrier-anti-slip-liner": {
       "amount": 150,
       "category": "一次性準備費",
-      "description": "外出籠底部鋪防滑墊，可避免兔子在車輛晃動時滑倒受傷",
+      "description": "外出籠底部鋪防滑墊，可避免兔子在車輛晃動時滑倒受傷。",
       "fromEmergency": false,
       "id": "rabbit-carrier-anti-slip-liner",
       "name": "防滑墊（籠內鋪底）",
@@ -7406,7 +7390,7 @@
     "rabbit-chew-toy": {
       "amount": 200,
       "category": "一次性準備費",
-      "description": "天然材質供兔子啃咬；維持牙齒磨損，兼具豐富化功能",
+      "description": "兔齒終生生長，安全的木製咀嚼玩具可提供磨牙與啃咬出口。",
       "fromEmergency": false,
       "id": "rabbit-chew-toy",
       "name": "木製咀嚼玩具",
@@ -7416,7 +7400,7 @@
     "rabbit-cooling-mat": {
       "amount": 600,
       "category": "一次性準備費",
-      "description": "夏季降溫必備；兔子對高溫極度敏感，超過 28°C 有中暑風險",
+      "description": "兔子沒有汗腺，高溫時可用陶板涼感墊協助牠自行選擇降溫位置。",
       "fromEmergency": false,
       "id": "rabbit-cooling-mat",
       "name": "陶板涼感墊",
@@ -7426,7 +7410,7 @@
     "rabbit-cooling-pack": {
       "amount": 400,
       "category": "一次性準備費",
-      "description": "夏季外出時放於外出籠旁降溫；兔子體溫調節能力差",
+      "description": "兔子非常怕熱，夏季外出需準備安全的降溫措施。",
       "fromEmergency": false,
       "id": "rabbit-cooling-pack",
       "name": "保冷袋／冰袋",
@@ -7436,7 +7420,7 @@
     "rabbit-dig-box": {
       "amount": 400,
       "category": "一次性準備費",
-      "description": "提供挖掘行為出口，減少破壞性行為",
+      "description": "挖掘是兔子的天性；挖掘箱能提供安全的行為出口。",
       "fromEmergency": false,
       "id": "rabbit-dig-box",
       "name": "挖掘箱",
@@ -7446,7 +7430,7 @@
     "rabbit-fence-pen": {
       "amount": 1500,
       "category": "一次性準備費",
-      "description": "限制兔子活動範圍，同時提供安全的自由活動空間",
+      "description": "以穩固圍片隔出安全活動範圍，保護兔子與家具。",
       "fromEmergency": false,
       "id": "rabbit-fence-pen",
       "name": "圍片／柵欄",
@@ -7456,7 +7440,7 @@
     "rabbit-hay-initial": {
       "amount": 600,
       "category": "一次性準備費",
-      "description": "兔子最重要的主食，入住前需備妥足量；之後每月持續補充（見每月基本支出）",
+      "description": "主食，無限量供應；入住前需備妥足量牧草，是兔子每日最重要的食物。",
       "fromEmergency": false,
       "id": "rabbit-hay-initial",
       "name": "牧草（初期備量）",
@@ -7476,7 +7460,7 @@
     "rabbit-hay-rack": {
       "amount": 800,
       "category": "一次性準備費",
-      "description": "固定牧草避免踩踏污染；無限量供應牧草為兔子最重要的飲食需求",
+      "description": "牧草是兔子的主食，必須隨時可取用；牧草架也能避免牧草被踩髒。",
       "fromEmergency": false,
       "id": "rabbit-hay-rack",
       "name": "牧草架",
@@ -7486,7 +7470,7 @@
     "rabbit-heavy-water-bowl": {
       "amount": 350,
       "category": "一次性準備費",
-      "description": "較重不易翻倒；每日換新鮮水、保持清潔",
+      "description": "較重的飲水碗不容易打翻，也方便每天觀察飲水量。",
       "fromEmergency": false,
       "id": "rabbit-heavy-water-bowl",
       "name": "較重的飲水碗",
@@ -7496,7 +7480,7 @@
     "rabbit-hiding-box": {
       "amount": 800,
       "category": "一次性準備費",
-      "description": "提供可隨時躲藏的安全空間，減少緊迫",
+      "description": "兔子需要隨時可退避的躲藏處，才能降低緊迫。",
       "fromEmergency": false,
       "id": "rabbit-hiding-box",
       "name": "躲藏箱／小屋",
@@ -7518,7 +7502,7 @@
     "rabbit-litter-box": {
       "amount": 600,
       "category": "一次性準備費",
-      "description": "兔子可訓練定點上廁所；搭配墊料每日清理",
+      "description": "兔子傾向固定區域排泄；定期清潔便盆才能避免尿灼傷並觀察糞便。",
       "fromEmergency": false,
       "id": "rabbit-litter-box",
       "name": "兔用便盆",
@@ -7528,7 +7512,7 @@
     "rabbit-litter-monthly": {
       "amount": 450,
       "category": "每月基本支出",
-      "description": "草製或紙製墊料；每日清理，每週全換",
+      "description": "兔子傾向固定區域排泄；定期清潔便盆才能避免尿灼傷並觀察糞便。",
       "fromEmergency": false,
       "id": "rabbit-litter-monthly",
       "name": "每月便盆墊料費用",
@@ -7613,7 +7597,7 @@
     "rabbit-water-for-trip": {
       "amount": 100,
       "category": "一次性準備費",
-      "description": "長途或夏季移動時準備適量飲水；抵達後務必確認兔子有喝水",
+      "description": "長途或夏季移動時準備適量飲水；兔子緊張時可能減少進食，抵達後務必確認牠有喝水。",
       "fromEmergency": false,
       "id": "rabbit-water-for-trip",
       "name": "飲水容器",
@@ -8158,7 +8142,7 @@
       ],
       "busyCareCompletion": {
         "additionalAdvice": [
-          "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
+          "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉兔子照護的寵物旅館，或由**熟悉兔子醫療的獸醫師**提供的住宿服務，作為備用方案。"
         ],
         "careTimeItems": [
           {
@@ -8175,15 +8159,11 @@
           },
           {
             "detail": "約 5～10 分鐘",
-            "title": "觀察精神、食量與行為"
+            "title": "觀察精神、進食狀況等行為"
           },
           {
             "detail": "約 30～60 分鐘",
             "title": "放風陪伴與互動"
-          },
-          {
-            "detail": "約 5～15 分鐘",
-            "title": "梳毛（依毛長與換毛期）"
           }
         ],
         "careTimeTitle": "每日照護時間",

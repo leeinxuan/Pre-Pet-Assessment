@@ -402,6 +402,7 @@
           "/assets/bird/room/perch-set-2.webp",
           "/assets/bird/room/perch-set-3.webp"
         ],
+        "perchToe23": "/assets/bird/room/perch-toe-23.webp",
         "plant": "/assets/bird/room/toxic-plant.webp",
         "sleepingTent": "/assets/bird/room/parrot-nest.webp",
         "thermometer": "/assets/bird/room/thermometer.webp",
@@ -1810,7 +1811,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
               ],
               "careTimeItems": [
                 {
@@ -2580,7 +2581,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
               ],
               "careTimeItems": [
                 {
@@ -3354,7 +3355,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
               ],
               "careTimeItems": [
                 {
@@ -3749,7 +3750,7 @@
             "stageId": "daily",
             "stageTitle": "日常照護",
             "timeLabel": "日常照護",
-            "title": "鳥籠日常巡視",
+            "title": "今天{petName}說什麼？",
             "topic": "每日鳥籠巡視"
           }
         ],
@@ -4166,7 +4167,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
               ],
               "careTimeItems": [
                 {
@@ -4561,7 +4562,7 @@
             "stageId": "daily",
             "stageTitle": "日常照護",
             "timeLabel": "日常照護",
-            "title": "鳥籠日常巡視",
+            "title": "今天{petName}說什麼？",
             "topic": "每日鳥籠巡視"
           }
         ]
@@ -4888,28 +4889,21 @@
             {
               "segments": [
                 {
-                  "text": "鸚鵡的"
+                  "text": "請評估居住空間是否有"
                 },
                 {
                   "emphasis": true,
-                  "text": "鳴叫聲量相當大"
+                  "text": "充足通風與自然光線的空間"
                 },
                 {
-                  "text": "，在公寓住宅中極易影響鄰居，甚至引發抗議或糾紛；建議事先與鄰居溝通，並了解可能的"
+                  "text": "擺放鳥籠；鸚鵡的鳴叫聲量相當大，在公寓住宅中極易影響鄰居，甚至引發抗議或糾紛；建議事先與鄰居溝通，並了解可能的"
                 },
                 {
                   "emphasis": true,
                   "text": "隔音措施"
                 },
                 {
-                  "text": "（如加裝隔音窗簾等）；同時評估空間是否適合"
-                },
-                {
-                  "emphasis": true,
-                  "text": "鳥籠擺放"
-                },
-                {
-                  "text": "（充足通風與自然光線）。"
+                  "text": "（如加裝隔音窗簾等）。"
                 }
               ],
               "type": "item"
@@ -4989,21 +4983,21 @@
             {
               "segments": [
                 {
-                  "text": "評估租屋空間是否適合鳥籠擺放（充足"
+                  "text": "請評估租屋空間是否有"
                 },
                 {
                   "emphasis": true,
-                  "text": "通風"
+                  "text": "充足通風與自然光線的空間"
                 },
                 {
-                  "text": "與"
+                  "text": "擺放鳥籠；鸚鵡的鳴叫聲量相當大，在公寓住宅中極易影響鄰居，甚至引發抗議或糾紛；建議事先與鄰居溝通，並了解可能的"
                 },
                 {
                   "emphasis": true,
-                  "text": "自然光線"
+                  "text": "隔音措施"
                 },
                 {
-                  "text": "）；若飼養鸚鵡，請確認鳴叫噪音不會引發房東或鄰居抗議。"
+                  "text": "（如加裝隔音窗簾等）。"
                 }
               ],
               "type": "item"
@@ -5095,7 +5089,7 @@
             "今天的巡視，就是你和 {petName} 之間的默契。"
           ],
           "startLabel": "開始今日巡視 →",
-          "title": "{petName} 看起來沒事，不代表牠真的沒事",
+          "title": "今天{petName}說什麼？",
           "visualAssets": {
             "character": "/assets/bird/dailygame/bird-closeup-interactive.webp",
             "collector": "/assets/bird/dailygame/bedding-dirty.webp",
@@ -5108,7 +5102,8 @@
           "health-observed",
           "social-time"
         ],
-        "targetStamps": 4
+        "targetStamps": 4,
+        "title": "今天{petName}說什麼？"
       },
       "dailyBehaviorScenarioIds": [
         "bird-picky-eating",
@@ -5146,7 +5141,7 @@
           "stageId": "daily",
           "stageLabel": "日常照護",
           "timeLabel": "日常照護",
-          "title": "鸚鵡日常巡視",
+          "title": "今天{petName}說什麼？",
           "type": "bird-cage-inspection"
         },
         {
@@ -5216,7 +5211,7 @@
             "kind": "room-preparation"
           }
         ],
-        "summary": "選用適當尺寸的方形金屬籠，備好粗細合適的棲木、飲水器與安全玩具。",
+        "summary": "選用方形金屬籠，確認籠寬與高度能讓雙翼完全展開、站於棲木時尾羽不碰底；棲木粗細應能讓鳥抓握時足趾環繞約 2/3 圓周，另備飲水器與安全玩具。",
         "title": "安全空間佈置"
       },
       {
@@ -5303,6 +5298,7 @@
         "title": "生活變化應對"
       }
     ],
+    "mobileActivityLayout": "full-bleed",
     "preparation": {
       "departureScene": {
         "trunkBackground": "/assets/car/car-trunk.webp",
@@ -5478,7 +5474,7 @@
       },
       "roomItems": [
         {
-          "description": "方形籠提供可倚靠的角落；籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底；材質選白鐵，避免烤漆或鍍鋅。",
+          "description": "方形籠提供可倚靠的角落；<accent>籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底</accent>；材質選白鐵，避免烤漆或鍍鋅。",
           "expenseId": "bird-cage",
           "icon": "▦",
           "id": "bird-cage",
@@ -5521,7 +5517,8 @@
           "required": false
         },
         {
-          "description": "足趾環繞棲木圓周約 2/3 為合適粗細；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
+          "description": "<accent>足趾環繞棲木圓周約 2/3 為合適粗細</accent>；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
+          "descriptionImage": "/assets/bird/room/perch-toe-23.webp",
           "expenseId": "bird-perch-set",
           "icon": "━",
           "id": "perch-set",
@@ -5807,10 +5804,11 @@
             "x": 45,
             "y": 56
           },
-          "preparedLabel": "已準備"
+          "preparedLabel": "已準備",
+          "priceNote": "可使用家中薄毛巾或布料"
         },
         {
-          "description": "途中備少量符合食性的飼料，從家中現有存糧取用即可。",
+          "description": "依食性選購：種子飼料、滋養丸或吸蜜粉。",
           "expenseIds": [
             "bird-food-initial"
           ],
@@ -5862,7 +5860,7 @@
         },
         {
           "items": [
-            "適當尺寸的方形金屬鳥籠與不同材質、粗細合適的棲木",
+            "方形金屬鳥籠（籠寬與高度能讓雙翼完全展開、尾羽不碰底）與棲木（足趾環繞約 2/3 圓周）",
             "合適食水容器、糞便托盤與溫度計",
             "天然啃咬與攀爬玩具，定期輪換",
             "完全停用鐵氟龍，避免香氛、噴霧與煙霧",
@@ -5979,7 +5977,7 @@
     },
     "roomItems": [
       {
-        "description": "方形籠提供可倚靠的角落；籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底；材質選白鐵，避免烤漆或鍍鋅。",
+        "description": "方形籠提供可倚靠的角落；<accent>籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底</accent>；材質選白鐵，避免烤漆或鍍鋅。",
         "expenseId": "bird-cage",
         "icon": "▦",
         "id": "bird-cage",
@@ -6022,7 +6020,8 @@
         "required": false
       },
       {
-        "description": "足趾環繞棲木圓周約 2/3 為合適粗細；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
+        "description": "<accent>足趾環繞棲木圓周約 2/3 為合適粗細</accent>；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
+        "descriptionImage": "/assets/bird/room/perch-toe-23.webp",
         "expenseId": "bird-perch-set",
         "icon": "━",
         "id": "perch-set",
@@ -6697,7 +6696,7 @@
         ],
         "busyCareCompletion": {
           "additionalAdvice": [
-            "如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
+            "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
           ],
           "careTimeItems": [
             {
@@ -7105,10 +7104,11 @@
           "x": 45,
           "y": 56
         },
-        "preparedLabel": "已準備"
+        "preparedLabel": "已準備",
+        "priceNote": "可使用家中薄毛巾或布料"
       },
       {
-        "description": "途中備少量符合食性的飼料，從家中現有存糧取用即可。",
+        "description": "依食性選購：種子飼料、滋養丸或吸蜜粉。",
         "expenseIds": [
           "bird-food-initial"
         ],
@@ -7174,7 +7174,7 @@
     "bird-cage": {
       "amount": 1500,
       "category": "一次性準備費",
-      "description": "應選用方形籠，白鐵金屬籠為佳；格柵間隙依鳥體型選擇，避免過大或過小",
+      "description": "方形籠提供可倚靠的角落；<accent>籠寬與高度需能讓鸚鵡雙翼完全展開、站於棲木時尾羽不碰底</accent>；材質選白鐵，避免烤漆或鍍鋅。",
       "fromEmergency": false,
       "id": "bird-cage",
       "name": "鳥籠",
@@ -7184,7 +7184,7 @@
     "bird-carrier": {
       "amount": 1200,
       "category": "一次性準備費",
-      "description": "通風良好、材質堅固、內有棲木；縫隙不讓肢體探出",
+      "description": "鳥必須在通風、堅固且間隙安全的外出籠中運送。",
       "fromEmergency": false,
       "id": "bird-carrier",
       "name": "鳥用外出籠",
@@ -7194,7 +7194,7 @@
     "bird-chew-toy": {
       "amount": 300,
       "category": "一次性準備費",
-      "description": "天然材質（木材、麻繩）降低誤食風險；為消耗品，需定期更換",
+      "description": "木材、麻繩等天然材質可提供安全啃咬與紓壓。",
       "fromEmergency": false,
       "id": "bird-chew-toy",
       "name": "啃咬玩具",
@@ -7204,7 +7204,7 @@
     "bird-cleaning-monthly": {
       "amount": 300,
       "category": "每月基本支出",
-      "description": "糞尿托盤墊料每日更換；定期徹底清洗消毒籠舍；使用確認對鳥無害的清潔劑",
+      "description": "每天更換墊料，才能觀察糞便並維持環境衛生；可使用報紙、餐巾紙、紙棉等材質，避免使用有香氣的產品。",
       "fromEmergency": false,
       "id": "bird-cleaning-monthly",
       "name": "每月清潔耗材費",
@@ -7214,7 +7214,7 @@
     "bird-climbing-toy": {
       "amount": 500,
       "category": "一次性準備費",
-      "description": "增加籠內落腳空間，鼓勵活動；視使用狀況定期更換",
+      "description": "增加籠內活動與探索機會，定期輪換更有新鮮感。",
       "fromEmergency": false,
       "id": "bird-climbing-toy",
       "name": "攀爬玩具（梯子／鞦韆）",
@@ -7222,9 +7222,9 @@
       "stage": "飼養前準備"
     },
     "bird-cover-cloth": {
-      "amount": 300,
+      "amount": 0,
       "category": "一次性準備費",
-      "description": "遮蔽籠具降低外界刺激，減少途中緊迫；也用於日常安靜休息",
+      "description": "覆蓋外出籠可減少視覺刺激與緊迫。",
       "fromEmergency": false,
       "id": "bird-cover-cloth",
       "name": "遮光布",
@@ -7234,7 +7234,7 @@
     "bird-feces-tray": {
       "amount": 300,
       "category": "一次性準備費",
-      "description": "可使用報紙、餐巾紙、紙棉等材質鋪於籠底，每日更換以觀察糞便狀態並維持衛生；避免使用有香氣的產品",
+      "description": "每天更換墊料，才能觀察糞便並維持環境衛生；可使用報紙、餐巾紙、紙棉等材質，避免使用有香氣的產品。",
       "fromEmergency": false,
       "id": "bird-feces-tray",
       "name": "籠底墊料",
@@ -7244,7 +7244,7 @@
     "bird-food-bowl": {
       "amount": 200,
       "category": "一次性準備費",
-      "description": "依食性選擇適當容器；吸蜜性鳥類需專用碗具",
+      "description": "依食性提供專用飼料，並留意碗中是否只剩空殼。",
       "fromEmergency": false,
       "id": "bird-food-bowl",
       "name": "食碗／食杯",
@@ -7254,7 +7254,7 @@
     "bird-food-initial": {
       "amount": 250,
       "category": "一次性準備費",
-      "description": "依食性選購一包初期存量（種子飼料、滋養丸或吸蜜粉）；到家第一天即可立刻餵食",
+      "description": "依食性選購：種子飼料、滋養丸或吸蜜粉。",
       "fromEmergency": false,
       "id": "bird-food-initial",
       "name": "主食飼料（初期備量）",
@@ -7308,7 +7308,7 @@
     "bird-perch-set": {
       "amount": 500,
       "category": "一次性準備費",
-      "description": "提供不同材質與粗細的棲木；寬度讓足趾環繞約 2/3 為佳",
+      "description": "<accent>足趾環繞棲木圓周約 2/3 為合適粗細</accent>；搭配不同材質（天然樹枝、棉繩等），分散足部壓力。",
       "fromEmergency": false,
       "id": "bird-perch-set",
       "name": "棲木組",
@@ -7328,7 +7328,7 @@
     "bird-sleeping-tent": {
       "amount": 300,
       "category": "一次性準備費",
-      "description": "提供遮蔽感與保暖；部分鸚鵡（尤其玄鳳）喜歡在布窩中休息。需定期清洗並修剪鬆脫線頭。",
+      "description": "提供遮蔽感與保暖，部分鸚鵡（尤其玄鳳）喜歡在布窩中休息；需定期清洗並修剪鬆脫線頭。",
       "fromEmergency": false,
       "id": "bird-sleeping-tent",
       "name": "布窩（三角帳篷型）",
@@ -7338,7 +7338,7 @@
     "bird-thermometer": {
       "amount": 300,
       "category": "一次性準備費",
-      "description": "鳥對溫度變化敏感，維持環境溫度穩定非常重要",
+      "description": "鳥對溫度變化敏感，需要具體數據協助調整環境。",
       "fromEmergency": false,
       "id": "bird-thermometer",
       "name": "溫度計",
@@ -7348,7 +7348,7 @@
     "bird-water-bowl": {
       "amount": 200,
       "category": "一次性準備費",
-      "description": "不使用過大過深容器；避免鳥跌落",
+      "description": "每天換水並清洗容器；避免過深容器造成跌落風險。",
       "fromEmergency": false,
       "id": "bird-water-bowl",
       "name": "水碗／水杯",
@@ -7358,7 +7358,7 @@
     "bird-water-supply": {
       "amount": 150,
       "category": "一次性準備費",
-      "description": "長途移動準備適量飲水，安全停靠時補充",
+      "description": "長途移動準備適量飲水，安全停靠時補充。",
       "fromEmergency": false,
       "id": "bird-water-supply",
       "name": "飲水容器",
@@ -7397,7 +7397,7 @@
       "stageId": "daily",
       "stageLabel": "日常照護",
       "timeLabel": "日常照護",
-      "title": "鸚鵡日常巡視",
+      "title": "今天{petName}說什麼？",
       "type": "bird-cage-inspection"
     },
     {
@@ -7841,7 +7841,7 @@
       ],
       "busyCareCompletion": {
         "additionalAdvice": [
-          "如果未來找不到合適的代養人，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
+          "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有接受鳥類的寵物旅館，作為備用方案。⚠️ 請注意，市面上接受鳥類的寵物旅館極少，建議平時就事先查詢確認。"
         ],
         "careTimeItems": [
           {

@@ -866,7 +866,7 @@
             "bottom": 11,
             "left": 47,
             "maxHeight": 67,
-            "width": 33
+            "width": 25
           },
           "veggie": {
             "bottom": 10,
@@ -961,6 +961,11 @@
       ],
       "scene": {
         "desktopBackground": "/assets/cat/room/cat-safe-room.webp",
+        "desktopBackgroundStyle": {
+          "objectPosition": "center bottom",
+          "transform": "scale(1.28)",
+          "transformOrigin": "center bottom"
+        },
         "food": {
           "empty": "/assets/cat/feeding/empty-food-bowl.webp",
           "ready": "/assets/cat/feeding/cat-food-bowl.webp"
@@ -991,7 +996,7 @@
         },
         {
           "alt": "乾淨飲水",
-          "description": "✅ 必要！每天提供新鮮飲水並清洗容器。貓咪天性飲水量少，可嘗試流動飲水器增加飲水意願。",
+          "description": "必要！每天提供新鮮飲水並清洗容器。貓咪天性飲水量少，可嘗試流動飲水器增加飲水意願。",
           "image": "/assets/shared/waterbottle.webp",
           "label": "乾淨飲水",
           "stateKey": "water"
@@ -1284,7 +1289,7 @@
             ],
             "stage": "日常照護",
             "timeLabel": "日常照護",
-            "title": "抓沙發",
+            "title": "牠把家具都抓壞了",
             "topic": "貓咪抓磨需求與居家安全",
             "wrongOptionIds": [
               "cat-scratch-trim-natural"
@@ -1405,7 +1410,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
               ],
               "careTimeItems": [
                 {
@@ -2015,7 +2020,7 @@
             ],
             "stage": "日常照護",
             "timeLabel": "日常照護",
-            "title": "抓沙發",
+            "title": "牠把家具都抓壞了",
             "topic": "貓咪抓磨需求與居家安全",
             "wrongOptionIds": [
               "cat-scratch-trim-natural"
@@ -2136,7 +2141,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
               ],
               "careTimeItems": [
                 {
@@ -2750,7 +2755,7 @@
             ],
             "stage": "日常照護",
             "timeLabel": "日常照護",
-            "title": "抓沙發",
+            "title": "牠把家具都抓壞了",
             "topic": "貓咪抓磨需求與居家安全",
             "wrongOptionIds": [
               "cat-scratch-trim-natural"
@@ -2871,7 +2876,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
               ],
               "careTimeItems": [
                 {
@@ -3481,7 +3486,7 @@
             ],
             "stage": "日常照護",
             "timeLabel": "日常照護",
-            "title": "抓沙發",
+            "title": "牠把家具都抓壞了",
             "topic": "貓咪抓磨需求與居家安全",
             "wrongOptionIds": [
               "cat-scratch-trim-natural"
@@ -3602,7 +3607,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
+                "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
               ],
               "careTimeItems": [
                 {
@@ -4274,14 +4279,21 @@
             {
               "segments": [
                 {
-                  "text": "若住在公寓或大廈，留意"
+                  "text": "評估居住空間是否有"
                 },
                 {
                   "emphasis": true,
-                  "text": "電梯與公共走道的禮節"
+                  "text": "足夠空間"
                 },
                 {
-                  "text": "，並確認門窗防逃設施完善，避免貓咪進入公共區域引發糾紛；貓咪在"
+                  "text": "讓貓咪自由活動，並確認門窗能否加裝"
+                },
+                {
+                  "emphasis": true,
+                  "text": "防逃設施"
+                },
+                {
+                  "text": "（貓網、窗扣），避免貓咪外逃；貓咪在"
                 },
                 {
                   "emphasis": true,
@@ -4382,7 +4394,21 @@
                   "text": "防逃設施"
                 },
                 {
-                  "text": "（貓網、窗扣），避免貓咪外逃。"
+                  "text": "（貓網、窗扣），避免貓咪外逃；貓咪在"
+                },
+                {
+                  "emphasis": true,
+                  "text": "發情期的夜間嚎叫"
+                },
+                {
+                  "text": "聲量可能影響鄰居，請及早安排"
+                },
+                {
+                  "emphasis": true,
+                  "text": "結紮手術"
+                },
+                {
+                  "text": "。"
                 }
               ],
               "type": "item"
@@ -4480,7 +4506,7 @@
           "stageId": "daily",
           "stageLabel": "日常照護",
           "timeLabel": "日常照護",
-          "title": "貓砂盆救援隊",
+          "title": "貓砂盆清潔隊",
           "type": "daily-inspection"
         },
         {
@@ -4716,6 +4742,7 @@
           }
         ],
         "targetStamps": 3,
+        "title": "貓砂盆清潔隊",
         "wasteItems": [
           {
             "id": "urine-1",
@@ -4848,6 +4875,7 @@
         "title": "生活變化應對"
       }
     ],
+    "mobileActivityLayout": "full-bleed",
     "preparation": {
       "departureScene": {
         "documentFolderAlt": "飼養文件夾",
@@ -5059,7 +5087,6 @@
         {
           "description": "維持足夠砂量並每天清理，才能觀察排泄與降低壓力。",
           "expenseIds": [
-            "cat-litter-box",
             "cat-litter-monthly"
           ],
           "icon": "◌",
@@ -5501,7 +5528,6 @@
       {
         "description": "維持足夠砂量並每天清理，才能觀察排泄與降低壓力。",
         "expenseIds": [
-          "cat-litter-box",
           "cat-litter-monthly"
         ],
         "icon": "◌",
@@ -5936,7 +5962,7 @@
         ],
         "stage": "日常照護",
         "timeLabel": "日常照護",
-        "title": "抓沙發",
+        "title": "牠把家具都抓壞了",
         "topic": "貓咪抓磨需求與居家安全",
         "wrongOptionIds": [
           "cat-scratch-trim-natural"
@@ -6057,7 +6083,7 @@
         ],
         "busyCareCompletion": {
           "additionalAdvice": [
-            "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
+            "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
           ],
           "careTimeItems": [
             {
@@ -6550,7 +6576,7 @@
     "cat-carrier": {
       "amount": 1500,
       "category": "一次性準備費",
-      "description": "安全運送貓咪的必要設備；選擇通風、有頂蓋、開口足夠的款式；平時可放置家中讓貓習慣",
+      "description": "讓小貓在移動途中有安全固定的空間。",
       "fromEmergency": false,
       "id": "cat-carrier",
       "name": "外出籠",
@@ -6560,7 +6586,7 @@
     "cat-carrier-pad": {
       "amount": 250,
       "category": "一次性準備費",
-      "description": "途中防止意外弄髒外出籠；選擇吸水性佳、不易移位的款式",
+      "description": "接回途中可降低排泄與清潔壓力。",
       "fromEmergency": false,
       "id": "cat-carrier-pad",
       "name": "尿墊（外出用）",
@@ -6570,7 +6596,7 @@
     "cat-cleaner-kit": {
       "amount": 150,
       "category": "一次性準備費",
-      "description": "途中清潔與到家後基本清理用",
+      "description": "處理接回途中可能發生的髒污。",
       "fromEmergency": false,
       "id": "cat-cleaner-kit",
       "name": "外出清潔組（濕紙巾）",
@@ -6580,7 +6606,7 @@
     "cat-food-bowl": {
       "amount": 300,
       "category": "一次性準備費",
-      "description": "固定位置餵食，建立穩定作息；寬口、深度淺的碗減少貓鬚不適",
+      "description": "固定食盆位置，避免和砂盆太接近，讓進食更安心。",
       "fromEmergency": false,
       "id": "cat-food-bowl",
       "name": "食盆",
@@ -6600,7 +6626,7 @@
     "cat-hiding-space": {
       "amount": 600,
       "category": "一次性準備費",
-      "description": "新到家貓咪需要可退避的安全角落；貓屋或有蓋的紙箱均可",
+      "description": "準備緊張時可躲避的隱蔽空間，讓貓咪能用自己的速度觀察與適應。",
       "fromEmergency": false,
       "id": "cat-hiding-space",
       "name": "安全躲藏空間（紙箱或貓屋）",
@@ -6622,7 +6648,7 @@
     "cat-litter-box": {
       "amount": 1200,
       "category": "一次性準備費",
-      "description": "建議每隻貓至少一個砂盆；選擇入口低、尺寸足夠的款式；提供不同類型貓砂供貓選擇",
+      "description": "貓砂盆應放在安靜、容易到達且與食水分開的位置。",
       "fromEmergency": false,
       "id": "cat-litter-box",
       "name": "貓砂盆與貓砂（初期）",
@@ -6632,7 +6658,7 @@
     "cat-litter-monthly": {
       "amount": 700,
       "category": "每月基本支出",
-      "description": "貓砂盆每天清潔、定期全換砂；貓砂選擇需考量貓的偏好與飼主打掃便利性",
+      "description": "維持足夠砂量並每天清理，才能觀察排泄與降低壓力。",
       "fromEmergency": false,
       "id": "cat-litter-monthly",
       "name": "每月貓砂費",
@@ -6684,7 +6710,7 @@
     "cat-rest-bed": {
       "amount": 800,
       "category": "一次性準備費",
-      "description": "提供溫暖舒適的休息處；可選擇可拆洗款式",
+      "description": "日常睡眠與舒適休息的位置要安靜、穩定，避免一直被打擾。",
       "fromEmergency": false,
       "id": "cat-rest-bed",
       "name": "日常休息空間（貓床或軟墊）",
@@ -6714,7 +6740,7 @@
     "cat-scratcher": {
       "amount": 800,
       "category": "一次性準備費",
-      "description": "提供合法磨爪出口，減少抓沙發行為；選擇穩固的款式。",
+      "description": "抓板能提供自然抓磨出口，降低家具被抓的機會。",
       "fromEmergency": false,
       "id": "cat-scratcher",
       "name": "抓板",
@@ -6755,7 +6781,7 @@
     "cat-water-bowl": {
       "amount": 300,
       "category": "一次性準備費",
-      "description": "遠離食盆放置；部分貓偏好流動水，可搭配飲水機",
+      "description": "水碗可與食盆稍微分開，並每天更換乾淨飲水。",
       "fromEmergency": false,
       "id": "cat-water-bowl",
       "name": "水碗",
@@ -6765,7 +6791,7 @@
     "cat-water-kit": {
       "amount": 250,
       "category": "一次性準備費",
-      "description": "長途移動備用飲水；折疊式水碗方便攜帶",
+      "description": "必要時補充飲水，避免長時間缺水。",
       "fromEmergency": false,
       "id": "cat-water-kit",
       "name": "外出用水碗＋飲水",
@@ -6802,7 +6828,7 @@
       "stageId": "daily",
       "stageLabel": "日常照護",
       "timeLabel": "日常照護",
-      "title": "貓砂盆救援隊",
+      "title": "貓砂盆清潔隊",
       "type": "daily-inspection"
     },
     {
@@ -7094,7 +7120,7 @@
       ],
       "stage": "日常照護",
       "timeLabel": "日常照護",
-      "title": "抓沙發",
+      "title": "牠把家具都抓壞了",
       "topic": "貓咪抓磨需求與居家安全",
       "wrongOptionIds": [
         "cat-scratch-trim-natural"
@@ -7215,7 +7241,7 @@
       ],
       "busyCareCompletion": {
         "additionalAdvice": [
-          "如果未來找不到合適的代養人，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
+          "如果未來找不到合適的臨時照顧者，可以提前了解附近是否有熟悉貓咪照護的寵物旅館，作為備用方案。"
         ],
         "careTimeItems": [
           {

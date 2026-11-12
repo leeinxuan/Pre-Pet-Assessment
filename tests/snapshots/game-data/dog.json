@@ -1403,7 +1403,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
+                "如果未來臨時找不到合適的臨時照顧者，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
               ],
               "reflectionContent": [
                 "忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"
@@ -2122,7 +2122,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
+                "如果未來臨時找不到合適的臨時照顧者，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
               ],
               "reflectionContent": [
                 "忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"
@@ -2845,7 +2845,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
+                "如果未來臨時找不到合適的臨時照顧者，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
               ],
               "reflectionContent": [
                 "忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"
@@ -3564,7 +3564,7 @@
             ],
             "busyCareCompletion": {
               "additionalAdvice": [
-                "如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
+                "如果未來臨時找不到合適的臨時照顧者，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
               ],
               "reflectionContent": [
                 "忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"
@@ -4544,6 +4544,7 @@
         "title": "生活變化應對"
       }
     ],
+    "mobileActivityLayout": "standard",
     "preparation": {
       "departureScene": {
         "documentFolderAlt": "飼養文件夾",
@@ -4674,7 +4675,7 @@
       },
       "roomItems": [
         {
-          "description": "提供固定、安靜的休息位置。",
+          "description": "提供安靜、安全的休息角落；可選擇犬用床或軟墊，依體型選擇適合尺寸",
           "expenseId": "dog-bed",
           "icon": "🛏️",
           "id": "bed",
@@ -4695,7 +4696,7 @@
           "required": true
         },
         {
-          "description": "幫助小狗消耗精力與建立正向互動。",
+          "description": "提供啃咬與互動的適當出口；選擇不易碎裂、無毒材質，避免誤食",
           "expenseId": "dog-toy",
           "icon": "🦴",
           "id": "toy",
@@ -4716,7 +4717,7 @@
           "required": true
         },
         {
-          "description": "每天確認有乾淨、足量的飲水。",
+          "description": "隨時保持乾淨飲水；選擇適合體型的碗，不易打翻為佳",
           "expenseId": "dog-water-bowl",
           "icon": "💧",
           "id": "water-bowl",
@@ -4737,7 +4738,7 @@
           "required": true
         },
         {
-          "description": "固定飲食器具，幫助建立規律餵食。",
+          "description": "固定位置餵食，建立穩定作息；依體型選擇高度適中的食碗",
           "expenseId": "dog-food-bowl",
           "icon": "🥣",
           "id": "food-bowl",
@@ -4779,7 +4780,7 @@
           "required": true
         },
         {
-          "description": "維持居家清潔，降低病原與異味。",
+          "description": "清潔排泄物，避免殘留氣味引導錯誤如廁行為；需選用對犬無害的成分",
           "expenseId": "dog-cleaner",
           "icon": "🧼",
           "id": "cleaner",
@@ -4800,7 +4801,7 @@
           "required": true
         },
         {
-          "description": "選擇符合年齡、體型與健康需求的主食。",
+          "description": "依體型與年齡選擇適合的犬用飼料；初期維持原飼料、漸進換食以避免腸胃不適",
           "expenseId": "dog-food",
           "icon": "🦴",
           "id": "food",
@@ -4892,7 +4893,7 @@
           "visualRole": "document-folder"
         },
         {
-          "description": "讓小狗在移動途中有安全固定的空間。",
+          "description": "安全運送，避免車內跌倒或排泄污染；選擇通風、堅固且尺寸適當的運輸籠。",
           "expenseIds": [
             "carrier-kit"
           ],
@@ -4930,7 +4931,7 @@
           ]
         },
         {
-          "description": "必要時補充飲水，避免長時間缺水。",
+          "description": "路程中保持水分供應；折疊式水碗方便攜帶",
           "expenseIds": [
             "water-kit"
           ],
@@ -4947,7 +4948,7 @@
           "preparedLabel": "已準備"
         },
         {
-          "description": "下車或移動時維持安全防護。",
+          "description": "移動安全必備；選擇適合體型的牽繩長度與扣環強度",
           "expenseIds": [
             "dog-leash"
           ],
@@ -4964,7 +4965,7 @@
           "preparedLabel": "已準備"
         },
         {
-          "description": "處理接回途中可能發生的髒污。",
+          "description": "路程中若發生排泄可即時清理；公共場所清潔為基本禮儀與法規義務",
           "expenseIds": [
             "dog-cleaner-kit"
           ],
@@ -5092,7 +5093,7 @@
     },
     "roomItems": [
       {
-        "description": "提供固定、安靜的休息位置。",
+        "description": "提供安靜、安全的休息角落；可選擇犬用床或軟墊，依體型選擇適合尺寸",
         "expenseId": "dog-bed",
         "icon": "🛏️",
         "id": "bed",
@@ -5113,7 +5114,7 @@
         "required": true
       },
       {
-        "description": "幫助小狗消耗精力與建立正向互動。",
+        "description": "提供啃咬與互動的適當出口；選擇不易碎裂、無毒材質，避免誤食",
         "expenseId": "dog-toy",
         "icon": "🦴",
         "id": "toy",
@@ -5134,7 +5135,7 @@
         "required": true
       },
       {
-        "description": "每天確認有乾淨、足量的飲水。",
+        "description": "隨時保持乾淨飲水；選擇適合體型的碗，不易打翻為佳",
         "expenseId": "dog-water-bowl",
         "icon": "💧",
         "id": "water-bowl",
@@ -5155,7 +5156,7 @@
         "required": true
       },
       {
-        "description": "固定飲食器具，幫助建立規律餵食。",
+        "description": "固定位置餵食，建立穩定作息；依體型選擇高度適中的食碗",
         "expenseId": "dog-food-bowl",
         "icon": "🥣",
         "id": "food-bowl",
@@ -5197,7 +5198,7 @@
         "required": true
       },
       {
-        "description": "維持居家清潔，降低病原與異味。",
+        "description": "清潔排泄物，避免殘留氣味引導錯誤如廁行為；需選用對犬無害的成分",
         "expenseId": "dog-cleaner",
         "icon": "🧼",
         "id": "cleaner",
@@ -5218,7 +5219,7 @@
         "required": true
       },
       {
-        "description": "選擇符合年齡、體型與健康需求的主食。",
+        "description": "依體型與年齡選擇適合的犬用飼料；初期維持原飼料、漸進換食以避免腸胃不適",
         "expenseId": "dog-food",
         "icon": "🦴",
         "id": "food",
@@ -5697,7 +5698,7 @@
         ],
         "busyCareCompletion": {
           "additionalAdvice": [
-            "如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
+            "如果未來臨時找不到合適的臨時照顧者，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
           ],
           "reflectionContent": [
             "忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"
@@ -6055,7 +6056,7 @@
         "visualRole": "document-folder"
       },
       {
-        "description": "讓小狗在移動途中有安全固定的空間。",
+        "description": "安全運送，避免車內跌倒或排泄污染；選擇通風、堅固且尺寸適當的運輸籠。",
         "expenseIds": [
           "carrier-kit"
         ],
@@ -6093,7 +6094,7 @@
         ]
       },
       {
-        "description": "必要時補充飲水，避免長時間缺水。",
+        "description": "路程中保持水分供應；折疊式水碗方便攜帶",
         "expenseIds": [
           "water-kit"
         ],
@@ -6110,7 +6111,7 @@
         "preparedLabel": "已準備"
       },
       {
-        "description": "下車或移動時維持安全防護。",
+        "description": "移動安全必備；選擇適合體型的牽繩長度與扣環強度",
         "expenseIds": [
           "dog-leash"
         ],
@@ -6127,7 +6128,7 @@
         "preparedLabel": "已準備"
       },
       {
-        "description": "處理接回途中可能發生的髒污。",
+        "description": "路程中若發生排泄可即時清理；公共場所清潔為基本禮儀與法規義務",
         "expenseIds": [
           "dog-cleaner-kit"
         ],
@@ -6852,7 +6853,7 @@
       ],
       "busyCareCompletion": {
         "additionalAdvice": [
-          "如果未來臨時找不到合適的家人朋友，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
+          "如果未來臨時找不到合適的臨時照顧者，可以平時先了解附近是否有熟悉狗狗照護的寵物旅館，作為備用方案。"
         ],
         "reflectionContent": [
           "忙完一天回到家時，你還有能量陪伴等了你一整天的 {petName} 嗎？"
