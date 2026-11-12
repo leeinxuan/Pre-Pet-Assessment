@@ -46,7 +46,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   `;
 
   // Microsoft Clarity：只用來抽樣核對操作錄影。
-  // 目前暫時恢復：沒有 pid 的訪客也會載入（為了排查回放沒有樣式的問題）。有 pid 時才標記受測者編號。
+  // 只有網址帶過 ?pid=（或 localStorage 已存編號）的受測者才載入；本機開發與一般訪客、研究者自己測試都不會被錄影。
   // 受測者編號由網址 ?pid=A03 帶入，存在 localStorage，重新體驗時不會被清掉。
   const clarityBootstrap = `
     (function () {
@@ -58,16 +58,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         if (pid) localStorage.setItem("pre-pet-pid", pid);
         pid = localStorage.getItem("pre-pet-pid");
       } catch (error) {}
+      if (!pid) return;
       (function (c, l, a, r, i, t, y) {
         c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
         t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
         y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
       })(window, document, "clarity", "script", "zb83oslrv0");
       try {
-        if (pid) {
-          window.clarity("identify", pid, undefined, undefined, pid); // 第 4 個參數是顯示用名稱，Clarity 介面才看得到完整編號
-          window.clarity("set", "pid", pid);
-        }
+        window.clarity("identify", pid, undefined, undefined, pid); // 第 4 個參數是顯示用名稱，Clarity 介面才看得到完整編號
+        window.clarity("set", "pid", pid);
       } catch (error) {}
       // 所有輸入欄位一律遮蔽（協助者名稱、生活條件等），錄影看得到有沒有填，看不到填了什麼。
       var maskInputs = function () {
@@ -82,7 +81,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     })();
   `;
 
-  // Google Analytics 4：整體流量參考。目前暫時恢復：沒有 pid 的訪客也會載入；有 pid 時才帶 user_id。
+  // Google Analytics 4：整體流量參考。只有帶過 ?pid=（或 localStorage 已存編號）的受測者才載入；本機開發與一般訪客不會送出。
   const gaBootstrap = `
     (function () {
       var host = location.hostname;
@@ -93,6 +92,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         if (pid) localStorage.setItem("pre-pet-pid", pid);
         pid = localStorage.getItem("pre-pet-pid");
       } catch (error) {}
+      if (!pid) return;
       var gaId = "G-EMPZW20EY7";
       var tag = document.createElement("script");
       tag.async = true;
@@ -101,8 +101,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       window.dataLayer = window.dataLayer || [];
       window.gtag = function () { window.dataLayer.push(arguments); };
       window.gtag("js", new Date());
-      window.gtag("config", gaId, pid ? { user_id: pid } : {});
-      if (pid) window.gtag("set", "user_properties", { pid: pid });
+      window.gtag("config", gaId, { user_id: pid });
+      window.gtag("set", "user_properties", { pid: pid });
     })();
   `;
 
