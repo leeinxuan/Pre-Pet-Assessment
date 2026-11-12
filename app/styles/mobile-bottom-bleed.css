@@ -176,14 +176,6 @@
     box-sizing: border-box;
     padding-bottom: 24px !important;
   }
-  .stage-layout .departure-supply-rows {
-    padding-bottom: calc(
-      24px + max(
-        var(--bottom-scroll-safe),
-        var(--pane-bottom-obstruction, 0px)
-      )
-    ) !important;
-  }
   .stage-layout .arrival-meal-inventory {
     box-sizing: border-box;
     padding-bottom: 0 !important;
@@ -193,6 +185,7 @@
    * 尾端捲動空間位於最後一張卡片之後。正常瀏覽時卡片會一路畫到工具列後方；
    * 只有捲到底時才看到這段空間，用來把最後一項推到工具列上方。
    */
+  .stage-layout .departure-supply-rows::after,
   .stage-layout .arrival-meal-supplies::after,
   .stage-layout .video-scenario-choice-list::after,
   .stage-layout .busy-care-choice-list::after,
@@ -207,15 +200,6 @@
     pointer-events: none;
   }
 
-  /*
-   * 出發前準備和佈置房間使用相同的延伸方式：內容本身延伸到
-   * Safari 工具列後方，安全距離由捲動清單的 padding 提供。
-   * 不再插入會顯示成白色遮擋區的尾端 grid item。
-   */
-  .stage-layout .departure-supply-rows::after {
-    content: none !important;
-    display: none !important;
-  }
   /*
    * 「做得很好」回饋頁：把「視覺延伸」與「捲動視窗」分開。
    * - 版面（.stage-layout）照常加高 --bottom-bleed，淡綠底色由回饋頁自身的背景一路畫到工具列後方，
@@ -279,12 +263,7 @@
     padding-bottom: 24px !important;
   }
   .stage-layout .departure-supply-rows.bleed-pane {
-    padding-bottom: calc(
-      24px + max(
-        var(--bottom-scroll-safe),
-        var(--pane-bottom-obstruction, 0px)
-      )
-    ) !important;
+    padding-bottom: 24px !important;
   }
   .stage-layout .arrival-meal-inventory.bleed-pane {
     padding-bottom: 0 !important;
@@ -324,12 +303,11 @@
     padding-bottom: calc(76px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px))) !important;
   }
   .stage-layout .departure-preparation-page:has(> .departure-actions.is-complete) .departure-supply-rows {
-    padding-bottom: calc(
-      76px + max(
-        var(--bottom-scroll-safe),
-        var(--pane-bottom-obstruction, 0px)
-      )
-    ) !important;
+    padding-bottom: 24px !important;
+  }
+  .stage-layout .departure-preparation-page:has(> .departure-actions.is-complete) .departure-supply-rows::after {
+    height: calc(76px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px)));
+    min-height: calc(76px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px)));
   }
   .stage-layout .arrival-meal-activity:has(> .arrival-meal-footer) .arrival-meal-supplies::after {
     height: calc(76px + max(var(--bottom-scroll-safe), var(--pane-bottom-obstruction, 0px)));
