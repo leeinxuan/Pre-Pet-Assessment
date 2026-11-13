@@ -357,6 +357,23 @@
   @keyframes walkingBagCollect { from { opacity: 0; transform: scale(.5); } to { opacity: 1; transform: scale(1); } }
 }
 
+/* 直式平板保留滿版場景，但進度列和桌機一樣放在場景上方。 */
+@media (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
+  .walking-activity.is-walking-game .walking-progress-overlay {
+    position: static;
+    order: 0;
+    width: min(620px, calc(100% - 48px));
+    min-height: 0;
+    margin: 0 auto 16px;
+    padding: 10px 14px;
+    border: 1px solid rgba(225, 209, 181, .82);
+    border-radius: 999px;
+    background: rgba(255, 253, 247, .82);
+    box-shadow: 0 10px 26px rgba(61, 44, 22, .14);
+  }
+  .walking-activity.is-walking-game .walking-scene { order: 1; }
+}
+
 @media (max-width: 720px) and (prefers-reduced-motion: reduce),
   (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) and (prefers-reduced-motion: reduce) {
   .walking-activity.is-walking-game .walking-drag-bag.is-tap-prompt img,
