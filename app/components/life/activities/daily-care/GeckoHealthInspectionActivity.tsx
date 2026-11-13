@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import type {
   GeckoHealthDisplayState,
   GeckoHealthInspectionConfig,
@@ -150,7 +151,7 @@ function GeckoMobileSheet({ label, onDismiss, children }: { label: string; onDis
   const [pointerStart, setPointerStart] = useState<number | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
   useDialogFocus({ isOpen: true, dialogRef, onClose: onDismiss });
-  return (
+  return createPortal(
     <div
       className="activity-observation-sheet-layer gecko-observation-sheet-layer"
       onPointerDown={(event) => setPointerStart(event.clientY)}
@@ -165,7 +166,8 @@ function GeckoMobileSheet({ label, onDismiss, children }: { label: string; onDis
         <button type="button" className="activity-observation-sheet-close" aria-label="關閉說明" onClick={onDismiss}>×</button>
         {children}
       </aside>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

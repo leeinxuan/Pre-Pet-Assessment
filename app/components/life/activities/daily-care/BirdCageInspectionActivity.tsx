@@ -225,9 +225,11 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
     heartTimer.current = setTimeout(() => setShowHearts(false), 650);
     const nextTouch = socialTouches + 1;
     logEvent("game_interaction", { game: "bird", action: "pet_bird", count: nextTouch, result: "success" });
-    add(`social-touch-${nextTouch}`);
-    if (nextTouch < 5) return;
-    add("social-time");
+    if (nextTouch < 5) {
+      add(`social-touch-${nextTouch}`);
+      return;
+    }
+    addMany(`social-touch-${nextTouch}`, "social-time");
     setSocialCompleting(true);
     singTimer.current = setTimeout(() => setSocialCompleting(false), 650);
   }

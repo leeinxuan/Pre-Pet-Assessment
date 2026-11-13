@@ -271,8 +271,8 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     warmPlacement: { x: 90, y: 87, width: 25 },
     coolPlacement: { x: 22, y: 47, width: 25 },
     // 手機版兩支溫度計各自獨立調整位置與尺寸。
-    warmMobilePlacement: { x: 88, y: 67, width: 35 },
-    coolMobilePlacement: { x: 18, y: 48, width: 35 },
+    warmMobilePlacement: { x: 88, y: 86, width: 35 },
+    coolMobilePlacement: { x: 18, y: 40, width: 35 },
     // All temperature-stage pieces can now be adjusted separately.  The
     // initial values preserve the existing visual arrangement.
     warmImagePlacement: { top: "0", left: "0" },
