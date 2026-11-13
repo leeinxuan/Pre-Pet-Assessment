@@ -178,11 +178,11 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     </>}
     {draggingBrush && point && <div className="rabbit-grooming-drag-ghost" style={{ left: point.x, top: point.y }}><img src={rabbitGroomingConfig.assets.brush} alt="" /></div>}
     {magnifierPosition && <img className="activity-magnifier-hint" src={rabbitGroomingConfig.assets.magnifier} alt="" aria-hidden="true" style={{ left: magnifierPosition.x, top: magnifierPosition.y }} />}
-    {isMobile && observationContent && <div className="rabbit-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) setObservation(null); setSheetPointerStart(null); }}>
-      <button type="button" className="rabbit-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={() => setObservation(null)} />
-      <aside ref={observationSheetRef} className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={observationData?.title} tabIndex={-1}>
-        <div className="rabbit-observation-sheet-handle" aria-hidden="true" />
-        <button type="button" className="rabbit-observation-sheet-close" aria-label="關閉觀察說明" onClick={() => setObservation(null)}>×</button>
+    {isMobile && observationContent && <div className="activity-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) setObservation(null); setSheetPointerStart(null); }}>
+      <button type="button" className="activity-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={() => setObservation(null)} />
+      <aside ref={observationSheetRef} className="activity-observation-sheet" role="dialog" aria-modal="true" aria-label={observationData?.title} tabIndex={-1}>
+        <div className="activity-observation-sheet-handle" aria-hidden="true" />
+        <button type="button" className="activity-observation-sheet-close" aria-label="關閉觀察說明" onClick={() => setObservation(null)}>×</button>
         {observationContent}
       </aside>
     </div>}

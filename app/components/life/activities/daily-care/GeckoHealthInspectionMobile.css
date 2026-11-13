@@ -233,12 +233,12 @@
   }
   .gecko-body-hotspot.is-available { animation: geckoHotspotPulse 1.5s ease-in-out infinite; }
 
-  /* 底部說明欄（外層沿用 .rabbit-observation-sheet*）：內容改為靜態排版。 */
-  .rabbit-observation-sheet .gecko-observation-card,
-  .rabbit-observation-sheet .gecko-observation-card.observation-card,
-  .rabbit-observation-sheet .gecko-health-card,
-  .rabbit-observation-sheet .gecko-health-card--center,
-  .rabbit-observation-sheet .gecko-health-feedback {
+  /* 底部說明欄（外層沿用 .activity-observation-sheet*）：內容改為靜態排版。 */
+  .activity-observation-sheet .gecko-observation-card,
+  .activity-observation-sheet .gecko-observation-card.observation-card,
+  .activity-observation-sheet .gecko-health-card,
+  .activity-observation-sheet .gecko-health-card--center,
+  .activity-observation-sheet .gecko-health-feedback {
     position: static;
     inset: auto;
     width: 100%;
@@ -254,14 +254,14 @@
     background: transparent;
     box-shadow: none;
   }
-  .rabbit-observation-sheet .gecko-health-card .primary,
-  .rabbit-observation-sheet .gecko-health-feedback .primary { min-height: 48px; width: 100%; justify-content: center; }
-  .rabbit-observation-sheet .gecko-health-card,
-  .rabbit-observation-sheet .gecko-health-feedback { padding-top: 40px; }
+  .activity-observation-sheet .gecko-health-card .primary,
+  .activity-observation-sheet .gecko-health-feedback .primary { min-height: 48px; width: 100%; justify-content: center; }
+  .activity-observation-sheet .gecko-health-card,
+  .activity-observation-sheet .gecko-health-feedback { padding-top: 40px; }
   /* 說明欄高度依內容調整：圖片限制高度，避免短內容也撐成大面積。 */
-  .rabbit-observation-sheet .gecko-observation-card .observation-card-image,
-  .rabbit-observation-sheet .gecko-health-card-image { display: block; width: auto; max-width: 100%; max-height: 150px; margin: 0 auto; object-fit: contain; }
-  .rabbit-observation-sheet .gecko-observation-card .observation-card-comparison img { max-height: 150px; object-fit: contain; }
+  .activity-observation-sheet .gecko-observation-card .observation-card-image,
+  .activity-observation-sheet .gecko-health-card-image { display: block; width: auto; max-width: 100%; max-height: 150px; margin: 0 auto; object-fit: contain; }
+  .activity-observation-sheet .gecko-observation-card .observation-card-comparison img { max-height: 150px; object-fit: contain; }
 
   @keyframes gecko-mobile-target-pulse {
     0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(245, 200, 97, 0)); }

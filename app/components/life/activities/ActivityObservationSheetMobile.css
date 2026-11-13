@@ -1,0 +1,41 @@
+/* Shared mobile observation sheet for rabbit, bird, and gecko. */
+@media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
+  .activity-observation-sheet-layer {
+    position: fixed;
+    z-index: 90;
+    inset: 0;
+    /*
+     * iPhone Safari 的浮動工具列會蓋在 visual viewport 下方。
+     * 讓知識卡外層與卡片本體一起往下延伸，工具列後方看到的是卡片紙色，
+     * 不是深色 backdrop；卡片在工具列上方的可見位置維持不變。
+     */
+    bottom: calc(-1 * var(--bottom-scroll-safe));
+    display: grid;
+    align-items: end;
+  }
+  .activity-observation-sheet-backdrop { position: absolute; inset: 0; border: 0; background: rgba(48, 39, 28, .42); }
+  .activity-observation-sheet {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    max-height: calc(min(78dvh, 680px) + var(--bottom-scroll-safe));
+    padding: 10px 16px calc(18px + env(safe-area-inset-bottom) + var(--bottom-scroll-safe));
+    overflow-y: auto;
+    border-radius: 24px 24px 0 0;
+    background: var(--paper);
+    box-shadow: 0 -12px 32px rgba(48, 39, 28, .2);
+    overscroll-behavior: contain;
+    animation: activity-observation-sheet-in .2s ease-out both;
+  }
+  .activity-observation-sheet-handle { justify-self: center; width: 42px; height: 4px; border-radius: 99px; background: var(--line); }
+  .activity-observation-sheet-close { position: absolute; top: 13px; right: 16px; display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: white; color: var(--ink); font-size: 26px; line-height: 1; }
+  .activity-observation-sheet .rabbit-grooming-observation { position: static; width: 100%; margin: 0; transform: none; animation: none; }
+  .activity-observation-sheet .observation-card { padding: 10px 2px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .activity-observation-sheet .observation-card > button,
+  .activity-observation-sheet .observation-card-action { min-height: 44px; }
+  @keyframes activity-observation-sheet-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .gecko-observation-sheet-layer { background: var(--paper); }
+  .gecko-observation-sheet-layer .activity-observation-sheet-backdrop { bottom: var(--bottom-scroll-safe); }
+}

@@ -360,7 +360,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
       {magnifierPosition && <img className="activity-magnifier-hint" src={birdAssets.dailyGame.magnifier} alt="" aria-hidden="true" style={{ left: magnifierPosition.x, top: magnifierPosition.y }} />}
     </div>
     {!isCageOutGuidance && <p className="bird-cage-mobile-prompt">{renderKnowledgeText(inspectionReady ? inspectionCompleteFeedback : message)}</p>}
-    {inspectionReady && isMobile && <button type="button" className="primary bird-cage-complete-button bird-cage-complete-button--mobile" onClick={finishInspection}>完成巡視 <span>→</span></button>}
+    {inspectionReady && isMobile && <div className="activity-mobile-finish-action bird-cage-complete-action--mobile"><button type="button" className="primary bird-cage-complete-button bird-cage-complete-button--mobile activity-mobile-wide-action" onClick={finishInspection}>完成巡視 <span>→</span></button></div>}
     {isSocial && !inspectionReady && <div className="bird-social-footer">
       <div className="walking-progress bird-social-progress" aria-label={`互動進度 ${socialTouches} / 5`}>
         <b>互動進度</b>
@@ -368,11 +368,11 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
         <small>{socialTouches} / 5</small>
       </div>
     </div>}
-    {isMobile && observationCard && <div className="rabbit-observation-sheet-layer bird-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) dismissObservation(); setSheetPointerStart(null); }}>
-      <button type="button" className="rabbit-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={dismissObservation} />
-      <aside ref={observationSheetRef} className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={activeObservation === "feces" ? "糞便觀察" : `${selectedHealthPoint?.label ?? "健康部位"}觀察`} tabIndex={-1}>
-        <div className="rabbit-observation-sheet-handle" aria-hidden="true" />
-        <button type="button" className="rabbit-observation-sheet-close" aria-label="關閉觀察說明" onClick={dismissObservation}>×</button>
+    {isMobile && observationCard && <div className="activity-observation-sheet-layer bird-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) dismissObservation(); setSheetPointerStart(null); }}>
+      <button type="button" className="activity-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={dismissObservation} />
+      <aside ref={observationSheetRef} className="activity-observation-sheet" role="dialog" aria-modal="true" aria-label={activeObservation === "feces" ? "糞便觀察" : `${selectedHealthPoint?.label ?? "健康部位"}觀察`} tabIndex={-1}>
+        <div className="activity-observation-sheet-handle" aria-hidden="true" />
+        <button type="button" className="activity-observation-sheet-close" aria-label="關閉觀察說明" onClick={dismissObservation}>×</button>
         {observationCard}
       </aside>
     </div>}

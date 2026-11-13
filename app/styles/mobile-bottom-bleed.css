@@ -340,12 +340,12 @@
   }
 
   /* 兔子、鸚鵡、守宮共用的知識卡底欄：以卡片本身的紙色延伸到 Safari 工具列後方。 */
-  html:has(.rabbit-observation-sheet),
-  body:has(.rabbit-observation-sheet) {
+  html:has(.activity-observation-sheet),
+  body:has(.activity-observation-sheet) {
     background-color: var(--paper) !important;
     --bottom-bleed-color: var(--paper) !important;
   }
-  .rabbit-observation-sheet {
+  .activity-observation-sheet {
     box-shadow:
       0 var(--bottom-scroll-safe) 0 var(--paper),
       0 -12px 32px rgba(48, 39, 28, .2) !important;

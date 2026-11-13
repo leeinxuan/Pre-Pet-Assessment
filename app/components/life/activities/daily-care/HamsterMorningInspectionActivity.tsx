@@ -353,8 +353,8 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       </div>}
     </div>
     {sandComplete && isMobile && (
-      <div className="hamster-mobile-finish-row">
-        <button type="button" className="primary hamster-cage-check-finish" onClick={() => setFeedback(steps[1].id, "correct")}>完成清潔 →</button>
+      <div className="hamster-mobile-finish-row activity-mobile-finish-action">
+        <button type="button" className="primary hamster-cage-check-finish activity-mobile-wide-action" onClick={() => setFeedback(steps[1].id, "correct")}>完成清潔 →</button>
       </div>
     )}
     {ghostImage && dragPoint && <img className="hamster-cage-check-drag-ghost" src={ghostImage} alt="" aria-hidden="true" style={{ left: dragPoint.x, top: dragPoint.y }} />}

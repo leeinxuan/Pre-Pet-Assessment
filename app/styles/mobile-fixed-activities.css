@@ -471,7 +471,7 @@
   }
   .life-journey-page[data-mobile-activity-layout="full-bleed"] .activity-intro-page-content { padding: 28px 24px calc(32px + env(safe-area-inset-bottom)); }
   .activity-intro-page .activity-mobile-wide-action,
-  .cat-litter-rescue .activity-mobile-wide-action {
+  .activity-mobile-finish-action .activity-mobile-wide-action {
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
@@ -479,11 +479,13 @@
     justify-content: center;
     text-align: center;
   }
-  .cat-litter-rescue .cat-rescue-finish-action {
+  .activity-mobile-finish-action,
+  .cat-litter-rescue .activity-mobile-finish-action {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 16px calc(12px + max(var(--bottom-toolbar-safe), env(safe-area-inset-bottom)));
     justify-content: center;
-    padding-right: 16px;
-    padding-left: 16px;
-    padding-bottom: calc(12px + max(var(--bottom-toolbar-safe), env(safe-area-inset-bottom)));
   }
   .life-journey-page[data-mobile-activity-layout="full-bleed"] > :is(.life-activity, .guided-activity, .rabbit-activity) {
     box-sizing: border-box;

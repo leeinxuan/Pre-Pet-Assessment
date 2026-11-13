@@ -145,24 +145,24 @@ function buildInitialStates(config: GeckoHealthInspectionConfig): Record<string,
   return states;
 }
 
-/** 手機版底部說明欄（外觀沿用兔子／鸚鵡的 .rabbit-observation-sheet*）；桌機版不會渲染，維持原本置中 Modal。 */
+/** 手機版底部說明欄（外觀沿用兔子／鸚鵡的 .activity-observation-sheet*）；桌機版不會渲染，維持原本置中 Modal。 */
 function GeckoMobileSheet({ label, onDismiss, children }: { label: string; onDismiss: () => void; children: ReactNode }) {
   const [pointerStart, setPointerStart] = useState<number | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
   useDialogFocus({ isOpen: true, dialogRef, onClose: onDismiss });
   return (
     <div
-      className="rabbit-observation-sheet-layer gecko-observation-sheet-layer"
+      className="activity-observation-sheet-layer gecko-observation-sheet-layer"
       onPointerDown={(event) => setPointerStart(event.clientY)}
       onPointerUp={(event) => {
         if (pointerStart !== null && event.clientY - pointerStart > 56) onDismiss();
         setPointerStart(null);
       }}
     >
-      <button type="button" className="rabbit-observation-sheet-backdrop" aria-label="關閉說明" onClick={onDismiss} />
-      <aside ref={dialogRef} className="rabbit-observation-sheet" role="dialog" aria-modal="true" aria-label={label} tabIndex={-1}>
-        <div className="rabbit-observation-sheet-handle" aria-hidden="true" />
-        <button type="button" className="rabbit-observation-sheet-close" aria-label="關閉說明" onClick={onDismiss}>×</button>
+      <button type="button" className="activity-observation-sheet-backdrop" aria-label="關閉說明" onClick={onDismiss} />
+      <aside ref={dialogRef} className="activity-observation-sheet" role="dialog" aria-modal="true" aria-label={label} tabIndex={-1}>
+        <div className="activity-observation-sheet-handle" aria-hidden="true" />
+        <button type="button" className="activity-observation-sheet-close" aria-label="關閉說明" onClick={onDismiss}>×</button>
         {children}
       </aside>
     </div>

@@ -28,6 +28,7 @@
 @import "./components/life/activities/daily-care/WalkingActivityMobile.css";
 @import "./components/life/activities/daily-care/CatDailyInspectionMobile.css";
 @import "./components/life/activities/RabbitActivitiesMobile.css";
+@import "./components/life/activities/ActivityObservationSheetMobile.css";
 @import "./components/life/activities/daily-care/BirdCageInspectionMobile.css";
 @import "./components/life/activities/daily-care/GeckoHealthInspectionMobile.css";
 @import "./styles/site-entry-intro.css";

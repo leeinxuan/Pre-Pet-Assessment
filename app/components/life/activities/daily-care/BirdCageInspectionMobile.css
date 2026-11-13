@@ -183,20 +183,19 @@
   .bird-cage-activity > .bird-cage-mobile-prompt {
     display: none;
   }
-  .bird-cage-activity > .bird-cage-complete-button--mobile {
-    position: static; /* 桌機版的絕對定位在手機版改為版面流內，固定在畫面底部 */
+  .bird-cage-activity > .bird-cage-complete-action--mobile {
     order: 4;
     flex: 0 0 auto;
-    align-self: stretch;
+  }
+  .bird-cage-complete-action--mobile > .bird-cage-complete-button--mobile {
+    position: static; /* 桌機版的絕對定位在手機版改為版面流內，固定在畫面底部 */
     min-height: 52px;
-    margin: 0 16px calc(12px + max(var(--bottom-toolbar-safe), env(safe-area-inset-bottom)));
-    justify-content: center;
     white-space: nowrap;
   }
 
-  /* 觀察知識卡改用兔子手機版同款底部說明欄（外層樣式沿用 .rabbit-observation-sheet*）。 */
-  .rabbit-observation-sheet .bird-observation-card,
-  .rabbit-observation-sheet .bird-observation-card.observation-card {
+  /* 觀察知識卡改用兔子手機版同款底部說明欄（外層樣式沿用 .activity-observation-sheet*）。 */
+  .activity-observation-sheet .bird-observation-card,
+  .activity-observation-sheet .bird-observation-card.observation-card {
     position: static;
     left: auto;
     top: auto;
@@ -205,11 +204,11 @@
     transform: none;
     animation: none;
   }
-  .rabbit-observation-sheet .bird-observation-comparison-grid article {
+  .activity-observation-sheet .bird-observation-comparison-grid article {
     display: grid;
     justify-items: center;
   }
-  .rabbit-observation-sheet .bird-observation-comparison-grid img {
+  .activity-observation-sheet .bird-observation-comparison-grid img {
     width: 240px;
     height: 240px;
     max-width: 100%;
