@@ -172,7 +172,7 @@
      * 讓知識卡外層與卡片本體一起往下延伸，工具列後方看到的是卡片紙色，
      * 不是深色 backdrop；卡片在工具列上方的可見位置維持不變。
      */
-    bottom: calc(-1 * var(--bottom-bleed));
+    bottom: calc(-1 * var(--bottom-scroll-safe));
     display: grid;
     align-items: end;
   }
@@ -183,8 +183,8 @@
     display: grid;
     gap: 10px;
     width: 100%;
-    max-height: calc(min(78dvh, 680px) + var(--bottom-bleed));
-    padding: 10px 16px calc(18px + env(safe-area-inset-bottom) + var(--bottom-bleed));
+    max-height: calc(min(78dvh, 680px) + var(--bottom-scroll-safe));
+    padding: 10px 16px calc(18px + env(safe-area-inset-bottom) + var(--bottom-scroll-safe));
     overflow-y: auto;
     border-radius: 24px 24px 0 0;
     background: var(--paper);

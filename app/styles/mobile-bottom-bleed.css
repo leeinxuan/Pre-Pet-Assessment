@@ -347,7 +347,7 @@
   }
   .rabbit-observation-sheet {
     box-shadow:
-      0 var(--bottom-bleed) 0 var(--paper),
+      0 var(--bottom-scroll-safe) 0 var(--paper),
       0 -12px 32px rgba(48, 39, 28, .2) !important;
   }
 

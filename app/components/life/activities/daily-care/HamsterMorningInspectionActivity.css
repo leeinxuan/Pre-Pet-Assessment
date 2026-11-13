@@ -285,10 +285,10 @@
   .hamster-mobile-action-progress > div span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e0a01d, #85bd9b); transition: width .2s ease; }
 
   .hamster-cage-check-scene {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     width: 100vw;
     min-height: 0;
-    height: auto;
+    height: 100vw;
     aspect-ratio: 1 / 1;
     align-self: start;
     overflow: hidden;

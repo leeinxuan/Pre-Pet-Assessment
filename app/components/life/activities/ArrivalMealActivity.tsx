@@ -219,7 +219,6 @@ export function ArrivalMealActivity({
   function chooseMealChoice(id: string) {
     const item = choiceItems.find((entry) => entry.id === id);
     if (!item) return;
-    logEvent("meal_choice_clicked", { choiceId: id, result: item.result });
     if (activity.arrivalMealSelectedChoiceIds.includes(id) && matchesCompactPortraitLayout()) {
       setMobileInfo({ title: item.label, description: interpolatePetName(item.feedback, petName) });
       return;
@@ -275,7 +274,7 @@ export function ArrivalMealActivity({
         <img className="arrival-meal-room arrival-meal-room--mobile" src={feeding.scene.mobileBackground} style={feeding.scene.mobileBackgroundStyle} alt="" />
         {foodWarning && <div className="arrival-meal-warning-overlay">
           <div ref={warningDialogRef} className="arrival-meal-warning" role="dialog" aria-modal="true" aria-label={foodWarning.title} tabIndex={-1} onClick={closeFoodWarning}>
-            <button type="button" className="arrival-meal-warning-close" onClick={closeFoodWarning} aria-label="關閉不適合食物提示">×</button>
+            <button type="button" className="arrival-meal-warning-close" onClick={(event) => { event.stopPropagation(); closeFoodWarning(); }} aria-label="關閉不適合食物提示">×</button>
             <b>{foodWarning.title}</b>
             <p>{foodWarning.text}</p>
           </div>
