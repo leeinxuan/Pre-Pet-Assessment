@@ -117,7 +117,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
     <section ref={activityRef} tabIndex={-1} className={`rabbit-activity rabbit-carry-activity ${isCompletionState ? "is-completion-state" : ""}`} aria-labelledby="rabbit-carry-title">
       <header><p>日常照護</p><h1 id="rabbit-carry-title">{withPetName(scenario.title, petName)}</h1>{!isCompletionState && <span className="rabbit-carry-description">{withPetName(scenario.description, petName)}</span>}</header>
       <div className="rabbit-activity-panel">
-        <h2 className={isCompletionState ? "rabbit-carry-completion-title" : undefined}>{withPetName(answerRevealed ? scenario.activityRevealNotice ?? "" : complete ? scenario.activityCompletionTitle ?? scenario.questionText ?? "" : scenario.questionText ?? "", petName)}</h2>
+        <h2 className={isCompletionState ? "rabbit-carry-completion-title" : undefined}>{withPetName(answerRevealed ? scenario.activityRevealNotice ?? "" : complete ? scenario.activityCompletionTitle ?? scenario.questionText ?? "" : isMobile ? "請點擊上下箭頭調整這 5 個動作的順序，安全地抱起 {petName}。" : scenario.questionText ?? "", petName)}</h2>
         <ol className="rabbit-sort-list rabbit-drag-sort-list">
           {order.map((value, index) => (
             <li key={value} data-rabbit-step={index}

@@ -483,6 +483,7 @@
     justify-content: center;
     padding-right: 16px;
     padding-left: 16px;
+    padding-bottom: calc(12px + max(var(--bottom-toolbar-safe), env(safe-area-inset-bottom)));
   }
   .life-journey-page[data-mobile-activity-layout="full-bleed"] > :is(.life-activity, .guided-activity, .rabbit-activity) {
     box-sizing: border-box;

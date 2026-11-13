@@ -177,6 +177,8 @@
     align-items: end;
   }
   .rabbit-observation-sheet-backdrop { position: absolute; inset: 0; border: 0; background: rgba(48, 39, 28, .42); }
+  .gecko-observation-sheet-layer { background: var(--paper); }
+  .gecko-observation-sheet-layer .rabbit-observation-sheet-backdrop { bottom: var(--bottom-scroll-safe); }
   .rabbit-observation-sheet {
     position: relative;
     z-index: 1;
