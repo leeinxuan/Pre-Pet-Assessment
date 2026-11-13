@@ -71,10 +71,10 @@ export function ObservationCardFlow({
       {image}
       <h2>{title}</h2>
       {status === "correct" ? <>
-        <p className="observation-card-feedback observation-card-feedback--correct">{feedback}</p>
+        <div className="observation-card-feedback observation-card-feedback--correct">{feedback}</div>
         {correctAction}
       </> : status === "incorrect" ? <>
-        <p className="observation-card-feedback observation-card-feedback--incorrect">{feedback}</p>
+        <div className="observation-card-feedback observation-card-feedback--incorrect">{feedback}</div>
         <ObservationReturnButton onReturn={onReturn} />
       </> : <>
         <p className="observation-card-question">{question}</p>

@@ -473,8 +473,8 @@ export type GeckoHealthInspectionState = {
   image: string;
   imageAlt: string;
   detail: string;
-  correctFeedback: string;
-  incorrectFeedback: string;
+  correctFeedback: string | string[];
+  incorrectFeedback: string | string[];
 };
 
 export type GeckoHealthJudgement = {
@@ -488,7 +488,7 @@ export type GeckoHealthJudgement = {
     title: string;
     image: string;
     imageAlt: string;
-    description: string;
+    description: string | string[];
     actionLabel: string;
   };
 };

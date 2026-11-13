@@ -412,13 +412,26 @@
 
 .gecko-observation-card {
   position: absolute;
-  top: calc(50% + 24px);
-  left: 22px;
+  top: 50%;
+  left: 50%;
   z-index: 10;
-  width: min(360px, calc(50% - 34px));
-  max-height: calc(100% - 84px);
-  transform: translateY(-50%);
+  width: min(560px, calc(100% - 40px));
+  transform: translate(-50%, -50%);
 }
+
+/* 綠色正確回饋：重點字加深為深綠 */
+.gecko-observation-card .observation-card-feedback--correct .knowledge-emphasis {
+  color: var(--gold-dark);
+  font-weight: 900;
+}
+
+/* 異常說明卡（溫暖米色底）：重點字改為網站琥珀色 */
+.gecko-observation-card .observation-card-comparison .knowledge-emphasis {
+  color: var(--gold-dark);
+  font-weight: 900;
+}
+
+
 
 @keyframes geckoWaterFill {
   0% { opacity: .35; transform: scale(.9); }

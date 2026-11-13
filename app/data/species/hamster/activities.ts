@@ -117,7 +117,7 @@ export const hamsterCageCheck = {
   completion: {
     title: "清潔完成！{petName} 的小小家整理好了",
     subtitle: "浴沙裡的糞便和結塊都清乾淨了，{petName} 可以繼續在裡面打滾了！",
-    description: "倉鼠的健康很難從外表立刻看出來——牠靠著這兩個乾淨的空間，每天維持身體的整潔與舒適。",
+    description: "倉鼠的健康很難從外表立刻看出來——牠擁有乾淨的空間，才能每天維持身體的整潔與舒適。",
     reflectionTitle: "每天的小動作，是對 {petName} 最具體的照顧",
     reflection: "倉鼠不像貓狗會告訴你牠的需求。牠有固定的廁所角落、每天使用砂浴盆——保持這兩個地方的乾淨，就是你每天能給牠最直接的照顧，也是觀察牠使用習慣有無異常的時機。",
     careTitle: "每天留給牠的照護時間",

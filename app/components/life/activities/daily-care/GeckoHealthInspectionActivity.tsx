@@ -188,6 +188,10 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   const displayName = petName.trim() || getSpeciesConfig(species).copy.animalNameFallback;
   const renderText = (value: string) => interpolatePetName(value, displayName, species);
   const render = (value: string) => renderKnowledgeText(renderText(value));
+  const renderFeedback = (value: string | string[]) =>
+    Array.isArray(value)
+      ? <>{value.map((para, i) => <p key={i}>{render(para)}</p>)}</>
+      : render(value);
   const states = Object.keys(activity.geckoHealthInspectionStates).length
     ? activity.geckoHealthInspectionStates
     : generatedInitialStates;
@@ -294,8 +298,8 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   const comparisonVisible = activeJudgement
     ? states[`comparison-${activeJudgement.id}`] === true
     : false;
-  // 企劃：異常對照提示只在 normal＋答對時顯示。
-  const needsComparison = activeState === "normal";
+  // 企劃：異常對照提示在 normal 與 shedding 答對時顯示。
+  const needsComparison = activeState === "normal" || activeState === "shedding";
   const warm = Number(states["temperature-warm"]);
   const cool = Number(states["temperature-cool"]);
   // 溫度計以四捨五入的整數顯示，判斷是否進入安全範圍也必須用同一個數值。
@@ -386,13 +390,15 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
   ) : null;
 
   const observationCard = activeJudgement && activeStateContent ? (
-    <ObservationCard className="gecko-observation-card" label={`${activeJudgement.label}觀察`}>
+    <ObservationCard className={`gecko-observation-card${(comparisonVisible && activeJudgement?.comparison) || activeFeedback === 'correct' ? ' has-comparison' : ''}`} label={`${activeJudgement.label}觀察`}>
       {comparisonVisible && activeJudgement.comparison ? (
         <>
           <h2>異常狀態</h2>
           <ObservationCardComparison>
             <img src={activeJudgement.comparison.image} alt={activeJudgement.comparison.imageAlt} />
-            <p>{render(activeJudgement.comparison.description)}</p>
+            {Array.isArray(activeJudgement.comparison.description)
+              ? activeJudgement.comparison.description.map((para, i) => <p key={i}>{render(para)}</p>)
+              : <p>{render(activeJudgement.comparison.description as string)}</p>}
           </ObservationCardComparison>
           <button type="button" className="observation-card-action" onClick={() => complete(activeJudgement.id)}>我了解了</button>
         </>
@@ -403,7 +409,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
           image={<img className="observation-card-image" src={activeStateContent.image} alt={activeStateContent.imageAlt} />}
           question={render(activeJudgement.prompt)}
           choices={activeJudgement.choices.map((choice) => ({ id: choice.id, label: renderText(choice.text) }))}
-          feedback={render(activeFeedback === "incorrect" ? activeStateContent.incorrectFeedback : activeStateContent.correctFeedback)}
+          feedback={renderFeedback(activeFeedback === "incorrect" ? activeStateContent.incorrectFeedback : activeStateContent.correctFeedback)}
           onChoose={selectAnswer}
           onReturn={() => onChange({ geckoHealthInspectionFeedback: { ...activity.geckoHealthInspectionFeedback, [activeJudgement.id]: "question" } })}
           correctAction={needsComparison && activeJudgement.comparison

@@ -162,6 +162,9 @@ export function ArrivalMealActivity({
   const [readyPetDisplayed, setReadyPetDisplayed] = useState(false);
   useDialogFocus({ isOpen: Boolean(foodWarning && !isMobile), dialogRef: warningDialogRef, onClose: closeFoodWarning });
   useEffect(() => {
+  if (complete) logEvent("arrival_meal_completed", { species });
+}, [complete, species]);
+  useEffect(() => {
     if (!complete || hasRecordedMeal.current || (!mobileStarted && matchesCompactPortraitLayout())) return;
     hasRecordedMeal.current = true;
     let active = true;
@@ -181,7 +184,10 @@ export function ArrivalMealActivity({
     const ready = key === "food" ? activity.arrivalMealFoodReady : key === "water" ? activity.arrivalMealWaterReady : activity.arrivalMealVeggieReady;
     if (ready) return;
     setFoodWarning(null);
-    const completeSelection = () => onChange(key === "food" ? { arrivalMealFoodReady: true } : key === "water" ? { arrivalMealWaterReady: true } : { arrivalMealVeggieReady: true });
+    const completeSelection = () => {
+  logEvent("supply_prepared", { supply: key });
+  onChange(key === "food" ? { arrivalMealFoodReady: true } : key === "water" ? { arrivalMealWaterReady: true } : { arrivalMealVeggieReady: true });
+};
     if (!isMobile) {
       completeSelection();
       return;
@@ -213,6 +219,7 @@ export function ArrivalMealActivity({
   function chooseMealChoice(id: string) {
     const item = choiceItems.find((entry) => entry.id === id);
     if (!item) return;
+    logEvent("meal_choice_clicked", { choiceId: id, result: item.result });
     if (activity.arrivalMealSelectedChoiceIds.includes(id) && matchesCompactPortraitLayout()) {
       setMobileInfo({ title: item.label, description: interpolatePetName(item.feedback, petName) });
       return;
