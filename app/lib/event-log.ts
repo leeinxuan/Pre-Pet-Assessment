@@ -32,6 +32,8 @@ let pidCache: string | null = null;
 let sessionCache: string | null = null;
 // 最近一次作答的題目代號：回饋事件（答錯說明／完整回饋）沒有自己的題目資訊，由這裡補上
 let lastScenarioId = "";
+// 每次作答只對應一筆回饋；換頁回訪已完成題目時元件重新掛載，不重複記錄
+let feedbackPending = false;
 
 function isLocal() {
   const host = location.hostname;
@@ -84,8 +86,12 @@ export function logEvent(event: string, props?: Record<string, unknown>, overrid
   if (typeof window === "undefined") return;
   const pid = readPid();
   if (!pid) return;
-  if (event === "mcq_attempt" && typeof props?.scenarioId === "string") lastScenarioId = props.scenarioId;
-  if ((event === "mcq_error_feedback" || event === "mcq_full_feedback") && !props) props = { scenarioId: lastScenarioId };
+  if (event === "mcq_attempt" && typeof props?.scenarioId === "string") { lastScenarioId = props.scenarioId; feedbackPending = true; }
+  if (event === "mcq_error_feedback" || event === "mcq_full_feedback") {
+    if (!feedbackPending) return;
+    feedbackPending = false;
+    if (!props) props = { scenarioId: lastScenarioId };
+  }
   const row: EventRow = {
     pid,
     species: context.species,
@@ -93,7 +99,7 @@ export function logEvent(event: string, props?: Record<string, unknown>, overrid
     session: readSession(),
     event,
     stage: override?.stage ?? context.stage,
-    page: override?.page ?? (context.page || location.pathname),
+    page: override?.page || context.page || location.pathname,
     ts: Date.now(),
     props,
   };
