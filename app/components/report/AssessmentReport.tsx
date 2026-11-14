@@ -511,7 +511,7 @@ export function AssessmentReport({
           <section className="care-a4-discussion care-a4-discussion--cards" aria-label="知識點複習摘要">
             {topics.map((topic) => <article key={topic.id} className="care-a4-discussion-card">
               <h2>{topic.topic}</h2>
-              <p><b>情境：</b>{topic.summary ?? topic.title}</p>
+              <p><b>情境：</b><HomeReadinessReviewText segments={[{ text: topic.summary ?? topic.title }]} petName={petName} species={species} /></p>
               <div>
                 <b>建議複習：</b>
                 <ul>{topic.knowledgePoints.slice(0, 4).map((point) => <li key={point}><HomeReadinessReviewText segments={[{ text: point }]} petName={petName} species={species} /></li>)}</ul>
@@ -553,7 +553,7 @@ export function AssessmentReport({
         <section className="care-review-section care-review-followup" aria-labelledby="followup-care-title">
           <header><span aria-hidden="true"><ReviewAlertIcon /></span><div><h2 id="followup-care-title">建議再留意的觀念</h2><p>以下主題在體驗中曾出現不同選擇，建議在真正飼養前，再多花一些時間了解。</p></div></header>
           {discussionTopics.length ? <div className="care-review-topic-grid">
-            {discussionTopics.map((topic) => <article key={topic.id}><span aria-hidden="true"><ReviewAlertIcon /></span><div><b>{topic.title}</b><p>{topic.summary ?? topic.topic}</p></div><button type="button" className="discussion-info-button" onClick={() => { logEvent("review_followup_opened", { topicId: topic.id }); setActiveDiscussionId(topic.id); }} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button></article>)}
+            {discussionTopics.map((topic) => <article key={topic.id}><span aria-hidden="true"><ReviewAlertIcon /></span><div><b>{topic.title}</b><p><HomeReadinessReviewText segments={[{ text: topic.summary ?? topic.topic }]} petName={petName} species={species} /></p></div><button type="button" className="discussion-info-button" onClick={() => { logEvent("review_followup_opened", { topicId: topic.id }); setActiveDiscussionId(topic.id); }} aria-label={`查看「${topic.title}」的知識點`}><i aria-hidden="true">i</i> 查看知識點</button></article>)}
           </div> : <div className="care-review-all-clear"><span aria-hidden="true">✓</span><p>你已完成本次體驗中的所有照顧重點。正式飼養前，仍可以透過照護指南持續複習。</p></div>}
         </section>
 

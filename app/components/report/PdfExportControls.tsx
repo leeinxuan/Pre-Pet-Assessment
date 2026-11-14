@@ -511,7 +511,7 @@ function useMobileDownloadMode() {
   return mobile;
 }
 
-export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string, pdfWindow?: Window | null) {
+export async function createAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
   if (typeof window === "undefined" || typeof document === "undefined") throw new Error("PDF export requires a browser environment");
   if (kind === "profile" && profile) {
     const canvases = await createProfilePdfCanvases(profile, petName, selectedTypeLabel || "寵物");
@@ -521,8 +521,7 @@ export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind
     const fileName = safePetName
       ? `伴日子新手村_個人資料_${safePetName}.pdf`
       : "伴日子新手村_個人資料.pdf";
-    deliverPdf(blob, fileName, pdfWindow);
-    return;
+    return { blob, fileName };
   }
   const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
   const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
@@ -570,25 +569,15 @@ export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind
     const fileName = safePetName
       ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照顧準備總覽"}_${safePetName}.pdf`
       : `伴日子新手村_${kind === "profile" ? "個人資料" : "照顧準備總覽"}.pdf`;
-    deliverPdf(blob, fileName, pdfWindow);
+    return { blob, fileName };
   } finally {
     stage.remove();
   }
 }
 
-function deliverPdf(blob: Blob, fileName: string, pdfWindow?: Window | null) {
+export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
+  const { blob, fileName } = await createAssessmentPdf(petName, kind, profile, selectedTypeLabel);
   const url = URL.createObjectURL(blob);
-  if (pdfWindow) {
-    if (pdfWindow.closed) {
-      URL.revokeObjectURL(url);
-      throw new Error("The PDF tab was closed before export finished");
-    }
-    // Mobile Safari can ignore `download` for blob URLs and replace the app tab.
-    // A tab opened during the original tap retains the app and its in-memory progress.
-    pdfWindow.location.replace(url);
-    window.setTimeout(() => URL.revokeObjectURL(url), 10 * 60_000);
-    return;
-  }
   const link = document.createElement("a");
   link.href = url;
   link.download = fileName;

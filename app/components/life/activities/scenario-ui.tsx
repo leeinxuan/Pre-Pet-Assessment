@@ -396,8 +396,26 @@ export function VideoWithToggle({
     if (!shouldAutoPlay) return;
     const video = videoRef.current;
     if (!video) return;
-    if (autoPlayId) autoPlayedQuestionVideos.add(autoPlayId);
-    void video.play().catch(() => setPlayback({ key: playbackKey, paused: true, ended: false }));
+    let active = true;
+    const start = async () => {
+      try {
+        await video.play();
+      } catch {
+        // iOS Safari commonly blocks audible autoplay. Keep the first viewing
+        // automatic by retrying muted; the user can still replay with a tap.
+        if (!active) return;
+        video.muted = true;
+        try {
+          await video.play();
+        } catch {
+          if (active) setPlayback({ key: playbackKey, paused: true, ended: false });
+          return;
+        }
+      }
+      if (active && autoPlayId) autoPlayedQuestionVideos.add(autoPlayId);
+    };
+    void start();
+    return () => { active = false; };
   }, [autoPlayId, playbackKey, shouldAutoPlay]);
 
   function toggleVideo() {
