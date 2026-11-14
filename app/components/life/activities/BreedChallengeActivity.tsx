@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getBreedChallengeScenarios, getScenarioPresentation } from "../../../data/species/journey";
 import type { Scenario, ScenarioAnswer, ScenarioChoice } from "../../../game-types";
-import { withPetName } from "./activity-ui";
+import { renderKnowledgeText, withPetName } from "./activity-ui";
 import {
   BreedKnowledgeHighlight,
   CorrectFeedbackLayout,
@@ -121,7 +121,7 @@ export function BreedChallengeActivity({
           <section className="breed-challenge-retry" aria-live="polite">
             <h2>這個想法很常見，但可能還不夠</h2>
             <IncorrectExplanation text={withPetName(selectedChoice.explanation, petName)} />
-            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName)}</p></div>}
+            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{renderKnowledgeText(withPetName(selectedChoice.suggestion, petName))}</p></div>}
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新選擇</button>
           </section>
         ) : (

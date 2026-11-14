@@ -202,7 +202,7 @@ export function BusyCareActivity({
             {familyStep === "name" ? (
               <>
                 <div><span>協助者 1 / 2</span><h2>你會找誰幫忙？</h2><p>可以是同住家人，也可以是你信任的朋友。先寫下一個實際可聯絡的人。</p></div>
-                <label className="busy-helper-name-field"><span>協助者姓名或稱呼</span><input type="text" value={helperName} placeholder="例如：姊姊、阿德" maxLength={20} onChange={(event) => setHelperName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && helperName.trim()) submitHelperName(); }} /></label>
+                <label className="busy-helper-name-field"><span>協助者姓名或稱呼</span><input type="text" value={helperName} placeholder="例如：姊姊、阿德" maxLength={20} onChange={(event) => setHelperName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }} /></label>
                 <div className="busy-care-member-actions"><button type="button" className="secondary" onClick={() => { logEvent("helper_step_back"); setMode("question"); }}>返回</button><button type="button" className="primary" disabled={!helperName.trim()} onClick={submitHelperName}>下一步，確認是否合適 <span>→</span></button></div>
               </>
             ) : (
@@ -230,7 +230,7 @@ export function BusyCareActivity({
           <section className="busy-care-feedback incorrect busy-care-feedback--standard" aria-live="polite">
             <h2>這個做法可能不太適合</h2>
             <IncorrectExplanation text={withPetName(selectedChoice.explanation, petName, species)} />
-            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(selectedChoice.suggestion, petName, species)}</p></div>}
+            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{renderKnowledgeText(withPetName(selectedChoice.suggestion, petName, species))}</p></div>}
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (

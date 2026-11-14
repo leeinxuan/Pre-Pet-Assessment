@@ -595,9 +595,11 @@ export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses
   const monthlyExpenses = grouped.find((entry) => entry.group === expenseLabels.monthlyBasic)?.items ?? [];
   const temporaryExpenses = getTemporaryExpenses(visibleExpenses);
   const totalFor = (items: ExpenseRecord[]) => items.reduce((sum, item) => sum + item.amount, 0);
-  const renderExpenseDescription = (description: string) => description.split("**").map((part, index) => index % 2 === 1
-    ? <strong className="knowledge-emphasis" key={`${part}-${index}`}>{part}</strong>
-    : <span key={`${part}-${index}`}>{part}</span>);
+  const renderExpenseDescription = (description: string) => description.split(/(\*\*.*?\*\*|<accent>.*?<\/accent>)/g).filter(Boolean).map((part, index) => part.startsWith("**") && part.endsWith("**")
+    ? <strong className="knowledge-emphasis" key={index}>{part.slice(2, -2)}</strong>
+    : part.startsWith("<accent>") && part.endsWith("</accent>")
+      ? <strong className="knowledge-emphasis" key={index}>{part.slice(8, -9)}</strong>
+      : <span key={index}>{part}</span>);
   const renderItems = (items: ExpenseRecord[], showReserveAmount = false) => items.length ? (
     <ul>{items.map((item) => <li key={item.id}><span className="expense-line-copy"><b>{item.name}</b>{item.description && <small className="expense-line-description">{renderExpenseDescription(item.description)}</small>}</span><strong className="expense-line-amount">{showReserveAmount ? formatTemporaryExpenseAmount(item) : `NT$ ${money.format(item.amount)}${item.showPlusSuffix ? "+" : ""}${isMonthlyExpense(item) ? expenseLabels.monthlySuffix : ""}`}</strong></li>)}</ul>
   ) : <p>{expenseLabels.noGroupExpenses}</p>;

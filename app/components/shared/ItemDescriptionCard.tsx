@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { logEvent } from "../../lib/event-log";
 
 type ItemDescriptionCardProps = {
   title: string;
@@ -52,7 +53,7 @@ export function ItemDescriptionCard({ title, description, descriptionImage, foot
   return <>
     <div className={`supply-slot-note ${className}`.trim()} aria-live="polite">
       <b>{title}</b>
-      <small>{renderDescription(description, descriptionImage, () => setPopupOpen(true))}</small>
+      <small>{renderDescription(description, descriptionImage, () => { logEvent("description_image_opened", { title }); setPopupOpen(true); })}</small>
       {footer && <span className="supply-slot-price">{footer}</span>}
     </div>
     {popupOpen && descriptionImage && typeof document !== "undefined" && createPortal(

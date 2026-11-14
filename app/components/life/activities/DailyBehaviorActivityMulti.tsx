@@ -238,7 +238,7 @@ export function DailyBehaviorActivityMulti({
         <section className="daily-behavior-retry" aria-live="polite">
           <h2>{retryCopy.title}</h2>
           <IncorrectExplanation text={withPetName(retryCopy.explanation, petName, species)} />
-          {retryCopy.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(retryCopy.suggestion, petName, species)}</p></div>}
+          {retryCopy.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{renderKnowledgeText(withPetName(retryCopy.suggestion, petName, species))}</p></div>}
           <button type="button" className="secondary" onClick={retry}>重新想一次</button>
         </section>
       ) : <section className="reflection daily-behavior-choices">

@@ -43,12 +43,12 @@ export const hamsterCageCheck = {
     rounds: [
       {
         scoopPrompt: "用砂鏟舀起一部分浴沙",
-        shakePrompt: "搖晃砂鏟，讓細沙漏回盆裡",
+        shakePrompt: "按住砂鏟並左右搖晃，讓細沙漏回盆裡",
         trashPrompt: "點擊垃圾桶，丟掉留在砂鏟上的排泄物",
       },
       {
         scoopPrompt: "再舀一次浴沙！",
-        shakePrompt: "搖晃砂鏟，讓細沙漏回盆裡",
+        shakePrompt: "按住砂鏟並左右搖晃，讓細沙漏回盆裡",
         trashPrompt: "點擊垃圾桶，丟掉最後的排泄物！",
       },
     ],

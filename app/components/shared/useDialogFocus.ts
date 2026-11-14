@@ -15,11 +15,15 @@ export function useDialogFocus({
   dialogRef,
   onClose,
   getReturnFocus,
+  preventScroll = false,
+  lockBodyScroll = true,
 }: {
   isOpen: boolean;
   dialogRef: RefObject<HTMLElement | null>;
   onClose: () => void;
   getReturnFocus?: () => HTMLElement | null;
+  preventScroll?: boolean;
+  lockBodyScroll?: boolean;
 }) {
   const onCloseRef = useRef(onClose);
   const getReturnFocusRef = useRef(getReturnFocus);
@@ -38,12 +42,13 @@ export function useDialogFocus({
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const resolveReturnFocus = getReturnFocusRef.current;
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    if (lockBodyScroll) document.body.style.overflow = "hidden";
 
     const focusFirst = () => {
       const dialog = dialogRef.current;
       const first = dialog?.querySelector<HTMLElement>(focusableSelector);
-      (first ?? dialog)?.focus();
+      if (preventScroll) (first ?? dialog)?.focus({ preventScroll: true });
+      else (first ?? dialog)?.focus();
     };
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -74,7 +79,7 @@ export function useDialogFocus({
     return () => {
       window.clearTimeout(timer);
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousOverflow;
+      if (lockBodyScroll) document.body.style.overflow = previousOverflow;
       // Some interactions replace their opener while the dialog is open (for
       // example, a room hazard becomes an "already secured" review button).
       // Let those dialogs identify the equivalent control instead of dropping
@@ -82,11 +87,13 @@ export function useDialogFocus({
       window.setTimeout(() => {
         const returnTarget = resolveReturnFocus?.();
         if (returnTarget?.isConnected) {
-          returnTarget.focus();
+          if (preventScroll) returnTarget.focus({ preventScroll: true });
+          else returnTarget.focus();
         } else if (previouslyFocused?.isConnected) {
-          previouslyFocused.focus();
+          if (preventScroll) previouslyFocused.focus({ preventScroll: true });
+          else previouslyFocused.focus();
         }
       }, 0);
     };
-  }, [dialogRef, isOpen]);
+  }, [dialogRef, isOpen, lockBodyScroll, preventScroll]);
 }

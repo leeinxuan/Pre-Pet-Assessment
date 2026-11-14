@@ -167,7 +167,7 @@ export function VideoScenarioActivity({
           <section className="video-scenario-retry" aria-live="polite">
             <h2>這個做法可能不太適合</h2>
             <IncorrectExplanation text={withPetName(withBreedName(selectedChoice.explanation, breed, species), petName, species)} />
-            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{withPetName(withBreedName(selectedChoice.suggestion, breed, species), petName, species)}</p></div>}
+            {selectedChoice.suggestion && <div className="incorrect-suggestion"><b>可以這樣調整：</b><p>{renderKnowledgeText(withPetName(withBreedName(selectedChoice.suggestion, breed, species), petName, species))}</p></div>}
             <button type="button" className="secondary" onClick={() => setMode("question")}>重新想一次</button>
           </section>
         ) : (

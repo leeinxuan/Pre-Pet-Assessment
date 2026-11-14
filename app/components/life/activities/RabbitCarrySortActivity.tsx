@@ -162,7 +162,7 @@ export function RabbitCarrySortActivity({ activity, petName, onChange, onChoose,
             </li>
           ))}
         </ol>
-        {attempts > 0 && !answerRevealed && <p className="sort-attempts" role="status">{isLockedAfterFailures ? <>已達 <strong>3</strong> 次嘗試</> : <>還有 <strong>{Math.max(0, 3 - attempts)}</strong> 次可嘗試</>}</p>}
+        {attempts > 0 && !isCompletionState && <p className="sort-attempts" role="status">{isLockedAfterFailures ? <>已達 <strong>3</strong> 次嘗試</> : <>還有 <strong>{Math.max(0, 3 - attempts)}</strong> 次可嘗試</>}</p>}
         {message && !isCompletionState && <p className="rabbit-activity-message" role="status">{message}</p>}
         {isCompletionState ? <button type="button" className="primary" onClick={() => onChange({ rabbitCarryFeedbackShown: true })}>我知道正確做法了 <span>→</span></button> : isLockedAfterFailures ? <button type="button" className="rabbit-carry-reveal-button" onClick={revealCorrectWay}>查看正確方式 <span>→</span></button> : <button type="button" className="primary" onClick={check}>確認順序 <span>→</span></button>}
       </div>

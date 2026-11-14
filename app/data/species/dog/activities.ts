@@ -63,7 +63,7 @@ export const walkingActivityConfig = {
       readyTitle: "準備好再出門",
       readyDescription: "確認牽繩、撿便袋和水都準備好後，就可以陪牠走一段 20 分鐘的散步路線。路上如果牠排泄，也要記得停下來清理。",
     },
-    walkInstruction: "點擊「往前走」，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。",
+    walkInstruction: "按住「往前走」，陪牠一步一步往前走。散步不只是運動，也是牠探索環境、放鬆心情和練習與世界相處的時間。",
     messages: {
       leashRequired: "外出活動需要適當防護措施，牽繩或胸背帶能避免走失、驚嚇衝出，也能保護牠和其他人。",
       preparationRequired: "出門前也要準備撿便袋和水，讓散步更安心。",

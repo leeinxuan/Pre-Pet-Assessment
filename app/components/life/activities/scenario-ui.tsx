@@ -504,7 +504,7 @@ function ScenarioFeedback({
       <div className="feedback-title"><span>{labels[choice.result].icon}</span><div><small>{scenario.timeLabel}</small><h2>{withPetName(choice.feedbackTitle, petName, species)}</h2></div></div>
       <IncorrectExplanation text={withPetName(choice.explanation, petName, species)} />
       <OtherCorrectTips scenario={scenario} choice={choice} petName={petName} species={species} />
-      {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整：</b><p>{withPetName(choice.suggestion, petName, species)}</p></div>}
+      {choice.suggestion && <div className="feedback-suggestion"><b>可以這樣調整：</b><p>{renderKnowledgeText(withPetName(choice.suggestion, petName, species))}</p></div>}
       <div className="feedback-expense">
         <b>本次費用變化</b>
         {expenseChanges.length
