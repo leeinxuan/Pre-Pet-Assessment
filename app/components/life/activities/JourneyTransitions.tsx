@@ -3,7 +3,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getJourneyTransitionMedia, getSpeciesConfig } from "../../../data/species";
 import { usePrefersReducedMotion } from "../../shared/usePrefersReducedMotion";
-import { useIsMobileViewport } from "../../shared/useIsMobileViewport";
+import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../../shared/responsive";
+
+function ResponsiveVideoSources({ desktop, mobile }: { desktop?: string; mobile?: string }) {
+  return <>
+    {mobile && <source media={COMPACT_PORTRAIT_LAYOUT_QUERY} src={mobile} type="video/mp4" />}
+    {desktop && <source src={desktop} type="video/mp4" />}
+  </>;
+}
 
 export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onContinue: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -13,10 +20,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
   const onContinueRef = useRef(onContinue);
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const isMobile = useIsMobileViewport();
   const transitionMedia = getJourneyTransitionMedia(species);
-  const arrivalVideoSource = isMobile === null ? undefined : (isMobile && transitionMedia.arrivalMobile) || transitionMedia.arrival;
-  const sourceReady = isMobile !== null;
 
   useEffect(() => {
     onContinueRef.current = onContinue;
@@ -32,7 +36,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !sourceReady) return;
+    if (!video) return;
     if (prefersReducedMotion) {
       video.pause();
       video.currentTime = 0;
@@ -46,7 +50,6 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
       if (video.paused || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) setNeedsManualPlay(true);
     }, 8000);
 
-    video.load();
     const playAttempt = video.play();
     playAttempt?.catch(() => {
       console.warn("接回家過場影片無法自動播放，已略過至飼養生活。");
@@ -57,7 +60,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
       if (startTimeoutRef.current !== null) window.clearTimeout(startTimeoutRef.current);
       if (endTimeoutRef.current !== null) window.clearTimeout(endTimeoutRef.current);
     };
-  }, [prefersReducedMotion, showFinalFrame, sourceReady]);
+  }, [prefersReducedMotion, showFinalFrame]);
 
   function handlePlaying() {
     if (startTimeoutRef.current !== null) {
@@ -88,7 +91,6 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
     <section className="arrival-video-screen" aria-label="接回家影片過場">
       <video
         ref={videoRef}
-        src={arrivalVideoSource}
         autoPlay={!prefersReducedMotion}
         playsInline
         preload="auto"
@@ -100,7 +102,7 @@ export function ArrivalTransitionVideo({ onContinue, species = "dog" }: { onCont
           console.warn("接回家過場影片載入失敗，已略過至飼養生活。");
           handleVideoError();
         }}
-      />
+      ><ResponsiveVideoSources desktop={transitionMedia.arrival} mobile={transitionMedia.arrivalMobile} /></video>
       <p id="arrival-transition-description" className="sr-only">這段影片表示{animalLabel}已抵達新家，不包含額外作答資訊；播放結束後會自動進入飼養生活。</p>
       {needsManualPlay && <button type="button" className="primary arrival-video-play" onClick={startVideoManually}>播放影片</button>}
     </section>
@@ -112,10 +114,7 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
   const [needsManualPlay, setNeedsManualPlay] = useState(false);
   const hasFinished = useRef(false);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const isMobile = useIsMobileViewport();
   const transitionMedia = getJourneyTransitionMedia(species);
-  const timePassVideoSource = isMobile === null ? undefined : (isMobile && transitionMedia.timePassMobile) || transitionMedia.timePass;
-  const sourceReady = isMobile !== null;
 
   const finish = useCallback(() => {
     if (hasFinished.current) return;
@@ -125,13 +124,13 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !sourceReady) return;
+    if (!video) return;
     if (prefersReducedMotion) {
       const timer = window.setTimeout(finish, 180);
       return () => window.clearTimeout(timer);
     }
     video.play().catch(() => setNeedsManualPlay(true));
-  }, [finish, prefersReducedMotion, sourceReady]);
+  }, [finish, prefersReducedMotion]);
 
   function playManually() {
     const video = videoRef.current;
@@ -142,7 +141,7 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 
   return (
     <section className="time-pass-transition" aria-label="時間流逝過場動畫">
-      <video ref={videoRef} src={timePassVideoSource} autoPlay={!prefersReducedMotion} playsInline preload="metadata" aria-label="時間流逝過場動畫" aria-describedby="time-pass-transition-description" onEnded={finish} onError={() => setNeedsManualPlay(true)} />
+      <video ref={videoRef} autoPlay={!prefersReducedMotion} playsInline preload="auto" aria-label="時間流逝過場動畫" aria-describedby="time-pass-transition-description" onEnded={finish} onError={() => setNeedsManualPlay(true)}><ResponsiveVideoSources desktop={transitionMedia.timePass} mobile={transitionMedia.timePassMobile} /></video>
       <p id="time-pass-transition-description" className="sr-only">這段影片表示時間經過與寵物年齡增長，不包含額外作答資訊；播放結束後會自動繼續。</p>
       {needsManualPlay && <button type="button" className="time-pass-play" onClick={playManually}>播放影片</button>}
     </section>
@@ -152,26 +151,22 @@ export function TimePassTransition({ onComplete, species = "dog" }: { onComplete
 export function BusyCareTransition({ onComplete, species = "dog" }: { onComplete: () => void; species?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const isMobile = useIsMobileViewport();
   const transitionMedia = getJourneyTransitionMedia(species);
-  const busyCareTransitionSource = isMobile === null ? undefined : (isMobile && transitionMedia.busyCareMobile) || transitionMedia.busyCare;
-  const sourceReady = isMobile !== null;
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !sourceReady) return;
+    if (!video) return;
     if (prefersReducedMotion) {
       const timer = window.setTimeout(onComplete, 180);
       return () => window.clearTimeout(timer);
     }
     video.play().catch(onComplete);
-  }, [onComplete, prefersReducedMotion, sourceReady]);
+  }, [onComplete, prefersReducedMotion]);
 
   return (
     <section className="arrival-video-screen busy-care-transition" aria-label="疲憊忙碌的日子過場影片">
       <video
         ref={videoRef}
-        src={busyCareTransitionSource}
         autoPlay={!prefersReducedMotion}
         playsInline
         preload="auto"
@@ -179,7 +174,7 @@ export function BusyCareTransition({ onComplete, species = "dog" }: { onComplete
         aria-describedby="busy-care-transition-description"
         onEnded={onComplete}
         onError={onComplete}
-      />
+      ><ResponsiveVideoSources desktop={transitionMedia.busyCare} mobile={transitionMedia.busyCareMobile} /></video>
       <p id="busy-care-transition-description" className="sr-only">這段影片表示照顧者進入疲憊忙碌的生活時期，不包含額外作答資訊；播放結束後會進入照護安排題目。</p>
     </section>
   );

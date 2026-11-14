@@ -45,7 +45,7 @@ function RoomIntroIcon() {
 }
 
 function ItemThumbnail({ image, label }: { image?: string; label: string }) {
-  return <span className="room-mobile-thumbnail">{image ? <img src={image} alt="" /> : <span aria-hidden="true">◇</span>}<span className="sr-only">{label}</span></span>;
+  return <span className="room-mobile-thumbnail">{image ? <img src={image} alt="" loading="lazy" decoding="async" /> : <span aria-hidden="true">◇</span>}<span className="sr-only">{label}</span></span>;
 }
 
 function CheckIcon() {

@@ -314,7 +314,7 @@ function roomDoorplatePlacementStyle(placement: {
 
 function RoomItemVisual({ item, scene = false }: { item: RoomItem; scene?: boolean }) {
   const image = scene ? item.sceneImage ?? item.image : item.image;
-  if (image) return <img className={scene ? "" : `room-item-image room-item-image--${item.id}`} src={image} alt={scene ? `房間中已配置的${item.label}` : ""} />;
+  if (image) return <img className={scene ? "" : `room-item-image room-item-image--${item.id}`} src={image} alt={scene ? `房間中已配置的${item.label}` : ""} loading={scene ? "eager" : "lazy"} decoding="async" />;
   return <span className={`preparation-asset-placeholder ${scene ? "preparation-asset-placeholder--scene" : ""}`} role="img" aria-label={`${item.label}素材待補`}>素材待補</span>;
 }
 

@@ -134,7 +134,6 @@ test("contains the five-unit journey and current project-owned artwork", async (
 
   assert.match(dogJourney, /arrival-transition\.mp4/);
   assert.match(journeyTransitions, /const transitionMedia = getJourneyTransitionMedia\(species\)/);
-  assert.match(journeyTransitions, /transitionMedia\.arrivalMobile\) \|\| transitionMedia\.arrival/);
   assert.match(journeyTransitions, /arrival-video-screen/);
   assert.match(journeyTransitions, /autoPlay/);
   assert.match(journeyTransitions, /muted/);
