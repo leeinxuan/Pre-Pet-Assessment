@@ -1031,7 +1031,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-delay",
                 "result": "incorrect",
-                "text": "守宮很獨立，應該沒問題，今晚不用特別安排"
+                "text": "守宮平常不太需要照顧，今晚先不特別安排"
               },
               {
                 "effects": {
@@ -1084,7 +1084,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "wait-and-see",
                 "result": "incorrect",
-                "text": "先等幾天看看，牠可能只是心情不好"
+                "text": "先觀察幾天，看牠是不是只是心情不好"
               },
               {
                 "effects": {
@@ -1208,11 +1208,11 @@
                   "trust": -1,
                   "wellbeing": -1
                 },
-                "explanation": "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
+                "explanation": "高齡照顧需要提前準備。等到症狀很明顯才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-senior-wait",
                 "result": "incorrect",
-                "text": "等到牠真的很嚴重再處理，平常不用特別準備"
+                "text": "等牠出現明顯的老化症狀再處理，平常先不特別準備"
               },
               {
                 "effects": {
@@ -1224,7 +1224,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-senior-self-medicate",
                 "result": "incorrect",
-                "text": "自行判斷並使用人用藥物或網路偏方"
+                "text": "參考網路上的經驗，自行用人用藥物或偏方處理"
               },
               {
                 "effects": {
@@ -1764,7 +1764,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-delay",
                 "result": "incorrect",
-                "text": "守宮很獨立，應該沒問題，今晚不用特別安排"
+                "text": "守宮平常不太需要照顧，今晚先不特別安排"
               },
               {
                 "effects": {
@@ -1817,7 +1817,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "wait-and-see",
                 "result": "incorrect",
-                "text": "先等幾天看看，牠可能只是心情不好"
+                "text": "先觀察幾天，看牠是不是只是心情不好"
               },
               {
                 "effects": {
@@ -1941,11 +1941,11 @@
                   "trust": -1,
                   "wellbeing": -1
                 },
-                "explanation": "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
+                "explanation": "高齡照顧需要提前準備。等到症狀很明顯才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-senior-wait",
                 "result": "incorrect",
-                "text": "等到牠真的很嚴重再處理，平常不用特別準備"
+                "text": "等牠出現明顯的老化症狀再處理，平常先不特別準備"
               },
               {
                 "effects": {
@@ -1957,7 +1957,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-senior-self-medicate",
                 "result": "incorrect",
-                "text": "自行判斷並使用人用藥物或網路偏方"
+                "text": "參考網路上的經驗，自行用人用藥物或偏方處理"
               },
               {
                 "effects": {
@@ -2501,7 +2501,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-delay",
                 "result": "incorrect",
-                "text": "守宮很獨立，應該沒問題，今晚不用特別安排"
+                "text": "守宮平常不太需要照顧，今晚先不特別安排"
               },
               {
                 "effects": {
@@ -2554,7 +2554,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "wait-and-see",
                 "result": "incorrect",
-                "text": "先等幾天看看，牠可能只是心情不好"
+                "text": "先觀察幾天，看牠是不是只是心情不好"
               },
               {
                 "effects": {
@@ -2678,11 +2678,11 @@
                   "trust": -1,
                   "wellbeing": -1
                 },
-                "explanation": "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
+                "explanation": "高齡照顧需要提前準備。等到症狀很明顯才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-senior-wait",
                 "result": "incorrect",
-                "text": "等到牠真的很嚴重再處理，平常不用特別準備"
+                "text": "等牠出現明顯的老化症狀再處理，平常先不特別準備"
               },
               {
                 "effects": {
@@ -2694,7 +2694,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-senior-self-medicate",
                 "result": "incorrect",
-                "text": "自行判斷並使用人用藥物或網路偏方"
+                "text": "參考網路上的經驗，自行用人用藥物或偏方處理"
               },
               {
                 "effects": {
@@ -3234,7 +3234,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-delay",
                 "result": "incorrect",
-                "text": "守宮很獨立，應該沒問題，今晚不用特別安排"
+                "text": "守宮平常不太需要照顧，今晚先不特別安排"
               },
               {
                 "effects": {
@@ -3287,7 +3287,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "wait-and-see",
                 "result": "incorrect",
-                "text": "先等幾天看看，牠可能只是心情不好"
+                "text": "先觀察幾天，看牠是不是只是心情不好"
               },
               {
                 "effects": {
@@ -3411,11 +3411,11 @@
                   "trust": -1,
                   "wellbeing": -1
                 },
-                "explanation": "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
+                "explanation": "高齡照顧需要提前準備。等到症狀很明顯才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-senior-wait",
                 "result": "incorrect",
-                "text": "等到牠真的很嚴重再處理，平常不用特別準備"
+                "text": "等牠出現明顯的老化症狀再處理，平常先不特別準備"
               },
               {
                 "effects": {
@@ -3427,7 +3427,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "gecko-senior-self-medicate",
                 "result": "incorrect",
-                "text": "自行判斷並使用人用藥物或網路偏方"
+                "text": "參考網路上的經驗，自行用人用藥物或偏方處理"
               },
               {
                 "effects": {
@@ -4591,7 +4591,7 @@
             }
           },
           "fixedWarning": "⚠️ 熱區超過 35°C 可能引發熱衰竭；冷區低於 18°C 守宮消化與免疫功能都會受影響。加熱設備須搭配溫度計持續監控，不可使用電熱石（無法精準控溫且易燙傷）。",
-          "instruction": "確認熱區底部與冷區溫度，調整加熱設備後再確認今日溫度。",
+          "instruction": "確認熱區與冷區溫度，調整加熱設備後再確認今日溫度。",
           "presets": {
             "in-range": [
               {
@@ -6696,7 +6696,7 @@
             "feedbackTitle": "這個做法可能不太適合。",
             "id": "gecko-delay",
             "result": "incorrect",
-            "text": "守宮很獨立，應該沒問題，今晚不用特別安排"
+            "text": "守宮平常不太需要照顧，今晚先不特別安排"
           },
           {
             "effects": {
@@ -6749,7 +6749,7 @@
             "feedbackTitle": "這個做法可能不太適合。",
             "id": "wait-and-see",
             "result": "incorrect",
-            "text": "先等幾天看看，牠可能只是心情不好"
+            "text": "先觀察幾天，看牠是不是只是心情不好"
           },
           {
             "effects": {
@@ -6873,11 +6873,11 @@
               "trust": -1,
               "wellbeing": -1
             },
-            "explanation": "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
+            "explanation": "高齡照顧需要提前準備。等到症狀很明顯才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
             "feedbackTitle": "這個做法可能不太適合。",
             "id": "gecko-senior-wait",
             "result": "incorrect",
-            "text": "等到牠真的很嚴重再處理，平常不用特別準備"
+            "text": "等牠出現明顯的老化症狀再處理，平常先不特別準備"
           },
           {
             "effects": {
@@ -6889,7 +6889,7 @@
             "feedbackTitle": "這個做法可能不太適合。",
             "id": "gecko-senior-self-medicate",
             "result": "incorrect",
-            "text": "自行判斷並使用人用藥物或網路偏方"
+            "text": "參考網路上的經驗，自行用人用藥物或偏方處理"
           },
           {
             "effects": {
@@ -7886,7 +7886,7 @@
           "feedbackTitle": "這個做法可能不太適合。",
           "id": "gecko-delay",
           "result": "incorrect",
-          "text": "守宮很獨立，應該沒問題，今晚不用特別安排"
+          "text": "守宮平常不太需要照顧，今晚先不特別安排"
         },
         {
           "effects": {
@@ -7939,7 +7939,7 @@
           "feedbackTitle": "這個做法可能不太適合。",
           "id": "wait-and-see",
           "result": "incorrect",
-          "text": "先等幾天看看，牠可能只是心情不好"
+          "text": "先觀察幾天，看牠是不是只是心情不好"
         },
         {
           "effects": {
@@ -8063,11 +8063,11 @@
             "trust": -1,
             "wellbeing": -1
           },
-          "explanation": "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
+          "explanation": "高齡照顧需要提前準備。等到症狀很明顯才處理，可能延誤照顧，也會讓 {petName} 承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。",
           "feedbackTitle": "這個做法可能不太適合。",
           "id": "gecko-senior-wait",
           "result": "incorrect",
-          "text": "等到牠真的很嚴重再處理，平常不用特別準備"
+          "text": "等牠出現明顯的老化症狀再處理，平常先不特別準備"
         },
         {
           "effects": {
@@ -8079,7 +8079,7 @@
           "feedbackTitle": "這個做法可能不太適合。",
           "id": "gecko-senior-self-medicate",
           "result": "incorrect",
-          "text": "自行判斷並使用人用藥物或網路偏方"
+          "text": "參考網路上的經驗，自行用人用藥物或偏方處理"
         },
         {
           "effects": {

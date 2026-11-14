@@ -109,10 +109,10 @@ export const dogLifeScenarios: Scenario[] = [
       },
       {
         id: "bark-scold",
-        text: "立刻大聲責罵，讓牠知道吠叫不被允許",
+        text: "對牠大聲喝止，讓牠知道不可以吠叫",
         result: "incorrect",
         ...incorrect,
-        explanation: "大聲責罵可能反而強化 {petName} 的焦慮，讓吠叫情況更難改善，也無法處理觸發原因。"
+        explanation: "大聲責罵或喝止可能反而強化 {petName} 的焦慮，讓吠叫情況更難改善，也無法處理觸發原因。"
       },
       {
         id: "bark-walk",
@@ -175,10 +175,10 @@ export const dogLifeScenarios: Scenario[] = [
       },
       {
         id: "chew-punish",
-        text: "看到牠咬東西就立刻打牠或嚇牠",
+        text: "看到牠咬東西就大聲嚇阻，讓牠不敢再咬",
         result: "incorrect",
         ...incorrect,
-        explanation: "打罵或驚嚇可能造成壓力、破壞信任，也不一定能解決探索與情緒需求。先收好危險物品，並把牠引導到安全的啃咬玩具。"
+        explanation: "責罵或嚇阻可能造成壓力、破壞信任，也不一定能解決探索與情緒需求。先收好危險物品，並把牠引導到安全的啃咬玩具。"
       },
       {
         id: "chew-store-hazards",
@@ -254,7 +254,7 @@ export const dogLifeScenarios: Scenario[] = [
       },
       {
         id: "toilet-scold",
-        text: "牠尿錯地方就把牠抓過來罵",
+        text: "牠尿錯地方就當場把牠帶到尿尿的地方並責備牠",
         result: "incorrect",
         ...incorrect,
         explanation: "責罵可能讓狗狗害怕，卻不一定知道正確如廁地點。應增加合適的如廁機會，並在牠於正確地點完成時立即給予獎勵。"
@@ -402,7 +402,7 @@ export const dogLifeScenarios: Scenario[] = [
     choices: [
       {
         id: "wait-and-see",
-        text: "先等幾天看看，牠可能只是心情不好",
+        text: "先觀察幾天，看牠是不是只是心情不好",
         result: "incorrect",
         ...incorrect,
         explanation: "等太久可能延誤就醫，讓{petName} 持續不舒服。",
@@ -504,14 +504,14 @@ export const dogLifeScenarios: Scenario[] = [
       },
       {
         id: "senior-wait",
-        text: "等到牠真的很嚴重再處理，平常不用特別準備",
+        text: "等牠出現明顯的老化症狀再處理，平常先不特別準備",
         result: "incorrect",
         ...incorrect,
-        explanation: "高齡照顧需要提前準備。等到症狀很嚴重才處理，可能延誤照顧，也會讓小狗承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。"
+        explanation: "高齡照顧需要提前準備。等到症狀很明顯才處理，可能延誤照顧，也會讓小狗承受更多不適；醫療基金、健康觀察與日常照護都應在問題變嚴重前開始規劃。"
       },
       {
         id: "senior-human-medicine",
-        text: "自行判斷並使用人用藥物或網路偏方",
+        text: "參考網路上的經驗，自行用人用藥物或偏方處理",
         result: "incorrect",
         ...incorrect,
         explanation: "人用藥物或網路偏方可能對小狗造成危險。高齡階段若有健康疑慮，應諮詢獸醫並依專業建議處理。",

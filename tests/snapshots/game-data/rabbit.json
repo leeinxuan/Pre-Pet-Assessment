@@ -1906,7 +1906,7 @@
                 "id": "rabbit-health-wait",
                 "result": "incorrect",
                 "suggestion": "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診。",
-                "text": "這是正常波動，明天再看看"
+                "text": "牠可能只是一時食慾差，明天再看看"
               },
               {
                 "effects": {
@@ -2709,7 +2709,7 @@
                 "id": "rabbit-health-wait",
                 "result": "incorrect",
                 "suggestion": "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診。",
-                "text": "這是正常波動，明天再看看"
+                "text": "牠可能只是一時食慾差，明天再看看"
               },
               {
                 "effects": {
@@ -3516,7 +3516,7 @@
                 "id": "rabbit-health-wait",
                 "result": "incorrect",
                 "suggestion": "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診。",
-                "text": "這是正常波動，明天再看看"
+                "text": "牠可能只是一時食慾差，明天再看看"
               },
               {
                 "effects": {
@@ -4461,7 +4461,7 @@
                 "id": "rabbit-health-wait",
                 "result": "incorrect",
                 "suggestion": "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診。",
-                "text": "這是正常波動，明天再看看"
+                "text": "牠可能只是一時食慾差，明天再看看"
               },
               {
                 "effects": {
@@ -6997,7 +6997,7 @@
             "id": "rabbit-health-wait",
             "result": "incorrect",
             "suggestion": "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診。",
-            "text": "這是正常波動，明天再看看"
+            "text": "牠可能只是一時食慾差，明天再看看"
           },
           {
             "effects": {
@@ -8274,7 +8274,7 @@
           "id": "rabbit-health-wait",
           "result": "incorrect",
           "suggestion": "立刻聯繫**熟悉兔子醫療的獸醫師**，帶去看診。",
-          "text": "這是正常波動，明天再看看"
+          "text": "牠可能只是一時食慾差，明天再看看"
         },
         {
           "effects": {

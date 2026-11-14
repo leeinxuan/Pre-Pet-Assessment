@@ -1471,7 +1471,7 @@
                 "id": "cat-alone-food",
                 "result": "incorrect",
                 "suggestion": "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。",
-                "text": "放大量食物水讓牠自己撐過"
+                "text": "出門前多放些食物和水，讓牠自己度過這段時間"
               },
               {
                 "effects": {
@@ -1497,7 +1497,7 @@
                 "id": "cat-no-check",
                 "result": "incorrect",
                 "suggestion": "至少安排可信任者確認基本需求、環境安全與是否有異常。",
-                "text": "覺得貓很獨立，不用特別安排"
+                "text": "貓咪平常很獨立，這次加班不用特別請人協助"
               },
               {
                 "effects": {
@@ -2202,7 +2202,7 @@
                 "id": "cat-alone-food",
                 "result": "incorrect",
                 "suggestion": "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。",
-                "text": "放大量食物水讓牠自己撐過"
+                "text": "出門前多放些食物和水，讓牠自己度過這段時間"
               },
               {
                 "effects": {
@@ -2228,7 +2228,7 @@
                 "id": "cat-no-check",
                 "result": "incorrect",
                 "suggestion": "至少安排可信任者確認基本需求、環境安全與是否有異常。",
-                "text": "覺得貓很獨立，不用特別安排"
+                "text": "貓咪平常很獨立，這次加班不用特別請人協助"
               },
               {
                 "effects": {
@@ -2937,7 +2937,7 @@
                 "id": "cat-alone-food",
                 "result": "incorrect",
                 "suggestion": "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。",
-                "text": "放大量食物水讓牠自己撐過"
+                "text": "出門前多放些食物和水，讓牠自己度過這段時間"
               },
               {
                 "effects": {
@@ -2963,7 +2963,7 @@
                 "id": "cat-no-check",
                 "result": "incorrect",
                 "suggestion": "至少安排可信任者確認基本需求、環境安全與是否有異常。",
-                "text": "覺得貓很獨立，不用特別安排"
+                "text": "貓咪平常很獨立，這次加班不用特別請人協助"
               },
               {
                 "effects": {
@@ -3668,7 +3668,7 @@
                 "id": "cat-alone-food",
                 "result": "incorrect",
                 "suggestion": "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。",
-                "text": "放大量食物水讓牠自己撐過"
+                "text": "出門前多放些食物和水，讓牠自己度過這段時間"
               },
               {
                 "effects": {
@@ -3694,7 +3694,7 @@
                 "id": "cat-no-check",
                 "result": "incorrect",
                 "suggestion": "至少安排可信任者確認基本需求、環境安全與是否有異常。",
-                "text": "覺得貓很獨立，不用特別安排"
+                "text": "貓咪平常很獨立，這次加班不用特別請人協助"
               },
               {
                 "effects": {
@@ -6144,7 +6144,7 @@
             "id": "cat-alone-food",
             "result": "incorrect",
             "suggestion": "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。",
-            "text": "放大量食物水讓牠自己撐過"
+            "text": "出門前多放些食物和水，讓牠自己度過這段時間"
           },
           {
             "effects": {
@@ -6170,7 +6170,7 @@
             "id": "cat-no-check",
             "result": "incorrect",
             "suggestion": "至少安排可信任者確認基本需求、環境安全與是否有異常。",
-            "text": "覺得貓很獨立，不用特別安排"
+            "text": "貓咪平常很獨立，這次加班不用特別請人協助"
           },
           {
             "effects": {
@@ -7302,7 +7302,7 @@
           "id": "cat-alone-food",
           "result": "incorrect",
           "suggestion": "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。",
-          "text": "放大量食物水讓牠自己撐過"
+          "text": "出門前多放些食物和水，讓牠自己度過這段時間"
         },
         {
           "effects": {
@@ -7328,7 +7328,7 @@
           "id": "cat-no-check",
           "result": "incorrect",
           "suggestion": "至少安排可信任者確認基本需求、環境安全與是否有異常。",
-          "text": "覺得貓很獨立，不用特別安排"
+          "text": "貓咪平常很獨立，這次加班不用特別請人協助"
         },
         {
           "effects": {

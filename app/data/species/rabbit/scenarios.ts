@@ -469,7 +469,7 @@ export const rabbitLifeScenarios: Scenario[] = [
     choices: [
       {
         id: "rabbit-health-wait",
-        text: "這是正常波動，明天再看看",
+        text: "牠可能只是一時食慾差，明天再看看",
         result: "incorrect",
         ...incorrect,
         explanation: "排便量突然減少＋食慾下降是兔子最重要的危急警訊，不能等待。",

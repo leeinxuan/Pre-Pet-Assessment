@@ -16,7 +16,6 @@ export type MobileInfoSheetContent = {
 
 /** Informational only: all placement and expense actions remain in the activity. */
 export function MobileInfoSheet({ content, onClose }: { content: MobileInfoSheetContent | null; onClose: () => void }) {
-  const touchStart = useRef<number | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const isMobile = useMobileLayout();
   useDialogFocus({ isOpen: Boolean(content && isMobile), dialogRef, onClose });
@@ -25,12 +24,7 @@ export function MobileInfoSheet({ content, onClose }: { content: MobileInfoSheet
   return createPortal(
     <div className="mobile-info-sheet-overlay" onClick={onClose}>
       <section ref={dialogRef} className="mobile-info-sheet" role="dialog" aria-modal="true" aria-label={`${content.title}說明`} tabIndex={-1}
-        onClick={(event) => event.stopPropagation()}
-        onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientY ?? null; }}
-        onTouchEnd={(event) => {
-          if (touchStart.current !== null && event.currentTarget.scrollTop <= 0 && (event.changedTouches[0]?.clientY ?? 0) - touchStart.current > 70) onClose();
-          touchStart.current = null;
-        }}>
+        onClick={(event) => event.stopPropagation()}>
         <span className="mobile-info-sheet-handle" aria-hidden="true" />
         <button type="button" className="mobile-info-sheet-close" onClick={onClose} aria-label="關閉說明">×</button>
         <header>

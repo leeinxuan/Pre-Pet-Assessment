@@ -95,7 +95,6 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
   // expose supplies before the prerequisite is met.
   const tab = hazardsCleared ? (chosenTab ?? "items") : "hazards";
   const activeInfo = activeHazard ?? activeItem;
-  const touchStart = useRef<number | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const pageCount = Math.ceil(items.length / 8);
   const currentPage = Math.min(supplyPage, Math.max(0, pageCount - 1));
@@ -178,7 +177,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
       {roomComplete && <div className="room-mobile-footer"><button type="button" className="primary room-mobile-complete" onClick={onComplete}>完成房間檢查，準備出發 <span aria-hidden="true">→</span></button></div>}
     </>}
     {activeInfo && started && typeof document !== "undefined" && createPortal(<div className="room-mobile-sheet-overlay" onClick={closeInfo}>
-      <section ref={dialogRef} className="room-mobile-sheet" role="dialog" aria-modal="true" aria-label={`${activeInfo.label}說明`} tabIndex={-1} onClick={(event) => event.stopPropagation()} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientY ?? null; }} onTouchEnd={(event) => { if (touchStart.current !== null && event.currentTarget.scrollTop <= 0 && (event.changedTouches[0]?.clientY ?? 0) - touchStart.current > 70) closeInfo(); touchStart.current = null; }}>
+      <section ref={dialogRef} className="room-mobile-sheet" role="dialog" aria-modal="true" aria-label={`${activeInfo.label}說明`} tabIndex={-1} onClick={(event) => event.stopPropagation()}>
         <span className="room-mobile-sheet-handle" aria-hidden="true" />
         <button type="button" className="room-mobile-sheet-close" onClick={closeInfo} aria-label="關閉說明">×</button>
         <header>{activeHazard ? <HazardThumbnail hazard={activeHazard} background={hazardBackground} backgroundPosition={hazardBackgroundPosition} /> : <ItemThumbnail image={activeInfo.image} label={activeInfo.label} />}<div><h2>{activeInfo.label}</h2>{activeItem && <p className="room-mobile-price">{itemPrice(activeItem)}</p>}</div></header>

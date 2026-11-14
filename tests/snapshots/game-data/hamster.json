@@ -957,7 +957,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "hamster-leave-alone",
                 "result": "incorrect",
-                "text": "倉鼠自理能力強，晚一點回家也沒關係"
+                "text": "倉鼠平常能自己照顧自己，晚點回家再處理就好"
               },
               {
                 "effects": {
@@ -1138,7 +1138,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "hamster-senior-wait",
                 "result": "incorrect",
-                "text": "等到牠真的很嚴重再就醫，平常不需要特別準備"
+                "text": "等牠出現明顯的老化症狀再帶去就醫，平常先不特別準備"
               },
               {
                 "effects": {
@@ -1687,7 +1687,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "hamster-leave-alone",
                 "result": "incorrect",
-                "text": "倉鼠自理能力強，晚一點回家也沒關係"
+                "text": "倉鼠平常能自己照顧自己，晚點回家再處理就好"
               },
               {
                 "effects": {
@@ -1868,7 +1868,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "hamster-senior-wait",
                 "result": "incorrect",
-                "text": "等到牠真的很嚴重再就醫，平常不需要特別準備"
+                "text": "等牠出現明顯的老化症狀再帶去就醫，平常先不特別準備"
               },
               {
                 "effects": {
@@ -2421,7 +2421,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "hamster-leave-alone",
                 "result": "incorrect",
-                "text": "倉鼠自理能力強，晚一點回家也沒關係"
+                "text": "倉鼠平常能自己照顧自己，晚點回家再處理就好"
               },
               {
                 "effects": {
@@ -2602,7 +2602,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "hamster-senior-wait",
                 "result": "incorrect",
-                "text": "等到牠真的很嚴重再就醫，平常不需要特別準備"
+                "text": "等牠出現明顯的老化症狀再帶去就醫，平常先不特別準備"
               },
               {
                 "effects": {
@@ -3151,7 +3151,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "hamster-leave-alone",
                 "result": "incorrect",
-                "text": "倉鼠自理能力強，晚一點回家也沒關係"
+                "text": "倉鼠平常能自己照顧自己，晚點回家再處理就好"
               },
               {
                 "effects": {
@@ -3332,7 +3332,7 @@
                 "feedbackTitle": "這個做法可能不太適合。",
                 "id": "hamster-senior-wait",
                 "result": "incorrect",
-                "text": "等到牠真的很嚴重再就醫，平常不需要特別準備"
+                "text": "等牠出現明顯的老化症狀再帶去就醫，平常先不特別準備"
               },
               {
                 "effects": {
@@ -5405,7 +5405,7 @@
             "feedbackTitle": "這個做法可能不太適合。",
             "id": "hamster-leave-alone",
             "result": "incorrect",
-            "text": "倉鼠自理能力強，晚一點回家也沒關係"
+            "text": "倉鼠平常能自己照顧自己，晚點回家再處理就好"
           },
           {
             "effects": {
@@ -5586,7 +5586,7 @@
             "feedbackTitle": "這個做法可能不太適合。",
             "id": "hamster-senior-wait",
             "result": "incorrect",
-            "text": "等到牠真的很嚴重再就醫，平常不需要特別準備"
+            "text": "等牠出現明顯的老化症狀再帶去就醫，平常先不特別準備"
           },
           {
             "effects": {
@@ -6517,7 +6517,7 @@
           "feedbackTitle": "這個做法可能不太適合。",
           "id": "hamster-leave-alone",
           "result": "incorrect",
-          "text": "倉鼠自理能力強，晚一點回家也沒關係"
+          "text": "倉鼠平常能自己照顧自己，晚點回家再處理就好"
         },
         {
           "effects": {
@@ -6698,7 +6698,7 @@
           "feedbackTitle": "這個做法可能不太適合。",
           "id": "hamster-senior-wait",
           "result": "incorrect",
-          "text": "等到牠真的很嚴重再就醫，平常不需要特別準備"
+          "text": "等牠出現明顯的老化症狀再帶去就醫，平常先不特別準備"
         },
         {
           "effects": {

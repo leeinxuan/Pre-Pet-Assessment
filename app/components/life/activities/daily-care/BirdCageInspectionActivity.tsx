@@ -57,7 +57,6 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   const [magnifierPosition, setMagnifierPosition] = useState<{ x: number; y: number } | null>(null);
   const isMobile = useMobileLayout();
   const observationSheetRef = useRef<HTMLElement>(null);
-  const [sheetPointerStart, setSheetPointerStart] = useState<number | null>(null);
   const heartTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const singTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const socialInteractionLock = useRef(false);
@@ -371,7 +370,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
         <small>{socialTouches} / 5</small>
       </div>
     </div>}
-    {isMobile && observationCard && <div className="activity-observation-sheet-layer bird-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) dismissObservation(); setSheetPointerStart(null); }}>
+    {isMobile && observationCard && <div className="activity-observation-sheet-layer bird-observation-sheet-layer">
       <button type="button" className="activity-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={dismissObservation} />
       <aside ref={observationSheetRef} className="activity-observation-sheet" role="dialog" aria-modal="true" aria-label={activeObservation === "feces" ? "糞便觀察" : `${selectedHealthPoint?.label ?? "健康部位"}觀察`} tabIndex={-1}>
         <div className="activity-observation-sheet-handle" aria-hidden="true" />

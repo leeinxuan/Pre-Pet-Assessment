@@ -335,7 +335,7 @@ export const catLifeScenarios: Scenario[] = [
     choices: [
       {
         id: "cat-alone-food",
-        text: "放大量食物水讓牠自己撐過",
+        text: "出門前多放些食物和水，讓牠自己度過這段時間",
         result: "incorrect",
         ...incorrect,
         explanation: "食物和水不能取代砂盆清理、環境巡視、陪玩與狀況觀察，也可能造成食物過量或變質。",
@@ -351,7 +351,7 @@ export const catLifeScenarios: Scenario[] = [
       },
       {
         id: "cat-no-check",
-        text: "覺得貓很獨立，不用特別安排",
+        text: "貓咪平常很獨立，這次加班不用特別請人協助",
         result: "incorrect",
         ...incorrect,
         explanation: "獨立不代表不需要日常照護與安全巡視。砂盆、飲水、食慾、活動與異常狀況仍需要有人確認。",

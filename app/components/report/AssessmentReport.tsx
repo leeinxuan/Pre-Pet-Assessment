@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Report artwork is consumed by the capture/export flow and must retain native image rendering. */
 
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode, type RefObject } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { logEvent } from "../../lib/event-log";
 import { money } from "../../data/shared/expenses";
@@ -106,18 +106,8 @@ function ResponsiveKnowledgeDetail({
   children,
 }: ResponsiveKnowledgeDetailProps) {
   const isMobile = useMobileLayout();
-  const swipeStartY = useRef<number | null>(null);
 
   if (!isOpen || typeof document === "undefined") return null;
-
-  const beginSwipe = (event: ReactPointerEvent<HTMLButtonElement>) => {
-    swipeStartY.current = event.clientY;
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-  const endSwipe = (event: ReactPointerEvent<HTMLButtonElement>) => {
-    if (swipeStartY.current !== null && event.clientY - swipeStartY.current > 72) onClose();
-    swipeStartY.current = null;
-  };
 
   if (!isMobile) {
     return createPortal(
@@ -137,11 +127,10 @@ function ResponsiveKnowledgeDetail({
   return createPortal(
     <div className="knowledge-modal-backdrop responsive-knowledge-sheet-backdrop" onPointerDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section ref={dialogRef} className={`knowledge-modal responsive-knowledge-sheet ${className}`.trim()} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}>
-        <button type="button" className="responsive-knowledge-sheet-handle" aria-label="向下拖曳關閉說明欄" onPointerDown={beginSwipe} onPointerUp={endSwipe} onPointerCancel={() => { swipeStartY.current = null; }}><span /></button>
+        <span className="responsive-knowledge-sheet-handle" aria-hidden="true"><span /></span>
         <button type="button" className="knowledge-modal-close" onClick={onClose} aria-label={closeLabel}>×</button>
         <header className="responsive-knowledge-sheet-header"><p className="life-stage-label">{label}</p><h2 id={titleId}>{title}</h2></header>
         <div className="responsive-knowledge-sheet-content">{children}</div>
-        <footer className="responsive-knowledge-sheet-footer"><button type="button" className="knowledge-modal-confirm" onClick={onClose}>我知道了</button></footer>
       </section>
     </div>,
     document.body,

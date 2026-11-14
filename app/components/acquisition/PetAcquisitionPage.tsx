@@ -65,7 +65,7 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
           <h2 id={`${source.id}-title`}>{source.title}</h2>
           <p>{source.description}</p>
         </div>
-        <a className="primary official-acquisition-link" href={source.url} target="_blank" rel="noopener noreferrer">
+        <a className="primary official-acquisition-link" href={source.url} target="_blank" rel="noopener noreferrer" onClick={() => logEvent("acquisition_link_clicked", { sourceId: source.id })}>
           {source.linkLabel} <ExternalLinkIcon />
         </a>
       </section>)}

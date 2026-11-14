@@ -27,7 +27,6 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
   const [magnifierPosition, setMagnifierPosition] = useState<{ x: number; y: number } | null>(null);
   const [mobileBrushSelectedFor, setMobileBrushSelectedFor] = useState<string | null>(null);
-  const [sheetPointerStart, setSheetPointerStart] = useState<number | null>(null);
   const [observation, setObservation] = useState<{ key: keyof typeof rabbitGroomingConfig.observations; displayState: "normal" | "warning"; status: RabbitObservationStatus } | null>(null);
   const brushTargetRef = useRef<HTMLButtonElement>(null);
   const observationSheetRef = useRef<HTMLElement>(null);
@@ -179,7 +178,7 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     </>}
     {draggingBrush && point && <div className="rabbit-grooming-drag-ghost" style={{ left: point.x, top: point.y }}><img src={rabbitGroomingConfig.assets.brush} alt="" /></div>}
     {magnifierPosition && <img className="activity-magnifier-hint" src={rabbitGroomingConfig.assets.magnifier} alt="" aria-hidden="true" style={{ left: magnifierPosition.x, top: magnifierPosition.y }} />}
-    {isMobile && observationContent && <div className="activity-observation-sheet-layer" onPointerDown={(event) => setSheetPointerStart(event.clientY)} onPointerUp={(event) => { if (sheetPointerStart !== null && event.clientY - sheetPointerStart > 56) setObservation(null); setSheetPointerStart(null); }}>
+    {isMobile && observationContent && <div className="activity-observation-sheet-layer">
       <button type="button" className="activity-observation-sheet-backdrop" aria-label="關閉觀察說明" onClick={() => setObservation(null)} />
       <aside ref={observationSheetRef} className="activity-observation-sheet" role="dialog" aria-modal="true" aria-label={observationData?.title} tabIndex={-1}>
         <div className="activity-observation-sheet-handle" aria-hidden="true" />
