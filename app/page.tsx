@@ -759,12 +759,17 @@ export default function Home() {
   }
 
   function resetAll() {
+    // The report can be far down the document. Reset scroll immediately and
+    // again after the cover replaces it, before the cover locks touch panning.
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
     resetJourney();
     setTestMode(false);
     setStep(0);
     setFurthestStep(1);
     setIntroOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    });
   }
 
   function startTestJourney() {

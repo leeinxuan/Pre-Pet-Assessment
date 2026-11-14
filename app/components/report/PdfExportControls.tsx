@@ -511,7 +511,7 @@ function useMobileDownloadMode() {
   return mobile;
 }
 
-export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string) {
+export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind, profile?: Profile, selectedTypeLabel?: string, pdfWindow?: Window | null) {
   if (typeof window === "undefined" || typeof document === "undefined") throw new Error("PDF export requires a browser environment");
   if (kind === "profile" && profile) {
     const canvases = await createProfilePdfCanvases(profile, petName, selectedTypeLabel || "寵物");
@@ -521,14 +521,7 @@ export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind
     const fileName = safePetName
       ? `伴日子新手村_個人資料_${safePetName}.pdf`
       : "伴日子新手村_個人資料.pdf";
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    deliverPdf(blob, fileName, pdfWindow);
     return;
   }
   const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
@@ -577,17 +570,32 @@ export async function downloadAssessmentPdf(petName: string, kind: ReportPdfKind
     const fileName = safePetName
       ? `伴日子新手村_${kind === "profile" ? "個人資料" : "照顧準備總覽"}_${safePetName}.pdf`
       : `伴日子新手村_${kind === "profile" ? "個人資料" : "照顧準備總覽"}.pdf`;
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    deliverPdf(blob, fileName, pdfWindow);
   } finally {
     stage.remove();
   }
+}
+
+function deliverPdf(blob: Blob, fileName: string, pdfWindow?: Window | null) {
+  const url = URL.createObjectURL(blob);
+  if (pdfWindow) {
+    if (pdfWindow.closed) {
+      URL.revokeObjectURL(url);
+      throw new Error("The PDF tab was closed before export finished");
+    }
+    // Mobile Safari can ignore `download` for blob URLs and replace the app tab.
+    // A tab opened during the original tap retains the app and its in-memory progress.
+    pdfWindow.location.replace(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 10 * 60_000);
+    return;
+  }
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 30_000);
 }
 
 export function PdfDownloadButton({ petName, kind = "overview", label, profile, selectedTypeLabel }: { petName: string; kind?: ReportPdfKind; label?: string; profile?: Profile; selectedTypeLabel?: string }) {
