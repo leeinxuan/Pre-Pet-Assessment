@@ -36,7 +36,6 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
   const [generating, setGenerating] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [error, setError] = useState("");
-  const [previewUrl, setPreviewUrl] = useState("");
   const previewUrlRef = useRef("");
   const mobileDownload = useMobileDownloadMode();
   const previewOnMobile = mobileDownload && kind === "overview";
@@ -48,6 +47,17 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
 
   const preparePdf = async () => {
     if (generating) return;
+    // Safari 只允許在使用者點擊的同步階段開新分頁；PDF 產生完才開會被擋下。
+    const previewWindow = previewOnMobile ? window.open("", "_blank") : null;
+    if (previewOnMobile && !previewWindow) {
+      setError("無法開啟 PDF 分頁，請允許此網站開啟彈出視窗後再試一次。");
+      return;
+    }
+    if (previewWindow) {
+      previewWindow.opener = null;
+      previewWindow.document.title = "正在整理照護指南…";
+      previewWindow.document.body.textContent = "正在整理照護指南，請稍候…";
+    }
     setGenerating(true);
     setCompleted(false);
     setError("");
@@ -59,12 +69,14 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
         const url = URL.createObjectURL(blob);
         if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
         previewUrlRef.current = url;
-        setPreviewUrl(url);
+        previewWindow?.location.replace(url);
+        setCompleted(true);
       } else {
         await pdf.downloadAssessmentPdf(petName, kind, profile, selectedTypeLabel);
         setCompleted(true);
       }
     } catch (downloadError) {
+      previewWindow?.close();
       console.error("Assessment export failed.", downloadError);
       setError("PDF下載失敗，請再試一次。");
     } finally {
@@ -75,16 +87,9 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
 
   return <div className="report-download-control">
     {error && <p className="pdf-download-error" role="alert">{error}</p>}
-    {previewOnMobile && previewUrl ? (
-      <a className="primary pdf-download-button" href={previewUrl} target="_blank" rel="noopener noreferrer" type="application/pdf" aria-label={buttonLabel} title="在新分頁檢視 PDF" style={{ textDecoration: "none" }}>
-        {downloadIcon}<span>{buttonLabel}</span>
-      </a>
-    ) : (
-      <button type="button" className={`primary pdf-download-button ${generating ? "is-generating" : ""}`} onClick={preparePdf} disabled={generating} aria-label={buttonLabel} title="下載 PDF">
+    <button type="button" className={`primary pdf-download-button ${generating ? "is-generating" : ""}`} onClick={preparePdf} disabled={generating} aria-label={buttonLabel} title="下載 PDF">
         {generating ? <span className="pdf-download-spinner" aria-hidden="true" /> : downloadIcon}
         <span>{generating ? (kind === "overview" ? "正在整理你的照護指南…" : "正在整理你的個人資料…") : completed ? (kind === "overview" ? "照護指南已下載" : "個人資料已下載") : buttonLabel}</span>
-      </button>
-    )}
-    {previewOnMobile && previewUrl && <span role="status" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clipPath: "inset(50%)" }}>PDF 已準備好，請再點一次按鈕在新分頁檢視。</span>}
+    </button>
   </div>;
 }

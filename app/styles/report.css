@@ -983,6 +983,7 @@
     border-bottom: 0;
     border-radius: 24px 24px 0 0;
     background: #fffdf7;
+    box-shadow: 0 var(--bottom-scroll-safe) 0 #fffdf7;
     overflow: hidden;
     transform: none;
     flex-direction: column;
@@ -1023,6 +1024,8 @@
   }
   .responsive-knowledge-sheet-footer .knowledge-modal-confirm { min-height: 48px; margin: 0; }
   .responsive-knowledge-sheet .care-review-notes-modal-content { display: grid; gap: 14px; }
+  html:has(.responsive-knowledge-sheet),
+  body:has(.responsive-knowledge-sheet) { background-color: #fffdf7 !important; }
 }
 
 @media (max-width: 360px) {

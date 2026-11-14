@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- Room and departure scenes rely on native image sizing for existing drag coordinates and overlays. */
 
-import type { CSSProperties, MouseEvent, ReactNode } from "react";
+import type { CSSProperties, MouseEvent, PointerEvent, ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getExpenseForSpecies, money } from "../../data/shared/expenses";
 import { initialHomeReadinessState, type HomeReadinessState } from "../../data/shared/home-readiness-state";
@@ -598,18 +598,37 @@ export function RoomPreparation({
     setActiveMobileItemInfo(null);
   }, [setActiveHazardInfo, setActiveMobileItemInfo]);
 
-  function secureMobileHazardFromScene(event: MouseEvent<HTMLDivElement>) {
-    if (!mobileRoomSceneRef.current || hazardsCleared || (event.target as HTMLElement).closest("button")) return;
-    const rect = mobileRoomSceneRef.current.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width * 100;
-    const y = (event.clientY - rect.top) / rect.height * 100;
-    const closest = activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => {
+  function closestMobileHazard(clientX: number, clientY: number) {
+    const rect = mobileRoomSceneRef.current?.getBoundingClientRect();
+    if (!rect) return null;
+    const x = (clientX - rect.left) / rect.width * 100;
+    const y = (clientY - rect.top) / rect.height * 100;
+    return activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => {
       const area = mobileHazardArea(item, roomFlow?.floorHazardId === item.id ? roomFlow.floorHotspot : undefined);
       const within = Math.abs(x - area.x) <= Math.max(area.width / 2, 26 / rect.width * 100)
         && Math.abs(y - area.y) <= Math.max(area.height / 2, 26 / rect.height * 100);
       return { id: item.id, distance: Math.hypot(x - area.x, y - area.y), within };
-    }).filter((item) => item.within).sort((a, b) => a.distance - b.distance)[0];
-    if (closest) secureHazard(closest.id);
+    }).filter((item) => item.within).sort((a, b) => a.distance - b.distance)[0]?.id ?? null;
+  }
+
+  function secureMobileHazardFromScene(event: MouseEvent<HTMLDivElement>) {
+    if (hazardsCleared || (event.target as HTMLElement).closest("button")) return;
+    const id = closestMobileHazard(event.clientX, event.clientY);
+    if (id) secureHazard(id);
+  }
+
+  function secureMobileHazardOnTouch(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "touch" || hazardsCleared) return;
+    const target = event.target instanceof Element ? event.target : null;
+    const hazardButton = target?.closest<HTMLButtonElement>(".room-mobile-hazard-hit-area, .room-floor-hazard-hotspot");
+    if (hazardButton) {
+      const id = hazardButton.dataset.hazardId;
+      if (id) secureHazard(id);
+      return;
+    }
+    if (target?.closest("button")) return;
+    const id = closestMobileHazard(event.clientX, event.clientY);
+    if (id) secureHazard(id);
   }
 
   function getRoomCheckMessages() {
@@ -632,7 +651,7 @@ export function RoomPreparation({
   }
 
   const renderRoomScene = (mobile: boolean, mobileOverlay?: ReactNode) => (
-          <div ref={mobile ? mobileRoomSceneRef : roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${usesDedicatedMobileRoomBackground ? "room-scene--dedicated-mobile-background" : ""} ${floorHazardComplete ? "room-scene--floor-safe" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${interiorUsesOwnAspectRatio ? "room-flow-scene--custom-aspect" : ""} ${roomSceneReady || mobile ? "room-scene-ready" : ""} ${mobile ? "room-mobile-scene" : ""}`} style={interiorUsesOwnAspectRatio ? { "--room-flow-aspect-ratio": roomFlow?.interiorBackgroundAspectRatio } as CSSProperties : undefined} data-species={species} role="group" aria-label="寵物生活空間" onClick={mobile ? secureMobileHazardFromScene : undefined}>
+          <div ref={mobile ? mobileRoomSceneRef : roomSceneRef} className={`room-scene simplified-room-scene ${roomFlow ? "room-flow-scene" : ""} ${usesDedicatedMobileRoomBackground ? "room-scene--dedicated-mobile-background" : ""} ${floorHazardComplete ? "room-scene--floor-safe" : ""} ${insideView ? "room-flow-scene--interior" : ""} ${interiorUsesOwnAspectRatio ? "room-flow-scene--custom-aspect" : ""} ${roomSceneReady || mobile ? "room-scene-ready" : ""} ${mobile ? "room-mobile-scene" : ""}`} style={interiorUsesOwnAspectRatio ? { "--room-flow-aspect-ratio": roomFlow?.interiorBackgroundAspectRatio } as CSSProperties : undefined} data-species={species} role="group" aria-label="寵物生活空間" onClick={mobile ? secureMobileHazardFromScene : undefined} onPointerUp={mobile ? secureMobileHazardOnTouch : undefined}>
             {!mobile && activeHazard && <HazardInfoPanel hazard={activeHazard} petName={displayName} onClose={() => setActiveHazardInfo(null)} />}
             {roomBackground ? usesDedicatedMobileRoomBackground ? <picture className="room-scene-background room-scene-background--dedicated-mobile">
               <source media="(max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait)" srcSet={mobileRoomBackground} />
@@ -662,10 +681,10 @@ export function RoomPreparation({
               top: `${roomFlow?.mobileEntryHintPlacement?.y ?? mobileEntryItem.mobilePlacement?.y ?? mobileEntryItem.placement.y}%`,
             }} aria-label={roomFlow?.copy.entryLabel ?? "點擊佈置內部空間"} onClick={(event) => { event.stopPropagation(); setInsideRoomView(true); setRoomCheckMessage(""); }}><InteriorEntryPointerIcon direction={(mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? "left" : "right"} /></button>}
             {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => item.hotspot
-              ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(item.hotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
+              ? <button key={item.id} type="button" data-hazard-id={item.id} className="room-floor-hazard-hotspot" style={roomHotspotStyle(item.hotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
               : roomFlow && roomFlow.floorHazardId && item.id === roomFlow.floorHazardId
-                ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(roomFlow.floorHotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
-              : mobile ? <div key={item.id} className="room-mobile-hazard-wrap"><div className={`room-object room-hazard room-mobile-hazard-visual ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-hidden="true">{item.image ? <img src={item.image} alt="" /> : <span className="preparation-asset-placeholder">{item.icon}</span>}<span className="room-hazard-label">{item.label}</span></div><button type="button" className="room-mobile-hazard-hit-area" style={mobileHazardAreaStyle(mobileHazardArea(item))} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)} /></div>
+                ? <button key={item.id} type="button" data-hazard-id={item.id} className="room-floor-hazard-hotspot" style={roomHotspotStyle(roomFlow.floorHotspot)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
+              : mobile ? <div key={item.id} className="room-mobile-hazard-wrap"><div className={`room-object room-hazard room-mobile-hazard-visual ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-hidden="true">{item.image ? <img src={item.image} alt="" /> : <span className="preparation-asset-placeholder">{item.icon}</span>}<span className="room-hazard-label">{item.label}</span></div><button type="button" data-hazard-id={item.id} className="room-mobile-hazard-hit-area" style={mobileHazardAreaStyle(mobileHazardArea(item))} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)} /></div>
               : <button key={item.id} type="button" className={`room-object room-hazard ${dismissingHazard === item.id ? "dismissing" : ""}`} style={roomHazardPlacementStyle(item)} aria-label={`收好危險物品：${item.label}`} onClick={() => secureHazard(item.id)}>{item.image ? <img src={item.image} alt="" /> : <span className="preparation-asset-placeholder" aria-hidden="true">{item.icon}</span>}<span className="room-hazard-label">{item.label}</span></button>)}
             {insideView && <button type="button" className="room-flow-return" aria-label="返回整個房間" onClick={() => setInsideRoomView(false)}>←</button>}
             {!insideView && roomScene.doorplate && doorplatePlacement && <div className="pet-doorplate" style={roomDoorplatePlacementStyle(doorplatePlacement)}>
