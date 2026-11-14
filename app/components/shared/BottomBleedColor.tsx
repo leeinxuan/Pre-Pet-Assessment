@@ -136,6 +136,9 @@ export default function BottomBleedColor() {
     // 鎖定頁：手指若不在「可捲動的內部清單」上，就不讓整頁被拖動。
     const onTouchMove = (event: TouchEvent) => {
       if (!media.matches || event.touches.length > 1 || !isPageLocked()) return;
+      // iOS 會因為 touchmove 被取消而不派發 click。互動控制項交給瀏覽器
+      // 處理點擊；整頁若真的被捲動，keepLocked 仍會將它拉回頂端。
+      if (event.target instanceof Element && event.target.closest("button, a, input, select, textarea, summary, [role='button']")) return;
       const explicitPane = document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR);
       if (explicitPane) {
         (window as unknown as { __touchDbg?: string }).__touchDbg = `pass-page ${String(explicitPane.className).slice(0, 19)} ${explicitPane.scrollHeight}/${explicitPane.clientHeight}`;

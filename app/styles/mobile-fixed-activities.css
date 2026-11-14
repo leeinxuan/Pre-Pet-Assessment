@@ -764,14 +764,14 @@
   .mobile-info-sheet-overlay { position: fixed; z-index: 999; inset: 0; display: flex; align-items: flex-end; background: rgba(33, 30, 25, .42); }
   .mobile-info-sheet { position: relative; box-sizing: border-box; width: 100%; max-height: min(74dvh, 680px); overflow-y: auto; overscroll-behavior: contain; padding: 20px 22px calc(24px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; background: white; box-shadow: 0 -12px 32px rgba(33, 30, 25, .14); }
   .mobile-info-sheet-handle { display: block; width: 44px; height: 5px; margin: -7px auto 20px; border-radius: 999px; background: var(--line); }
-  .mobile-info-sheet-close { position: absolute; top: 17px; right: 17px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: white; color: var(--ink); font-size: 24px; line-height: 1; }
+  .mobile-info-sheet-close { position: absolute; top: 12px; right: 12px; display: grid; width: 48px; height: 48px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: white; color: var(--ink); font-size: 24px; line-height: 1; touch-action: manipulation; }
   .mobile-info-sheet header { display: flex; align-items: center; gap: 14px; padding-right: 38px; }
   .mobile-info-sheet header img { width: 72px; height: 72px; padding: 7px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); object-fit: contain; }
   .mobile-info-sheet h2 { margin: 0; font-size: 19px; line-height: 1.3; overflow-wrap: anywhere; }
   /* 出發前準備的說明卡沿用佈置房間原本的價格與內文字色。 */
-  .mobile-info-sheet header p { margin: 4px 0 0; color: #477c5d; font-size: 15px; font-weight: 900; }
+  .mobile-info-sheet header p { margin: 4px 0 0; color: var(--ink); font-size: 15px; font-weight: 900; }
   .mobile-info-sheet-copy { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
-  .mobile-info-sheet-copy p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
+  .mobile-info-sheet-copy p { margin: 0; color: var(--ink); font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
 }
 
 /* 家庭與居住確認：手機保留固定標題與導覽，只有閱讀內容本身可以捲動。 */

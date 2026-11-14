@@ -272,6 +272,9 @@
   @media (prefers-reduced-motion: reduce) { .room-mobile-entry-cue { animation: none; } }
   .room-mobile-sheet-overlay { position: fixed; z-index: 999; inset: 0; display: flex; align-items: flex-end; background: rgba(33, 30, 25, .42); }
   .room-mobile-sheet {
+    --room-mobile-ink: var(--ink);
+    --room-mobile-line: var(--line);
+    --room-mobile-paper: #fffdf8;
     position: relative;
     box-sizing: border-box;
     width: 100vw;
@@ -284,13 +287,13 @@
     overscroll-behavior: contain;
   }
   .room-mobile-sheet-handle { display: block; width: 44px; height: 5px; margin: -7px auto 20px; border-radius: 999px; background: var(--room-mobile-line); }
-  .room-mobile-sheet-close { position: absolute; top: 17px; right: 17px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--room-mobile-line); border-radius: 50%; background: white; color: var(--room-mobile-ink); font-size: 24px; line-height: 1; }
+  .room-mobile-sheet-close { position: absolute; top: 12px; right: 12px; display: grid; width: 48px; height: 48px; place-items: center; border: 1px solid var(--room-mobile-line); border-radius: 50%; background: white; color: var(--room-mobile-ink); font-size: 24px; line-height: 1; touch-action: manipulation; }
   .room-mobile-sheet header { display: flex; align-items: center; gap: 14px; min-width: 0; padding-right: 38px; }
   .room-mobile-sheet header .room-mobile-thumbnail { width: 72px; height: 72px; padding: 7px; border: 1px solid var(--room-mobile-line); border-radius: 14px; background: var(--room-mobile-paper); }
   .room-mobile-sheet h2 { margin: 0; font-size: 19px; line-height: 1.3; overflow-wrap: anywhere; }
-  .room-mobile-price { margin: 4px 0 0; color: var(--room-mobile-green); font-size: 15px; font-weight: 900; line-height: 1.4; overflow-wrap: anywhere; }
+  .room-mobile-price { margin: 4px 0 0; color: var(--ink); font-size: 15px; font-weight: 900; line-height: 1.4; overflow-wrap: anywhere; }
   .room-mobile-sheet-copy { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--room-mobile-line); }
-  .room-mobile-sheet-copy p { margin: 0 0 10px; color: var(--room-mobile-muted); font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
+  .room-mobile-sheet-copy p { margin: 0 0 10px; color: var(--ink); font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
   .room-mobile-sheet-copy p:last-child { margin-bottom: 0; }
   .room-mobile-hazard-section + .room-mobile-hazard-section { margin-top: 18px; }
   .room-mobile-hazard-section h3 { margin: 0 0 5px; color: var(--room-mobile-ink); font-size: 14px; font-weight: 900; }

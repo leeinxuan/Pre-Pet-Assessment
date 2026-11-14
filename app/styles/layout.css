@@ -63,7 +63,7 @@
 @media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   .stage-layout { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
   .station-rail { display: none; }
-  .mobile-progress-nav { display: block; position: sticky; top: 0; z-index: 45; border-bottom: 1px solid var(--line); background: rgba(255,253,247,.98); box-shadow: 0 7px 20px rgba(70,53,26,.07); }
+  .stage-layout > .mobile-progress-nav { display: block; grid-row: 1; min-width: 0; position: sticky; top: 0; z-index: 45; border-bottom: 1px solid var(--line); background: rgba(255,253,247,.98); box-shadow: 0 7px 20px rgba(70,53,26,.07); }
 }
 @media (max-width: 720px), (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
   /* Some mobile browsers retain the details element's previous expanded
