@@ -91,19 +91,21 @@ export default function BottomBleedColor() {
     // 底部延伸只在「工具列浮在網頁上方」的 iPhone Safari 才需要：
     // 此時 screen.height 比可用高度多出一截（含工具列）。開發者工具的手機模擬、Android、
     // 主畫面 App（standalone）都沒有這一截，延伸高度會把按鈕推到畫面外，所以設為 0。
-    const measureViewportHeight = (unit: "lvh" | "dvh") => {
+    const createViewportProbe = (unit: "lvh" | "dvh") => {
       const probe = document.createElement("div");
       probe.style.cssText = `position:fixed;left:-9999px;top:0;width:1px;height:100${unit};visibility:hidden;pointer-events:none;`;
       document.body.appendChild(probe);
-      const height = probe.getBoundingClientRect().height;
-      probe.remove();
-      return height;
+      return probe;
     };
+    // Install the probes before observing body mutations. Recreating them in
+    // every apply() would make the observer schedule apply() indefinitely.
+    const largeViewportProbe = createViewportProbe("lvh");
+    const dynamicViewportProbe = createViewportProbe("dvh");
     const updateBleed = () => {
       const isIPhone = /iPhone|iPad|iPod/.test(navigator.userAgent);
       const needsBleed = media.matches && isIPhone && window.screen.height - window.innerHeight >= 100;
       const toolbarHeight = needsBleed
-        ? Math.max(0, Math.round(measureViewportHeight("lvh") - measureViewportHeight("dvh")))
+        ? Math.max(0, Math.round(largeViewportProbe.getBoundingClientRect().height - dynamicViewportProbe.getBoundingClientRect().height))
         : 0;
       const configuredBleed = Number.parseFloat(
         getComputedStyle(root).getPropertyValue("--bottom-bleed-target"),
@@ -141,7 +143,13 @@ export default function BottomBleedColor() {
       const touch = event.touches[0];
       touchStart = touch ? { x: touch.clientX, y: touch.clientY } : null;
     };
-    const onTouchEnd = () => { startedOnControl = false; touchStart = null; };
+    const onTouchEnd = () => {
+      startedOnControl = false;
+      touchStart = null;
+      // Safari can finish a touch with the document below its locked origin.
+      // Restore the top after the gesture so the progress bar stays visible.
+      window.requestAnimationFrame(keepLocked);
+    };
     const onTouchMove = (event: TouchEvent) => {
       if (!media.matches || event.touches.length > 1 || !isPageLocked()) return;
       // iOS 會因為 touchmove 被取消而不派發 click。互動控制項交給瀏覽器
@@ -194,6 +202,8 @@ export default function BottomBleedColor() {
 
     return () => {
       observer.disconnect();
+      largeViewportProbe.remove();
+      dynamicViewportProbe.remove();
       window.removeEventListener("resize", schedule);
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("touchstart", onTouchStart);

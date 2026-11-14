@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Profile } from "../../game-types";
+import { logEvent } from "../../lib/event-log";
 import { loadRetriableModule } from "../shared/AsyncFlowState";
 import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../shared/responsive";
 
@@ -56,6 +57,7 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
       } catch (prepareError) {
         if (!cancelled) {
           console.error("Assessment export failed.", prepareError);
+          logEvent("pdf_download_failed", { kind, step: "prepare" });
           setError("PDF下載失敗，請再試一次。");
         }
       } finally {
@@ -83,6 +85,7 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
 
   const preparePdf = async () => {
     if (generating) return;
+    logEvent("pdf_download_clicked", { kind });
     if (previewOnMobile) {
       if (!preparedUrlRef.current) {
         setError("");
@@ -90,7 +93,7 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
         return;
       }
       const opened = window.open(preparedUrlRef.current, "_blank");
-      if (!opened) setError("無法開啟 PDF 分頁，請允許此網站開啟彈出視窗後再試一次。");
+      if (!opened) { logEvent("pdf_download_failed", { kind, step: "open_blocked" }); setError("無法開啟 PDF 分頁，請允許此網站開啟彈出視窗後再試一次。"); }
       else { opened.opener = null; setError(""); setCompleted(true); }
       return;
     }
@@ -104,6 +107,7 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
       setCompleted(true);
     } catch (downloadError) {
       console.error("Assessment export failed.", downloadError);
+      logEvent("pdf_download_failed", { kind, step: "download" });
       setError("PDF下載失敗，請再試一次。");
     } finally {
       onAfterDownload?.();
