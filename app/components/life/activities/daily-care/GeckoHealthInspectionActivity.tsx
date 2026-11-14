@@ -14,6 +14,7 @@ import { getSpeciesConfig } from "../../../../data/species";
 import { interpolatePetName } from "../../../../data/shared/pet-text";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, renderKnowledgeText, type ObservationAnswerStatus } from "../activity-ui";
+import { ActivityGameHeading } from "../ActivityGameHeading";
 import { InspectionHotspot } from "../InspectionHotspot";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { COMPACT_PORTRAIT_LAYOUT_QUERY } from "../../../shared/responsive";
@@ -435,11 +436,7 @@ export function GeckoHealthInspectionActivity({ config, activity, petName, speci
 
   return (
     <section className="life-activity gecko-health-inspection" aria-label={renderText(config.title)}>
-      <div className="activity-heading">
-        <p className="life-stage-label">日常照護</p>
-        <h1>{render(config.title)}</h1>
-        <p className="gecko-health-message">{render(config.description)}</p>
-      </div>
+      <ActivityGameHeading className="activity-heading" eyebrow="日常照護" title={render(config.title)} descriptionClassName="gecko-health-message" description={render(config.description)} />
 
       <ol className="rabbit-grooming-progress" aria-label="每日巡視進度">
         {config.progress.map((step, index) => {

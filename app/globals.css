@@ -35,3 +35,4 @@
 @import "./styles/mobile-bottom-bleed.css";
 @import "./styles/tablet-portrait.css";
 @import "./styles/tablet-landscape.css";
+@import "./components/life/activities/ActivityGameHeading.css";

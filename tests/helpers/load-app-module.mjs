@@ -9,7 +9,7 @@ async function getServer() {
     root: new URL("../..", import.meta.url).pathname,
     logLevel: "error",
     appType: "custom",
-    server: { middlewareMode: true, hmr: false, watch: null },
+    server: { middlewareMode: true, hmr: false, ws: false, watch: null },
     define: { __CONTENT_LAST_UPDATED__: JSON.stringify("test") },
   });
   return serverPromise;

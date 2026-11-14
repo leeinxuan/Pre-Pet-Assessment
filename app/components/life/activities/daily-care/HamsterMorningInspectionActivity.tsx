@@ -10,6 +10,7 @@ import { hamsterCopy } from "../../../../data/species/hamster/copy";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { ActivityIntroPage, renderKnowledgeText, withPetName } from "../activity-ui";
+import { ActivityGameHeading } from "../ActivityGameHeading";
 import { logEvent } from "../../../../lib/event-log";
 import { useGameProgressLog } from "../../../../lib/useGameProgressLog";
 
@@ -292,7 +293,7 @@ export function HamsterMorningInspectionActivity({ activity, petName, onChange, 
       : hamsterAssets.cageCheckActivity.sandSieveFull;
 
   return <section className="guided-activity hamster-cage-check" aria-label={render(config.title)}>
-    <header className="guided-activity-heading hamster-cage-check-heading"><p className="life-stage-label">日常照護</p><h1>{render(config.title)}</h1><p className="hamster-cage-check-message">{render(config.sceneDescription)}</p></header>
+    <ActivityGameHeading as="header" className="guided-activity-heading hamster-cage-check-heading" eyebrow="日常照護" title={render(config.title)} descriptionClassName="hamster-cage-check-message" description={render(config.sceneDescription)} />
     <ol className="rabbit-grooming-progress hamster-cage-check-progress" aria-label="清潔日常進度">
       {steps.map((step, index) => {
         const isComplete = index === 0 ? toiletComplete : sandComplete;

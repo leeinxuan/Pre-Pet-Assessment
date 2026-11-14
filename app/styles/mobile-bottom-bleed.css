@@ -350,6 +350,23 @@
       0 var(--bottom-scroll-safe) 0 var(--paper),
       0 -12px 32px rgba(48, 39, 28, .2) !important;
   }
+  /* 守宮場景會延伸到 Safari 工具列後方；獨立鋪滿卡片以下的區域，
+     避免較短的溫度卡僅靠陰影時露出底下的遙控器。 */
+  html:has(.gecko-observation-sheet-layer) {
+    position: relative;
+    min-height: calc(100dvh + var(--bottom-scroll-safe)) !important;
+  }
+  html:has(.gecko-observation-sheet-layer)::after {
+    position: absolute;
+    z-index: 91;
+    top: 100dvh;
+    right: 0;
+    left: 0;
+    height: var(--bottom-scroll-safe);
+    background: var(--paper);
+    pointer-events: none;
+    content: "";
+  }
 
   /* 每日照護完成頁：中文長標題可在卡片內正常換行，不再撐出欄位。 */
   .walking-complete .walking-time-commitment > div {

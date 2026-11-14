@@ -7,6 +7,7 @@ import { catLitterRescueConfig } from "../../../../data/species/cat/activities";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { ActivityIntroPage, withPetName } from "../activity-ui";
+import { ActivityGameHeading } from "../ActivityGameHeading";
 import { useTapSequence } from "../useTapSequence";
 import { logEvent } from "../../../../lib/event-log";
 import { useGameProgressLog } from "../../../../lib/useGameProgressLog";
@@ -248,7 +249,7 @@ export function CatDailyInspectionActivity({ activity, petName, selected, onChan
   }
   if (complete) return <DailyCareCompletion title={withPetName(copy.completion.title, petName, "cat")} summary={withPetName(copy.completion.summary, petName, "cat")} detail={copy.completion.detail} reflectionTitle={withPetName(copy.completion.reflectionTitle, petName, "cat")} reflection={copy.completion.reflection} dailyCareBreakdown={copy.completion.dailyCareBreakdown} onContinue={onContinue} />;
   return <section className="life-activity cat-inspection-activity cat-litter-rescue" onPointerMove={trackScoopSweep} onPointerUp={finishDrag} onPointerCancel={cancelDrag}>
-    <div className="activity-heading"><p className="life-stage-label">{copy.heading.eyebrow}</p><h1>{render(config.title)}</h1><p>{withPetName(copy.heading.description, petName, "cat")}</p></div>
+    <ActivityGameHeading className="activity-heading" eyebrow={copy.heading.eyebrow} title={render(config.title)} description={withPetName(copy.heading.description, petName, "cat")} />
     <ol className="cat-litter-stage-rail" aria-label={copy.aria.stageRail}>
       {copy.stageLabels.map((label, index) => <li key={`${label}-${index}`} className={index < stageIndex ? "is-complete" : index === stageIndex ? "is-active" : ""}><span>{index < stageIndex ? "✓" : index + 1}</span>{label}</li>)}
     </ol>

@@ -7,6 +7,7 @@ import { rabbitActivityScenarios, rabbitGroomingCompletion, rabbitGroomingConfig
 import type { LifeActivityState, Scenario, ScenarioChoice } from "../../../../game-types";
 import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { ActivityIntroPage, type ObservationAnswerStatus, renderKnowledgeText, withPetName } from "../activity-ui";
+import { ActivityGameHeading } from "../ActivityGameHeading";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { useDialogFocus } from "../../../shared/useDialogFocus";
@@ -159,7 +160,7 @@ export function RabbitDailyCheckActivity({ activity, petName, onChange, onChoose
     </>}
   </ObservationCard> : null;
   return <section className="rabbit-activity rabbit-grooming-activity" onPointerMove={(event) => draggingBrush && setPoint({ x: event.clientX, y: event.clientY })} onPointerUp={finishBrush} onPointerCancel={() => { setDraggingBrush(false); setPoint(null); }} aria-labelledby="rabbit-grooming-title">
-    <header><p>日常照護</p><h1 id="rabbit-grooming-title">{render(rabbitGroomingConfig.title)}</h1><p className="rabbit-grooming-scene-description">{withPetName(firstPart ? rabbitGroomingConfig.sceneDescriptions.part1 : rabbitGroomingConfig.sceneDescriptions.part2, petName)}</p><span>{firstPart ? "第一部分：梳毛與足底確認" : "第二部分：進食與指甲外觀觀察"}</span></header>
+    <ActivityGameHeading as="header" eyebrow="日常照護" titleId="rabbit-grooming-title" title={render(rabbitGroomingConfig.title)} descriptionClassName="rabbit-grooming-scene-description" description={withPetName(firstPart ? rabbitGroomingConfig.sceneDescriptions.part1 : rabbitGroomingConfig.sceneDescriptions.part2, petName)}><span>{firstPart ? "第一部分：梳毛與足底確認" : "第二部分：進食與指甲外觀觀察"}</span></ActivityGameHeading>
     {isTransition ? <div className="rabbit-grooming-transition" role="status"><span aria-hidden="true">✓</span><div><p>第一部分完成</p><strong>梳毛與足底檢查都完成了</strong><small>接著一起觀察 {petName || "兔兔"} 的進食與指甲狀況。</small></div></div> : <>
       <div className={`rabbit-grooming-scene ${isInspection ? "is-inspection-stage" : ""} ${current?.id === "groom-footpad" ? "has-observation-layout" : ""} ${observation ? "has-observation" : ""}`}>
         {!observation && <p className="rabbit-grooming-scene-prompt">{isInspection ? "點擊進食畫面與前腳，完成外觀觀察。" : mobileBrushInstruction}</p>}

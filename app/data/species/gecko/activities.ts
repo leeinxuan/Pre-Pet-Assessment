@@ -228,7 +228,7 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     visualAssets: { character: health.body },
   },
   title: healthInspectionTitle,
-  description: "守宮善於隱藏不適，每天固定巡視，確認熱區底部與冷區溫度、飲水是否乾淨、排泄狀態，並觀察眼睛、尾巴、皮膚與趾端，是在問題還小的時候先發現它的第一道防線。",
+  description: "守宮善於隱藏不適，每天固定巡視，確認熱區與冷區溫度、飲水是否乾淨、排泄狀態，並觀察眼睛、尾巴、皮膚與趾端，是在問題還小的時候先發現它的第一道防線。",
   progress: [
     { id: "temperature", label: "溫度確認" },
     { id: "water", label: "飲水更換" },

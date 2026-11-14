@@ -12,6 +12,7 @@ import { DailyCareCompletion } from "../../DailyCareCompletion";
 import { useMobileLayout } from "../../../shared/useMobileLayout";
 import { useDialogFocus } from "../../../shared/useDialogFocus";
 import { ActivityIntroPage, ObservationReturnButton, plainChoiceText, renderKnowledgeText, type ObservationAnswerStatus } from "../activity-ui";
+import { ActivityGameHeading } from "../ActivityGameHeading";
 import { InspectionHotspot } from "../InspectionHotspot";
 import { ObservationCard, ObservationCardComparison, ObservationCardFlow } from "../ObservationCard";
 import { logEvent } from "../../../../lib/event-log";
@@ -300,7 +301,7 @@ export function BirdCageInspectionActivity({ activity, petName, onChange, onChoo
   ) : null;
 
   return <section className="life-activity bird-cage-activity" aria-label={render(birdCageInspectionConfig.title)}>
-    <div className="activity-heading"><p className="life-stage-label">日常照護</p><h1>{render(birdCageInspectionConfig.title)}</h1><p className="bird-cage-message">今天早上，你走近 {displayPetName} 的鳥籠，牠正在棲木上整理羽毛，籠底也留下了昨天使用過的痕跡。開始一天前，先陪牠完成清潔、糞便觀察、健康巡視與籠外互動吧。</p></div>
+    <ActivityGameHeading className="activity-heading" eyebrow="日常照護" title={render(birdCageInspectionConfig.title)} descriptionClassName="bird-cage-message" description={<>今天早上，你走近 {displayPetName} 的鳥籠，牠正在棲木上整理羽毛，籠底也留下了昨天使用過的痕跡。開始一天前，先陪牠完成清潔、糞便觀察、健康巡視與籠外互動吧。</>} />
     <ol className="rabbit-grooming-progress" aria-label="鳥籠巡視進度">{stageLabels.map((label, index) => {
       const isComplete = (index === 0 && cleanComplete) || (index === 1 && has("feces-observed")) || (index === 2 && healthComplete) || (index === 3 && has("social-time"));
       return <li key={label} className={isComplete ? "done" : index === currentStage ? "active" : ""} aria-current={!isComplete && index === currentStage ? "step" : undefined}><span>{isComplete ? "✓" : index + 1}</span>{label}</li>;
