@@ -173,11 +173,11 @@ export const birdLifeScenarios: Scenario[] = [
         explanation: "移除棲木沒有解決壓力或社交需求不足的成因，行為可能轉移成其他形式。"
       },
       {
-        id: "bird-stereotypy-social",
-        text: "確認 {petName} 每天是否有足夠的籠外互動時間",
-        result: "correct",
-        ...positive,
-        explanation: "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。"
+        id: "bird-stereotypy-vet",
+        text: "刻板行為代表 {petName} 生病了，立刻就醫",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。"
       },
       {
         id: "bird-stereotypy-enrichment",
@@ -187,11 +187,11 @@ export const birdLifeScenarios: Scenario[] = [
         explanation: "定期輪換能增加探索刺激、緩解刻板行為。"
       },
       {
-        id: "bird-stereotypy-vet",
-        text: "刻板行為代表 {petName} 生病了，立刻就醫",
-        result: "incorrect",
-        ...incorrect,
-        explanation: "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。"
+        id: "bird-stereotypy-social",
+        text: "確認 {petName} 每天是否有足夠的籠外互動時間",
+        result: "correct",
+        ...positive,
+        explanation: "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。"
       },
     ],
     correctSummary: ["鸚鵡刻板行為是壓力指標，應增加每日籠外互動時間並輪換豐富化玩具，不可只移除觸發物，若同時出現澎毛或食慾下降則應就醫。"],
@@ -360,14 +360,6 @@ export const birdLifeScenarios: Scenario[] = [
     ],
     choices: [
       {
-        id: "seek-help",
-        text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}",
-        result: "correct",
-        isSupportChoice: true,
-        ...positive,
-        explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。"
-      },
-      {
         id: "bird-food-stockpile",
         text: "出門前多放一天份量的飼料和水，讓 {petName} 自己過",
         result: "incorrect",
@@ -387,6 +379,14 @@ export const birdLifeScenarios: Scenario[] = [
         result: "incorrect",
         ...incorrect,
         explanation: "把飼料補充、飲水確認和健康觀察全部延後，可能無法及時發現當天的異常。確定晚歸時，應事先安排合適的人接手照顧。"
+      },
+      {
+        id: "seek-help",
+        text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}",
+        result: "correct",
+        isSupportChoice: true,
+        ...positive,
+        explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。"
       },
     ],
     correctSummary: ["確定晚歸時應立刻聯繫可信任的人代為照顧，完整交接飼料補充、換水、鳥籠清潔、健康觀察與緊急聯絡方式，也可事先了解附近的寵物旅館作為備援，多放飼料無法取代完整照護。"],
@@ -430,6 +430,13 @@ export const birdLifeScenarios: Scenario[] = [
     },
     choices: [
       {
+        id: "bird-wait-tomorrow",
+        text: "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。"
+      },
+      {
         id: "bird-vet-now",
         text: "立刻聯繫**熟悉鳥類醫療的獸醫師**，準備外出籠，今天就安排就診",
         result: "correct",
@@ -438,13 +445,6 @@ export const birdLifeScenarios: Scenario[] = [
         expenseIds: [
           "bird-mild-sick", "bird-moderate-sick", "bird-hospitalization"
         ]
-      },
-      {
-        id: "bird-wait-tomorrow",
-        text: "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生",
-        result: "incorrect",
-        ...incorrect,
-        explanation: "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。"
       },
       {
         id: "bird-try-food",
@@ -526,14 +526,12 @@ export const birdLifeScenarios: Scenario[] = [
     ],
     choices: [
       {
-        id: "bird-senior-perch",
-        text: "將棲木調低，降低跌落風險",
-        result: "correct",
-        ...positive,
-        explanation: "可保留一根較高棲木，讓牠自行選擇。",
-        expenseIds: [
-          "bird-senior-room"
-        ]
+        id: "bird-senior-reduce-interaction",
+        text: "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
+        suggestion: "依個體狀況調整互動方式，而非直接縮短時間。"
       },
       {
         id: "bird-senior-checkup",
@@ -551,12 +549,14 @@ export const birdLifeScenarios: Scenario[] = [
         suggestion: "依活動能力調整豐富化，而非完全撤除。"
       },
       {
-        id: "bird-senior-reduce-interaction",
-        text: "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息",
-        result: "incorrect",
-        ...incorrect,
-        explanation: "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
-        suggestion: "依個體狀況調整互動方式，而非直接縮短時間。"
+        id: "bird-senior-perch",
+        text: "將棲木調低，降低跌落風險",
+        result: "correct",
+        ...positive,
+        explanation: "可保留一根較高棲木，讓牠自行選擇。",
+        expenseIds: [
+          "bird-senior-room"
+        ]
       },
     ],
     correctSummary: ["高齡鳥應降低棲木高度防跌落、提高健檢頻率至半年一次、並維持適合老年的豐富化設施，不可完全停止互動，應依個體狀況請**熟悉鳥類醫療的獸醫師**評估調整。"],

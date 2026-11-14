@@ -46,19 +46,6 @@
         "choices": [
           {
             "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
-            },
-            "explanation": "米克斯貓的成貓毛型無法從幼貓外觀準確預測，幼貓時看似短毛，長大可能發展為半長毛甚至長毛。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "breed-challenge-2-distractor-1",
-            "result": "incorrect",
-            "suggestion": "為不同毛型的梳理需求保留準備。",
-            "text": "幼貓現在是短毛，長大一定也是短毛"
-          },
-          {
-            "effects": {
               "support": 1,
               "trust": 2,
               "wellbeing": 2
@@ -69,6 +56,19 @@
             "id": "breed-challenge-2-correct",
             "result": "correct",
             "text": "幼貓的毛型看不準，長大可能是短毛、半長毛或長毛"
+          },
+          {
+            "effects": {
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
+            },
+            "explanation": "米克斯貓的成貓毛型無法從幼貓外觀準確預測，幼貓時看似短毛，長大可能發展為半長毛甚至長毛。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "breed-challenge-2-distractor-1",
+            "result": "incorrect",
+            "suggestion": "為不同毛型的梳理需求保留準備。",
+            "text": "幼貓現在是短毛，長大一定也是短毛"
           },
           {
             "effects": {
@@ -137,19 +137,6 @@
           },
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
-            },
-            "expenseIds": "<undefined>",
-            "explanation": "米克斯貓的基因多樣性雖可能降低某些品種遺傳疾病的風險，但常見貓咪疾病（如牙周病、病毒感染）與定期疫苗、驅蟲仍是每隻貓不可省略的基本照護。",
-            "feedbackTitle": "做得很好！",
-            "id": "breed-challenge-3-correct",
-            "result": "correct",
-            "text": "米克斯貓的確較少特定品種遺傳疾病，但仍需定期健檢與疫苗"
-          },
-          {
-            "effects": {
               "support": 0,
               "trust": -1,
               "wellbeing": -1
@@ -173,6 +160,19 @@
             "result": "incorrect",
             "suggestion": "到家後確認篩檢與疫苗紀錄。",
             "text": "米克斯貓從收容所來，通常已打過所有疫苗，之後不需要補打"
+          },
+          {
+            "effects": {
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
+            },
+            "expenseIds": "<undefined>",
+            "explanation": "米克斯貓的基因多樣性雖可能降低某些品種遺傳疾病的風險，但常見貓咪疾病（如牙周病、病毒感染）與定期疫苗、驅蟲仍是每隻貓不可省略的基本照護。",
+            "feedbackTitle": "做得很好！",
+            "id": "breed-challenge-3-correct",
+            "result": "correct",
+            "text": "米克斯貓的確較少特定品種遺傳疾病，但仍需定期健檢與疫苗"
           }
         ],
         "correctFeedbackMedia": {
@@ -304,19 +304,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "米克斯貓的成貓毛型無法從幼貓外觀準確預測，幼貓時看似短毛，長大可能發展為半長毛甚至長毛。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "breed-challenge-2-distractor-1",
-                "result": "incorrect",
-                "suggestion": "為不同毛型的梳理需求保留準備。",
-                "text": "幼貓現在是短毛，長大一定也是短毛"
-              },
-              {
-                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -327,6 +314,19 @@
                 "id": "breed-challenge-2-correct",
                 "result": "correct",
                 "text": "幼貓的毛型看不準，長大可能是短毛、半長毛或長毛"
+              },
+              {
+                "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "米克斯貓的成貓毛型無法從幼貓外觀準確預測，幼貓時看似短毛，長大可能發展為半長毛甚至長毛。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "breed-challenge-2-distractor-1",
+                "result": "incorrect",
+                "suggestion": "為不同毛型的梳理需求保留準備。",
+                "text": "幼貓現在是短毛，長大一定也是短毛"
               },
               {
                 "effects": {
@@ -395,19 +395,6 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": "<undefined>",
-                "explanation": "米克斯貓的基因多樣性雖可能降低某些品種遺傳疾病的風險，但常見貓咪疾病（如牙周病、病毒感染）與定期疫苗、驅蟲仍是每隻貓不可省略的基本照護。",
-                "feedbackTitle": "做得很好！",
-                "id": "breed-challenge-3-correct",
-                "result": "correct",
-                "text": "米克斯貓的確較少特定品種遺傳疾病，但仍需定期健檢與疫苗"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -431,6 +418,19 @@
                 "result": "incorrect",
                 "suggestion": "到家後確認篩檢與疫苗紀錄。",
                 "text": "米克斯貓從收容所來，通常已打過所有疫苗，之後不需要補打"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": "<undefined>",
+                "explanation": "米克斯貓的基因多樣性雖可能降低某些品種遺傳疾病的風險，但常見貓咪疾病（如牙周病、病毒感染）與定期疫苗、驅蟲仍是每隻貓不可省略的基本照護。",
+                "feedbackTitle": "做得很好！",
+                "id": "breed-challenge-3-correct",
+                "result": "correct",
+                "text": "米克斯貓的確較少特定品種遺傳疾病，但仍需定期健檢與疫苗"
               }
             ],
             "correctFeedbackMedia": {
@@ -462,19 +462,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "米克斯貓的成貓毛型無法從幼貓外觀準確預測，幼貓時看似短毛，長大可能發展為半長毛甚至長毛。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "breed-challenge-2-distractor-1",
-                "result": "incorrect",
-                "suggestion": "為不同毛型的梳理需求保留準備。",
-                "text": "幼貓現在是短毛，長大一定也是短毛"
-              },
-              {
-                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -485,6 +472,19 @@
                 "id": "breed-challenge-2-correct",
                 "result": "correct",
                 "text": "幼貓的毛型看不準，長大可能是短毛、半長毛或長毛"
+              },
+              {
+                "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "米克斯貓的成貓毛型無法從幼貓外觀準確預測，幼貓時看似短毛，長大可能發展為半長毛甚至長毛。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "breed-challenge-2-distractor-1",
+                "result": "incorrect",
+                "suggestion": "為不同毛型的梳理需求保留準備。",
+                "text": "幼貓現在是短毛，長大一定也是短毛"
               },
               {
                 "effects": {
@@ -553,19 +553,6 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": "<undefined>",
-                "explanation": "米克斯貓的基因多樣性雖可能降低某些品種遺傳疾病的風險，但常見貓咪疾病（如牙周病、病毒感染）與定期疫苗、驅蟲仍是每隻貓不可省略的基本照護。",
-                "feedbackTitle": "做得很好！",
-                "id": "breed-challenge-3-correct",
-                "result": "correct",
-                "text": "米克斯貓的確較少特定品種遺傳疾病，但仍需定期健檢與疫苗"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -589,6 +576,19 @@
                 "result": "incorrect",
                 "suggestion": "到家後確認篩檢與疫苗紀錄。",
                 "text": "米克斯貓從收容所來，通常已打過所有疫苗，之後不需要補打"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": "<undefined>",
+                "explanation": "米克斯貓的基因多樣性雖可能降低某些品種遺傳疾病的風險，但常見貓咪疾病（如牙周病、病毒感染）與定期疫苗、驅蟲仍是每隻貓不可省略的基本照護。",
+                "feedbackTitle": "做得很好！",
+                "id": "breed-challenge-3-correct",
+                "result": "correct",
+                "text": "米克斯貓的確較少特定品種遺傳疾病，但仍需定期健檢與疫苗"
               }
             ],
             "correctFeedbackMedia": {
@@ -1475,19 +1475,6 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-                "feedbackTitle": "做得很好！",
-                "id": "seek-help",
-                "isSupportChoice": true,
-                "result": "correct",
-                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -1511,6 +1498,19 @@
                 "result": "incorrect",
                 "suggestion": "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。",
                 "text": "等自己晚點回來再餵，先讓牠等著"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+                "feedbackTitle": "做得很好！",
+                "id": "seek-help",
+                "isSupportChoice": true,
+                "result": "correct",
+                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
               }
             ],
             "correctSummary": [
@@ -1545,6 +1545,19 @@
               },
               {
                 "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "cat-health-friend",
+                "result": "incorrect",
+                "suggestion": "整理觀察資料後儘速聯絡獸醫。",
+                "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
+              },
+              {
+                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -1559,19 +1572,6 @@
                 "id": "cat-health-complete-response",
                 "result": "correct",
                 "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
-              },
-              {
-                "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "cat-health-friend",
-                "result": "incorrect",
-                "suggestion": "整理觀察資料後儘速聯絡獸醫。",
-                "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
               },
               {
                 "effects": {
@@ -2206,19 +2206,6 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-                "feedbackTitle": "做得很好！",
-                "id": "seek-help",
-                "isSupportChoice": true,
-                "result": "correct",
-                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -2242,6 +2229,19 @@
                 "result": "incorrect",
                 "suggestion": "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。",
                 "text": "等自己晚點回來再餵，先讓牠等著"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+                "feedbackTitle": "做得很好！",
+                "id": "seek-help",
+                "isSupportChoice": true,
+                "result": "correct",
+                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
               }
             ],
             "correctSummary": [
@@ -2276,6 +2276,19 @@
               },
               {
                 "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "cat-health-friend",
+                "result": "incorrect",
+                "suggestion": "整理觀察資料後儘速聯絡獸醫。",
+                "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
+              },
+              {
+                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -2290,19 +2303,6 @@
                 "id": "cat-health-complete-response",
                 "result": "correct",
                 "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
-              },
-              {
-                "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "cat-health-friend",
-                "result": "incorrect",
-                "suggestion": "整理觀察資料後儘速聯絡獸醫。",
-                "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
               },
               {
                 "effects": {
@@ -2941,19 +2941,6 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-                "feedbackTitle": "做得很好！",
-                "id": "seek-help",
-                "isSupportChoice": true,
-                "result": "correct",
-                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -2977,6 +2964,19 @@
                 "result": "incorrect",
                 "suggestion": "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。",
                 "text": "等自己晚點回來再餵，先讓牠等著"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+                "feedbackTitle": "做得很好！",
+                "id": "seek-help",
+                "isSupportChoice": true,
+                "result": "correct",
+                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
               }
             ],
             "correctSummary": [
@@ -3011,6 +3011,19 @@
               },
               {
                 "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "cat-health-friend",
+                "result": "incorrect",
+                "suggestion": "整理觀察資料後儘速聯絡獸醫。",
+                "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
+              },
+              {
+                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -3025,19 +3038,6 @@
                 "id": "cat-health-complete-response",
                 "result": "correct",
                 "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
-              },
-              {
-                "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "cat-health-friend",
-                "result": "incorrect",
-                "suggestion": "整理觀察資料後儘速聯絡獸醫。",
-                "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
               },
               {
                 "effects": {
@@ -3672,19 +3672,6 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-                "feedbackTitle": "做得很好！",
-                "id": "seek-help",
-                "isSupportChoice": true,
-                "result": "correct",
-                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -3708,6 +3695,19 @@
                 "result": "incorrect",
                 "suggestion": "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。",
                 "text": "等自己晚點回來再餵，先讓牠等著"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+                "feedbackTitle": "做得很好！",
+                "id": "seek-help",
+                "isSupportChoice": true,
+                "result": "correct",
+                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
               }
             ],
             "correctSummary": [
@@ -3742,6 +3742,19 @@
               },
               {
                 "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "cat-health-friend",
+                "result": "incorrect",
+                "suggestion": "整理觀察資料後儘速聯絡獸醫。",
+                "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
+              },
+              {
+                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -3756,19 +3769,6 @@
                 "id": "cat-health-complete-response",
                 "result": "correct",
                 "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
-              },
-              {
-                "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "cat-health-friend",
-                "result": "incorrect",
-                "suggestion": "整理觀察資料後儘速聯絡獸醫。",
-                "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
               },
               {
                 "effects": {
@@ -6148,19 +6148,6 @@
           },
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
-            },
-            "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-            "feedbackTitle": "做得很好！",
-            "id": "seek-help",
-            "isSupportChoice": true,
-            "result": "correct",
-            "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-          },
-          {
-            "effects": {
               "support": 0,
               "trust": -1,
               "wellbeing": -1
@@ -6184,6 +6171,19 @@
             "result": "incorrect",
             "suggestion": "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。",
             "text": "等自己晚點回來再餵，先讓牠等著"
+          },
+          {
+            "effects": {
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
+            },
+            "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+            "feedbackTitle": "做得很好！",
+            "id": "seek-help",
+            "isSupportChoice": true,
+            "result": "correct",
+            "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
           }
         ],
         "correctSummary": [
@@ -6218,6 +6218,19 @@
           },
           {
             "effects": {
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
+            },
+            "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "cat-health-friend",
+            "result": "incorrect",
+            "suggestion": "整理觀察資料後儘速聯絡獸醫。",
+            "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
+          },
+          {
+            "effects": {
               "support": 1,
               "trust": 2,
               "wellbeing": 2
@@ -6232,19 +6245,6 @@
             "id": "cat-health-complete-response",
             "result": "correct",
             "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
-          },
-          {
-            "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
-            },
-            "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "cat-health-friend",
-            "result": "incorrect",
-            "suggestion": "整理觀察資料後儘速聯絡獸醫。",
-            "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
           },
           {
             "effects": {
@@ -7306,19 +7306,6 @@
         },
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
-          },
-          "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-          "feedbackTitle": "做得很好！",
-          "id": "seek-help",
-          "isSupportChoice": true,
-          "result": "correct",
-          "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-        },
-        {
-          "effects": {
             "support": 0,
             "trust": -1,
             "wellbeing": -1
@@ -7342,6 +7329,19 @@
           "result": "incorrect",
           "suggestion": "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。",
           "text": "等自己晚點回來再餵，先讓牠等著"
+        },
+        {
+          "effects": {
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
+          },
+          "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+          "feedbackTitle": "做得很好！",
+          "id": "seek-help",
+          "isSupportChoice": true,
+          "result": "correct",
+          "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
         }
       ],
       "correctSummary": [
@@ -7376,6 +7376,19 @@
         },
         {
           "effects": {
+            "support": 0,
+            "trust": -1,
+            "wellbeing": -1
+          },
+          "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
+          "feedbackTitle": "這個做法可能不太適合。",
+          "id": "cat-health-friend",
+          "result": "incorrect",
+          "suggestion": "整理觀察資料後儘速聯絡獸醫。",
+          "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
+        },
+        {
+          "effects": {
             "support": 1,
             "trust": 2,
             "wellbeing": 2
@@ -7390,19 +7403,6 @@
           "id": "cat-health-complete-response",
           "result": "correct",
           "text": "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫"
-        },
-        {
-          "effects": {
-            "support": 0,
-            "trust": -1,
-            "wellbeing": -1
-          },
-          "explanation": "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
-          "feedbackTitle": "這個做法可能不太適合。",
-          "id": "cat-health-friend",
-          "result": "incorrect",
-          "suggestion": "整理觀察資料後儘速聯絡獸醫。",
-          "text": "拍一張照片傳給有養貓的朋友，等對方回覆後再決定"
         },
         {
           "effects": {

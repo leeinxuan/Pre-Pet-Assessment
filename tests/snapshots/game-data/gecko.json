@@ -739,15 +739,15 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
-                "feedbackTitle": "做得很好！",
-                "id": "room-heating",
-                "result": "correct",
-                "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
+                "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "wait-and-see",
+                "result": "incorrect",
+                "text": "先觀察幾天，看牠能不能自己撐過去"
               },
               {
                 "effects": {
@@ -775,15 +775,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "wait-and-see",
-                "result": "incorrect",
-                "text": "先觀察幾天，看牠能不能自己撐過去"
+                "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
+                "feedbackTitle": "做得很好！",
+                "id": "room-heating",
+                "result": "correct",
+                "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
               }
             ],
             "completionFeedback": {
@@ -1088,18 +1088,6 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "human-medicine",
-                "result": "incorrect",
-                "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
-              },
-              {
-                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -1114,6 +1102,18 @@
                 "id": "record-and-vet",
                 "result": "correct",
                 "text": "記錄後腿顫抖的頻率與進食狀況，並聯絡熟悉爬蟲的獸醫確認是否就醫"
+              },
+              {
+                "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "human-medicine",
+                "result": "incorrect",
+                "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
               },
               {
                 "effects": {
@@ -1189,21 +1189,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": [
-                  "gecko-senior-room"
-                ],
-                "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
-                "feedbackTitle": "做得很好！",
-                "id": "gecko-senior-adjust",
-                "result": "correct",
-                "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -1237,6 +1222,21 @@
                 "id": "gecko-senior-supplements",
                 "result": "incorrect",
                 "text": "先買大家推薦的保健食品補一補，等下次有空再安排檢查"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": [
+                  "gecko-senior-room"
+                ],
+                "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
+                "feedbackTitle": "做得很好！",
+                "id": "gecko-senior-adjust",
+                "result": "correct",
+                "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
               }
             ],
             "completionFeedback": {
@@ -1472,15 +1472,15 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
-                "feedbackTitle": "做得很好！",
-                "id": "room-heating",
-                "result": "correct",
-                "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
+                "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "wait-and-see",
+                "result": "incorrect",
+                "text": "先觀察幾天，看牠能不能自己撐過去"
               },
               {
                 "effects": {
@@ -1508,15 +1508,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "wait-and-see",
-                "result": "incorrect",
-                "text": "先觀察幾天，看牠能不能自己撐過去"
+                "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
+                "feedbackTitle": "做得很好！",
+                "id": "room-heating",
+                "result": "correct",
+                "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
               }
             ],
             "completionFeedback": {
@@ -1821,18 +1821,6 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "human-medicine",
-                "result": "incorrect",
-                "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
-              },
-              {
-                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -1847,6 +1835,18 @@
                 "id": "record-and-vet",
                 "result": "correct",
                 "text": "記錄後腿顫抖的頻率與進食狀況，並聯絡熟悉爬蟲的獸醫確認是否就醫"
+              },
+              {
+                "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "human-medicine",
+                "result": "incorrect",
+                "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
               },
               {
                 "effects": {
@@ -1922,21 +1922,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": [
-                  "gecko-senior-room"
-                ],
-                "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
-                "feedbackTitle": "做得很好！",
-                "id": "gecko-senior-adjust",
-                "result": "correct",
-                "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -1970,6 +1955,21 @@
                 "id": "gecko-senior-supplements",
                 "result": "incorrect",
                 "text": "先買大家推薦的保健食品補一補，等下次有空再安排檢查"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": [
+                  "gecko-senior-room"
+                ],
+                "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
+                "feedbackTitle": "做得很好！",
+                "id": "gecko-senior-adjust",
+                "result": "correct",
+                "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
               }
             ],
             "completionFeedback": {
@@ -2209,15 +2209,15 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
-                "feedbackTitle": "做得很好！",
-                "id": "room-heating",
-                "result": "correct",
-                "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
+                "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "wait-and-see",
+                "result": "incorrect",
+                "text": "先觀察幾天，看牠能不能自己撐過去"
               },
               {
                 "effects": {
@@ -2245,15 +2245,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "wait-and-see",
-                "result": "incorrect",
-                "text": "先觀察幾天，看牠能不能自己撐過去"
+                "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
+                "feedbackTitle": "做得很好！",
+                "id": "room-heating",
+                "result": "correct",
+                "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
               }
             ],
             "completionFeedback": {
@@ -2558,18 +2558,6 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "human-medicine",
-                "result": "incorrect",
-                "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
-              },
-              {
-                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -2584,6 +2572,18 @@
                 "id": "record-and-vet",
                 "result": "correct",
                 "text": "記錄後腿顫抖的頻率與進食狀況，並聯絡熟悉爬蟲的獸醫確認是否就醫"
+              },
+              {
+                "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "human-medicine",
+                "result": "incorrect",
+                "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
               },
               {
                 "effects": {
@@ -2659,21 +2659,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": [
-                  "gecko-senior-room"
-                ],
-                "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
-                "feedbackTitle": "做得很好！",
-                "id": "gecko-senior-adjust",
-                "result": "correct",
-                "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -2707,6 +2692,21 @@
                 "id": "gecko-senior-supplements",
                 "result": "incorrect",
                 "text": "先買大家推薦的保健食品補一補，等下次有空再安排檢查"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": [
+                  "gecko-senior-room"
+                ],
+                "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
+                "feedbackTitle": "做得很好！",
+                "id": "gecko-senior-adjust",
+                "result": "correct",
+                "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
               }
             ],
             "completionFeedback": {
@@ -2942,15 +2942,15 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
-                "feedbackTitle": "做得很好！",
-                "id": "room-heating",
-                "result": "correct",
-                "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
+                "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "wait-and-see",
+                "result": "incorrect",
+                "text": "先觀察幾天，看牠能不能自己撐過去"
               },
               {
                 "effects": {
@@ -2978,15 +2978,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "wait-and-see",
-                "result": "incorrect",
-                "text": "先觀察幾天，看牠能不能自己撐過去"
+                "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
+                "feedbackTitle": "做得很好！",
+                "id": "room-heating",
+                "result": "correct",
+                "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
               }
             ],
             "completionFeedback": {
@@ -3291,18 +3291,6 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "human-medicine",
-                "result": "incorrect",
-                "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
-              },
-              {
-                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -3317,6 +3305,18 @@
                 "id": "record-and-vet",
                 "result": "correct",
                 "text": "記錄後腿顫抖的頻率與進食狀況，並聯絡熟悉爬蟲的獸醫確認是否就醫"
+              },
+              {
+                "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "human-medicine",
+                "result": "incorrect",
+                "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
               },
               {
                 "effects": {
@@ -3392,21 +3392,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": [
-                  "gecko-senior-room"
-                ],
-                "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
-                "feedbackTitle": "做得很好！",
-                "id": "gecko-senior-adjust",
-                "result": "correct",
-                "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -3440,6 +3425,21 @@
                 "id": "gecko-senior-supplements",
                 "result": "incorrect",
                 "text": "先買大家推薦的保健食品補一補，等下次有空再安排檢查"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": [
+                  "gecko-senior-room"
+                ],
+                "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
+                "feedbackTitle": "做得很好！",
+                "id": "gecko-senior-adjust",
+                "result": "correct",
+                "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
               }
             ],
             "completionFeedback": {
@@ -6404,15 +6404,15 @@
         "choices": [
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
             },
-            "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
-            "feedbackTitle": "做得很好！",
-            "id": "room-heating",
-            "result": "correct",
-            "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
+            "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "wait-and-see",
+            "result": "incorrect",
+            "text": "先觀察幾天，看牠能不能自己撐過去"
           },
           {
             "effects": {
@@ -6440,15 +6440,15 @@
           },
           {
             "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
             },
-            "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "wait-and-see",
-            "result": "incorrect",
-            "text": "先觀察幾天，看牠能不能自己撐過去"
+            "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
+            "feedbackTitle": "做得很好！",
+            "id": "room-heating",
+            "result": "correct",
+            "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
           }
         ],
         "completionFeedback": {
@@ -6753,18 +6753,6 @@
           },
           {
             "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
-            },
-            "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "human-medicine",
-            "result": "incorrect",
-            "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
-          },
-          {
-            "effects": {
               "support": 1,
               "trust": 2,
               "wellbeing": 2
@@ -6779,6 +6767,18 @@
             "id": "record-and-vet",
             "result": "correct",
             "text": "記錄後腿顫抖的頻率與進食狀況，並聯絡熟悉爬蟲的獸醫確認是否就醫"
+          },
+          {
+            "effects": {
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
+            },
+            "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "human-medicine",
+            "result": "incorrect",
+            "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
           },
           {
             "effects": {
@@ -6854,21 +6854,6 @@
         "choices": [
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
-            },
-            "expenseIds": [
-              "gecko-senior-room"
-            ],
-            "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
-            "feedbackTitle": "做得很好！",
-            "id": "gecko-senior-adjust",
-            "result": "correct",
-            "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
-          },
-          {
-            "effects": {
               "support": 0,
               "trust": -1,
               "wellbeing": -1
@@ -6902,6 +6887,21 @@
             "id": "gecko-senior-supplements",
             "result": "incorrect",
             "text": "先買大家推薦的保健食品補一補，等下次有空再安排檢查"
+          },
+          {
+            "effects": {
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
+            },
+            "expenseIds": [
+              "gecko-senior-room"
+            ],
+            "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
+            "feedbackTitle": "做得很好！",
+            "id": "gecko-senior-adjust",
+            "result": "correct",
+            "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
           }
         ],
         "completionFeedback": {
@@ -7594,15 +7594,15 @@
       "choices": [
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
+            "support": 0,
+            "trust": -1,
+            "wellbeing": -1
           },
-          "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
-          "feedbackTitle": "做得很好！",
-          "id": "room-heating",
-          "result": "correct",
-          "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
+          "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
+          "feedbackTitle": "這個做法可能不太適合。",
+          "id": "wait-and-see",
+          "result": "incorrect",
+          "text": "先觀察幾天，看牠能不能自己撐過去"
         },
         {
           "effects": {
@@ -7630,15 +7630,15 @@
         },
         {
           "effects": {
-            "support": 0,
-            "trust": -1,
-            "wellbeing": -1
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
           },
-          "explanation": "低溫會導致守宮消化停滯、免疫力下降，若長期處於過低溫度可能引發嚴重健康問題，不應等待觀察，應即時處理。",
-          "feedbackTitle": "這個做法可能不太適合。",
-          "id": "wait-and-see",
-          "result": "incorrect",
-          "text": "先觀察幾天，看牠能不能自己撐過去"
+          "explanation": "室溫過低時，光靠加熱片的加熱效率會大幅下降。將室溫維持在 20°C 以上，能讓加熱片的效果更穩定，守宮也能維持正常體溫。",
+          "feedbackTitle": "做得很好！",
+          "id": "room-heating",
+          "result": "correct",
+          "text": "開啟室內暖氣，讓整個房間升溫，幫助缸內溫度回升"
         }
       ],
       "completionFeedback": {
@@ -7943,18 +7943,6 @@
         },
         {
           "effects": {
-            "support": 0,
-            "trust": -1,
-            "wellbeing": -1
-          },
-          "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
-          "feedbackTitle": "這個做法可能不太適合。",
-          "id": "human-medicine",
-          "result": "incorrect",
-          "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
-        },
-        {
-          "effects": {
             "support": 1,
             "trust": 2,
             "wellbeing": 2
@@ -7969,6 +7957,18 @@
           "id": "record-and-vet",
           "result": "correct",
           "text": "記錄後腿顫抖的頻率與進食狀況，並聯絡熟悉爬蟲的獸醫確認是否就醫"
+        },
+        {
+          "effects": {
+            "support": 0,
+            "trust": -1,
+            "wellbeing": -1
+          },
+          "explanation": "人用藥物的成分與劑量對守宮體型與代謝完全不適用，可能造成器官衰竭。守宮出現異常絕對不可自行用藥。",
+          "feedbackTitle": "這個做法可能不太適合。",
+          "id": "human-medicine",
+          "result": "incorrect",
+          "text": "先拿家裡的人用藥餵一點，看看有沒有改善"
         },
         {
           "effects": {
@@ -8044,21 +8044,6 @@
       "choices": [
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
-          },
-          "expenseIds": [
-            "gecko-senior-room"
-          ],
-          "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
-          "feedbackTitle": "做得很好！",
-          "id": "gecko-senior-adjust",
-          "result": "correct",
-          "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
-        },
-        {
-          "effects": {
             "support": 0,
             "trust": -1,
             "wellbeing": -1
@@ -8092,6 +8077,21 @@
           "id": "gecko-senior-supplements",
           "result": "incorrect",
           "text": "先買大家推薦的保健食品補一補，等下次有空再安排檢查"
+        },
+        {
+          "effects": {
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
+          },
+          "expenseIds": [
+            "gecko-senior-room"
+          ],
+          "explanation": "提前準備能幫助飼主在高齡階段更穩定地照顧 {petName}，也能及早安排健康觀察、醫療需求與長期照顧。",
+          "feedbackTitle": "做得很好！",
+          "id": "gecko-senior-adjust",
+          "result": "correct",
+          "text": "提前規劃醫療基金，學習老年照顧知識，並定期諮詢獸醫"
         }
       ],
       "completionFeedback": {

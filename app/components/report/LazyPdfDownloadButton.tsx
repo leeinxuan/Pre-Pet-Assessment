@@ -36,27 +36,63 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
   const [generating, setGenerating] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [error, setError] = useState("");
-  const previewUrlRef = useRef("");
+  const [retryCount, setRetryCount] = useState(0);
+  const preparedUrlRef = useRef("");
   const mobileDownload = useMobileDownloadMode();
-  const previewOnMobile = mobileDownload && kind === "overview";
+  const previewOnMobile = mobileDownload;
   const buttonLabel = label ?? (kind === "profile" ? "下載個人資料" : "下載照顧準備總覽");
 
+  useEffect(() => {
+    if (!previewOnMobile) return;
+    let cancelled = false;
+    if (preparedUrlRef.current) URL.revokeObjectURL(preparedUrlRef.current);
+    preparedUrlRef.current = "";
+    const prepare = async () => {
+      try {
+        await onBeforeDownload?.();
+        const pdf = await loadRetriableModule(() => import("./PdfExportControls"));
+        const { blob } = await pdf.createAssessmentPdf(petName, kind, profile, selectedTypeLabel);
+        if (!cancelled) preparedUrlRef.current = URL.createObjectURL(blob);
+      } catch (prepareError) {
+        if (!cancelled) {
+          console.error("Assessment export failed.", prepareError);
+          setError("PDF下載失敗，請再試一次。");
+        }
+      } finally {
+        if (!cancelled) {
+          onAfterDownload?.();
+          setGenerating(false);
+        }
+      }
+    };
+    // Profile fields can still change on the acquisition page. Regenerate
+    // after editing settles so the opened PDF always contains the latest data.
+    const timer = window.setTimeout(() => {
+      setGenerating(true);
+      setCompleted(false);
+      void prepare();
+    }, kind === "profile" ? 600 : 0);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+    // The export callbacks are recreated on render but do not change the data.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [previewOnMobile, petName, kind, profile, selectedTypeLabel, retryCount]);
+
   useEffect(() => () => {
-    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (preparedUrlRef.current) URL.revokeObjectURL(preparedUrlRef.current);
   }, []);
 
   const preparePdf = async () => {
     if (generating) return;
-    // Safari 只允許在使用者點擊的同步階段開新分頁；PDF 產生完才開會被擋下。
-    const previewWindow = previewOnMobile ? window.open("", "_blank") : null;
-    if (previewOnMobile && !previewWindow) {
-      setError("無法開啟 PDF 分頁，請允許此網站開啟彈出視窗後再試一次。");
+    if (previewOnMobile) {
+      if (!preparedUrlRef.current) {
+        setError("");
+        setRetryCount((count) => count + 1);
+        return;
+      }
+      const opened = window.open(preparedUrlRef.current, "_blank");
+      if (!opened) setError("無法開啟 PDF 分頁，請允許此網站開啟彈出視窗後再試一次。");
+      else { opened.opener = null; setError(""); setCompleted(true); }
       return;
-    }
-    if (previewWindow) {
-      previewWindow.opener = null;
-      previewWindow.document.title = "正在整理照護指南…";
-      previewWindow.document.body.textContent = "正在整理照護指南，請稍候…";
     }
     setGenerating(true);
     setCompleted(false);
@@ -64,19 +100,9 @@ export function LazyPdfDownloadButton({ petName, kind = "overview", label, profi
     try {
       await onBeforeDownload?.();
       const pdf = await loadRetriableModule(() => import("./PdfExportControls"));
-      if (previewOnMobile) {
-        const { blob } = await pdf.createAssessmentPdf(petName, kind, profile, selectedTypeLabel);
-        const url = URL.createObjectURL(blob);
-        if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
-        previewUrlRef.current = url;
-        previewWindow?.location.replace(url);
-        setCompleted(true);
-      } else {
-        await pdf.downloadAssessmentPdf(petName, kind, profile, selectedTypeLabel);
-        setCompleted(true);
-      }
+      await pdf.downloadAssessmentPdf(petName, kind, profile, selectedTypeLabel);
+      setCompleted(true);
     } catch (downloadError) {
-      previewWindow?.close();
       console.error("Assessment export failed.", downloadError);
       setError("PDF下載失敗，請再試一次。");
     } finally {

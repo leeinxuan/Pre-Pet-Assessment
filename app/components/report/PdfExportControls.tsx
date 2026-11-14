@@ -155,6 +155,10 @@ async function elementToCanvas(source: HTMLElement, maxScale = 2) {
   clone.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
   await replaceImagesWithDataUrls(clone);
   inlineComputedStyles(source, clone);
+  // Safari's SVG foreignObject renderer can omit an embedded pet image. Draw
+  // that image directly on the PDF canvas after rasterizing the page instead.
+  const petImage = clone.querySelector<HTMLElement>(".care-breed-card img");
+  if (petImage) petImage.style.visibility = "hidden";
   clone.style.margin = "0";
   clone.style.boxSizing = "border-box";
 
@@ -177,7 +181,29 @@ async function elementToCanvas(source: HTMLElement, maxScale = 2) {
   context.fillStyle = "#ffffff";
   context.fillRect(0, 0, canvas.width, canvas.height);
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  await drawPetImageOnCanvas(source, canvas);
   return canvas;
+}
+
+async function drawPetImageOnCanvas(source: HTMLElement, canvas: HTMLCanvasElement) {
+  const sourcePetImage = source.querySelector<HTMLImageElement>(".care-breed-card img");
+  if (sourcePetImage) {
+    await sourcePetImage.decode();
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Canvas is not available");
+    const pageRect = source.getBoundingClientRect();
+    const imageRect = sourcePetImage.getBoundingClientRect();
+    const imageRatio = sourcePetImage.naturalWidth / sourcePetImage.naturalHeight;
+    const frameRatio = imageRect.width / imageRect.height;
+    const width = imageRatio > frameRatio ? imageRect.width : imageRect.height * imageRatio;
+    const height = imageRatio > frameRatio ? imageRect.width / imageRatio : imageRect.height;
+    const scaleX = canvas.width / pageRect.width;
+    const scaleY = canvas.height / pageRect.height;
+    context.drawImage(sourcePetImage,
+      (imageRect.left - pageRect.left + (imageRect.width - width) / 2) * scaleX,
+      (imageRect.top - pageRect.top + (imageRect.height - height) / 2) * scaleY,
+      width * scaleX, height * scaleY);
+  }
 }
 
 /** A no-image fallback for browsers that cannot rasterize SVG foreignObject. */
@@ -554,7 +580,9 @@ export async function createAssessmentPdf(petName: string, kind: ReportPdfKind, 
         // Some browser builds cannot draw a foreignObject SVG or a user photo.
         // Preserve all entered text in a valid PDF instead of failing the download.
         console.warn("Falling back to text-only PDF page export.", error);
-        canvases.push(elementTextToCanvas(page));
+        const fallback = elementTextToCanvas(page);
+        await drawPetImageOnCanvas(page, fallback);
+        canvases.push(fallback);
       }
     }
     let blob: Blob;

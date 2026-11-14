@@ -84,9 +84,9 @@ export const hamsterLifeScenarios: Scenario[] = [
     ],
     choices: [
       correct("hamster-nocturnal-respect", "這是正常的！倉鼠是夜行性動物，白天睡覺、夜間活動才是牠的自然節律", "倉鼠是夜行性動物，白天大多在睡眠，晚上和清晨才是牠們最活躍的時段。白天安靜是完全正常的。"),
-      correct("hamster-nocturnal-obs", "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食", "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。"),
-      wrong("hamster-nocturnal-wake", "強迫牠白天多醒著，讓牠配合我的作息", "強迫夜行性動物在白天活動，對牠是嚴重的緊迫。倉鼠的生理節律不應被強迫改變，要尊重牠的天性。"),
       wrong("hamster-nocturnal-vet", "立刻帶去看獸醫，因為白天都在睡覺很不正常", "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。"),
+      wrong("hamster-nocturnal-wake", "強迫牠白天多醒著，讓牠配合我的作息", "強迫夜行性動物在白天活動，對牠是嚴重的緊迫。倉鼠的生理節律不應被強迫改變，要尊重牠的天性。"),
+      correct("hamster-nocturnal-obs", "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食", "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。"),
     ],
     correctSummary: ["倉鼠是夜行性動物，白天睡覺完全正常，應在傍晚或夜間確認活動與進食跡象，不可強迫牠在白天活動以配合飼主作息。"],
     completionFeedback: {
@@ -371,12 +371,12 @@ export const hamsterLifeScenarios: Scenario[] = [
       ariaLabel: "倉鼠答對回饋影片"
     },
     choices: [
-      correct("hamster-senior-vet", "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查", "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。", [
-        "hamster-senior-care"
-      ]),
       wrong("hamster-senior-wait", "等牠出現明顯的老化症狀再帶去就醫，平常先不特別準備", "高齡照護需要提前準備；等到症狀很明顯才處理，可能讓{petName}在不必要的不適中度過最後一段時間。提前規劃才能在最需要時穩定陪著牠。"),
       wrong("hamster-senior-remove-wheel", "把滾輪拿出來，讓高齡的{petName}多休息", "適當的活動對高齡倉鼠仍然重要，不應直接移除滾輪；可以換成較輕鬆的環境（如降低設施的難度），但不應剝奪活動機會。"),
       wrong("hamster-senior-no-change", "維持現有環境不動，避免環境改變造成壓力", "小幅度的環境優化（如確保設施容易取用、維持舒適溫度）是必要的；同時安排更規律的健康檢查，才能完整照顧高齡{petName}的需求。"),
+      correct("hamster-senior-vet", "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查", "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。", [
+        "hamster-senior-care"
+      ]),
     ],
     correctSummary: ["高齡倉鼠（接近兩歲）應提前諮詢獸醫了解照護重點、安排更規律的健康檢查，並適當調整環境降低設施難度，不可直接移除滾輪等活動設施。"],
     completionFeedback: {

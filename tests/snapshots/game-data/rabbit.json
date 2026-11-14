@@ -67,19 +67,6 @@
           },
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
-            },
-            "expenseIds": "<undefined>",
-            "explanation": "盲腸便是兔子吸收重要營養的方式；不應阻止或當成一般髒污清除。",
-            "feedbackTitle": "做得很好！",
-            "id": "breed-challenge-1-correct",
-            "result": "correct",
-            "text": "這是食糞行為，盲腸便是必要的營養來源，完全正常"
-          },
-          {
-            "effects": {
               "support": 0,
               "trust": -1,
               "wellbeing": -1
@@ -103,6 +90,19 @@
             "result": "incorrect",
             "suggestion": "讓牠完成正常食糞行為；只有長期未食入才需諮詢獸醫。",
             "text": "應該阻止這個行為，對衛生習慣不好"
+          },
+          {
+            "effects": {
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
+            },
+            "expenseIds": "<undefined>",
+            "explanation": "盲腸便是兔子吸收重要營養的方式；不應阻止或當成一般髒污清除。",
+            "feedbackTitle": "做得很好！",
+            "id": "breed-challenge-1-correct",
+            "result": "correct",
+            "text": "這是食糞行為，盲腸便是必要的營養來源，完全正常"
           }
         ],
         "correctFeedbackMedia": {
@@ -392,19 +392,6 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": "<undefined>",
-                "explanation": "盲腸便是兔子吸收重要營養的方式；不應阻止或當成一般髒污清除。",
-                "feedbackTitle": "做得很好！",
-                "id": "breed-challenge-1-correct",
-                "result": "correct",
-                "text": "這是食糞行為，盲腸便是必要的營養來源，完全正常"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -428,6 +415,19 @@
                 "result": "incorrect",
                 "suggestion": "讓牠完成正常食糞行為；只有長期未食入才需諮詢獸醫。",
                 "text": "應該阻止這個行為，對衛生習慣不好"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": "<undefined>",
+                "explanation": "盲腸便是兔子吸收重要營養的方式；不應阻止或當成一般髒污清除。",
+                "feedbackTitle": "做得很好！",
+                "id": "breed-challenge-1-correct",
+                "result": "correct",
+                "text": "這是食糞行為，盲腸便是必要的營養來源，完全正常"
               }
             ],
             "correctFeedbackMedia": {
@@ -628,19 +628,6 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": "<undefined>",
-                "explanation": "盲腸便是兔子吸收重要營養的方式；不應阻止或當成一般髒污清除。",
-                "feedbackTitle": "做得很好！",
-                "id": "breed-challenge-1-correct",
-                "result": "correct",
-                "text": "這是食糞行為，盲腸便是必要的營養來源，完全正常"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -664,6 +651,19 @@
                 "result": "incorrect",
                 "suggestion": "讓牠完成正常食糞行為；只有長期未食入才需諮詢獸醫。",
                 "text": "應該阻止這個行為，對衛生習慣不好"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": "<undefined>",
+                "explanation": "盲腸便是兔子吸收重要營養的方式；不應阻止或當成一般髒污清除。",
+                "feedbackTitle": "做得很好！",
+                "id": "breed-challenge-1-correct",
+                "result": "correct",
+                "text": "這是食糞行為，盲腸便是必要的營養來源，完全正常"
               }
             ],
             "correctFeedbackMedia": {
@@ -1529,15 +1529,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
-                "feedbackTitle": "做得很好！",
-                "id": "rabbit-cecotropes-nutrition",
-                "result": "correct",
-                "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
+                "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "rabbit-cecotropes-stop",
+                "result": "incorrect",
+                "text": "試圖阻止牠，覺得這個行為不衛生"
               },
               {
                 "effects": {
@@ -1553,15 +1553,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "rabbit-cecotropes-stop",
-                "result": "incorrect",
-                "text": "試圖阻止牠，覺得這個行為不衛生"
+                "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
+                "feedbackTitle": "做得很好！",
+                "id": "rabbit-cecotropes-nutrition",
+                "result": "correct",
+                "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
               }
             ],
             "completionFeedback": {
@@ -2332,15 +2332,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
-                "feedbackTitle": "做得很好！",
-                "id": "rabbit-cecotropes-nutrition",
-                "result": "correct",
-                "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
+                "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "rabbit-cecotropes-stop",
+                "result": "incorrect",
+                "text": "試圖阻止牠，覺得這個行為不衛生"
               },
               {
                 "effects": {
@@ -2356,15 +2356,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "rabbit-cecotropes-stop",
-                "result": "incorrect",
-                "text": "試圖阻止牠，覺得這個行為不衛生"
+                "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
+                "feedbackTitle": "做得很好！",
+                "id": "rabbit-cecotropes-nutrition",
+                "result": "correct",
+                "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
               }
             ],
             "completionFeedback": {
@@ -3139,15 +3139,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
-                "feedbackTitle": "做得很好！",
-                "id": "rabbit-cecotropes-nutrition",
-                "result": "correct",
-                "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
+                "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "rabbit-cecotropes-stop",
+                "result": "incorrect",
+                "text": "試圖阻止牠，覺得這個行為不衛生"
               },
               {
                 "effects": {
@@ -3163,15 +3163,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "rabbit-cecotropes-stop",
-                "result": "incorrect",
-                "text": "試圖阻止牠，覺得這個行為不衛生"
+                "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
+                "feedbackTitle": "做得很好！",
+                "id": "rabbit-cecotropes-nutrition",
+                "result": "correct",
+                "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
               }
             ],
             "completionFeedback": {
@@ -4084,15 +4084,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
-                "feedbackTitle": "做得很好！",
-                "id": "rabbit-cecotropes-nutrition",
-                "result": "correct",
-                "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
+                "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "rabbit-cecotropes-stop",
+                "result": "incorrect",
+                "text": "試圖阻止牠，覺得這個行為不衛生"
               },
               {
                 "effects": {
@@ -4108,15 +4108,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "rabbit-cecotropes-stop",
-                "result": "incorrect",
-                "text": "試圖阻止牠，覺得這個行為不衛生"
+                "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
+                "feedbackTitle": "做得很好！",
+                "id": "rabbit-cecotropes-nutrition",
+                "result": "correct",
+                "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
               }
             ],
             "completionFeedback": {
@@ -6620,15 +6620,15 @@
           },
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
             },
-            "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
-            "feedbackTitle": "做得很好！",
-            "id": "rabbit-cecotropes-nutrition",
-            "result": "correct",
-            "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
+            "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "rabbit-cecotropes-stop",
+            "result": "incorrect",
+            "text": "試圖阻止牠，覺得這個行為不衛生"
           },
           {
             "effects": {
@@ -6644,15 +6644,15 @@
           },
           {
             "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
             },
-            "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "rabbit-cecotropes-stop",
-            "result": "incorrect",
-            "text": "試圖阻止牠，覺得這個行為不衛生"
+            "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
+            "feedbackTitle": "做得很好！",
+            "id": "rabbit-cecotropes-nutrition",
+            "result": "correct",
+            "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
           }
         ],
         "completionFeedback": {
@@ -7897,15 +7897,15 @@
         },
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
+            "support": 0,
+            "trust": -1,
+            "wellbeing": -1
           },
-          "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
-          "feedbackTitle": "做得很好！",
-          "id": "rabbit-cecotropes-nutrition",
-          "result": "correct",
-          "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
+          "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
+          "feedbackTitle": "這個做法可能不太適合。",
+          "id": "rabbit-cecotropes-stop",
+          "result": "incorrect",
+          "text": "試圖阻止牠，覺得這個行為不衛生"
         },
         {
           "effects": {
@@ -7921,15 +7921,15 @@
         },
         {
           "effects": {
-            "support": 0,
-            "trust": -1,
-            "wellbeing": -1
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
           },
-          "explanation": "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。",
-          "feedbackTitle": "這個做法可能不太適合。",
-          "id": "rabbit-cecotropes-stop",
-          "result": "incorrect",
-          "text": "試圖阻止牠，覺得這個行為不衛生"
+          "explanation": "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。",
+          "feedbackTitle": "做得很好！",
+          "id": "rabbit-cecotropes-nutrition",
+          "result": "correct",
+          "text": "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完"
         }
       ],
       "completionFeedback": {

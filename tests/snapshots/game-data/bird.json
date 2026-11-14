@@ -1604,15 +1604,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
-                "feedbackTitle": "做得很好！",
-                "id": "bird-stereotypy-social",
-                "result": "correct",
-                "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
+                "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-stereotypy-vet",
+                "result": "incorrect",
+                "text": "刻板行為代表 {petName} 生病了，立刻就醫"
               },
               {
                 "effects": {
@@ -1628,15 +1628,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-stereotypy-vet",
-                "result": "incorrect",
-                "text": "刻板行為代表 {petName} 生病了，立刻就醫"
+                "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
+                "feedbackTitle": "做得很好！",
+                "id": "bird-stereotypy-social",
+                "result": "correct",
+                "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
               }
             ],
             "completionFeedback": {
@@ -1868,19 +1868,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-                "feedbackTitle": "做得很好！",
-                "id": "seek-help",
-                "isSupportChoice": true,
-                "result": "correct",
-                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -1914,6 +1901,19 @@
                 "id": "bird-wait-return",
                 "result": "incorrect",
                 "text": "等晚上回家再一起補充和確認，平常也都是這樣"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+                "feedbackTitle": "做得很好！",
+                "id": "seek-help",
+                "isSupportChoice": true,
+                "result": "correct",
+                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
               }
             ],
             "completionFeedback": {
@@ -1950,6 +1950,18 @@
             "choices": [
               {
                 "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-wait-tomorrow",
+                "result": "incorrect",
+                "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
+              },
+              {
+                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -1964,18 +1976,6 @@
                 "id": "bird-vet-now",
                 "result": "correct",
                 "text": "立刻聯繫**熟悉鳥類醫療的獸醫師**，準備外出籠，今天就安排就診"
-              },
-              {
-                "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-wait-tomorrow",
-                "result": "incorrect",
-                "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
               },
               {
                 "effects": {
@@ -2063,18 +2063,16 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "expenseIds": [
-                  "bird-senior-room"
-                ],
-                "explanation": "可保留一根較高棲木，讓牠自行選擇。",
-                "feedbackTitle": "做得很好！",
-                "id": "bird-senior-perch",
-                "result": "correct",
-                "text": "將棲木調低，降低跌落風險"
+                "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-senior-reduce-interaction",
+                "result": "incorrect",
+                "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
+                "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
               },
               {
                 "effects": {
@@ -2103,16 +2101,18 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-senior-reduce-interaction",
-                "result": "incorrect",
-                "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
-                "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
+                "expenseIds": [
+                  "bird-senior-room"
+                ],
+                "explanation": "可保留一根較高棲木，讓牠自行選擇。",
+                "feedbackTitle": "做得很好！",
+                "id": "bird-senior-perch",
+                "result": "correct",
+                "text": "將棲木調低，降低跌落風險"
               }
             ],
             "completionFeedback": {
@@ -2374,15 +2374,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
-                "feedbackTitle": "做得很好！",
-                "id": "bird-stereotypy-social",
-                "result": "correct",
-                "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
+                "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-stereotypy-vet",
+                "result": "incorrect",
+                "text": "刻板行為代表 {petName} 生病了，立刻就醫"
               },
               {
                 "effects": {
@@ -2398,15 +2398,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-stereotypy-vet",
-                "result": "incorrect",
-                "text": "刻板行為代表 {petName} 生病了，立刻就醫"
+                "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
+                "feedbackTitle": "做得很好！",
+                "id": "bird-stereotypy-social",
+                "result": "correct",
+                "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
               }
             ],
             "completionFeedback": {
@@ -2638,19 +2638,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-                "feedbackTitle": "做得很好！",
-                "id": "seek-help",
-                "isSupportChoice": true,
-                "result": "correct",
-                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -2684,6 +2671,19 @@
                 "id": "bird-wait-return",
                 "result": "incorrect",
                 "text": "等晚上回家再一起補充和確認，平常也都是這樣"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+                "feedbackTitle": "做得很好！",
+                "id": "seek-help",
+                "isSupportChoice": true,
+                "result": "correct",
+                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
               }
             ],
             "completionFeedback": {
@@ -2720,6 +2720,18 @@
             "choices": [
               {
                 "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-wait-tomorrow",
+                "result": "incorrect",
+                "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
+              },
+              {
+                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -2734,18 +2746,6 @@
                 "id": "bird-vet-now",
                 "result": "correct",
                 "text": "立刻聯繫**熟悉鳥類醫療的獸醫師**，準備外出籠，今天就安排就診"
-              },
-              {
-                "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-wait-tomorrow",
-                "result": "incorrect",
-                "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
               },
               {
                 "effects": {
@@ -2833,18 +2833,16 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "expenseIds": [
-                  "bird-senior-room"
-                ],
-                "explanation": "可保留一根較高棲木，讓牠自行選擇。",
-                "feedbackTitle": "做得很好！",
-                "id": "bird-senior-perch",
-                "result": "correct",
-                "text": "將棲木調低，降低跌落風險"
+                "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-senior-reduce-interaction",
+                "result": "incorrect",
+                "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
+                "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
               },
               {
                 "effects": {
@@ -2873,16 +2871,18 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-senior-reduce-interaction",
-                "result": "incorrect",
-                "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
-                "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
+                "expenseIds": [
+                  "bird-senior-room"
+                ],
+                "explanation": "可保留一根較高棲木，讓牠自行選擇。",
+                "feedbackTitle": "做得很好！",
+                "id": "bird-senior-perch",
+                "result": "correct",
+                "text": "將棲木調低，降低跌落風險"
               }
             ],
             "completionFeedback": {
@@ -3148,15 +3148,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
-                "feedbackTitle": "做得很好！",
-                "id": "bird-stereotypy-social",
-                "result": "correct",
-                "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
+                "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-stereotypy-vet",
+                "result": "incorrect",
+                "text": "刻板行為代表 {petName} 生病了，立刻就醫"
               },
               {
                 "effects": {
@@ -3172,15 +3172,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-stereotypy-vet",
-                "result": "incorrect",
-                "text": "刻板行為代表 {petName} 生病了，立刻就醫"
+                "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
+                "feedbackTitle": "做得很好！",
+                "id": "bird-stereotypy-social",
+                "result": "correct",
+                "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
               }
             ],
             "completionFeedback": {
@@ -3412,19 +3412,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-                "feedbackTitle": "做得很好！",
-                "id": "seek-help",
-                "isSupportChoice": true,
-                "result": "correct",
-                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -3458,6 +3445,19 @@
                 "id": "bird-wait-return",
                 "result": "incorrect",
                 "text": "等晚上回家再一起補充和確認，平常也都是這樣"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+                "feedbackTitle": "做得很好！",
+                "id": "seek-help",
+                "isSupportChoice": true,
+                "result": "correct",
+                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
               }
             ],
             "completionFeedback": {
@@ -3494,6 +3494,18 @@
             "choices": [
               {
                 "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-wait-tomorrow",
+                "result": "incorrect",
+                "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
+              },
+              {
+                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -3508,18 +3520,6 @@
                 "id": "bird-vet-now",
                 "result": "correct",
                 "text": "立刻聯繫**熟悉鳥類醫療的獸醫師**，準備外出籠，今天就安排就診"
-              },
-              {
-                "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-wait-tomorrow",
-                "result": "incorrect",
-                "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
               },
               {
                 "effects": {
@@ -3607,18 +3607,16 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "expenseIds": [
-                  "bird-senior-room"
-                ],
-                "explanation": "可保留一根較高棲木，讓牠自行選擇。",
-                "feedbackTitle": "做得很好！",
-                "id": "bird-senior-perch",
-                "result": "correct",
-                "text": "將棲木調低，降低跌落風險"
+                "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-senior-reduce-interaction",
+                "result": "incorrect",
+                "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
+                "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
               },
               {
                 "effects": {
@@ -3647,16 +3645,18 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-senior-reduce-interaction",
-                "result": "incorrect",
-                "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
-                "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
+                "expenseIds": [
+                  "bird-senior-room"
+                ],
+                "explanation": "可保留一根較高棲木，讓牠自行選擇。",
+                "feedbackTitle": "做得很好！",
+                "id": "bird-senior-perch",
+                "result": "correct",
+                "text": "將棲木調低，降低跌落風險"
               }
             ],
             "completionFeedback": {
@@ -3960,15 +3960,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
-                "feedbackTitle": "做得很好！",
-                "id": "bird-stereotypy-social",
-                "result": "correct",
-                "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
+                "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-stereotypy-vet",
+                "result": "incorrect",
+                "text": "刻板行為代表 {petName} 生病了，立刻就醫"
               },
               {
                 "effects": {
@@ -3984,15 +3984,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-stereotypy-vet",
-                "result": "incorrect",
-                "text": "刻板行為代表 {petName} 生病了，立刻就醫"
+                "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
+                "feedbackTitle": "做得很好！",
+                "id": "bird-stereotypy-social",
+                "result": "correct",
+                "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
               }
             ],
             "completionFeedback": {
@@ -4224,19 +4224,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-                "feedbackTitle": "做得很好！",
-                "id": "seek-help",
-                "isSupportChoice": true,
-                "result": "correct",
-                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -4270,6 +4257,19 @@
                 "id": "bird-wait-return",
                 "result": "incorrect",
                 "text": "等晚上回家再一起補充和確認，平常也都是這樣"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+                "feedbackTitle": "做得很好！",
+                "id": "seek-help",
+                "isSupportChoice": true,
+                "result": "correct",
+                "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
               }
             ],
             "completionFeedback": {
@@ -4306,6 +4306,18 @@
             "choices": [
               {
                 "effects": {
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
+                },
+                "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-wait-tomorrow",
+                "result": "incorrect",
+                "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
+              },
+              {
+                "effects": {
                   "support": 1,
                   "trust": 2,
                   "wellbeing": 2
@@ -4320,18 +4332,6 @@
                 "id": "bird-vet-now",
                 "result": "correct",
                 "text": "立刻聯繫**熟悉鳥類醫療的獸醫師**，準備外出籠，今天就安排就診"
-              },
-              {
-                "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
-                },
-                "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-wait-tomorrow",
-                "result": "incorrect",
-                "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
               },
               {
                 "effects": {
@@ -4419,18 +4419,16 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "expenseIds": [
-                  "bird-senior-room"
-                ],
-                "explanation": "可保留一根較高棲木，讓牠自行選擇。",
-                "feedbackTitle": "做得很好！",
-                "id": "bird-senior-perch",
-                "result": "correct",
-                "text": "將棲木調低，降低跌落風險"
+                "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "bird-senior-reduce-interaction",
+                "result": "incorrect",
+                "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
+                "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
               },
               {
                 "effects": {
@@ -4459,16 +4457,18 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "bird-senior-reduce-interaction",
-                "result": "incorrect",
-                "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
-                "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
+                "expenseIds": [
+                  "bird-senior-room"
+                ],
+                "explanation": "可保留一根較高棲木，讓牠自行選擇。",
+                "feedbackTitle": "做得很好！",
+                "id": "bird-senior-perch",
+                "result": "correct",
+                "text": "將棲木調低，降低跌落風險"
               }
             ],
             "completionFeedback": {
@@ -6489,15 +6489,15 @@
           },
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
             },
-            "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
-            "feedbackTitle": "做得很好！",
-            "id": "bird-stereotypy-social",
-            "result": "correct",
-            "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
+            "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "bird-stereotypy-vet",
+            "result": "incorrect",
+            "text": "刻板行為代表 {petName} 生病了，立刻就醫"
           },
           {
             "effects": {
@@ -6513,15 +6513,15 @@
           },
           {
             "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
             },
-            "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "bird-stereotypy-vet",
-            "result": "incorrect",
-            "text": "刻板行為代表 {petName} 生病了，立刻就醫"
+            "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
+            "feedbackTitle": "做得很好！",
+            "id": "bird-stereotypy-social",
+            "result": "correct",
+            "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
           }
         ],
         "completionFeedback": {
@@ -6753,19 +6753,6 @@
         "choices": [
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
-            },
-            "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-            "feedbackTitle": "做得很好！",
-            "id": "seek-help",
-            "isSupportChoice": true,
-            "result": "correct",
-            "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-          },
-          {
-            "effects": {
               "support": 0,
               "trust": -1,
               "wellbeing": -1
@@ -6799,6 +6786,19 @@
             "id": "bird-wait-return",
             "result": "incorrect",
             "text": "等晚上回家再一起補充和確認，平常也都是這樣"
+          },
+          {
+            "effects": {
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
+            },
+            "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+            "feedbackTitle": "做得很好！",
+            "id": "seek-help",
+            "isSupportChoice": true,
+            "result": "correct",
+            "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
           }
         ],
         "completionFeedback": {
@@ -6835,6 +6835,18 @@
         "choices": [
           {
             "effects": {
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
+            },
+            "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "bird-wait-tomorrow",
+            "result": "incorrect",
+            "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
+          },
+          {
+            "effects": {
               "support": 1,
               "trust": 2,
               "wellbeing": 2
@@ -6849,18 +6861,6 @@
             "id": "bird-vet-now",
             "result": "correct",
             "text": "立刻聯繫**熟悉鳥類醫療的獸醫師**，準備外出籠，今天就安排就診"
-          },
-          {
-            "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
-            },
-            "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "bird-wait-tomorrow",
-            "result": "incorrect",
-            "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
           },
           {
             "effects": {
@@ -6948,18 +6948,16 @@
         "choices": [
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
             },
-            "expenseIds": [
-              "bird-senior-room"
-            ],
-            "explanation": "可保留一根較高棲木，讓牠自行選擇。",
-            "feedbackTitle": "做得很好！",
-            "id": "bird-senior-perch",
-            "result": "correct",
-            "text": "將棲木調低，降低跌落風險"
+            "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "bird-senior-reduce-interaction",
+            "result": "incorrect",
+            "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
+            "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
           },
           {
             "effects": {
@@ -6988,16 +6986,18 @@
           },
           {
             "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
             },
-            "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "bird-senior-reduce-interaction",
-            "result": "incorrect",
-            "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
-            "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
+            "expenseIds": [
+              "bird-senior-room"
+            ],
+            "explanation": "可保留一根較高棲木，讓牠自行選擇。",
+            "feedbackTitle": "做得很好！",
+            "id": "bird-senior-perch",
+            "result": "correct",
+            "text": "將棲木調低，降低跌落風險"
           }
         ],
         "completionFeedback": {
@@ -7634,15 +7634,15 @@
         },
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
+            "support": 0,
+            "trust": -1,
+            "wellbeing": -1
           },
-          "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
-          "feedbackTitle": "做得很好！",
-          "id": "bird-stereotypy-social",
-          "result": "correct",
-          "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
+          "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
+          "feedbackTitle": "這個做法可能不太適合。",
+          "id": "bird-stereotypy-vet",
+          "result": "incorrect",
+          "text": "刻板行為代表 {petName} 生病了，立刻就醫"
         },
         {
           "effects": {
@@ -7658,15 +7658,15 @@
         },
         {
           "effects": {
-            "support": 0,
-            "trust": -1,
-            "wellbeing": -1
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
           },
-          "explanation": "先調整環境和互動頻率；若同時出現澎毛、食慾下降等症狀，再聯繫**熟悉鳥類醫療的獸醫師**評估。",
-          "feedbackTitle": "這個做法可能不太適合。",
-          "id": "bird-stereotypy-vet",
-          "result": "incorrect",
-          "text": "刻板行為代表 {petName} 生病了，立刻就醫"
+          "explanation": "缺乏社交陪伴容易發展刻板行為；增加籠外互動是首要調整。",
+          "feedbackTitle": "做得很好！",
+          "id": "bird-stereotypy-social",
+          "result": "correct",
+          "text": "確認 {petName} 每天是否有足夠的籠外互動時間"
         }
       ],
       "completionFeedback": {
@@ -7898,19 +7898,6 @@
       "choices": [
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
-          },
-          "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
-          "feedbackTitle": "做得很好！",
-          "id": "seek-help",
-          "isSupportChoice": true,
-          "result": "correct",
-          "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
-        },
-        {
-          "effects": {
             "support": 0,
             "trust": -1,
             "wellbeing": -1
@@ -7944,6 +7931,19 @@
           "id": "bird-wait-return",
           "result": "incorrect",
           "text": "等晚上回家再一起補充和確認，平常也都是這樣"
+        },
+        {
+          "effects": {
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
+          },
+          "explanation": "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。",
+          "feedbackTitle": "做得很好！",
+          "id": "seek-help",
+          "isSupportChoice": true,
+          "result": "correct",
+          "text": "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}"
         }
       ],
       "completionFeedback": {
@@ -7980,6 +7980,18 @@
       "choices": [
         {
           "effects": {
+            "support": 0,
+            "trust": -1,
+            "wellbeing": -1
+          },
+          "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
+          "feedbackTitle": "這個做法可能不太適合。",
+          "id": "bird-wait-tomorrow",
+          "result": "incorrect",
+          "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
+        },
+        {
+          "effects": {
             "support": 1,
             "trust": 2,
             "wellbeing": 2
@@ -7994,18 +8006,6 @@
           "id": "bird-vet-now",
           "result": "correct",
           "text": "立刻聯繫**熟悉鳥類醫療的獸醫師**，準備外出籠，今天就安排就診"
-        },
-        {
-          "effects": {
-            "support": 0,
-            "trust": -1,
-            "wellbeing": -1
-          },
-          "explanation": "鳥的病情進展很快。澎毛、精神低落、食慾消失同時出現，等到隔天可能已錯過治療時機。請立刻聯繫**熟悉鳥類醫療的獸醫師**。",
-          "feedbackTitle": "這個做法可能不太適合。",
-          "id": "bird-wait-tomorrow",
-          "result": "incorrect",
-          "text": "先靜靜陪著牠，明天再觀察，如果還一樣才去看醫生"
         },
         {
           "effects": {
@@ -8093,18 +8093,16 @@
       "choices": [
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
+            "support": 0,
+            "trust": -1,
+            "wellbeing": -1
           },
-          "expenseIds": [
-            "bird-senior-room"
-          ],
-          "explanation": "可保留一根較高棲木，讓牠自行選擇。",
-          "feedbackTitle": "做得很好！",
-          "id": "bird-senior-perch",
-          "result": "correct",
-          "text": "將棲木調低，降低跌落風險"
+          "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
+          "feedbackTitle": "這個做法可能不太適合。",
+          "id": "bird-senior-reduce-interaction",
+          "result": "incorrect",
+          "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
+          "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
         },
         {
           "effects": {
@@ -8133,16 +8131,18 @@
         },
         {
           "effects": {
-            "support": 0,
-            "trust": -1,
-            "wellbeing": -1
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
           },
-          "explanation": "老年期的社交陪伴仍然重要，強制剝奪互動反而可能加速心理退化。應依個體狀況調整互動方式，而非直接縮短時間。",
-          "feedbackTitle": "這個做法可能不太適合。",
-          "id": "bird-senior-reduce-interaction",
-          "result": "incorrect",
-          "suggestion": "依個體狀況調整互動方式，而非直接縮短時間。",
-          "text": "活動力明顯下降後，可以逐漸減少每天的籠外互動時間，讓牠多休息"
+          "expenseIds": [
+            "bird-senior-room"
+          ],
+          "explanation": "可保留一根較高棲木，讓牠自行選擇。",
+          "feedbackTitle": "做得很好！",
+          "id": "bird-senior-perch",
+          "result": "correct",
+          "text": "將棲木調低，降低跌落風險"
         }
       ],
       "completionFeedback": {

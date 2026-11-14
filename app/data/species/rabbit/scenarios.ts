@@ -199,11 +199,11 @@ export const rabbitLifeScenarios: Scenario[] = [
         explanation: "盲腸便（俗稱葡萄便）柔軟、成串、帶光澤，與平時清便盆的圓形硬糞不同；這是本能，不應干預。"
       },
       {
-        id: "rabbit-cecotropes-nutrition",
-        text: "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完",
-        result: "correct",
-        ...positive,
-        explanation: "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。"
+        id: "rabbit-cecotropes-stop",
+        text: "試圖阻止牠，覺得這個行為不衛生",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。"
       },
       {
         id: "rabbit-cecotropes-vet",
@@ -213,11 +213,11 @@ export const rabbitLifeScenarios: Scenario[] = [
         explanation: "這是正常的生理行為；只有大量盲腸便長期未被食入，才需要諮詢獸醫。"
       },
       {
-        id: "rabbit-cecotropes-stop",
-        text: "試圖阻止牠，覺得這個行為不衛生",
-        result: "incorrect",
-        ...incorrect,
-        explanation: "食糞行為是兔子本能，盲腸便是必需的營養來源，干預反而影響健康。"
+        id: "rabbit-cecotropes-nutrition",
+        text: "不阻止，了解干預反而影響牠的營養吸收，等牠自己吃完",
+        result: "correct",
+        ...positive,
+        explanation: "盲腸便含有必需胺基酸和 B 群維生素，是兔子吸收關鍵營養的方式。"
       },
     ],
     correctSummary: ["兔子自行食入柔軟成串的盲腸便是正常的本能行為，含有必需胺基酸和 B 群維生素，不應干預或阻止。"],

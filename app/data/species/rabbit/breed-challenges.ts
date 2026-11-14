@@ -10,7 +10,7 @@ export const rabbitBreedChallengeContent: Record<"rabbit", BreedChallengeQuestio
       topic: "食糞行為（盲腸便）",
       reportSummary: "兔子的食糞行為屬正常生理需求；盲腸便含重要營養，通常會被立即食入。",
       breedKnowledge: "兔子的糞便有兩種：每天清理的**圓形硬糞**，以及柔軟成串的**盲腸便（葡萄便）**。\n\n盲腸便通常會被**立即食入**，其中含有腸道菌叢產生的**必需胺基酸與 B 群維生素**。若大量盲腸便**長期出現在便盆中未被食入**，才需要留意壓力或飲食問題並諮詢獸醫。",
-      correctChoiceIndex: 1,
+      correctChoiceIndex: 3,
       correctText: "這是食糞行為，盲腸便是必要的營養來源，完全正常",
       correctExplanation: "盲腸便是兔子吸收重要營養的方式；不應阻止或當成一般髒污清除。",
       distractors: [

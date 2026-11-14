@@ -645,15 +645,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
-                "feedbackTitle": "做得很好！",
-                "id": "hamster-nocturnal-obs",
-                "result": "correct",
-                "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
+                "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "hamster-nocturnal-vet",
+                "result": "incorrect",
+                "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
               },
               {
                 "effects": {
@@ -669,15 +669,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "hamster-nocturnal-vet",
-                "result": "incorrect",
-                "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
+                "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
+                "feedbackTitle": "做得很好！",
+                "id": "hamster-nocturnal-obs",
+                "result": "correct",
+                "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
               }
             ],
             "completionFeedback": {
@@ -1173,21 +1173,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": [
-                  "hamster-senior-care"
-                ],
-                "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
-                "feedbackTitle": "做得很好！",
-                "id": "hamster-senior-vet",
-                "result": "correct",
-                "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -1221,6 +1206,21 @@
                 "id": "hamster-senior-no-change",
                 "result": "incorrect",
                 "text": "維持現有環境不動，避免環境改變造成壓力"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": [
+                  "hamster-senior-care"
+                ],
+                "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
+                "feedbackTitle": "做得很好！",
+                "id": "hamster-senior-vet",
+                "result": "correct",
+                "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
               }
             ],
             "completionFeedback": {
@@ -1375,15 +1375,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
-                "feedbackTitle": "做得很好！",
-                "id": "hamster-nocturnal-obs",
-                "result": "correct",
-                "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
+                "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "hamster-nocturnal-vet",
+                "result": "incorrect",
+                "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
               },
               {
                 "effects": {
@@ -1399,15 +1399,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "hamster-nocturnal-vet",
-                "result": "incorrect",
-                "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
+                "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
+                "feedbackTitle": "做得很好！",
+                "id": "hamster-nocturnal-obs",
+                "result": "correct",
+                "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
               }
             ],
             "completionFeedback": {
@@ -1903,21 +1903,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": [
-                  "hamster-senior-care"
-                ],
-                "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
-                "feedbackTitle": "做得很好！",
-                "id": "hamster-senior-vet",
-                "result": "correct",
-                "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -1951,6 +1936,21 @@
                 "id": "hamster-senior-no-change",
                 "result": "incorrect",
                 "text": "維持現有環境不動，避免環境改變造成壓力"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": [
+                  "hamster-senior-care"
+                ],
+                "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
+                "feedbackTitle": "做得很好！",
+                "id": "hamster-senior-vet",
+                "result": "correct",
+                "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
               }
             ],
             "completionFeedback": {
@@ -2109,15 +2109,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
-                "feedbackTitle": "做得很好！",
-                "id": "hamster-nocturnal-obs",
-                "result": "correct",
-                "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
+                "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "hamster-nocturnal-vet",
+                "result": "incorrect",
+                "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
               },
               {
                 "effects": {
@@ -2133,15 +2133,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "hamster-nocturnal-vet",
-                "result": "incorrect",
-                "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
+                "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
+                "feedbackTitle": "做得很好！",
+                "id": "hamster-nocturnal-obs",
+                "result": "correct",
+                "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
               }
             ],
             "completionFeedback": {
@@ -2637,21 +2637,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": [
-                  "hamster-senior-care"
-                ],
-                "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
-                "feedbackTitle": "做得很好！",
-                "id": "hamster-senior-vet",
-                "result": "correct",
-                "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -2685,6 +2670,21 @@
                 "id": "hamster-senior-no-change",
                 "result": "incorrect",
                 "text": "維持現有環境不動，避免環境改變造成壓力"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": [
+                  "hamster-senior-care"
+                ],
+                "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
+                "feedbackTitle": "做得很好！",
+                "id": "hamster-senior-vet",
+                "result": "correct",
+                "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
               }
             ],
             "completionFeedback": {
@@ -2839,15 +2839,15 @@
               },
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
+                  "support": 0,
+                  "trust": -1,
+                  "wellbeing": -1
                 },
-                "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
-                "feedbackTitle": "做得很好！",
-                "id": "hamster-nocturnal-obs",
-                "result": "correct",
-                "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
+                "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
+                "feedbackTitle": "這個做法可能不太適合。",
+                "id": "hamster-nocturnal-vet",
+                "result": "incorrect",
+                "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
               },
               {
                 "effects": {
@@ -2863,15 +2863,15 @@
               },
               {
                 "effects": {
-                  "support": 0,
-                  "trust": -1,
-                  "wellbeing": -1
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
                 },
-                "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
-                "feedbackTitle": "這個做法可能不太適合。",
-                "id": "hamster-nocturnal-vet",
-                "result": "incorrect",
-                "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
+                "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
+                "feedbackTitle": "做得很好！",
+                "id": "hamster-nocturnal-obs",
+                "result": "correct",
+                "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
               }
             ],
             "completionFeedback": {
@@ -3367,21 +3367,6 @@
             "choices": [
               {
                 "effects": {
-                  "support": 1,
-                  "trust": 2,
-                  "wellbeing": 2
-                },
-                "expenseIds": [
-                  "hamster-senior-care"
-                ],
-                "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
-                "feedbackTitle": "做得很好！",
-                "id": "hamster-senior-vet",
-                "result": "correct",
-                "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
-              },
-              {
-                "effects": {
                   "support": 0,
                   "trust": -1,
                   "wellbeing": -1
@@ -3415,6 +3400,21 @@
                 "id": "hamster-senior-no-change",
                 "result": "incorrect",
                 "text": "維持現有環境不動，避免環境改變造成壓力"
+              },
+              {
+                "effects": {
+                  "support": 1,
+                  "trust": 2,
+                  "wellbeing": 2
+                },
+                "expenseIds": [
+                  "hamster-senior-care"
+                ],
+                "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
+                "feedbackTitle": "做得很好！",
+                "id": "hamster-senior-vet",
+                "result": "correct",
+                "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
               }
             ],
             "completionFeedback": {
@@ -5093,15 +5093,15 @@
           },
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
+              "support": 0,
+              "trust": -1,
+              "wellbeing": -1
             },
-            "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
-            "feedbackTitle": "做得很好！",
-            "id": "hamster-nocturnal-obs",
-            "result": "correct",
-            "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
+            "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
+            "feedbackTitle": "這個做法可能不太適合。",
+            "id": "hamster-nocturnal-vet",
+            "result": "incorrect",
+            "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
           },
           {
             "effects": {
@@ -5117,15 +5117,15 @@
           },
           {
             "effects": {
-              "support": 0,
-              "trust": -1,
-              "wellbeing": -1
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
             },
-            "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
-            "feedbackTitle": "這個做法可能不太適合。",
-            "id": "hamster-nocturnal-vet",
-            "result": "incorrect",
-            "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
+            "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
+            "feedbackTitle": "做得很好！",
+            "id": "hamster-nocturnal-obs",
+            "result": "correct",
+            "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
           }
         ],
         "completionFeedback": {
@@ -5621,21 +5621,6 @@
         "choices": [
           {
             "effects": {
-              "support": 1,
-              "trust": 2,
-              "wellbeing": 2
-            },
-            "expenseIds": [
-              "hamster-senior-care"
-            ],
-            "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
-            "feedbackTitle": "做得很好！",
-            "id": "hamster-senior-vet",
-            "result": "correct",
-            "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
-          },
-          {
-            "effects": {
               "support": 0,
               "trust": -1,
               "wellbeing": -1
@@ -5669,6 +5654,21 @@
             "id": "hamster-senior-no-change",
             "result": "incorrect",
             "text": "維持現有環境不動，避免環境改變造成壓力"
+          },
+          {
+            "effects": {
+              "support": 1,
+              "trust": 2,
+              "wellbeing": 2
+            },
+            "expenseIds": [
+              "hamster-senior-care"
+            ],
+            "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
+            "feedbackTitle": "做得很好！",
+            "id": "hamster-senior-vet",
+            "result": "correct",
+            "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
           }
         ],
         "completionFeedback": {
@@ -6205,15 +6205,15 @@
         },
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
+            "support": 0,
+            "trust": -1,
+            "wellbeing": -1
           },
-          "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
-          "feedbackTitle": "做得很好！",
-          "id": "hamster-nocturnal-obs",
-          "result": "correct",
-          "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
+          "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
+          "feedbackTitle": "這個做法可能不太適合。",
+          "id": "hamster-nocturnal-vet",
+          "result": "incorrect",
+          "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
         },
         {
           "effects": {
@@ -6229,15 +6229,15 @@
         },
         {
           "effects": {
-            "support": 0,
-            "trust": -1,
-            "wellbeing": -1
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
           },
-          "explanation": "白天睡覺對夜行性的倉鼠是完全正常的；只有伴隨食量明顯下降、外觀異常、對刺激完全無反應時才需要就醫。",
-          "feedbackTitle": "這個做法可能不太適合。",
-          "id": "hamster-nocturnal-vet",
-          "result": "incorrect",
-          "text": "立刻帶去看獸醫，因為白天都在睡覺很不正常"
+          "explanation": "對！即使知道牠是夜行性，每天晚間也要確認有活動跡象、食碗有進食痕跡——這是日常健康觀察的重要部分。",
+          "feedbackTitle": "做得很好！",
+          "id": "hamster-nocturnal-obs",
+          "result": "correct",
+          "text": "雖然白天睡覺是正常的，但我仍然應該每天晚上確認{petName}有在活動、進食"
         }
       ],
       "completionFeedback": {
@@ -6733,21 +6733,6 @@
       "choices": [
         {
           "effects": {
-            "support": 1,
-            "trust": 2,
-            "wellbeing": 2
-          },
-          "expenseIds": [
-            "hamster-senior-care"
-          ],
-          "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
-          "feedbackTitle": "做得很好！",
-          "id": "hamster-senior-vet",
-          "result": "correct",
-          "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
-        },
-        {
-          "effects": {
             "support": 0,
             "trust": -1,
             "wellbeing": -1
@@ -6781,6 +6766,21 @@
           "id": "hamster-senior-no-change",
           "result": "incorrect",
           "text": "維持現有環境不動，避免環境改變造成壓力"
+        },
+        {
+          "effects": {
+            "support": 1,
+            "trust": 2,
+            "wellbeing": 2
+          },
+          "expenseIds": [
+            "hamster-senior-care"
+          ],
+          "explanation": "高齡期的倉鼠更需要定期健康檢查（建議半年至一年一次），提前諮詢能幫助你為{petName}規劃更適合高齡期的環境與照護方式。",
+          "feedbackTitle": "做得很好！",
+          "id": "hamster-senior-vet",
+          "result": "correct",
+          "text": "提前諮詢獸醫師，了解高齡倉鼠的照護重點，並安排更規律的健康檢查"
         }
       ],
       "completionFeedback": {

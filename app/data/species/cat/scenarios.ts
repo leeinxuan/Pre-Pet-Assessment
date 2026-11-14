@@ -342,14 +342,6 @@ export const catLifeScenarios: Scenario[] = [
         suggestion: "臨時晚歸時，先安排可信任且了解照護需求的人接手確認。"
       },
       {
-        id: "seek-help",
-        text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}",
-        result: "correct",
-        isSupportChoice: true,
-        ...positive,
-        explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。"
-      },
-      {
         id: "cat-no-check",
         text: "貓咪平常很獨立，這次加班不用特別請人協助",
         result: "incorrect",
@@ -364,6 +356,14 @@ export const catLifeScenarios: Scenario[] = [
         ...incorrect,
         explanation: "只補食物會漏掉砂盆、飲水、環境安全與行為變化，也可能讓協助者不知道如何安全互動。",
         suggestion: "請清楚交接食水、砂盆、環境巡視、陪玩方式與異常時怎麼聯絡你或獸醫。"
+      },
+      {
+        id: "seek-help",
+        text: "主動聯繫可信任的家人或朋友，請他們代為照顧 {petName}",
+        result: "correct",
+        isSupportChoice: true,
+        ...positive,
+        explanation: "你知道忙碌的時候不是讓 {petName} 自己撐，而是要立刻找人幫忙，做得很好！繼續確認你的交接安排是否完整。"
       },
     ],
     correctSummary: ["無論多忙，都必須事先安排可信任的人代為照顧，完整交接餵食、換水、清砂盆與緊急聯絡方式，也可事先了解附近的寵物旅館作為備援，不可只靠多放食物應急。"],
@@ -400,6 +400,14 @@ export const catLifeScenarios: Scenario[] = [
         suggestion: "可以整理可信資料供溝通，但先記錄時間與觀察到的狀況，並聯絡獸醫討論下一步。"
       },
       {
+        id: "cat-health-friend",
+        text: "拍一張照片傳給有養貓的朋友，等對方回覆後再決定",
+        result: "incorrect",
+        ...incorrect,
+        explanation: "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
+        suggestion: "整理觀察資料後儘速聯絡獸醫。"
+      },
+      {
         id: "cat-health-complete-response",
         text: "記下食慾、飲水、尿便、活動與躲藏的前後變化，並立即聯繫獸醫",
         result: "correct",
@@ -408,14 +416,6 @@ export const catLifeScenarios: Scenario[] = [
         expenseIds: [
           "cat-mild-sick", "cat-moderate-sick", "cat-hospitalization"
         ]
-      },
-      {
-        id: "cat-health-friend",
-        text: "拍一張照片傳給有養貓的朋友，等對方回覆後再決定",
-        result: "incorrect",
-        ...incorrect,
-        explanation: "朋友經驗無法取代獸醫判斷；影像可保留，但仍應主動聯繫獸醫。",
-        suggestion: "整理觀察資料後儘速聯絡獸醫。"
       },
       {
         id: "cat-health-medicine",
