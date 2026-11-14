@@ -115,7 +115,7 @@
   }
   .room-mobile-hazard-hit-area:focus-visible { outline: 3px solid var(--gold); outline-offset: -2px; }
   .room-mobile-scene .room-floor-hazard-hotspot { min-width: 64px; min-height: 64px; }
-  .room-mobile-entry-cue { position: absolute; z-index: 14; pointer-events: none; animation: roomMobileEntryNudge 1.8s ease-in-out infinite; }
+  .room-mobile-entry-cue { position: absolute; z-index: 14; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; animation: roomMobileEntryNudge 1.8s ease-in-out infinite; }
   .room-mobile-entry-cue .interior-entry-hint { position: static; display: flex; flex-direction: row; align-items: center; gap: 5px; padding: 6px 10px 6px 13px; border: 1px solid rgba(191, 130, 27, .45); border-radius: 999px; background: rgba(255, 253, 248, .97); box-shadow: 0 3px 10px rgba(65, 45, 21, .2); animation: none; transform: translate(-50%, -50%); }
   .room-mobile-entry-cue--left .interior-entry-hint { flex-direction: row-reverse; }
   .room-mobile-entry-cue .interior-entry-hint-arrow { width: 21px; height: 21px; filter: none; }
@@ -138,23 +138,7 @@
     border-top: 1px solid var(--room-mobile-line);
     background: white;
   }
-  .room-mobile-scene-message {
-    position: absolute;
-    z-index: 24;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    max-width: 100%;
-    margin: 0;
-    padding: 9px 12px;
-    border: 1px solid var(--gold);
-    border-radius: 12px;
-    background: var(--room-mobile-paper);
-    color: var(--gold-dark);
-    font-size: 12px;
-    font-weight: 800;
-    text-align: center;
-  }
+  .room-mobile-scene .room-locked-supply-toast { padding: 28px 20px; font-size: clamp(14px, 4vw, 18px); }
   .room-mobile-tabs {
     box-sizing: border-box;
     display: grid;

@@ -55,6 +55,8 @@ export type RoomFlowConfig = {
   hiddenPlacedItemIds?: readonly string[];
   /** Interior supplies remain unavailable until this required item is placed. */
   interiorUnlockItemId?: string;
+  /** Mobile interior supplies unlock in this order; defaults to interiorUnlockItemId. */
+  mobileInteriorPrerequisiteItemIds?: readonly string[];
   /** Required supplies placed in the interior view; drives the shared entry prompt completion state. */
   interiorRequiredItemIds?: readonly string[];
   interiorBackgroundAspectRatio?: "match-room" | string; interiorBackgroundMobileFit?: "cover"; floorHazardId: string; safeWhenAllHazards?: boolean;

@@ -259,7 +259,7 @@ export const geckoHealthInspection: GeckoHealthInspectionConfig = {
     ],
   },
   temperature: {
-  instruction: "確認熱區底部與冷區溫度，調整加熱設備後再確認今日溫度。",
+  instruction: "確認熱區與冷區溫度，調整加熱設備後再確認今日溫度。",
     warmLabel: "熱區溫度",
     coolLabel: "冷區溫度",
     controllerLabel: "加熱片控制器",

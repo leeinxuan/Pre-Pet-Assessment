@@ -156,6 +156,7 @@ export const geckoRoomFlow: RoomFlowConfig = {
   ],
   hiddenPlacedItemIds: ["safe-substrate", "heat-mat"],
   interiorUnlockItemId: "safe-substrate",
+  mobileInteriorPrerequisiteItemIds: ["safe-substrate", "heat-mat"],
   hasInteriorView: true,
   // 牆縫與管道共用一個熱區；封好後立即切換為已封閉的房間背景。
   floorHazardId: "openings",

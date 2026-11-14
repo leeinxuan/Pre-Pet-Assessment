@@ -5053,6 +5053,10 @@
         "interiorSafeBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
         "interiorSafeMobileBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
         "interiorUnlockItemId": "safe-substrate",
+        "mobileInteriorPrerequisiteItemIds": [
+          "safe-substrate",
+          "heat-mat"
+        ],
         "mobileEntryHintPlacement": {
           "x": 34,
           "y": 44
@@ -5751,6 +5755,10 @@
       "interiorSafeBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate.webp",
       "interiorSafeMobileBackground": "/assets/gecko/room/bg-gecko-terrarium-substrate-mobile.webp",
       "interiorUnlockItemId": "safe-substrate",
+      "mobileInteriorPrerequisiteItemIds": [
+        "safe-substrate",
+        "heat-mat"
+      ],
       "mobileEntryHintPlacement": {
         "x": 34,
         "y": 44

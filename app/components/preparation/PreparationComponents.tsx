@@ -367,6 +367,13 @@ export function RoomPreparation({
   const activeRoomItems = speciesConfig.roomItems;
   const activeHazards = speciesConfig.hazards;
   const [roomCheckMessage, setRoomCheckMessage] = useState("");
+  const [lockedSupplyNotice, setLockedSupplyNotice] = useState<{ text: string; key: number } | null>(null);
+  const lockedSupplyNoticeSequence = useRef(0);
+  useEffect(() => {
+    if (!lockedSupplyNotice) return;
+    const timer = window.setTimeout(() => setLockedSupplyNotice(null), 2500);
+    return () => window.clearTimeout(timer);
+  }, [lockedSupplyNotice]);
   const [dismissingHazard, setDismissingHazard] = useState<string | null>(null);
   const [activeHazardInfo, setActiveHazardInfo] = useState<string | null>(null);
   const [activeMobileItemInfo, setActiveMobileItemInfo] = useState<string | null>(null);
@@ -453,6 +460,52 @@ export function RoomPreparation({
     : hazardsCleared
       ? "空間已整理完成。請點擊下方準備用品，將它們放進生活空間。"
       : `在把${displayName}帶回家前，先檢查生活空間。請點擊場景中的危險物品，先將它們收好。`;
+  const hazardPrompt = "請點擊場景中的危險物品";
+  const hazardPromptIndex = !hazardsCleared ? roomInstruction.indexOf(hazardPrompt) : -1;
+  const desktopRoomInstruction = hazardPromptIndex < 0 ? roomInstruction : <>
+    {roomInstruction.slice(0, hazardPromptIndex)}<strong className="room-hazard-instruction-emphasis">{hazardPrompt}</strong>{roomInstruction.slice(hazardPromptIndex + hazardPrompt.length)}
+  </>;
+  const desktopSupplyGuidance = !hazardsCleared
+    ? "請先收好空間中危險物品"
+    : hasInteriorRoomFlow && insideView && roomFlow?.interiorUnlockItemId && !selectedItems.includes(roomFlow.interiorUnlockItemId)
+      ? (roomFlow.copy.interiorLockedInstruction ?? roomFlow.copy.lockedInstruction ?? "請先放入墊料，再配置其他用品。").replaceAll("{petName}", displayName)
+      : null;
+  const mobileInteriorPrerequisites = roomFlow?.mobileInteriorPrerequisiteItemIds
+    ?? (roomFlow?.interiorUnlockItemId ? [roomFlow.interiorUnlockItemId] : []);
+  const nextMobileInteriorPrerequisite = insideView
+    ? mobileInteriorPrerequisites.find((id) => !selectedItems.includes(id))
+    : undefined;
+  const canPrepareRoomItem = (item: RoomItem, mobile = false) => {
+    const isOutsideItem = Boolean(roomFlow?.outsideItemIds?.includes(item.id) ?? item.id === roomFlow?.fenceItemId);
+    return hazardsCleared
+      && (!hasInteriorRoomFlow || (insideView ? !isOutsideItem : isOutsideItem && (item.id === roomFlow?.fenceItemId || fencePlaced)))
+      && !(mobile && nextMobileInteriorPrerequisite && !isOutsideItem && item.id !== nextMobileInteriorPrerequisite)
+      && !(insideView && !isOutsideItem && roomFlow?.interiorUnlockItemId
+        && item.id !== roomFlow.interiorUnlockItemId && !selectedItems.includes(roomFlow.interiorUnlockItemId));
+  };
+  const roomItemLockedReason = (item: RoomItem, mobile = false) => {
+    if (!hazardsCleared) return "請先收好空間中危險物品";
+    const isOutsideItem = Boolean(roomFlow?.outsideItemIds?.includes(item.id) ?? item.id === roomFlow?.fenceItemId);
+    if (mobile && nextMobileInteriorPrerequisite && !isOutsideItem && item.id !== nextMobileInteriorPrerequisite) {
+      if (nextMobileInteriorPrerequisite === roomFlow?.interiorUnlockItemId) {
+        return (roomFlow.copy.interiorLockedInstruction ?? roomFlow.copy.lockedInstruction ?? "請先放入墊料，再配置其他用品。").replaceAll("{petName}", displayName);
+      }
+      const prerequisite = activeRoomItems.find((entry) => entry.id === nextMobileInteriorPrerequisite);
+      return `請先放入${prerequisite?.label ?? "基礎用品"}，才能放入其他用品。`;
+    }
+    if (insideView && !isOutsideItem && roomFlow?.interiorUnlockItemId
+      && item.id !== roomFlow.interiorUnlockItemId && !selectedItems.includes(roomFlow.interiorUnlockItemId)) {
+      return (roomFlow.copy.interiorLockedInstruction ?? roomFlow.copy.lockedInstruction ?? "請先放入墊料，再配置其他用品。").replaceAll("{petName}", displayName);
+    }
+    if (hasInteriorRoomFlow && !insideView && !isOutsideItem) {
+      return entryReady ? "請先點進去籠子佈置裡面" : "請先備齊籠外用品，再點進去籠子佈置裡面。";
+    }
+    return roomFlow?.copy.lockedInstruction ?? "請先完成前面的用品配置。";
+  };
+  const showLockedSupplyNotice = (item: RoomItem, mobile = false) => {
+    lockedSupplyNoticeSequence.current += 1;
+    setLockedSupplyNotice({ text: roomItemLockedReason(item, mobile), key: lockedSupplyNoticeSequence.current });
+  };
   const visiblePlacedItems = activeRoomItems.filter((item) => {
     if (!selectedItems.includes(item.id) || item.id === roomScene.hidePlacedItemId) return false;
     if (roomFlow?.hiddenPlacedItemIds?.includes(item.id)) return false;
@@ -620,10 +673,10 @@ export function RoomPreparation({
               : item.sceneParts?.length
                 ? item.sceneParts.map((part) => <div key={`${item.id}-${part.id}`} data-room-item-id={item.id} className={`room-object room-object-part placed-supply auto-room-object placed-room-item--${item.id}`} style={roomScenePartPlacementStyle(part)}><img src={part.image} alt={`房間中已配置的${item.label}`} /></div>)
                 : <div key={item.id} data-room-item-id={item.id} className={`room-object placed-supply auto-room-object placed-room-item--${item.id} ${item.sceneClassName ?? ""}`} style={roomItemSceneStyle(item)}><RoomItemVisual item={item} scene /><span>{item.label}</span></div>)}
-            {mobile && shouldPromptInteriorEntry && mobileEntryItem && <div className={`room-mobile-entry-cue ${(mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? "room-mobile-entry-cue--left" : "room-mobile-entry-cue--right"}`} style={{
+            {mobile && shouldPromptInteriorEntry && mobileEntryItem && <button type="button" className={`room-mobile-entry-cue ${(mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? "room-mobile-entry-cue--left" : "room-mobile-entry-cue--right"}`} style={{
               left: `${roomFlow?.mobileEntryHintPlacement?.x ?? Math.max(24, Math.min(76, (mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) + ((mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? -30 : 21)))}%`,
               top: `${roomFlow?.mobileEntryHintPlacement?.y ?? mobileEntryItem.mobilePlacement?.y ?? mobileEntryItem.placement.y}%`,
-            }} aria-hidden="true"><InteriorEntryPointerIcon direction={(mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? "left" : "right"} /></div>}
+            }} aria-label={roomFlow?.copy.entryLabel ?? "點擊佈置內部空間"} onClick={(event) => { event.stopPropagation(); setInsideRoomView(true); setRoomCheckMessage(""); }}><InteriorEntryPointerIcon direction={(mobileEntryItem.mobilePlacement?.x ?? mobileEntryItem.placement.x) >= 50 ? "left" : "right"} /></button>}
             {activeHazards.filter((item) => !securedHazards.includes(item.id)).map((item) => item.hotspot
               ? <button key={item.id} type="button" className="room-floor-hazard-hotspot" style={roomHotspotStyle(item.hotspot)} aria-label={`收好危險物品：${item.label}`} onClick={(event) => mobile ? secureMobileHazard(event, item.id) : secureHazard(item.id)}><span className="room-floor-hazard-label">{item.label}</span></button>
               : roomFlow && roomFlow.floorHazardId && item.id === roomFlow.floorHazardId
@@ -635,8 +688,8 @@ export function RoomPreparation({
               <img src={roomScene.doorplate.image} alt={roomScene.doorplate.alt} />
               <span className="pet-doorplate-name">{displayName}</span>
             </div>}
+            {lockedSupplyNotice && <div key={lockedSupplyNotice.key} className="coin-toast-overlay room-locked-supply-overlay" role="status" aria-live="polite"><div className="coin-toast-card room-locked-supply-toast">{lockedSupplyNotice.text}</div></div>}
             {mobileOverlay}
-            {mobile && roomCheckMessage && <p className="room-mobile-scene-message" role="alert">{roomCheckMessage}</p>}
           </div>
   );
 
@@ -644,7 +697,7 @@ export function RoomPreparation({
     <div className="content-wrap preparation-page room-preparation-page">
       <div className="room-preparation-desktop"><StepHeading
         title={speciesConfig.copy.roomTitle}
-        body={roomInstruction}
+        body={desktopRoomInstruction}
       />
       <ol className="room-phase-progress" aria-label="房間佈置進度">
         <li className={hazardsCleared ? "done" : "active"}><span>1</span>收好危險物品 <b>{hazardsDone}／{activeHazards.length}</b></li>
@@ -653,7 +706,7 @@ export function RoomPreparation({
       <div className="room-preparation-layout simplified-room-layout">
         <section className="room-supply-shelf" aria-label="生活用品準備區">
           <div className="room-supply-header">
-            <h2><span className="room-supply-header-icon"><StorageBoxIcon /></span>用品準備箱</h2>{!hazardsCleared && <span>請先完成空間安全整理</span>}
+            <h2><span className="room-supply-header-icon"><StorageBoxIcon /></span>用品準備箱</h2>{desktopSupplyGuidance && <span>{desktopSupplyGuidance}</span>}
           </div>
           <div className="room-supply-rows">
             {supplyRows.map((row, rowIndex) => <div key={`${rowIndex}-${row.map((item) => item.id).join("-")}`} className={`room-supply-row room-supply-row--${row.length} full-seven`}>
@@ -661,18 +714,10 @@ export function RoomPreparation({
                 const selected = selectedItems.includes(item.id);
                 const expenseIds = [...(item.expenseIds ?? []), ...(item.expenseId ? [item.expenseId] : [])];
                 const price = expensePriceText(Array.from(new Set(expenseIds)), species);
-                const isOutsideItem = Boolean(roomFlow?.outsideItemIds?.includes(item.id) ?? item.id === roomFlow?.fenceItemId);
-                const interiorItemLocked = Boolean(
-                  hasInteriorRoomFlow
-                  && insideView
-                  && !isOutsideItem
-                  && roomFlow?.interiorUnlockItemId
-                  && item.id !== roomFlow.interiorUnlockItemId
-                  && !selectedItems.includes(roomFlow.interiorUnlockItemId),
-                );
-                const canPrepare = hazardsCleared && !interiorItemLocked && (!hasInteriorRoomFlow || (insideView ? !isOutsideItem : (isOutsideItem && (item.id === roomFlow?.fenceItemId || fencePlaced))));
+                const canPrepare = canPrepareRoomItem(item);
+                const lockedReason = roomItemLockedReason(item);
                 return <div key={item.id} className="supply-slot">
-                  {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : interiorItemLocked ? (roomFlow?.copy.interiorLockedInstruction ?? roomFlow?.copy.lockedInstruction ?? "請先完成內部基礎配置").replaceAll("{petName}", displayName) : fencePlaced ? roomFlow?.copy.interiorInstruction ?? "請先進入圍欄內部" : roomFlow?.copy.lockedInstruction ?? "請先放置圍欄"}`} disabled={exitingItems.includes(item.id) || !canPrepare} onClick={() => prepareItem(item.id)}>
+                  {!selected ? <button type="button" className={`${exitingItems.includes(item.id) ? "departing" : ""} ${!canPrepare ? "locked" : ""}`} aria-label={`${item.label}，${canPrepare ? "可加入生活空間" : lockedReason}`} aria-disabled={!canPrepare} disabled={exitingItems.includes(item.id)} onClick={() => canPrepare ? prepareItem(item.id) : showLockedSupplyNotice(item)}>
                     <span className="room-supply-visual"><RoomItemVisual item={item} /></span>
                     <b>{item.label}</b>
                   </button> : <ItemDescriptionCard title={item.label} description={item.description.replaceAll("{petName}", displayName)} descriptionImage={item.descriptionImage} footer={price} />}
@@ -710,7 +755,7 @@ export function RoomPreparation({
         <div className="room-actions-right">{roomCheckMessage && <p className="room-check-message" role="alert">{roomCheckMessage}</p>}<button className="primary" onClick={completeRoomCheck}>完成房間檢查，準備出發 <span>→</span></button></div>
       </div>
       </div>
-      <RoomPreparationMobile key={species} petName={displayName} scene={() => renderRoomScene(true)} hazardBackground={roomFlow?.initialMobileBackground ?? roomFlow?.initialBackground ?? roomScene.mobileBackground ?? roomScene.background ?? ""} hazardBackgroundPosition={roomFlow?.initialMobileBackground ? "center center" : roomScene.mobileExteriorBackgroundStyle?.objectPosition ?? "right center"} hazards={activeHazards} items={activeRoomItems} securedHazards={securedHazards} selectedItems={selectedItems} exitingItemIds={exitingItems} activeHazard={activeHazard} activeItem={activeRoomItems.find((item) => item.id === activeMobileItemInfo)} hazardsCleared={hazardsCleared} lockedItemIds={hasInteriorRoomFlow && !insideView ? activeRoomItems.filter((item) => !outsideItemIds.includes(item.id)).map((item) => item.id) : []} hazardIcon={<WarningTriangleIcon />} supplyIcon={<StorageBoxIcon />} onSelectHazard={(id) => { setActiveMobileItemInfo(null); setActiveHazardInfo(id); }} onSelectItem={(id) => { setActiveHazardInfo(null); setActiveMobileItemInfo(id); }} onCloseInfo={closeMobileInfo} onPrepare={prepareItem} roomComplete={mobileRoomComplete} onComplete={completeRoomCheck} itemPrice={(item) => mobileRoomPriceText(item, species)} />
+      <RoomPreparationMobile key={species} petName={displayName} scene={() => renderRoomScene(true)} hazardBackground={roomFlow?.initialMobileBackground ?? roomFlow?.initialBackground ?? roomScene.mobileBackground ?? roomScene.background ?? ""} hazardBackgroundPosition={roomFlow?.initialMobileBackground ? "center center" : roomScene.mobileExteriorBackgroundStyle?.objectPosition ?? "right center"} hazards={activeHazards} items={activeRoomItems} securedHazards={securedHazards} selectedItems={selectedItems} exitingItemIds={exitingItems} activeHazard={activeHazard} activeItem={activeRoomItems.find((item) => item.id === activeMobileItemInfo)} hazardsCleared={hazardsCleared} lockedItemIds={activeRoomItems.filter((item) => !canPrepareRoomItem(item, true)).map((item) => item.id)} hazardIcon={<WarningTriangleIcon />} supplyIcon={<StorageBoxIcon />} onSelectHazard={(id) => { setActiveMobileItemInfo(null); setActiveHazardInfo(id); }} onSelectItem={(id) => { setActiveHazardInfo(null); setActiveMobileItemInfo(id); }} onCloseInfo={closeMobileInfo} onPrepare={prepareItem} onLockedItem={(id) => { const item = activeRoomItems.find((entry) => entry.id === id); if (item) showLockedSupplyNotice(item, true); }} roomComplete={mobileRoomComplete} onComplete={completeRoomCheck} itemPrice={(item) => mobileRoomPriceText(item, species)} />
     </div>
   );
 }

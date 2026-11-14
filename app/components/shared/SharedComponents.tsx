@@ -14,7 +14,7 @@ import type { ExpenseRecord, LifeJourneyPhase } from "../../game-types";
 import { useDialogFocus } from "./useDialogFocus";
 import { matchesCompactPortraitLayout } from "./responsive";
 
-export function StepHeading({ title, body }: { title: string; body?: string }) {
+export function StepHeading({ title, body }: { title: string; body?: React.ReactNode }) {
   return <div className="step-heading"><h1>{title}</h1>{body && <p>{body}</p>}</div>;
 }
 
@@ -663,10 +663,10 @@ function CoinFlightAnimation({ expense, triggerRef }: {
       ? formatTemporaryExpenseAmount(expense)
       : `+NT$ ${money.format(expense.amount)}${isMonthlyExpense(expense) ? expenseLabels.monthlySuffix : ""}`;
     const title = isTemporaryReserve ? "臨時性支出預留已更新" : "已加入準備清單";
-    const mobileRoomScene = matchesCompactPortraitLayout()
-      ? document.querySelector<HTMLElement>(".room-preparation-mobile.is-started .room-mobile-scene, .departure-preparation-page .departure-car, .life-journey-page .arrival-meal-scene")
-      : null;
-    const measuredScene = mobileRoomScene?.getBoundingClientRect();
+    const preparationSceneSelector = matchesCompactPortraitLayout()
+      ? ".room-preparation-mobile.is-started .room-mobile-scene, .departure-preparation-page .departure-car, .life-journey-page .arrival-meal-scene"
+      : ".room-preparation-desktop .room-scene, .departure-preparation-page .departure-car";
+    const measuredScene = document.querySelector<HTMLElement>(preparationSceneSelector)?.getBoundingClientRect();
     const sceneRect = measuredScene && measuredScene.width > 0 && measuredScene.height > 0 ? measuredScene : null;
     const startCenterX = sceneRect ? sceneRect.left + sceneRect.width / 2 : window.innerWidth / 2;
     const startCenterY = sceneRect ? sceneRect.top + sceneRect.height / 2 : window.innerHeight * .47;
