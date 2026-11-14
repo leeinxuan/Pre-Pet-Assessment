@@ -143,13 +143,7 @@ export default function BottomBleedColor() {
       const touch = event.touches[0];
       touchStart = touch ? { x: touch.clientX, y: touch.clientY } : null;
     };
-    const onTouchEnd = () => {
-      startedOnControl = false;
-      touchStart = null;
-      // Safari can finish a touch with the document below its locked origin.
-      // Restore the top after the gesture so the progress bar stays visible.
-      window.requestAnimationFrame(keepLocked);
-    };
+    const onTouchEnd = () => { startedOnControl = false; touchStart = null; };
     const onTouchMove = (event: TouchEvent) => {
       if (!media.matches || event.touches.length > 1 || !isPageLocked()) return;
       // iOS 會因為 touchmove 被取消而不派發 click。互動控制項交給瀏覽器

@@ -27,6 +27,26 @@
 .correct-feedback-content { display: contents; }
 
 @media (max-width: 720px) {
+  /* The stage can be taller than the Safari viewport to paint behind its toolbar.
+     Keep navigation outside that scrolling/clipped stage while reserving its row. */
+  .stage-layout { grid-template-rows: 44px minmax(0, 1fr) !important; }
+  .stage-layout > .mobile-progress-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+  }
+  .stage-layout > .stage { grid-row: 2; }
+
+  /* A slight finger movement must not turn these taps into a page scroll. */
+  .bill-trigger,
+  .mobile-info-sheet-close,
+  .room-mobile-sheet-close,
+  .stage-layout button.primary {
+    touch-action: none;
+  }
+
   /* 首頁：用 border 把背景圖多畫到底；絕對定位的標題與按鈕以 padding box 為準，位置不變。 */
   section.welcome {
     box-sizing: border-box;
