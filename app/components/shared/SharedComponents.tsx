@@ -791,17 +791,27 @@ export function CostBar({
   species?: string;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const detailsOpenedAt = useRef(0);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const openDetails = () => {
+    detailsOpenedAt.current = Date.now();
+    logEvent("expense_detail_opened", { expenseCount: expenses.length });
+    setDetailsOpen(true);
+  };
+  const closeDetails = () => {
+    logEvent("expense_detail_closed", { stayMs: Date.now() - detailsOpenedAt.current });
+    setDetailsOpen(false);
+  };
   return (
     <>
       <CoinFlightAnimation expense={latestExpense} triggerRef={triggerRef} />
       <div className="cost-bar cost-bar-compact" aria-label={expenseLabels.currentCostStatus}>
-        <button ref={triggerRef} type="button" className="bill-trigger" onClick={() => setDetailsOpen(true)} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
+        <button ref={triggerRef} type="button" className="bill-trigger" onClick={openDetails} aria-label={expenseLabels.viewDetails} title={expenseLabels.viewDetails}>
           <span className="bill-trigger-icon" aria-hidden="true">＄</span>
           <em>{expenseLabels.viewDetails}</em>
         </button>
       </div>
-      {detailsOpen && <ExpenseDetails expenses={expenses} breed={breed} species={species} onClose={() => setDetailsOpen(false)} />}
+      {detailsOpen && <ExpenseDetails expenses={expenses} breed={breed} species={species} onClose={closeDetails} />}
     </>
   );
 }
