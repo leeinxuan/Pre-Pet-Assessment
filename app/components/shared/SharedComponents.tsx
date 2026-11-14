@@ -582,7 +582,7 @@ function detailGroupForExpense(item: ExpenseRecord): ExpenseDetailGroup {
 
 export function ExpenseDetails({ expenses, breed, species, onClose }: { expenses: ExpenseRecord[]; breed: string; species?: string; onClose: () => void }) {
   const modalRef = useRef<HTMLElement>(null);
-  useDialogFocus({ isOpen: true, dialogRef: modalRef, onClose });
+  useDialogFocus({ isOpen: true, dialogRef: modalRef, onClose, preventScroll: true });
   const visibleExpenses = mergeDefaultVisibleExpenses(expenses, breed, species);
   const preparationTotal = getInitialPreparationTotal(visibleExpenses);
   const monthlyTotal = getMonthlyBasicTotal(visibleExpenses);

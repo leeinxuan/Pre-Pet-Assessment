@@ -134,11 +134,22 @@ export default function BottomBleedColor() {
     // 一旦偏離 0 就拉回，避免底部空白越捲越高。
     const isPageLocked = () => getComputedStyle(root).getPropertyValue("--page-lock").trim() === "1";
     // 鎖定頁：手指若不在「可捲動的內部清單」上，就不讓整頁被拖動。
+    let startedOnControl = false;
+    let touchStart: { x: number; y: number } | null = null;
+    const onTouchStart = (event: TouchEvent) => {
+      startedOnControl = event.target instanceof Element && Boolean(event.target.closest("button, a, input, select, textarea, summary, [role='button']"));
+      const touch = event.touches[0];
+      touchStart = touch ? { x: touch.clientX, y: touch.clientY } : null;
+    };
+    const onTouchEnd = () => { startedOnControl = false; touchStart = null; };
     const onTouchMove = (event: TouchEvent) => {
       if (!media.matches || event.touches.length > 1 || !isPageLocked()) return;
       // iOS 會因為 touchmove 被取消而不派發 click。互動控制項交給瀏覽器
-      // 處理點擊；整頁若真的被捲動，keepLocked 仍會將它拉回頂端。
-      if (event.target instanceof Element && event.target.closest("button, a, input, select, textarea, summary, [role='button']")) return;
+      // 處理點擊。Safari 可能在移動時將 target 改指向外層，故以 touchstart 為準。
+      // 整頁若真的被捲動，keepLocked 仍會將它拉回頂端。
+      if (startedOnControl || (event.target instanceof Element && event.target.closest("button, a, input, select, textarea, summary, [role='button']"))) return;
+      const touch = event.touches[0];
+      if (touch && touchStart && Math.hypot(touch.clientX - touchStart.x, touch.clientY - touchStart.y) < 10) return;
       const explicitPane = document.querySelector<HTMLElement>(LOCKED_PAGE_SCROLL_PANE_SELECTOR);
       if (explicitPane) {
         (window as unknown as { __touchDbg?: string }).__touchDbg = `pass-page ${String(explicitPane.className).slice(0, 19)} ${explicitPane.scrollHeight}/${explicitPane.clientHeight}`;
@@ -173,6 +184,9 @@ export default function BottomBleedColor() {
     observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["class", "style", "hidden"] });
     window.addEventListener("resize", schedule);
     window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("touchstart", onTouchStart, { passive: true });
+    document.addEventListener("touchend", onTouchEnd, { passive: true });
+    document.addEventListener("touchcancel", onTouchEnd, { passive: true });
     document.addEventListener("touchmove", onTouchMove, { passive: false });
     media.addEventListener("change", schedule);
     document.addEventListener("transitionend", schedule, true);
@@ -182,6 +196,9 @@ export default function BottomBleedColor() {
       observer.disconnect();
       window.removeEventListener("resize", schedule);
       window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("touchstart", onTouchStart);
+      document.removeEventListener("touchend", onTouchEnd);
+      document.removeEventListener("touchcancel", onTouchEnd);
       document.removeEventListener("touchmove", onTouchMove);
       media.removeEventListener("change", schedule);
       document.removeEventListener("transitionend", schedule, true);

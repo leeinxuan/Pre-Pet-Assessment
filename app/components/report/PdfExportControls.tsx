@@ -35,7 +35,7 @@ function concatBytes(chunks: Uint8Array[]) {
   return output;
 }
 
-function createPdfBlobFromCanvases(canvases: HTMLCanvasElement[]) {
+function createPdfBlobFromCanvases(canvases: HTMLCanvasElement[], jpegQuality = 0.92) {
   if (!canvases.length) throw new Error("PDF has no renderable pages");
   const chunks: Uint8Array[] = [];
   const offsets: number[] = [0];
@@ -63,7 +63,7 @@ function createPdfBlobFromCanvases(canvases: HTMLCanvasElement[]) {
     const pageObjectId = 3 + index * 3;
     const imageObjectId = pageObjectId + 1;
     const contentObjectId = pageObjectId + 2;
-    const imageBytes = dataUrlToBytes(canvas.toDataURL("image/jpeg", 0.92));
+    const imageBytes = dataUrlToBytes(canvas.toDataURL("image/jpeg", jpegQuality));
     const content = `q\n${a4PageWidthPt} 0 0 ${a4PageHeightPt} 0 0 cm\n/Im${index + 1} Do\nQ\n`;
     const contentBytes = textBytes(content);
 
@@ -147,7 +147,7 @@ function inlineComputedStyles(source: Element, clone: Element) {
   });
 }
 
-async function elementToCanvas(source: HTMLElement) {
+async function elementToCanvas(source: HTMLElement, maxScale = 2) {
   const width = source.offsetWidth;
   const height = source.offsetHeight;
   if (!width || !height) throw new Error("PDF source page has no layout size");
@@ -168,7 +168,7 @@ async function elementToCanvas(source: HTMLElement) {
     image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
   });
 
-  const scale = Math.min(2, window.devicePixelRatio || 1.5);
+  const scale = Math.min(maxScale, window.devicePixelRatio || 1.5);
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(width * scale);
   canvas.height = Math.round(height * scale);
@@ -524,6 +524,9 @@ export async function createAssessmentPdf(petName: string, kind: ReportPdfKind, 
     return { blob, fileName };
   }
   const selector = kind === "profile" ? ".care-print-profile" : ".care-a4-sheet";
+  // The phone previews this PDF in Safari. A smaller raster avoids the cost of
+  // encoding and decoding several full-resolution A4 images on the same device.
+  const compactPreview = kind === "overview" && window.matchMedia(COMPACT_PORTRAIT_LAYOUT_QUERY).matches;
   const sourcePages = Array.from(document.querySelectorAll<HTMLElement>(selector));
   // The profile form can be opened directly from the acquisition page, where
   // the report-only .care-print-profile node is intentionally absent.
@@ -546,7 +549,7 @@ export async function createAssessmentPdf(petName: string, kind: ReportPdfKind, 
     const canvases = [];
     for (const page of pages) {
       try {
-        canvases.push(await elementToCanvas(page));
+        canvases.push(await elementToCanvas(page, compactPreview ? 1.5 : 2));
       } catch (error) {
         // Some browser builds cannot draw a foreignObject SVG or a user photo.
         // Preserve all entered text in a valid PDF instead of failing the download.
@@ -556,7 +559,7 @@ export async function createAssessmentPdf(petName: string, kind: ReportPdfKind, 
     }
     let blob: Blob;
     try {
-      blob = createPdfBlobFromCanvases(canvases);
+      blob = createPdfBlobFromCanvases(canvases, compactPreview ? 0.82 : 0.92);
     } catch (error) {
       // A canvas can become tainted after a late-loading remote/user image even
       // when SVG rasterization itself succeeded. Rebuild every page without

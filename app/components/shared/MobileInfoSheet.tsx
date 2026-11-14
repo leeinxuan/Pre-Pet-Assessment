@@ -18,7 +18,7 @@ export type MobileInfoSheetContent = {
 export function MobileInfoSheet({ content, onClose }: { content: MobileInfoSheetContent | null; onClose: () => void }) {
   const dialogRef = useRef<HTMLElement>(null);
   const isMobile = useMobileLayout();
-  useDialogFocus({ isOpen: Boolean(content && isMobile), dialogRef, onClose });
+  useDialogFocus({ isOpen: Boolean(content && isMobile), dialogRef, onClose, preventScroll: true });
 
   if (!content || typeof document === "undefined") return null;
   return createPortal(

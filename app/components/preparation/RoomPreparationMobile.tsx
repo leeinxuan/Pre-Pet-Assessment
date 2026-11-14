@@ -141,6 +141,7 @@ export function RoomPreparationMobile({ petName, scene, hazardBackground, hazard
     dialogRef,
     onClose: closeInfo,
     getReturnFocus: getInfoReturnFocus,
+    preventScroll: true,
   });
 
   return <div className={`room-preparation-mobile${started ? " is-started" : ""}${roomComplete ? " is-complete" : ""}`}>
