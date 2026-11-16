@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { officialPetSources } from "../../data/shared/pet-sources";
 import { getSpeciesConfig } from "../../data/species";
@@ -12,6 +12,10 @@ import { ExternalLinkIcon } from "../shared/ExternalLinkIcon";
 import { ShareIcon } from "../shared/ShareIcon";
 import { logEvent } from "../../lib/event-log";
 
+// 後測表單（forms.app）：欄位以網址 #欄位代碼=受測者編號 預先填入
+const POST_TEST_FORM_URL = "https://share.forms.app/form/6afa9592a84c68b3a2d15808";
+const POST_TEST_PID_FIELD = "7f9f534e57995d40c48e8b90";
+
 const importProfileForms = () => import("../report/ProfileForms");
 const ProfileSupplementForm = dynamic(
   () => loadRetriableModule(importProfileForms).then((module) => module.ProfileSupplementForm),
@@ -22,6 +26,14 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
   const [shareMessage, setShareMessage] = useState("");
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [profileEdited, setProfileEdited] = useState(false);
+  // 只有帶過 ?pid=（編號存在 localStorage）的受測者才顯示後測連結；一般訪客不顯示
+  const [postTestUrl, setPostTestUrl] = useState("");
+  useEffect(() => {
+    try {
+      const pid = localStorage.getItem("pre-pet-pid");
+      if (pid) setPostTestUrl(`${POST_TEST_FORM_URL}#${POST_TEST_PID_FIELD}=${encodeURIComponent(pid)}`);
+    } catch { /* 無法讀取 localStorage 時不顯示 */ }
+  }, []);
   const profileModalRef = useRef<HTMLElement>(null);
   const acquisition = getSpeciesConfig(species).acquisition;
   const visibleSources = officialPetSources.filter((source) => acquisition.sourceIds.includes(source.id));
@@ -74,6 +86,13 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
       ? <strong className="home-readiness-emphasis" key={`${segment.text}-${index}`}>{segment.text}</strong>
       : <span key={`${segment.text}-${index}`}>{segment.text}</span>)}</p>
 
+    {postTestUrl && <section className="official-profile-entry official-evaluation-entry" aria-labelledby="official-evaluation-title">
+      <div>
+        <h2 id="official-evaluation-title">填寫測試評估表單，領取禮券</h2>
+        <p>感謝您完成操作！請接著填寫後測表單，完成後我們會寄送電子禮券給您。</p>
+      </div>
+      <a className="primary" href={postTestUrl} target="_blank" rel="noopener noreferrer" onClick={() => logEvent("post_test_form_clicked")}>填寫測試評估表單 <span>→</span></a>
+    </section>}
     <div className="nav-buttons official-acquisition-footer-actions">
       <button className="secondary" type="button" onClick={() => { logEvent("acquisition_back_clicked"); onBack(); }}>← 返回飼養觀念回顧</button>
       <div className="official-final-actions">
