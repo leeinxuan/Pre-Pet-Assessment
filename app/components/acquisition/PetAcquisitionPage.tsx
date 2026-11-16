@@ -15,6 +15,8 @@ import { logEvent } from "../../lib/event-log";
 // 後測表單（forms.app）：欄位以網址 #欄位代碼=受測者編號 預先填入
 const POST_TEST_FORM_URL = "https://share.forms.app/form/6afa9592a84c68b3a2d15808";
 const POST_TEST_PID_FIELD = "7f9f534e57995d40c48e8b90";
+const POST_TEST_SPECIES_FIELD = "6afadcd51f55bd02d889c303";
+const SPECIES_BY_PREFIX: Record<string, string> = { A: "犬", B: "貓", C: "兔子", D: "鸚鵡", E: "倉鼠", F: "小型地棲性守宮" };
 
 const importProfileForms = () => import("../report/ProfileForms");
 const ProfileSupplementForm = dynamic(
@@ -31,7 +33,7 @@ export function PetAcquisitionPage({ profile, petName, breed, species, onProfile
   useEffect(() => {
     try {
       const pid = localStorage.getItem("pre-pet-pid");
-      if (pid) setPostTestUrl(`${POST_TEST_FORM_URL}#${POST_TEST_PID_FIELD}=${encodeURIComponent(pid)}`);
+      if (pid) { const species = SPECIES_BY_PREFIX[pid.trim().charAt(0).toUpperCase()]; setPostTestUrl(`${POST_TEST_FORM_URL}#${POST_TEST_PID_FIELD}=${encodeURIComponent(pid)}${species ? `&${POST_TEST_SPECIES_FIELD}=${encodeURIComponent(species)}` : ""}`); }
     } catch { /* 無法讀取 localStorage 時不顯示 */ }
   }, []);
   const profileModalRef = useRef<HTMLElement>(null);
