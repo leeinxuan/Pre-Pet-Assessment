@@ -351,6 +351,11 @@ export function SpeciesStep({
     const nameplate = new Image();
     nameplate.src = sharedAssets.nameplate;
   }, []);
+  // 子步驟換頁（名字 → 養過嗎 → 過渡）一律回到頂端：iOS 開鍵盤會把文件捲動約 40px，
+  // 若不歸零，這個位置會被帶到下一頁，而鎖定頁不允許整頁拖動，使用者無法自行拉回。
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+  }, [selectionPage]);
   // 品種流程目前在全站皆暫時停用。無論父層的 state 更新順序為何，
   // 都不能掛載舊的品種頁，避免在物種選擇後閃過已下架的畫面。
   const visibleSelectionPage: typeof selectionPage = selectionPage === "breed" ? "name" : selectionPage;
