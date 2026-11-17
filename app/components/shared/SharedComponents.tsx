@@ -351,11 +351,6 @@ export function SpeciesStep({
     const nameplate = new Image();
     nameplate.src = sharedAssets.nameplate;
   }, []);
-  // 子步驟換頁（名字 → 養過嗎 → 過渡）一律回到頂端：iOS 開鍵盤會把文件捲動約 40px，
-  // 若不歸零，這個位置會被帶到下一頁，而鎖定頁不允許整頁拖動，使用者無法自行拉回。
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
-  }, [selectionPage]);
   // 品種流程目前在全站皆暫時停用。無論父層的 state 更新順序為何，
   // 都不能掛載舊的品種頁，避免在物種選擇後閃過已下架的畫面。
   const visibleSelectionPage: typeof selectionPage = selectionPage === "breed" ? "name" : selectionPage;
@@ -370,7 +365,7 @@ export function SpeciesStep({
     onCategory(id);
     onBreed(nextBreed);
     onSelectionPage("name");
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   return (
@@ -401,7 +396,7 @@ export function SpeciesStep({
           <div className="pet-naming-stage">
             <img src={sharedAssets.nameplate} width={2720} height={1860} alt={`${speciesConfig.copy.animalName}名字吊牌`} />
             <label htmlFor="new-pet-name" className="sr-only">{speciesConfig.copy.animalName}的名字</label>
-            <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} onBlur={() => window.setTimeout(() => { if (!(document.activeElement instanceof HTMLInputElement)) window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }, 150)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} />
+            <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} />
           </div>
           <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
         </section>

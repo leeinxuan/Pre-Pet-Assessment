@@ -129,7 +129,7 @@ export function ProfileForm({
     if (page < titles.length - 1) {
       onPage(page + 1);
       setErrors({});
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else onNext();
   }
 
@@ -137,7 +137,7 @@ export function ProfileForm({
     setErrors({});
     if (page > 0) onPage(page - 1);
     else onBack();
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (

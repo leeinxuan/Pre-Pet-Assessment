@@ -80,7 +80,7 @@ export function ScenarioGame({
   function continueJourney() {
     if (index < end) {
       onIndex(index + 1);
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (stageComplete) {
       onCompleteStage();
     }

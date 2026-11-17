@@ -54,7 +54,7 @@ export function ActivityIntroPage({ config, petName, species, onStart }: { confi
         </div>
         <button type="button" className="primary activity-mobile-wide-action" onClick={() => {
           onStart();
-          window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }));
+          window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
         }}>{actionLabel}</button>
       </div>
     </div>

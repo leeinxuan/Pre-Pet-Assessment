@@ -70,7 +70,7 @@ export function BreedChallengeActivity({
     setCurrentIndex((current) => current + 1);
     setMode(reviewFromStart && answers[scenarios[currentIndex + 1]?.id ?? ""]?.finalResult === "correct" ? "positive" : "question");
     setFeedbackVideoFailed(false);
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   useEffect(() => {
