@@ -151,7 +151,7 @@ export function LifeJourney({
     setFeedbackOpen(Boolean(nextScenarioId && answers[nextScenarioId]));
     onIndex(next);
     onStageChange(getJourneyStepForItem(activeJourneyItems[next]));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   function continueJourney() {
@@ -172,7 +172,7 @@ export function LifeJourney({
   function continueScenario() {
     if (activityConfig?.transition === "arrival-meal") {
       setArrivalMealOpen(true);
-      window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+      window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }));
       return;
     }
     continueJourney();
@@ -219,7 +219,7 @@ export function LifeJourney({
     setTimePassOpen(false);
     setResetItemId(item.id);
     setResetSignal((current) => current + 1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   const isRevisitingItem = isRevisitingJourneyItem(replayState, item.id);

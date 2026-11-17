@@ -365,7 +365,7 @@ export function SpeciesStep({
     onCategory(id);
     onBreed(nextBreed);
     onSelectionPage("name");
-    window.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   return (

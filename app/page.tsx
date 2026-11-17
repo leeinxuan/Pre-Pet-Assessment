@@ -320,7 +320,7 @@ export default function Home() {
     setStep(next);
     setFurthestStep((current) => Math.max(current, next));
     setIntroOpen(next > 0 && next <= 2);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   function goToStation(next: number) {
@@ -334,7 +334,7 @@ export default function Home() {
     enterJourneyReplayItem(activeItem?.id);
     setStep(next);
     setIntroOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   function goToLifeStage(stageIndex: number) {
@@ -357,7 +357,7 @@ export default function Home() {
       setStep(getJourneyStepForItem(journeyItems[journeyStart]));
       setIntroOpen(false);
     }
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   function changeSelectionPage(page: "species" | "breed" | "name" | "history" | "transition") {
@@ -387,7 +387,7 @@ export default function Home() {
         setFurthestStep((current) => Math.max(current, 3));
         setIntroOpen(false);
       }
-      window.scrollTo({ top: 0, behavior: "auto" });
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
       return;
     }
 
@@ -401,14 +401,14 @@ export default function Home() {
       setLifePhase("life-journey");
       setJourneyIndex(0);
       setStep(3);
-      window.scrollTo({ top: 0, behavior: "auto" });
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
       return;
     }
 
     // 一般關卡：只觸發子題目前進，由 LifeJourneyMap 決定是否推進到下一大關。
     setTestNextTargetIndex(journeyIndex);
     setTestNextSignal((current) => current + 1);
-    window.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   function showExpenseCard(expense: ExpenseRecord, duration = 1900) {
@@ -716,7 +716,7 @@ export default function Home() {
     if (selectionChanged) {
       // 新的物種／品種只保留選擇本身，其他資料回到首次進站的乾淨狀態。
       resetAllGameData(nextSelection, { preserveTestMode: testMode });
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
       return;
     }
     committedSelectionRef.current = nextSelection;
@@ -734,7 +734,7 @@ export default function Home() {
     if (selectionChanged) {
       resetAllGameData(nextSelection, { preserveTestMode: testMode });
       if (testMode) setPetName("多多");
-      window.scrollTo({ top: 0, behavior: "auto" });
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
       return;
     }
 
@@ -742,7 +742,7 @@ export default function Home() {
     setBreed(nextSelection.breed);
     setSelectionPage("name");
     setSelectionReached((current) => Math.max(current, 2));
-    window.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   function startFreshJourney() {
@@ -755,7 +755,7 @@ export default function Home() {
     setStep(1);
     setFurthestStep(1);
     setIntroOpen(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   function resetAll() {
@@ -791,19 +791,19 @@ export default function Home() {
     // 測試模式也從共用的物種選擇入口開始，不能落入已隱藏的品種頁。
     setSelectionPage("species");
     setIntroOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }
 
   function renderPreparation() {
     if (preparationTask === 0) {
-      return <HomeReadinessActivity species={category} petName={petName} state={homeReadiness} onChange={setHomeReadiness} onBack={() => goTo(1)} onNext={() => { changePreparationTask(1); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
+      return <HomeReadinessActivity species={category} petName={petName} state={homeReadiness} onChange={setHomeReadiness} onBack={() => goTo(1)} onNext={() => { changePreparationTask(1); window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }} />;
     }
     if (preparationTask === 1) {
       const reviewing = completedPreparationTasks.includes(1) && preparationReached >= 2 && preparationReplayTask !== 1;
-      return <RoomPreparation key={`${category}:room:${mobilePreparationEntry}`} selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setCompletedPreparationTasks((current) => current.filter((task) => task !== 1)); setPreparationReplayTask(1); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(1) ? current : [...current, 1]); changePreparationTask(2); window.scrollTo({ top: 0, behavior: "auto" }); }} />;
+      return <RoomPreparation key={`${category}:room:${mobilePreparationEntry}`} selectedItems={roomReady} securedHazards={hazardsReady} petName={petName} breed={breed} species={category} onPrepare={addRoomItem} onToggleHazard={toggleHazard} reviewing={reviewing} onReplay={() => { setRoomReady([]); setHazardsReady([]); setCompletedPreparationTasks((current) => current.filter((task) => task !== 1)); setPreparationReplayTask(1); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(1) ? current : [...current, 1]); changePreparationTask(2); window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }} />;
     }
     const reviewing = completedPreparationTasks.includes(2) && furthestStep >= 3 && preparationReplayTask !== 2;
-    return <CarTrunkPreparation key={`${category}:departure:${mobilePreparationEntry}`} selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setCompletedPreparationTasks((current) => current.filter((task) => task !== 2)); setPreparationReplayTask(2); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(2) ? current : [...current, 2]); setPreparationReached((current) => Math.max(current, 2)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} />;
+    return <CarTrunkPreparation key={`${category}:departure:${mobilePreparationEntry}`} selected={trunkSelected} petName={petName} breed={breed} species={category} onSelect={selectTrunkItem} reviewing={reviewing} onReplay={() => { setTrunkSelected([]); setTrunkPassed(false); setCompletedPreparationTasks((current) => current.filter((task) => task !== 2)); setPreparationReplayTask(2); }} onNext={() => { setCompletedPreparationTasks((current) => current.includes(2) ? current : [...current, 2]); setPreparationReached((current) => Math.max(current, 2)); setStep(3); setFurthestStep((current) => Math.max(current, 3)); setIntroOpen(false); window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }} />;
   }
 
   function renderLifeJourney() {
@@ -847,7 +847,7 @@ export default function Home() {
           setStep(7);
           setFurthestStep((current) => Math.max(current, 7));
           setIntroOpen(false);
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
         }}
       />
     );
@@ -899,13 +899,13 @@ export default function Home() {
               {step === 2 && renderPreparation()}
               {step >= 3 && step <= 6 && renderLifeJourney()}
               {step === 7 && <>
-                <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} homeReadiness={homeReadiness} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setTestNextTargetIndex(null); setLifePhase("life-journey"); setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />
+                <AssessmentReport petName={petName} breed={breed} species={category} profile={profile} expenses={expenses} roomReady={roomReady} hazardsReady={hazardsReady} members={members} trunkSelected={trunkSelected} trunkPassed={trunkPassed} answers={scenarioAnswers} lifeActivity={lifeActivity} homeReadiness={homeReadiness} committed={careCommitted} onCommittedChange={setCareCommitted} onBack={() => { setTestNextTargetIndex(null); setLifePhase("life-journey"); setStep(6); setIntroOpen(false); window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }} onReset={resetAll} />
                 <div className="report-next-step-actions">
                   <p>準備好進一步了解合法、透明的取得方式了嗎？</p>
-                  <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, behavior: "auto" }); }}>取得寵物 <span>→</span></button>
+                  <button className="primary" type="button" onClick={() => { setStep(8); setFurthestStep((current) => Math.max(current, 8)); window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }}>取得寵物 <span>→</span></button>
                 </div>
               </>}
-              {step === 8 && <PetAcquisitionPage profile={profile} petName={petName} breed={breed} species={category} onProfileChange={setProfile} onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} onReset={resetAll} />}
+              {step === 8 && <PetAcquisitionPage profile={profile} petName={petName} breed={breed} species={category} onProfileChange={setProfile} onBack={() => { setStep(7); setIntroOpen(false); window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }} onReset={resetAll} />}
             </FlowLoadErrorBoundary>
           </section>
         </div>
