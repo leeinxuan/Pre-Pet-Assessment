@@ -401,7 +401,7 @@ export function SpeciesStep({
           <div className="pet-naming-stage">
             <img src={sharedAssets.nameplate} width={2720} height={1860} alt={`${speciesConfig.copy.animalName}名字吊牌`} />
             <label htmlFor="new-pet-name" className="sr-only">{speciesConfig.copy.animalName}的名字</label>
-            <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} />
+            <input id="new-pet-name" name="pet-display-name" value={petName} maxLength={12} placeholder={speciesConfig.copy.namePlaceholder} onChange={(event) => onPetName(event.target.value)} onBlur={() => window.setTimeout(() => { if (!(document.activeElement instanceof HTMLInputElement)) window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }, 150)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} />
           </div>
           <NavButtons onBack={() => onSelectionPage("species")} onNext={() => onSelectionPage("history")} disabled={!petName.trim()} nextLabel="下一步" />
         </section>

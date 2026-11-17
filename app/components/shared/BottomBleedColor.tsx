@@ -169,9 +169,12 @@ export default function BottomBleedColor() {
       (window as unknown as { __touchDbg?: string }).__touchDbg = `BLOCK ${event.target instanceof Element ? String(event.target.className).slice(0, 24) : "?"}`;
       if (event.cancelable) event.preventDefault();
     };
+    const inputFocused = () => document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
     const keepLocked = () => {
       if (!media.matches || window.scrollY === 0) return;
       if (!isPageLocked()) return;
+      // 鍵盤開啟、輸入框聚焦時 iOS 會自己把頁面推上去，這時不硬拉回，改在離開輸入框後歸零
+      if (inputFocused()) return;
       window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
     };
     const onScroll = () => {
@@ -190,6 +193,8 @@ export default function BottomBleedColor() {
     document.addEventListener("touchend", onTouchEnd, { passive: true });
     document.addEventListener("touchcancel", onTouchEnd, { passive: true });
     document.addEventListener("touchmove", onTouchMove, { passive: false });
+    const onFocusOut = () => { window.setTimeout(() => { if (!inputFocused()) keepLocked(); }, 150); };
+    document.addEventListener("focusout", onFocusOut);
     media.addEventListener("change", schedule);
     document.addEventListener("transitionend", schedule, true);
     schedule();
@@ -204,6 +209,7 @@ export default function BottomBleedColor() {
       document.removeEventListener("touchend", onTouchEnd);
       document.removeEventListener("touchcancel", onTouchEnd);
       document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("focusout", onFocusOut);
       media.removeEventListener("change", schedule);
       document.removeEventListener("transitionend", schedule, true);
       if (frame) window.clearTimeout(frame);
