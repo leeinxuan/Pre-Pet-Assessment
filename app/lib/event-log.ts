@@ -137,78 +137,18 @@ export function flush() {
   }
 }
 
-// ---- 無效點擊（dead click）：點到沒有互動功能的地方 ----
-// 只記標籤、class 與次數，不記文字內容與座標；1 秒內連點同一處合併成一筆（count）。
-const INTERACTIVE_SELECTOR = 'a[href], button, input, select, textarea, label, summary, [role="button"], [role="tab"], [role="link"], [role="checkbox"], [role="radio"], [role="option"], [role="menuitem"], [role="switch"], [contenteditable="true"]';
-const DEAD_MERGE_MS = 1000;
-let deadPending: { key: string; props: Record<string, unknown>; count: number; last: number; stage: string; page: string } | null = null;
-let deadTimer: number | null = null;
-
-function describeTarget(el: Element): { key: string; props: Record<string, unknown> } {
-  const tag = el.tagName.toLowerCase();
-  const cls = (typeof el.className === "string" ? el.className : "").trim().split(/\s+/).filter(Boolean).slice(0, 3).join(".").slice(0, 80);
-  const itemId = el.closest("[data-room-item-id]")?.getAttribute("data-room-item-id") ?? undefined;
-  const props: Record<string, unknown> = { tag, cls };
-  if (itemId) props.itemId = itemId;
-  return { key: `${tag}|${cls}|${itemId ?? ""}`, props };
-}
-
-function isDeadClick(el: Element): boolean {
-  const interactive = el.closest(INTERACTIVE_SELECTOR);
-  if (interactive) {
-    // 點到停用（disabled）的按鈕也算「點了沒反應」
-    return interactive.matches(":disabled, [aria-disabled='true']");
-  }
-  // React 的 onClick 不會出現在屬性上，用游標樣式（pointer）判斷是否為可點擊區域
-  try {
-    return getComputedStyle(el).cursor !== "pointer";
-  } catch {
-    return false;
-  }
-}
-
-function flushDeadClick() {
-  if (deadTimer !== null) {
-    window.clearTimeout(deadTimer);
-    deadTimer = null;
-  }
-  if (!deadPending) return;
-  const { props, count, stage, page } = deadPending;
-  deadPending = null;
-  logEvent("dead_click", { ...props, count }, { stage, page });
-}
-
-function handleDeadClick(event: MouseEvent) {
-  const target = event.target;
-  if (!(target instanceof Element)) return;
-  if (!isDeadClick(target)) return;
-  const now = Date.now();
-  const { key, props } = describeTarget(target);
-  if (deadPending && deadPending.key === key && now - deadPending.last < DEAD_MERGE_MS) {
-    deadPending.count += 1;
-    deadPending.last = now;
-  } else {
-    flushDeadClick();
-    deadPending = { key, props, count: 1, last: now, stage: context.stage, page: context.page || location.pathname };
-  }
-  if (deadTimer !== null) window.clearTimeout(deadTimer);
-  deadTimer = window.setTimeout(flushDeadClick, DEAD_MERGE_MS);
-}
-
 // 只需呼叫一次：開始監聽分頁隱藏／回來，並在離開頁面時送出剩餘事件。
 export function startEventLog() {
   if (typeof window === "undefined" || started) return;
   started = true;
-  document.addEventListener("click", handleDeadClick, true);
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
-      flushDeadClick();
       logEvent("tab_hidden");
       flush();
     } else {
       logEvent("tab_visible");
     }
   });
-  window.addEventListener("pagehide", () => { flushDeadClick(); flush(); });
+  window.addEventListener("pagehide", () => { flush(); });
   logEvent("session_start", { width: window.innerWidth, height: window.innerHeight });
 }
